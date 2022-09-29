@@ -1,0 +1,53 @@
+name: "TypeScript environment setup"
+
+inputs:
+  node-version:
+    description: "Node.js version"
+    required: true
+    default: "16.x"
+  npm-version:
+    description: "npm version"
+    required: true
+    default: "latest"
+  install-dependencies:
+    required: true
+    default: "false"
+  dependencies-root:
+    description: "Runs npm-install in this directory"
+    required: true
+    default: "ts"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install Node.js ${{ inputs.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ inputs.node-version }}
+        registry-url: "https://registry.npmjs.org"
+        scope: "@configu"
+
+    - name: Install npm latest
+      shell: bash
+      run: |
+        npm install -g npm@${{ inputs.npm-version }}
+        npm -v
+
+    - name: Install useful npm global packages
+      shell: bash
+      run: |
+        npm install -g json serve ngrok
+        npm list -g --depth 0
+
+    - name: Set CWD environment variable
+      shell: bash
+      run: |
+        echo "CWD=${{ inputs.dependencies-root }}" >> $GITHUB_ENV
+
+    - name: Install npm dependencies
+      shell: bash
+      if: ${{ inputs.install-dependencies == 'true' }} # * there is a bug in gh-actions causing booleans to be strings in composite actions - see: https://github.com/actions/runner/issues/1483#issuecomment-1042393939
+      run: |
+        cd ${{ env.CWD }}
+        npm install
+        npm list --depth 0

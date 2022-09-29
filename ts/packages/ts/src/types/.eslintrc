@@ -1,0 +1,10 @@
+{
+  "extends": [
+    "../../../../.eslintrc"
+  ],
+  "rules": {
+    "no-shadow": "off",
+    "no-use-before-define": "off",
+    "prettier/prettier": "off"
+  }
+}

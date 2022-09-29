@@ -1,0 +1,57 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "play cli",
+      "type": "node",
+      "request": "launch",
+      "console": "integratedTerminal",
+      "program": "${workspaceRoot}/ts/packages/cli/bin/dev",
+      "env": {
+        "VAULT_ADDR": "http://127.0.0.1:8200",
+        "VAULT_TOKEN": "root"
+      },
+      "args": [
+        "upsert",
+        // "export",
+        "--store", "json-file://ts/packages/node/test/db.json",
+        // "--store", "hashicorp-vault://-",
+        "--set", "/prod/us-east-1",
+        // "--schema", "ts/packages/node/test/s1.cfgu.json",
+        "--schema", "ts/packages/node/test/s2.cfgu.json",
+        "--config", "S1V1=44", //"S1V1={{hashicorp-vault://secret/prod/service/NPM_TOKEN}}"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/**/*.js",
+        "!**/node_modules/**"
+      ],
+      "skipFiles": ["<node_internals>/**", "node_modules/**"],
+      "preLaunchTask": "build ts"
+    },
+    {
+      "name": "play node sdk",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceRoot}/ts/packages/node",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["--nolazy", "--inspect", "-r", "ts-node/register"],
+      "args": ["test/index.ts"],
+      "internalConsoleOptions": "openOnSessionStart",
+      "skipFiles": ["<node_internals>/**", "node_modules/**"],
+      "preLaunchTask": "build ts"
+    },
+    {
+      "name": "run ts tests",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceRoot}/ts",
+      "runtimeArgs": [
+        "--inspect-brk",
+        "node_modules/.bin/jest",
+        "--runInBand",
+        "src/*.test.ts"
+      ],
+      // "internalConsoleOptions": "neverOpen",
+    },
+  ]
+}

@@ -1,0 +1,21 @@
+name: "Deployment end hook"
+
+inputs:
+  package-name:
+    required: true
+  package-version:
+    required: true
+  google-chat-webhook:
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    # change to Slack after migration
+    - name: Post Google Chat build status
+      uses: Co-qn/google-chat-notification@v1
+      if: always()
+      with:
+        name: ${{ inputs.package-name }} v${{ inputs.package-version }} deployment
+        url: ${{ inputs.google-chat-webhook }}
+        status: ${{ job.status }}

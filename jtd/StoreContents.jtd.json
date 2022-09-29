@@ -1,0 +1,18 @@
+{
+  "definitions": {
+    "Config": {
+      "metadata": {
+        "description": "A generic representation of a software configuration, aka Config"
+      },
+      "properties": {
+        "set": { "type": "string" },
+        "schema": { "type": "string" },
+        "key": { "type": "string" },
+        "value": { "type": "string" }
+      }
+    }
+  },
+  "elements": {
+    "ref": "Config"
+  }
+}

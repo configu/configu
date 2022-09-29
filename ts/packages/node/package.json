@@ -1,0 +1,34 @@
+{
+  "name": "@configu/node",
+  "version": "0.0.0",
+  "license": "Apache-2.0",
+  "description": "configu node.js sdk",
+  "author": "Configu",
+  "engines": {
+    "node": ">=16.13.2"
+  },
+  "exports": "./build/index.js",
+  "types": "./build/index.d.ts",
+  "files": [
+    "/build"
+  ],
+  "homepage": "https://configu.com",
+  "keywords": [
+    "cfgu",
+    "configu",
+    "configu-sdk",
+    "configu-node-sdk"
+  ],
+  "scripts": {
+    "build": "tsc --build --verbose"
+  },
+  "dependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.180.0",
+    "@configu/ts": "*",
+    "axios": "^0.27.2",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.186"
+  }
+}

@@ -1,0 +1,56 @@
+name: "Deployment start hook"
+
+inputs:
+  package-name:
+    required: true
+  google-chat-webhook:
+    required: true
+
+outputs:
+  commit-sha:
+    description: "Commit SHA"
+    value: ${{ steps.commit-sha.outputs.sha_short }}
+  release-version:
+    description: "Release version"
+    value: ${{ steps.release-tag.outputs.version }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Extract commit SHA version
+      id: commit-sha
+      shell: bash
+      run: |
+        echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+
+    - name: Extract release tag version
+      id: release-tag
+      uses: olegtarasov/get-tag@v2.1
+      with:
+        tagRegex: "(?<package>.*)-v(?<version>.*)"
+        tagRegexGroup: 2
+
+    # todo: replace with Slack action after migration
+    - name: Post Google Chat message
+      uses: julb/action-post-googlechat-message@v1
+      with:
+        message: "${{ inputs.package-name }} v${{ steps.release-tag.outputs.version }} is now being deployed"
+        gchat_webhook_url: ${{ inputs.google-chat-webhook }}
+
+    - name: Create local bin dir
+      shell: bash
+      run: |
+        mkdir -p $HOME/.local/bin
+        echo "LOCAL_BIN=$HOME/.local/bin" >> $GITHUB_ENV
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+    - uses: robinraju/release-downloader@v1.5
+      with:
+        repository: "jsontypedef/json-typedef-codegen"
+        latest: true
+        fileName: "x86_64-unknown-linux-gnu.zip"
+
+    - name: Append jtd-codegen to PATH # * https://www.scivision.dev/github-actions-path-append/
+      shell: bash
+      run: |
+        unzip -d $LOCAL_BIN x86_64-unknown-linux-gnu.zip

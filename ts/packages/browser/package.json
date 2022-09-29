@@ -1,0 +1,27 @@
+{
+  "name": "@configu/browser",
+  "version": "0.0.0",
+  "license": "Apache-2.0",
+  "description": "configu browser sdk",
+  "author": "Configu",
+  "engines": {
+    "browser-list": "todo: add supported browser-list"
+  },
+  "exports": "./build/index.js",
+  "types": "./build/index.d.ts",
+  "files": [
+    "/build"
+  ],
+  "homepage": "https://configu.com",
+  "keywords": [
+    "cfgu",
+    "configu",
+    "configu-sdk",
+    "configu-browser-sdk"
+  ],
+  "scripts": {},
+  "dependencies": {
+    "axios": "^0.27.2"
+  },
+  "devDependencies": {}
+}

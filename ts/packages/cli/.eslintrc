@@ -1,0 +1,18 @@
+{
+  "extends": [
+    // todo: hope it will be solved in next oclif releases and uncomment this
+    // ! ESLint: Failed to load plugin 'unicorn' declared in 'packages/cli/.eslintrc » eslint-config-oclif': Package subpath './lib/rules/no-warning-comments' is not defined by "exports" in /Users/ran/dev/configu/node_modules/eslint/package.json Referenced from: /Users/ran/dev/configu/node_modules/eslint-config-oclif/index.js. Please see the 'ESLint' output channel for details.
+    // "oclif",
+    // "oclif-typescript",
+    "../../.eslintrc"
+  ],
+  "rules": {
+    // "unicorn/filename-case": "off",
+    // "unicorn/no-array-for-each": "off",
+    // "unicorn/no-array-reduce": "off",
+    // "unicorn/prefer-node-protocol": "off",
+    // "no-shadow": "off",
+    // "node/no-missing-import": "off"
+  },
+  "ignorePatterns": ["bin", "build"]
+}

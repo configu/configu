@@ -1,0 +1,49 @@
+{
+  "definitions": {
+    "ConfigSchema": {
+      "properties": {
+        "type": {
+          "enum": [
+            "Boolean",
+            "Number",
+            "String",
+            "RegEx",
+            "UUID",
+            "SemVer",
+            "Email",
+            "MobilePhone",
+            "Locale",
+            "LatLong",
+            "Color",
+            "IPv4",
+            "IPv6",
+            "Domain",
+            "URL",
+            "ConnectionString",
+            "Hex",
+            "Base64",
+            "MD5",
+            "SHA",
+            "Country",
+            "Currency"
+          ]
+        }
+      },
+      "optionalProperties": {
+        "pattern": { "type": "string" },
+        "description": { "type": "string" },
+        "default": { "type": "string" },
+        "required": { "type": "boolean" },
+        "depends": {
+          "elements": {
+            "type": "string"
+          }
+        },
+        "template": { "type": "string" }
+      }
+    }
+  },
+  "values": {
+    "ref": "ConfigSchema"
+  }
+}

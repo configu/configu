@@ -1,0 +1,34 @@
+{
+  "editor.tabSize": 2,
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "[markdown]": {
+    "editor.formatOnSave": false
+  },
+  "[javascript]": {
+    "editor.formatOnSave": false
+  },
+  "[typescript]": {
+    "editor.formatOnSave": false,
+  },
+  "typescript.tsdk": "ts/node_modules/typescript/lib",
+  "typescript.referencesCodeLens.enabled": true,
+  "eslint.validate": [
+    "javascript",
+    "typescript"
+  ],
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/build": true,
+    "**/dist": true,
+    "**/coverage": true,
+    "package-lock.json": true,
+    "tsconfig.tsbuildinfo": true
+  },
+  "cSpell.words": [
+    "cfgu",
+    "configu",
+  ],
+}

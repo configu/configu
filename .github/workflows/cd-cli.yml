@@ -1,0 +1,90 @@
+name: "CD: configu cli tarballs, docker image"
+
+on:
+  push:
+    tags:
+      - cli-*
+
+env:
+  PACKAGE_NAME: "@configu/cli"
+  PACKAGE_PATH: "packages/cli"
+  AWS_REGION: ${{ secrets.AWS_REGION }} # required by oclif
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }} # required by oclif
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }} # required by oclif
+  S3_BUCKET: "cli.configu.com"
+  CLOUDFRONT_DISTRIBUTION: "E1I302A2MRSW0O"
+  DOCKERHUB_REPOSITORY: "configu/cli"
+
+jobs:
+  build_and_deploy:
+    name: Build and deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: ./.github/actions/deploy-start-action
+        id: deployment
+        with:
+          package-name: ${{ env.PACKAGE_NAME }}
+          google-chat-webhook: ${{ secrets.GOOGLE_CHAT_WEBHOOK }}
+
+      - uses: ./.github/actions/ts-env-action
+        with:
+          install-dependencies: true
+
+      # ----------
+      - name: Bump package version
+        run: |
+          cd ${{ env.CWD }}
+          npm --no-git-tag-version version ${{ steps.deployment.outputs.release-version }} --workspace=${{ env.PACKAGE_NAME }}
+
+      - name: Build package code and produce tarballs
+        run: |
+          cd ${{ env.CWD }}
+          npm run build:oclif --workspace=${{ env.PACKAGE_NAME }}
+
+      # https://github.com/oclif/oclif
+      # https://github.com/oclif/oclif/blob/61cb7664ce38f1b7827ff652f063c3be7adeb1af/src/tarballs/config.ts
+      - name: Publish tarballs to storage
+        run: |
+          cd ${{ env.CWD }}/${{ env.PACKAGE_PATH }}
+          npx oclif upload tarballs
+          npx oclif promote \
+            --version ${{ steps.deployment.outputs.release-version }} \
+            --sha ${{ steps.deployment.outputs.commit-sha }} \
+            --indexes
+
+      - name: Copy installation scripts to storage
+        run: |
+          cd ${{ env.CWD }}/${{ env.PACKAGE_PATH }}
+          aws s3 cp ./scripts/install.sh s3://${{ env.S3_BUCKET }}/install.sh
+          aws s3 cp ./scripts/install.ps1 s3://${{ env.S3_BUCKET }}/install.ps1
+
+      - name: Invalidate storage CDN
+        run: |
+          aws cloudfront create-invalidation --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION }} --paths "/*"
+
+      - uses: docker/setup-qemu-action@v2
+
+      - uses: docker/setup-buildx-action@v2
+
+      - uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build docker image and push to Docker Hub
+        uses: docker/build-push-action@v3
+        with:
+          context: ${{ env.CWD }}/${{ env.PACKAGE_PATH }}
+          platforms: linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8
+          tags: ${{ env.DOCKERHUB_REPOSITORY }}:${{ steps.deployment.outputs.release-version }},${{ env.DOCKERHUB_REPOSITORY }}:latest
+          push: true
+      # ----------
+
+      - uses: ./.github/actions/deploy-end-action
+        if: always()
+        with:
+          package-name: ${{ env.PACKAGE_NAME }}
+          package-version: ${{ steps.deployment.outputs.release-version }}
+          google-chat-webhook: ${{ secrets.GOOGLE_CHAT_WEBHOOK }}

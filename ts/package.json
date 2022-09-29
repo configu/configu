@@ -1,0 +1,51 @@
+{
+  "name": "@configu/root",
+  "version": "0.0.0",
+  "license": "Apache-2.0",
+  "description": "configu typescript monorepo root powered by npm workspaces",
+  "author": "Configu",
+  "devEngines": {
+    "node": ">=v16.13.2",
+    "npm": ">=8.0.0"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "clean:build": "shx rm -rf packages/*/build packages/*/out packages/*/dist",
+    "clean:cache": "shx rm -rf .eslintcache packages/*/tsconfig.tsbuildinfo packages/*/coverage packages/*/tmp",
+    "clean:modules": "shx rm -rf ./**/node_modules",
+    "clean": "concurrently \"npm:clean:build\" \"npm:clean:cache\"",
+    "clean:all": "npm run clean && npm run clean:modules",
+    "format": "prettier --write '**/*.{js,ts}' --ignore-path ../.gitignore",
+    "format:check": "prettier --check '**/*.{js,ts}' --ignore-path ../.gitignore",
+    "lint": "eslint . --cache --fix --ext js,ts --ignore-path ../.gitignore",
+    "lint:check": "eslint . --cache --ext js,ts --ignore-path ../.gitignore",
+    "build": "tsc --build --verbose tsconfig.build.json",
+    "test": "jest",
+    "test:cov": "npm run build && npm test -- --coverage",
+    "test:watch": "echo 'run test in watch mode'",
+    "start": "npm run test:watch"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.1.0",
+    "@types/node": "^18.7.23",
+    "@typescript-eslint/eslint-plugin": "^5.38.1",
+    "@typescript-eslint/parser": "^5.38.1",
+    "concurrently": "^7.4.0",
+    "esbuild": "^0.15.9",
+    "eslint": "^8.24.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jest": "^27.0.4",
+    "eslint-plugin-prettier": "^4.2.1",
+    "jest": "^29.1.1",
+    "prettier": "^2.7.1",
+    "shx": "^0.3.4",
+    "ts-jest": "^29.0.3",
+    "ts-node": "^10.9.1",
+    "tslib": "^2.4.0",
+    "typescript": "^4.8.4"
+  }
+}

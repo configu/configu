@@ -1,0 +1,10 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build ts",
+      "type": "shell",
+      "command": "cd ${workspaceRoot}/ts && npm run build",
+    },
+  ]
+}

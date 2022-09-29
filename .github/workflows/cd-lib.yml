@@ -1,0 +1,52 @@
+name: "CD: @configu/lib npm package"
+
+on:
+  push:
+    tags:
+      - lib-*
+
+env:
+  PACKAGE_NAME: "@configu/lib"
+
+jobs:
+  build_and_deploy:
+    name: Build and deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: ./.github/actions/deploy-start-action
+        id: deployment
+        with:
+          package-name: ${{ env.PACKAGE_NAME }}
+          google-chat-webhook: ${{ secrets.GOOGLE_CHAT_WEBHOOK }}
+
+      - uses: ./.github/actions/ts-env-action
+        with:
+          install-dependencies: true
+
+      # ----------
+      - name: Bump package version
+        run: |
+          cd ${{ env.CWD }}
+          npm --no-git-tag-version version ${{ steps.deployment.outputs.release-version }} --workspace=${{ env.PACKAGE_NAME }}
+
+      - name: Build package code
+        run: |
+          cd ${{ env.CWD }}
+          npm run build --workspace=${{ env.PACKAGE_NAME }}
+
+      - name: Publish to npm
+        run: |
+          cd ${{ env.CWD }}
+          npm publish --access public --workspace=${{ env.PACKAGE_NAME }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # ----------
+
+      - uses: ./.github/actions/deploy-end-action
+        if: always()
+        with:
+          package-name: ${{ env.PACKAGE_NAME }}
+          package-version: ${{ steps.deployment.outputs.release-version }}
+          google-chat-webhook: ${{ secrets.GOOGLE_CHAT_WEBHOOK }}
