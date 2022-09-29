@@ -32,14 +32,9 @@
     "additionalHelpFlags": [
       "-h"
     ],
-    "topicSeparator": " ",
-    "topics": {},
-    "macos": {
-      "identifier": "com.configu.cli"
-    },
     "update": {
       "node": {
-        "version": "16.13.2",
+        "version": "16.17.1",
         "targets": [
           "linux-arm",
           "linux-x64",
@@ -58,7 +53,7 @@
     }
   },
   "engines": {
-    "node": ">=16.13.2"
+    "node": "=16.17.1"
   },
   "exports": "./build/index.js",
   "types": "./build/index.d.ts",
@@ -104,7 +99,7 @@
     "eslint-config-oclif": "^4.0.0",
     "eslint-config-oclif-typescript": "^1.0.3",
     "globby": "11.0.4",
-    "oclif": "^3.2.8",
+    "oclif": "^3.2.9",
     "tslib": "^2.4.0"
   }
 }
