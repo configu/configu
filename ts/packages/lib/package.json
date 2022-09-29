@@ -18,7 +18,7 @@
     "build": "tsc --build --verbose"
   },
   "dependencies": {
-    "@configu/ts": "*",
+    "@configu/ts": "0.2.0",
     "change-case": "^4.1.2",
     "dotenv": "^16.0.2",
     "js-yaml": "^4.1.0",
