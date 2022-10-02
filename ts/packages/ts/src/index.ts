@@ -5,6 +5,7 @@ export * from './Store';
 export * from './Set';
 export * from './Cfgu';
 
+export * from './stores/Noop';
 export * from './stores/Configu';
 
 export * from './Command';
