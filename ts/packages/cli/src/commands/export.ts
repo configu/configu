@@ -23,7 +23,9 @@ export default class Export extends BaseCommand {
 
   static flags = {
     store: Flags.string({ multiple: true, description: 'tbd', default: ['default'] }),
-    set: Flags.string({ required: true, description: 'tbd' }),
+    defaults: Flags.boolean({ description: 'tbd' }),
+
+    set: Flags.string({ description: 'tbd', default: '' }),
     schema: Flags.string({ required: true, multiple: true, description: 'tbd' }),
 
     label: Flags.string({ description: 'tbd' }),
@@ -115,6 +117,11 @@ export default class Export extends BaseCommand {
 
   public async run(): Promise<void> {
     const { flags } = await this.parse(Export);
+
+    if (flags.defaults) {
+      flags.store = ['noop://-'];
+      flags.set = '';
+    }
 
     const storePromises = flags.store.map(async (storeFlag) => {
       const storeUrl = this.config.configData.stores?.[storeFlag] ?? storeFlag;

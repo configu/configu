@@ -12,14 +12,15 @@
         "VAULT_TOKEN": "root"
       },
       "args": [
-        "upsert",
-        // "export",
-        "--store", "json-file://ts/packages/node/test/db.json",
-        // "--store", "hashicorp-vault://-",
-        "--set", "/prod/us-east-1",
-        // "--schema", "ts/packages/node/test/s1.cfgu.json",
-        "--schema", "ts/packages/node/test/s2.cfgu.json",
-        "--config", "S1V1=44", //"S1V1={{hashicorp-vault://secret/prod/service/NPM_TOKEN}}"
+        // "upsert",
+        "export",
+        // "--store", "json-file://ts/packages/node/test/db.json",
+        "--store", "hashicorp-vault://-",
+        "--set", "secret/prod",
+        // "--set", "/prod/us-east-1",
+        "--schema", "tmp/test/s1.cfgu.json",
+        // "--schema", "ts/packages/node/test/s2.cfgu.json",
+        // "--config", "S1V1=44", //"S1V1={{hashicorp-vault://secret/prod/service/NPM_TOKEN}}"
       ],
       "outFiles": [
         "${workspaceFolder}/**/*.js",
