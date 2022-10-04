@@ -8,6 +8,7 @@
     "description": "A generic representation of a <schema>.cfgu.[json|yaml] file that contains ConfigSchema records ([<key>: string]: ConfigSchema)"
   },
   "properties": {
-    "path": { "type": "string" }
+    "path": { "type": "string" },
+    "contents": { "type": "string" }
   }
 }

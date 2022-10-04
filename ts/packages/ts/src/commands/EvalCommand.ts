@@ -26,7 +26,7 @@ export class EvalCommand extends Command<EvalCommandReturn> {
     const storeDict = _.keyBy(stores, 'protocol');
 
     const schemas = Array.isArray(schema) ? schema : [schema];
-    const cfguContentsPromises = schemas.map((sch) => sch.parse());
+    const cfguContentsPromises = schemas.map((sch) => Cfgu.parse(sch));
     const cfguContentsArray = await Promise.all(cfguContentsPromises);
 
     const storeQuery = cfguContentsArray.flatMap((cfguContents, idx) => {
