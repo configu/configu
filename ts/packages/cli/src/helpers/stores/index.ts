@@ -1,12 +1,14 @@
 import { URL } from 'url';
 import { ProtocolToInit } from './types';
 
+import { NoopStorePTI } from './Noop';
 import { ConfiguStorePTI } from './Configu';
 import { JsonFileStorePTI } from './JsonFile';
 import { HashiCorpVaultStorePTI } from './HashiCorpVault';
 import { AwsSecretsManagerStorePTI } from './AwsSecretsManager';
 
 const PROTOCOL_TO_STORE_INIT_FN_DICT: ProtocolToInit = {
+  ...NoopStorePTI,
   ...ConfiguStorePTI,
   ...JsonFileStorePTI,
   ...HashiCorpVaultStorePTI,
