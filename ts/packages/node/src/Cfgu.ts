@@ -1,8 +1,8 @@
 import fs from 'fs/promises';
-import { Cfgu as ACfgu } from '@configu/ts';
+import { Cfgu as BaseCfgu } from '@configu/ts';
 
-export class Cfgu extends ACfgu {
-  read(): Promise<string> {
-    return fs.readFile(this.path, 'utf8');
+export class Cfgu extends BaseCfgu {
+  async read() {
+    this.contents = await fs.readFile(this.path, { encoding: 'utf8', flag: 'r' });
   }
 }

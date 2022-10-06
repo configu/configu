@@ -5,6 +5,7 @@
  * ConfigSchema records ([<key>: string]: ConfigSchema)
  */
 export interface Cfgu {
+  contents: string;
   path: string;
 }
 
