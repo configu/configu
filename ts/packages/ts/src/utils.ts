@@ -10,9 +10,13 @@ export const ERR = (message: string, location: string[] = [], suggestion = '') =
 
 // * Use single Avj instance https://ajv.js.org/guide/managing-schemas.html#compiling-during-initialization
 const ajv = new Ajv({ allErrors: true });
+// * properties used in the 'metadata' schema member need to be defined as keywords https://ajv.js.org/json-type-definition.html#metadata-schema-member
+ajv.addKeyword('description');
+
 export const JTD = <T>(schema: SchemaObject) => {
   const parse = ajv.compileParser<T>(schema);
   const serialize = ajv.compileSerializer<T>(schema);
+  const validate = ajv.compile<T>(schema);
 
   return {
     parse: (json: string) => {
@@ -23,6 +27,7 @@ export const JTD = <T>(schema: SchemaObject) => {
       return data;
     },
     serialize,
+    validate,
   };
 };
 
