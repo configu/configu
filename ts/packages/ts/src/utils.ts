@@ -27,7 +27,14 @@ export const JTD = <T>(schema: SchemaObject) => {
       return data;
     },
     serialize,
-    validate,
+    validate: (object: Record<string, unknown>) => {
+      const isValid = validate(object);
+      if (validate.errors) {
+        const { message, instancePath } = validate.errors[0];
+        throw new Error(`${message}${instancePath && ` at :${instancePath}`}`);
+      }
+      return isValid;
+    },
   };
 };
 
