@@ -15,7 +15,8 @@ export type AzureFunctionsConfiguration = {
   functionApp: string;
 };
 
-export const syncAzureFunctionsConfigs = async ({
+// TODO - Decide between syncAzureFunctionsConfigs (previous name) and syncAzureFunctionsAppSettings
+export const syncAzureFunctionsAppSettings = async ({
   configuration,
   configs,
 }: {
