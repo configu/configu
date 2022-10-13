@@ -3,6 +3,7 @@ import { ConfigSynchronizer } from '@configu/lib';
 
 import { syncAwsLambdaEnvironmentVariables } from './AwsLambda';
 import { syncHerokuConfigVars } from './Heroku';
+import { syncAzureFunctionsConfigs } from './AzureFunctions';
 
 type HandlerParameters = {
   configuration: { [key in string]: string | boolean | undefined };
@@ -22,9 +23,7 @@ export const SYNCHRONIZERS_HANDLERS: Record<ConfigSynchronizer, HandlerFunction>
     throw new Error('Function not implemented.');
   },
   AwsLambda: syncAwsLambdaEnvironmentVariables,
-  AzureFunctions: () => {
-    throw new Error('Function not implemented.');
-  },
+  AzureFunctions: syncAzureFunctionsConfigs,
   GcpCloudFunctions: () => {
     throw new Error('Function not implemented.');
   },
