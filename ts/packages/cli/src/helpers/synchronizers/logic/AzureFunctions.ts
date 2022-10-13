@@ -6,7 +6,7 @@ import { CONFIG_SYNCHRONIZER_LABEL } from '@configu/lib';
 const label = CONFIG_SYNCHRONIZER_LABEL.AzureFunctions;
 
 export type AzureFunctionsConfiguration = {
-  // * Azure functions docs: TODO
+  // * Azure functions docs: https://learn.microsoft.com/en-us/azure/app-service/configure-common
   tenantId: string;
   clientId: string;
   clientSecret: string;
