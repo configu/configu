@@ -12,6 +12,7 @@ import { AWS_LAMBDA_FLAGS, extractAwsLambdaFlags } from './AwsLambda';
 import { AZURE_FUNCTIONS_FLAGS, extractAzureFunctionsFlags } from './AzureFunctions';
 import { GCP_CLOUD_FUNCTIONS_FLAGS, extractGcpCloudFunctionsFlags } from './GcpCloudFunctions';
 import { AWS_ECS_FLAGS, extractAwsEcsFlags } from './AwsEcs';
+import { GATSBY_CLOUD_FLAGS, extractGatsbyCloudFlags } from './GatsbyCloud';
 
 export * from './types';
 
@@ -27,6 +28,7 @@ export const SYNCHRONIZERS_FLAGS_DICT = {
   ...AZURE_FUNCTIONS_FLAGS,
   ...GCP_CLOUD_FUNCTIONS_FLAGS,
   ...AWS_ECS_FLAGS,
+  ...GATSBY_CLOUD_FLAGS,
 };
 
 export const SYNCHRONIZERS_FLAGS_EXTRACTORS: Record<ConfigSynchronizer, ExtractorFunction> = {
@@ -38,4 +40,5 @@ export const SYNCHRONIZERS_FLAGS_EXTRACTORS: Record<ConfigSynchronizer, Extracto
   AzureFunctions: extractAzureFunctionsFlags,
   GcpCloudFunctions: extractGcpCloudFunctionsFlags,
   AwsEcs: extractAwsEcsFlags,
+  GatsbyCloud: extractGatsbyCloudFlags,
 };
