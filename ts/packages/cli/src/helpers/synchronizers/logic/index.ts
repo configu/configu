@@ -31,4 +31,7 @@ export const SYNCHRONIZERS_HANDLERS: Record<ConfigSynchronizer, HandlerFunction>
   AwsEcs: () => {
     throw new Error('Function not implemented.');
   },
+  GatsbyCloud: () => {
+    throw new Error('Function not implemented.');
+  },
 };
