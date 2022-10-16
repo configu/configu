@@ -3,6 +3,7 @@ import { ConfigSynchronizer } from '@configu/lib';
 
 import { syncAwsLambdaEnvironmentVariables } from './AwsLambda';
 import { syncHerokuConfigVars } from './Heroku';
+import { assignEnvVarsToAwsEcsTaskDef } from './AwsEcs';
 
 type HandlerParameters = {
   configuration: { [key in string]: string | boolean | undefined };
@@ -28,7 +29,5 @@ export const SYNCHRONIZERS_HANDLERS: Record<ConfigSynchronizer, HandlerFunction>
   GcpCloudFunctions: () => {
     throw new Error('Function not implemented.');
   },
-  AwsEcs: () => {
-    throw new Error('Function not implemented.');
-  },
+  AwsEcs: assignEnvVarsToAwsEcsTaskDef,
 };
