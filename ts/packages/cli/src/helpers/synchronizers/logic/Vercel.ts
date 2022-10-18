@@ -10,14 +10,13 @@ const DEFAULT_TARGETS = ['development', 'preview', 'production'];
 const DEFAULT_TYPE = 'encrypted';
 
 export type VercelConfiguration = {
-  // * Vercel docs: https://devcenter.heroku.com/articles/platform-api-reference#config-vars
+  // * Vercel docs: https://vercel.com/docs/concepts/projects/environment-variables
   token: string;
   appUid: string;
 };
 type VercelEnvVar = { key: string; id: string; [otherKeys: string]: unknown };
 
-// TODO - Decide between syncVercelConfigs (previous name) and syncVercelEnvVars
-export const syncVercelEnvVars = async ({
+export const syncVercelEnvironmentVariables = async ({
   configuration,
   configs,
 }: {
