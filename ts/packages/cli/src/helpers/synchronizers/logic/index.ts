@@ -5,7 +5,7 @@ import { syncAwsLambdaEnvironmentVariables } from './AwsLambda';
 import { syncHerokuConfigVars } from './Heroku';
 import { syncVercelEnvironmentVariables } from './Vercel';
 import { syncNetlifyEnvironmentVariables } from './Netlify';
-import { syncGcpCloudFunctionsEnvVars } from './GcpCloudFunctions';
+import { syncGcpCloudFunctionsEnvironmentVariables } from './GcpCloudFunctions';
 
 type HandlerParameters = {
   configuration: { [key in string]: string | boolean | undefined };
@@ -24,7 +24,7 @@ export const SYNCHRONIZERS_HANDLERS: Record<ConfigSynchronizer, HandlerFunction>
   AzureFunctions: () => {
     throw new Error('Function not implemented.');
   },
-  GcpCloudFunctions: syncGcpCloudFunctionsEnvVars,
+  GcpCloudFunctions: syncGcpCloudFunctionsEnvironmentVariables,
   AwsEcs: () => {
     throw new Error('Function not implemented.');
   },

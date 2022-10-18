@@ -10,8 +10,7 @@ export type GcpCloudFunctionsConfiguration = {
   functionName: string;
 };
 
-// TODO - Decide between syncGcpCloudFunctionsConfigs (previous name) and syncGcpCloudFunctionsEnvVars
-export const syncGcpCloudFunctionsEnvVars = async ({
+export const syncGcpCloudFunctionsEnvironmentVariables = async ({
   configuration,
   configs,
 }: {
