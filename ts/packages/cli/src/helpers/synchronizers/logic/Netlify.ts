@@ -10,8 +10,7 @@ export type NetlifyConfiguration = {
   siteId: string;
 };
 
-// TODO - Decide between syncNetlifyConfigs (previous name) and syncNetlifyEnvVars
-export const syncNetlifyEnvVars = async ({
+export const syncNetlifyEnvironmentVariables = async ({
   configuration,
   configs,
 }: {

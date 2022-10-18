@@ -3,7 +3,7 @@ import { ConfigSynchronizer } from '@configu/lib';
 
 import { syncAwsLambdaEnvironmentVariables } from './AwsLambda';
 import { syncHerokuConfigVars } from './Heroku';
-import { syncNetlifyEnvVars } from './Netlify';
+import { syncNetlifyEnvironmentVariables } from './Netlify';
 
 type HandlerParameters = {
   configuration: { [key in string]: string | boolean | undefined };
@@ -16,7 +16,7 @@ export const SYNCHRONIZERS_HANDLERS: Record<ConfigSynchronizer, HandlerFunction>
   Vercel: () => {
     throw new Error('Function not implemented.');
   },
-  Netlify: syncNetlifyEnvVars,
+  Netlify: syncNetlifyEnvironmentVariables,
   Firebase: () => {
     throw new Error('Function not implemented.');
   },
