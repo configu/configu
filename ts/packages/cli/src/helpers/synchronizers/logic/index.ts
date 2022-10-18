@@ -3,6 +3,8 @@ import { ConfigSynchronizer } from '@configu/lib';
 
 import { syncAwsLambdaEnvironmentVariables } from './AwsLambda';
 import { syncHerokuConfigVars } from './Heroku';
+import { syncVercelEnvironmentVariables } from './Vercel';
+import { syncNetlifyEnvironmentVariables } from './Netlify';
 import { syncGcpCloudFunctionsEnvVars } from './GcpCloudFunctions';
 
 type HandlerParameters = {
@@ -13,12 +15,8 @@ type HandlerFunction = (params: HandlerParameters) => Promise<void>;
 
 export const SYNCHRONIZERS_HANDLERS: Record<ConfigSynchronizer, HandlerFunction> = {
   Heroku: syncHerokuConfigVars,
-  Vercel: () => {
-    throw new Error('Function not implemented.');
-  },
-  Netlify: () => {
-    throw new Error('Function not implemented.');
-  },
+  Vercel: syncVercelEnvironmentVariables,
+  Netlify: syncNetlifyEnvironmentVariables,
   Firebase: () => {
     throw new Error('Function not implemented.');
   },
