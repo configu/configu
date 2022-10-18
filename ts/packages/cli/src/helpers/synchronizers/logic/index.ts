@@ -7,6 +7,7 @@ import { syncVercelEnvironmentVariables } from './Vercel';
 import { syncNetlifyEnvironmentVariables } from './Netlify';
 import { syncAzureFunctionsAppSettings } from './AzureFunctions';
 import { syncGcpCloudFunctionsEnvironmentVariables } from './GcpCloudFunctions';
+import { assignEnvVarsToAwsEcsTaskDef } from './AwsEcs';
 
 type HandlerParameters = {
   configuration: { [key in string]: string | boolean | undefined };
@@ -24,7 +25,5 @@ export const SYNCHRONIZERS_HANDLERS: Record<ConfigSynchronizer, HandlerFunction>
   AwsLambda: syncAwsLambdaEnvironmentVariables,
   AzureFunctions: syncAzureFunctionsAppSettings,
   GcpCloudFunctions: syncGcpCloudFunctionsEnvironmentVariables,
-  AwsEcs: () => {
-    throw new Error('Function not implemented.');
-  },
+  AwsEcs: assignEnvVarsToAwsEcsTaskDef,
 };
