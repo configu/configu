@@ -3,6 +3,11 @@ import { ConfigSynchronizer } from '@configu/lib';
 
 import { syncAwsLambdaEnvironmentVariables } from './AwsLambda';
 import { syncHerokuConfigVars } from './Heroku';
+import { syncVercelEnvironmentVariables } from './Vercel';
+import { syncNetlifyEnvironmentVariables } from './Netlify';
+import { syncAzureFunctionsAppSettings } from './AzureFunctions';
+import { syncGcpCloudFunctionsEnvironmentVariables } from './GcpCloudFunctions';
+import { assignEnvVarsToAwsEcsTaskDef } from './AwsEcs';
 
 type HandlerParameters = {
   configuration: { [key in string]: string | boolean | undefined };
@@ -12,23 +17,13 @@ type HandlerFunction = (params: HandlerParameters) => Promise<void>;
 
 export const SYNCHRONIZERS_HANDLERS: Record<ConfigSynchronizer, HandlerFunction> = {
   Heroku: syncHerokuConfigVars,
-  Vercel: () => {
-    throw new Error('Function not implemented.');
-  },
-  Netlify: () => {
-    throw new Error('Function not implemented.');
-  },
+  Vercel: syncVercelEnvironmentVariables,
+  Netlify: syncNetlifyEnvironmentVariables,
   Firebase: () => {
     throw new Error('Function not implemented.');
   },
   AwsLambda: syncAwsLambdaEnvironmentVariables,
-  AzureFunctions: () => {
-    throw new Error('Function not implemented.');
-  },
-  GcpCloudFunctions: () => {
-    throw new Error('Function not implemented.');
-  },
-  AwsEcs: () => {
-    throw new Error('Function not implemented.');
-  },
+  AzureFunctions: syncAzureFunctionsAppSettings,
+  GcpCloudFunctions: syncGcpCloudFunctionsEnvironmentVariables,
+  AwsEcs: assignEnvVarsToAwsEcsTaskDef,
 };

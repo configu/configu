@@ -21,5 +21,9 @@ export const syncIntegration = async ({
     throw new Error(`${synchronizer} is not supported`);
   }
   const configuration = extractor({ flags });
-  return handler({ configuration, configs });
+  try {
+    return await handler({ configuration, configs });
+  } catch (error) {
+    throw new Error(`Failed to sync ${synchronizer}`);
+  }
 };
