@@ -19,12 +19,18 @@ export class ConfiguStore extends Store {
     this.client = axios.create({
       baseURL: endpoint,
       headers: {
-        Authorization: `${credentials.type} ${credentials.token}`,
         Org: credentials.org,
         Source: source,
       },
       responseType: 'json',
     });
+
+    if (credentials.type === 'Token') {
+      this.client.defaults.headers.common[credentials.type] = credentials.token;
+    }
+    if (credentials.type === 'Bearer') {
+      this.client.defaults.headers.common.Authorization = `${credentials.type} ${credentials.token}`;
+    }
   }
 
   async get(query: StoreQuery): Promise<StoreContents> {
