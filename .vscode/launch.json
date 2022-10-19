@@ -8,19 +8,23 @@
       "console": "integratedTerminal",
       "program": "${workspaceRoot}/ts/packages/cli/bin/dev",
       "env": {
-        "VAULT_ADDR": "http://127.0.0.1:8200",
-        "VAULT_TOKEN": "root"
+        // "VAULT_ADDR": "http://127.0.0.1:8200",
+        // "VAULT_TOKEN": "root"
       },
       "args": [
-        // "upsert",
-        "export",
+        "upsert",
+        // "export",
         // "--store", "json-file://ts/packages/node/test/db.json",
-        "--store", "hashicorp-vault://-",
-        "--set", "secret/prod",
+        // "--store", "hashicorp-vault://-",
+        "--store", "configu://8o5t3Em1zodJ8V5M069qhYT3wzHyLNw5i2gd7oth@playground",
+        // "--set", "secret/prod",
         // "--set", "/prod/us-east-1",
-        "--schema", "tmp/test/s1.cfgu.json",
+        "--set", "dev",
+        // "--schema", "tmp/test/s1.cfgu.json",
         // "--schema", "ts/packages/node/test/s2.cfgu.json",
+        "--schema", "~/dev/saas/saas.cfgu.json",
         // "--config", "S1V1=44", //"S1V1={{hashicorp-vault://secret/prod/service/NPM_TOKEN}}"
+        "--config", "BAR=bar"
       ],
       "outFiles": [
         "${workspaceFolder}/**/*.js",
