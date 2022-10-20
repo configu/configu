@@ -46,7 +46,7 @@ export class Cfgu implements ICfgu {
 
   static NAMING_RULES = {
     PATTERN: /^[A-Za-z0-9_-]+$/,
-    RESERVED: ['cfgu', 'schema', 'set', 'config', 'current', 'cur', 'this', 'root', '_'],
+    RESERVED: ['cfgu', 'schema', 'set', 'config', 'current', 'cur', 'this', 'root', 'admin', 'general', 'local', '_'],
   };
 
   static validateNaming = (name: string) => {
