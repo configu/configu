@@ -4,9 +4,9 @@
   "license": "Apache-2.0",
   "description": "configu browser sdk",
   "author": "Configu",
-  "engines": {
-    "browser-list": "todo: add supported browser-list"
-  },
+  "browserslist": [
+    "defaults and supports es6-module"
+  ],
   "exports": "./build/index.js",
   "types": "./build/index.d.ts",
   "files": [
@@ -19,9 +19,16 @@
     "configu-sdk",
     "configu-browser-sdk"
   ],
-  "scripts": {},
-  "dependencies": {
-    "axios": "^0.27.2"
+  "scripts": {
+    "build": "tsc --build --verbose"
   },
-  "devDependencies": {}
+  "dependencies": {
+    "@configu/ts": "*",
+    "axios": "^0.27.2",
+    "browser-fs-access": "^0.31.1",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.186"
+  }
 }

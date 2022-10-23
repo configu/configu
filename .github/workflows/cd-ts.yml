@@ -26,24 +26,23 @@ jobs:
           install-dependencies: true
 
       # ----------
-      # todo: add --workspace=@configu/browser
       - name: Bump package version
         run: |
           cd ${{ env.CWD }}
           npm --no-git-tag-version version ${{ steps.deployment.outputs.release-version }} \
-            --workspace=@configu/ts --workspace=@configu/node
+            --workspace=@configu/ts --workspace=@configu/node --workspace=@configu/browser
 
       - name: Build package code
         run: |
           cd ${{ env.CWD }}
           npm run build \
-            --workspace=@configu/ts --workspace=@configu/node
+            --workspace=@configu/ts --workspace=@configu/node --workspace=@configu/browser
 
       - name: Publish to npm
         run: |
           cd ${{ env.CWD }}
           npm publish --access public \
-            --workspace=@configu/ts --workspace=@configu/node
+            --workspace=@configu/ts --workspace=@configu/node --workspace=@configu/browser
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       # ----------
