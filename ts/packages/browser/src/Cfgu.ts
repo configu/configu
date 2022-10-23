@@ -12,9 +12,11 @@ export class Cfgu extends BaseCfgu {
 
   static async init(): Promise<Cfgu[]> {
     const blobs = await fileOpen({
-      // mimeTypes: [`application/${CfguType.Json}`],
       description: 'Cfgu files',
-      extensions: Cfgu.TYPES.map((type) => `${Cfgu.EXT}.${type}`),
+      // todo: submit an application for a cfgu vendor Media Type - https://www.iana.org/assignments/media-types/media-types.xhtml#text
+      // extensions: Cfgu.TYPES.map((type) => `${Cfgu.EXT}.${type}`),
+      // mimeTypes: [`application/${CfguType.Json}`],
+      extensions: Cfgu.TYPES.map((type) => `.${type}`),
       multiple: true,
     });
     return blobs.map((blob) => new Cfgu(blob));
