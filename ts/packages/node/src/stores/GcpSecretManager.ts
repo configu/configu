@@ -35,6 +35,7 @@ export class GcpSecretManagerStore extends Store {
     });
   };
 
+  // * https://cloud.google.com/secret-manager/docs/creating-and-accessing-secrets#access
   private fetchSecret = async (secretId: string) => {
     try {
       const [accessResponse] = await this.client.accessSecretVersion({
@@ -51,7 +52,6 @@ export class GcpSecretManagerStore extends Store {
     }
   };
 
-  // * https://cloud.google.com/secret-manager/docs/creating-and-accessing-secrets#access
   async get(query: StoreQuery): Promise<StoreContents> {
     return getConfigsHelper(query, 'secretId', this.getSecretId, this.fetchSecret);
   }
