@@ -3,7 +3,7 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "target": "ES6",
+    "target": "es6",
     "module": "commonjs",
     "moduleResolution": "node",
     "incremental": true,
