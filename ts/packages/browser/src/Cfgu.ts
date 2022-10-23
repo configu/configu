@@ -14,8 +14,8 @@ export class Cfgu extends BaseCfgu {
     const blobs = await fileOpen({
       description: 'Cfgu files',
       // todo: submit an application for a cfgu vendor Media Type - https://www.iana.org/assignments/media-types/media-types.xhtml#text
-      // extensions: Cfgu.TYPES.map((type) => `${Cfgu.EXT}.${type}`),
       // mimeTypes: [`application/${CfguType.Json}`],
+      // extensions: Cfgu.TYPES.map((type) => `${Cfgu.EXT}.${type}`),
       extensions: Cfgu.TYPES.map((type) => `.${type}`),
       multiple: true,
     });
