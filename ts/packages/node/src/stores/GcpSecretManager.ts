@@ -39,7 +39,7 @@ export class GcpSecretManagerStore extends Store {
   private fetchSecret = async (secretId: string) => {
     try {
       const [accessResponse] = await this.client.accessSecretVersion({
-        name: `projects/${this.project}/secrets/${secretId}/version/latest`,
+        name: `projects/${this.project}/secrets/${secretId}/versions/latest`,
       });
       const secret = accessResponse?.payload?.data?.toString();
 
