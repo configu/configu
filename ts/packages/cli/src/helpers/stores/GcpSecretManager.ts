@@ -1,37 +1,39 @@
+import _ from 'lodash';
 import { GcpSecretManagerStore } from '@configu/node';
 import { ProtocolToInit } from './types';
 
 export const GcpSecretManagerStorePTI: ProtocolToInit = {
   [GcpSecretManagerStore.protocol]: async (url) => {
-    const endpoint = url.searchParams.get('endpoint') ?? undefined;
-
-    // * aws-secrets-manager://-[?endpoint=]
+    // * gcp-secret-manager://-[?endpoint=]
     if (url.hostname === '-') {
-      const { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION } = process.env;
+      const { GCP_PROJECT, GCP_KEY_FILE } = process.env;
 
-      if (!AWS_ACCESS_KEY_ID || !AWS_SECRET_ACCESS_KEY || !AWS_REGION) {
+      if (!GCP_PROJECT || !GCP_KEY_FILE) {
         throw new Error(`invalid store url ${url}`);
       }
 
       return {
-        url: `${GcpSecretManagerStore.protocol}://${AWS_ACCESS_KEY_ID}:${AWS_SECRET_ACCESS_KEY}@${AWS_REGION}${
-          endpoint ? `?endpoint=${endpoint}` : ''
-        }`,
+        url: `${GcpSecretManagerStore.protocol}://${GCP_KEY_FILE}@${GCP_PROJECT}`,
         store: new GcpSecretManagerStore({
-          credentials: { accessKeyId: AWS_ACCESS_KEY_ID, secretAccessKey: AWS_SECRET_ACCESS_KEY },
-          region: AWS_REGION,
-          endpoint,
+          project: GCP_PROJECT,
+          keyFile: GCP_KEY_FILE,
         }),
       };
     }
 
-    // TODO: * gcp-secrets-manager://accessKeyId:secretAccessKey@region[?endpoint=]
+    // TODO - this is a mess - find a better approach
+    const splittedHref = url.href.split('@');
+    const keyFilePath = _([url.hostname, url.pathname.split('@')[0]])
+      .compact()
+      .join('');
+    const project = splittedHref[1];
+
+    // * gcp-secret-manager://path/to/key/file.json@project
     return {
       url: url.href,
       store: new GcpSecretManagerStore({
-        credentials: { accessKeyId: url.username, secretAccessKey: url.password },
-        region: url.hostname,
-        endpoint,
+        project,
+        keyFile: `/${keyFilePath}`, // TODO - this does not support relative paths
       }),
     };
   },
