@@ -6,6 +6,7 @@ import { ConfiguStorePTI } from './Configu';
 import { JsonFileStorePTI } from './JsonFile';
 import { HashiCorpVaultStorePTI } from './HashiCorpVault';
 import { AwsSecretsManagerStorePTI } from './AwsSecretsManager';
+import { KubernetesSecretStorePTI } from './KubernetesSecret';
 
 const PROTOCOL_TO_STORE_INIT_FN_DICT: ProtocolToInit = {
   ...NoopStorePTI,
@@ -13,6 +14,7 @@ const PROTOCOL_TO_STORE_INIT_FN_DICT: ProtocolToInit = {
   ...JsonFileStorePTI,
   ...HashiCorpVaultStorePTI,
   ...AwsSecretsManagerStorePTI,
+  ...KubernetesSecretStorePTI,
 };
 
 export const constructStoreFromUrl = (url: string) => {
