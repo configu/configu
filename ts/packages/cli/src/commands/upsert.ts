@@ -7,16 +7,22 @@ import { BaseCommand } from '../base';
 import { constructStoreFromUrl } from '../helpers/stores';
 
 export default class Upsert extends BaseCommand {
-  static description = 'tbd';
+  static description = 'creates, updates or deletes configs from a store';
 
-  static examples = ['<%= config.bin %> <%= command.id %> tbd'];
+  static examples = [
+    '<%= config.bin %> <%= command.id %> --store "configu" --set "prod" --schema "./node-srv.cfgu.json" --config NODE_ENV=production --config LOG_LEVEL=error',
+  ];
 
   static flags = {
-    store: Flags.string({ description: 'tbd', default: 'default' }),
-    set: Flags.string({ required: true, description: 'tbd' }),
-    schema: Flags.string({ required: true, description: 'tbd' }),
+    store: Flags.string({ description: 'store to operate to', default: 'default' }),
+    set: Flags.string({ required: true, description: 'hierarchy of the configs' }),
+    schema: Flags.string({ required: true, description: 'path to a <schema>.cfgu.[json|yaml] file' }),
 
-    config: Flags.string({ exclusive: ['import'], multiple: true, description: 'tbd' }),
+    config: Flags.string({
+      exclusive: ['import'],
+      multiple: true,
+      description: 'key=value pairs to upsert (empty value means delete)',
+    }),
     import: Flags.string({
       exclusive: ['config'],
       description: 'use this flag to import an existing .env file and create configs from it',

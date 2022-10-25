@@ -17,37 +17,45 @@ import { SYNCHRONIZERS_FLAGS_DICT, syncIntegration } from '../helpers/synchroniz
 export const NO_CONFIGS_WARNING_TEXT = 'no configuration was fetched';
 export const CONFIG_EXPORT_RUN_DEFAULT_ERROR_TEXT = 'could not export configurations';
 export default class Export extends BaseCommand {
-  static description = 'tbd';
+  static description = 'exports configurations on demand and in multiple forms';
 
-  static examples = ['<%= config.bin %> <%= command.id %> tbd'];
+  static examples = [
+    '<%= config.bin %> <%= command.id %> --store "configu" --store "secrets" --set "prod" --schema "./node-srv.cfgu.json" --format "Dotenv"',
+    '<%= config.bin %> <%= command.id %> --schema "./node-srv.cfgu.json" --defaults --no-empty',
+  ];
 
   static flags = {
-    store: Flags.string({ multiple: true, description: 'tbd', default: ['default'] }),
-    defaults: Flags.boolean({ description: 'tbd' }),
+    store: Flags.string({ multiple: true, description: 'stores to fetch configurations from', default: ['default'] }),
+    defaults: Flags.boolean({ description: 'only use the defaults property from the schema to export configurations' }),
 
-    set: Flags.string({ description: 'tbd', default: '' }),
-    schema: Flags.string({ required: true, multiple: true, description: 'tbd' }),
+    set: Flags.string({ description: 'hierarchy of the configs', default: '' }),
+    schema: Flags.string({
+      required: true,
+      multiple: true,
+      description: 'path to a <schema>.cfgu.[json|yaml] files',
+    }),
 
-    label: Flags.string({ description: 'tbd' }),
+    label: Flags.string({ description: 'metadata required in some formats like k8s ConfigMaps' }),
     empty: Flags.boolean({
-      description: 'omits all non-value configurations in the current set.',
+      description: 'omits all non-value configurations in the current set',
       default: true,
       allowNo: true,
     }),
 
     format: Flags.string({
-      description: 'sets the format in which configurations will be received',
+      description:
+        'format configurations to some common configurations formats. (redirect the output to file, if needed)',
       options: CONFIG_FORMAT_TYPE,
       exclusive: ['template', 'source', 'sync'],
     }),
 
     template: Flags.string({
-      description: 'inject configurations into handlebars templates',
+      description: 'path to a mustache based template to inject configurations into',
       exclusive: ['format', 'source', 'sync'],
     }),
     'template-input': Flags.string({
-      description: 'tbd',
-      options: ['object', 'array'],
+      description: 'inject configurations to template as object or array or formatted string',
+      options: ['object', 'array', 'string'],
       dependsOn: ['template'],
     }),
 
