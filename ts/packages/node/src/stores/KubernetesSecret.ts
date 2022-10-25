@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { KubeConfig, CoreV1Api } from '@kubernetes/client-node';
+import { KubeConfig, CoreV1Api, PatchUtils } from '@kubernetes/client-node';
 import { Store, StoreQuery, StoreContents } from '@configu/ts';
 import { getConfigsHelper } from './util';
 
@@ -9,7 +9,7 @@ type KubernetesSecretConfiguration = {
 };
 
 export class KubernetesSecretStore extends Store {
-  static readonly protocol = 'aws-secrets-manager';
+  static readonly protocol = 'kubernetes-secret';
   private client: CoreV1Api;
   private namespace: string;
   constructor({ kubeconfigFilePath, namespace }: KubernetesSecretConfiguration) {
@@ -35,12 +35,15 @@ export class KubernetesSecretStore extends Store {
   private fetchSecret = async (secretId: string) => {
     try {
       const response = await this.client.readNamespacedSecret(secretId, this.namespace);
-      const secret = response?.body?.data?.[secretId];
+      const secret = response?.body?.data;
 
       if (!secret) {
         throw new Error(`secret ${secretId} has no value at ${this.constructor.name}`);
       }
-      return { secretId, data: JSON.parse(Buffer.from(secret, 'base64').toString()) };
+      return {
+        secretId,
+        data: _.mapValues(secret, (value) => Buffer.from(value, 'base64').toString()),
+      };
     } catch (error) {
       return { secretId, data: {} };
     }
@@ -68,24 +71,38 @@ export class KubernetesSecretStore extends Store {
         await this.client.deleteNamespacedSecret(secretName, this.namespace);
         return;
       }
+      // * Values must be base64 strings
+      const encodedData = _.mapValues(secretData, (value) => Buffer.from(value).toString('base64'));
 
       try {
         await this.client.createNamespacedSecret(this.namespace, {
           metadata: { name: secretName },
-          data: _(secretData)
-            .mapValues((value) => Buffer.from(JSON.stringify(value)).toString('base64'))
-            .value(),
+          data: encodedData,
         });
       } catch (err) {
         // * Creating a secret with a conflicting secretName creates an error
-        // TODO: patch vs replace
-        // await this.client.patchNamespacedSecret(secretName, this.namespace, {
-        await this.client.replaceNamespacedSecret(secretName, this.namespace, {
-          metadata: { name: secretName },
-          data: _(secretData)
-            .mapValues((value) => Buffer.from(JSON.stringify(value)).toString('base64'))
-            .value(),
-        });
+        // TODO: decide between patch and replace - Patch has non-existent documentation
+        await this.client.patchNamespacedSecret(
+          secretName,
+          this.namespace,
+          [
+            {
+              op: 'replace',
+              path: '/data',
+              value: encodedData,
+            },
+          ],
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          { headers: { 'Content-type': PatchUtils.PATCH_FORMAT_JSON_PATCH } },
+        );
+        // await this.client.replaceNamespacedSecret(secretName, this.namespace, {
+        //   metadata: { name: secretName },
+        //   data: encodedData,
+        // });
       }
     });
 
