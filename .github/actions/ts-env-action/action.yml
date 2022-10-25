@@ -36,7 +36,7 @@ runs:
     - name: Install useful npm global packages
       shell: bash
       run: |
-        npm install -g json serve ngrok
+        npm install -g json env-cmd serve ngrok
         npm list -g --depth 0
 
     - name: Set CWD environment variable

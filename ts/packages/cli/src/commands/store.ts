@@ -5,13 +5,16 @@ import { BaseCommand } from '../base';
 import { constructStoreFromUrl } from '../helpers/stores';
 
 export default class Store extends BaseCommand {
-  static description = 'tbd';
+  static description = 'caches config store credentials as names to later be used as --store flag value';
 
-  static examples = ['<%= config.bin %> <%= command.id %> tbd'];
+  static examples = [
+    '<%= config.bin %> <%= command.id %> --name "default" --url "configu://-"',
+    '<%= config.bin %> <%= command.id %> --name "secrets" --url "hashicorp-vault://token@address"',
+  ];
 
   static flags = {
-    name: Flags.string({ required: true, description: 'tbd' }),
-    url: Flags.string({ required: true, description: 'tbd' }),
+    name: Flags.string({ required: true, description: 'name to assign to the cached store' }),
+    url: Flags.string({ required: true, description: 'store url to cache' }),
   };
 
   public async run(): Promise<void> {
