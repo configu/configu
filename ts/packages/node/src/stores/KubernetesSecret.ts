@@ -71,7 +71,7 @@ export class KubernetesSecretStore extends Store {
         await this.client.deleteNamespacedSecret(secretName, this.namespace);
         return;
       }
-      // * Values must be base64 strings
+      // * Values must be base64 strings - https://kubernetes.io/docs/concepts/configuration/secret/#restriction-names-data
       const encodedData = _.mapValues(secretData, (value) => Buffer.from(value).toString('base64'));
 
       try {
@@ -81,7 +81,6 @@ export class KubernetesSecretStore extends Store {
         });
       } catch (err) {
         // * Creating a secret with a conflicting secretName creates an error
-        // TODO: decide between patch and replace - Patch has non-existent documentation
         await this.client.patchNamespacedSecret(
           secretName,
           this.namespace,
@@ -99,10 +98,6 @@ export class KubernetesSecretStore extends Store {
           undefined,
           { headers: { 'Content-type': PatchUtils.PATCH_FORMAT_JSON_PATCH } },
         );
-        // await this.client.replaceNamespacedSecret(secretName, this.namespace, {
-        //   metadata: { name: secretName },
-        //   data: encodedData,
-        // });
       }
     });
 
