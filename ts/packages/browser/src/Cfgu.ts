@@ -10,15 +10,20 @@ export class Cfgu extends BaseCfgu {
     this.contents = await this.blob.text();
   }
 
-  static async init(): Promise<Cfgu[]> {
-    const blobs = await fileOpen({
+  static async init(multiple: false): Promise<Cfgu>;
+  static async init(multiple: true): Promise<Cfgu[]>;
+  static async init(multiple = false): Promise<Cfgu | Cfgu[]> {
+    const blob = await fileOpen({
       description: 'Cfgu files',
       // todo: submit an application for a cfgu vendor Media Type - https://www.iana.org/assignments/media-types/media-types.xhtml#text
       // mimeTypes: [`application/${CfguType.Json}`],
       // extensions: Cfgu.TYPES.map((type) => `${Cfgu.EXT}.${type}`),
       extensions: Cfgu.TYPES.map((type) => `.${type}`),
-      multiple: true,
+      multiple,
     });
-    return blobs.map((blob) => new Cfgu(blob));
+    if (Array.isArray(blob)) {
+      return blob.map((b) => new Cfgu(b));
+    }
+    return new Cfgu(blob);
   }
 }
