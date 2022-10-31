@@ -1,12 +1,12 @@
 import _ from 'lodash';
 import { Store } from '../Store';
-import { StoreQuery, StoreContents } from '../types';
+import { StoreQuery, StoreContents, StoreConfiguration } from '../types';
 
 export type Value = Record<string, string>;
 
 export abstract class KeyValueStore extends Store {
-  constructor(public protocol: string) {
-    super(protocol, { supportsGlobQuery: false });
+  constructor(protocol: string, configuration: Omit<StoreConfiguration, 'supportsGlobQuery'>) {
+    super(protocol, { ...configuration, supportsGlobQuery: false });
   }
 
   abstract getByKey(key: string): Promise<Value>;
@@ -16,6 +16,21 @@ export abstract class KeyValueStore extends Store {
   abstract delete(key: string): Promise<void>;
 
   calcKey({ set, schema }: StoreQuery[number]): string {
+    const { enforceRootSet, slashDisallowedOnKey } = this.configuration;
+
+    if (enforceRootSet && !set) {
+      throw new Error(`root set missing at ${this.constructor.name}`);
+    }
+
+    if (slashDisallowedOnKey) {
+      const adjustedSet = set.split('/').join('-');
+      let key = `${adjustedSet}-${schema}`;
+      if (!set && schema) {
+        key = schema;
+      }
+      return key;
+    }
+
     let key = `${set}/${schema}`;
     if (!set && schema) {
       key = schema;
