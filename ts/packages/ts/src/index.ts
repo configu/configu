@@ -7,6 +7,7 @@ export * from './Cfgu';
 
 export * from './stores/Noop';
 export * from './stores/Configu';
+export * from './stores/KeyValue';
 
 export * from './Command';
 export * from './commands/UpsertCommand';
