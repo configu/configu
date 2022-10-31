@@ -2,6 +2,8 @@
 
 export interface StoreConfiguration {
   supportsGlobQuery: boolean;
+  enforceRootSet?: boolean;
+  slashDisallowedOnKey?: boolean;
 }
 
 /**
