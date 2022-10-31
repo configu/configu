@@ -13,7 +13,7 @@ export class AwsSecretsManagerStore extends KeyValueStore {
   static readonly protocol = 'aws-secrets-manager';
   private client: SecretsManagerClient;
   constructor(configuration: SecretsManagerClientConfig) {
-    super(AwsSecretsManagerStore.protocol, { supportsGlobQuery: false });
+    super(AwsSecretsManagerStore.protocol);
 
     this.client = new SecretsManagerClient(configuration);
   }

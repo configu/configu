@@ -5,6 +5,10 @@ import { StoreQuery, StoreContents } from '../types';
 export type Value = Record<string, string>;
 
 export abstract class KeyValueStore extends Store {
+  constructor(public protocol: string) {
+    super(protocol, { supportsGlobQuery: false });
+  }
+
   abstract getByKey(key: string): Promise<Value>;
 
   abstract upsert(key: string, value: Value): Promise<void>;
