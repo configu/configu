@@ -2,9 +2,13 @@ import _ from 'lodash';
 import { Store } from '../Store';
 import { StoreQuery, StoreContents } from '../types';
 
-type Value = Record<string, string>;
+export type Value = Record<string, string>;
 
 export abstract class KeyValueStore extends Store {
+  constructor(public protocol: string) {
+    super(protocol, { supportsGlobQuery: false });
+  }
+
   abstract getByKey(key: string): Promise<Value>;
 
   abstract upsert(key: string, value: Value): Promise<void>;
@@ -19,24 +23,22 @@ export abstract class KeyValueStore extends Store {
     return key;
   }
 
-  private async getByKeySafe(key: string): Promise<{ key: string; value: Value }> {
-    try {
-      const value = await this.getByKey(key);
-      if (!value) {
-        throw new Error(`key ${key} has no value at ${this.constructor.name}`);
-      }
-      return {
-        key,
-        value,
-      };
-    } catch (error) {
-      return { key, value: {} };
-    }
-  }
-
   async get(query: StoreQuery): Promise<StoreContents> {
     const keys = _(query).map(this.calcKey).uniq().value();
-    const kvPromises = keys.map(this.getByKeySafe);
+    const kvPromises = keys.map(async (key) => {
+      try {
+        const value = await this.getByKey(key);
+        if (!value) {
+          throw new Error(`key ${key} has no value at ${this.constructor.name}`);
+        }
+        return {
+          key,
+          value,
+        };
+      } catch (error) {
+        return { key, value: {} };
+      }
+    });
     const kvArray = await Promise.all(kvPromises);
     const kvDict = _(kvArray).keyBy('key').mapValues('value').value();
 
