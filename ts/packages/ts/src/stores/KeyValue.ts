@@ -7,6 +7,7 @@ export type Value = Record<string, string>;
 export abstract class KeyValueStore extends Store {
   constructor(protocol: string, configuration: Omit<StoreConfiguration, 'supportsGlobQuery'>) {
     super(protocol, { ...configuration, supportsGlobQuery: false });
+    this.calcKey = this.calcKey.bind(this); // TODO: review with Ran
   }
 
   abstract getByKey(key: string): Promise<Value>;
@@ -16,12 +17,9 @@ export abstract class KeyValueStore extends Store {
   abstract delete(key: string): Promise<void>;
 
   calcKey({ set, schema }: StoreQuery[number]): string {
-    const { enforceRootSet, slashDisallowedOnKey } = this.configuration;
+    const { slashDisallowedOnKey } = this.configuration;
 
-    if (enforceRootSet && !set) {
-      throw new Error(`root set missing at ${this.constructor.name}`);
-    }
-
+    // TODO: review with Ran
     if (slashDisallowedOnKey) {
       const adjustedSet = set.split('/').join('-');
       let key = `${adjustedSet}-${schema}`;
@@ -39,7 +37,23 @@ export abstract class KeyValueStore extends Store {
   }
 
   async get(query: StoreQuery): Promise<StoreContents> {
-    const keys = _(query).map(this.calcKey).uniq().value();
+    const { enforceRootSet } = this.configuration;
+    let keys: string[];
+    let adjustedQuery = query;
+
+    // TODO: review with Ran - maybe 'disregardRootSet'
+    if (enforceRootSet) {
+      adjustedQuery = _.filter(query, 'set');
+
+      if (adjustedQuery.length === 0) {
+        throw new Error(`root set missing at ${this.constructor.name}`);
+      }
+
+      keys = _(adjustedQuery).map(this.calcKey).uniq().value();
+    } else {
+      keys = _(query).map(this.calcKey).uniq().value();
+    }
+
     const kvPromises = keys.map(async (key) => {
       try {
         const value = await this.getByKey(key);
@@ -57,7 +71,7 @@ export abstract class KeyValueStore extends Store {
     const kvArray = await Promise.all(kvPromises);
     const kvDict = _(kvArray).keyBy('key').mapValues('value').value();
 
-    const storedConfigs = _(query)
+    const storedConfigs = _(adjustedQuery)
       .map((q) => {
         const { set, schema, key } = q;
         const value = kvDict[this.calcKey(q)];
