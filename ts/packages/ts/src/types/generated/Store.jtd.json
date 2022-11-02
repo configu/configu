@@ -17,7 +17,9 @@
     "protocol": { "type": "string" },
     "configuration": {
       "properties": {
-        "supportsGlobQuery": { "type": "boolean" }
+        "supportsGlobQuery": { "type": "boolean" },
+        "enforceRootSet": { "type": "boolean" },
+        "slashDisallowedOnKey": { "type": "boolean" }
       },
       "additionalProperties": true
     }

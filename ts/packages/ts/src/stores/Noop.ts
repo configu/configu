@@ -4,7 +4,7 @@ import { StoreQuery, StoreContents } from '../types';
 export class NoopStore extends Store {
   static readonly protocol = 'noop';
   constructor() {
-    super(NoopStore.protocol, { supportsGlobQuery: true });
+    super(NoopStore.protocol, { supportsGlobQuery: true, enforceRootSet: false, slashDisallowedOnKey: false });
   }
 
   async get(query: StoreQuery): Promise<StoreContents> {

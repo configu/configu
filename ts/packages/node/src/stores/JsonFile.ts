@@ -5,7 +5,7 @@ import { Store, StoreQuery, StoreContents } from '@configu/ts';
 export class JsonFileStore extends Store {
   static readonly protocol = 'json-file';
   constructor(public path: string) {
-    super(JsonFileStore.protocol, { supportsGlobQuery: true });
+    super(JsonFileStore.protocol, { supportsGlobQuery: true, enforceRootSet: false, slashDisallowedOnKey: false });
   }
 
   async read(): Promise<StoreContents> {

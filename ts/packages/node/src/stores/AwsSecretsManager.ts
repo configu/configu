@@ -14,7 +14,11 @@ export class AwsSecretsManagerStore extends Store {
   static readonly protocol = 'aws-secrets-manager';
   private client: SecretsManagerClient;
   constructor(configuration: SecretsManagerClientConfig) {
-    super(AwsSecretsManagerStore.protocol, { supportsGlobQuery: false });
+    super(AwsSecretsManagerStore.protocol, {
+      supportsGlobQuery: false,
+      enforceRootSet: false,
+      slashDisallowedOnKey: false,
+    });
 
     this.client = new SecretsManagerClient(configuration);
   }

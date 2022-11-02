@@ -14,7 +14,7 @@ export class ConfiguStore extends Store {
   static readonly protocol = 'configu';
   private client: Axios;
   constructor({ credentials, endpoint = `https://api.configu.com`, source = 'sdk' }: ConfiguStoreConfiguration) {
-    super(ConfiguStore.protocol, { supportsGlobQuery: true });
+    super(ConfiguStore.protocol, { supportsGlobQuery: true, enforceRootSet: false, slashDisallowedOnKey: false });
 
     this.client = axios.create({
       baseURL: endpoint,

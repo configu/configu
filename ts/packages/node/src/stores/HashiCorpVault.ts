@@ -9,7 +9,11 @@ export class HashiCorpVaultStore extends Store {
   static readonly protocol = 'hashicorp-vault';
   private client: Axios;
   constructor({ address, token }: HashiCorpVaultConfiguration) {
-    super(HashiCorpVaultStore.protocol, { supportsGlobQuery: false });
+    super(HashiCorpVaultStore.protocol, {
+      supportsGlobQuery: false,
+      enforceRootSet: true,
+      slashDisallowedOnKey: false,
+    });
 
     this.client = axios.create({
       baseURL: `${address}/v1`,
