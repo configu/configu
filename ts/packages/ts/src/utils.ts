@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import Ajv, { SchemaObject } from 'ajv/dist/jtd';
 import Mustache from 'mustache';
-import Uri from 'uri-js';
+import * as Uri from 'uri-js';
 
 export const ERR = (message: string, location: string[] = [], suggestion = '') => {
   return `${message}${_(location)
