@@ -32,6 +32,23 @@ export abstract class KeyValueStore extends Store {
     return key;
   }
 
+  private stringifyValue(value: any) {
+    if (typeof value === 'string') {
+      return value;
+    }
+    return JSON.stringify(value);
+  }
+
+  private safeJsonParse(value: any) {
+    let jsonValue: Record<string, any> = {};
+    try {
+      jsonValue = JSON.parse(value);
+    } catch (error) {
+      jsonValue = {};
+    }
+    return jsonValue;
+  }
+
   async get(query: StoreQuery): Promise<StoreContents> {
     const keys = _(query)
       .map((q) => this.calcKey(q))
@@ -66,12 +83,7 @@ export abstract class KeyValueStore extends Store {
           };
         }
 
-        let jsonValue: Record<string, any> = {};
-        try {
-          jsonValue = JSON.parse(value);
-        } catch (error) {
-          jsonValue = {};
-        }
+        const jsonValue = this.safeJsonParse(value);
 
         if (key === '*') {
           return Object.entries(jsonValue).map(([k, v]) => {
@@ -79,7 +91,7 @@ export abstract class KeyValueStore extends Store {
               set,
               schema,
               key: k,
-              value: JSON.stringify(v),
+              value: this.stringifyValue(v),
             };
           });
         }
@@ -88,7 +100,7 @@ export abstract class KeyValueStore extends Store {
           set,
           schema,
           key,
-          value: JSON.stringify(_.get(jsonValue, key)) ?? '',
+          value: this.stringifyValue(_.get(jsonValue, key)) ?? '',
         };
       })
       .flatten()
