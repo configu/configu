@@ -24,16 +24,6 @@ export class DeleteCommand extends Command<void> {
       throw new Error(ERR('either set or schema parameter should be supplied', ['parameters']));
     }
 
-    if (!store.configuration.supportsGlobQuery && (!set || !schema)) {
-      throw new Error(
-        ERR(
-          `provided store ${store.protocol} don't support bulk operations`,
-          [`parameters.store`],
-          'provide both set and schema',
-        ),
-      );
-    }
-
     const storedConfigs = await store.get([{ set: set?.path ?? '*', schema: schema?.name ?? '*', key: '*' }]);
 
     const deleteConfigs = _(storedConfigs)

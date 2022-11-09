@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import Ajv, { SchemaObject } from 'ajv/dist/jtd';
 import Mustache from 'mustache';
+import * as Uri from 'uri-js';
 
 export const ERR = (message: string, location: string[] = [], suggestion = '') => {
   return `${message}${_(location)
@@ -29,7 +30,7 @@ export const JTD = <T>(schema: SchemaObject) => {
     serialize,
     validate: (object: Record<string, unknown>) => {
       const isValid = validate(object);
-      if (validate.errors) {
+      if (validate?.errors?.[0]) {
         const { message, instancePath } = validate.errors[0];
         throw new Error(`${message}${instancePath && ` at :${instancePath}`}`);
       }
@@ -54,3 +55,5 @@ export const TMPL = {
   },
   render: (template: string, context: any) => Mustache.render(template, context),
 };
+
+export const URI = { parse: Uri.parse, serialize: Uri.serialize };

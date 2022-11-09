@@ -23,7 +23,7 @@ export class EvalCommand extends Command<EvalCommandReturn> {
     const { store, set, schema } = this.parameters;
 
     const stores = Array.isArray(store) ? store : [store];
-    const storeDict = _.keyBy(stores, 'protocol');
+    const storeDict = _.keyBy(stores, 'uid');
 
     const schemas = Array.isArray(schema) ? schema : [schema];
     const cfguContentsPromises = schemas.map((sch) => Cfgu.parse(sch));
@@ -75,13 +75,13 @@ export class EvalCommand extends Command<EvalCommandReturn> {
             // * the code shouldn't get here if the reference was added via the upsert command
             return { key, value: '' };
           }
-          const referencedStore = storeDict[referenceData.store];
+          const referencedStore = storeDict[referenceData.uid];
           if (!referencedStore) {
             // * the store required to eval the current reference value was not provided via parameters
             return { key, value: '' };
           }
 
-          const referencedValue = await referencedStore.get([referenceData] as StoreQuery);
+          const referencedValue = await referencedStore.get(referenceData.query);
           return { key, value: referencedValue[0].value };
         }
 

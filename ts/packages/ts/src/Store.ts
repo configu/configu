@@ -1,10 +1,16 @@
-import { JTD, TMPL } from './utils';
-import { IStore, StoreConfiguration, StoreQuery, StoreContents, StoreContentsJTDSchema } from './types';
+import _ from 'lodash';
+import { JTD, TMPL, URI } from './utils';
+import { Set } from './Set';
+import { IStore, StoreQuery, StoreContents, StoreContentsJTDSchema } from './types';
 
 const { parse, serialize } = JTD<StoreContents>(StoreContentsJTDSchema);
 
 export abstract class Store implements IStore {
-  constructor(public protocol: string, public configuration: StoreConfiguration) {}
+  public readonly uid: string;
+  constructor(public readonly scheme: string, userinfo?: string) {
+    this.uid = URI.serialize({ scheme, userinfo });
+  }
+
   abstract get(query: StoreQuery): Promise<StoreContents>;
   abstract set(configs: StoreContents): Promise<void>;
 
@@ -30,22 +36,46 @@ export abstract class Store implements IStore {
     return expressions[0].key;
   }
 
-  static parseReferenceValue(value: string) {
-    const [protocol, path] = value.split('://');
-    const splittedPath = path.split('/');
-    const isReferenceProperlyConstructed = protocol && splittedPath.length >= 2;
-    if (!isReferenceProperlyConstructed) {
+  static parseReferenceValue(uri: string) {
+    // * ReferenceValue structure: <scheme>://[userinfo@][set/]<schema>[.key][?key=[key]]
+    // ! ReferenceValue uses only the Set specified in its URI, it doesn't support Set hierarchy.
+
+    const { scheme, userinfo, host, path, query } = URI.parse(uri);
+    if (!scheme || !host) {
+      return null;
+    }
+    const [setAndSchema, ...keyPath] = `${host}${path}`.split('.');
+    if (!setAndSchema) {
+      return null;
+    }
+    const splittedSetAndSchema = setAndSchema.split('/');
+    const schema = splittedSetAndSchema.pop();
+    if (!schema) {
+      return null;
+    }
+    let set = '';
+    try {
+      set = new Set(splittedSetAndSchema.join('/')).path;
+    } catch (error) {
       return null;
     }
 
+    const queryDict = _(query)
+      .split('&')
+      .map((q) => q.split('='))
+      .fromPairs()
+      .value();
+
     return {
-      store: protocol,
-      key: splittedPath.pop(),
-      schema: splittedPath.pop(),
-      set: splittedPath.join('/'),
+      uid: URI.serialize({ scheme, userinfo }),
+      query: [
+        {
+          key: keyPath.join('.'),
+          schema,
+          set,
+          ...queryDict,
+        },
+      ],
     };
   }
 }
-
-export type StoreCtor = { new (protocol: string): Store };
-export type StoreDerived = StoreCtor & typeof Store;

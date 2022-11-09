@@ -18,6 +18,7 @@
     "noImplicitAny": true,
     "useUnknownInCatchVariables": false,
     "strictPropertyInitialization": false,
+    // todo: add "noUncheckedIndexedAccess": true,
   },
   "exclude": ["node_modules", "build", "src/**/*.test*"]
 }
