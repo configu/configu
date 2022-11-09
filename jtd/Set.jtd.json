@@ -1,0 +1,14 @@
+{
+  "definitions": {},
+  "metadata": {
+    "description": "A generic representation of a ConfigSet that contains a path hierarchy to differentiate Config values and enable inheritance"
+  },
+  "properties": {
+    "path": { "type": "string" },
+    "hierarchy": {
+      "elements": {
+        "type": "string"
+      }
+    }
+  }
+}

@@ -2,9 +2,9 @@ import { Store } from '../Store';
 import { StoreQuery, StoreContents } from '../types';
 
 export class NoopStore extends Store {
-  static readonly protocol = 'noop';
+  static readonly scheme = 'noop';
   constructor() {
-    super(NoopStore.protocol, { supportsGlobQuery: true });
+    super(NoopStore.scheme);
   }
 
   async get(query: StoreQuery): Promise<StoreContents> {

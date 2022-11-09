@@ -6,7 +6,8 @@
           "set": { "type": "string" },
           "schema": { "type": "string" },
           "key": { "type": "string" }
-        }
+        },
+        "additionalProperties": true
       }
     }
   },
@@ -14,12 +15,7 @@
     "description": "A generic representation of a ConfigStore that contains Config records (Config[])"
   },
   "properties": {
-    "protocol": { "type": "string" },
-    "configuration": {
-      "properties": {
-        "supportsGlobQuery": { "type": "boolean" }
-      },
-      "additionalProperties": true
-    }
+    "scheme": { "type": "string" },
+    "uid": { "type": "string" }
   }
 }

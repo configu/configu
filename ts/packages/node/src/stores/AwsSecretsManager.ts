@@ -7,15 +7,16 @@ import {
   DeleteSecretCommand,
 } from '@aws-sdk/client-secrets-manager';
 import _ from 'lodash';
-import { Store, StoreQuery, StoreContents } from '@configu/ts';
+import { Store, KeyValueStore, StoreQuery, StoreContents } from '@configu/ts';
+
+// todo: use KeyValueStore instead of Store
 
 // ! supports JSON secrets only
 export class AwsSecretsManagerStore extends Store {
-  static readonly protocol = 'aws-secrets-manager';
+  static readonly scheme = 'aws-secrets-manager';
   private client: SecretsManagerClient;
   constructor(configuration: SecretsManagerClientConfig) {
-    super(AwsSecretsManagerStore.protocol, { supportsGlobQuery: false });
-
+    super(AwsSecretsManagerStore.scheme);
     this.client = new SecretsManagerClient(configuration);
   }
 

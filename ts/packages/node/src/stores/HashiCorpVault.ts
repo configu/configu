@@ -1,15 +1,16 @@
 import axios, { Axios } from 'axios';
 import _ from 'lodash';
-import { Store, StoreQuery, StoreContents } from '@configu/ts';
+import { Store, KeyValueStore, StoreQuery, StoreContents } from '@configu/ts';
 
-type HashiCorpVaultConfiguration = { address: string; token: string };
+// todo: use KeyValueStore instead of Store
+type HashiCorpVaultConfiguration = { address: string; token: string; engine: string };
 
 // ! supports K/V2 engine only
 export class HashiCorpVaultStore extends Store {
-  static readonly protocol = 'hashicorp-vault';
+  static readonly scheme = 'hashicorp-vault';
   private client: Axios;
-  constructor({ address, token }: HashiCorpVaultConfiguration) {
-    super(HashiCorpVaultStore.protocol, { supportsGlobQuery: false });
+  constructor({ address, token, engine }: HashiCorpVaultConfiguration) {
+    super(HashiCorpVaultStore.scheme, engine);
 
     this.client = axios.create({
       baseURL: `${address}/v1`,

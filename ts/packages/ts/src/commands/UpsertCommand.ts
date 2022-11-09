@@ -48,7 +48,7 @@ export class UpsertCommand extends Command<void> {
             ERR(
               `invalid value ${value}`,
               [`parameters.config[${idx}]`],
-              `reference value must be in "<protocol>://<query>" shape`,
+              `reference value must be a valid uri - <scheme>://[userinfo@][set/]<schema>[.key]`,
             ),
           );
         }

@@ -1,11 +1,12 @@
 import fs from 'fs/promises';
+import crypto from 'crypto';
 import _ from 'lodash';
 import { Store, StoreQuery, StoreContents } from '@configu/ts';
 
 export class JsonFileStore extends Store {
-  static readonly protocol = 'json-file';
+  static readonly scheme = 'json-file';
   constructor(public path: string) {
-    super(JsonFileStore.protocol, { supportsGlobQuery: true });
+    super(JsonFileStore.scheme, crypto.createHash('md5').update(path).digest('hex'));
   }
 
   async read(): Promise<StoreContents> {
