@@ -1,14 +1,13 @@
 import axios, { Axios } from 'axios';
-import _ from 'lodash';
-import { Store, KeyValueStore, StoreQuery, StoreContents } from '@configu/ts';
+import { KeyValueStore } from '@configu/ts';
 
-// todo: use KeyValueStore instead of Store
 type HashiCorpVaultConfiguration = { address: string; token: string; engine: string };
 
 // ! supports K/V2 engine only
-export class HashiCorpVaultStore extends Store {
+export class HashiCorpVaultStore extends KeyValueStore {
   static readonly scheme = 'hashicorp-vault';
   private client: Axios;
+  private engine: string;
   constructor({ address, token, engine }: HashiCorpVaultConfiguration) {
     super(HashiCorpVaultStore.scheme, engine);
 
@@ -19,94 +18,25 @@ export class HashiCorpVaultStore extends Store {
       },
       responseType: 'json',
     });
+    this.engine = engine;
+  }
+
+  private formatKey(key: string): string {
+    return `${this.engine}/data/${key}`;
   }
 
   // * K/V2 Read Secret Version - https://www.vaultproject.io/api-docs/secret/kv/kv-v2#read-secret-version
-  private getSecretPath({ set, schema }: StoreQuery[number]) {
-    // * set first element used as vault engine
-    if (!set) {
-      throw new Error(`invalid secret path is at ${this.constructor.name}`);
-    }
-    const splittedSet = set.split('/');
-    const engine = splittedSet.shift();
-    const path = _.isEmpty(splittedSet) ? schema : `${splittedSet.join('/')}/${schema}`;
-    return `${engine}/data/${path}`;
+  async getByKey(key: string): Promise<string> {
+    const { data } = await this.client.get(this.formatKey(key));
+    return JSON.stringify(data?.data?.data) ?? '';
   }
 
-  async get(query: StoreQuery): Promise<StoreContents> {
-    const secretsPaths = _(query)
-      .map((q) => this.getSecretPath(q))
-      .uniq()
-      .value();
-
-    const secretsPromises = secretsPaths.map(async (secretPath) => {
-      try {
-        const { data } = await this.client.get(secretPath);
-        const secretData = data?.data?.data;
-        if (secretData) {
-          throw new Error(`secret ${secretPath} has no value at ${this.constructor.name}`);
-        }
-        return { secretPath, data: secretData };
-      } catch (error) {
-        return { secretPath, data: {} };
-      }
-    });
-    const secretsArray = await Promise.all(secretsPromises);
-    const secrets = _(secretsArray).keyBy('secretPath').mapValues('data').value();
-
-    const storedConfigs = _(query)
-      .map((q) => {
-        const { set, schema, key } = q;
-        const secretPath = this.getSecretPath(q);
-        const secretData = secrets[secretPath];
-
-        if (key === '*') {
-          return Object.entries(secretData).map((data) => {
-            return {
-              set,
-              schema,
-              key: data[0],
-              value: data[1] as any,
-            };
-          });
-        }
-
-        return {
-          set,
-          schema,
-          key,
-          value: secretData[key],
-        };
-      })
-      .flatten()
-      .filter('value')
-      .value();
-
-    return storedConfigs;
+  // * K/V2 Create/Update Secret Version - https://www.vaultproject.io/api-docs/secret/kv/kv-v2#create-update-secret
+  async upsert(key: string, value: string): Promise<void> {
+    await this.client.post(this.formatKey(key), { data: JSON.parse(value) });
   }
 
-  async set(configs: StoreContents): Promise<void> {
-    const secrets: Record<string, Record<string, string>> = {};
-    configs.forEach((config) => {
-      const secretPath = this.getSecretPath(config);
-      if (!secrets[secretPath]) {
-        secrets[secretPath] = {};
-      }
-      if (!config.value) {
-        return;
-      }
-      secrets[secretPath] = { ...secrets[secretPath], [config.key]: config.value };
-    });
-
-    const setConfigsPromises = Object.entries(secrets).map(async ([secretPath, secretData]) => {
-      if (_.isEmpty(secretData)) {
-        await this.client.delete(secretPath.replace('data', 'metadata'));
-        return;
-      }
-
-      await this.client.post(secretPath, { data: secretData });
-    });
-
-    await Promise.all(setConfigsPromises);
+  async delete(key: string): Promise<void> {
+    await this.client.delete(this.formatKey(key).replace('data', 'metadata'));
   }
 }
