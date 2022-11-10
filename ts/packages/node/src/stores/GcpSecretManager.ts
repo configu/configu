@@ -59,6 +59,6 @@ export class GcpSecretManagerStore extends KeyValueStore {
   }
 
   async delete(key: string): Promise<void> {
-    await this.client.deleteSecret({ name: key });
+    await this.client.deleteSecret({ name: this.formatKey(key) });
   }
 }
