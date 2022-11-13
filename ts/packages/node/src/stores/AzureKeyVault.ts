@@ -21,12 +21,12 @@ export class AzureKeyVaultStore extends KeyValueStore {
   async getByKey(key: string): Promise<string> {
     const keyVaultSecret = await this.client.getSecret(key);
     const secret = keyVaultSecret?.value;
-    return secret ? JSON.parse(secret) : {};
+    return secret ?? '';
   }
 
   // * https://learn.microsoft.com/en-us/javascript/api/@azure/keyvault-secrets/secretclient?view=azure-node-latest#@azure-keyvault-secrets-secretclient-setsecret
   async upsert(key: string, value: string): Promise<void> {
-    await this.client.setSecret(key, JSON.stringify(value));
+    await this.client.setSecret(key, value);
   }
 
   // * https://learn.microsoft.com/en-us/javascript/api/@azure/keyvault-secrets/secretclient?view=azure-node-latest#@azure-keyvault-secrets-secretclient-begindeletesecret
