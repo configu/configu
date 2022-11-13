@@ -4,9 +4,9 @@
     "rootDir": "src",
     "outDir": "build",
     "composite": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   },
-  "references": [
-    { "path": "../ts" },
-  ],
+  "references": [{ "path": "../ts" }],
   "include": ["src"]
 }
