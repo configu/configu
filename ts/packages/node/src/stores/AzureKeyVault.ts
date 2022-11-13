@@ -29,7 +29,7 @@ export class AzureKeyVaultStore extends KeyValueStore {
     await this.client.setSecret(key, JSON.stringify(value));
   }
 
-  // * https://learn.microsoft.com/en-us/javascript/api/@azure/keyvault-secrets/secretclient?view=azure-node-latest#@azure-keyvault-secrets-secretclient-setsecret
+  // * https://learn.microsoft.com/en-us/javascript/api/@azure/keyvault-secrets/secretclient?view=azure-node-latest#@azure-keyvault-secrets-secretclient-begindeletesecret
   async delete(key: string): Promise<void> {
     await this.client.beginDeleteSecret(key);
   }
