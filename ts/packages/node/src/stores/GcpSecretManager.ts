@@ -44,7 +44,7 @@ export class GcpSecretManagerStore extends KeyValueStore {
     try {
       await this.client.createSecret({
         parent: `projects/${this.project}`,
-        secretId: formattedKey,
+        secretId: key,
         secret: {
           replication: {
             automatic: {},
