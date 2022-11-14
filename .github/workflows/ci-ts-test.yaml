@@ -16,6 +16,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - uses: ./.github/actions/env-action
+
       - uses: ./.github/actions/ts-env-action
         with:
           install-dependencies: true
