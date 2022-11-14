@@ -6,15 +6,15 @@ type KeyValueStoreConfiguration = {
   keySeparator?: string;
 };
 export abstract class KeyValueStore extends Store {
-  constructor(scheme: string, userinfo?: string, protected configuration: KeyValueStoreConfiguration = {}) {
-    super(scheme, userinfo);
+  constructor(scheme: string, protected configuration: KeyValueStoreConfiguration = {}) {
+    super(scheme);
   }
 
-  abstract getByKey(key: string): Promise<string>;
+  protected abstract getByKey(key: string): Promise<string>;
 
-  abstract upsert(key: string, value: string): Promise<void>;
+  protected abstract upsert(key: string, value: string): Promise<void>;
 
-  abstract delete(key: string): Promise<void>;
+  protected abstract delete(key: string): Promise<void>;
 
   private calcKey({ set, schema }: StoreQuery[number]): string {
     if (set === '*' || schema === '*') {

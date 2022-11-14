@@ -17,6 +17,11 @@ export class AwsSecretsManagerStore extends KeyValueStore {
     this.client = new SecretsManagerClient(configuration);
   }
 
+  async init(): Promise<void> {
+    const region = await this.client.config.region();
+    super.init(region);
+  }
+
   // * https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-secrets-manager/classes/getsecretvaluecommand.html
   async getByKey(key: string): Promise<string> {
     const command = new GetSecretValueCommand({ SecretId: key });
