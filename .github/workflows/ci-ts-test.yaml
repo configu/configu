@@ -24,6 +24,7 @@ jobs:
 
       - name: Run tests & Generate coverage report
         run: |
+          cd ${{ env.CWD }}
           npm run test:cov
 
       # - name: Upload coverage to Codecov
