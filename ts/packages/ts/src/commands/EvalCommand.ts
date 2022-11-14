@@ -5,6 +5,7 @@ import { Store } from '../Store';
 import { Set } from '../Set';
 import { Cfgu } from '../Cfgu';
 import { ERR, TMPL } from '../utils';
+import { DatabaseStore } from '../stores/Database';
 
 export type EvalCommandParameters = {
   store: Store | Store[];
@@ -38,6 +39,16 @@ export class EvalCommand extends Command<EvalCommandReturn> {
         })
         .value();
     });
+
+    // * Initialize all database store instances
+    await Promise.all(
+      stores.map(async (storeInstance) => {
+        if (storeInstance instanceof DatabaseStore && !storeInstance.isInitialized) {
+          await storeInstance.init();
+        }
+      }),
+    );
+
     const storedConfigs = await stores[0].get(storeQuery);
 
     // * removed duplicate fetched configs according to set hierarchy and schemas rtl

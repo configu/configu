@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { StoreQuery, StoreContents, DatabaseStore } from '@configu/ts';
+import { StoreQuery, StoreContents, DatabaseStore, StoreContentsWithId } from '@configu/ts';
 import { Entity, PrimaryColumn, ObjectIdColumn, Column, DataSource, DataSourceOptions, Index } from 'typeorm';
 import _ from 'lodash';
 
@@ -8,6 +8,7 @@ import _ from 'lodash';
 export class Config {
   /**
    * TODO: decide the following:
+   * - _id vs id
    * - what should be within the config table
    * - what should be a column
    * - Indexing?
@@ -75,14 +76,14 @@ export abstract class TypeOrmStore extends DatabaseStore {
     const configRepository = this.dataSource.getRepository(Config);
 
     if (configIds.length > 0) {
-      await configRepository.delete(_.map(configIds, '_id'));
+      await configRepository.delete(configIds);
     }
   }
 }
 
 export abstract class TypeOrmStoreWithUpsert extends TypeOrmStore {
   // * Upsert is supported by AuroraDataApi, Cockroach, Mysql, Postgres, and Sqlite database drivers.
-  async upsert(configs: StoreContents): Promise<void> {
+  async upsert(configs: StoreContentsWithId): Promise<void> {
     const configRepository = this.dataSource.getRepository(Config);
 
     if (configs.length > 0) {

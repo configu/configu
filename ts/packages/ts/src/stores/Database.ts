@@ -3,19 +3,25 @@ import forge from 'node-forge';
 import { Store } from '../Store';
 import { StoreQuery, StoreContents, Config } from '../types';
 
+interface ConfigWithId extends Config {
+  _id: string;
+}
+
+export type StoreContentsWithId = ConfigWithId[];
+
 export abstract class DatabaseStore extends Store {
-  private isInitialized = false;
+  public isInitialized = false;
   constructor(scheme: string, userinfo?: string) {
     super(scheme, userinfo);
   }
 
-  abstract getByQuery(query: StoreQuery): Promise<StoreContents>;
+  protected abstract getByQuery(query: StoreQuery): Promise<StoreContents>;
 
-  abstract upsert(configs: StoreContents): Promise<void>;
+  protected abstract upsert(configs: StoreContentsWithId): Promise<void>;
 
-  abstract delete(configIds: string[]): Promise<void>;
+  protected abstract delete(configIds: string[]): Promise<void>;
 
-  abstract initialize(): Promise<void>;
+  protected abstract initialize(): Promise<void>;
 
   async init() {
     if (!this.isInitialized) {
@@ -23,7 +29,6 @@ export abstract class DatabaseStore extends Store {
         await this.initialize();
         this.isInitialized = true;
       } catch (err) {
-        // TODO: decide what to do with the error
         throw new Error(`failed to initialize ${this.scheme} - ${err.message}`);
       }
     }

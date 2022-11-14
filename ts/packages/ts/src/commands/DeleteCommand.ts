@@ -5,6 +5,7 @@ import { Store } from '../Store';
 import { Set } from '../Set';
 import { Cfgu } from '../Cfgu';
 import { ERR } from '../utils';
+import { DatabaseStore } from '../stores/Database';
 
 export type DeleteCommandParameters = {
   store: Store;
@@ -22,6 +23,10 @@ export class DeleteCommand extends Command<void> {
 
     if (!set && !schema) {
       throw new Error(ERR('either set or schema parameter should be supplied', ['parameters']));
+    }
+
+    if (store instanceof DatabaseStore && !store.isInitialized) {
+      await store.init();
     }
 
     const storedConfigs = await store.get([{ set: set?.path ?? '*', schema: schema?.name ?? '*', key: '*' }]);
