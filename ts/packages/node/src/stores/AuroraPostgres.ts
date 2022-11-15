@@ -1,7 +1,7 @@
 import { AuroraPostgresConnectionOptions } from 'typeorm/driver/aurora-postgres/AuroraPostgresConnectionOptions';
-import { TypeOrmStoreWithUpsert } from './TypeORM';
+import { TypeOrmStore } from './TypeORM';
 
-export class AuroraPostgresStore extends TypeOrmStoreWithUpsert {
+export class AuroraPostgresStore extends TypeOrmStore {
   static readonly scheme = 'aurora-postgres';
 
   constructor(configuration: Omit<AuroraPostgresConnectionOptions, 'type'>) {

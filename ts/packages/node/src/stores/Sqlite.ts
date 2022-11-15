@@ -1,7 +1,7 @@
 import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionOptions';
-import { TypeOrmStoreWithUpsert } from './TypeORM';
+import { TypeOrmStore } from './TypeORM';
 
-export class SqliteStore extends TypeOrmStoreWithUpsert {
+export class SqliteStore extends TypeOrmStore {
   static readonly scheme = 'sqlite';
 
   constructor(configuration: Omit<SqliteConnectionOptions, 'type'>) {

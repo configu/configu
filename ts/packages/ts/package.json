@@ -32,7 +32,6 @@
   "devDependencies": {
     "@types/lodash": "^4.14.186",
     "@types/mustache": "^4.2.1",
-    "@types/node-forge": "^1.3.0",
     "@types/validator": "^13.7.7"
   }
 }

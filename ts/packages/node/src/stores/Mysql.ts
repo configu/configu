@@ -1,7 +1,7 @@
 import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
-import { TypeOrmStoreWithUpsert } from './TypeORM';
+import { TypeOrmStore } from './TypeORM';
 
-export class MysqlStore extends TypeOrmStoreWithUpsert {
+export class MysqlStore extends TypeOrmStore {
   static readonly scheme = 'mysql';
 
   constructor(configuration: Omit<MysqlConnectionOptions, 'type'>) {

@@ -1,27 +1,19 @@
 import 'reflect-metadata';
-import { StoreQuery, StoreContents, DatabaseStore, StoreContentsWithId } from '@configu/ts';
-import { Entity, PrimaryColumn, ObjectIdColumn, Column, DataSource, DataSourceOptions, Index } from 'typeorm';
+import { StoreQuery, StoreContents, Store } from '@configu/ts';
+import { Entity, Column, DataSource, DataSourceOptions, Index, PrimaryGeneratedColumn } from 'typeorm';
 import _ from 'lodash';
 
-// TODO: perhaps it should be ConfigEntity to avoid confusion?
 @Entity()
-export class Config {
+@Index(['schema', 'set'])
+class Config {
   /**
    * TODO: decide the following:
-   * - _id vs id
-   * - what should be within the config table
-   * - what should be a column
    * - Indexing?
-   * - PrimaryColumn('text') vs ObjectIdColumn()
-   * - _id vs id as the key for the PK
    */
+  @PrimaryGeneratedColumn()
+  id: string;
 
-  // @ObjectIdColumn()
-  // _id: ObjectID;
-
-  @PrimaryColumn('text')
-  _id: string;
-
+  @Index('schema')
   @Column('text')
   schema: string;
 
@@ -34,17 +26,9 @@ export class Config {
 
   @Column('text')
   value: string;
-
-  // TODO: decide if relevant here
-  // @Column('timestamp')
-  // createdAt: string;
-
-  // TODO: decide if relevant here
-  // @Column('timestamp')
-  // updatedAt: string;
 }
 
-export abstract class TypeOrmStore extends DatabaseStore {
+export abstract class TypeOrmStore extends Store {
   readonly dataSource: DataSource;
 
   constructor(public protocol: string, dataSourceOptions: DataSourceOptions) {
@@ -61,7 +45,35 @@ export abstract class TypeOrmStore extends DatabaseStore {
     super.init(this.dataSource.driver.database);
   }
 
-  async getByQuery(query: StoreQuery): Promise<StoreContents> {
+  private async delete(configIds: string[]): Promise<void> {
+    const configRepository = this.dataSource.getRepository(Config);
+
+    if (configIds.length > 0) {
+      await configRepository.delete(configIds);
+    }
+  }
+
+  private async upsert(configs: StoreContents): Promise<void> {
+    const configRepository = this.dataSource.getRepository(Config);
+
+    if (configs.length > 0) {
+      await configRepository.upsert(configs, ['id']);
+    }
+  }
+
+  async set(configs: StoreContents): Promise<void> {
+    const [configsToUpsert, configsToDelete] = _.partition(configs, 'value');
+
+    if (configsToDelete.length > 0) {
+      await this.delete(_.map(configsToDelete, 'id'));
+    }
+
+    if (configsToUpsert.length > 0) {
+      await this.upsert(configsToUpsert);
+    }
+  }
+
+  async get(query: StoreQuery): Promise<StoreContents> {
     const configRepository = this.dataSource.getRepository(Config);
 
     const adjustedQuery = query.map((entry) => ({
@@ -71,24 +83,5 @@ export abstract class TypeOrmStore extends DatabaseStore {
     }));
 
     return configRepository.find({ where: adjustedQuery });
-  }
-
-  async delete(configIds: string[]): Promise<void> {
-    const configRepository = this.dataSource.getRepository(Config);
-
-    if (configIds.length > 0) {
-      await configRepository.delete(configIds);
-    }
-  }
-}
-
-export abstract class TypeOrmStoreWithUpsert extends TypeOrmStore {
-  // * Upsert is supported by AuroraDataApi, Cockroach, Mysql, Postgres, and Sqlite database drivers.
-  async upsert(configs: StoreContentsWithId): Promise<void> {
-    const configRepository = this.dataSource.getRepository(Config);
-
-    if (configs.length > 0) {
-      await configRepository.upsert(configs, ['_id']);
-    }
   }
 }

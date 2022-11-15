@@ -1,7 +1,7 @@
 import { CockroachConnectionOptions } from 'typeorm/driver/cockroachdb/CockroachConnectionOptions';
-import { TypeOrmStoreWithUpsert } from './TypeORM';
+import { TypeOrmStore } from './TypeORM';
 
-export class CockroachStore extends TypeOrmStoreWithUpsert {
+export class CockroachStore extends TypeOrmStore {
   static readonly scheme = 'cockroachdb';
 
   constructor(configuration: Omit<CockroachConnectionOptions, 'type'>) {
