@@ -1,7 +1,7 @@
 import { Flags } from '@oclif/core';
 import { Set, Cfgu, DeleteCommand } from '@configu/node';
 import { BaseCommand } from '../base';
-import { constructStoreFromUrl } from '../helpers/stores';
+import { constructStoreFromUri } from '../helpers/stores';
 
 export default class Delete extends BaseCommand {
   static description = 'deletes configs from a store';
@@ -21,8 +21,8 @@ export default class Delete extends BaseCommand {
   public async run(): Promise<void> {
     const { flags } = await this.parse(Delete);
 
-    const storeUrl = this.config.configData.stores?.[flags.store] ?? flags.store;
-    const { store } = await constructStoreFromUrl(storeUrl);
+    const storeUri = this.config.configData.stores?.[flags.store] ?? flags.store;
+    const { store } = await constructStoreFromUri(storeUri);
 
     const set = flags.set ? new Set(flags.set) : undefined;
     const schema = flags.schema ? new Cfgu(flags.schema) : undefined;

@@ -1,6 +1,5 @@
-import { URL } from 'url';
 import { Store } from '@configu/ts';
 
-export type InitFunction = (url: URL) => Promise<{ url: string; store: Store }>;
+export type InitFunction = (uri: string) => Promise<{ uri: string; store: Store }>;
 
-export type ProtocolToInit = Record<string, InitFunction>;
+export type SchemeToInit = Record<string, InitFunction>;

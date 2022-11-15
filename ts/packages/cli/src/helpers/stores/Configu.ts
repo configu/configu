@@ -1,10 +1,12 @@
+import _ from 'lodash';
+import { URI } from '@configu/ts';
 import { CliUx } from '@oclif/core';
 import axios from 'axios';
 import chalk from 'chalk';
 import { prompt } from 'inquirer';
 import { Issuer, errors } from 'openid-client';
 import { ConfiguStore } from '@configu/node';
-import { ProtocolToInit } from './types';
+import { SchemeToInit } from './types';
 
 const CONFIGU_DEFAULT_ENDPOINT = 'https://api.configu.com';
 const AUTH0_DOMAIN = 'configu.us.auth0.com';
@@ -90,19 +92,22 @@ you should see the following code: ${chalk.bold(userCode)}. it expires in ${
   }
 };
 
-export const ConfiguStorePTI: ProtocolToInit = {
-  [ConfiguStore.protocol]: async (url) => {
+export const ConfiguStoreSTI: SchemeToInit = {
+  [ConfiguStore.scheme]: async (uri) => {
     const source = 'cli';
-    const endpoint = url.searchParams.get('endpoint') ?? CONFIGU_DEFAULT_ENDPOINT;
-    const type = (url.searchParams.get('type') as 'Token' | 'Bearer' | null) ?? 'Token';
+    const parsedUri = URI.parse(uri);
+    const queryDict = _.fromPairs(parsedUri.query?.split('&').map((query) => query.split('=')));
+    const endpoint = queryDict.endpoint ?? CONFIGU_DEFAULT_ENDPOINT;
+    const type = (queryDict.type as 'Token' | 'Bearer' | null) ?? 'Token';
+    const splittedUserinfo = parsedUri.userinfo?.split(':');
 
     // * configu://-[?endpoint=]
-    if (url.hostname === '-') {
+    if (parsedUri.host === '-') {
       const { CONFIGU_ORG, CONFIGU_TOKEN } = process.env;
 
       if (CONFIGU_ORG && CONFIGU_TOKEN) {
         return {
-          url: `${ConfiguStore.protocol}://${CONFIGU_TOKEN}@${CONFIGU_ORG}?endpoint=${endpoint}`,
+          uri: `${ConfiguStore.scheme}://${CONFIGU_TOKEN}@${CONFIGU_ORG}?endpoint=${endpoint}`,
           store: new ConfiguStore({
             credentials: { org: CONFIGU_ORG, token: CONFIGU_TOKEN, type: 'Token' },
             source,
@@ -113,7 +118,7 @@ export const ConfiguStorePTI: ProtocolToInit = {
 
       const credentials = await loginWithAuth0(endpoint);
       return {
-        url: `${ConfiguStore.protocol}://${credentials.token}@${credentials.org}?endpoint=${endpoint}&type=Bearer`,
+        uri: `${ConfiguStore.scheme}://${credentials.token}@${credentials.org}?endpoint=${endpoint}&type=Bearer`,
         store: new ConfiguStore({
           credentials,
           source,
@@ -122,11 +127,15 @@ export const ConfiguStorePTI: ProtocolToInit = {
       };
     }
 
+    if (!splittedUserinfo || !splittedUserinfo[0] || !parsedUri.host) {
+      throw new Error(`invalid store uri ${uri}`);
+    }
+
     // * configu://token@org[?endpoint=]
     return {
-      url: url.href,
+      uri,
       store: new ConfiguStore({
-        credentials: { org: url.hostname, token: url.username, type },
+        credentials: { org: parsedUri.host, token: splittedUserinfo[0], type },
         source,
         endpoint,
       }),

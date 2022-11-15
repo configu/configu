@@ -1,26 +1,27 @@
-import { URL } from 'url';
-import { ProtocolToInit } from './types';
-
+import { URI } from '@configu/ts';
+import { SchemeToInit } from './types';
 import { NoopStorePTI } from './Noop';
-import { ConfiguStorePTI } from './Configu';
-import { JsonFileStorePTI } from './JsonFile';
-import { HashiCorpVaultStorePTI } from './HashiCorpVault';
-import { AwsSecretsManagerStorePTI } from './AwsSecretsManager';
+import { ConfiguStoreSTI } from './Configu';
+import { JsonFileStoreSTI } from './JsonFile';
+import { HashiCorpVaultStoreSTI } from './HashiCorpVault';
+import { AwsSecretsManagerStoreSTI } from './AwsSecretsManager';
 
-const PROTOCOL_TO_STORE_INIT_FN_DICT: ProtocolToInit = {
+const SCHEME_TO_STORE_INIT_FN_DICT: SchemeToInit = {
   ...NoopStorePTI,
-  ...ConfiguStorePTI,
-  ...JsonFileStorePTI,
-  ...HashiCorpVaultStorePTI,
-  ...AwsSecretsManagerStorePTI,
+  ...ConfiguStoreSTI,
+  ...JsonFileStoreSTI,
+  ...HashiCorpVaultStoreSTI,
+  ...AwsSecretsManagerStoreSTI,
 };
 
-export const constructStoreFromUrl = (url: string) => {
-  const storeUrl = new URL(url);
-  const storeProtocol = storeUrl.protocol.slice(0, -1);
-  const storeInitFunction = PROTOCOL_TO_STORE_INIT_FN_DICT[storeProtocol];
+export const constructStoreFromUri = (uri: string) => {
+  const storeUri = URI.parse(uri);
+
+  console.log(storeUri); // TODO -remove
+
+  const storeInitFunction = SCHEME_TO_STORE_INIT_FN_DICT[storeUri.scheme as string];
   if (!storeInitFunction) {
-    throw new Error(`invalid store url ${url}`);
+    throw new Error(`invalid store uri ${uri}`);
   }
-  return storeInitFunction(storeUrl);
+  return storeInitFunction(uri);
 };

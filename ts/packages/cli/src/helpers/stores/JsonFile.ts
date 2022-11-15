@@ -1,11 +1,13 @@
 import _ from 'lodash';
+import { URI } from '@configu/ts';
 import { JsonFileStore } from '@configu/node';
-import { ProtocolToInit } from './types';
+import { SchemeToInit } from './types';
 
-export const JsonFileStorePTI: ProtocolToInit = {
-  [JsonFileStore.protocol]: async (url) => {
+export const JsonFileStoreSTI: SchemeToInit = {
+  [JsonFileStore.scheme]: async (uri) => {
+    const parsedUri = URI.parse(uri);
     // * json-file://path/to/file.json
-    const jsonFilePath = _([url.hostname, url.pathname]).compact().join('/');
-    return { url: url.href, store: new JsonFileStore(jsonFilePath) };
+    const jsonFilePath = _([parsedUri.host, parsedUri.path]).compact().join('/');
+    return { uri, store: new JsonFileStore(jsonFilePath) };
   },
 };
