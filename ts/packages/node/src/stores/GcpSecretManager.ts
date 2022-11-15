@@ -9,10 +9,14 @@ export class GcpSecretManagerStore extends KeyValueStore {
   private project: string;
 
   constructor({ keyFile, project }: GcpSecretManagerConfiguration) {
-    super(GcpSecretManagerStore.protocol, project, { keySeparator: '-' });
+    super(GcpSecretManagerStore.protocol, { keySeparator: '-' });
 
     this.client = new SecretManagerServiceClient({ keyFile });
     this.project = project;
+  }
+
+  async init() {
+    super.init(this.project);
   }
 
   private formatKey(key: string): string {

@@ -1,0 +1,37 @@
+name: "CI: test"
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "ts/packages/ts/**"
+      - "ts/packages/node/**"
+      - "ts/packages/browser/**"
+
+jobs:
+  run_tests_on_code_changes:
+    name: Run tests on code changes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: ./.github/actions/env-action
+
+      - uses: ./.github/actions/ts-env-action
+        with:
+          install-dependencies: true
+
+      - name: Run tests & Generate coverage report
+        run: |
+          cd ${{ env.CWD }}
+          npm run test:cov
+
+      # - name: Upload coverage to Codecov
+      #   uses: codecov/codecov-action@v2
+      #   if: ${{ github.event_name == 'push' }}
+      #   with:
+      #     token: ${{ secrets.CODECOV_TOKEN }}
+      #     flags: unittests
+      #     fail_ci_if_error: true
+      #     verbose: true
