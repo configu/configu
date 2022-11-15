@@ -38,6 +38,10 @@ export class EvalCommand extends Command<EvalCommandReturn> {
         })
         .value();
     });
+
+    // * initialize all provided stores
+    await Promise.all(stores.map((storeInstance) => storeInstance.init()));
+
     const storedConfigs = await stores[0].get(storeQuery);
 
     // * removed duplicate fetched configs according to set hierarchy and schemas rtl
