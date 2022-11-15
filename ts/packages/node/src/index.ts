@@ -8,7 +8,6 @@ export * from './stores/HashiCorpVault';
 export * from './stores/AuroraMysql';
 export * from './stores/AuroraPostgres';
 export * from './stores/CockroachDB';
-export * from './stores/MongoDB';
 export * from './stores/Mysql';
 export * from './stores/Postgres';
 export * from './stores/Sqlite';
