@@ -24,7 +24,6 @@ export class EvalCommand extends Command<EvalCommandReturn> {
 
     const stores = Array.isArray(store) ? store : [store];
     const storeDict = _.keyBy(stores, 'uid');
-    // * initialize all provided stores
     await Promise.all(stores.map((storeInstance) => storeInstance.init()));
 
     const schemas = Array.isArray(schema) ? schema : [schema];
