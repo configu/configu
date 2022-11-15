@@ -24,6 +24,8 @@ export class EvalCommand extends Command<EvalCommandReturn> {
 
     const stores = Array.isArray(store) ? store : [store];
     const storeDict = _.keyBy(stores, 'uid');
+    // * initialize all provided stores
+    await Promise.all(stores.map((storeInstance) => storeInstance.init()));
 
     const schemas = Array.isArray(schema) ? schema : [schema];
     const cfguContentsPromises = schemas.map((sch) => Cfgu.parse(sch));
@@ -38,9 +40,6 @@ export class EvalCommand extends Command<EvalCommandReturn> {
         })
         .value();
     });
-
-    // * initialize all provided stores
-    await Promise.all(stores.map((storeInstance) => storeInstance.init()));
 
     const storedConfigs = await stores[0].get(storeQuery);
 
