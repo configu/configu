@@ -5,26 +5,23 @@ import _ from 'lodash';
 
 @Entity()
 @Index(['schema', 'set'])
+@Index(['schema', 'set', 'key'], { unique: true })
 class Config {
-  /**
-   * TODO: decide the following:
-   * - Indexing?
-   */
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Index('schema')
-  @Column('text')
+  @Column({ type: 'varchar', length: 100 })
   schema: string;
 
   @Index('set')
-  @Column('text')
+  @Column({ type: 'varchar', length: 100 })
   set: string;
 
-  @Column('text')
+  @Column({ type: 'varchar', length: 100 })
   key: string;
 
-  @Column('text')
+  @Column('varchar')
   value: string;
 }
 
@@ -45,19 +42,17 @@ export abstract class TypeOrmStore extends Store {
     super.init(this.dataSource.driver.database);
   }
 
-  private async delete(configIds: string[]): Promise<void> {
+  private async delete(configs: StoreContents): Promise<void> {
     const configRepository = this.dataSource.getRepository(Config);
-
-    if (configIds.length > 0) {
-      await configRepository.delete(configIds);
-    }
+    const preloadedConfigs = await Promise.all(configs.map((config) => configRepository.preload(config)));
+    await configRepository.delete(_.map(preloadedConfigs, 'id'));
   }
 
   private async upsert(configs: StoreContents): Promise<void> {
     const configRepository = this.dataSource.getRepository(Config);
 
     if (configs.length > 0) {
-      await configRepository.upsert(configs, ['id']);
+      await configRepository.upsert(configs, ['schema', 'set', 'key']);
     }
   }
 
@@ -65,7 +60,7 @@ export abstract class TypeOrmStore extends Store {
     const [configsToUpsert, configsToDelete] = _.partition(configs, 'value');
 
     if (configsToDelete.length > 0) {
-      await this.delete(_.map(configsToDelete, 'id'));
+      await this.delete(configsToDelete);
     }
 
     if (configsToUpsert.length > 0) {
@@ -81,6 +76,8 @@ export abstract class TypeOrmStore extends Store {
       ...(entry.schema !== '*' && { schema: entry.schema }),
       ...(entry.key !== '*' && { key: entry.key }),
     }));
+
+    console.log(await configRepository.find({ where: adjustedQuery }));
 
     return configRepository.find({ where: adjustedQuery });
   }
