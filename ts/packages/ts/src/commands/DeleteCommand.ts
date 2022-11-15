@@ -24,6 +24,8 @@ export class DeleteCommand extends Command<void> {
       throw new Error(ERR('either set or schema parameter should be supplied', ['parameters']));
     }
 
+    await store.init();
+
     const storedConfigs = await store.get([{ set: set?.path ?? '*', schema: schema?.name ?? '*', key: '*' }]);
 
     const deleteConfigs = _(storedConfigs)
