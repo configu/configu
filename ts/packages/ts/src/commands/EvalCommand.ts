@@ -5,7 +5,6 @@ import { Store } from '../Store';
 import { Set } from '../Set';
 import { Cfgu } from '../Cfgu';
 import { ERR, TMPL } from '../utils';
-import { DatabaseStore } from '../stores/Database';
 
 export type EvalCommandParameters = {
   store: Store | Store[];
