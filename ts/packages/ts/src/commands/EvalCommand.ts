@@ -38,7 +38,6 @@ export class EvalCommand extends Command<EvalCommandReturn> {
         })
         .value();
     });
-
     const storedConfigs = await stores[0].get(storeQuery);
 
     // * removed duplicate fetched configs according to set hierarchy and schemas rtl
