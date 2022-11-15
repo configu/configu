@@ -10,9 +10,8 @@ interface ConfigWithId extends Config {
 export type StoreContentsWithId = ConfigWithId[];
 
 export abstract class DatabaseStore extends Store {
-  public isInitialized = false;
-  constructor(scheme: string, userinfo?: string) {
-    super(scheme, userinfo);
+  constructor(scheme: string) {
+    super(scheme);
   }
 
   protected abstract getByQuery(query: StoreQuery): Promise<StoreContents>;
@@ -20,19 +19,6 @@ export abstract class DatabaseStore extends Store {
   protected abstract upsert(configs: StoreContentsWithId): Promise<void>;
 
   protected abstract delete(configIds: string[]): Promise<void>;
-
-  protected abstract initialize(): Promise<void>;
-
-  async init() {
-    if (!this.isInitialized) {
-      try {
-        await this.initialize();
-        this.isInitialized = true;
-      } catch (err) {
-        throw new Error(`failed to initialize ${this.scheme} - ${err.message}`);
-      }
-    }
-  }
 
   // TODO: TBD
   private hashObject = (object: Record<string, unknown>): string => {
@@ -49,18 +35,10 @@ export abstract class DatabaseStore extends Store {
   }
 
   async get(query: StoreQuery): Promise<StoreContents> {
-    if (!this.isInitialized) {
-      throw new Error(`${this.constructor.name} is not initialized`);
-    }
-
     return this.getByQuery(query);
   }
 
   async set(configs: StoreContents): Promise<void> {
-    if (!this.isInitialized) {
-      throw new Error(`${this.constructor.name} is not initialized`);
-    }
-
     // TODO: Leave this for each db store to implement in case they have bulk ops?
 
     const configEntities = configs.map((config) => ({

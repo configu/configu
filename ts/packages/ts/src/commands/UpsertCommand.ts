@@ -5,7 +5,6 @@ import { Store } from '../Store';
 import { Set } from '../Set';
 import { Cfgu } from '../Cfgu';
 import { ERR } from '../utils';
-import { DatabaseStore } from '../stores/Database';
 
 export type UpsertCommandParameters = {
   store: Store;
@@ -72,10 +71,6 @@ export class UpsertCommand extends Command<void> {
         };
       })
       .value();
-
-    if (store instanceof DatabaseStore && !store.isInitialized) {
-      await store.init();
-    }
 
     await store.set(upsertConfigs);
 

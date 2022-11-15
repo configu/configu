@@ -40,15 +40,6 @@ export class EvalCommand extends Command<EvalCommandReturn> {
         .value();
     });
 
-    // * Initialize all database store instances
-    await Promise.all(
-      stores.map(async (storeInstance) => {
-        if (storeInstance instanceof DatabaseStore && !storeInstance.isInitialized) {
-          await storeInstance.init();
-        }
-      }),
-    );
-
     const storedConfigs = await stores[0].get(storeQuery);
 
     // * removed duplicate fetched configs according to set hierarchy and schemas rtl

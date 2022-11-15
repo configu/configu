@@ -47,8 +47,8 @@ export class Config {
 export abstract class TypeOrmStore extends DatabaseStore {
   readonly dataSource: DataSource;
 
-  constructor(public protocol: string, dataSourceOptions: DataSourceOptions, userinfo?: string) {
-    super(protocol, userinfo);
+  constructor(public protocol: string, dataSourceOptions: DataSourceOptions) {
+    super(protocol);
 
     this.dataSource = new DataSource({
       ...dataSourceOptions,
@@ -56,8 +56,9 @@ export abstract class TypeOrmStore extends DatabaseStore {
     });
   }
 
-  async initialize() {
+  async init() {
     await this.dataSource.initialize();
+    super.init(this.dataSource.driver.database);
   }
 
   async getByQuery(query: StoreQuery): Promise<StoreContents> {
