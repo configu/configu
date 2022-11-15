@@ -21,6 +21,8 @@ export class UpsertCommand extends Command<void> {
   async run() {
     const { store, set, schema, configs } = this.parameters;
 
+    await store.init();
+
     const cfguContents = await Cfgu.parse(schema);
 
     const upsertConfigs = _(configs)
