@@ -11,6 +11,7 @@ export * from './stores/CockroachDB';
 export * from './stores/Mysql';
 export * from './stores/Postgres';
 export * from './stores/Sqlite';
+export * from './stores/MariaDB';
 
 export { UpsertCommand, EvalCommand, DeleteCommand } from '@configu/ts';
 export * from './commands/ExportCommand';
