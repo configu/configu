@@ -9,7 +9,7 @@ export class HashiCorpVaultStore extends KeyValueStore {
   private client: Axios;
   private engine: string;
   constructor({ address, token, engine }: HashiCorpVaultConfiguration) {
-    super(HashiCorpVaultStore.scheme, engine);
+    super(HashiCorpVaultStore.scheme);
 
     this.client = axios.create({
       baseURL: `${address}/v1`,
@@ -19,6 +19,10 @@ export class HashiCorpVaultStore extends KeyValueStore {
       responseType: 'json',
     });
     this.engine = engine;
+  }
+
+  async init(): Promise<void> {
+    super.init(this.engine);
   }
 
   private formatKey(key: string): string {

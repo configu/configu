@@ -7,8 +7,14 @@ export class LocalForageStore extends KeyValueStore {
   constructor(configuration: LocalForageOptions) {
     // TODO: name is optional - perhaps we should enforce it or at least decide on a proper default instead of "localforage"?
     // TODO: storeName is optional - perhaps we should enforce it or at least decide on a proper default instead of "keyvaluepairs"?
-    super(LocalForageStore.scheme, `${configuration.name}${configuration.storeName}`);
+    super(LocalForageStore.scheme);
     this.client = localForage.createInstance(configuration);
+  }
+
+  async init() {
+    const config = this.client.config();
+    const separator = config.name && config.storeName ? ':' : '';
+    super.init(`${config.name}${separator}${config.storeName}`);
   }
 
   // * https://localforage.github.io/localForage/#data-api-getitem

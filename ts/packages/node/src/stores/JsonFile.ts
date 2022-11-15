@@ -6,7 +6,11 @@ import { Store, StoreQuery, StoreContents } from '@configu/ts';
 export class JsonFileStore extends Store {
   static readonly scheme = 'json-file';
   constructor(public path: string) {
-    super(JsonFileStore.scheme, crypto.createHash('md5').update(path).digest('hex'));
+    super(JsonFileStore.scheme);
+  }
+
+  async init() {
+    super.init(crypto.createHash('md5').update(this.path).digest('hex'));
   }
 
   async read(): Promise<StoreContents> {
