@@ -73,6 +73,7 @@ export class UpsertCommand extends Command<void> {
         };
       })
       .value();
+
     await store.set(upsertConfigs);
 
     return { data: undefined };
