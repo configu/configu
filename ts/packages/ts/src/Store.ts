@@ -6,13 +6,15 @@ import { IStore, StoreQuery, StoreContents, StoreContentsJTDSchema } from './typ
 const { parse, serialize } = JTD<StoreContents>(StoreContentsJTDSchema);
 
 export abstract class Store implements IStore {
-  public readonly uid: string;
-  constructor(public readonly scheme: string, userinfo?: string) {
-    this.uid = URI.serialize({ scheme, userinfo });
-  }
+  public uid: string;
+  constructor(public readonly scheme: string) {}
 
   abstract get(query: StoreQuery): Promise<StoreContents>;
   abstract set(configs: StoreContents): Promise<void>;
+
+  async init(userinfo?: string) {
+    this.uid = URI.serialize({ scheme: this.scheme, userinfo });
+  }
 
   static parse(rawConfigs: string) {
     return parse(rawConfigs);

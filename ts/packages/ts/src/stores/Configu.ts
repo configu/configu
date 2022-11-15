@@ -14,7 +14,7 @@ export class ConfiguStore extends Store {
   static readonly scheme = 'configu';
   private client: Axios;
   constructor({ credentials, endpoint = `https://api.configu.com`, source = 'sdk' }: ConfiguStoreConfiguration) {
-    super(ConfiguStore.scheme, credentials.org);
+    super(ConfiguStore.scheme);
 
     this.client = axios.create({
       baseURL: endpoint,
@@ -31,6 +31,10 @@ export class ConfiguStore extends Store {
     if (credentials.type === 'Bearer') {
       this.client.defaults.headers.common.Authorization = `${credentials.type} ${credentials.token}`;
     }
+  }
+
+  async init() {
+    super.init(this.client.defaults.headers.common.Org as string);
   }
 
   async get(query: StoreQuery): Promise<StoreContents> {

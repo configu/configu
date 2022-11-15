@@ -11,5 +11,6 @@
     { "path": "../lib" },
     { "path": "../node" },
   ],
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["node_modules", "build", "src/**/*.test*"]
 }
