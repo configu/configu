@@ -2,7 +2,7 @@ import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOpti
 import { TypeOrmStore } from './TypeORM';
 
 export class MariaStore extends TypeOrmStore {
-  static readonly scheme = 'sqlite';
+  static readonly scheme = 'mariadb';
 
   // * TypeORM uses the mysql driver under the hood for MariaDB
   constructor(configuration: Omit<MysqlConnectionOptions, 'type'>) {
