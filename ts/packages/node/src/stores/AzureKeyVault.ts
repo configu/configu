@@ -35,6 +35,7 @@ export class AzureKeyVaultStore extends KeyValueStore {
 
   // * https://learn.microsoft.com/en-us/javascript/api/@azure/keyvault-secrets/secretclient?view=azure-node-latest#@azure-keyvault-secrets-secretclient-begindeletesecret
   async delete(key: string): Promise<void> {
+    // ! This operation does not immediately remove secrets, attempting to upsert before absolute deletion is complete will throw an error
     await this.client.beginDeleteSecret(key);
   }
 }
