@@ -79,8 +79,6 @@ export abstract class TypeOrmStore extends Store {
       ...(entry.key !== '*' && { key: entry.key }),
     }));
 
-    console.log(await configRepository.find({ where: adjustedQuery }));
-
     return configRepository.find({ where: adjustedQuery });
   }
 }
