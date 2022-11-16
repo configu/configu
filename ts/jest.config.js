@@ -1,3 +1,4 @@
+/** @type {import('ts-jest').JestConfigWithTsJest} */
 // * https://jestjs.io/docs/configuration
 module.exports = {
   rootDir: '.',

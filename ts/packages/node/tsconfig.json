@@ -3,9 +3,7 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "build",
-    "composite": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "composite": true
   },
   "references": [{ "path": "../ts" }],
   "include": ["src"],
