@@ -25,6 +25,7 @@
   "dependencies": {
     "@aws-sdk/client-secrets-manager": "^3.180.0",
     "@configu/ts": "*",
+    "@kubernetes/client-node": "^0.17.1",
     "axios": "^0.27.2",
     "lodash": "^4.17.21"
   },
