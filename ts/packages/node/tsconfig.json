@@ -3,9 +3,11 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "build",
-    "composite": true
+    "composite": true,
   },
-  "references": [{ "path": "../ts" }],
+  "references": [
+    { "path": "../ts" },
+  ],
   "include": ["src"],
   "exclude": ["node_modules", "build", "src/**/*.test*"]
 }
