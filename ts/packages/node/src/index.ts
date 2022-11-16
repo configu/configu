@@ -8,9 +8,9 @@ export * from './stores/HashiCorpVault';
 export * from './stores/AuroraMysql';
 export * from './stores/AuroraPostgres';
 export * from './stores/CockroachDB';
-export * from './stores/Mysql';
+export * from './stores/MySQL';
 export * from './stores/Postgres';
-export * from './stores/Sqlite';
+export * from './stores/SQLite';
 export * from './stores/MariaDB';
 export * from './stores/MSSQL';
 
