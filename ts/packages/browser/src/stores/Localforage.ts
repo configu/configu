@@ -5,8 +5,6 @@ export class LocalForageStore extends KeyValueStore {
   static readonly scheme = 'localforage';
   private client: LocalForage;
   constructor(configuration: LocalForageOptions) {
-    // TODO: name is optional - perhaps we should enforce it or at least decide on a proper default instead of "localforage"?
-    // TODO: storeName is optional - perhaps we should enforce it or at least decide on a proper default instead of "keyvaluepairs"?
     super(LocalForageStore.scheme);
     this.client = localForage.createInstance(configuration);
   }
