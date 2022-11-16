@@ -30,7 +30,9 @@ export const HashiCorpVaultStoreSTI: SchemeToInit = {
     let address = parsedUri.host;
     if (queryDict.protocol) {
       address = `${queryDict.protocol}://${parsedUri.host}`;
-      if (parsedUri.port) address += `:${parsedUri.port}`;
+    }
+    if (parsedUri.port) {
+      address = address.concat(`:${parsedUri.port}`);
     }
     // * hashicorp-vault://token@address[&engine=][?protocol=]
     return {

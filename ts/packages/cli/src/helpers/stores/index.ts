@@ -16,9 +16,6 @@ const SCHEME_TO_STORE_INIT_FN_DICT: SchemeToInit = {
 
 export const constructStoreFromUri = (uri: string) => {
   const storeUri = URI.parse(uri);
-
-  console.log(storeUri); // TODO -remove
-
   const storeInitFunction = SCHEME_TO_STORE_INIT_FN_DICT[storeUri.scheme as string];
   if (!storeInitFunction) {
     throw new Error(`invalid store uri ${uri}`);
