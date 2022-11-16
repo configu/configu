@@ -5,6 +5,7 @@ export { NoopStore, ConfiguStore } from '@configu/ts';
 export * from './stores/JsonFile';
 export * from './stores/AwsSecretsManager';
 export * from './stores/HashiCorpVault';
+export * from './stores/KubernetesSecret';
 export * from './stores/GcpSecretManager';
 
 export { UpsertCommand, EvalCommand, DeleteCommand } from '@configu/ts';
