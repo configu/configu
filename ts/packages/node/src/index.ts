@@ -9,7 +9,7 @@ export * from './stores/KubernetesSecret';
 export * from './stores/GcpSecretManager';
 export * from './stores/AzureKeyVault';
 export * from './stores/AuroraMysql';
-export * from './stores/AuroraPostgres';
+export * from './stores/AuroraPostgreSQL';
 export * from './stores/CockroachDB';
 export * from './stores/MySQL';
 export * from './stores/PostgreSQL';
