@@ -12,6 +12,7 @@ export * from './stores/Mysql';
 export * from './stores/Postgres';
 export * from './stores/Sqlite';
 export * from './stores/MariaDB';
+export * from './stores/OracleDatabase';
 
 export { UpsertCommand, EvalCommand, DeleteCommand } from '@configu/ts';
 export * from './commands/ExportCommand';
