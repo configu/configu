@@ -32,8 +32,10 @@ export abstract class TypeOrmStore extends Store {
     super(protocol);
 
     this.dataSource = new DataSource({
-      ...dataSourceOptions,
+      // TODO: synchronize is not production safe - create a migration script to initialize tables
+      synchronize: true,
       entities: [Config],
+      ...dataSourceOptions,
     });
   }
 
