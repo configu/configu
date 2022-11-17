@@ -4,7 +4,7 @@ import { EvaluatedConfigsArray } from '@configu/ts';
 import { Set, Cfgu, UpsertCommand } from '@configu/node';
 import { extractConfigs } from '@configu/lib';
 import { BaseCommand } from '../base';
-import { constructStoreFromUrl } from '../helpers/stores';
+import { constructStoreFromUri } from '../helpers/stores';
 
 export default class Upsert extends BaseCommand {
   static description = 'creates, updates or deletes configs from a store';
@@ -32,8 +32,8 @@ export default class Upsert extends BaseCommand {
   public async run(): Promise<void> {
     const { flags } = await this.parse(Upsert);
 
-    const storeUrl = this.config.configData.stores?.[flags.store] ?? flags.store;
-    const { store } = await constructStoreFromUrl(storeUrl);
+    const storeUri = this.config.configData.stores?.[flags.store] ?? flags.store;
+    const { store } = await constructStoreFromUri(storeUri);
 
     const set = new Set(flags.set);
     const schema = new Cfgu(flags.schema);

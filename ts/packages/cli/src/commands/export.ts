@@ -11,7 +11,7 @@ import {
   ConfigSynchronizer,
 } from '@configu/lib';
 import { BaseCommand } from '../base';
-import { constructStoreFromUrl } from '../helpers/stores';
+import { constructStoreFromUri } from '../helpers/stores';
 import { SYNCHRONIZERS_FLAGS_DICT, syncIntegration } from '../helpers/synchronizers';
 
 export const NO_CONFIGS_WARNING_TEXT = 'no configuration was fetched';
@@ -132,8 +132,8 @@ export default class Export extends BaseCommand {
     }
 
     const storePromises = flags.store.map(async (storeFlag) => {
-      const storeUrl = this.config.configData.stores?.[storeFlag] ?? storeFlag;
-      const { store } = await constructStoreFromUrl(storeUrl);
+      const storeUri = this.config.configData.stores?.[storeFlag] ?? storeFlag;
+      const { store } = await constructStoreFromUri(storeUri);
       return store;
     });
     const store = await Promise.all(storePromises);

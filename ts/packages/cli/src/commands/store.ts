@@ -2,7 +2,7 @@ import { Flags } from '@oclif/core';
 import fs from 'fs/promises';
 import _ from 'lodash';
 import { BaseCommand } from '../base';
-import { constructStoreFromUrl } from '../helpers/stores';
+import { constructStoreFromUri } from '../helpers/stores';
 
 export default class Store extends BaseCommand {
   static description = 'caches config store credentials as names to later be used as --store flag value';
@@ -20,9 +20,9 @@ export default class Store extends BaseCommand {
   public async run(): Promise<void> {
     const { flags } = await this.parse(Store);
 
-    const { url } = await constructStoreFromUrl(flags.uri);
+    const { uri } = await constructStoreFromUri(flags.uri);
 
-    const configDataWithNewStore = _.set(this.config.configData, `stores.${flags.name}`, url);
+    const configDataWithNewStore = _.set(this.config.configData, `stores.${flags.name}`, uri);
     const rawConfigData = JSON.stringify(configDataWithNewStore);
     await fs.writeFile(this.config.configFile, rawConfigData);
   }

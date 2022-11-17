@@ -1,28 +1,47 @@
 import { HashiCorpVaultStore } from '@configu/node';
-import { ProtocolToInit } from './types';
+import { SchemeToInit } from './types';
 
-export const HashiCorpVaultStorePTI: ProtocolToInit = {
-  [HashiCorpVaultStore.protocol]: async (url) => {
+export const HashiCorpVaultStoreSTI: SchemeToInit = {
+  [HashiCorpVaultStore.scheme]: async ({ uri, parsedUri, queryDict, userinfo }) => {
+    const token = userinfo[0];
+
+    if (!queryDict.engine) {
+      throw new Error(`invalid store uri ${uri}`);
+    }
+
     // * hashicorp-vault://-
-    if (url.hostname === '-') {
+    if (parsedUri.host === '-') {
       const { VAULT_ADDR, VAULT_TOKEN } = process.env;
 
       if (!VAULT_ADDR || !VAULT_TOKEN) {
-        throw new Error(`invalid store url ${url}`);
+        throw new Error(`invalid store uri ${uri}`);
       }
 
       return {
-        url: `${HashiCorpVaultStore.protocol}://${VAULT_TOKEN}@${VAULT_ADDR}`,
-        store: new HashiCorpVaultStore({ address: VAULT_ADDR, token: VAULT_TOKEN }),
+        uri: `${HashiCorpVaultStore.scheme}://${VAULT_TOKEN}@${VAULT_ADDR}`,
+        store: new HashiCorpVaultStore({ address: VAULT_ADDR, token: VAULT_TOKEN, engine: queryDict.engine }),
       };
     }
 
-    // * hashicorp-vault://token@address[?protocol=]
-    const protocol = url.searchParams.get('protocol');
-    let address = url.host;
-    if (protocol) {
-      address = `${protocol}://${url.host}`;
+    if (!token || !parsedUri.host) {
+      throw new Error(`invalid store uri ${uri}`);
     }
-    return { url: url.href, store: new HashiCorpVaultStore({ address, token: url.username }) };
+
+    let address = parsedUri.host;
+    if (queryDict.protocol) {
+      address = `${queryDict.protocol}://${parsedUri.host}`;
+    }
+    if (parsedUri.port) {
+      address = address.concat(`:${parsedUri.port}`);
+    }
+    // * hashicorp-vault://token@address[&engine=][?protocol=]
+    return {
+      uri,
+      store: new HashiCorpVaultStore({
+        address,
+        token,
+        engine: queryDict.engine,
+      }),
+    };
   },
 };

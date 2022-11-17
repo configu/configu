@@ -1,9 +1,9 @@
 import { NoopStore } from '@configu/node';
-import { ProtocolToInit } from './types';
+import { SchemeToInit } from './types';
 
-export const NoopStorePTI: ProtocolToInit = {
-  [NoopStore.protocol]: async (url) => {
+export const NoopStorePTI: SchemeToInit = {
+  [NoopStore.scheme]: async ({ uri }) => {
     // * noop://-
-    return { url: url.href, store: new NoopStore() };
+    return { uri, store: new NoopStore() };
   },
 };
