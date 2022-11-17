@@ -31,15 +31,15 @@ export const AwsSecretsManagerStoreSTI: SchemeToInit = {
       };
     }
 
-    if (!splittedUserinfo || !splittedUserinfo[0] || !splittedUserinfo[1] || !parsedUri.host) {
+    if (!splittedUserinfo || !splittedUserinfo[0] || !queryDict.secretAccessKey || !parsedUri.host) {
       throw new Error(`invalid store uri ${uri}`);
     }
 
-    // * aws-secrets-manager://accessKeyId:secretAccessKey@region[?endpoint=]
+    // * aws-secrets-manager://accessKeyId@region[?secretAccessKey=][&endpoint=]
     return {
       uri,
       store: new AwsSecretsManagerStore({
-        credentials: { accessKeyId: splittedUserinfo[0], secretAccessKey: splittedUserinfo[1] },
+        credentials: { accessKeyId: splittedUserinfo[0], secretAccessKey: queryDict.secretAccessKey },
         region: parsedUri.host,
         endpoint,
       }),
