@@ -6,6 +6,7 @@ import { ConfiguStoreSTI } from './Configu';
 import { JsonFileStoreSTI } from './JsonFile';
 import { HashiCorpVaultStoreSTI } from './HashiCorpVault';
 import { AwsSecretsManagerStoreSTI } from './AwsSecretsManager';
+import { KubernetesSecretStoreSTI } from './Kubernetes';
 
 const SCHEME_TO_STORE_INIT_FN_DICT: SchemeToInit = {
   ...NoopStorePTI,
@@ -13,6 +14,7 @@ const SCHEME_TO_STORE_INIT_FN_DICT: SchemeToInit = {
   ...JsonFileStoreSTI,
   ...HashiCorpVaultStoreSTI,
   ...AwsSecretsManagerStoreSTI,
+  ...KubernetesSecretStoreSTI,
 };
 
 export const constructStoreFromUri = (uri: string) => {
