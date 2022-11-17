@@ -93,13 +93,11 @@ you should see the following code: ${chalk.bold(userCode)}. it expires in ${
 };
 
 export const ConfiguStoreSTI: SchemeToInit = {
-  [ConfiguStore.scheme]: async (uri) => {
+  [ConfiguStore.scheme]: async ({ uri, parsedUri, queryDict, userinfo }) => {
     const source = 'cli';
-    const parsedUri = URI.parse(uri);
-    const queryDict = _.fromPairs(parsedUri.query?.split('&').map((query) => query.split('=')));
     const endpoint = queryDict.endpoint ?? CONFIGU_DEFAULT_ENDPOINT;
     const type = (queryDict.type as 'Token' | 'Bearer' | null) ?? 'Token';
-    const splittedUserinfo = parsedUri.userinfo?.split(':');
+    const token = userinfo[0];
 
     // * configu://-[?endpoint=]
     if (parsedUri.host === '-') {
@@ -127,7 +125,7 @@ export const ConfiguStoreSTI: SchemeToInit = {
       };
     }
 
-    if (!splittedUserinfo || !splittedUserinfo[0] || !parsedUri.host) {
+    if (!token || !parsedUri.host) {
       throw new Error(`invalid store uri ${uri}`);
     }
 
@@ -135,7 +133,7 @@ export const ConfiguStoreSTI: SchemeToInit = {
     return {
       uri,
       store: new ConfiguStore({
-        credentials: { org: parsedUri.host, token: splittedUserinfo[0], type },
+        credentials: { org: parsedUri.host, token, type },
         source,
         endpoint,
       }),

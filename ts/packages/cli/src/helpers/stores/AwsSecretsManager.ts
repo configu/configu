@@ -1,15 +1,11 @@
-import _ from 'lodash';
-import { URI } from '@configu/ts';
 import { AwsSecretsManagerStore } from '@configu/node';
 import { SchemeToInit } from './types';
 
 // todo: try to utilize aws sdk's builtin configurations detection - https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/setting-credentials-node.html
 export const AwsSecretsManagerStoreSTI: SchemeToInit = {
-  [AwsSecretsManagerStore.scheme]: async (uri) => {
-    const parsedUri = URI.parse(uri);
-    const queryDict = _.fromPairs(parsedUri.query?.split('&').map((query) => query.split('=')));
+  [AwsSecretsManagerStore.scheme]: async ({ uri, parsedUri, queryDict, userinfo }) => {
     const endpoint = queryDict.endpoint ?? undefined;
-    const splittedUserinfo = parsedUri.userinfo?.split(':');
+    const accessKeyId = userinfo[0];
 
     // * aws-secrets-manager://-[?endpoint=]
     if (parsedUri.host === '-') {
@@ -31,7 +27,7 @@ export const AwsSecretsManagerStoreSTI: SchemeToInit = {
       };
     }
 
-    if (!splittedUserinfo || !splittedUserinfo[0] || !queryDict.secretAccessKey || !parsedUri.host) {
+    if (!accessKeyId || !queryDict.secretAccessKey || !parsedUri.host) {
       throw new Error(`invalid store uri ${uri}`);
     }
 
@@ -39,7 +35,7 @@ export const AwsSecretsManagerStoreSTI: SchemeToInit = {
     return {
       uri,
       store: new AwsSecretsManagerStore({
-        credentials: { accessKeyId: splittedUserinfo[0], secretAccessKey: queryDict.secretAccessKey },
+        credentials: { accessKeyId, secretAccessKey: queryDict.secretAccessKey },
         region: parsedUri.host,
         endpoint,
       }),

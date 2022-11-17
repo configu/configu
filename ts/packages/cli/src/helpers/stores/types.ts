@@ -1,5 +1,12 @@
-import { Store } from '@configu/ts';
+import { Store, URI } from '@configu/ts';
 
-export type InitFunction = (uri: string) => Promise<{ uri: string; store: Store }>;
+type InitFunctionParameters = {
+  uri: string;
+  parsedUri: ReturnType<typeof URI.parse>;
+  queryDict: Record<string, string>;
+  userinfo: [string?, string?];
+};
+
+export type InitFunction = (params: InitFunctionParameters) => Promise<{ uri: string; store: Store }>;
 
 export type SchemeToInit = Record<string, InitFunction>;

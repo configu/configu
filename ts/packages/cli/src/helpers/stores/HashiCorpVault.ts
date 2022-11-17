@@ -1,19 +1,19 @@
-import _ from 'lodash';
-import { URI } from '@configu/ts';
 import { HashiCorpVaultStore } from '@configu/node';
 import { SchemeToInit } from './types';
 
 export const HashiCorpVaultStoreSTI: SchemeToInit = {
-  [HashiCorpVaultStore.scheme]: async (uri) => {
-    const parsedUri = URI.parse(uri);
-    const queryDict = _.fromPairs(parsedUri.query?.split('&').map((query) => query.split('=')));
-    const splittedUserinfo = parsedUri.userinfo?.split(':');
+  [HashiCorpVaultStore.scheme]: async ({ uri, parsedUri, queryDict, userinfo }) => {
+    const token = userinfo[0];
+
+    if (!queryDict.engine) {
+      throw new Error(`invalid store uri ${uri}`);
+    }
 
     // * hashicorp-vault://-
     if (parsedUri.host === '-') {
       const { VAULT_ADDR, VAULT_TOKEN } = process.env;
 
-      if (!VAULT_ADDR || !VAULT_TOKEN || !queryDict.engine) {
+      if (!VAULT_ADDR || !VAULT_TOKEN) {
         throw new Error(`invalid store uri ${uri}`);
       }
 
@@ -23,7 +23,7 @@ export const HashiCorpVaultStoreSTI: SchemeToInit = {
       };
     }
 
-    if (!splittedUserinfo || !splittedUserinfo[0] || !parsedUri.host || !queryDict.engine) {
+    if (!token || !parsedUri.host) {
       throw new Error(`invalid store uri ${uri}`);
     }
 
@@ -39,7 +39,7 @@ export const HashiCorpVaultStoreSTI: SchemeToInit = {
       uri,
       store: new HashiCorpVaultStore({
         address,
-        token: splittedUserinfo[0],
+        token,
         engine: queryDict.engine,
       }),
     };
