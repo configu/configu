@@ -53,7 +53,7 @@ export const TMPL = {
       };
     });
   },
-  render: (template: string, context: any) => Mustache.render(template, context),
+  render: (template: string, context: any) => Mustache.render(template, context, {}, { escape: (value) => value }),
 };
 
 export const URI = { parse: Uri.parse, serialize: Uri.serialize };
