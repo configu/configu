@@ -52,7 +52,7 @@ const jsonToKubernetesConfigMap: FormatterFunction = ({ json, label }) => {
       creationTimestamp: new Date().toISOString(),
       name: label.toLowerCase(),
     },
-    json,
+    data: json,
   };
 
   return ymlStringify(jsonConfigMap);
