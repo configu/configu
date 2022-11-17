@@ -26,6 +26,7 @@
     "@configu/ts": "*",
     "axios": "^0.27.2",
     "browser-fs-access": "^0.31.1",
+    "localforage": "^1.10.0",
     "lodash": "^4.17.21"
   },
   "devDependencies": {
