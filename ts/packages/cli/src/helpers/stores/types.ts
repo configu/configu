@@ -1,6 +1,6 @@
 import { Store, URI } from '@configu/ts';
 
-type InitFunctionParameters = {
+export type InitFunctionParameters = {
   uri: string;
   parsedUri: ReturnType<typeof URI.parse>;
   queryDict: Record<string, string>;

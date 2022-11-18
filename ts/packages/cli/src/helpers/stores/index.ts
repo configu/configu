@@ -6,6 +6,16 @@ import { ConfiguStoreSTI } from './Configu';
 import { JsonFileStoreSTI } from './JsonFile';
 import { HashiCorpVaultStoreSTI } from './HashiCorpVault';
 import { AwsSecretsManagerStoreSTI } from './AwsSecretsManager';
+import {
+  AuroraMysqlStoreSTI,
+  AuroraPostgreSQLStoreSTI,
+  CockroachStoreSTI,
+  MSSQLStoreSTI,
+  MariaStoreSTI,
+  MySQLStoreSTI,
+  PostgresSQLStoreSTI,
+  SQLiteStoreSTI,
+} from './TypeORM';
 
 const SCHEME_TO_STORE_INIT_FN_DICT: SchemeToInit = {
   ...NoopStorePTI,
@@ -13,6 +23,14 @@ const SCHEME_TO_STORE_INIT_FN_DICT: SchemeToInit = {
   ...JsonFileStoreSTI,
   ...HashiCorpVaultStoreSTI,
   ...AwsSecretsManagerStoreSTI,
+  ...AuroraMysqlStoreSTI,
+  ...AuroraPostgreSQLStoreSTI,
+  ...CockroachStoreSTI,
+  ...MSSQLStoreSTI,
+  ...MariaStoreSTI,
+  ...MySQLStoreSTI,
+  ...PostgresSQLStoreSTI,
+  ...SQLiteStoreSTI,
 };
 
 export const constructStoreFromUri = (uri: string) => {
