@@ -29,6 +29,7 @@ const STI = async ({ uri, parsedUri, userinfo, queryDict }: InitFunctionParamete
     throw new Error(`invalid store uri ${uri}`);
   }
 
+  // * <scheme>://username:password@host[?database=]
   return {
     uri,
     store: {
