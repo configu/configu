@@ -27,7 +27,7 @@ export const constructStoreFromUri = (uri: string) => {
   const [user, password] = parsedUri.userinfo ? parsedUri.userinfo.split(':') : [];
   const storeInitFunction = SCHEME_TO_STORE_INIT_FN_DICT[parsedUri.scheme as string];
   if (!storeInitFunction) {
-    throw new Error(`invalid store uri ${uri}, scheme unidentified`);
+    throw new Error(`invalid store uri ${uri}`);
   }
   return storeInitFunction({ uri, parsedUri, queryDict, userinfo: [user, password] });
 };
