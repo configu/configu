@@ -7,8 +7,6 @@ export const AzureKeyVaultStoreSTI: SchemeToInit = {
     const { vaultUrl } = queryDict;
     const [clientId, clientSecret] = userinfo;
 
-    console.log(parsedUri);
-
     // * azure-key-vault://-[?vaultUrl=]
     if (parsedUri.host === '-') {
       const { AZURE_CLIENT_ID, AZURE_CLIENT_SECRET, AZURE_TENANT_ID } = process.env;
