@@ -1,7 +1,7 @@
 import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
-import { TypeOrmStore } from './TypeORM';
+import { ORMStore } from './ORM';
 
-export class MariaStore extends TypeOrmStore {
+export class MariaStore extends ORMStore {
   static readonly scheme = 'mariadb';
 
   // * TypeORM uses the mysql driver under the hood for MariaDB
