@@ -15,7 +15,7 @@ import {
   MySQLStoreSTI,
   PostgresSQLStoreSTI,
   SQLiteStoreSTI,
-} from './TypeORM';
+} from './ORM';
 
 const SCHEME_TO_STORE_INIT_FN_DICT: SchemeToInit = {
   ...NoopStorePTI,

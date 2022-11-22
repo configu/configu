@@ -10,7 +10,7 @@ import {
 } from '@configu/node';
 import { InitFunctionParameters, SchemeToInit } from './types';
 
-const STI = async ({ uri, parsedUri, userinfo, queryDict }: InitFunctionParameters) => {
+const GenerateORMSTI = async ({ uri, parsedUri, userinfo, queryDict }: InitFunctionParameters) => {
   const [username, password] = userinfo;
   const { database, region, secretArn, resourceArn } = queryDict;
   let host = `${parsedUri.host}${parsedUri.path}`;
@@ -46,54 +46,54 @@ const STI = async ({ uri, parsedUri, userinfo, queryDict }: InitFunctionParamete
 
 export const PostgresSQLStoreSTI: SchemeToInit = {
   [PostgreSQLStore.scheme]: async (params) => {
-    const { uri, store } = await STI(params);
+    const { uri, store } = await GenerateORMSTI(params);
     return { uri, store: new PostgreSQLStore(store) };
   },
 };
 
 export const AuroraMysqlStoreSTI: SchemeToInit = {
   [AuroraMysqlStore.scheme]: async (params) => {
-    const { uri, store } = await STI(params);
+    const { uri, store } = await GenerateORMSTI(params);
     return { uri, store: new AuroraMysqlStore(store) };
   },
 };
 
 export const AuroraPostgreSQLStoreSTI: SchemeToInit = {
   [AuroraPostgreSQLStore.scheme]: async (params) => {
-    const { uri, store } = await STI(params);
+    const { uri, store } = await GenerateORMSTI(params);
     return { uri, store: new AuroraPostgreSQLStore(store) };
   },
 };
 
 export const CockroachStoreSTI: SchemeToInit = {
   [CockroachStore.scheme]: async (params) => {
-    const { uri, store } = await STI(params);
+    const { uri, store } = await GenerateORMSTI(params);
     return { uri, store: new CockroachStore(store) };
   },
 };
 
 export const MSSQLStoreSTI: SchemeToInit = {
   [MSSQLStore.scheme]: async (params) => {
-    const { uri, store } = await STI(params);
+    const { uri, store } = await GenerateORMSTI(params);
     return { uri, store: new MSSQLStore(store) };
   },
 };
 
 export const MariaStoreSTI: SchemeToInit = {
   [MariaStore.scheme]: async (params) => {
-    const { uri, store } = await STI(params);
+    const { uri, store } = await GenerateORMSTI(params);
     return { uri, store: new MariaStore(store) };
   },
 };
 export const MySQLStoreSTI: SchemeToInit = {
   [MySQLStore.scheme]: async (params) => {
-    const { uri, store } = await STI(params);
+    const { uri, store } = await GenerateORMSTI(params);
     return { uri, store: new MySQLStore(store) };
   },
 };
 export const SQLiteStoreSTI: SchemeToInit = {
   [SQLiteStore.scheme]: async (params) => {
-    const { uri, store } = await STI(params);
+    const { uri, store } = await GenerateORMSTI(params);
     return { uri, store: new SQLiteStore(store) };
   },
 };
