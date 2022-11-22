@@ -23,8 +23,8 @@ export class EvalCommand extends Command<EvalCommandReturn> {
     const { store, set, schema } = this.parameters;
 
     const stores = Array.isArray(store) ? store : [store];
-    const storeDict = _.keyBy(stores, 'uid');
     await Promise.all(stores.map((storeInstance) => storeInstance.init()));
+    const storeDict = _.keyBy(stores, 'uid');
 
     const schemas = Array.isArray(schema) ? schema : [schema];
     const cfguContentsPromises = schemas.map((sch) => Cfgu.parse(sch));
