@@ -16,9 +16,9 @@ const SCHEME_TO_STORE_INIT_FN_DICT: SchemeToInit = {
   ...JsonFileStoreSTI,
   ...HashiCorpVaultStoreSTI,
   ...AwsSecretsManagerStoreSTI,
-  ...KubernetesSecretStoreSTI,
-  ...GcpSecretManagerStoreSTI,
   ...AzureKeyVaultStoreSTI,
+  ...GcpSecretManagerStoreSTI,
+  ...KubernetesSecretStoreSTI,
 };
 
 export const constructStoreFromUri = (uri: string) => {
