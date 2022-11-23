@@ -1,26 +1,26 @@
 import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
 import { KeyValueStore } from '@configu/ts';
 
-type GcpSecretManagerConfiguration = { keyFile: string; project: string };
+type GcpSecretManagerConfiguration = { keyFile: string; projectId: string };
 
 export class GcpSecretManagerStore extends KeyValueStore {
   static readonly scheme = 'gcp-secret-manager';
   private client: SecretManagerServiceClient;
-  private project: string;
+  private projectId: string;
 
-  constructor({ keyFile, project }: GcpSecretManagerConfiguration) {
+  constructor({ keyFile, projectId }: GcpSecretManagerConfiguration) {
     super(GcpSecretManagerStore.scheme, { keySeparator: '-' });
 
     this.client = new SecretManagerServiceClient({ keyFile });
-    this.project = project;
+    this.projectId = projectId;
   }
 
   async init() {
-    super.init(this.project);
+    super.init(this.projectId);
   }
 
   private formatKey(key: string): string {
-    return `projects/${this.project}/secrets/${key}`;
+    return `projects/${this.projectId}/secrets/${key}`;
   }
 
   // * https://cloud.google.com/secret-manager/docs/creating-and-accessing-secrets#access
@@ -47,7 +47,7 @@ export class GcpSecretManagerStore extends KeyValueStore {
     const formattedKey = this.formatKey(key);
     try {
       await this.client.createSecret({
-        parent: `projects/${this.project}`,
+        parent: `projects/${this.projectId}`,
         secretId: key,
         secret: {
           replication: {
