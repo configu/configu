@@ -25,7 +25,7 @@ class Config {
   value: string;
 }
 
-export abstract class TypeOrmStore extends Store {
+export abstract class ORMStore extends Store {
   readonly dataSource: DataSource;
 
   constructor(public protocol: string, dataSourceOptions: DataSourceOptions) {
