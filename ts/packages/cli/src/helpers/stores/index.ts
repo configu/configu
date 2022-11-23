@@ -9,6 +9,16 @@ import { AwsSecretsManagerStoreSTI } from './AwsSecretsManager';
 import { KubernetesSecretStoreSTI } from './Kubernetes';
 import { GcpSecretManagerStoreSTI } from './GcpSecretManager';
 import { AzureKeyVaultStoreSTI } from './AzureKeyVault';
+import {
+  AuroraMysqlStoreSTI,
+  AuroraPostgreSQLStoreSTI,
+  CockroachStoreSTI,
+  MSSQLStoreSTI,
+  MariaStoreSTI,
+  MySQLStoreSTI,
+  PostgresSQLStoreSTI,
+  SQLiteStoreSTI,
+} from './ORM';
 
 const SCHEME_TO_STORE_INIT_FN_DICT: SchemeToInit = {
   ...NoopStorePTI,
@@ -19,6 +29,14 @@ const SCHEME_TO_STORE_INIT_FN_DICT: SchemeToInit = {
   ...AzureKeyVaultStoreSTI,
   ...GcpSecretManagerStoreSTI,
   ...KubernetesSecretStoreSTI,
+  ...AuroraMysqlStoreSTI,
+  ...AuroraPostgreSQLStoreSTI,
+  ...CockroachStoreSTI,
+  ...MSSQLStoreSTI,
+  ...MariaStoreSTI,
+  ...MySQLStoreSTI,
+  ...PostgresSQLStoreSTI,
+  ...SQLiteStoreSTI,
 };
 
 export const constructStoreFromUri = (uri: string) => {
