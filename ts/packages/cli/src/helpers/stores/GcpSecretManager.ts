@@ -4,16 +4,16 @@ import { SchemeToInit } from './types';
 export const GcpSecretManagerStoreSTI: SchemeToInit = {
   [GcpSecretManagerStore.scheme]: async ({ uri, parsedUri, queryDict }) => {
     const keyFilePath = `${parsedUri.host}${parsedUri.path}`;
-    const { project } = queryDict;
+    const { projectId } = queryDict;
 
-    if (!project) {
+    if (!projectId) {
       throw new Error(`invalid store uri ${uri}`);
     }
 
-    // * gcp-secret-manager://path/to/keyfile.json[?project=]
+    // * gcp-secret-manager://path/to/keyfile.json[?projectId=]
     return {
       uri,
-      store: new GcpSecretManagerStore({ keyFile: keyFilePath, project }),
+      store: new GcpSecretManagerStore({ keyFile: keyFilePath, projectId }),
     };
   },
 };
