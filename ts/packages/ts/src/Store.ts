@@ -28,14 +28,18 @@ export abstract class Store implements IStore {
     if (!value) {
       return null;
     }
-    const expressions = TMPL.parse(value);
-    const isReference =
-      expressions.length === 1 && expressions[0].type === 'name' && expressions[0].end === value.length;
-    if (!isReference) {
+
+    try {
+      const expressions = TMPL.parse(value);
+      const isReference =
+        expressions.length === 1 && expressions[0].type === 'name' && expressions[0].end === value.length;
+      if (!isReference) {
+        return null;
+      }
+      return expressions[0].key;
+    } catch {
       return null;
     }
-
-    return expressions[0].key;
   }
 
   static parseReferenceValue(uri: string) {
@@ -69,6 +73,8 @@ export abstract class Store implements IStore {
       .value();
 
     return {
+      schema,
+      userinfo,
       uid: URI.serialize({ scheme, userinfo }),
       query: [
         {

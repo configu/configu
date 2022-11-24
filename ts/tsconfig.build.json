@@ -2,9 +2,9 @@
   "files": [],
   "references": [
     // { "path": "packages/cli" },
-    { "path": "packages/browser" },
-    { "path": "packages/node" },
-    { "path": "packages/lib" },
     { "path": "packages/ts" },
+    { "path": "packages/node" },
+    { "path": "packages/browser" },
+    { "path": "packages/lib" },
   ]
 }
