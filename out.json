@@ -1,0 +1,119 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "ConfigSchemaType": {
+            "title": "ConfigSchemaType",
+            "enum": [
+                "Base64",
+                "Boolean",
+                "Color",
+                "ConnectionString",
+                "Country",
+                "Currency",
+                "Domain",
+                "Email",
+                "Hex",
+                "IPv4",
+                "IPv6",
+                "LatLong",
+                "Locale",
+                "MD5",
+                "MobilePhone",
+                "Number",
+                "RegEx",
+                "SHA",
+                "SemVer",
+                "String",
+                "URL",
+                "UUID"
+            ],
+            "type": "string"
+        },
+        "ConfigSchema": {
+            "title": "ConfigSchema",
+            "type": "object",
+            "properties": {
+                "type": {
+                    "$ref": "#/definitions/ConfigSchemaType",
+                    "title": "type"
+                },
+                "default": {
+                    "type": "string",
+                    "title": "default"
+                },
+                "depends": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "title": "depends"
+                },
+                "description": {
+                    "type": "string",
+                    "title": "description"
+                },
+                "pattern": {
+                    "type": "string",
+                    "title": "pattern"
+                },
+                "required": {
+                    "type": "boolean",
+                    "title": "required"
+                },
+                "template": {
+                    "type": "string",
+                    "title": "template"
+                }
+            },
+            "required": [
+                "type"
+            ]
+        },
+        "SchemaContentsValue": {
+            "title": "SchemaContentsValue",
+            "type": "object",
+            "properties": {
+                "type": {
+                    "$ref": "#/definitions/ConfigSchemaType",
+                    "title": "type"
+                },
+                "default": {
+                    "type": "string",
+                    "title": "default"
+                },
+                "depends": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "title": "depends"
+                },
+                "description": {
+                    "type": "string",
+                    "title": "description"
+                },
+                "pattern": {
+                    "type": "string",
+                    "title": "pattern"
+                },
+                "required": {
+                    "type": "boolean",
+                    "title": "required"
+                },
+                "template": {
+                    "type": "string",
+                    "title": "template"
+                }
+            },
+            "required": [
+                "type"
+            ]
+        },
+        "SchemaContents": {
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/definitions/SchemaContentsValue"
+            }
+        }
+    }
+}
