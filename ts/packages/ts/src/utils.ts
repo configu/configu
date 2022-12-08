@@ -1,7 +1,6 @@
-import _ from 'lodash';
+import _, { Dictionary } from 'lodash';
 import Ajv, { SchemaObject } from 'ajv/dist/jtd';
 import Mustache from 'mustache';
-import qs from 'qs';
 
 export const ERR = (message: string, location: string[] = [], suggestion = '') => {
   return `${message}${_(location)
@@ -56,4 +55,12 @@ export const TMPL = {
   render: (template: string, context: any) => Mustache.render(template, context, {}, { escape: (value) => value }),
 };
 
-export const QS = { parse: qs.parse, stringify: qs.stringify };
+export const CS = {
+  parse: (cs: string): Dictionary<string | undefined> => {
+    return _(cs)
+      .split(';')
+      .map((q) => q.split('='))
+      .fromPairs()
+      .value();
+  },
+};

@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { JTD, TMPL, QS } from './utils';
+import { JTD, TMPL, CS } from './utils';
 import { Set } from './Set';
 import { IStore, StoreQuery, StoreContents, StoreContentsJTDSchema } from './types';
 
@@ -43,7 +43,7 @@ export abstract class Store implements IStore {
     // * ReferenceValue structure: store=<store.type>&query=[set/]<schema>[.key]
     // ! ReferenceValue uses only the Set specified in its query, it doesn't support Set hierarchy.
     try {
-      const { store, ...rest } = QS.parse(qs);
+      const { store, ...rest } = CS.parse(qs);
       const query = rest.query ?? rest.q;
 
       const isValidReference = typeof store === 'string' && typeof query === 'string';
