@@ -10,16 +10,11 @@ import { KeyValueStore } from '@configu/ts';
 
 // ! supports JSON secrets only
 export class AwsSecretsManagerStore extends KeyValueStore {
-  static readonly scheme = 'aws-secrets-manager';
+  static readonly type = 'aws-secrets-manager';
   private client: SecretsManagerClient;
   constructor(configuration: SecretsManagerClientConfig) {
-    super(AwsSecretsManagerStore.scheme);
+    super(AwsSecretsManagerStore.type);
     this.client = new SecretsManagerClient(configuration);
-  }
-
-  async init(): Promise<void> {
-    const region = await this.client.config.region();
-    super.init(region);
   }
 
   // * https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-secrets-manager/classes/getsecretvaluecommand.html

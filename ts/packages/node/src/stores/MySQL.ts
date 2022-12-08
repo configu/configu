@@ -2,9 +2,9 @@ import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOpti
 import { ORMStore } from './ORM';
 
 export class MySQLStore extends ORMStore {
-  static readonly scheme = 'mysql';
+  static readonly type = 'mysql';
 
   constructor(configuration: Omit<MysqlConnectionOptions, 'type'>) {
-    super(MySQLStore.scheme, { ...configuration, type: 'mysql' });
+    super(MySQLStore.type, { ...configuration, type: 'mysql' });
   }
 }

@@ -2,9 +2,9 @@ import { AuroraPostgresConnectionOptions } from 'typeorm/driver/aurora-postgres/
 import { ORMStore } from './ORM';
 
 export class AuroraPostgreSQLStore extends ORMStore {
-  static readonly scheme = 'aurora-postgres';
+  static readonly type = 'aurora-postgres';
 
   constructor(configuration: Omit<AuroraPostgresConnectionOptions, 'type'>) {
-    super(AuroraPostgreSQLStore.scheme, { ...configuration, type: 'aurora-postgres' });
+    super(AuroraPostgreSQLStore.type, { ...configuration, type: 'aurora-postgres' });
   }
 }

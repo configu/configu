@@ -6,8 +6,8 @@ type KeyValueStoreConfiguration = {
   keySeparator?: string;
 };
 export abstract class KeyValueStore extends Store {
-  constructor(scheme: string, protected configuration: KeyValueStoreConfiguration = {}) {
-    super(scheme);
+  constructor(type: string, protected configuration: KeyValueStoreConfiguration = {}) {
+    super(type);
   }
 
   protected abstract getByKey(key: string): Promise<string>;
@@ -16,7 +16,7 @@ export abstract class KeyValueStore extends Store {
 
   protected abstract delete(key: string): Promise<void>;
 
-  private calcKey({ set, schema }: StoreQuery[number]): string {
+  private calcKey({ set, schema }: StoreQuery): string {
     if (set === '*' || schema === '*') {
       throw new Error(`store ${this.constructor.name} don't support bulk operations`);
     }
@@ -49,7 +49,7 @@ export abstract class KeyValueStore extends Store {
     return jsonValue;
   }
 
-  async get(query: StoreQuery): Promise<StoreContents> {
+  async get(query: StoreQuery[]): Promise<StoreContents> {
     const keys = _(query)
       .map((q) => this.calcKey(q))
       .uniq()

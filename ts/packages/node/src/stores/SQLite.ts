@@ -2,9 +2,9 @@ import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionO
 import { ORMStore } from './ORM';
 
 export class SQLiteStore extends ORMStore {
-  static readonly scheme = 'sqlite';
+  static readonly type = 'sqlite';
 
   constructor(configuration: Omit<SqliteConnectionOptions, 'type'>) {
-    super(SQLiteStore.scheme, { ...configuration, type: 'sqlite' });
+    super(SQLiteStore.type, { ...configuration, type: 'sqlite' });
   }
 }

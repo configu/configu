@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import Ajv, { SchemaObject } from 'ajv/dist/jtd';
 import Mustache from 'mustache';
-import * as Uri from 'uri-js';
+import qs from 'qs';
 
 export const ERR = (message: string, location: string[] = [], suggestion = '') => {
   return `${message}${_(location)
@@ -56,4 +56,4 @@ export const TMPL = {
   render: (template: string, context: any) => Mustache.render(template, context, {}, { escape: (value) => value }),
 };
 
-export const URI = { parse: Uri.parse, serialize: Uri.serialize };
+export const QS = { parse: qs.parse, stringify: qs.stringify };

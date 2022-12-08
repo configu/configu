@@ -1,16 +1,11 @@
 import fs from 'fs/promises';
-import crypto from 'crypto';
 import _ from 'lodash';
 import { Store, StoreQuery, StoreContents } from '@configu/ts';
 
 export class JsonFileStore extends Store {
-  static readonly scheme = 'json-file';
+  static readonly type = 'json-file';
   constructor(public path: string) {
-    super(JsonFileStore.scheme);
-  }
-
-  async init() {
-    super.init(crypto.createHash('md5').update(this.path).digest('hex'));
+    super(JsonFileStore.type);
   }
 
   async read(): Promise<StoreContents> {
@@ -23,7 +18,7 @@ export class JsonFileStore extends Store {
     await fs.writeFile(this.path, data);
   }
 
-  async get(query: StoreQuery): Promise<StoreContents> {
+  async get(query: StoreQuery[]): Promise<StoreContents> {
     const storedConfigs = await this.read();
 
     return storedConfigs.filter((config) => {

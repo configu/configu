@@ -28,8 +28,8 @@ class Config {
 export abstract class ORMStore extends Store {
   readonly dataSource: DataSource;
 
-  constructor(public protocol: string, dataSourceOptions: DataSourceOptions) {
-    super(protocol);
+  constructor(type: string, dataSourceOptions: DataSourceOptions) {
+    super(type);
 
     this.dataSource = new DataSource({
       // TODO: synchronize is not production safe - create a migration script to initialize tables
@@ -41,7 +41,6 @@ export abstract class ORMStore extends Store {
 
   async init() {
     await this.dataSource.initialize();
-    super.init(this.dataSource.driver.database);
   }
 
   private async delete(configs: StoreContents): Promise<void> {
@@ -70,7 +69,7 @@ export abstract class ORMStore extends Store {
     }
   }
 
-  async get(query: StoreQuery): Promise<StoreContents> {
+  async get(query: StoreQuery[]): Promise<StoreContents> {
     const configRepository = this.dataSource.getRepository(Config);
 
     const adjustedQuery = query.map((entry) => ({

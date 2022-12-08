@@ -2,9 +2,9 @@ import { AuroraMysqlConnectionOptions } from 'typeorm/driver/aurora-mysql/Aurora
 import { ORMStore } from './ORM';
 
 export class AuroraMysqlStore extends ORMStore {
-  static readonly scheme = 'aurora-mysql';
+  static readonly type = 'aurora-mysql';
 
   constructor(configuration: Omit<AuroraMysqlConnectionOptions, 'type'>) {
-    super(AuroraMysqlStore.scheme, { ...configuration, type: 'aurora-mysql' });
+    super(AuroraMysqlStore.type, { ...configuration, type: 'aurora-mysql' });
   }
 }

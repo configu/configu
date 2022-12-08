@@ -2,17 +2,11 @@ import localForage from 'localforage';
 import { KeyValueStore } from '@configu/ts';
 
 export class LocalForageStore extends KeyValueStore {
-  static readonly scheme = 'localforage';
+  static readonly type = 'localforage';
   private client: LocalForage;
   constructor(configuration: LocalForageOptions) {
-    super(LocalForageStore.scheme);
+    super(LocalForageStore.type);
     this.client = localForage.createInstance(configuration);
-  }
-
-  async init() {
-    const config = this.client.config();
-    const separator = config.name && config.storeName ? ':' : '';
-    super.init(`${config.name}${separator}${config.storeName}`);
   }
 
   // * https://localforage.github.io/localForage/#data-api-getitem
