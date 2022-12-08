@@ -1,13 +1,4 @@
-import {
-  AuroraMysqlStore,
-  AuroraPostgreSQLStore,
-  CockroachStore,
-  MSSQLStore,
-  MariaStore,
-  MySQLStore,
-  PostgreSQLStore,
-  SQLiteStore,
-} from '@configu/node';
+import { CockroachStore, MSSQLStore, MariaStore, MySQLStore, PostgreSQLStore, SQLiteStore } from '@configu/node';
 import { InitFunctionParameters, SchemeToInit } from './types';
 
 const GenerateORMSTI = async ({ uri, parsedUri, userinfo, queryDict }: InitFunctionParameters) => {
@@ -19,13 +10,6 @@ const GenerateORMSTI = async ({ uri, parsedUri, userinfo, queryDict }: InitFunct
   }
 
   if (!username || !password || !host || !database) {
-    throw new Error(`invalid store uri ${uri}`);
-  }
-
-  if (
-    (parsedUri.scheme === AuroraMysqlStore.scheme || parsedUri.scheme === AuroraPostgreSQLStore.scheme) &&
-    (!region || !secretArn || !resourceArn)
-  ) {
     throw new Error(`invalid store uri ${uri}`);
   }
 
@@ -50,21 +34,6 @@ export const PostgresSQLStoreSTI: SchemeToInit = {
     return { uri, store: new PostgreSQLStore(store) };
   },
 };
-
-export const AuroraMysqlStoreSTI: SchemeToInit = {
-  [AuroraMysqlStore.scheme]: async (params) => {
-    const { uri, store } = await GenerateORMSTI(params);
-    return { uri, store: new AuroraMysqlStore(store) };
-  },
-};
-
-export const AuroraPostgreSQLStoreSTI: SchemeToInit = {
-  [AuroraPostgreSQLStore.scheme]: async (params) => {
-    const { uri, store } = await GenerateORMSTI(params);
-    return { uri, store: new AuroraPostgreSQLStore(store) };
-  },
-};
-
 export const CockroachStoreSTI: SchemeToInit = {
   [CockroachStore.scheme]: async (params) => {
     const { uri, store } = await GenerateORMSTI(params);

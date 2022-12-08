@@ -10,8 +10,6 @@ import { KubernetesSecretStoreSTI } from './Kubernetes';
 import { GcpSecretManagerStoreSTI } from './GcpSecretManager';
 import { AzureKeyVaultStoreSTI } from './AzureKeyVault';
 import {
-  AuroraMysqlStoreSTI,
-  AuroraPostgreSQLStoreSTI,
   CockroachStoreSTI,
   MSSQLStoreSTI,
   MariaStoreSTI,
@@ -29,8 +27,6 @@ const SCHEME_TO_STORE_INIT_FN_DICT: SchemeToInit = {
   ...AzureKeyVaultStoreSTI,
   ...GcpSecretManagerStoreSTI,
   ...KubernetesSecretStoreSTI,
-  ...AuroraMysqlStoreSTI,
-  ...AuroraPostgreSQLStoreSTI,
   ...CockroachStoreSTI,
   ...MSSQLStoreSTI,
   ...MariaStoreSTI,
