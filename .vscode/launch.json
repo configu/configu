@@ -51,11 +51,11 @@
       "request": "launch",
       "cwd": "${workspaceRoot}/ts",
       "runtimeArgs": [
-        "--inspect-brk",
+        "--inspect",
         "node_modules/.bin/jest",
-        "--runInBand",
-        "src/*.test.ts"
+        "--runInBand"
       ],
+      "outputCapture": "std"
       // "internalConsoleOptions": "neverOpen",
     },
   ]

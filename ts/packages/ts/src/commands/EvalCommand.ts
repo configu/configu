@@ -75,7 +75,7 @@ export class EvalCommand extends Command<EvalCommandReturn> {
             // * the code shouldn't get here if the reference was added via the upsert command
             return { key, value: '' };
           }
-          const referencedStores = stores.filter((s) => s.type === referenceData.store);
+          const referencedStores = stores.filter((s, i) => i !== 0 && s.type === referenceData.store);
           if (_.isEmpty(referencedStores)) {
             // * the store required to eval the current reference value was not provided via parameters
             return { key, value: '' };

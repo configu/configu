@@ -39,11 +39,11 @@ export abstract class Store implements IStore {
     }
   }
 
-  static parseReferenceValue(qs: string) {
-    // * ReferenceValue structure: store=<store.type>&query=[set/]<schema>[.key]
+  static parseReferenceValue(value: string) {
+    // * ReferenceValue structure: store=<store.type>;query=[set/]<schema>[.key]
     // ! ReferenceValue uses only the Set specified in its query, it doesn't support Set hierarchy.
     try {
-      const { store, ...rest } = CS.parse(qs);
+      const { store, ...rest } = CS.parse(value);
       const query = rest.query ?? rest.q;
 
       const isValidReference = typeof store === 'string' && typeof query === 'string';
@@ -73,49 +73,4 @@ export abstract class Store implements IStore {
       return null;
     }
   }
-
-  // static parseReferenceValue(uri: string) {
-  //   // * ReferenceValue structure: <scheme>://[userinfo@][set/]<schema>[.key][?key=[key]]
-  //   // ! ReferenceValue uses only the Set specified in its URI, it doesn't support Set hierarchy.
-
-  //   const { scheme, userinfo, host, path, query } = URI.parse(uri);
-  //   if (!scheme || !host) {
-  //     return null;
-  //   }
-  //   const [setAndSchema, ...keyPath] = `${host}${path}`.split('.');
-  //   if (!setAndSchema) {
-  //     return null;
-  //   }
-  //   const splittedSetAndSchema = setAndSchema.split('/');
-  //   const schema = splittedSetAndSchema.pop();
-  //   if (!schema) {
-  //     return null;
-  //   }
-  //   let set = '';
-  //   try {
-  //     set = new Set(splittedSetAndSchema.join('/')).path;
-  //   } catch (error) {
-  //     return null;
-  //   }
-
-  //   const queryDict = _(query)
-  //     .split('&')
-  //     .map((q) => q.split('='))
-  //     .fromPairs()
-  //     .value();
-
-  //   return {
-  //     schema,
-  //     userinfo,
-  //     uid: URI.serialize({ scheme, userinfo }),
-  //     query: [
-  //       {
-  //         key: keyPath.join('.'),
-  //         schema,
-  //         set,
-  //         ...queryDict,
-  //       },
-  //     ],
-  //   };
-  // }
 }
