@@ -36,8 +36,7 @@
     "pg": "^8.8.0",
     "reflect-metadata": "^0.1.13",
     "sqlite3": "^5.1.2",
-    "typeorm": "^0.3.10",
-    "typeorm-aurora-data-api-driver": "^2.4.4"
+    "typeorm": "^0.3.10"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.186"

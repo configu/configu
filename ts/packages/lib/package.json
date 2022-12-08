@@ -23,6 +23,7 @@
     "dotenv": "^16.0.3",
     "js-yaml": "^4.1.0",
     "lodash": "^4.17.21",
+    "type-fest": "^3.3.0",
     "validator": "^13.7.0"
   },
   "devDependencies": {

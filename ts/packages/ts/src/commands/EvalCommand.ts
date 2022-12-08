@@ -24,7 +24,6 @@ export class EvalCommand extends Command<EvalCommandReturn> {
 
     const stores = Array.isArray(store) ? store : [store];
     await Promise.all(stores.map((storeInstance) => storeInstance.init()));
-    const storeDict = _.keyBy(stores, 'uid');
 
     const schemas = Array.isArray(schema) ? schema : [schema];
     const cfguContentsPromises = schemas.map((sch) => Cfgu.parse(sch));
@@ -76,14 +75,18 @@ export class EvalCommand extends Command<EvalCommandReturn> {
             // * the code shouldn't get here if the reference was added via the upsert command
             return { key, value: '' };
           }
-          const referencedStore = storeDict[referenceData.uid];
-          if (!referencedStore) {
+          const referencedStores = stores.filter((s, i) => i !== 0 && s.type === referenceData.store);
+          if (_.isEmpty(referencedStores)) {
             // * the store required to eval the current reference value was not provided via parameters
             return { key, value: '' };
           }
 
-          const referencedValue = await referencedStore.get(referenceData.query);
-          return { key, value: referencedValue[0].value };
+          const referencedValues = await Promise.all(referencedStores.map((s) => s.get([referenceData.query])));
+          const evaluatedReferencedValue =
+            _(referencedValues)
+              .reverse()
+              .find((v) => Boolean(v?.[0]?.value))?.[0]?.value ?? ''; // todo: refactor to something nicer then that
+          return { key, value: evaluatedReferencedValue };
         }
 
         if (configSchema.default) {

@@ -8,19 +8,15 @@ type KubernetesSecretConfiguration = {
 };
 
 export class KubernetesSecretStore extends KeyValueStore {
-  static readonly scheme = 'kubernetes-secret';
+  static readonly type = 'kubernetes-secret';
   private client: CoreV1Api;
   private namespace: string;
   constructor({ kubeconfigFilePath, namespace }: KubernetesSecretConfiguration) {
-    super(KubernetesSecretStore.scheme, { keySeparator: '-' });
+    super(KubernetesSecretStore.type, { keySeparator: '-' });
     const kubernetesConfig = new KubeConfig();
     kubernetesConfig.loadFromFile(kubeconfigFilePath);
     this.client = kubernetesConfig.makeApiClient(CoreV1Api);
     this.namespace = namespace;
-  }
-
-  async init() {
-    super.init(this.namespace);
   }
 
   async getByKey(key: string): Promise<string> {
