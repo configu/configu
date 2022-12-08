@@ -85,7 +85,7 @@ export class EvalCommand extends Command<EvalCommandReturn> {
           const evaluatedReferencedValue =
             _(referencedValues)
               .reverse()
-              .find((v) => Boolean(v?.[0]?.value))?.[0]?.value ?? '';
+              .find((v) => Boolean(v?.[0]?.value))?.[0]?.value ?? ''; // todo: refactor to something nicer then that
           return { key, value: evaluatedReferencedValue };
         }
 
