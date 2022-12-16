@@ -1,11 +1,10 @@
-import fs from 'fs/promises';
+import { promises as fs } from 'fs';
 import _ from 'lodash';
 import { Store, StoreQuery, StoreContents } from '@configu/ts';
 
 export class JsonFileStore extends Store {
-  static readonly type = 'json-file';
   constructor(public path: string) {
-    super(JsonFileStore.type);
+    super('json-file');
   }
 
   async read(): Promise<StoreContents> {

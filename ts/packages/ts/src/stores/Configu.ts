@@ -11,10 +11,9 @@ type ConfiguStoreConfiguration = {
 };
 
 export class ConfiguStore extends Store {
-  static readonly type = 'configu';
   private client: Axios;
   constructor({ credentials, endpoint = `https://api.configu.com`, source = 'sdk' }: ConfiguStoreConfiguration) {
-    super(ConfiguStore.type);
+    super('configu');
 
     this.client = axios.create({
       baseURL: endpoint,

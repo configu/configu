@@ -8,10 +8,9 @@ type AzureKeyVaultConfiguration = {
 };
 
 export class AzureKeyVaultStore extends KeyValueStore {
-  static readonly type = 'azure-key-vault';
   private client: SecretClient;
   constructor({ credentials: { clientId, clientSecret, tenantId }, vaultUrl }: AzureKeyVaultConfiguration) {
-    super(AzureKeyVaultStore.type, { keySeparator: '-' });
+    super('azure-key-vault', { keySeparator: '-' });
 
     const clientCredentials = new ClientSecretCredential(tenantId, clientId, clientSecret);
     this.client = new SecretClient(vaultUrl, clientCredentials);

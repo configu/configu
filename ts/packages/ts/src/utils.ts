@@ -63,4 +63,10 @@ export const CS = {
       .fromPairs()
       .value();
   },
+  serialize: (dict: Dictionary<string | undefined>): string => {
+    return _(dict)
+      .toPairs()
+      .map(([key, value]) => `${key}=${value}`)
+      .join(';');
+  },
 };

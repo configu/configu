@@ -10,10 +10,9 @@ import { KeyValueStore } from '@configu/ts';
 
 // ! supports JSON secrets only
 export class AwsSecretsManagerStore extends KeyValueStore {
-  static readonly type = 'aws-secrets-manager';
   private client: SecretsManagerClient;
   constructor(configuration: SecretsManagerClientConfig) {
-    super(AwsSecretsManagerStore.type);
+    super('aws-secrets-manager');
     this.client = new SecretsManagerClient(configuration);
   }
 

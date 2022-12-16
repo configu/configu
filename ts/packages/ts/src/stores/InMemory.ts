@@ -3,11 +3,10 @@ import { Store } from '../Store';
 import { StoreQuery, StoreContents } from '../types';
 
 export class InMemoryStore extends Store {
-  static readonly type = 'in-memory';
   private data: StoreContents = [];
 
   constructor() {
-    super(InMemoryStore.type);
+    super('in-memory');
   }
 
   async get(query: StoreQuery[]): Promise<StoreContents> {

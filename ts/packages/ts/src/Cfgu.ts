@@ -47,21 +47,25 @@ export class Cfgu implements ICfgu {
   static NAMING_RULES = {
     PATTERN: /^[A-Za-z0-9_-]+$/,
     RESERVED: [
+      'config',
       'store',
       'query',
       'q',
       'set',
-      'cfgu',
       'schema',
-      'config',
+      'cfgu',
+
+      '_',
+      '-',
+      'this',
       'current',
       'cur',
-      'this',
       'root',
+      'default',
+
       'admin',
       'general',
       'local',
-      '_',
     ],
   };
 
