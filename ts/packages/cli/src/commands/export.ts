@@ -11,7 +11,7 @@ import {
   ConfigSynchronizer,
 } from '@configu/lib';
 import { BaseCommand } from '../base';
-import { constructStoreFromUri } from '../helpers/stores';
+import { constructStoreFromConnectionString } from '../helpers/stores';
 import { SYNCHRONIZERS_FLAGS_DICT, syncIntegration } from '../helpers/synchronizers';
 
 export const NO_CONFIGS_WARNING_TEXT = 'no configuration was fetched';
@@ -25,17 +25,31 @@ export default class Export extends BaseCommand {
   ];
 
   static flags = {
-    store: Flags.string({ multiple: true, description: 'stores to fetch configurations from', default: ['default'] }),
-    defaults: Flags.boolean({ description: 'only use the defaults property from the schema to export configurations' }),
-
-    set: Flags.string({ description: 'hierarchy of the configs', default: '' }),
-    schema: Flags.string({
-      required: true,
+    store: Flags.string({
+      description: 'config-stores to fetch configurations from',
+      exclusive: ['defaults'],
       multiple: true,
-      description: 'path to a <schema>.cfgu.[json|yaml] files',
+      default: [],
+    }),
+    defaults: Flags.boolean({
+      description: 'only use the defaults property from the schema to export configurations',
+      exclusive: ['store'],
+      aliases: ['use-defaults'],
     }),
 
-    label: Flags.string({ description: 'metadata required in some formats like k8s ConfigMaps' }),
+    set: Flags.string({
+      description: 'hierarchy of the configs',
+      default: '',
+    }),
+    schema: Flags.string({
+      description: 'path to a <schema>.cfgu.[json|yaml] files',
+      required: true,
+      multiple: true,
+    }),
+
+    label: Flags.string({
+      description: 'metadata required in some formats like k8s ConfigMaps',
+    }),
     empty: Flags.boolean({
       description: 'omits all non-value configurations in the current set',
       default: true,
@@ -127,13 +141,13 @@ export default class Export extends BaseCommand {
     const { flags } = await this.parse(Export);
 
     if (flags.defaults) {
-      flags.store = ['noop://-'];
+      flags.store = ['store=noop'];
       flags.set = '';
     }
 
     const storePromises = flags.store.map(async (storeFlag) => {
-      const storeUri = this.config.configData.stores?.[storeFlag] ?? storeFlag;
-      const { store } = await constructStoreFromUri(storeUri);
+      const storeCS = this.config.configData.stores?.[storeFlag] ?? storeFlag;
+      const { store } = await constructStoreFromConnectionString(storeCS);
       return store;
     });
     const store = await Promise.all(storePromises);

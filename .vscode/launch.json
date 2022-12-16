@@ -12,19 +12,24 @@
         // "VAULT_TOKEN": "root"
       },
       "args": [
-        "upsert",
+        // "upsert",
         // "export",
+        "delete",
+
+        "--store", "configu-prod",
         // "--store", "json-file://ts/packages/node/test/db.json",
         // "--store", "hashicorp-vault://-",
-        "--store", "configu://8o5t3Em1zodJ8V5M069qhYT3wzHyLNw5i2gd7oth@playground",
+
         // "--set", "secret/prod",
         // "--set", "/prod/us-east-1",
-        "--set", "dev",
+        "--set", "demo",
+
         // "--schema", "tmp/test/s1.cfgu.json",
         // "--schema", "ts/packages/node/test/s2.cfgu.json",
-        "--schema", "~/dev/saas/saas.cfgu.json",
+        // "--schema", "~/dev/saas/saas.cfgu.json",
+
         // "--config", "S1V1=44", //"S1V1={{hashicorp-vault://secret/prod/service/NPM_TOKEN}}"
-        "--config", "BAR=bar"
+        // "--config", "BAR=bar"
       ],
       "outFiles": [
         "${workspaceFolder}/**/*.js",

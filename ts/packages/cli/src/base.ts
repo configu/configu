@@ -4,6 +4,10 @@ import path from 'path';
 import _ from 'lodash';
 import chalk from 'chalk';
 import ci from 'ci-info';
+import inquirer from 'inquirer';
+import inquirerPrompt from 'inquirer-autocomplete-prompt';
+
+inquirer.registerPrompt('autocomplete', inquirerPrompt);
 
 type BaseConfig = Config & { ci: typeof ci; configFile: string; configData: { stores?: Record<string, string> } };
 
@@ -48,6 +52,11 @@ export abstract class BaseCommand extends Command {
 
       throw error;
     }
+  }
+
+  async writeConfigData() {
+    const rawConfigData = JSON.stringify(this.config.configData);
+    await fs.writeFile(this.config.configFile, rawConfigData);
   }
 
   async init() {
