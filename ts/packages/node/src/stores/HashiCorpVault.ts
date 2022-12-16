@@ -5,11 +5,10 @@ type HashiCorpVaultConfiguration = { address: string; token: string; engine: str
 
 // ! supports K/V2 engine only
 export class HashiCorpVaultStore extends KeyValueStore {
-  static readonly type = 'hashicorp-vault';
   private client: Axios;
   private engine: string;
   constructor({ address, token, engine }: HashiCorpVaultConfiguration) {
-    super(HashiCorpVaultStore.type);
+    super('hashicorp-vault');
 
     this.client = axios.create({
       baseURL: `${address}/v1`,

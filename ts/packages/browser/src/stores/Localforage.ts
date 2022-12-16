@@ -2,10 +2,9 @@ import localForage from 'localforage';
 import { KeyValueStore } from '@configu/ts';
 
 export class LocalForageStore extends KeyValueStore {
-  static readonly type = 'localforage';
   private client: LocalForage;
   constructor(configuration: LocalForageOptions) {
-    super(LocalForageStore.type);
+    super('localforage');
     this.client = localForage.createInstance(configuration);
   }
 

@@ -2,9 +2,7 @@ import { SqlServerConnectionOptions } from 'typeorm/driver/sqlserver/SqlServerCo
 import { ORMStore } from './ORM';
 
 export class MSSQLStore extends ORMStore {
-  static readonly type = 'mssql';
-
   constructor(configuration: Omit<SqlServerConnectionOptions, 'type'>) {
-    super(MSSQLStore.type, { ...configuration, type: 'mssql' });
+    super('mssql', { ...configuration, type: 'mssql' });
   }
 }

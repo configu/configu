@@ -2,9 +2,7 @@ import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConne
 import { ORMStore } from './ORM';
 
 export class PostgreSQLStore extends ORMStore {
-  static readonly type = 'postgres';
-
   constructor(configuration: Omit<PostgresConnectionOptions, 'type'>) {
-    super(PostgreSQLStore.type, { ...configuration, type: 'postgres' });
+    super('postgres', { ...configuration, type: 'postgres' });
   }
 }

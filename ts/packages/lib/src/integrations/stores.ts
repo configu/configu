@@ -2,6 +2,7 @@ import { LiteralUnion } from 'type-fest';
 
 export type StoreType = LiteralUnion<
   | 'noop'
+  | 'in-memory'
   | 'configu'
   | 'json-file'
   | 'hashicorp-vault'
@@ -20,9 +21,11 @@ export type StoreType = LiteralUnion<
 
 export const STORE_CONFIGURATION: Record<StoreType, Record<string, { required: boolean; env?: string }>> = {
   noop: {},
+  'in-memory': {},
   configu: {
-    token: { required: true, env: 'CONFIGU_TOKEN' },
     org: { required: true, env: 'CONFIGU_ORG' },
+    token: { required: true, env: 'CONFIGU_TOKEN' },
+    type: { required: true },
     endpoint: { required: false },
   },
   'json-file': {
@@ -72,13 +75,23 @@ export const STORE_CONFIGURATION: Record<StoreType, Record<string, { required: b
   },
 };
 
+export const getStoreConnectionStringPlaceholder = (store: StoreType) => {
+  const storeConfigurationDefinition = STORE_CONFIGURATION[store];
+  if (!storeConfigurationDefinition) {
+    throw new Error(`unknown store type ${store}`);
+  }
+  let connectionStringPlaceholder = `store=${store}`;
+  Object.entries(storeConfigurationDefinition).forEach(([key, settings]) => {
+    const keyNode = `${key}=<${key}>`;
+    const placeholder = settings.required ? `;${keyNode}` : `[;${keyNode}]`;
+    connectionStringPlaceholder = `${connectionStringPlaceholder}${placeholder}`;
+  });
+  return connectionStringPlaceholder;
+};
+
 export const STORE_LABEL: Record<StoreType, string> = {
-  HashiCorpVault: 'HashiCorp Vault',
-  AzureKeyVault: 'Azure Key Vault',
-  AwsSecretsManager: 'AWS Secrets Manager',
-  GcpSecretManager: 'GCP Secret Manager',
-  KubernetesSecret: 'Kubernetes Secret',
   noop: 'Noop',
+  'in-memory': 'In Memory',
   configu: 'Configu',
   'json-file': 'Json File',
   'hashicorp-vault': 'HashiCorp Vault',
@@ -94,12 +107,22 @@ export const STORE_LABEL: Record<StoreType, string> = {
   mssql: 'Microsoft SQL Server',
 };
 
-// export const STORE_WEBSITE: Record<StoreType, string> = {
-//   HashiCorpVault: 'https://www.vaultproject.io/',
-//   AzureKeyVault: 'https://azure.microsoft.com/en-us/services/key-vault/',
-//   AwsSecretsManager: 'https://aws.amazon.com/secrets-manager/',
-//   GcpSecretManager: 'https://cloud.google.com/secret-manager/',
-//   KubernetesSecret: 'https://kubernetes.io/docs/concepts/configuration/secret/',
-// };
+export const STORE_WEBSITE: Record<StoreType, string> = {
+  noop: '',
+  'in-memory': '',
+  configu: 'https://configu.com/',
+  'json-file': 'https://www.json.org/json-en.html',
+  'hashicorp-vault': 'https://www.vaultproject.io/',
+  'aws-secrets-manager': 'https://aws.amazon.com/secrets-manager/',
+  'azure-key-vault': 'https://azure.microsoft.com/en-us/services/key-vault/',
+  'gcp-secret-manager': 'https://cloud.google.com/secret-manager/',
+  'kubernetes-secret': 'https://kubernetes.io/docs/concepts/configuration/secret/',
+  sqlite: 'https://www.sqlite.org/index.html',
+  mysql: 'https://www.mysql.com/',
+  mariadb: 'https://mariadb.org/',
+  postgres: 'https://www.postgresql.org/',
+  cockroachdb: 'https://www.cockroachlabs.com/',
+  mssql: 'https://www.microsoft.com/en-gb/sql-server',
+};
 
 export const STORE_TYPE = Object.keys(STORE_LABEL) as StoreType[];
