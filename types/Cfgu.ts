@@ -1,4 +1,4 @@
-export enum ConfigSchemaType {
+export enum CfguType {
   Base64 = "Base64",
   Boolean = "Boolean",
   Color = "Color",
@@ -23,8 +23,11 @@ export enum ConfigSchemaType {
   Uuid = "UUID",
 }
 
-export interface ConfigSchema {
-  type: ConfigSchemaType;
+/**
+ * A generic declaration of a Config, aka Cfgu that specifies information about its type and other characteristics
+ */
+export interface Cfgu {
+  type: CfguType;
   default?: string;
   depends?: string[];
   description?: string;
@@ -32,5 +35,3 @@ export interface ConfigSchema {
   required?: boolean;
   template?: string;
 }
-
-export type CfguContents = { [key: string]: ConfigSchema };

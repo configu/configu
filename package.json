@@ -8,13 +8,14 @@
     "npm": ">=8.0.0"
   },
   "scripts": {
-    "prepare": "is-ci || husky install"
+    "prepare": "(is-ci || husky install) && npm run prepare:ts",
+    "prepare:ts": "npx quicktype --lang typescript --out ts/packages/ts/src/types/generated.ts --src-lang typescript --src ./types/*.ts"
   },
   "devDependencies": {
     "husky": "^8.0.2",
     "is-ci": "^3.0.1",
     "json": "^11.0.0",
-    "lint-staged": "^13.0.4",
+    "lint-staged": "^13.1.0",
     "quicktype": "^15.1.0"
   }
 }

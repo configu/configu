@@ -1,34 +1,21 @@
+import { Cfgu } from "./Cfgu";
+
 export enum ConfigSchemaType {
-  Base64 = "Base64",
-  Boolean = "Boolean",
-  Color = "Color",
-  ConnectionString = "ConnectionString",
-  Country = "Country",
-  Currency = "Currency",
-  Domain = "Domain",
-  Email = "Email",
-  Hex = "Hex",
-  Ipv4 = "IPv4",
-  Ipv6 = "IPv6",
-  LatLong = "LatLong",
-  Locale = "Locale",
-  Md5 = "MD5",
-  MobilePhone = "MobilePhone",
-  Number = "Number",
-  RegEx = "RegEx",
-  Sha = "SHA",
-  SemVer = "SemVer",
-  String = "String",
-  Url = "URL",
-  Uuid = "UUID",
+  Json = "json",
+  Yaml = "yaml",
 }
 
+/**
+ * An interface of a <uid>.cfgu.[json|yaml] file, aka ConfigSchema
+ * that contains binding records between a unique Config <key> and its Cfgu declaration
+ */
 export interface ConfigSchema {
+  path: string;
   type: ConfigSchemaType;
-  default?: string;
-  depends?: string[];
-  description?: string;
-  pattern?: string;
-  required?: boolean;
-  template?: string;
+  uid: string;
+  contents: string;
 }
+
+
+export interface ConfigSchemaContentsValue extends Cfgu {};
+export type ConfigSchemaContents = { [key: string]: ConfigSchemaContentsValue };
