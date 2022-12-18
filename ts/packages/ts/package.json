@@ -19,7 +19,6 @@
     "build": "tsc --build --verbose"
   },
   "dependencies": {
-    "ajv": "^8.11.2",
     "axios": "^0.27.2",
     "lodash": "^4.17.21",
     "mustache": "^4.2.0",

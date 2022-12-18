@@ -6,14 +6,14 @@ import { Config } from "./Config";
  */
 export interface ConfigStore {
   type: string;
-  uid: string;
+  // uid: string;
 }
 
 export type ConfigStoreQuery = {
   key: string;
   schema: string;
   set: string;
-}[];
+};
 
 
 export interface ConfigStoreContentsElement extends Config {};

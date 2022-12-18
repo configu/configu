@@ -1,12 +1,12 @@
-import { InMemoryStore, Set, Cfgu, UpsertCommand, EvalCommand } from '..';
+import { InMemoryStore, ConfigSet, ConfigSchema, UpsertCommand, EvalCommand } from '..';
 
 describe(`commands`, () => {
   const mainStore = new InMemoryStore();
   const secondaryStore = new InMemoryStore();
 
-  const set = new Set('test');
+  const set = new ConfigSet('test');
 
-  const s1 = new Cfgu('s1.cfgu.json');
+  const s1 = new ConfigSchema('s1.cfgu.json');
   s1.contents = JSON.stringify({
     S11: {
       type: 'Number',
@@ -21,7 +21,7 @@ describe(`commands`, () => {
       template: '{{S11}}-{{S12}}@{{S21}}',
     },
   });
-  const s2 = new Cfgu('s2.cfgu.json');
+  const s2 = new ConfigSchema('s2.cfgu.json');
   s2.contents = JSON.stringify({
     S21: {
       type: 'RegEx',

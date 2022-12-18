@@ -1,23 +1,23 @@
 import { promises as fs } from 'fs';
 import _ from 'lodash';
-import { Store, StoreQuery, StoreContents } from '@configu/ts';
+import { ConfigStore, ConfigStoreQuery, Config } from '@configu/ts';
 
-export class JsonFileStore extends Store {
+export class JsonFileStore extends ConfigStore {
   constructor(public path: string) {
     super('json-file');
   }
 
-  async read(): Promise<StoreContents> {
+  async read(): Promise<Config[]> {
     const data = await fs.readFile(this.path, 'utf8');
-    return Store.parse(data);
+    return ConfigStore.parse(data);
   }
 
-  async write(nextConfigs: StoreContents): Promise<void> {
-    const data = Store.serialize(nextConfigs);
+  async write(nextConfigs: Config[]): Promise<void> {
+    const data = ConfigStore.serialize(nextConfigs);
     await fs.writeFile(this.path, data);
   }
 
-  async get(query: StoreQuery[]): Promise<StoreContents> {
+  async get(query: ConfigStoreQuery[]): Promise<Config[]> {
     const storedConfigs = await this.read();
 
     return storedConfigs.filter((config) => {
@@ -31,7 +31,7 @@ export class JsonFileStore extends Store {
     });
   }
 
-  async set(configs: StoreContents): Promise<void> {
+  async set(configs: Config[]): Promise<void> {
     const storedConfigs = await this.read();
 
     const nextConfigs = _([...configs, ...storedConfigs])

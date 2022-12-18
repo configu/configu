@@ -1,41 +1,13 @@
 import _, { Dictionary } from 'lodash';
-import Ajv, { SchemaObject } from 'ajv/dist/jtd';
 import Mustache from 'mustache';
 
-export const ERR = (message: string, location: string[] = [], suggestion = '') => {
-  return `${message}${_(location)
-    .map((loc) => ` at ${loc}`)
-    .join('')}${suggestion ? `, ${suggestion}` : ''}`;
-};
-
-// * Use single Avj instance https://ajv.js.org/guide/managing-schemas.html#compiling-during-initialization
-const ajv = new Ajv({ allErrors: true });
-// * properties used in the 'metadata' schema member need to be defined as keywords https://ajv.js.org/json-type-definition.html#metadata-schema-member
-ajv.addKeyword('description');
-
-export const JTD = <T>(schema: SchemaObject) => {
-  const parse = ajv.compileParser<T>(schema);
-  const serialize = ajv.compileSerializer<T>(schema);
-  const validate = ajv.compile<T>(schema);
-
-  return {
-    parse: (json: string) => {
-      const data = parse(json);
-      if (data === undefined) {
-        throw new Error(`${parse.message} at :${parse.position}`);
-      }
-      return data;
-    },
-    serialize,
-    validate: (object: Record<string, unknown>) => {
-      const isValid = validate(object);
-      if (validate?.errors?.[0]) {
-        const { message, instancePath } = validate.errors[0];
-        throw new Error(`${message}${instancePath && ` at :${instancePath}`}`);
-      }
-      return isValid;
-    },
-  };
+export const ERR = (
+  message: string,
+  { location = [], suggestion = '' }: { location?: string[]; suggestion?: string } = {},
+) => {
+  return `${message}${!_.isEmpty(location) ? ` at ${location.join(' > ')}` : ''}${
+    suggestion ? `, try ${suggestion}` : ''
+  }`;
 };
 
 export const TMPL = {
@@ -57,16 +29,16 @@ export const TMPL = {
 
 export const CS = {
   parse: (cs: string): Dictionary<string | undefined> => {
-    return _(cs)
+    return _(_.trim(cs, '; '))
       .split(';')
-      .map((q) => q.split('='))
+      .map((q) => _.split(q, '='))
       .fromPairs()
       .value();
   },
   serialize: (dict: Dictionary<string | undefined>): string => {
     return _(dict)
       .toPairs()
-      .map(([key, value]) => `${key}=${value}`)
+      .map(([key, value]) => `${key}${_.isNil(value) ? '' : `=${value}`}`)
       .join(';');
   },
 };

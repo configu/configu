@@ -1,9 +1,9 @@
+export * from './types';
 export * from './utils';
 
-export * from './types';
-export * from './Store';
-export * from './Set';
-export * from './Cfgu';
+export * from './ConfigStore';
+export * from './ConfigSet';
+export * from './ConfigSchema';
 
 export * from './stores/Noop';
 export * from './stores/InMemory';

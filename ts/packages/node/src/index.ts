@@ -1,7 +1,7 @@
-export { Set } from '@configu/ts';
-export * from './Cfgu';
+export { ConfigSet } from '@configu/ts';
+export { ConfigSchema } from './ConfigSchema';
 
-export { NoopStore, ConfiguStore } from '@configu/ts';
+export { NoopStore, InMemoryStore, ConfiguStore } from '@configu/ts';
 
 export * from './stores/JsonFile';
 export * from './stores/AwsSecretsManager';

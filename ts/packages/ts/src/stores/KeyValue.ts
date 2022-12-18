@@ -1,11 +1,11 @@
 import _ from 'lodash';
-import { Store } from '../Store';
-import { StoreQuery, StoreContents } from '../types';
+import { ConfigStore } from '../ConfigStore';
+import { ConfigStoreQuery, Config } from '../types';
 
 type KeyValueStoreConfiguration = {
   keySeparator?: string;
 };
-export abstract class KeyValueStore extends Store {
+export abstract class KeyValueStore extends ConfigStore {
   constructor(type: string, protected configuration: KeyValueStoreConfiguration = {}) {
     super(type);
   }
@@ -16,7 +16,7 @@ export abstract class KeyValueStore extends Store {
 
   protected abstract delete(key: string): Promise<void>;
 
-  private calcKey({ set, schema }: StoreQuery): string {
+  private calcKey({ set, schema }: ConfigStoreQuery): string {
     if (set === '*' || schema === '*') {
       throw new Error(`store ${this.constructor.name} don't support bulk operations`);
     }
@@ -49,7 +49,7 @@ export abstract class KeyValueStore extends Store {
     return jsonValue;
   }
 
-  async get(query: StoreQuery[]): Promise<StoreContents> {
+  async get(query: ConfigStoreQuery[]): Promise<Config[]> {
     const keys = _(query)
       .map((q) => this.calcKey(q))
       .uniq()
@@ -110,7 +110,7 @@ export abstract class KeyValueStore extends Store {
     return storedConfigs;
   }
 
-  async set(configs: StoreContents): Promise<void> {
+  async set(configs: Config[]): Promise<void> {
     const kvDict: Record<string, Record<string, string>> = {};
     configs.forEach((config) => {
       const key = this.calcKey(config);

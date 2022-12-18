@@ -28,10 +28,10 @@ export enum CfguType {
  */
 export interface Cfgu {
   type: CfguType;
-  default?: string;
-  depends?: string[];
-  description?: string;
   pattern?: string;
+  default?: string;
   required?: boolean;
+  depends?: string[];
   template?: string;
+  description?: string;
 }
