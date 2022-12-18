@@ -19,6 +19,12 @@
     "dirname": "configu",
     "scope": "configu",
     "commands": "./build/commands",
+    "topicSeparator": " ",
+    "topics": {
+      "store": {
+        "description": "manage config-store connection as labels to later be used with the --store flag value in following commands"
+      }
+    },
     "plugins": [
       "@oclif/plugin-autocomplete",
       "@oclif/plugin-help",
@@ -71,38 +77,41 @@
     "configu-cli"
   ],
   "dependencies": {
-    "@aws-sdk/client-lambda": "^3.194.0",
-    "@azure/arm-appservice": "^13.0.2",
-    "@azure/identity": "^3.0.0",
-    "@configu/lib": "0.3.0",
-    "@configu/node": "0.8.3",
-    "@configu/ts": "0.8.3",
-    "@google-cloud/functions": "^2.2.1",
-    "@oclif/core": "^1.19.1",
-    "@oclif/plugin-autocomplete": "^1.3.4",
-    "@oclif/plugin-help": "^5.1.16",
-    "@oclif/plugin-not-found": "^2.3.6",
-    "@oclif/plugin-plugins": "^2.1.5",
-    "@oclif/plugin-update": "^3.0.4",
+    "@aws-sdk/client-lambda": "^3.231.0",
+    "@azure/arm-appservice": "^13.0.3",
+    "@azure/identity": "^3.1.2",
+    "@configu/lib": "0.3.4",
+    "@configu/node": "0.8.6",
+    "@configu/ts": "0.8.6",
+    "@google-cloud/functions": "^2.2.3",
+    "@oclif/core": "^1.21.0",
+    "@oclif/plugin-autocomplete": "^1.3.7",
+    "@oclif/plugin-help": "^5.1.20",
+    "@oclif/plugin-not-found": "^2.3.9",
+    "@oclif/plugin-plugins": "^2.1.8",
+    "@oclif/plugin-update": "^3.0.8",
     "@oclif/plugin-version": "^1.1.3",
     "axios": "^0.27.2",
     "chalk": "4.1.2",
     "change-case": "^4.1.2",
-    "ci-info": "^3.5.0",
+    "ci-info": "^3.7.0",
     "dotenv": "^16.0.3",
-    "inquirer": "8.2.4",
+    "fuzzy": "^0.1.3",
+    "inquirer": "8.2.5",
+    "inquirer-autocomplete-prompt": "2.0.0",
     "lodash": "^4.17.21",
-    "openid-client": "^5.2.1"
+    "openid-client": "^5.3.1"
   },
   "devDependencies": {
-    "@oclif/test": "^2.2.6",
-    "@types/inquirer": "8.2.3",
-    "@types/lodash": "^4.14.186",
-    "aws-sdk": "^2.1239.0",
+    "@oclif/test": "^2.2.15",
+    "@types/inquirer": "8.2.5",
+    "@types/inquirer-autocomplete-prompt": "3.0.0",
+    "@types/lodash": "^4.14.191",
+    "aws-sdk": "^2.1276.0",
     "eslint-config-oclif": "^4.0.0",
     "eslint-config-oclif-typescript": "^1.0.3",
     "globby": "11.0.4",
-    "oclif": "^3.2.22",
-    "tslib": "^2.4.0"
+    "oclif": "^3.4.2",
+    "tslib": "^2.4.1"
   }
 }

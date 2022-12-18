@@ -4,19 +4,14 @@ import { KeyValueStore } from '@configu/ts';
 type GcpSecretManagerConfiguration = { keyFile: string; projectId: string };
 
 export class GcpSecretManagerStore extends KeyValueStore {
-  static readonly scheme = 'gcp-secret-manager';
   private client: SecretManagerServiceClient;
   private projectId: string;
 
   constructor({ keyFile, projectId }: GcpSecretManagerConfiguration) {
-    super(GcpSecretManagerStore.scheme, { keySeparator: '-' });
+    super('gcp-secret-manager', { keySeparator: '-' });
 
     this.client = new SecretManagerServiceClient({ keyFile });
     this.projectId = projectId;
-  }
-
-  async init() {
-    super.init(this.projectId);
   }
 
   private formatKey(key: string): string {

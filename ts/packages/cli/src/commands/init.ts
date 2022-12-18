@@ -30,28 +30,29 @@ export default class Init extends BaseCommand {
       default: paramCase(getPathBasename()),
     }),
     force: Flags.boolean({
-      char: 'f',
       description: `overrides the ${Cfgu.EXT} file in case it already exists`,
+      char: 'f',
       default: false,
     }),
 
     examples: Flags.boolean({
-      exclusive: ['import'],
       description: `fills the new ${Cfgu.EXT} file with a variety of detailed examples`,
+      exclusive: ['import'],
+      aliases: ['example'],
       default: false,
     }),
 
     import: Flags.string({
-      exclusive: ['examples'],
       description: `use this flag to import an existing .env file and create a ${Cfgu.EXT} file from it. Then push the newly created ${Cfgu.NAME} to create a Configu schema`,
+      exclusive: ['examples'],
     }),
     defaults: Flags.boolean({
-      dependsOn: ['import'],
       description: `use this flag to assign the values from your .env file as the default value for the keys that will be created in the ${Cfgu.EXT} file.`,
+      dependsOn: ['import'],
     }),
     types: Flags.boolean({
-      dependsOn: ['import'],
       description: `use this flag, so that Configu will infer the types of your keys from their values, and create the ${Cfgu.NAME} with those types. Otherwise all keys are created with the String type.`,
+      dependsOn: ['import'],
     }),
   };
 

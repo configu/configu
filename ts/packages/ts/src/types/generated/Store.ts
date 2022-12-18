@@ -5,14 +5,11 @@
  * (Config[])
  */
 export interface Store {
-  scheme: string;
-  uid: string;
+  type: string;
 }
 
-export interface StoreQuery0 {
+export interface StoreQuery {
   key: string;
   schema: string;
   set: string;
 }
-
-export type StoreQuery = StoreQuery0[];

@@ -30,6 +30,12 @@
     "class-methods-use-this": "off",
     "max-classes-per-file": "off"
   },
+  "overrides":[
+    {
+      "files": ["**/*.test.ts", "**/*.test.js"],
+      "rules": {"dot-notation": "off"}
+    }
+  ],
   "ignorePatterns": [
     "generated.ts"
   ]

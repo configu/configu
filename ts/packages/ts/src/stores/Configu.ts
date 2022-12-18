@@ -11,10 +11,9 @@ type ConfiguStoreConfiguration = {
 };
 
 export class ConfiguStore extends Store {
-  static readonly scheme = 'configu';
   private client: Axios;
   constructor({ credentials, endpoint = `https://api.configu.com`, source = 'sdk' }: ConfiguStoreConfiguration) {
-    super(ConfiguStore.scheme);
+    super('configu');
 
     this.client = axios.create({
       baseURL: endpoint,
@@ -33,11 +32,7 @@ export class ConfiguStore extends Store {
     }
   }
 
-  async init() {
-    super.init(this.client.defaults.headers.common.Org as string);
-  }
-
-  async get(query: StoreQuery): Promise<StoreContents> {
+  async get(query: StoreQuery[]): Promise<StoreContents> {
     const { data } = await this.client.post('/config', { query });
     return data;
   }

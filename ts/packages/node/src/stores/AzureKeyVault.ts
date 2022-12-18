@@ -8,17 +8,12 @@ type AzureKeyVaultConfiguration = {
 };
 
 export class AzureKeyVaultStore extends KeyValueStore {
-  static readonly scheme = 'azure-key-vault';
   private client: SecretClient;
   constructor({ credentials: { clientId, clientSecret, tenantId }, vaultUrl }: AzureKeyVaultConfiguration) {
-    super(AzureKeyVaultStore.scheme, { keySeparator: '-' });
+    super('azure-key-vault', { keySeparator: '-' });
 
     const clientCredentials = new ClientSecretCredential(tenantId, clientId, clientSecret);
     this.client = new SecretClient(vaultUrl, clientCredentials);
-  }
-
-  async init() {
-    super.init(this.client.vaultUrl);
   }
 
   // * https://learn.microsoft.com/en-us/javascript/api/@azure/keyvault-secrets/secretclient?view=azure-node-latest#@azure-keyvault-secrets-secretclient-getsecret

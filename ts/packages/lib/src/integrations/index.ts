@@ -1,2 +1,2 @@
 export * from './cicd';
-export * from './secrets';
+export * from './stores';

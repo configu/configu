@@ -4,7 +4,7 @@ import { EvaluatedConfigsArray } from '@configu/ts';
 import { Set, Cfgu, UpsertCommand } from '@configu/node';
 import { extractConfigs } from '@configu/lib';
 import { BaseCommand } from '../base';
-import { constructStoreFromUri } from '../helpers/stores';
+import { constructStoreFromConnectionString } from '../helpers/stores';
 
 export default class Upsert extends BaseCommand {
   static description = 'creates, updates or deletes configs from a store';
@@ -14,26 +14,36 @@ export default class Upsert extends BaseCommand {
   ];
 
   static flags = {
-    store: Flags.string({ description: 'store to operate to', default: 'default' }),
-    set: Flags.string({ required: true, description: 'hierarchy of the configs' }),
-    schema: Flags.string({ required: true, description: 'path to a <schema>.cfgu.[json|yaml] file' }),
+    store: Flags.string({
+      description: 'config-store to upsert configurations to',
+      required: true,
+    }),
+    set: Flags.string({
+      description: 'hierarchy of the configs',
+      required: true,
+    }),
+    schema: Flags.string({
+      description: 'path to a <schema>.cfgu.[json|yaml] file',
+      required: true,
+    }),
 
     config: Flags.string({
+      description: 'key=value pairs to upsert (empty value means delete)',
       exclusive: ['import'],
       multiple: true,
-      description: 'key=value pairs to upsert (empty value means delete)',
+      char: 'c',
     }),
     import: Flags.string({
-      exclusive: ['config'],
       description: 'use this flag to import an existing .env file and create configs from it',
+      exclusive: ['config'],
     }),
   };
 
   public async run(): Promise<void> {
     const { flags } = await this.parse(Upsert);
 
-    const storeUri = this.config.configData.stores?.[flags.store] ?? flags.store;
-    const { store } = await constructStoreFromUri(storeUri);
+    const storeCS = this.config.configData.stores?.[flags.store] ?? flags.store;
+    const { store } = await constructStoreFromConnectionString(storeCS);
 
     const set = new Set(flags.set);
     const schema = new Cfgu(flags.schema);

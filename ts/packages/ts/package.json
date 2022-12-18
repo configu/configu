@@ -23,7 +23,6 @@
     "axios": "^0.27.2",
     "lodash": "^4.17.21",
     "mustache": "^4.2.0",
-    "uri-js": "^4.4.1",
     "validator": "^13.7.0"
   },
   "devDependencies": {

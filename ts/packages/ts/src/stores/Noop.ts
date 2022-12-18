@@ -2,12 +2,11 @@ import { Store } from '../Store';
 import { StoreQuery, StoreContents } from '../types';
 
 export class NoopStore extends Store {
-  static readonly scheme = 'noop';
   constructor() {
-    super(NoopStore.scheme);
+    super('noop');
   }
 
-  async get(query: StoreQuery): Promise<StoreContents> {
+  async get(query: StoreQuery[]): Promise<StoreContents> {
     return [];
   }
 

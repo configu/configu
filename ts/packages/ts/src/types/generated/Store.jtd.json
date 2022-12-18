@@ -1,21 +1,18 @@
 {
   "definitions": {
     "StoreQuery": {
-      "elements": {
-        "properties": {
-          "set": { "type": "string" },
-          "schema": { "type": "string" },
-          "key": { "type": "string" }
-        },
-        "additionalProperties": true
-      }
+      "properties": {
+        "set": { "type": "string" },
+        "schema": { "type": "string" },
+        "key": { "type": "string" }
+      },
+      "additionalProperties": true
     }
   },
   "metadata": {
     "description": "A generic representation of a ConfigStore that contains Config records (Config[])"
   },
   "properties": {
-    "scheme": { "type": "string" },
-    "uid": { "type": "string" }
+    "type": { "type": "string" }
   }
 }
