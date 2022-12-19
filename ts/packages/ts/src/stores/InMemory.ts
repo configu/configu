@@ -9,9 +9,9 @@ export class InMemoryStore extends ConfigStore {
     super('in-memory');
   }
 
-  async get(query: ConfigStoreQuery[]): Promise<Config[]> {
+  async get(queries: ConfigStoreQuery[]): Promise<Config[]> {
     return this.data.filter((config) => {
-      return query.some(({ set, schema, key }) => {
+      return queries.some(({ set, schema, key }) => {
         return (
           (set === '*' || set === config.set) &&
           (schema === '*' || schema === config.schema) &&

@@ -6,7 +6,7 @@ export class NoopStore extends ConfigStore {
     super('noop');
   }
 
-  async get(query: ConfigStoreQuery[]): Promise<Config[]> {
+  async get(queries: ConfigStoreQuery[]): Promise<Config[]> {
     return [];
   }
 

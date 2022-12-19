@@ -51,7 +51,7 @@ export class UpsertCommand extends Command<void> {
           throw new Error(
             ERR(`invalid value ${value}`, {
               location: [`parameters.config[${idx}]`],
-              suggestion: `reference value must be a valid connection string - store=<store.type>;query=[set/]<schema>[.key]`,
+              suggestion: `reference value must be a valid connection string - store=<type>;query=[set/]<schema>[.key]`,
             }),
           );
         }

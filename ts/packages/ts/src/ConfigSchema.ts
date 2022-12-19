@@ -14,11 +14,6 @@ export class ConfigSchema implements IConfigSchema {
 
   static TYPES = _.values<string>(ConfigSchemaType);
   static EXT = `.<${ConfigSchema.TYPES.join('|')}>` as const;
-  static EXAMPLE: { [key: string]: Cfgu } = {
-    FOO: { type: CfguType.String, default: 'foo', description: 'string example variable' },
-    BAR: { type: CfguType.RegEx, pattern: '^(foo|bar|baz)$', description: 'regex example variable' },
-    BAZ: { type: CfguType.String, template: '{{FOO}} - {{BAR}}', description: 'template example variable' },
-  };
 
   static VALIDATIONS: {
     NAMES: { PATTERN: RegExp; RESERVED: string[] };

@@ -49,8 +49,8 @@ export abstract class KeyValueStore extends ConfigStore {
     return jsonValue;
   }
 
-  async get(query: ConfigStoreQuery[]): Promise<Config[]> {
-    const keys = _(query)
+  async get(queries: ConfigStoreQuery[]): Promise<Config[]> {
+    const keys = _(queries)
       .map((q) => this.calcKey(q))
       .uniq()
       .value();
@@ -69,7 +69,7 @@ export abstract class KeyValueStore extends ConfigStore {
     const kvArray = await Promise.all(kvPromises);
     const kvDict = _(kvArray).keyBy('key').mapValues('value').value();
 
-    const storedConfigs = _(query)
+    const storedConfigs = _(queries)
       .map((q) => {
         const { set, schema, key } = q;
         const value = kvDict[this.calcKey(q)];

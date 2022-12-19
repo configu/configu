@@ -17,11 +17,11 @@ export class JsonFileStore extends ConfigStore {
     await fs.writeFile(this.path, data);
   }
 
-  async get(query: ConfigStoreQuery[]): Promise<Config[]> {
+  async get(queries: ConfigStoreQuery[]): Promise<Config[]> {
     const storedConfigs = await this.read();
 
     return storedConfigs.filter((config) => {
-      return query.some(({ set, schema, key }) => {
+      return queries.some(({ set, schema, key }) => {
         return (
           (set === '*' || set === config.set) &&
           (schema === '*' || schema === config.schema) &&

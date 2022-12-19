@@ -6,7 +6,7 @@ import { IConfigStore, ConfigStoreQuery, Config, Convert } from './types';
 export abstract class ConfigStore implements IConfigStore {
   constructor(public readonly type: string) {}
 
-  abstract get(query: ConfigStoreQuery[]): Promise<Config[]>;
+  abstract get(queries: ConfigStoreQuery[]): Promise<Config[]>;
   abstract set(configs: Config[]): Promise<void>;
 
   async init() {}

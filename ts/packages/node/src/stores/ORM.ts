@@ -57,10 +57,10 @@ export abstract class ORMStore extends ConfigStore {
     }
   }
 
-  async get(query: ConfigStoreQuery[]): Promise<IConfig[]> {
+  async get(queries: ConfigStoreQuery[]): Promise<IConfig[]> {
     const configRepository = this.dataSource.getRepository(Config);
 
-    const adjustedQuery = query.map((entry) => ({
+    const adjustedQuery = queries.map((entry) => ({
       ...(entry.set !== '*' && { set: entry.set }),
       ...(entry.schema !== '*' && { schema: entry.schema }),
       ...(entry.key !== '*' && { key: entry.key }),
