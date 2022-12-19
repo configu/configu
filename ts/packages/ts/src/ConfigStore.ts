@@ -1,24 +1,22 @@
 import _ from 'lodash';
-import { JTD, TMPL, CS } from './utils';
-import { Set } from './Set';
-import { IStore, StoreQuery, StoreContents, StoreContentsJTDSchema } from './types';
+import { TMPL, CS } from './utils';
+import { ConfigSet } from './ConfigSet';
+import { IConfigStore, ConfigStoreQuery, Config, Convert } from './types';
 
-const { parse, serialize } = JTD<StoreContents>(StoreContentsJTDSchema);
-
-export abstract class Store implements IStore {
+export abstract class ConfigStore implements IConfigStore {
   constructor(public readonly type: string) {}
 
-  abstract get(query: StoreQuery[]): Promise<StoreContents>;
-  abstract set(configs: StoreContents): Promise<void>;
+  abstract get(queries: ConfigStoreQuery[]): Promise<Config[]>;
+  abstract set(configs: Config[]): Promise<void>;
 
   async init() {}
 
-  static parse(rawConfigs: string) {
-    return parse(rawConfigs);
+  static parse(rawConfigs: string): Config[] {
+    return Convert.toConfigStoreContents(rawConfigs);
   }
 
-  static serialize(configs: StoreContents) {
-    return serialize(configs);
+  static serialize(configs: Config[]): string {
+    return Convert.configStoreContentsToJson(configs);
   }
 
   static extractReferenceValue(value?: string) {
@@ -40,7 +38,7 @@ export abstract class Store implements IStore {
   }
 
   static parseReferenceValue(value: string) {
-    // * ReferenceValue structure: store=<store.type>;query=[set/]<schema>[.key]
+    // * ReferenceValue structure: store=<type>;query=[set/]<schema>[.key]
     // ! ReferenceValue uses only the Set specified in its query, it doesn't support Set hierarchy.
     try {
       const { store, ...rest } = CS.parse(value);
@@ -59,7 +57,7 @@ export abstract class Store implements IStore {
       if (!schema) {
         return null;
       }
-      const set = new Set(splittedSetAndSchema.join('/')).path;
+      const set = new ConfigSet(splittedSetAndSchema.join('/')).path;
 
       return {
         store,

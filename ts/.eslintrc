@@ -35,5 +35,8 @@
       "files": ["**/*.test.ts", "**/*.test.js"],
       "rules": {"dot-notation": "off"}
     }
+  ],
+  "ignorePatterns": [
+    "generated.ts"
   ]
 }

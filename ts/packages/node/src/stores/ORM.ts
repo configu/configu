@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { StoreQuery, StoreContents, Store } from '@configu/ts';
+import { ConfigStore, ConfigStoreQuery, Config as IConfig } from '@configu/ts';
 import { Entity, Column, DataSource, DataSourceOptions, Index, PrimaryGeneratedColumn } from 'typeorm';
 import _ from 'lodash';
 
@@ -25,7 +25,7 @@ class Config {
   value: string;
 }
 
-export abstract class ORMStore extends Store {
+export abstract class ORMStore extends ConfigStore {
   readonly dataSource: DataSource;
 
   constructor(type: string, dataSourceOptions: DataSourceOptions) {
@@ -43,13 +43,13 @@ export abstract class ORMStore extends Store {
     await this.dataSource.initialize();
   }
 
-  private async delete(configs: StoreContents): Promise<void> {
+  private async delete(configs: IConfig[]): Promise<void> {
     const configRepository = this.dataSource.getRepository(Config);
     const preloadedConfigs = await Promise.all(configs.map((config) => configRepository.preload(config)));
     await configRepository.delete(_.map(preloadedConfigs, 'id'));
   }
 
-  private async upsert(configs: StoreContents): Promise<void> {
+  private async upsert(configs: IConfig[]): Promise<void> {
     const configRepository = this.dataSource.getRepository(Config);
 
     if (configs.length > 0) {
@@ -57,7 +57,19 @@ export abstract class ORMStore extends Store {
     }
   }
 
-  async set(configs: StoreContents): Promise<void> {
+  async get(queries: ConfigStoreQuery[]): Promise<IConfig[]> {
+    const configRepository = this.dataSource.getRepository(Config);
+
+    const adjustedQuery = queries.map((entry) => ({
+      ...(entry.set !== '*' && { set: entry.set }),
+      ...(entry.schema !== '*' && { schema: entry.schema }),
+      ...(entry.key !== '*' && { key: entry.key }),
+    }));
+
+    return configRepository.find({ where: adjustedQuery });
+  }
+
+  async set(configs: IConfig[]): Promise<void> {
     const [configsToUpsert, configsToDelete] = _.partition(configs, 'value');
 
     if (configsToDelete.length > 0) {
@@ -67,17 +79,5 @@ export abstract class ORMStore extends Store {
     if (configsToUpsert.length > 0) {
       await this.upsert(configsToUpsert);
     }
-  }
-
-  async get(query: StoreQuery[]): Promise<StoreContents> {
-    const configRepository = this.dataSource.getRepository(Config);
-
-    const adjustedQuery = query.map((entry) => ({
-      ...(entry.set !== '*' && { set: entry.set }),
-      ...(entry.schema !== '*' && { schema: entry.schema }),
-      ...(entry.key !== '*' && { key: entry.key }),
-    }));
-
-    return configRepository.find({ where: adjustedQuery });
   }
 }

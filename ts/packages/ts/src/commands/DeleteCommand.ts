@@ -1,15 +1,15 @@
 import _ from 'lodash';
 import { Command } from '../Command';
 import { Config } from '../types';
-import { Store } from '../Store';
-import { Set } from '../Set';
-import { Cfgu } from '../Cfgu';
 import { ERR } from '../utils';
+import { ConfigStore } from '../ConfigStore';
+import { ConfigSet } from '../ConfigSet';
+import { ConfigSchema } from '../ConfigSchema';
 
 export type DeleteCommandParameters = {
-  store: Store;
-  set?: Set;
-  schema?: Cfgu;
+  store: ConfigStore;
+  set?: ConfigSet;
+  schema?: ConfigSchema;
 };
 
 export class DeleteCommand extends Command<void> {
@@ -21,12 +21,12 @@ export class DeleteCommand extends Command<void> {
     const { store, set, schema } = this.parameters;
 
     if (!set && !schema) {
-      throw new Error(ERR('either set or schema parameter should be supplied', ['parameters']));
+      throw new Error(ERR('either set or schema parameter should be supplied', { location: ['parameters'] }));
     }
 
     await store.init();
 
-    const storedConfigs = await store.get([{ set: set?.path ?? '*', schema: schema?.name ?? '*', key: '*' }]);
+    const storedConfigs = await store.get([{ set: set?.path ?? '*', schema: schema?.uid ?? '*', key: '*' }]);
 
     const deleteConfigs = _(storedConfigs)
       .map<Config>((config) => {

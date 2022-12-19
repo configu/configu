@@ -21,7 +21,7 @@ runs:
       id: commit-sha
       shell: bash
       run: |
-        echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+        echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
     - name: Extract release tag version
       id: release-tag

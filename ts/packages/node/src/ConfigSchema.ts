@@ -1,7 +1,7 @@
 import { promises as fs } from 'fs';
-import { Cfgu as BaseCfgu } from '@configu/ts';
+import { ConfigSchema as BaseConfigSchema } from '@configu/ts';
 
-export class Cfgu extends BaseCfgu {
+export class ConfigSchema extends BaseConfigSchema {
   async read() {
     this.contents = await fs.readFile(this.path, { encoding: 'utf8', flag: 'r' });
   }

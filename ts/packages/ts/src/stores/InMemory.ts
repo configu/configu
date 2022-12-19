@@ -1,17 +1,17 @@
 import _ from 'lodash';
-import { Store } from '../Store';
-import { StoreQuery, StoreContents } from '../types';
+import { ConfigStore } from '../ConfigStore';
+import { ConfigStoreQuery, Config } from '../types';
 
-export class InMemoryStore extends Store {
-  private data: StoreContents = [];
+export class InMemoryStore extends ConfigStore {
+  private data: Config[] = [];
 
   constructor() {
     super('in-memory');
   }
 
-  async get(query: StoreQuery[]): Promise<StoreContents> {
+  async get(queries: ConfigStoreQuery[]): Promise<Config[]> {
     return this.data.filter((config) => {
-      return query.some(({ set, schema, key }) => {
+      return queries.some(({ set, schema, key }) => {
         return (
           (set === '*' || set === config.set) &&
           (schema === '*' || schema === config.schema) &&
@@ -21,7 +21,7 @@ export class InMemoryStore extends Store {
     });
   }
 
-  async set(configs: StoreContents): Promise<void> {
+  async set(configs: Config[]): Promise<void> {
     this.data = _([...configs, ...this.data])
       .uniqBy((config) => `${config.set}.${config.schema}.${config.key}`)
       .filter((config) => Boolean(config.value))

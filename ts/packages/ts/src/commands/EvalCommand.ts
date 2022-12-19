@@ -1,15 +1,18 @@
 import _ from 'lodash';
 import { Command } from '../Command';
-import { Config, CfguContents, StoreQuery, EvaluatedConfigs, EvaluatedConfigsArray } from '../types';
-import { Store } from '../Store';
-import { Set } from '../Set';
-import { Cfgu } from '../Cfgu';
+import { Config, Cfgu } from '../types';
 import { ERR, TMPL } from '../utils';
+import { ConfigStore } from '../ConfigStore';
+import { ConfigSet } from '../ConfigSet';
+import { ConfigSchema } from '../ConfigSchema';
+
+export type EvaluatedConfigs = { [key: string]: string };
+export type EvaluatedConfigsArray = { key: string; value: string }[];
 
 export type EvalCommandParameters = {
-  store: Store | Store[];
-  set: Set;
-  schema: Cfgu | Cfgu[];
+  store: ConfigStore | ConfigStore[];
+  set: ConfigSet;
+  schema: ConfigSchema | ConfigSchema[];
 };
 
 export type EvalCommandReturn = EvaluatedConfigs;
@@ -26,15 +29,15 @@ export class EvalCommand extends Command<EvalCommandReturn> {
     await Promise.all(stores.map((storeInstance) => storeInstance.init()));
 
     const schemas = Array.isArray(schema) ? schema : [schema];
-    const cfguContentsPromises = schemas.map((sch) => Cfgu.parse(sch));
-    const cfguContentsArray = await Promise.all(cfguContentsPromises);
+    const schemaContentsPromises = schemas.map((sch) => ConfigSchema.parse(sch));
+    const schemaContentsArray = await Promise.all(schemaContentsPromises);
 
-    const storeQuery = cfguContentsArray.flatMap((cfguContents, idx) => {
-      const cfgu = schemas[idx];
-      return _(cfguContents)
+    const storeQuery = schemaContentsArray.flatMap((schemaContents, idx) => {
+      const currentSchema = schemas[idx];
+      return _(schemaContents)
         .keys()
         .flatMap((key) => {
-          return set.hierarchy.map((sh) => ({ set: sh, schema: cfgu.name, key }));
+          return set.hierarchy.map((sh) => ({ set: sh, schema: currentSchema.uid, key }));
         })
         .value();
     });
@@ -51,25 +54,28 @@ export class EvalCommand extends Command<EvalCommandReturn> {
       .value();
 
     // * removed duplicate keys according to schemas rtl
-    const cfguContentsDict = _(cfguContentsArray).reduce<CfguContents>((dict, curr) => ({ ...dict, ...curr }), {});
+    const schemaContentsDict = _(schemaContentsArray).reduce<{ [key: string]: Cfgu }>(
+      (dict, curr) => ({ ...dict, ...curr }),
+      {},
+    );
 
     const templateKeys: string[] = [];
-    const evaluatedConfigsPromises = _(cfguContentsDict)
+    const evaluatedConfigsPromises = _(schemaContentsDict)
       .entries()
-      .map<Promise<EvaluatedConfigsArray[number]>>(async ([key, configSchema]) => {
-        if (configSchema.template) {
+      .map<Promise<EvaluatedConfigsArray[number]>>(async ([key, cfgu]) => {
+        if (cfgu.template) {
           templateKeys.push(key);
           return { key, value: '' };
         }
 
         const storedConfig = storedConfigsDict[key] as Config | undefined;
         if (storedConfig?.value) {
-          const referenceValue = Store.extractReferenceValue(storedConfig.value);
+          const referenceValue = ConfigStore.extractReferenceValue(storedConfig.value);
           if (!referenceValue) {
             return { key, value: storedConfig.value };
           }
 
-          const referenceData = Store.parseReferenceValue(referenceValue);
+          const referenceData = ConfigStore.parseReferenceValue(referenceValue);
           if (!referenceData) {
             // * couldn't extract reference data from current reference value (reference is not stored correctly)
             // * the code shouldn't get here if the reference was added via the upsert command
@@ -89,8 +95,8 @@ export class EvalCommand extends Command<EvalCommandReturn> {
           return { key, value: evaluatedReferencedValue };
         }
 
-        if (configSchema.default) {
-          return { key, value: configSchema.default };
+        if (cfgu.default) {
+          return { key, value: cfgu.default };
         }
 
         // * config wasn't found for the current key in the provided set hierarchy
@@ -108,7 +114,7 @@ export class EvalCommand extends Command<EvalCommandReturn> {
       _(templateKeys)
         .cloneDeep()
         .forEach((key) => {
-          const template = cfguContentsDict[key].template as string;
+          const template = schemaContentsDict[key].template as string;
           const expressions = TMPL.parse(template);
           if (expressions.some((exp) => templateKeys.includes(exp.key))) {
             return;
@@ -121,25 +127,23 @@ export class EvalCommand extends Command<EvalCommandReturn> {
     }
 
     // validate the eval result against the provided schemas
-    _(cfguContentsDict)
+    _(schemaContentsDict)
       .entries()
-      .forEach(async ([key, configSchema]) => {
+      .forEach(async ([key, cfgu]) => {
         const evaluatedValue = evaluatedConfigsDict[key];
 
-        if (!Cfgu.validateValueType({ ...configSchema, value: evaluatedValue })) {
-          throw new Error(ERR(`invalid value type`, [key], `"${evaluatedValue}" must be a "${configSchema.type}"`));
+        if (!ConfigSchema.validateValueType({ ...cfgu, value: evaluatedValue })) {
+          throw new Error(
+            ERR(`invalid value type`, { location: [key], suggestion: `"${evaluatedValue}" must be a "${cfgu.type}"` }),
+          );
         }
 
-        if (configSchema.required && !evaluatedValue) {
-          throw new Error(ERR(`required key is missing a value`, [key]));
+        if (cfgu.required && !evaluatedValue) {
+          throw new Error(ERR(`required key is missing a value`, { location: [key] }));
         }
 
-        if (
-          evaluatedValue &&
-          configSchema.depends &&
-          configSchema.depends.some((depend) => !evaluatedConfigsDict[depend])
-        ) {
-          throw new Error(ERR(`depends of a key are missing a value`, [key]));
+        if (evaluatedValue && cfgu.depends && cfgu.depends.some((depend) => !evaluatedConfigsDict[depend])) {
+          throw new Error(ERR(`depends of a key are missing a value`, { location: [key] }));
         }
       });
 

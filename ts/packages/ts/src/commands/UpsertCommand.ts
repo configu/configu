@@ -1,15 +1,15 @@
 import _ from 'lodash';
 import { Command } from '../Command';
 import { Config } from '../types';
-import { Store } from '../Store';
-import { Set } from '../Set';
-import { Cfgu } from '../Cfgu';
 import { ERR } from '../utils';
+import { ConfigStore } from '../ConfigStore';
+import { ConfigSet } from '../ConfigSet';
+import { ConfigSchema } from '../ConfigSchema';
 
 export type UpsertCommandParameters = {
-  store: Store;
-  set: Set;
-  schema: Cfgu;
+  store: ConfigStore;
+  set: ConfigSet;
+  schema: ConfigSchema;
   configs: { key: string; value?: string }[];
 };
 
@@ -23,51 +23,51 @@ export class UpsertCommand extends Command<void> {
 
     await store.init();
 
-    const cfguContents = await Cfgu.parse(schema);
+    const schemaContents = await ConfigSchema.parse(schema);
 
     const upsertConfigs = _(configs)
       .map<Config>(({ key, value = '' }, idx) => {
-        const configSchema = cfguContents[key];
-        if (!configSchema) {
+        const cfgu = schemaContents[key];
+        if (!cfgu) {
           throw new Error(
-            ERR(`invalid key ${key}`, [`parameters.config[${idx}]`], `key must be declared on the passed schema`),
+            ERR(`invalid key ${key}`, {
+              location: [`parameters.config[${idx}]`],
+              suggestion: `key must be declared on the passed schema`,
+            }),
           );
         }
 
-        if (value && configSchema.template) {
+        if (value && cfgu.template) {
           throw new Error(
-            ERR(
-              `invalid key ${key}`,
-              [`parameters.config[${idx}]`],
-              `keys declared with a template mustn't have a value`,
-            ),
+            ERR(`invalid key ${key}`, {
+              location: [`parameters.config[${idx}]`],
+              suggestion: `keys declared with a template mustn't have a value`,
+            }),
           );
         }
 
-        const referenceValue = Store.extractReferenceValue(value);
-        if (referenceValue && !Store.parseReferenceValue(referenceValue)) {
+        const referenceValue = ConfigStore.extractReferenceValue(value);
+        if (referenceValue && !ConfigStore.parseReferenceValue(referenceValue)) {
           throw new Error(
-            ERR(
-              `invalid value ${value}`,
-              [`parameters.config[${idx}]`],
-              `reference value must be a valid connection string - store=<store.type>;query=[set/]<schema>[.key]`,
-            ),
+            ERR(`invalid value ${value}`, {
+              location: [`parameters.config[${idx}]`],
+              suggestion: `reference value must be a valid connection string - store=<type>;query=[set/]<schema>[.key]`,
+            }),
           );
         }
 
-        if (!referenceValue && !Cfgu.validateValueType({ ...configSchema, value })) {
+        if (!referenceValue && !ConfigSchema.validateValueType({ ...cfgu, value })) {
           throw new Error(
-            ERR(
-              `invalid value ${value}`,
-              [`parameters.config[${idx}]`],
-              `"${value}" must be of type "${configSchema.type}"`,
-            ),
+            ERR(`invalid value ${value}`, {
+              location: [`parameters.config[${idx}]`],
+              suggestion: `"${value}" must be of type "${cfgu.type}"`,
+            }),
           );
         }
 
         return {
           set: set.path,
-          schema: schema.name,
+          schema: schema.uid,
           key,
           value,
         };

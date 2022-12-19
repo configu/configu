@@ -28,11 +28,11 @@ jobs:
           package-name: ${{ env.PACKAGE_NAME }}
           google-chat-webhook: ${{ secrets.GOOGLE_CHAT_WEBHOOK }}
 
-      - uses: ./.github/actions/env-action
+      - uses: ./.github/actions/ts-env-action
 
       - uses: ./.github/actions/ts-env-action
         with:
-          install-dependencies: true
+          dependencies-root: "ts"
 
       - uses: aws-actions/configure-aws-credentials@v1
         with:
