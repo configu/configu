@@ -8,10 +8,13 @@
     "npm": ">=8.0.0"
   },
   "scripts": {
-    "prepare": "(is-ci || husky install) && npm run prepare:ts",
-    "prepare:ts": "npx quicktype --lang typescript --out ts/packages/ts/src/types/generated.ts --src-lang typescript --src ./types/*.ts"
+    "prepare": "(is-ci || husky install) && concurrently \"npm:prepare:*\"",
+    "prepare:ts": "npx quicktype --lang typescript --out ts/packages/ts/src/types/generated.ts --src-lang typescript --src ./types/*.ts",
+    "prepare:vscode": "npx quicktype --lang schema --out ts/packages/vscode/public/cfgu.schema.json --src-lang typescript --src ./types/*.ts && json -I -f ts/packages/vscode/public/cfgu.schema.json -e 'this.$ref=\"#/definitions/ConfigSchemaContents\"' -e 'this.$schema=undefined'",
+    "prepare:py": "npx quicktype --lang python --out py/src/types/generated.py --src-lang typescript --src ./types/*.ts"
   },
   "devDependencies": {
+    "concurrently": "^7.6.0",
     "husky": "^8.0.2",
     "is-ci": "^3.0.1",
     "json": "^11.0.0",

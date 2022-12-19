@@ -6,13 +6,14 @@ import { IConfigSchema, ConfigSchemaType, Cfgu, CfguType, Convert } from './type
 export type CfguPath = `${string}.cfgu.${ConfigSchemaType}`;
 
 export class ConfigSchema implements IConfigSchema {
-  static CFGU: { NAME: string; PROPS: (keyof Cfgu)[] } = {
+  static CFGU: { NAME: string; EXT: string; PROPS: (keyof Cfgu)[] } = {
     NAME: 'cfgu' as const,
+    EXT: `.cfgu` as const,
     PROPS: ['type', 'pattern', 'default', 'required', 'depends', 'template', 'description'],
   };
 
-  static EXT = `.${ConfigSchema.CFGU.NAME}` as const;
   static TYPES = _.values<string>(ConfigSchemaType);
+  static EXT = `.<${ConfigSchema.TYPES.join('|')}>` as const;
   static EXAMPLE: { [key: string]: Cfgu } = {
     FOO: { type: CfguType.String, default: 'foo', description: 'string example variable' },
     BAR: { type: CfguType.RegEx, pattern: '^(foo|bar|baz)$', description: 'regex example variable' },
@@ -114,7 +115,7 @@ export class ConfigSchema implements IConfigSchema {
       throw new Error(
         ERR(`invalid file extension`, {
           location: [path],
-          suggestion: `extension must be [${ConfigSchema.TYPES.join('|')}]`,
+          suggestion: `extension must be a ${ConfigSchema.EXT}`,
         }),
       );
     }
@@ -125,7 +126,7 @@ export class ConfigSchema implements IConfigSchema {
       throw new Error(
         ERR(`invalid file extension`, {
           location: [path],
-          suggestion: `extension must be ${ConfigSchema.EXT}.[${ConfigSchema.TYPES.join('|')}]`,
+          suggestion: `extension must be ${ConfigSchema.CFGU.EXT}${ConfigSchema.EXT}`,
         }),
       );
     }
@@ -135,7 +136,7 @@ export class ConfigSchema implements IConfigSchema {
       throw new Error(
         ERR(`invalid file name`, {
           location: [path],
-          suggestion: `name must be <path>/<uid>.${ConfigSchema.EXT}.[${ConfigSchema.TYPES.join('|')}]`,
+          suggestion: `name must be <path>/<uid>${ConfigSchema.CFGU.EXT}${ConfigSchema.EXT}`,
         }),
       );
     }

@@ -1,0 +1,58 @@
+name: "CD: configu vscode extension artifact, marketplace"
+
+on:
+  push:
+    tags:
+      - vscode-*
+
+env:
+  PACKAGE: "vscode"
+  PACKAGE_PATH: "packages/vscode"
+
+jobs:
+  build_and_deploy:
+    name: Build and deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: ./.github/actions/deploy-start-action
+        id: deployment
+        with:
+          package-name: ${{ env.PACKAGE_NAME }}
+          google-chat-webhook: ${{ secrets.GOOGLE_CHAT_WEBHOOK }}
+
+      - uses: ./.github/actions/ts-env-action
+
+      - uses: ./.github/actions/ts-env-action
+        with:
+          dependencies-root: "ts"
+
+      # ----------
+      - name: Bump package version
+        run: |
+          cd ${{ env.CWD }}
+          npm --no-git-tag-version version ${{ steps.deployment.outputs.release-version }} --workspace=${{ env.PACKAGE_NAME }}
+
+      - name: Build extension
+        run: |
+          npm run --workspace=${{ env.PACKAGE }} build
+
+      - name: Upload vsix artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.PACKAGE }}-${{ steps.deployment.outputs.release-version }}
+          path: ${{ env.PACKAGE_PATH }}/build/${{ env.PACKAGE }}-${{ steps.deployment.outputs.release-version }}.vsix
+
+      # todo: Remove commented workflow after it decided to publish the extension to the market place
+      # Reference https://code.visualstudio.com/api/working-with-extensions/publishing-extension#publishing-extensions
+      # - name: Publish to VSCode extension marketplace
+      #   run: npm exec --workspace=${{ env.PACKAGE }} vsce publish -p ${{secrets.VSCE_PAT}}
+      # ----------
+
+      - uses: ./.github/actions/deploy-end-action
+        if: always()
+        with:
+          package-name: ${{ env.PACKAGE_NAME }}
+          package-version: ${{ steps.deployment.outputs.release-version }}
+          google-chat-webhook: ${{ secrets.GOOGLE_CHAT_WEBHOOK }}

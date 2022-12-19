@@ -1,0 +1,7 @@
+# https://code.visualstudio.com/api/working-with-extensions/publishing-extension#using-.vscodeignore
+.vscode
+node_modules
+src/
+**/*.map
+**/*.ts
+tsconfig.json

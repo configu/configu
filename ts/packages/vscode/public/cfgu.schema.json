@@ -1,0 +1,278 @@
+{
+  "definitions": {
+    "CfguType": {
+      "title": "CfguType",
+      "enum": [
+        "Base64",
+        "Boolean",
+        "Color",
+        "ConnectionString",
+        "Country",
+        "Currency",
+        "Domain",
+        "Email",
+        "Hex",
+        "IPv4",
+        "IPv6",
+        "LatLong",
+        "Locale",
+        "MD5",
+        "MobilePhone",
+        "Number",
+        "RegEx",
+        "SHA",
+        "SemVer",
+        "String",
+        "URL",
+        "UUID"
+      ],
+      "type": "string"
+    },
+    "Cfgu": {
+      "description": "A generic declaration of a Config, aka Cfgu that specifies information about its type and other characteristics",
+      "title": "Cfgu",
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/definitions/CfguType",
+          "title": "type"
+        },
+        "pattern": {
+          "type": "string",
+          "title": "pattern"
+        },
+        "default": {
+          "type": "string",
+          "title": "default"
+        },
+        "required": {
+          "type": "boolean",
+          "title": "required"
+        },
+        "depends": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "depends"
+        },
+        "template": {
+          "type": "string",
+          "title": "template"
+        },
+        "description": {
+          "type": "string",
+          "title": "description"
+        }
+      },
+      "required": [
+        "type"
+      ]
+    },
+    "Config": {
+      "description": "A generic representation of a software configuration, aka Config",
+      "title": "Config",
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "title": "key"
+        },
+        "schema": {
+          "type": "string",
+          "title": "schema"
+        },
+        "set": {
+          "type": "string",
+          "title": "set"
+        },
+        "value": {
+          "type": "string",
+          "title": "value"
+        }
+      },
+      "required": [
+        "key",
+        "schema",
+        "set",
+        "value"
+      ]
+    },
+    "ConfigSchemaType": {
+      "title": "ConfigSchemaType",
+      "enum": [
+        "json",
+        "yaml"
+      ],
+      "type": "string"
+    },
+    "ConfigSchema": {
+      "description": "An interface of a <uid>.cfgu.[json|yaml] file, aka ConfigSchema\nthat contains binding records between a unique Config <key> and its Cfgu declaration",
+      "title": "ConfigSchema",
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "title": "path"
+        },
+        "type": {
+          "$ref": "#/definitions/ConfigSchemaType",
+          "title": "type"
+        },
+        "uid": {
+          "type": "string",
+          "title": "uid"
+        },
+        "contents": {
+          "type": "string",
+          "title": "contents"
+        }
+      },
+      "required": [
+        "contents",
+        "path",
+        "type",
+        "uid"
+      ]
+    },
+    "ConfigSchemaContentsValue": {
+      "title": "ConfigSchemaContentsValue",
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/definitions/CfguType",
+          "title": "type"
+        },
+        "pattern": {
+          "type": "string",
+          "title": "pattern"
+        },
+        "default": {
+          "type": "string",
+          "title": "default"
+        },
+        "required": {
+          "type": "boolean",
+          "title": "required"
+        },
+        "depends": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "depends"
+        },
+        "template": {
+          "type": "string",
+          "title": "template"
+        },
+        "description": {
+          "type": "string",
+          "title": "description"
+        }
+      },
+      "required": [
+        "type"
+      ]
+    },
+    "ConfigSchemaContents": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/ConfigSchemaContentsValue"
+      }
+    },
+    "ConfigSet": {
+      "description": "An interface of a path in an hierarchy, aka ConfigSet\nthat contains Config <value> permutation",
+      "title": "ConfigSet",
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "title": "path"
+        },
+        "hierarchy": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "hierarchy"
+        }
+      },
+      "required": [
+        "hierarchy",
+        "path"
+      ]
+    },
+    "ConfigStore": {
+      "description": "An interface of a storage, aka ConfigStore\nthat contains Config records (Config[])",
+      "title": "ConfigStore",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "title": "type"
+        }
+      },
+      "required": [
+        "type"
+      ]
+    },
+    "ConfigStoreQuery": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "title": "key"
+        },
+        "schema": {
+          "type": "string",
+          "title": "schema"
+        },
+        "set": {
+          "type": "string",
+          "title": "set"
+        }
+      },
+      "required": [
+        "key",
+        "schema",
+        "set"
+      ]
+    },
+    "ConfigStoreContentsElement": {
+      "title": "ConfigStoreContentsElement",
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "title": "key"
+        },
+        "schema": {
+          "type": "string",
+          "title": "schema"
+        },
+        "set": {
+          "type": "string",
+          "title": "set"
+        },
+        "value": {
+          "type": "string",
+          "title": "value"
+        }
+      },
+      "required": [
+        "key",
+        "schema",
+        "set",
+        "value"
+      ]
+    },
+    "ConfigStoreContents": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ConfigStoreContentsElement"
+      }
+    }
+  },
+  "$ref": "#/definitions/ConfigSchemaContents"
+}

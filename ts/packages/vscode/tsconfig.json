@@ -1,0 +1,11 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "build",
+    "lib": ["ES2020"],
+    "sourceMap": true,
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "build", "src/**/*.test*"]
+}
