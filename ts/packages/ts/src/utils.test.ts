@@ -4,7 +4,7 @@ describe(`utils`, () => {
   describe(`ERR`, () => {
     const message = 'some-error';
     const location = ['tests', 'utils', 'ERR'];
-    const suggestion = 'to to reach 100% coverage';
+    const suggestion = 'try to to reach 100% coverage';
     it(`return message`, async () => {
       const res = ERR(message);
       expect(res).toEqual(message);
@@ -14,12 +14,12 @@ describe(`utils`, () => {
       expect(res).toBe(`${message} at ${location.join(' > ')}`);
     });
     it(`return message and suggestion`, async () => {
-      const res = ERR(message, { suggestion: 'to to reach 100% coverage' });
-      expect(res).toBe(`${message}, try ${suggestion}`);
+      const res = ERR(message, { suggestion });
+      expect(res).toBe(`${message}, ${suggestion}`);
     });
     it(`return decorated message`, async () => {
       const res = ERR(message, { location, suggestion });
-      expect(res).toBe(`${message} at ${location.join(' > ')}, try ${suggestion}`);
+      expect(res).toBe(`${message} at ${location.join(' > ')}, ${suggestion}`);
     });
   });
 

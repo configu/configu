@@ -24,6 +24,7 @@ export class EvalCommand extends Command<EvalCommandReturn> {
 
   async run() {
     const { store, set, schema } = this.parameters;
+    const warn: string[] = [];
 
     const stores = Array.isArray(store) ? store : [store];
     await Promise.all(stores.map((storeInstance) => storeInstance.init()));
@@ -79,11 +80,15 @@ export class EvalCommand extends Command<EvalCommandReturn> {
           if (!referenceData) {
             // * couldn't extract reference data from current reference value (reference is not stored correctly)
             // * the code shouldn't get here if the reference was added via the upsert command
+            warn.push(`failed to parse reference value "${storedConfig.value}" for key "${key}"`);
             return { key, value: '' };
           }
           const referencedStores = stores.filter((s, i) => i !== 0 && s.type === referenceData.store);
           if (_.isEmpty(referencedStores)) {
             // * the store required to eval the current reference value was not provided via parameters
+            warn.push(
+              `missing required store "${referenceData.store}" to eval reference value "${storedConfig.value}" for key "${key}"`,
+            );
             return { key, value: '' };
           }
 
@@ -92,6 +97,11 @@ export class EvalCommand extends Command<EvalCommandReturn> {
             _(referencedValues)
               .reverse()
               .find((v) => Boolean(v?.[0]?.value))?.[0]?.value ?? ''; // todo: refactor to something nicer then that
+          if (!evaluatedReferencedValue) {
+            warn.push(
+              `failed to get reference value "${storedConfig.value}" for key "${key}" from store "${referenceData.store}"`,
+            );
+          }
           return { key, value: evaluatedReferencedValue };
         }
 
@@ -100,6 +110,7 @@ export class EvalCommand extends Command<EvalCommandReturn> {
         }
 
         // * config wasn't found for the current key in the provided set hierarchy
+        warn.push(`failed to find a config for key "${key}" in the provided set hierarchy "${set.path}"`);
         return { key, value: '' };
       })
       .value();
@@ -125,8 +136,11 @@ export class EvalCommand extends Command<EvalCommandReturn> {
         });
       runAgain = hasRendered;
     }
+    if (!_.isEmpty(templateKeys)) {
+      warn.push(`failed to render template of keys "${templateKeys.join(', ')}", check for reference loop`);
+    }
 
-    // validate the eval result against the provided schemas
+    // * validate the eval result against the provided schemas
     _(schemaContentsDict)
       .entries()
       .forEach(async ([key, cfgu]) => {
@@ -134,19 +148,24 @@ export class EvalCommand extends Command<EvalCommandReturn> {
 
         if (!ConfigSchema.validateValueType({ ...cfgu, value: evaluatedValue })) {
           throw new Error(
-            ERR(`invalid value type`, { location: [key], suggestion: `"${evaluatedValue}" must be a "${cfgu.type}"` }),
+            ERR(`invalid value type for key "${key}"`, {
+              location: [`EvalCommand`, 'run'],
+              suggestion: `value "${evaluatedValue}" must be a "${cfgu.type}"`,
+            }),
           );
         }
 
         if (cfgu.required && !evaluatedValue) {
-          throw new Error(ERR(`required key is missing a value`, { location: [key] }));
+          throw new Error(ERR(`required key "${key}" is missing a value`, { location: [`EvalCommand`, 'run'] }));
         }
 
         if (evaluatedValue && cfgu.depends && cfgu.depends.some((depend) => !evaluatedConfigsDict[depend])) {
-          throw new Error(ERR(`depends of a key are missing a value`, { location: [key] }));
+          throw new Error(
+            ERR(`one or more depends of key "${key}" is missing a value`, { location: [`EvalCommand`, 'run'] }),
+          );
         }
       });
 
-    return { data: evaluatedConfigsDict as EvaluatedConfigs };
+    return { data: evaluatedConfigsDict as EvaluatedConfigs, warn };
   }
 }
