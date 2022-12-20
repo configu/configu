@@ -36,13 +36,14 @@ jobs:
 
       - name: Build extension
         run: |
+          cd ${{ env.CWD }}
           npm run --workspace=${{ env.PACKAGE_NAME }} build
 
       - name: Upload vsix artifact
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.PACKAGE_NAME }}-${{ steps.deployment.outputs.release-version }}
-          path: ${{ env.PACKAGE_PATH }}/build/${{ env.PACKAGE_NAME }}-${{ steps.deployment.outputs.release-version }}.vsix
+          path: ${{ env.CWD }}/${{ env.PACKAGE_PATH }}/build/${{ env.PACKAGE_NAME }}-${{ steps.deployment.outputs.release-version }}.vsix
 
       # todo: Remove commented workflow after it decided to publish the extension to the market place
       # Reference https://code.visualstudio.com/api/working-with-extensions/publishing-extension#publishing-extensions
