@@ -1,29 +1,25 @@
-import { parse } from 'dotenv';
+import { Cfgu, CfguType, Config } from '@configu/ts';
+import Dotenv from 'dotenv';
 import _ from 'lodash';
-import { ConfigSchema, ConfigSchemaType } from '@configu/ts';
 import { analyzeValueType } from './configAnalyzer';
-import { ConfigFormat } from '../formatters';
+import { ConfigFormat, CONFIG_FORMAT_EXTENSION } from '../formatters';
 
 type ConfigExtractorFormat = Extract<ConfigFormat, 'JSON' | 'Dotenv'>;
 
-const EXTENSION_TO_FORMAT_DICT: Record<string, ConfigExtractorFormat> = {
-  json: 'JSON',
-  env: 'Dotenv',
-};
-
-export const getFileExtension = (filename: string) => {
-  return _(filename).split('.').last();
-};
-
 type ExtractorParameters = { content: string };
 type ExtractorFunction = (params: ExtractorParameters) => Record<string, string>;
+
+const FORMAT_TO_EXTENSION_DICT: Record<ConfigExtractorFormat, string> = _.pick(CONFIG_FORMAT_EXTENSION, [
+  'JSON',
+  'Dotenv',
+]);
 
 const FILE_CONTENT_FORMAT_ERROR =
   'file content is not in a valid format. for more info on supported formats read here: https://configu.com/docs';
 const NOT_FLAT_JSON_ERROR = 'only flat .json files are supported. read more here: https://configu.com/docs';
 
-const configExtractors: Record<ConfigExtractorFormat, ExtractorFunction> = {
-  Dotenv: ({ content }) => parse(content),
+const CONFIG_EXTRACTORS: Record<ConfigExtractorFormat, ExtractorFunction> = {
+  Dotenv: ({ content }) => Dotenv.parse(content),
   JSON: ({ content }) => {
     const extractedKeys = JSON.parse(content) as Record<'string', 'string'>;
     if (Array.isArray(extractedKeys)) {
@@ -46,7 +42,7 @@ type ExtractConfigParameters = {
     analyzeValuesTypes?: boolean;
   };
 };
-type ExtractedConfig = { key: string; value: string; schema: Pick<ConfigSchema, 'type' | 'default'> };
+type ExtractedConfig = Pick<Config, 'key' | 'value'> & { cfgu: Pick<Cfgu, 'type' | 'default'> };
 
 export const extractConfigs = ({ filePath, fileContent, options = {} }: ExtractConfigParameters): ExtractedConfig[] => {
   if (!fileContent) {
@@ -54,14 +50,12 @@ export const extractConfigs = ({ filePath, fileContent, options = {} }: ExtractC
   }
 
   // * lowercase the extension in order to handle case sensitivity issues for example: .JSON, .json .ENV, .env etc
-  const fileExtension = getFileExtension(filePath)?.toLowerCase();
-  if (!fileExtension || !EXTENSION_TO_FORMAT_DICT[fileExtension]) {
-    throw new Error('file type not supported. see here for supported file types to import: https://configu.com/docs');
-  }
-  const format = EXTENSION_TO_FORMAT_DICT?.[fileExtension];
-  const extractor = configExtractors[format];
-  if (!extractor) {
-    throw new Error(`${format} is not supported`);
+  const fileFormat = _.findKey(FORMAT_TO_EXTENSION_DICT, (ext) => filePath.toLowerCase().includes(`.${ext}`));
+  const extractor = CONFIG_EXTRACTORS[fileFormat as ConfigExtractorFormat];
+  if (!fileFormat || !extractor) {
+    throw new Error(
+      'file format is not supported. for more info on supported file formats to import: https://configu.com/docs',
+    );
   }
 
   const rawExtractedConfig = extractor?.({ content: fileContent }) ?? {};
@@ -70,8 +64,8 @@ export const extractConfigs = ({ filePath, fileContent, options = {} }: ExtractC
     return {
       key,
       value,
-      schema: {
-        type: options.analyzeValuesTypes ? analyzeValueType(value) : ConfigSchemaType.String,
+      cfgu: {
+        type: options.analyzeValuesTypes ? analyzeValueType(value) : CfguType.String,
         ...(options.useValuesAsDefaults && { default: value }),
       },
     };

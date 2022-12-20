@@ -1,16 +1,16 @@
-import { ConfigSchemaType, Cfgu } from '@configu/ts';
+import { CfguType, ConfigSchema } from '@configu/ts';
 
 // * when adding a new type, update typeCheckOrder array
-export const TYPES_CHECK_ORDER: ConfigSchemaType[] = [
-  ConfigSchemaType.Number,
-  ConfigSchemaType.Boolean,
-  ConfigSchemaType.Email,
-  ConfigSchemaType.Uuid,
-  ConfigSchemaType.Ipv6,
-  ConfigSchemaType.Ipv4,
-  ConfigSchemaType.SemVer,
-  ConfigSchemaType.Domain,
-  ConfigSchemaType.Url,
+export const TYPES_CHECK_ORDER: CfguType[] = [
+  CfguType.Number,
+  CfguType.Boolean,
+  CfguType.Email,
+  CfguType.UUID,
+  CfguType.IPv6,
+  CfguType.IPv4,
+  CfguType.SemVer,
+  CfguType.Domain,
+  CfguType.URL,
   // ! currently its limited to the types above
   // 'Base64',
   // 'Locale',
@@ -23,16 +23,11 @@ export const TYPES_CHECK_ORDER: ConfigSchemaType[] = [
   // 'Hex',
 ];
 
-export const analyzeValueType = (value: string): ConfigSchemaType => {
+export const analyzeValueType = (value: string): CfguType => {
   if (!value) {
     // * handle empty value case
-    return ConfigSchemaType.String;
+    return CfguType.String;
   }
-
-  const analyzedType = TYPES_CHECK_ORDER.find((type) => {
-    const validator = Cfgu.TYPE_VALIDATORS[type];
-    return validator?.({ value });
-  });
-
-  return analyzedType ?? ConfigSchemaType.String;
+  const analyzedType = TYPES_CHECK_ORDER.find((type) => ConfigSchema.validateValueType({ type, value }));
+  return analyzedType ?? CfguType.String;
 };
