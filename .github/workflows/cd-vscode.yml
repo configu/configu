@@ -44,6 +44,14 @@ jobs:
         with:
           name: ${{ env.PACKAGE_NAME }}-${{ steps.deployment.outputs.release-version }}
           path: ${{ env.CWD }}/${{ env.PACKAGE_PATH }}/build/${{ env.PACKAGE_NAME }}-${{ steps.deployment.outputs.release-version }}.vsix
+          if-no-files-found: error
+
+      - name: Upload artifact to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ env.CWD }}/${{ env.PACKAGE_PATH }}/build/${{ env.PACKAGE_NAME }}-${{ steps.deployment.outputs.release-version }}.vsix
+          tag: ${{ github.ref }}
 
       # todo: Remove commented workflow after it decided to publish the extension to the market place
       # Reference https://code.visualstudio.com/api/working-with-extensions/publishing-extension#publishing-extensions
