@@ -6,7 +6,7 @@ on:
       - vscode-*
 
 env:
-  PACKAGE: "vscode"
+  PACKAGE_NAME: "vscode"
   PACKAGE_PATH: "packages/vscode"
 
 jobs:
@@ -36,18 +36,18 @@ jobs:
 
       - name: Build extension
         run: |
-          npm run --workspace=${{ env.PACKAGE }} build
+          npm run --workspace=${{ env.PACKAGE_NAME }} build
 
       - name: Upload vsix artifact
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ env.PACKAGE }}-${{ steps.deployment.outputs.release-version }}
-          path: ${{ env.PACKAGE_PATH }}/build/${{ env.PACKAGE }}-${{ steps.deployment.outputs.release-version }}.vsix
+          name: ${{ env.PACKAGE_NAME }}-${{ steps.deployment.outputs.release-version }}
+          path: ${{ env.PACKAGE_PATH }}/build/${{ env.PACKAGE_NAME }}-${{ steps.deployment.outputs.release-version }}.vsix
 
       # todo: Remove commented workflow after it decided to publish the extension to the market place
       # Reference https://code.visualstudio.com/api/working-with-extensions/publishing-extension#publishing-extensions
       # - name: Publish to VSCode extension marketplace
-      #   run: npm exec --workspace=${{ env.PACKAGE }} vsce publish -p ${{secrets.VSCE_PAT}}
+      #   run: npm exec --workspace=${{ env.PACKAGE_NAME }} vsce publish -p ${{secrets.VSCE_PAT}}
       # ----------
 
       - uses: ./.github/actions/deploy-end-action
