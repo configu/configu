@@ -1,0 +1,10 @@
+{
+  "extends": [
+    "../../.eslintrc"
+  ],
+  "rules": {
+    "no-console": "off",
+    "import/no-extraneous-dependencies": "off"
+  },
+  "ignorePatterns": ["build"]
+}
