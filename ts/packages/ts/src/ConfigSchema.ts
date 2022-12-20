@@ -108,9 +108,9 @@ export class ConfigSchema implements IConfigSchema {
     const fileExt = splittedPath.pop();
     if (!fileExt || !ConfigSchema.TYPES.includes(fileExt)) {
       throw new Error(
-        ERR(`invalid file extension`, {
-          location: [path],
-          suggestion: `extension must be a ${ConfigSchema.EXT}`,
+        ERR(`invalid path "${path}"`, {
+          location: [`ConfigSchema`, `constructor`],
+          suggestion: `path extension must be ${ConfigSchema.EXT}`,
         }),
       );
     }
@@ -119,9 +119,9 @@ export class ConfigSchema implements IConfigSchema {
     const cfguExt = splittedPath.pop();
     if (cfguExt !== ConfigSchema.CFGU.NAME) {
       throw new Error(
-        ERR(`invalid file extension`, {
-          location: [path],
-          suggestion: `extension must be ${ConfigSchema.CFGU.EXT}${ConfigSchema.EXT}`,
+        ERR(`invalid path "${path}"`, {
+          location: [`ConfigSchema`, `constructor`],
+          suggestion: `path extension must be ${ConfigSchema.CFGU.EXT}${ConfigSchema.EXT}`,
         }),
       );
     }
@@ -129,9 +129,9 @@ export class ConfigSchema implements IConfigSchema {
     const schemaUid = splittedPath.pop()?.split('/')?.pop();
     if (!schemaUid || !ConfigSchema.validateNaming(schemaUid)) {
       throw new Error(
-        ERR(`invalid file name`, {
-          location: [path],
-          suggestion: `name must be <path>/<uid>${ConfigSchema.CFGU.EXT}${ConfigSchema.EXT}`,
+        ERR(`invalid path "${path}"`, {
+          location: [`ConfigSchema`, `constructor`],
+          suggestion: `path must be formed as <path>/<schema.uid>${ConfigSchema.CFGU.EXT}${ConfigSchema.EXT}, and schema.uid mustn't contain reserved words`,
         }),
       );
     }
@@ -142,7 +142,7 @@ export class ConfigSchema implements IConfigSchema {
 
   static async parse(schema: ConfigSchema) {
     await schema.read();
-    const { path, contents } = schema;
+    const { uid, contents } = schema;
 
     const schemaContents = Convert.toConfigSchemaContents(contents);
     _(schemaContents)
@@ -151,13 +151,18 @@ export class ConfigSchema implements IConfigSchema {
         const { type } = cfgu;
 
         if (!ConfigSchema.validateNaming(key)) {
-          throw new Error(ERR(`invalid schema key"`, { location: [key, path] }));
+          throw new Error(
+            ERR(`invalid key "${key}"`, {
+              location: [`ConfigSchema`, 'parse', uid, key],
+              suggestion: `path nodes mustn't contain reserved words "${key}"`,
+            }),
+          );
         }
 
         if (type === 'RegEx' && !cfgu.pattern) {
           throw new Error(
             ERR(`invalid type property`, {
-              location: [key, path],
+              location: [`ConfigSchema`, 'parse', uid, key, 'type'],
               suggestion: `type "${type}" must come with a pattern property`,
             }),
           );
@@ -166,16 +171,17 @@ export class ConfigSchema implements IConfigSchema {
         if (cfgu.default && (cfgu.required || cfgu.template)) {
           throw new Error(
             ERR(`invalid default property`, {
-              location: [key, path],
-              suggestion: `default property must'nt set together with required or template properties`,
+              location: [`ConfigSchema`, 'parse', uid, key, 'default'],
+              suggestion: `default must'nt set together with required or template properties`,
             }),
           );
         }
+
         // ! default don't support templates of other store like regular values
         if (!ConfigSchema.validateValueType({ ...cfgu, value: cfgu.default })) {
           throw new Error(
             ERR(`invalid default property`, {
-              location: [key, path],
+              location: [`ConfigSchema`, 'parse', uid, key, 'default'],
               suggestion: `"${cfgu.default}" must be a "${type}"`,
             }),
           );
@@ -185,14 +191,24 @@ export class ConfigSchema implements IConfigSchema {
           cfgu.depends &&
           (_.isEmpty(cfgu.depends) || cfgu.depends.some((depend) => !ConfigSchema.validateNaming(depend)));
         if (isInvalidDepends) {
-          throw new Error(ERR(`invalid depends property`, { location: [key, path] }));
+          throw new Error(
+            ERR(`invalid depends property`, {
+              location: [`ConfigSchema`, 'parse', uid, key, 'depends'],
+              suggestion: `depends is empty or contain reserved words`,
+            }),
+          );
         }
 
         const isInvalidTemplate =
           cfgu.template &&
           TMPL.parse(cfgu.template).some((exp) => exp.type === 'name' && !ConfigSchema.validateNaming(exp.key));
         if (isInvalidTemplate) {
-          throw new Error(ERR(`invalid template property`, { location: [key, path] }));
+          throw new Error(
+            ERR(`invalid template property`, {
+              location: [`ConfigSchema`, 'parse', uid, key, 'template'],
+              suggestion: `template is invalid or contain reserved words`,
+            }),
+          );
         }
       });
 

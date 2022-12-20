@@ -5,9 +5,7 @@ export const ERR = (
   message: string,
   { location = [], suggestion = '' }: { location?: string[]; suggestion?: string } = {},
 ) => {
-  return `${message}${!_.isEmpty(location) ? ` at ${location.join(' > ')}` : ''}${
-    suggestion ? `, try ${suggestion}` : ''
-  }`;
+  return `${message}${!_.isEmpty(location) ? ` at ${location.join(' > ')}` : ''}${suggestion ? `, ${suggestion}` : ''}`;
 };
 
 export const TMPL = {

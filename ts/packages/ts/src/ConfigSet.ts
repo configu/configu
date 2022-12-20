@@ -18,7 +18,7 @@ export class ConfigSet implements IConfigSet {
     if (path.endsWith(ConfigSet.SEPARATOR)) {
       throw new Error(
         ERR(`invalid path "${path}"`, {
-          location: ['set.path'],
+          location: [`ConfigSet`, `constructor`],
           suggestion: `path mustn't end with ${ConfigSet.SEPARATOR} character`,
         }),
       );
@@ -33,8 +33,8 @@ export class ConfigSet implements IConfigSet {
       if (!ConfigSchema.validateNaming(cur)) {
         throw new Error(
           ERR(`invalid path "${path}"`, {
-            location: ['set.path'],
-            suggestion: `provided path contains invalid characters`,
+            location: [`ConfigSet`, `constructor`],
+            suggestion: `path nodes mustn't contain reserved words "${cur}"`,
           }),
         );
       }

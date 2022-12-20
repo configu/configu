@@ -30,18 +30,18 @@ export class UpsertCommand extends Command<void> {
         const cfgu = schemaContents[key];
         if (!cfgu) {
           throw new Error(
-            ERR(`invalid key ${key}`, {
-              location: [`parameters.config[${idx}]`],
-              suggestion: `key must be declared on the passed schema`,
+            ERR(`invalid config key "${key}"`, {
+              location: [`UpsertCommand`, 'run'],
+              suggestion: `key "${key}" must be declared on schema ${schema.uid}`,
             }),
           );
         }
 
         if (value && cfgu.template) {
           throw new Error(
-            ERR(`invalid key ${key}`, {
-              location: [`parameters.config[${idx}]`],
-              suggestion: `keys declared with a template mustn't have a value`,
+            ERR(`invalid assignment to config key "${key}"`, {
+              location: [`UpsertCommand`, 'run'],
+              suggestion: `keys declared with template mustn't have a value`,
             }),
           );
         }
@@ -49,18 +49,18 @@ export class UpsertCommand extends Command<void> {
         const referenceValue = ConfigStore.extractReferenceValue(value);
         if (referenceValue && !ConfigStore.parseReferenceValue(referenceValue)) {
           throw new Error(
-            ERR(`invalid value ${value}`, {
-              location: [`parameters.config[${idx}]`],
-              suggestion: `reference value must be a valid connection string - store=<type>;query=[set/]<schema>[.key]`,
+            ERR(`invalid config value "${value}" for key "${key}"`, {
+              location: [`UpsertCommand`, 'run'],
+              suggestion: `reference value must be formed as a valid connection string - store=<type>;query=[set/]<schema>[.key]`,
             }),
           );
         }
 
         if (!referenceValue && !ConfigSchema.validateValueType({ ...cfgu, value })) {
           throw new Error(
-            ERR(`invalid value ${value}`, {
-              location: [`parameters.config[${idx}]`],
-              suggestion: `"${value}" must be of type "${cfgu.type}"`,
+            ERR(`invalid config value "${value}" for key "${key}"`, {
+              location: [`UpsertCommand`, 'run'],
+              suggestion: `value "${value}" must be of type "${cfgu.type}"`,
             }),
           );
         }

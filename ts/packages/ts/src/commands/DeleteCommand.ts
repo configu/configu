@@ -21,7 +21,12 @@ export class DeleteCommand extends Command<void> {
     const { store, set, schema } = this.parameters;
 
     if (!set && !schema) {
-      throw new Error(ERR('either set or schema parameter should be supplied', { location: ['parameters'] }));
+      throw new Error(
+        ERR('invalid set or schema parameters', {
+          location: [`DeleteCommand`, 'run'],
+          suggestion: 'one of them must be supplied',
+        }),
+      );
     }
 
     await store.init();
