@@ -73,7 +73,7 @@
     ]
   },
   "dependencies": {
-    "@configu/ts": "0.8.6"
+    "@configu/ts": "0.9.0"
   },
   "devDependencies": {
     "@types/glob": "^8.0.0",
