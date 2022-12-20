@@ -25,7 +25,7 @@ runs:
 
     - name: Extract release tag version
       id: release-tag
-      uses: olegtarasov/get-tag@v2.1
+      uses: olegtarasov/get-tag@v2.1.2
       with:
         tagRegex: "(?<package>.*)-v(?<version>.*)"
         tagRegexGroup: 2
