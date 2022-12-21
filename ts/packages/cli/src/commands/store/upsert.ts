@@ -1,6 +1,6 @@
 import { Flags, CliUx } from '@oclif/core';
 import _ from 'lodash';
-import { Cfgu } from '@configu/node';
+import { ConfigSchema } from '@configu/node';
 import { getStoreConnectionStringPlaceholder } from '@configu/lib';
 import { BaseCommand } from '../../base';
 import { constructStoreFromConnectionString, constructStoreFromInteractiveSession } from '../../helpers/stores';
@@ -60,7 +60,7 @@ export default class StoreUpsert extends BaseCommand {
     // }
 
     flags.label.forEach((label) => {
-      if (!Cfgu.validateNaming(label)) {
+      if (!ConfigSchema.validateNaming(label)) {
         throw new Error(`invalid label name value ${label}`);
       }
       _.set(this.config.configData, `stores.${label}`, storeConnection);

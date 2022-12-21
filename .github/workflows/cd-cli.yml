@@ -72,6 +72,13 @@ jobs:
         run: |
           aws cloudfront create-invalidation --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION }} --paths "/*"
 
+      - name: Upload artifacts to release
+        uses: softprops/action-gh-release@v1
+        if: ${{startsWith(github.ref, 'refs/tags/') }}
+        with:
+          files: |
+            ${{ env.CWD }}/${{ env.PACKAGE_PATH }}/dist/*
+
       - uses: docker/setup-qemu-action@v2
 
       - uses: docker/setup-buildx-action@v2

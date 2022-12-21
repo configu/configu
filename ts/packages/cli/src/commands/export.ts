@@ -2,7 +2,7 @@ import { Flags } from '@oclif/core';
 import _ from 'lodash';
 import { paramCase } from 'change-case';
 import { EvaluatedConfigs, EvaluatedConfigsArray, TMPL } from '@configu/ts';
-import { Set, Cfgu, EvalCommand } from '@configu/node';
+import { ConfigSet, ConfigSchema, EvalCommand } from '@configu/node';
 import {
   CONFIG_FORMAT_TYPE,
   formatConfigs,
@@ -145,6 +145,10 @@ export default class Export extends BaseCommand {
       flags.set = '';
     }
 
+    if (_.isEmpty(flags.store)) {
+      throw new Error('missing required flag store');
+    }
+
     const storePromises = flags.store.map(async (storeFlag) => {
       const storeCS = this.config.configData.stores?.[storeFlag] ?? storeFlag;
       const { store } = await constructStoreFromConnectionString(storeCS);
@@ -152,9 +156,9 @@ export default class Export extends BaseCommand {
     });
     const store = await Promise.all(storePromises);
 
-    const set = new Set(flags.set);
+    const set = new ConfigSet(flags.set);
     const schema = flags.schema.map((schemaFlag) => {
-      return new Cfgu(schemaFlag);
+      return new ConfigSchema(schemaFlag);
     });
 
     let { data } = await new EvalCommand({

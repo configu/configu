@@ -1,7 +1,7 @@
 import { Flags } from '@oclif/core';
 import _ from 'lodash';
 import { EvaluatedConfigsArray } from '@configu/ts';
-import { Set, Cfgu, UpsertCommand } from '@configu/node';
+import { ConfigSet, ConfigSchema, UpsertCommand } from '@configu/node';
 import { extractConfigs } from '@configu/lib';
 import { BaseCommand } from '../base';
 import { constructStoreFromConnectionString } from '../helpers/stores';
@@ -45,14 +45,15 @@ export default class Upsert extends BaseCommand {
     const storeCS = this.config.configData.stores?.[flags.store] ?? flags.store;
     const { store } = await constructStoreFromConnectionString(storeCS);
 
-    const set = new Set(flags.set);
-    const schema = new Cfgu(flags.schema);
+    const set = new ConfigSet(flags.set);
+    const schema = new ConfigSchema(flags.schema);
 
     let configs: EvaluatedConfigsArray = [];
 
     if (flags.config) {
       configs = flags.config.map((pair) => {
-        const [key, value] = pair.split('=');
+        const [key, ...rest] = pair.split('=');
+        const value = rest.join('='); // * ...rest and join used here to handle reference-value formed as connection-string
         if (!key) {
           throw new Error('invalid config flag');
         }
@@ -75,5 +76,6 @@ export default class Upsert extends BaseCommand {
       schema,
       configs,
     }).run();
+    this.log(`configs upserted successfully`);
   }
 }
