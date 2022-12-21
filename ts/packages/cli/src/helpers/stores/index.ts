@@ -1,9 +1,12 @@
 import _, { Dictionary } from 'lodash';
 import inquirer from 'inquirer';
 import fuzzy from 'fuzzy';
-import { ConfiguStore, CS, InMemoryStore, NoopStore, Store } from '@configu/ts';
+import { CS, ConfigStore } from '@configu/ts';
 import { StoreType, STORE_CONFIGURATION, STORE_LABEL } from '@configu/lib';
 import {
+  NoopStore,
+  InMemoryStore,
+  ConfiguStore,
   AwsSecretsManagerStore,
   AzureKeyVaultStore,
   CockroachDBStore,
@@ -20,7 +23,7 @@ import {
 import { defaultInteractiveSession } from './default';
 import { configuInteractiveSession } from './Configu';
 
-const TYPE_TO_STORE: Record<StoreType, (configuration: Dictionary<string>) => Store> = {
+const TYPE_TO_STORE: Record<StoreType, (configuration: Dictionary<string>) => ConfigStore> = {
   noop: () => new NoopStore(),
   'in-memory': () => new InMemoryStore(),
   configu: ({ org, token, type, endpoint }) => {
@@ -75,7 +78,7 @@ const TYPE_TO_INTERACTIVE: Record<StoreType, () => Promise<Dictionary<string>>> 
 type ConstructStoreReturnType = {
   type: StoreType;
   connectionString: string;
-  store: Store;
+  store: ConfigStore;
 };
 
 export const constructStoreFromConnectionString = (storeConnectionString: string): ConstructStoreReturnType => {

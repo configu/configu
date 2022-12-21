@@ -20,16 +20,17 @@
         // "--store", "json-file://ts/packages/node/test/db.json",
         // "--store", "hashicorp-vault://-",
 
-        // "--set", "secret/prod",
+        "--set", "test/ref",
         // "--set", "/prod/us-east-1",
-        "--set", "demo",
+        // "--set", "demo",
 
-        // "--schema", "tmp/test/s1.cfgu.json",
+        "--schema", "ts/packages/cli/cli.cfgu.json",
         // "--schema", "ts/packages/node/test/s2.cfgu.json",
         // "--schema", "~/dev/saas/saas.cfgu.json",
 
         // "--config", "S1V1=44", //"S1V1={{hashicorp-vault://secret/prod/service/NPM_TOKEN}}"
-        // "--config", "BAR=bar"
+        // "--config", "MY_FIRST_CONFIG=test"
+        // "--config", "MY_FIRST_CONFIG={{store=aws-secrets-manager;query=cra.secret}}"
       ],
       "outFiles": [
         "${workspaceFolder}/**/*.js",

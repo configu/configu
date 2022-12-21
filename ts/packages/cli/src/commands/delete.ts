@@ -1,5 +1,5 @@
 import { Flags } from '@oclif/core';
-import { Set, Cfgu, DeleteCommand } from '@configu/node';
+import { ConfigSet, ConfigSchema, DeleteCommand } from '@configu/node';
 import { BaseCommand } from '../base';
 import { constructStoreFromConnectionString } from '../helpers/stores';
 
@@ -31,13 +31,14 @@ export default class Delete extends BaseCommand {
     const storeCS = this.config.configData.stores?.[flags.store] ?? flags.store;
     const { store } = await constructStoreFromConnectionString(storeCS);
 
-    const set = flags.set ? new Set(flags.set) : undefined;
-    const schema = flags.schema ? new Cfgu(flags.schema) : undefined;
+    const set = flags.set ? new ConfigSet(flags.set) : undefined;
+    const schema = flags.schema ? new ConfigSchema(flags.schema) : undefined;
 
     await new DeleteCommand({
       store,
       set,
       schema,
     }).run();
+    this.log(`configs deleted successfully`);
   }
 }
