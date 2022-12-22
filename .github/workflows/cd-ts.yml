@@ -19,6 +19,7 @@ jobs:
         id: deployment
         with:
           package-name: ${{ env.PACKAGE_NAME }}
+          slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           google-chat-webhook: ${{ secrets.GOOGLE_CHAT_WEBHOOK }}
 
       - uses: ./.github/actions/ts-env-action
@@ -54,4 +55,5 @@ jobs:
         with:
           package-name: ${{ env.PACKAGE_NAME }}
           package-version: ${{ steps.deployment.outputs.release-version }}
+          slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           google-chat-webhook: ${{ secrets.GOOGLE_CHAT_WEBHOOK }}

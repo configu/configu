@@ -5,13 +5,23 @@ inputs:
     required: true
   package-version:
     required: true
+  slack-webhook:
+    required: true
   google-chat-webhook:
     required: true
 
 runs:
   using: "composite"
   steps:
-    # change to Slack after migration
+    - name: Post Slack build status
+      uses: 8398a7/action-slack@v3
+      if: always()
+      with:
+        status: ${{ job.status }}
+        fields: repo,message,commit,author,action,eventName,ref,workflow
+      env:
+        SLACK_WEBHOOK_URL: ${{ inputs.slack-webhook }}
+
     - name: Post Google Chat build status
       uses: Co-qn/google-chat-notification@v1
       if: always()
