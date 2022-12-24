@@ -11,11 +11,11 @@ export class ConfigSet implements IConfigSet {
   public readonly hierarchy: string[] = [];
 
   constructor(public readonly path: string = ConfigSet.ROOT) {
-    if (path.startsWith(ConfigSet.ROOT_LABEL)) {
-      this.path = path.slice(1);
+    if (this.path.startsWith(ConfigSet.ROOT_LABEL)) {
+      this.path = this.path.slice(1);
     }
 
-    if (path.endsWith(ConfigSet.SEPARATOR)) {
+    if (this.path.endsWith(ConfigSet.SEPARATOR)) {
       throw new Error(
         ERR(`invalid path "${path}"`, {
           location: [`ConfigSet`, `constructor`],
