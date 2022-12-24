@@ -16,15 +16,16 @@
         // "export",
         "delete",
 
-        "--store", "configu-prod",
+        // "--store", "configu-prod",
+        "--store", "store=configu;org=playground;token=8Jka0Ey8VjbUFWc80RQKQIKWkq3mPohZkyB5MQsq;type=Token;endpoint=http://localhost:8080",
         // "--store", "json-file://ts/packages/node/test/db.json",
         // "--store", "hashicorp-vault://-",
 
-        "--set", "test/ref",
+        "--set", "dev",
         // "--set", "/prod/us-east-1",
         // "--set", "demo",
 
-        "--schema", "ts/packages/cli/cli.cfgu.json",
+        // "--schema", "ts/packages/cli/cli.cfgu.json",
         // "--schema", "ts/packages/node/test/s2.cfgu.json",
         // "--schema", "~/dev/saas/saas.cfgu.json",
 

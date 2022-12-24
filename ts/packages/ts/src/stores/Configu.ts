@@ -33,7 +33,7 @@ export class ConfiguStore extends ConfigStore {
   }
 
   async get(queries: ConfigStoreQuery[]): Promise<Config[]> {
-    const { data } = await this.client.post('/config', { query: queries });
+    const { data } = await this.client.post('/config', { queries });
     return data;
   }
 
