@@ -135,50 +135,10 @@
         "uid"
       ]
     },
-    "ConfigSchemaContentsValue": {
-      "title": "ConfigSchemaContentsValue",
-      "type": "object",
-      "properties": {
-        "type": {
-          "$ref": "#/definitions/CfguType",
-          "title": "type"
-        },
-        "pattern": {
-          "type": "string",
-          "title": "pattern"
-        },
-        "default": {
-          "type": "string",
-          "title": "default"
-        },
-        "required": {
-          "type": "boolean",
-          "title": "required"
-        },
-        "depends": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "title": "depends"
-        },
-        "template": {
-          "type": "string",
-          "title": "template"
-        },
-        "description": {
-          "type": "string",
-          "title": "description"
-        }
-      },
-      "required": [
-        "type"
-      ]
-    },
     "ConfigSchemaContents": {
       "type": "object",
       "additionalProperties": {
-        "$ref": "#/definitions/ConfigSchemaContentsValue"
+        "$ref": "#/definitions/Cfgu"
       }
     },
     "ConfigSet": {

@@ -17,5 +17,5 @@ export interface ConfigSchema {
 }
 
 
-export interface ConfigSchemaContentsValue extends Cfgu {};
-export type ConfigSchemaContents = { [key: string]: ConfigSchemaContentsValue };
+// export interface ConfigSchemaContentsValue extends Cfgu {};
+export type ConfigSchemaContents = { [key: string]: Cfgu };

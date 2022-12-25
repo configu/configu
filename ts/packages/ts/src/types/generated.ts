@@ -1,13 +1,12 @@
 // To parse this data:
 //
-//   import { Convert, CfguType, Cfgu, Config, ConfigSchemaType, ConfigSchema, ConfigSchemaContentsValue, ConfigSet, ConfigStore, ConfigStoreQuery, ConfigStoreContentsElement } from "./file";
+//   import { Convert, CfguType, Cfgu, Config, ConfigSchemaType, ConfigSchema, ConfigSet, ConfigStore, ConfigStoreQuery, ConfigStoreContentsElement } from "./file";
 //
 //   const cfguType = Convert.toCfguType(json);
 //   const cfgu = Convert.toCfgu(json);
 //   const config = Convert.toConfig(json);
 //   const configSchemaType = Convert.toConfigSchemaType(json);
 //   const configSchema = Convert.toConfigSchema(json);
-//   const configSchemaContentsValue = Convert.toConfigSchemaContentsValue(json);
 //   const configSchemaContents = Convert.toConfigSchemaContents(json);
 //   const configSet = Convert.toConfigSet(json);
 //   const configStore = Convert.toConfigStore(json);
@@ -19,10 +18,36 @@
 // match the expected interface, even if the JSON is valid.
 
 /**
+ * A generic representation of a software configuration, aka Config
+ */
+export interface Config {
+    key:    string;
+    schema: string;
+    set:    string;
+    value:  string;
+}
+
+/**
+ * An interface of a <uid>.cfgu.[json|yaml] file, aka ConfigSchema
+ * that contains binding records between a unique Config <key> and its Cfgu declaration
+ */
+export interface ConfigSchema {
+    contents: string;
+    path:     string;
+    type:     ConfigSchemaType;
+    uid:      string;
+}
+
+export enum ConfigSchemaType {
+    JSON = "json",
+    YAML = "yaml",
+}
+
+/**
  * A generic declaration of a Config, aka Cfgu that specifies information about its type and
  * other characteristics
  */
-export interface Cfgu {
+export interface ConfigSchemaContents {
     default?:     string;
     depends?:     string[];
     description?: string;
@@ -55,42 +80,6 @@ export enum CfguType {
     String = "String",
     URL = "URL",
     UUID = "UUID",
-}
-
-/**
- * A generic representation of a software configuration, aka Config
- */
-export interface Config {
-    key:    string;
-    schema: string;
-    set:    string;
-    value:  string;
-}
-
-/**
- * An interface of a <uid>.cfgu.[json|yaml] file, aka ConfigSchema
- * that contains binding records between a unique Config <key> and its Cfgu declaration
- */
-export interface ConfigSchema {
-    contents: string;
-    path:     string;
-    type:     ConfigSchemaType;
-    uid:      string;
-}
-
-export enum ConfigSchemaType {
-    JSON = "json",
-    YAML = "yaml",
-}
-
-export interface ConfigSchemaContents {
-    default?:     string;
-    depends?:     string[];
-    description?: string;
-    pattern?:     string;
-    required?:    boolean;
-    template?:    string;
-    type:         CfguType;
 }
 
 /**
@@ -134,12 +123,12 @@ export class Convert {
         return JSON.stringify(uncast(value, r("CfguType")), null, 2);
     }
 
-    public static toCfgu(json: string): Cfgu {
-        return cast(JSON.parse(json), r("Cfgu"));
+    public static toCfgu(json: string): ConfigSchemaContents {
+        return cast(JSON.parse(json), r("ConfigSchemaContents"));
     }
 
-    public static cfguToJson(value: Cfgu): string {
-        return JSON.stringify(uncast(value, r("Cfgu")), null, 2);
+    public static cfguToJson(value: ConfigSchemaContents): string {
+        return JSON.stringify(uncast(value, r("ConfigSchemaContents")), null, 2);
     }
 
     public static toConfig(json: string): Config {
@@ -164,14 +153,6 @@ export class Convert {
 
     public static configSchemaToJson(value: ConfigSchema): string {
         return JSON.stringify(uncast(value, r("ConfigSchema")), null, 2);
-    }
-
-    public static toConfigSchemaContentsValue(json: string): ConfigSchemaContents {
-        return cast(JSON.parse(json), r("ConfigSchemaContents"));
-    }
-
-    public static configSchemaContentsValueToJson(value: ConfigSchemaContents): string {
-        return JSON.stringify(uncast(value, r("ConfigSchemaContents")), null, 2);
     }
 
     public static toConfigSchemaContents(json: string): { [key: string]: ConfigSchemaContents } {
@@ -356,15 +337,6 @@ function r(name: string) {
 }
 
 const typeMap: any = {
-    "Cfgu": o([
-        { json: "default", js: "default", typ: u(undefined, "") },
-        { json: "depends", js: "depends", typ: u(undefined, a("")) },
-        { json: "description", js: "description", typ: u(undefined, "") },
-        { json: "pattern", js: "pattern", typ: u(undefined, "") },
-        { json: "required", js: "required", typ: u(undefined, true) },
-        { json: "template", js: "template", typ: u(undefined, "") },
-        { json: "type", js: "type", typ: r("CfguType") },
-    ], "any"),
     "Config": o([
         { json: "key", js: "key", typ: "" },
         { json: "schema", js: "schema", typ: "" },
@@ -404,6 +376,10 @@ const typeMap: any = {
         { json: "set", js: "set", typ: "" },
         { json: "value", js: "value", typ: "" },
     ], "any"),
+    "ConfigSchemaType": [
+        "json",
+        "yaml",
+    ],
     "CfguType": [
         "Base64",
         "Boolean",
@@ -427,9 +403,5 @@ const typeMap: any = {
         "String",
         "URL",
         "UUID",
-    ],
-    "ConfigSchemaType": [
-        "json",
-        "yaml",
     ],
 };
