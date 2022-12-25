@@ -1,0 +1,14 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.configu</groupId>
+  <artifactId>configu</artifactId>
+  <packaging>jar</packaging>
+  <version>1.0-SNAPSHOT</version>
+  <name>com.configu</name>
+  <dependencies>
+  </dependencies>
+  <build>
+    <plugins>
+    </plugins>
+  </build>
+</project>
