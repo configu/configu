@@ -1,8 +1,8 @@
-import json
 from typing import List
 
 from .config_schema import ConfigSchema
 from .types.generated import ConfigSet as IConfigSet
+from .utils import pretty_error
 
 
 class ConfigSet(IConfigSet):
@@ -22,7 +22,7 @@ class ConfigSet(IConfigSet):
                 "suggestion": f"path mustn't end with {ConfigSet.SEPARATOR} character",
             }
             raise ValueError(
-                f'invalid path "{path}"; {json.dumps(err_metadata, indent=2)}'
+                pretty_error(f'invalid path "{path}"', err_metadata)
             )
 
         if path == ConfigSet.ROOT:
