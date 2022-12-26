@@ -1,6 +1,6 @@
 // To parse this data:
 //
-//   import { Convert, CfguType, Cfgu, Config, ConfigSchemaType, ConfigSchema, ConfigSet, ConfigStore, ConfigStoreQuery, ConfigStoreContentsElement } from "./file";
+//   import { Convert, CfguType, Cfgu, Config, ConfigSchemaType, ConfigSchema, ConfigSchemaContents, ConfigSet, ConfigStore, ConfigStoreQuery, ConfigStoreContentsElement } from "./file";
 //
 //   const cfguType = Convert.toCfguType(json);
 //   const cfgu = Convert.toCfgu(json);
@@ -43,11 +43,15 @@ export enum ConfigSchemaType {
     YAML = "yaml",
 }
 
+export interface ConfigSchemaContents {
+    contents: { [key: string]: Cfgu };
+}
+
 /**
  * A generic declaration of a Config, aka Cfgu that specifies information about its type and
  * other characteristics
  */
-export interface ConfigSchemaContents {
+export interface Cfgu {
     default?:     string;
     depends?:     string[];
     description?: string;
@@ -123,12 +127,12 @@ export class Convert {
         return JSON.stringify(uncast(value, r("CfguType")), null, 2);
     }
 
-    public static toCfgu(json: string): ConfigSchemaContents {
-        return cast(JSON.parse(json), r("ConfigSchemaContents"));
+    public static toCfgu(json: string): Cfgu {
+        return cast(JSON.parse(json), r("Cfgu"));
     }
 
-    public static cfguToJson(value: ConfigSchemaContents): string {
-        return JSON.stringify(uncast(value, r("ConfigSchemaContents")), null, 2);
+    public static cfguToJson(value: Cfgu): string {
+        return JSON.stringify(uncast(value, r("Cfgu")), null, 2);
     }
 
     public static toConfig(json: string): Config {
@@ -155,12 +159,12 @@ export class Convert {
         return JSON.stringify(uncast(value, r("ConfigSchema")), null, 2);
     }
 
-    public static toConfigSchemaContents(json: string): { [key: string]: ConfigSchemaContents } {
-        return cast(JSON.parse(json), m(r("ConfigSchemaContents")));
+    public static toConfigSchemaContents(json: string): ConfigSchemaContents {
+        return cast(JSON.parse(json), r("ConfigSchemaContents"));
     }
 
-    public static configSchemaContentsToJson(value: { [key: string]: ConfigSchemaContents }): string {
-        return JSON.stringify(uncast(value, m(r("ConfigSchemaContents"))), null, 2);
+    public static configSchemaContentsToJson(value: ConfigSchemaContents): string {
+        return JSON.stringify(uncast(value, r("ConfigSchemaContents")), null, 2);
     }
 
     public static toConfigSet(json: string): ConfigSet {
@@ -350,6 +354,9 @@ const typeMap: any = {
         { json: "uid", js: "uid", typ: "" },
     ], "any"),
     "ConfigSchemaContents": o([
+        { json: "contents", js: "contents", typ: m(r("Cfgu")) },
+    ], "any"),
+    "Cfgu": o([
         { json: "default", js: "default", typ: u(undefined, "") },
         { json: "depends", js: "depends", typ: u(undefined, a("")) },
         { json: "description", js: "description", typ: u(undefined, "") },

@@ -136,10 +136,20 @@
       ]
     },
     "ConfigSchemaContents": {
+      "title": "ConfigSchemaContents",
       "type": "object",
-      "additionalProperties": {
-        "$ref": "#/definitions/Cfgu"
-      }
+      "properties": {
+        "contents": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/Cfgu"
+          },
+          "title": "contents"
+        }
+      },
+      "required": [
+        "contents"
+      ]
     },
     "ConfigSet": {
       "description": "An interface of a path in an hierarchy, aka ConfigSet\nthat contains Config <value> permutation",

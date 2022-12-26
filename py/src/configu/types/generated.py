@@ -58,19 +58,18 @@ def from_bool(x: Any) -> bool:
     return x
 
 
+def from_dict(f: Callable[[Any], T], x: Any) -> Dict[str, T]:
+    assert isinstance(x, dict)
+    return { k: f(v) for (k, v) in x.items() }
+
+
 def to_class(c: Type[T], x: Any) -> dict:
     assert isinstance(x, c)
     return cast(Any, x).to_dict()
 
 
-def from_dict(f: Callable[[Any], T], x: Any) -> Dict[str, T]:
-    assert isinstance(x, dict)
-    return {k: f(v) for (k, v) in x.items()}
-
-
 class Config:
     """A generic representation of a software configuration, aka Config"""
-
     key: str
     schema: str
     set: str
@@ -83,7 +82,7 @@ class Config:
         self.value = value
 
     @staticmethod
-    def from_dict(obj: Any) -> "Config":
+    def from_dict(obj: Any) -> 'Config':
         assert isinstance(obj, dict)
         key = from_str(obj.get("key"))
         schema = from_str(obj.get("schema"))
@@ -109,22 +108,19 @@ class ConfigSchema:
     """An interface of a <uid>.cfgu.[json|yaml] file, aka ConfigSchema
     that contains binding records between a unique Config <key> and its Cfgu declaration
     """
-
     contents: str
     path: str
     type: ConfigSchemaType
     uid: str
 
-    def __init__(
-        self, contents: str, path: str, type: ConfigSchemaType, uid: str
-    ) -> None:
+    def __init__(self, contents: str, path: str, type: ConfigSchemaType, uid: str) -> None:
         self.contents = contents
         self.path = path
         self.type = type
         self.uid = uid
 
     @staticmethod
-    def from_dict(obj: Any) -> "ConfigSchema":
+    def from_dict(obj: Any) -> 'ConfigSchema':
         assert isinstance(obj, dict)
         contents = from_str(obj.get("contents"))
         path = from_str(obj.get("path"))
@@ -170,7 +166,6 @@ class Cfgu:
     """A generic declaration of a Config, aka Cfgu that specifies information about its type and
     other characteristics
     """
-
     default: Optional[str]
     depends: Optional[List[str]]
     description: Optional[str]
@@ -179,16 +174,7 @@ class Cfgu:
     template: Optional[str]
     type: CfguType
 
-    def __init__(
-        self,
-        default: Optional[str],
-        depends: Optional[List[str]],
-        description: Optional[str],
-        pattern: Optional[str],
-        required: Optional[bool],
-        template: Optional[str],
-        type: CfguType,
-    ) -> None:
+    def __init__(self, default: Optional[str], depends: Optional[List[str]], description: Optional[str], pattern: Optional[str], required: Optional[bool], template: Optional[str], type: CfguType) -> None:
         self.default = default
         self.depends = depends
         self.description = description
@@ -198,12 +184,10 @@ class Cfgu:
         self.type = type
 
     @staticmethod
-    def from_dict(obj: Any) -> "Cfgu":
+    def from_dict(obj: Any) -> 'Cfgu':
         assert isinstance(obj, dict)
         default = from_union([from_str, from_none], obj.get("default"))
-        depends = from_union(
-            [lambda x: from_list(from_str, x), from_none], obj.get("depends")
-        )
+        depends = from_union([lambda x: from_list(from_str, x), from_none], obj.get("depends"))
         description = from_union([from_str, from_none], obj.get("description"))
         pattern = from_union([from_str, from_none], obj.get("pattern"))
         required = from_union([from_bool, from_none], obj.get("required"))
@@ -214,9 +198,7 @@ class Cfgu:
     def to_dict(self) -> dict:
         result: dict = {}
         result["default"] = from_union([from_str, from_none], self.default)
-        result["depends"] = from_union(
-            [lambda x: from_list(from_str, x), from_none], self.depends
-        )
+        result["depends"] = from_union([lambda x: from_list(from_str, x), from_none], self.depends)
         result["description"] = from_union([from_str, from_none], self.description)
         result["pattern"] = from_union([from_str, from_none], self.pattern)
         result["required"] = from_union([from_bool, from_none], self.required)
@@ -225,11 +207,28 @@ class Cfgu:
         return result
 
 
+class ConfigSchemaContents:
+    contents: Dict[str, Cfgu]
+
+    def __init__(self, contents: Dict[str, Cfgu]) -> None:
+        self.contents = contents
+
+    @staticmethod
+    def from_dict(obj: Any) -> 'ConfigSchemaContents':
+        assert isinstance(obj, dict)
+        contents = from_dict(Cfgu.from_dict, obj.get("contents"))
+        return ConfigSchemaContents(contents)
+
+    def to_dict(self) -> dict:
+        result: dict = {}
+        result["contents"] = from_dict(lambda x: to_class(Cfgu, x), self.contents)
+        return result
+
+
 class ConfigSet:
     """An interface of a path in an hierarchy, aka ConfigSet
     that contains Config <value> permutation
     """
-
     hierarchy: List[str]
     path: str
 
@@ -238,7 +237,7 @@ class ConfigSet:
         self.path = path
 
     @staticmethod
-    def from_dict(obj: Any) -> "ConfigSet":
+    def from_dict(obj: Any) -> 'ConfigSet':
         assert isinstance(obj, dict)
         hierarchy = from_list(from_str, obj.get("hierarchy"))
         path = from_str(obj.get("path"))
@@ -255,14 +254,13 @@ class ConfigStore:
     """An interface of a storage, aka ConfigStore
     that contains Config records (Config[])
     """
-
     type: str
 
     def __init__(self, type: str) -> None:
         self.type = type
 
     @staticmethod
-    def from_dict(obj: Any) -> "ConfigStore":
+    def from_dict(obj: Any) -> 'ConfigStore':
         assert isinstance(obj, dict)
         type = from_str(obj.get("type"))
         return ConfigStore(type)
@@ -284,7 +282,7 @@ class ConfigStoreQuery:
         self.set = set
 
     @staticmethod
-    def from_dict(obj: Any) -> "ConfigStoreQuery":
+    def from_dict(obj: Any) -> 'ConfigStoreQuery':
         assert isinstance(obj, dict)
         key = from_str(obj.get("key"))
         schema = from_str(obj.get("schema"))
@@ -312,7 +310,7 @@ class ConfigStoreContentsElement:
         self.value = value
 
     @staticmethod
-    def from_dict(obj: Any) -> "ConfigStoreContentsElement":
+    def from_dict(obj: Any) -> 'ConfigStoreContentsElement':
         assert isinstance(obj, dict)
         key = from_str(obj.get("key"))
         schema = from_str(obj.get("schema"))
@@ -369,12 +367,12 @@ def config_schema_to_dict(x: ConfigSchema) -> Any:
     return to_class(ConfigSchema, x)
 
 
-def config_schema_contents_from_dict(s: Any) -> Dict[str, Cfgu]:
-    return from_dict(Cfgu.from_dict, s)
+def config_schema_contents_from_dict(s: Any) -> ConfigSchemaContents:
+    return ConfigSchemaContents.from_dict(s)
 
 
-def config_schema_contents_to_dict(x: Dict[str, Cfgu]) -> Any:
-    return from_dict(lambda x: to_class(Cfgu, x), x)
+def config_schema_contents_to_dict(x: ConfigSchemaContents) -> Any:
+    return to_class(ConfigSchemaContents, x)
 
 
 def config_set_from_dict(s: Any) -> ConfigSet:

@@ -10,6 +10,7 @@ from .types.generated import (
     ConfigSchemaType,
     Cfgu,
     config_schema_contents_from_dict,
+    ConfigSchemaContents
 )
 from .utils import pretty_error
 
@@ -148,12 +149,14 @@ class ConfigSchema(IConfigSchema):
             self.contents = f.read()
 
     @staticmethod
-    def parse(schema: "ConfigSchema") -> Dict[str, Cfgu]:
+    def parse(schema: "ConfigSchema") -> ConfigSchemaContents:
         schema.read()
         uid = schema.uid
 
-        schema_contents = config_schema_contents_from_dict(json.loads(schema.contents))
-        for key, cfgu in schema_contents.items():
+        schema_contents = config_schema_contents_from_dict(dict(
+            contents=json.loads(schema.contents))
+        )
+        for key, cfgu in schema_contents.contents.items():
             type = cfgu.type
 
             if not ConfigSchema.validate_naming(key):
