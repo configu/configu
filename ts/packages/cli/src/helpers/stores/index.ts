@@ -116,18 +116,23 @@ export const constructStoreFromConnectionString = (storeConnectionString: string
 };
 
 const storeChoices = _(STORE_LABEL).omit(['noop', 'in-memory']).values().value();
-export const constructStoreFromInteractiveSession = async (): Promise<ConstructStoreReturnType> => {
-  const { storeLabel } = await inquirer.prompt<{ storeLabel: string }>([
-    {
-      type: 'autocomplete',
-      name: 'storeLabel',
-      message: 'Select store type',
-      // * source: https://github.com/mokkabonna/inquirer-autocomplete-prompt/blob/master/example.js#L87
-      source: (answers: never, input = '') => fuzzy.filter(input, storeChoices).map((res) => res.original),
-    },
-  ]);
+export const constructStoreFromInteractiveSession = async (
+  storeType?: StoreType,
+): Promise<ConstructStoreReturnType> => {
+  let store = storeType;
+  if (!store) {
+    const { storeLabel } = await inquirer.prompt<{ storeLabel: string }>([
+      {
+        type: 'autocomplete',
+        name: 'storeLabel',
+        message: 'Select store type',
+        // * source: https://github.com/mokkabonna/inquirer-autocomplete-prompt/blob/master/example.js#L87
+        source: (answers: never, input = '') => fuzzy.filter(input, storeChoices).map((res) => res.original),
+      },
+    ]);
+    store = _(STORE_LABEL).invert().get(storeLabel);
+  }
 
-  const store = _(STORE_LABEL).invert().get(storeLabel);
   const storeConfigurationDefinition = STORE_CONFIGURATION[store];
   const constructStoreFunction = TYPE_TO_STORE[store];
   const interactiveSessionFunction = TYPE_TO_INTERACTIVE[store];
