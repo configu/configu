@@ -11,10 +11,16 @@ import { BaseCommand } from '../base';
 import { getPathBasename } from '../helpers/utils';
 
 const POPULATED_SCHEMA: Record<string, { [key: string]: Cfgu }> = {
-  GETTING_STARTED: {
-    MY_FIRST_CONFIG: { type: CfguType.String, description: 'string example variable' },
+  GET_STARTED: {
+    GREETING: { type: CfguType.RegEx, pattern: '^(hello|hey|welcome|salute|bonjour)$', default: 'hello' },
+    SUBJECT: { type: CfguType.String, default: 'world' },
+    MESSAGE: {
+      type: CfguType.String,
+      template: '{{GREETING}}, {{SUBJECT}}!',
+      description: 'Generates a full greeting message',
+    },
   },
-  EXAMPLES: {
+  EXAMPLE: {
     FOO: { type: CfguType.String, default: 'foo', description: 'string example variable' },
     BAR: { type: CfguType.RegEx, pattern: '^(foo|bar|baz)$', description: 'regex example variable' },
     BAZ: { type: CfguType.String, template: '{{FOO}} - {{BAR}}', description: 'template example variable' },
@@ -24,21 +30,23 @@ const POPULATED_SCHEMA: Record<string, { [key: string]: Cfgu }> = {
 export default class Init extends BaseCommand {
   static description = `creates a config schema ${ConfigSchema.CFGU.EXT} file in the current working dir`;
   static examples = [
-    '<%= config.bin %> <%= command.id %> --name "cli"',
-    '<%= config.bin %> <%= command.id %> --dir "./src/cli" --name "cli"',
-    '<%= config.bin %> <%= command.id %> --name "cli" --examples',
-    '<%= config.bin %> <%= command.id %> --name "cli" --import "./src/.env" --defaults --types',
+    '<%= config.bin %> <%= command.id %> --uid "cli"',
+    '<%= config.bin %> <%= command.id %> --uid "cli" --dir "./src/cli"',
+    '<%= config.bin %> <%= command.id %> --uid "cli" --import "./src/.env" --defaults --types',
+    '<%= config.bin %> <%= command.id %> --example',
   ];
 
   static flags = {
     ...BaseCommand.flags,
+    uid: Flags.string({
+      description: `overrides the name for the new ${ConfigSchema.CFGU.EXT} file`,
+      aliases: ['id', 'unique-identifier', 'unique-id', 'name'],
+      default: paramCase(getPathBasename()),
+    }),
     dir: Flags.string({
       description: `overrides the directory that will contain the new ${ConfigSchema.CFGU.EXT} file`,
+      aliases: ['cwd', 'working-directory'],
       default: cwd(),
-    }),
-    name: Flags.string({
-      description: `overrides the name for the new ${ConfigSchema.CFGU.EXT} file`,
-      default: paramCase(getPathBasename()),
     }),
     force: Flags.boolean({
       description: `overrides the ${ConfigSchema.CFGU.EXT} file in case it already exists`,
@@ -46,22 +54,22 @@ export default class Init extends BaseCommand {
       default: false,
     }),
 
-    'getting-started': Flags.boolean({
-      description: `fills the new ${ConfigSchema.CFGU.EXT} file with a getting-started example`,
-      exclusive: ['import', 'examples'],
-      aliases: ['get-started', 'first'],
+    'get-started': Flags.boolean({
+      description: `fills the new ${ConfigSchema.CFGU.EXT} file with a get-started example`,
+      exclusive: ['uid', 'import', 'example'],
+      aliases: ['quick-start', 'getting-started'],
       default: false,
     }),
-    examples: Flags.boolean({
+    example: Flags.boolean({
       description: `fills the new ${ConfigSchema.CFGU.EXT} file with a variety of detailed examples`,
-      exclusive: ['import', 'getting-started'],
-      aliases: ['example'],
+      exclusive: ['uid', 'import', 'get-started'],
+      aliases: ['examples', 'foo'],
       default: false,
     }),
 
     import: Flags.string({
       description: `use this flag to import an existing .env file and create a ${ConfigSchema.CFGU.EXT} file from it. Then push the newly created ${ConfigSchema.CFGU.NAME} to create a Configu schema`,
-      exclusive: ['examples', 'getting-started'],
+      exclusive: ['example', 'get-started'],
     }),
     defaults: Flags.boolean({
       description: `use this flag to assign the values from your .env file as the default value for the keys that will be created in the ${ConfigSchema.CFGU.EXT} file.`,
@@ -73,22 +81,31 @@ export default class Init extends BaseCommand {
     }),
   };
 
-  public async run(): Promise<void> {
+  async getSchemaUid() {
     const { flags } = await this.parse(Init);
 
-    const hasOverrideName = flags.name !== getPathBasename();
-    const fileName = hasOverrideName ? flags.name : getPathBasename(flags.dir);
-    const fileNameWithExt = `${fileName}${ConfigSchema.CFGU.EXT}.${ConfigSchemaType.JSON}`;
-    const filePath = path.resolve(flags.dir, fileNameWithExt);
-    const schema = new ConfigSchema(filePath);
-
-    let fileContentData: { [key: string]: Cfgu } = {};
-
-    if (flags['getting-started']) {
-      fileContentData = POPULATED_SCHEMA.GETTING_STARTED;
+    if (flags['get-started']) {
+      return 'get-started';
     }
-    if (flags.examples) {
-      fileContentData = POPULATED_SCHEMA.EXAMPLES;
+    if (flags.example) {
+      return 'example';
+    }
+
+    const hasOverrideUid = flags.uid !== Init.flags.uid.default;
+    if (hasOverrideUid) {
+      return flags.uid;
+    }
+    return getPathBasename(flags.dir);
+  }
+
+  async getSchemaContents(): Promise<{ [key: string]: Cfgu }> {
+    const { flags } = await this.parse(Init);
+
+    if (flags['get-started']) {
+      return POPULATED_SCHEMA.GET_STARTED;
+    }
+    if (flags.example) {
+      return POPULATED_SCHEMA.EXAMPLE;
     }
 
     if (flags.import) {
@@ -98,13 +115,24 @@ export default class Init extends BaseCommand {
         fileContent,
         options: { useValuesAsDefaults: flags.defaults, analyzeValuesTypes: flags.types },
       });
-      fileContentData = _(extractedConfigs).keyBy('key').mapValues('cfgu').value();
+      return _(extractedConfigs).keyBy('key').mapValues('cfgu').value();
     }
 
+    return {};
+  }
+
+  public async run(): Promise<void> {
+    const { flags } = await this.parse(Init);
+
+    const fileName = await this.getSchemaUid();
+    const fileNameWithExt = `${fileName}${ConfigSchema.CFGU.EXT}.${ConfigSchemaType.JSON}`;
+    const filePath = path.resolve(flags.dir, fileNameWithExt);
+    const fileContentData = await this.getSchemaContents();
     const fileContent = JSON.stringify(fileContentData, null, 2);
 
+    const schema = new ConfigSchema(filePath);
     await fs.writeFile(filePath, fileContent, { flag: flags.force ? 'w' : 'wx' }); // * https://nodejs.org/api/fs.html#file-system-flags
-    fileContentData = await ConfigSchema.parse(schema);
+    await ConfigSchema.parse(schema);
 
     const recordsCount = _.keys(fileContentData).length;
     this.log(`${filePath} generated with ${recordsCount} records`);
