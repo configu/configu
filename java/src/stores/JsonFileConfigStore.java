@@ -63,6 +63,6 @@ public class JsonFileConfigStore extends ConfigStore {
   private boolean matchQueryAndConfig(ConfigStoreQuery query, Config config) {
     return (query.getKey().equals("*") || query.getKey().equals(config.getKey()))
       && (query.getSchema().equals("*") || query.getSchema().equals(config.getSchema()))
-      && (query.getSet().equals("*") || query.getSchema().equals(config.getSet()));
+      && (query.getSet().equals("*") || query.getSet().equals(config.getSet()));
   }
 }
