@@ -1,12 +1,12 @@
 // To use this code, add the following Maven dependency to your project:
 //
-//
+//     org.projectlombok : lombok : 1.18.2
 //     com.fasterxml.jackson.core     : jackson-databind          : 2.9.0
 //     com.fasterxml.jackson.datatype : jackson-datatype-jsr310   : 2.9.0
 //
 // Import this package:
 //
-//     import io.quicktype.Converter;
+//     import entities.Converter;
 //
 // Then you can deserialize a JSON string with
 //
@@ -18,20 +18,19 @@
 //     ConfigSchemaContents data = Converter.ConfigSchemaContentsValueFromJsonString(jsonString);
 //     Map<String, ConfigSchemaContents> data = Converter.ConfigSchemaContentsFromJsonString(jsonString);
 //     ConfigSet data = Converter.ConfigSetFromJsonString(jsonString);
-//     ConfigStore data = Converter.ConfigStoreFromJsonString(jsonString);
+//     stores.ConfigStore data = Converter.ConfigStoreFromJsonString(jsonString);
 //     ConfigStoreQuery data = Converter.ConfigStoreQueryFromJsonString(jsonString);
 //     ConfigStoreContents data = Converter.ConfigStoreContentsElementFromJsonString(jsonString);
-//     ConfigStoreContents[] data = Converter.ConfigStoreContentsFromJsonString(jsonString);
+//     List<ConfigStoreContents> data = Converter.ConfigStoreContentsFromJsonString(jsonString);
 
-package io.quicktype;
+package entities;
 
-import java.io.IOException;
-import com.fasterxml.jackson.databind.*;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import java.util.*;
-import java.time.LocalDate;
+import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+
+import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.time.OffsetTime;
 import java.time.ZoneOffset;
@@ -39,6 +38,8 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
+import java.util.List;
+import java.util.Map;
 
 public class Converter {
     // Date-time helpers
@@ -159,11 +160,11 @@ public class Converter {
         return getConfigStoreContentsElementObjectWriter().writeValueAsString(obj);
     }
 
-    public static ConfigStoreContents[] ConfigStoreContentsFromJsonString(String json) throws IOException {
+    public static List<ConfigStoreContents> ConfigStoreContentsFromJsonString(String json) throws IOException {
         return getConfigStoreContentsObjectReader().readValue(json);
     }
 
-    public static String ConfigStoreContentsToJsonString(ConfigStoreContents[] obj) throws JsonProcessingException {
+    public static String ConfigStoreContentsToJsonString(List<ConfigStoreContents> obj) throws JsonProcessingException {
         return getConfigStoreContentsObjectWriter().writeValueAsString(obj);
     }
 
@@ -525,8 +526,8 @@ public class Converter {
             }
         });
         mapper.registerModule(module);
-        ConfigStoreContentsReader = mapper.readerFor(ConfigStoreContents[].class);
-        ConfigStoreContentsWriter = mapper.writerFor(ConfigStoreContents[].class);
+        ConfigStoreContentsReader = mapper.readerFor(List.class);
+        ConfigStoreContentsWriter = mapper.writerFor(List.class);
     }
 
     private static ObjectReader getConfigStoreContentsObjectReader() {

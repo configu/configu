@@ -1,4 +1,4 @@
-package io.quicktype;
+package entities;
 
 import java.io.IOException;
 import com.fasterxml.jackson.annotation.*;
