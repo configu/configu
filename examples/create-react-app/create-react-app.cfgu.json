@@ -1,0 +1,27 @@
+{
+  "REACT_APP_BG_COLOR": {
+    "type": "Color",
+    "default": "#282c34",
+    "description": "Determines the background color of the app"
+  },
+  "REACT_APP_LOGO_SRC": {
+    "type": "URL",
+    "default": "https://app.configu.com/logo192.png",
+    "description": "Determines the source of the spined logo displayed in the app"
+  },
+  "REACT_APP_MAIN_TEXT": {
+    "type": "String",
+    "default": "This is a demo of a create-react-app application that uses Configu to mange its environment variables and configuration data",
+    "description": "Determines the main text displayed in the app"
+  },
+  "REACT_APP_LINK_HREF": {
+    "type": "URL",
+    "default": "https://configu.com/docs",
+    "description": "Determines the href of the link displayed in the app"
+  },
+  "REACT_APP_LINK_TEXT": {
+    "type": "String",
+    "default": "Learn Configu",
+    "description": "Determines the text of the link displayed in the app"
+  }
+}

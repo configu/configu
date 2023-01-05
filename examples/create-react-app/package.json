@@ -1,0 +1,40 @@
+{
+  "private": true,
+  "dependencies": {
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^14.4.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1",
+    "web-vitals": "^3.1.0"
+  },
+  "scripts": {
+    "install-configu-cli": "(curl -Ls https://cli.configu.com/install.sh || wget -qO- https://cli.configu.com/install.sh) | sh",
+    "prepare": "npm run install-configu-cli",
+    "prestart": "configu export --defaults --schema './create-react-app.cfgu.json' --format 'Dotenv' > .env.development.local",
+    "start": "react-scripts start",
+    "prebuild": "configu export --store 'store=configu;type=Token' --set '$NODE_ENV' --schema './create-react-app.cfgu.json' --format 'Dotenv' > .env.production.local",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
