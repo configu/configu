@@ -69,7 +69,7 @@ export default class Export extends BaseCommand {
     }),
     'template-input': Flags.string({
       description: 'inject configurations to template as object or array or formatted string',
-      options: ['object', 'array', 'string'],
+      options: ['object', 'array'],
       dependsOn: ['template'],
     }),
 
