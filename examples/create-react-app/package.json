@@ -14,7 +14,7 @@
     "prepare": "npm run install-configu-cli",
     "prestart": "configu export --defaults --schema './create-react-app.cfgu.json' --format 'Dotenv' > .env.development.local",
     "start": "react-scripts start",
-    "prebuild": "configu export --store 'store=configu;type=Token' --set '$CONFIGU_SET' --schema './create-react-app.cfgu.json' --format 'Dotenv' > .env.production.local",
+    "prebuild": "configu export --store 'store=configu;type=Token' --set $CONFIGU_SET --schema './create-react-app.cfgu.json' --format 'Dotenv' > .env.production.local",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
