@@ -1,6 +1,3 @@
-# [build]
-#   command = "configu export --store 'store=configu;type=Token' --set '$CONFIGU_SET' --schema './create-react-app.cfgu.json' --format 'Dotenv' > .env && npm run build"
-
 [context.production.environment]
   CONFIGU_SET = "production"
 
