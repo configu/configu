@@ -1,8 +1,8 @@
 [context.production.environment]
-  CONFIGU_SET = "production"
+  CONFIGU_SET = "examples/production"
 
 [context.deploy-preview.environment]
-  CONFIGU_SET = "staging/preview"
+  CONFIGU_SET = "examples/staging/preview"
 
 [context.branch-deploy.environment]
-  CONFIGU_SET = "staging/branch"
+  CONFIGU_SET = "examples/staging/branch"
