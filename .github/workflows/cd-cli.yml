@@ -66,8 +66,7 @@ jobs:
       - name: Copy installation scripts to storage
         run: |
           cd ${{ env.CWD }}/${{ env.PACKAGE_PATH }}
-          aws s3 cp ./scripts/install.sh s3://${{ env.S3_BUCKET }}/install.sh
-          aws s3 cp ./scripts/install.ps1 s3://${{ env.S3_BUCKET }}/install.ps1
+          aws s3 cp ./scripts s3://${{ env.S3_BUCKET }} --recursive
 
       - name: Invalidate storage CDN
         run: |
