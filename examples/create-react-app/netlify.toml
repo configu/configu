@@ -1,0 +1,11 @@
+# [build]
+#   command = "configu export --store 'store=configu;type=Token' --set '$CONFIGU_SET' --schema './create-react-app.cfgu.json' --format 'Dotenv' > .env && npm run build"
+
+[context.production.environment]
+  CONFIGU_SET = "production"
+
+[context.deploy-preview.environment]
+  CONFIGU_SET = "staging/preview"
+
+[context.branch-deploy.environment]
+  CONFIGU_SET = "staging/branch"
