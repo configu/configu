@@ -11,9 +11,9 @@ echoerr() {
 # detect os
 OS="unknown"
 uname_os=$(uname -s)
-if [ "$uname_os" == "Darwin" ]; then
+if [ "$uname_os" = "Darwin" ]; then
   OS=darwin
-elif [ "$(expr substr $uname_os 1 5)" == "Linux" ]; then
+elif [ "$uname_os" = "Linux" ] || [ "$(expr substr $uname_os 1 5)" = "Linux" ]; then
   OS=linux
 else
   echoerr "unsupported os '$uname_os'"
@@ -22,11 +22,11 @@ fi
 # detect arch
 ARCH="unknown"
 uname_machine=$(uname -m)
-if [ "$uname_machine" == "x86_64" ]; then
+if [ "$uname_machine" = "x86_64" ]; then
   ARCH=x64
-elif [[ "$uname_machine" == "arm64" || "$uname_machine" == "aarch64" ]]; then
+elif [ "$uname_machine" = "arm64" ] || [ "$uname_machine" = "aarch64" ]; then
   ARCH=arm64
-elif [[ "$uname_machine" == arm* || "$uname_machine" == aarch* ]]; then
+elif [ "$uname_machine" = arm* ] || [ "$uname_machine" = aarch* ]; then
   ARCH=arm
 else
   echoerr "unsupported architecture '$uname_machine'"
@@ -49,7 +49,7 @@ set -e
 CONFIGU_VERSION="${CONFIGU_VERSION:-latest}"
 GET_DOWNLOAD_URL="https://cli.configu.com/versions/configu-$OS-$ARCH-tar-gz.json"
 
-if [[ "$CONFIGU_VERSION" == "latest" || "$CONFIGU_VERSION" == "stable" ]]; then
+if [ "$CONFIGU_VERSION" = "latest" ] || [ "$CONFIGU_VERSION" = "stable" ]; then
   DOWNLOAD_URL="https://cli.configu.com/channels/stable/configu-$OS-$ARCH.tar.gz"
 elif [ "$curl_installed" -eq 0 ]; then
   DOWNLOAD_URL="$(curl --fail $GET_DOWNLOAD_URL | grep -o '"$CONFIGU_VERSION": "[^"]*' | grep -o '[^"]*$')"
