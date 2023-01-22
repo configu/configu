@@ -5,21 +5,12 @@ import validator from 'validator';
 import type { EvaluatedConfigs } from '@configu/ts';
 import type { ConfigFormat } from './ConfigFormat';
 
-const hasWhitespace = (str: string) => {
-  return /\s/.test(str);
-};
-
 type FormatterParameters = { json: EvaluatedConfigs; label: string };
 type FormatterFunction = (params: FormatterParameters) => string;
 
 const jsonToDotenv: FormatterFunction = ({ json }) => {
   return Object.entries(json)
-    .map(([key, value]) => {
-      if (hasWhitespace(value)) {
-        return `${key}="${value}"`; // * in case value has a whitespace, wrap with quotes around it
-      }
-      return `${key}=${value}`;
-    })
+    .map(([key, value]) => `${key}="${value}"`)
     .join('\n');
 };
 
