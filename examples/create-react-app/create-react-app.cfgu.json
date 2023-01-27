@@ -9,9 +9,14 @@
     "default": "https://app.configu.com/logo192.png",
     "description": "Determines the source of the spined logo displayed in the app"
   },
+  "DEPLOYMENT_PLATFORM": {
+    "type": "String",
+    "default": "localhost",
+    "description": "Determines the deployment platform of the app"
+  },
   "REACT_APP_MAIN_TEXT": {
     "type": "String",
-    "default": "This is a demo of a create-react-app application that uses Configu to mange its environment variables and configuration data",
+    "template": "This is an example of a create-react-app application that is deployed on {{DEPLOYMENT_PLATFORM}} and configured with Configu",
     "description": "Determines the main text displayed in the app"
   },
   "REACT_APP_LINK_HREF": {
