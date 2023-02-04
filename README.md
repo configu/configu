@@ -2,9 +2,9 @@
 
 <img align="right" src="https://app.configu.com/logo192.png" height="150px" alt="configu logo">
 
-[**Configu**](https://configu.com/docs/) is a _simple_, _modern_ and _generic_ standard for managing and collaborating **software configurations ⚙️**. 
+[**Configu**](https://configu.com/docs/) is a _simple_, _modern_, and _generic_ standard for managing and collaborating **software configurations ⚙️**. 
 
-It is built to provide a _common_, _flexible_, and _extensible_ process for _storing_, _mutating_ and _orchestrating_ **configuration data** across different environments and systems.
+It is built to provide a _common_, _flexible_, and _extensible_ process for _storing_, _mutating_, and _orchestrating_ **configuration data** across different environments and systems.
 
 [Learn how to use Configu in your project](https://configu.com/docs/get-started/).
 
