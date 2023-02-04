@@ -26,13 +26,13 @@ The documentation is divided into several sections:
 
 There are many ways to [contribute](CONTRIBUTING.md) to Configu.
 
+* Try Configu and share your feedback with us.
 * [Submit bugs](https://github.com/configu/configu/issues) and help us verify fixes as they are checked in.
 * Review the [source code changes](https://github.com/configu/configu/pulls).
-* Engage with other Configu users and developers on [Discord](https://discord.com/invite/cjSBxnB9z8).
+* Engage with other Configu users and developers on [StackOverflow](https://stackoverflow.com/questions/tagged/configu).
+* Help each other in the [Configu Community Discord](https://discord.com/invite/cjSBxnB9z8).
 * [Contribute bugfixes and improvements](CONTRIBUTING.md).
 * [Contribute documentation](https://github.com/configu/docs).
-<!-- * Engage with other Configu users and developers on [StackOverflow](https://stackoverflow.com/questions/tagged/configu). -->
-<!-- * Help each other in the [Configu Community Discord](https://discord.com/invite/cjSBxnB9z8). -->
 
 <!-- ### Roadmap
 
