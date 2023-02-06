@@ -1,9 +1,10 @@
 {
-  "name": "@configu/monorepo",
+  "name": "@configu/configu",
   "license": "Apache-2.0",
   "description": "configu oss monorepo powered by node.js and npm",
   "author": "Configu",
   "devEngines": {
+    "git": "*",
     "node": "=16.17.1",
     "npm": ">=8.0.0"
   },
