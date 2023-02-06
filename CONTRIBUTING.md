@@ -30,30 +30,61 @@ Please be considerate when doing this as this is not the primary purpose of the 
 
 On both websites, it is a good idea to structure your code and question in a way that is easy to read to entice people to answer it. For example, we encourage you to use syntax highlighting, indentation, and split text in paragraphs.
 
-You can make it easier for us if you provide versions of the relevant libraries and a runnable small project reproducing your issue.
+You can make it easier for us if you provide versions of the relevant libraries and a runnable small project or test case reproducing your issue.
 
 ## Development
 
 This repository is a [monorepo](https://trunkbaseddevelopment.com/monorepos/). This means there are multiple packages managed in this codebase, even though we publish them as separate packages.
 
-It is powered by [node.js](https://nodejs.org/en/) and [npm](https://www.npmjs.com/) and uses [husky] and [lint-staged] to enforce its coding guidelines. 
+It is powered by [node.js](https://nodejs.org/en/) and [npm](https://www.npmjs.com/) and uses [husky](https://typicode.github.io/husky/) and [lint-staged](https://github.com/okonet/lint-staged) to enforce its coding guidelines.
 
-To see the full list of prerequisites, check out the `devEngines` property in the main [`package.json`](https://github.com/configu/configu/blob/main/package.json#L6) file.
+> To see the full list of prerequisites, check out the `devEngines` property in the main [`package.json`](https://github.com/configu/configu/blob/main/package.json#L6) file.
+
+
+### Setting up your local environment
+
+- Install git
+- Install Node.js and Npm
+  > We recommend [installing node.js via a package manager](https://nodejs.org/en/download/package-manager/).
+- Install `monorepo` dependencies by running `npm i` in the root directory.
 
 ### Repository Structure
 
-1. The [types](types) directory contains the core types of Configu, which are declared in [TypeScript](https://www.typescriptlang.org/) and converted into strongly-typed models and serializers in multiple programming languages using [`quicktype`](https://quicktype.io/). These types serve as the foundation for Configu SDKs.
-2. The [ts](ts) directory houses a sub-monorepo that includes the following packages:
-   1. [ts/packages/ts](ts/packages/ts) - shared code for both the node and browser SDKs
-      1. [ts/packages/ts/src/stores](ts/packages/ts/src/stores) - [ConfigStores](https://configu.com/docs/config-store/) supported for all TS based packages.
-      2. [ts/packages/ts/src/commands](ts/packages/ts/src/commands) - [Commands](https://configu.com/docs/commands/) supported for all TS based packages.
-   2. [ts/packages/node](ts/packages/node) - the actual node SDK
-   3. [ts/packages/browser](ts/packages/browser) - the actual browser SDK
-   4. [ts/packages/cli](ts/packages/cli) - Configu CLI, which is built using the node SDK
-   5. [ts/packages/vscode](ts/packages/vscode) - a VSCode plugin for working with .cfgu files
-3. The [py](py) directory will shortly contain the Python SDK.
-4. The [examples](examples) directory demonstrate various concepts and best practices with some real-world use-cases of Configu.
-5. The [documentation repository](https://github.com/configu/docs) holds the official Configu docs. Improvements to the documentation are always welcome. We use [Gatsby](https://github.com/gatsbyjs/gatsby) to build our documentation website. The website is published automatically whenever the master branch is updated.
+#### [`./`](./)
+
+The root directory serves as the skeleton for the Configu project and provides the resources needed for developers to build and contribute to it.
+
+#### [`./types`](./types)
+
+The [./types](./types) directory holds the core types of the Configu project. These types are written in [TypeScript](https://www.typescriptlang.org/), and then converted into strongly-typed models and serializers in various programming languages using [`quicktype`](https://quicktype.io/). These core types serve as the foundation for all Configu SDKs.
+
+> Running `npm i` in the root directory triggers type generation of the various supported SDKs.
+
+#### [./examples](./examples)
+
+The [./examples](./examples) directory demonstrate various concepts and best practices with some real-world use-cases of Configu.
+
+#### [`documentation`]((https://github.com/configu/docs))
+
+The [documentation repository](https://github.com/configu/docs) holds the official Configu docs. Improvements to the documentation are always welcome. We use [Gatsby](https://github.com/gatsbyjs/gatsby) to build our documentation website. The website is published automatically whenever the master branch is updated.
+
+#### [./ts](./ts)
+
+The [./ts](./ts) directory houses a sub-monorepo that includes the following packages:
+
+- [ts/packages/ts](ts/packages/ts) - shared code for both the node and browser SDKs
+  - [ts/packages/ts/src/stores](ts/packages/ts/src/stores) - [ConfigStores](https://configu.com/docs/config-store/) supported for all TS based packages.
+  - [ts/packages/ts/src/commands](ts/packages/ts/src/commands) - [Commands](https://configu.com/docs/commands/) supported for all TS based packages.
+- [ts/packages/node](ts/packages/node) - the actual node SDK
+- [ts/packages/browser](ts/packages/browser) - the actual browser SDK
+- [ts/packages/cli](ts/packages/cli) - Configu CLI, which is built using the node SDK
+- [ts/packages/vscode](ts/packages/vscode) - a VSCode plugin for working with .cfgu files
+
+> To start working on the `ts` codebase you will have to install its dependencies by running `cd ts; npm i`.
+
+#### [./py](./py)
+
+The [./py](./py) directory will shortly contain the Python SDK.
 
 ### Sending a Pull Request
 
@@ -66,8 +97,6 @@ In general, the contribution workflow looks like this:
 - Open a new issue in the [Issue tracker](https://github.com/reduxjs/redux/issues).
 - Fork the repo.
 - Create a new feature branch based off the `main` branch.
-- Setup `monorepo` dependencies by running `npm i` in the root directory.
-  - Setup specific package dependencies, for example run `cd ts; npm i`.
 - Make sure all tests pass and there are no linting errors.
 - Submit a pull request, referencing any issues it addresses.
 
