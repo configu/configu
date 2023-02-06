@@ -1,6 +1,8 @@
 # Configu
 
-<img align="right" src="https://app.configu.com/logo192.png" height="150px" alt="configu logo">
+<a href="https://configu.com" target="_blank">
+  <img align="right" src="https://app.configu.com/logo192.png" height="150px" alt="configu logo">
+</a>
 
 [**Configu**](https://configu.com/docs/) is a _simple_, _modern_, and _generic_ standard for managing and collaborating **software configurations ⚙️**. 
 
