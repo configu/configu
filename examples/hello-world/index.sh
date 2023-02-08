@@ -1,0 +1,2 @@
+echo "=== sh ===";
+echo $MESSAGE
