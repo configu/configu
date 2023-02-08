@@ -1,3 +1,35 @@
+# @configu/examples/create-react-app
+
+Consider a web application that uses multiple configurations to display different elements. This application is built using [Create-React-App (CRA)](https://create-react-app.dev/) and leverages its [built-in support for environment variables](https://create-react-app.dev/docs/adding-custom-environment-variables). The application is deployed to several [Platform-as-a-Service (PaaS)](https://en.wikipedia.org/wiki/Platform_as_a_service) providers such as [Netlify](https://docs.netlify.com/), [Vercel](https://vercel.com/docs), etc using various methods such as the native capabilities of each PaaS or through GitHub Actions CI/CD.
+
+**This example showcases how Configu can be used to dynamically generate configuration files that are suitable for any environments and deployment methods.**
+
+### [Netlify Deployment](https://docs.netlify.com/site-deploys/create-deploys/#deploy-with-git)
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/8274d933-8f3b-44ee-b930-5581f1dda60e/deploy-status)](https://configu-example-cra.netlify.app/)
+
+- Current repository: **github.com/configu/configu**
+- Base directory: **examples/create-react-app**
+- Build command: **npm run build**
+- Publish directory: **examples/create-react-app/build**
+- Environment variables: **CONFIGU_ORG**, **CONFIGU_TOKEN**, **CONFIGU_SET**
+
+### [Vercel Deployment](https://vercel.com/docs/concepts/deployments/overview)
+
+[![Vercel](https://therealsujitk-vercel-badge.vercel.app/?app=configu-example-cra)](https://configu-example-cra.vercel.app/)
+
+- Framework Preset: **Create React App**
+- Root Directory: **examples/create-react-app**
+- Connected Git Repository: **github.com/configu/configu**
+- Environment variables: **CONFIGU_ORG**, **CONFIGU_TOKEN**, **CONFIGU_SET**
+
+### [GitHub Actions](.github/workflows/cd-cra.yml)
+
+<!-- TODO: finish explaining about this -->
+
+---
+---
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
