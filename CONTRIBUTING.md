@@ -4,13 +4,13 @@ Hi there 👋, we're excited 🤗 that you're interested in contributing to Conf
 
 Please take a moment to review this document in order to make the contribution process easy and effective for everyone involved.
 
-Following these guidelines helps to communicate that you respect the time of the developers managing and developing this open source project. In return, they should reciprocate that respect in addressing your issue, assessing changes, and helping you finalize your pull requests.
+Following these guidelines helps to communicate that you respect the time of the developers managing and developing this open source project. In return, they should reciprocate that respect by addressing your issue, assessing changes, and helping you finalize your pull requests.
 
 We ask all contributors to abide by our [Code of Conduct](CODE_OF_CONDUCT.md). This helps ensure a positive and productive environment for everyone.
 
 ## Reporting Issues and Asking Questions
 
-Before opening an issue, please search the [issue tracker](https://github.com/configu/confgiu/issues) to make sure your issue hasn't already been reported.
+Before opening an issue, please search the [issue tracker](https://github.com/configu/configu/issues) to make sure your issue hasn't already been reported.
 
 ### Bugs and Improvements
 
@@ -20,7 +20,7 @@ We use the issue tracker to keep track of bugs and improvements to Configu itsel
 
 **For support or usage questions like “how do I do X with Configu” and “my code doesn't work”, please search and ask on [StackOverflow with a Configu tag](https://stackoverflow.com/questions/tagged/configu?sort=votes&pageSize=50) first.**
 
-We ask you to do this because StackOverflow has a much better job at keeping popular questions visible. Unfortunately good answers get lost and outdated on GitHub.
+We ask you to do this because StackOverflow does a much better job of keeping popular questions visible. Unfortunately, good answers get lost and outdated on GitHub.
 
 Some questions take a long time to get an answer. **If your question gets closed or you don't get a reply on StackOverflow for longer than a few days,** we encourage you to post an issue linking to your question. We will close your issue but this will give people watching the repo an opportunity to see your question and reply to it on StackOverflow if they know the answer.
 
@@ -28,7 +28,7 @@ Please be considerate when doing this as this is not the primary purpose of the 
 
 ### Help Us Help You
 
-On both websites, it is a good idea to structure your code and question in a way that is easy to read to entice people to answer it. For example, we encourage you to use syntax highlighting, indentation, and split text in paragraphs.
+On both websites, it is a good idea to structure your code and question in a way that is easy to read to entice people to answer it. For example, we encourage you to use syntax highlighting, indentation, and split the text into paragraphs.
 
 You can make it easier for us if you provide versions of the relevant libraries and a runnable small project or test case reproducing your issue.
 
@@ -50,7 +50,7 @@ It is powered by [node.js](https://nodejs.org/en/) and [npm](https://www.npmjs.c
 
 ### Repository Structure
 
-#### [`./`](./)
+#### [`./`](https://github.com/configu/configu)
 
 The root directory serves as the skeleton for the Configu project and provides the resources needed for developers to build and contribute to it.
 
@@ -62,7 +62,7 @@ The [./types](./types) directory holds the core types of the Configu project. Th
 
 #### [./examples](./examples)
 
-The [./examples](./examples) directory demonstrate various concepts and best practices with some real-world use-cases of Configu.
+The [./examples](./examples) directory demonstrates various concepts and best practices with some real-world use cases of Configu.
 
 #### [`documentation`]((https://github.com/configu/docs))
 
@@ -90,11 +90,11 @@ The [./py](./py) directory will shortly contain the Python SDK.
 
 For non-trivial changes, please open an issue with a proposal for a new feature or refactoring before starting on the work. We don't want you to waste your efforts on a pull request that we won't want to accept.
 
-On the other hand, sometimes the best way to start a conversation _is_ to send a pull request. Use your best judgement!
+On the other hand, sometimes the best way to start a conversation _is_ to send a pull request. Use your best judgment!
 
 In general, the contribution workflow looks like this:
 
-- Open a new issue in the [Issue tracker](https://github.com/reduxjs/redux/issues).
+- Open a new issue in the [Issue tracker](https://github.com/configu/configu/issues).
 - Fork the repo.
 - Create a new feature branch based off the `main` branch.
 - Make sure all tests pass and there are no linting errors.
@@ -106,11 +106,11 @@ After you have submitted your pull request, we'll try to get back to you as soon
 
 ## Resources
 
-> Working on your first Pull Request? You can learn how from this *free* series, [How to Contribute to an Open Source Project on GitHub](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github).
+> Working on your first Pull Request? You can learn how from this *free* series, [How to Contribute to an Open Source Project on GitHub](https://app.egghead.io/playlists/how-to-contribute-to-an-open-source-project-on-github).
 
 - https://opensource.guide/how-to-contribute/
 - [GitHub Help](https://help.github.com)
-- https://help.github.com/articles/about-pull-requests/)
+- https://help.github.com/articles/about-pull-requests/
 - http://makeapullrequest.com/
 - http://www.firsttimersonly.com/
 - [JavaScript Standard Style](https://standardjs.com/)
