@@ -7,6 +7,10 @@ on:
         description: "Configu Set"
         required: true
         default: "examples/netlify/github-actions"
+  # Allows external webhook trigger
+  repository_dispatch:
+    types:
+      - create-react-app
 
 env:
   ROOT_DIRECTORY: "examples/create-react-app"
