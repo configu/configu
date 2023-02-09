@@ -80,7 +80,7 @@
     "@aws-sdk/client-lambda": "^3.234.0",
     "@azure/arm-appservice": "^13.0.3",
     "@azure/identity": "^3.1.2",
-    "@configu/lib": "0.4.1",
+    "@configu/lib": "0.4.2",
     "@configu/node": "0.9.1",
     "@configu/ts": "0.9.1",
     "@google-cloud/functions": "^2.2.3",

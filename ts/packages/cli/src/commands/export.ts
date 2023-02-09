@@ -119,7 +119,7 @@ export default class Export extends BaseCommand {
     }
 
     if (flags.source) {
-      const formattedConfigs = formatConfigs({ format: 'Dotenv', json: configs, label });
+      const formattedConfigs = formatConfigs({ format: 'Dotenv', json: configs, label, wrap: true });
       this.printStdout(formattedConfigs);
       return;
     }

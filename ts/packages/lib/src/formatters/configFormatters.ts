@@ -9,14 +9,18 @@ const hasWhitespace = (str: string) => {
   return /\s/.test(str);
 };
 
-type FormatterParameters = { json: EvaluatedConfigs; label: string };
+type FormatterParameters = {
+  json: EvaluatedConfigs;
+  label: string;
+  wrap?: boolean; // * Wraps all values with quotes
+};
 type FormatterFunction = (params: FormatterParameters) => string;
 
-const jsonToDotenv: FormatterFunction = ({ json }) => {
+const jsonToDotenv: FormatterFunction = ({ json, wrap }) => {
   return Object.entries(json)
     .map(([key, value]) => {
-      if (hasWhitespace(value)) {
-        return `${key}="${value}"`; // * in case value has a whitespace, wrap with quotes around it
+      if (wrap || hasWhitespace(value)) {
+        return `${key}="${value}"`; // * in case value has a whitespace or wrap is true, wrap with quotes around it
       }
       return `${key}=${value}`;
     })
