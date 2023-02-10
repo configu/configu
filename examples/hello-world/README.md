@@ -1,4 +1,4 @@
-# @configu/examples/hello-world
+# @configu/examples/[hello-world](https://en.wikipedia.org/wiki/%22Hello,_World!%22_program)
 
 ## flow
 
@@ -20,6 +20,3 @@
   ```bash
   set -a; source <(configu export --store "json-file" --set "dev" --schema "get-started.cfgu.json" --source); set +a && <EXECUTABLE>
   ```
-
-## resources
-- [Demo flow doc](https://docs.google.com/document/d/11s9TJCeSNag0eme6RSGIYkP5OfDPKLSPl1IrYFCFako)

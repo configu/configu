@@ -1,27 +1,26 @@
-export enum CfguType {
-  Base64 = "Base64",
-  Boolean = "Boolean",
-  Color = "Color",
-  ConnectionString = "ConnectionString",
-  Country = "Country",
-  Currency = "Currency",
-  Domain = "Domain",
-  Email = "Email",
-  Hex = "Hex",
-  Ipv4 = "IPv4",
-  Ipv6 = "IPv6",
-  LatLong = "LatLong",
-  Locale = "Locale",
-  Md5 = "MD5",
-  MobilePhone = "MobilePhone",
-  Number = "Number",
-  RegEx = "RegEx",
-  Sha = "SHA",
-  SemVer = "SemVer",
-  String = "String",
-  Url = "URL",
-  Uuid = "UUID",
-}
+export type CfguType =
+  | "Boolean"
+  | "Number"
+  | "String"
+  | "RegEx"
+  | "UUID"
+  | "SemVer"
+  | "IPv4"
+  | "IPv6"
+  | "Domain"
+  | "URL"
+  | "ConnectionString"
+  | "Hex"
+  | "Base64"
+  | "MD5"
+  | "SHA"
+  | "Color"
+  | "Email"
+  | "MobilePhone"
+  | "Locale"
+  | "LatLong"
+  | "Country"
+  | "Currency";
 
 /**
  * A generic declaration of a Config, aka Cfgu that specifies information about its type and other characteristics
