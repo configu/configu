@@ -41,8 +41,7 @@ runs:
         echo "ref_type: ${{ github.ref_type }}"
         echo "base_ref: ${{ github.base_ref }}"
 
-        ${{ github.event }}
-        echo "target_commitish: ${{ github.event.release.target_commitish }}"
+        echo "event: ${{ toJSON(github.event) }}
 
     - name: Post Slack build message
       id: slack
