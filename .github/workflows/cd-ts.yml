@@ -21,18 +21,18 @@ jobs:
           package-name: ${{ env.PACKAGE_NAME }}
           slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-      - uses: ./.github/actions/ts-env-action
+      # - uses: ./.github/actions/ts-env-action
 
-      - uses: ./.github/actions/ts-env-action
-        with:
-          dependencies-root: "ts"
+      # - uses: ./.github/actions/ts-env-action
+      #   with:
+      #     dependencies-root: "ts"
 
       # ----------
-      - name: Bump package version
-        run: |
-          cd ${{ env.CWD }}
-          npm --no-git-tag-version version ${{ steps.deployment.outputs.release-version }} \
-            --workspace=@configu/ts --workspace=@configu/node --workspace=@configu/browser
+      # - name: Bump package version
+      #   run: |
+      #     cd ${{ env.CWD }}
+      #     npm --no-git-tag-version version ${{ steps.deployment.outputs.release-version }} \
+      #       --workspace=@configu/ts --workspace=@configu/node --workspace=@configu/browser
 
       # - name: Build package code
       #   run: |
