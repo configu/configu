@@ -53,7 +53,7 @@ const TYPE_TO_STORE: Record<StoreType, (configuration: Dictionary<string>) => Co
   mysql: ({ url }) => new MySQLStore({ url }),
   mariadb: ({ url }) => new MariaDBStore({ url }),
   postgres: ({ url }) => new PostgreSQLStore({ url }),
-  cockroachdb: ({ url }) => new CockroachDBStore({ url }),
+  cockroachdb: ({ url }) => new CockroachDBStore({ url, timeTravelQueries: false }),
   mssql: ({ url }) => new MSSQLStore({ url }),
 };
 

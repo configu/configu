@@ -1,18 +1,18 @@
 import _ from 'lodash';
-import { Command, EvalCommand, EvalCommandParameters, EvalCommandReturn } from '@configu/ts';
+import { Command, EvalCommand, EvalCommandParameters } from '@configu/ts';
 
 type ExportCommandParameters = EvalCommandParameters & {
   override?: boolean;
 };
 
-export class ExportCommand extends Command<EvalCommandReturn> {
+export class ExportCommand extends Command<void> {
   constructor(public parameters: ExportCommandParameters) {
     super(parameters);
   }
 
   async run() {
     const { override = true, ...evalParameters } = this.parameters;
-    const { data: evaluatedConfigs } = await new EvalCommand(evalParameters).run();
+    const { result: evaluatedConfigs } = await new EvalCommand(evalParameters).run();
 
     // * https://github.com/motdotla/dotenv/blob/master/lib/main.js#L74
     _(evaluatedConfigs)
@@ -24,7 +24,5 @@ export class ExportCommand extends Command<EvalCommandReturn> {
           process.env[key] = val;
         }
       });
-
-    return { data: evaluatedConfigs };
   }
 }

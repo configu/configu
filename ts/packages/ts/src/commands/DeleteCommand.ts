@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { Command } from '../Command';
-import { Config } from '../types';
+import { Config, ConfigStoreQuery } from '../types';
 import { ERR } from '../utils';
 import { ConfigStore } from '../ConfigStore';
 import { ConfigSet } from '../ConfigSet';
@@ -18,12 +18,13 @@ export class DeleteCommand extends Command<void> {
   }
 
   async run() {
+    const scopeLocation = [`DeleteCommand`, 'run'];
     const { store, set, schema } = this.parameters;
 
     if (!set && !schema) {
       throw new Error(
         ERR('invalid set or schema parameters', {
-          location: [`DeleteCommand`, 'run'],
+          location: scopeLocation,
           suggestion: 'one of them must be supplied',
         }),
       );
@@ -31,7 +32,19 @@ export class DeleteCommand extends Command<void> {
 
     await store.init();
 
-    const storedConfigs = await store.get([{ set: set?.path ?? '*', schema: schema?.uid ?? '*', key: '*' }]);
+    let storeQueries: ConfigStoreQuery[] = [];
+    if (set && !schema) {
+      storeQueries = [{ set: set.path, key: '*' }];
+    }
+    if (schema) {
+      const schemaContents = await ConfigSchema.parse(schema);
+      storeQueries = _(schemaContents)
+        .keys()
+        .map((key) => ({ set: set?.path ?? '*', key }))
+        .value();
+    }
+
+    const storedConfigs = await store.get(storeQueries);
 
     const deleteConfigs = _(storedConfigs)
       .map<Config>((config) => {
@@ -43,7 +56,5 @@ export class DeleteCommand extends Command<void> {
       .value();
 
     await store.set(deleteConfigs);
-
-    return { data: undefined };
   }
 }

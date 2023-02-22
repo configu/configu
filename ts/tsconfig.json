@@ -18,9 +18,7 @@
     "noImplicitAny": true,
     "useUnknownInCatchVariables": false,
     "strictPropertyInitialization": false,
-    // todo: add "noUncheckedIndexedAccess": true,
-    "experimentalDecorators": true, // todo: try to move to node
-    "emitDecoratorMetadata": true // todo: try to move to node
+    "noUncheckedIndexedAccess": true,
   },
   "exclude": ["node_modules", "build", "src/**/*.test*"]
 }

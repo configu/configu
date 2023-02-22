@@ -1,5 +1,5 @@
 import { fileOpen } from 'browser-fs-access';
-import { ConfigSchema as BaseConfigSchema } from '@configu/ts';
+import { CfguPath, ConfigSchema as BaseConfigSchema } from '@configu/ts';
 
 const FILE_OPEN_DEFAULT_OPTIONS = {
   description: `${BaseConfigSchema.CFGU.NAME} files`,
@@ -11,11 +11,11 @@ const FILE_OPEN_DEFAULT_OPTIONS = {
 
 export class ConfigSchema extends BaseConfigSchema {
   constructor(public readonly blob: File) {
-    super(blob.name);
+    super(blob.name as CfguPath); // will throw an error if "blob.name" is not a CfguPath
   }
 
   async read() {
-    this.contents = await this.blob.text();
+    return this.blob.text();
   }
 
   static async init(): Promise<ConfigSchema> {

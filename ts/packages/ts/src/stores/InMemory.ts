@@ -11,19 +11,15 @@ export class InMemoryStore extends ConfigStore {
 
   async get(queries: ConfigStoreQuery[]): Promise<Config[]> {
     return this.data.filter((config) => {
-      return queries.some(({ set, schema, key }) => {
-        return (
-          (set === '*' || set === config.set) &&
-          (schema === '*' || schema === config.schema) &&
-          (key === '*' || key === config.key)
-        );
+      return queries.some(({ set, key }) => {
+        return (set === '*' || set === config.set) && (key === '*' || key === config.key);
       });
     });
   }
 
   async set(configs: Config[]): Promise<void> {
     this.data = _([...configs, ...this.data])
-      .uniqBy((config) => `${config.set}.${config.schema}.${config.key}`)
+      .uniqBy((config) => `${config.set}.${config.key}`)
       .filter((config) => Boolean(config.value))
       .value();
   }

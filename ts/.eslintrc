@@ -16,6 +16,9 @@
     "plugin:jest/recommended",
     "plugin:jest/style"
   ],
+  "plugins": [
+    "spellcheck"
+  ],
   "rules": {
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/no-empty-function": "off",
@@ -28,7 +31,14 @@
     "no-underscore-dangle": "off",
     "no-unused-expressions": "off",
     "class-methods-use-this": "off",
-    "max-classes-per-file": "off"
+    "max-classes-per-file": "off",
+    "spellcheck/spell-checker": ["warn", {
+      "skipWords": [
+        "configu",
+        "cfgu",
+        "upsert"
+      ]
+    }]
   },
   "overrides":[
     {

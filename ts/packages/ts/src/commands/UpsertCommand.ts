@@ -19,6 +19,7 @@ export class UpsertCommand extends Command<void> {
   }
 
   async run() {
+    const scopeLocation = [`UpsertCommand`, 'run'];
     const { store, set, schema, configs } = this.parameters;
 
     await store.init();
@@ -28,11 +29,12 @@ export class UpsertCommand extends Command<void> {
     const upsertConfigs = _(configs)
       .map<Config>(({ key, value = '' }, idx) => {
         const cfgu = schemaContents[key];
+
         if (!cfgu) {
           throw new Error(
             ERR(`invalid config key "${key}"`, {
-              location: [`UpsertCommand`, 'run'],
-              suggestion: `key "${key}" must be declared on schema ${schema.uid}`,
+              location: scopeLocation,
+              suggestion: `key "${key}" must be declared on schema ${schema.path}`,
             }),
           );
         }
@@ -40,26 +42,16 @@ export class UpsertCommand extends Command<void> {
         if (value && cfgu.template) {
           throw new Error(
             ERR(`invalid assignment to config key "${key}"`, {
-              location: [`UpsertCommand`, 'run'],
+              location: scopeLocation,
               suggestion: `keys declared with template mustn't have a value`,
             }),
           );
         }
 
-        const referenceValue = ConfigStore.extractReferenceValue(value);
-        if (referenceValue && !ConfigStore.parseReferenceValue(referenceValue)) {
+        if (value && !ConfigSchema.CFGU.TESTS.VAL_TYPE[cfgu.type]?.({ ...cfgu, value })) {
           throw new Error(
             ERR(`invalid config value "${value}" for key "${key}"`, {
-              location: [`UpsertCommand`, 'run'],
-              suggestion: `reference value must be formed as a valid connection string - store=<type>;query=[set/]<schema>[.key]`,
-            }),
-          );
-        }
-
-        if (!referenceValue && !ConfigSchema.validateValueType({ ...cfgu, value })) {
-          throw new Error(
-            ERR(`invalid config value "${value}" for key "${key}"`, {
-              location: [`UpsertCommand`, 'run'],
+              location: scopeLocation,
               suggestion: `value "${value}" must be of type "${cfgu.type}"`,
             }),
           );
@@ -67,7 +59,6 @@ export class UpsertCommand extends Command<void> {
 
         return {
           set: set.path,
-          schema: schema.uid,
           key,
           value,
         };
@@ -75,7 +66,5 @@ export class UpsertCommand extends Command<void> {
       .value();
 
     await store.set(upsertConfigs);
-
-    return { data: undefined };
   }
 }

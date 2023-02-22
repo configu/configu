@@ -11,7 +11,7 @@ export class KubernetesSecretStore extends KeyValueStore {
   private client: CoreV1Api;
   private namespace: string;
   constructor({ kubeconfigFilePath, namespace }: KubernetesSecretConfiguration) {
-    super('kubernetes-secret', { keySeparator: '-' });
+    super('kubernetes-secret');
     const kubernetesConfig = new KubeConfig();
     kubernetesConfig.loadFromFile(kubeconfigFilePath);
     this.client = kubernetesConfig.makeApiClient(CoreV1Api);

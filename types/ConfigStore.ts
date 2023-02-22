@@ -1,12 +1,17 @@
 import { Config } from './Config';
 
+export type ConfigStoreFeatures = {
+  readonly: boolean;
+  inheritance: boolean;
+};
+
 /**
  * An interface of a storage, aka ConfigStore
  * that I/Os Config records (Config[])
  */
 export interface ConfigStore {
   type: string;
-  // uid: string;
+  features: ConfigStoreFeatures;
 }
 
 export type ConfigStoreQuery = Pick<Config, "set" | "key">;

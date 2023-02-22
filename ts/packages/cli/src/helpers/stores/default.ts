@@ -8,7 +8,7 @@ export const defaultInteractiveSession = async (store: StoreType, skip: string[]
   const storeConfigurationQuestions = _(storeConfigurationDefinition)
     .omit(skip)
     .entries()
-    .map<Question>(([key, settings]: [string, typeof storeConfigurationDefinition[string]]) => {
+    .map<Question>(([key, settings]: [string, (typeof storeConfigurationDefinition)[string]]) => {
       return {
         type: 'input',
         name: key,

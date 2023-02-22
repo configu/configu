@@ -17,24 +17,8 @@ describe(`types`, () => {
     });
   });
 
-  describe(`ConfigStoreContents`, () => {
-    const errored = [{ key: 'TEST', schema: 'test', set: 'test' }];
-    it(`throw from Convert.ConfigStoreContents`, async () => {
-      const res = () => {
-        Convert.toConfigStoreContents(JSON.stringify(errored));
-      };
-      expect(res).toThrow();
-    });
-    it(`throw from Convert.configStoreContentsToJson`, async () => {
-      const res = () => {
-        Convert.configStoreContentsToJson(errored as any);
-      };
-      expect(res).toThrow();
-    });
-  });
-
   describe(`ConfigStoreQuery`, () => {
-    const errored = { key: 'TEST', schema: 'test' };
+    const errored = { key: 'TEST' };
     it(`throw from Convert.toConfigStoreQuery`, async () => {
       const res = () => {
         Convert.toConfigStoreQuery(JSON.stringify(errored));
@@ -49,8 +33,24 @@ describe(`types`, () => {
     });
   });
 
+  describe(`ConfigStoreContents`, () => {
+    const errored = [{ key: 'TEST', set: 'test' }];
+    it(`throw from Convert.ConfigStoreContents`, async () => {
+      const res = () => {
+        Convert.toConfigStoreContents(JSON.stringify(errored));
+      };
+      expect(res).toThrow();
+    });
+    it(`throw from Convert.configStoreContentsToJson`, async () => {
+      const res = () => {
+        Convert.configStoreContentsToJson(errored as any);
+      };
+      expect(res).toThrow();
+    });
+  });
+
   describe(`Config`, () => {
-    const errored = { key: 'TEST', schema: 'test', set: 'test' };
+    const errored = { key: 'TEST', set: 'test' };
     it(`throw from Convert.toConfig`, async () => {
       const res = () => {
         Convert.toConfig(JSON.stringify(errored));

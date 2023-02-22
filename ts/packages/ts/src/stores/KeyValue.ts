@@ -2,12 +2,9 @@ import _ from 'lodash';
 import { ConfigStore } from '../ConfigStore';
 import { ConfigStoreQuery, Config } from '../types';
 
-type KeyValueStoreConfiguration = {
-  keySeparator?: string;
-};
 export abstract class KeyValueStore extends ConfigStore {
-  constructor(type: string, protected configuration: KeyValueStoreConfiguration = {}) {
-    super(type);
+  constructor(type: string) {
+    super(type, { readonly: false, inheritance: false });
   }
 
   protected abstract getByKey(key: string): Promise<string>;
@@ -16,20 +13,14 @@ export abstract class KeyValueStore extends ConfigStore {
 
   protected abstract delete(key: string): Promise<void>;
 
-  private calcKey({ set, schema }: ConfigStoreQuery): string {
-    if (set === '*' || schema === '*') {
+  private calcKey({ set, key }: ConfigStoreQuery): string {
+    if (set === '*') {
       throw new Error(`store ${this.constructor.name} don't support bulk operations`);
     }
-
-    let key = `${set}/${schema}`;
-    if (!set && schema) {
-      key = schema;
+    if (!set) {
+      return key;
     }
-
-    if (this.configuration.keySeparator) {
-      return key.split('/').join(this.configuration.keySeparator);
-    }
-    return key;
+    return set;
   }
 
   private stringifyValue(value: any) {
@@ -71,17 +62,8 @@ export abstract class KeyValueStore extends ConfigStore {
 
     const storedConfigs = _(queries)
       .map((q) => {
-        const { set, schema, key } = q;
+        const { set, key } = q;
         const value = kvDict[this.calcKey(q)];
-
-        if (!key) {
-          return {
-            set,
-            schema,
-            key,
-            value,
-          };
-        }
 
         const jsonValue = this.safeJsonParse(value);
 
@@ -89,7 +71,6 @@ export abstract class KeyValueStore extends ConfigStore {
           return Object.entries(jsonValue).map(([k, v]) => {
             return {
               set,
-              schema,
               key: k,
               value: this.stringifyValue(v),
             };
@@ -98,7 +79,6 @@ export abstract class KeyValueStore extends ConfigStore {
 
         return {
           set,
-          schema,
           key,
           value: this.stringifyValue(_.get(jsonValue, key)) ?? '',
         };

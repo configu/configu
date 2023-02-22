@@ -9,7 +9,6 @@ export type ConfigSchemaType = "json";
 export interface ConfigSchema {
   path: string;
   type: ConfigSchemaType;
-  // name: string;
 }
 
 export interface ConfigSchemaContentsValue extends Cfgu {};
