@@ -33,16 +33,23 @@ runs:
         tagRegex: "(?<package>.*)-v(?<version>.*)"
         tagRegexGroup: 2
 
+    - name: Extract release tag version
+      id: ref
+      uses: olegtarasov/get-tag@v2.1.2
+      with:
+        tagRegex: "(?<package>.*)-v(?<version>.*)-(?<channel>.*)"
+        tagRegexGroup: 2
+
     - name: Extract release channel
       shell: bash
       run: |
-        # echo "ref: ${{ github.ref }}"
-        # echo "ref_name: ${{ github.ref_name }}"
-        # echo "ref_type: ${{ github.ref_type }}"
-        # echo "base_ref: ${{ github.base_ref }}"
+        echo "ref_tag: ${{ github.ref }}"
+        echo "ref_branch: ${{ github.event.base_ref }}"
 
-        echo "github: ${{ toJSON(github) }}"
-        echo "github.event: ${{ toJSON(github.event) }}"
+        echo "version: ${{ steps.release-tag.outputs.version }}"
+
+        echo "${{ steps.ref.outputs.version }}"
+        echo "${{ steps.ref.outputs.channel }}"
 
     # - name: Post Slack build message
     #   id: slack
