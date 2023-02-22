@@ -36,12 +36,13 @@ runs:
     - name: Extract release channel
       shell: bash
       run: |
-        echo "ref: ${{ github.ref }}"
-        echo "ref_name: ${{ github.ref_name }}"
-        echo "ref_type: ${{ github.ref_type }}"
-        echo "base_ref: ${{ github.base_ref }}"
+        # echo "ref: ${{ github.ref }}"
+        # echo "ref_name: ${{ github.ref_name }}"
+        # echo "ref_type: ${{ github.ref_type }}"
+        # echo "base_ref: ${{ github.base_ref }}"
 
-        echo "event: ${{ toJSON(github.event) }}"
+        echo "github: ${{ toJSON(github) }}"
+        echo "github.event: ${{ toJSON(github.event) }}"
 
     # - name: Post Slack build message
     #   id: slack
