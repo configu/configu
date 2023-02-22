@@ -41,19 +41,19 @@ runs:
         echo "ref_type: ${{ github.ref_type }}"
         echo "base_ref: ${{ github.base_ref }}"
 
-        echo "event: ${{ toJSON(github.event) }}
+        echo "event: ${{ toJSON(github.event) }}"
 
-    - name: Post Slack build message
-      id: slack
-      uses: slackapi/slack-github-action@v1.23.0
-      with:
-        payload: |
-          {
-            "text": "${{ inputs.package-name }} v${{ steps.release-tag.outputs.version }} is now being deployed"
-          }
-      env:
-        SLACK_WEBHOOK_URL: ${{ inputs.slack-webhook }}
-        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+    # - name: Post Slack build message
+    #   id: slack
+    #   uses: slackapi/slack-github-action@v1.23.0
+    #   with:
+    #     payload: |
+    #       {
+    #         "text": "${{ inputs.package-name }} v${{ steps.release-tag.outputs.version }} is now being deployed"
+    #       }
+    #   env:
+    #     SLACK_WEBHOOK_URL: ${{ inputs.slack-webhook }}
+    #     SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
     - name: Create local bin dir
       shell: bash

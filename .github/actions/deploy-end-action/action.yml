@@ -11,11 +11,11 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Post Slack build status
-      uses: 8398a7/action-slack@v3
-      if: always()
-      with:
-        status: ${{ job.status }}
-        fields: repo,message,commit,author,action,eventName,ref,workflow
-      env:
-        SLACK_WEBHOOK_URL: ${{ inputs.slack-webhook }}
+    # - name: Post Slack build status
+    #   uses: 8398a7/action-slack@v3
+    #   if: always()
+    #   with:
+    #     status: ${{ job.status }}
+    #     fields: repo,message,commit,author,action,eventName,ref,workflow
+    #   env:
+    #     SLACK_WEBHOOK_URL: ${{ inputs.slack-webhook }}
