@@ -5,8 +5,6 @@ inputs:
     required: true
   slack-webhook:
     required: true
-  google-chat-webhook:
-    required: true
 
 outputs:
   commit-sha:
@@ -15,6 +13,9 @@ outputs:
   release-version:
     description: "Release version"
     value: ${{ steps.release-tag.outputs.version }}
+  # release-channel:
+  #   description: "Release channel"
+  #   value: ${{ steps.release-tag.outputs.version }}
 
 runs:
   using: "composite"
@@ -32,6 +33,15 @@ runs:
         tagRegex: "(?<package>.*)-v(?<version>.*)"
         tagRegexGroup: 2
 
+    - name: Extract release channel
+      shell: bash
+      run: |
+        echo "ref: ${{ github.ref }}"
+        echo "ref_name: ${{ github.ref_name }}"
+        echo "ref_type: ${{ github.ref_type }}"
+        echo "base_ref: ${{ github.base_ref }}"
+        echo "target_commitish: ${{ github.event.release.target_commitish }}"
+
     - name: Post Slack build message
       id: slack
       uses: slackapi/slack-github-action@v1.23.0
@@ -43,12 +53,6 @@ runs:
       env:
         SLACK_WEBHOOK_URL: ${{ inputs.slack-webhook }}
         SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-
-    - name: Post Google Chat message
-      uses: julb/action-post-googlechat-message@v1
-      with:
-        message: "${{ inputs.package-name }} v${{ steps.release-tag.outputs.version }} is now being deployed"
-        gchat_webhook_url: ${{ inputs.google-chat-webhook }}
 
     - name: Create local bin dir
       shell: bash
