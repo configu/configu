@@ -39,7 +39,7 @@ runs:
         ref=${{ github.ref }}
         branch=$(git rev-parse --abbrev-ref HEAD)
         tag=$(git describe --abbrev=0 --tags)
-        version=$(echo $tag | awk -F '${{ inputs.package-name }}-' '{print $2}')
+        version=$(echo $tag | awk -F '-' '{print $2}')
         if [ "$branch" = "main" ]; then
           channel=stable
         else
