@@ -30,26 +30,35 @@ runs:
       id: release-tag
       uses: olegtarasov/get-tag@v2.1.2
       with:
-        tagRegex: "(?<package>.*)-v(?<version>.*)"
-        tagRegexGroup: 2
-
-    - name: Extract release tag version
-      id: ref
-      uses: olegtarasov/get-tag@v2.1.2
-      with:
-        tagRegex: "(?<package>.*)-v(?<version>.*)-(?<channel>.*)"
+        tagRegex: "(?<package>.*)-(?<version>.*)"
         tagRegexGroup: 2
 
     - name: Extract release channel
       shell: bash
       run: |
-        echo "ref_tag: ${{ github.ref }}"
-        echo "ref_branch: ${{ github.event.base_ref }}"
+        ref=${{ github.ref }}
+        branch=$(git rev-parse --abbrev-ref HEAD)
+        tag=$(git describe --abbrev=0 --tags)
+        version=$(echo $tag | awk -F "${{ inputs.package-name }}-" '{print $2}')
 
-        echo "version: ${{ steps.release-tag.outputs.version }}"
+        if [ "$branch" = "main" ]; then
+          channel=stable
+        else
+          channel=next
+        fi
 
-        echo "${{ steps.ref.outputs.version }}"
-        echo "${{ steps.ref.outputs.channel }}"
+        echo "branch: $ref"
+        echo "branch: $branch"
+        echo "tag: $tag"
+        echo "version: $version"
+        echo "channel: $channel"
+
+        # IFS='-' read -ra strarr <<< "$tag"
+        # echo "ref_tag: ${{ github.ref }}"
+        # echo "ref_branch: ${{ github.event.base_ref }}"
+        # echo "version: ${{ steps.release-tag.outputs.version }}"
+        # echo "${{ steps.ref.outputs.version }}"
+        # echo "${{ steps.ref.outputs.channel }}"
 
     # - name: Post Slack build message
     #   id: slack
