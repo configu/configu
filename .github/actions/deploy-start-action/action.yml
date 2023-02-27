@@ -20,48 +20,66 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - name: Extract commit SHA version
-      id: commit-sha
-      shell: bash
+    - name: "Read Git Info"
+      id: "git_info"
+      uses: YunaBraska/git-info-action@main
+
+    - name: "Print Git Info"
       run: |
-        echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+        echo "is_git_repo          [${{ steps.git_info.outputs.is_git_repo }}]"
+        echo "tag_latest           [${{ steps.git_info.outputs.tag_latest }}]"
+        echo "sha_latest           [${{ steps.git_info.outputs.sha_latest }}]"
+        echo "sha_latest_tag       [${{ steps.git_info.outputs.sha_latest_tag }}]"
+        echo "branch               [${{ steps.git_info.outputs.branch }}]"
+        echo "branch_default       [${{ steps.git_info.outputs.branch_default }}]"
+        echo "has_changes          [${{ steps.git_info.outputs.has_changes }}]"
+        echo "has_local_changes    [${{ steps.git_info.outputs.has_local_changes }}]"
+        echo "x_has_changes_python [${{ steps.git_info.outputs.x_has_changes_python }}]"
 
-    - name: Extract release tag version
-      id: release-tag
-      uses: olegtarasov/get-tag@v2.1.2
-      with:
-        tagRegex: "(?<package>.*)-(?<version>.*)"
-        tagRegexGroup: 2
+    # - name: Extract commit SHA version
+    #   id: commit-sha
+    #   shell: bash
+    #   run: |
+    #     echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
-    - name: Extract release channel
-      shell: bash
-      run: |
-        ref=${{ github.ref }}
-        branch=$(git rev-parse --abbrev-ref HEAD)
-        tag=$(git describe --abbrev=0 --tags)
-        version=$(echo "$tag" | awk -F "${{ inputs.package-name }}-" '{print $2}')
-        if [ "$branch" = "main" ]; then
-          channel=stable
-        else
-          channel=next
-        fi
+    # - name: Extract release tag version
+    #   id: release-tag
+    #   uses: olegtarasov/get-tag@v2.1.2
+    #   with:
+    #     tagRegex: "(?<package>.*)-(?<version>.*)"
+    #     tagRegexGroup: 2
 
-        echo "ref: $ref"
-        echo "branch: $branch"
-        echo "tag: $tag"
-        echo "version: $version"
-        echo "channel: $channel"
+    # - name: Extract release channel
+    #   shell: bash
+    #   run: |
+    #     git --no-pager log -n 1 --pretty=%d HEAD
 
-        echo "inputs: ${{ toJSON(inputs) }}"
-        echo "env: ${{ toJSON(env) }}"
-        echo "github: ${{ toJSON(github) }}"
+    #     ref=${{ github.ref }}
+    #     branch=$(git rev-parse --abbrev-ref HEAD)
+    #     tag=$(git describe --abbrev=0 --tags)
+    #     version=$(echo "$tag" | awk -F "${{ inputs.package-name }}-" '{print $2}')
+    #     if [ "$branch" = "main" ]; then
+    #       channel=stable
+    #     else
+    #       channel=next
+    #     fi
 
-        # IFS='-' read -ra strarr <<< "$tag"
-        # echo "ref_tag: ${{ github.ref }}"
-        # echo "ref_branch: ${{ github.event.base_ref }}"
-        # echo "version: ${{ steps.release-tag.outputs.version }}"
-        # echo "${{ steps.ref.outputs.version }}"
-        # echo "${{ steps.ref.outputs.channel }}"
+    #     echo "ref: $ref"
+    #     echo "branch: $branch"
+    #     echo "tag: $tag"
+    #     echo "version: $version"
+    #     echo "channel: $channel"
+
+    #     echo "inputs: ${{ toJSON(inputs) }}"
+    #     echo "env: ${{ env.GITHUB_REF_NAME }} ${{ env.GITHUB_REF_NAME }}"
+    #     echo "github: ${{ toJSON(github) }}"
+
+    #     # IFS='-' read -ra strarr <<< "$tag"
+    #     # echo "ref_tag: ${{ github.ref }}"
+    #     # echo "ref_branch: ${{ github.event.base_ref }}"
+    #     # echo "version: ${{ steps.release-tag.outputs.version }}"
+    #     # echo "${{ steps.ref.outputs.version }}"
+    #     # echo "${{ steps.ref.outputs.channel }}"
 
     # - name: Post Slack build message
     #   id: slack
