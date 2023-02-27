@@ -25,6 +25,7 @@ runs:
       uses: YunaBraska/git-info-action@main
 
     - name: "Print Git Info"
+      shell: bash
       run: |
         echo "is_git_repo          [${{ steps.git_info.outputs.is_git_repo }}]"
         echo "tag_latest           [${{ steps.git_info.outputs.tag_latest }}]"
