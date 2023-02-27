@@ -20,15 +20,15 @@ outputs:
 runs:
   using: "composite"
   steps:
-      - name: Get branch names
-        id: branch-name
-        uses: tj-actions/branch-names@v6
+    - name: Get branch names
+      id: branch-name
+      uses: tj-actions/branch-names@v6
 
-      - name: Print info
-        shell: bash
-        run: |
-          echo "Running on: ${{ steps.branch-name.outputs.tag }}"
-          echo "${{ toJSON(steps.branch-name.outputs) }}"
+    - name: Print info
+      shell: bash
+      run: |
+        echo "Running on: ${{ steps.branch-name.outputs.tag }}"
+        echo "${{ toJSON(steps.branch-name.outputs) }}"
 
     # - name: Extract commit SHA version
     #   id: commit-sha
@@ -87,12 +87,12 @@ runs:
     #     SLACK_WEBHOOK_URL: ${{ inputs.slack-webhook }}
     #     SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
-    - name: Create local bin dir
-      shell: bash
-      run: |
-        mkdir -p $HOME/.local/bin
-        echo "LOCAL_BIN=$HOME/.local/bin" >> $GITHUB_ENV
-        echo "$HOME/.local/bin" >> $GITHUB_PATH
+    # - name: Create local bin dir
+    #   shell: bash
+    #   run: |
+    #     mkdir -p $HOME/.local/bin
+    #     echo "LOCAL_BIN=$HOME/.local/bin" >> $GITHUB_ENV
+    #     echo "$HOME/.local/bin" >> $GITHUB_PATH
 
     # - uses: robinraju/release-downloader@v1.5
     #   with:
