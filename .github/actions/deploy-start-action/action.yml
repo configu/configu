@@ -25,6 +25,7 @@ runs:
         uses: tj-actions/branch-names@v6
 
       - name: Print info
+        shell: bash
         run: |
           echo "Running on: ${{ steps.branch-name.outputs.tag }}"
           echo "${{ toJSON(steps.branch-name.outputs) }}"
