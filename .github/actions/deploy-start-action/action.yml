@@ -7,44 +7,37 @@ inputs:
     required: true
 
 outputs:
-  commit-sha:
-    description: "Commit SHA"
-    value: ${{ steps.commit-sha.outputs.sha_short }}
+  release-sha:
+    description: "Release version"
+    value: ${{ steps.release-info.outputs.sha }}
+  release-tag:
+    description: "Release version"
+    value: ${{ steps.release-info.outputs.tag }}
+  release-branch:
+    description: "Release version"
+    value: ${{ steps.release-info.outputs.branch }}
   release-version:
     description: "Release version"
-    value: ${{ steps.release-tag.outputs.version }}
-  # release-channel:
-  #   description: "Release channel"
-  #   value: ${{ steps.release-tag.outputs.version }}
+    value: ${{ steps.release-info.outputs.version }}
+  release-channel:
+    description: "Release version"
+    value: ${{ steps.release-info.outputs.channel }}
 
 runs:
   using: "composite"
   steps:
-    # - name: Extract commit SHA version
-    #   id: commit-sha
-    #   shell: bash
-    #   run: |
-    #     echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-
-    # - name: Extract release tag version
-    #   id: release-tag
-    #   uses: olegtarasov/get-tag@v2.1.2
-    #   with:
-    #     tagRegex: "(?<package>.*)-(?<version>.*)"
-    #     tagRegexGroup: 2
-
-    - name: Extract release channel
+    - name: Extract release information
+      id: release-info
       shell: bash
       run: |
-        git --no-pager log -n 1 --pretty=%d HEAD
-        sha_short=$(git rev-parse --short HEAD)
+        sha=$(git rev-parse --short HEAD)
 
         ref_tag=${{ github.event.ref }}
         ref_branch=${{ github.event.base_ref }}
 
         tag=${ref_tag#refs/tags/}
         branch=${ref_branch#refs/heads/}
-        version=$(echo "$tag" | awk -F "${{ inputs.package-name }}-" '{print $2}')
+        version=$(echo "$tag" | awk -F '-' '{print $2-$3})
 
         ref_channel=$(echo "$tag" | awk -F '-' '{print $3}')
         if [ "$branch" = "${{ github.event.repository.master_branch }}" ]; then
@@ -59,41 +52,36 @@ runs:
           exit 1
         fi
 
-        echo "ref: $ref"
-        echo "branch: $branch"
+        echo "sha=$sha" >> $GITHUB_OUTPUT
+        echo "tag=$tag" >> $GITHUB_OUTPUT
+        echo "branch=$branch" >> $GITHUB_OUTPUT
+        echo "version=$version" >> $GITHUB_OUTPUT
+        echo "channel=$channel" >> $GITHUB_OUTPUT
+
+        echo "sha: $sha"
         echo "tag: $tag"
+        echo "branch: $branch"
         echo "version: $version"
         echo "channel: $channel"
 
-        # echo "inputs: ${{ toJSON(inputs) }}"
-        # echo "env: ${{ env.GITHUB_REF_NAME }} ${{ env.GITHUB_REF_NAME }}"
-        # echo "github: ${{ toJSON(github) }}"
+    - name: Post Slack build message
+      id: slack
+      uses: slackapi/slack-github-action@v1.23.0
+      with:
+        payload: |
+          {
+            "text": "${{ inputs.package-name }} ${{ steps.release-info.outputs.version }} is now being deployed"
+          }
+      env:
+        SLACK_WEBHOOK_URL: ${{ inputs.slack-webhook }}
+        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
-        # IFS='-' read -ra strarr <<< "$tag"
-        # echo "ref_tag: ${{ github.ref }}"
-        # echo "ref_branch: ${{ github.event.base_ref }}"
-        # echo "version: ${{ steps.release-tag.outputs.version }}"
-        # echo "${{ steps.ref.outputs.version }}"
-        # echo "${{ steps.ref.outputs.channel }}"
-
-    # - name: Post Slack build message
-    #   id: slack
-    #   uses: slackapi/slack-github-action@v1.23.0
-    #   with:
-    #     payload: |
-    #       {
-    #         "text": "${{ inputs.package-name }} v${{ steps.release-tag.outputs.version }} is now being deployed"
-    #       }
-    #   env:
-    #     SLACK_WEBHOOK_URL: ${{ inputs.slack-webhook }}
-    #     SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-
-    # - name: Create local bin dir
-    #   shell: bash
-    #   run: |
-    #     mkdir -p $HOME/.local/bin
-    #     echo "LOCAL_BIN=$HOME/.local/bin" >> $GITHUB_ENV
-    #     echo "$HOME/.local/bin" >> $GITHUB_PATH
+    - name: Create local bin dir
+      shell: bash
+      run: |
+        mkdir -p $HOME/.local/bin
+        echo "LOCAL_BIN=$HOME/.local/bin" >> $GITHUB_ENV
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
 
     # - uses: robinraju/release-downloader@v1.5
     #   with:

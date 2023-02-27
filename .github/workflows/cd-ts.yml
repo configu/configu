@@ -6,7 +6,7 @@ on:
       - ts-*
 
 env:
-  PACKAGE_NAME: "@configu/ts"
+  PACKAGE_NAME: "@configu/{ts,node,browser}"
 
 jobs:
   build_and_deploy:
@@ -28,6 +28,10 @@ jobs:
       #     dependencies-root: "ts"
 
       # ----------
+      - name: Test output
+        run: |
+          echo ${{ toJSON(steps.deployment.outputs) }}
+
       # - name: Bump package version
       #   run: |
       #     cd ${{ env.CWD }}
