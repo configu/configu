@@ -20,14 +20,14 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - name: Branch Names
-      id: git_info
-      uses: tj-actions/branch-names@v6.4
+      - name: Get branch names
+        id: branch-name
+        uses: tj-actions/branch-names@v6
 
-    - name: "Print Git Info"
-      shell: bash
-      run: |
-        echo "inputs: ${{ toJSON(git_info.outputs) }}"
+      - name: Print info
+        run: |
+          echo "Running on: ${{ steps.branch-name.outputs.tag }}"
+          echo "${{ toJSON(steps.branch-name.outputs) }}"
 
     # - name: Extract commit SHA version
     #   id: commit-sha
