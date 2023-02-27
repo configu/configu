@@ -3,6 +3,9 @@ name: "Deployment start hook"
 inputs:
   package-name:
     required: true
+  default-channel:
+    required: true
+    default: "latest"
   slack-webhook:
     required: true
 
@@ -45,8 +48,7 @@ runs:
 
         ref_channel=$(echo "$tag" | awk -F '-' '{print $3}')
         if [ "$branch" = "${{ github.event.repository.master_branch }}" ]; then
-          channel=stable
-          # channel=latest
+          channel=${{ inputs.default-channel }}
         elif [ "next" = "${ref_channel%.*}" ]; then
           channel=next
         else
