@@ -8,19 +8,19 @@ inputs:
 
 outputs:
   release-sha:
-    description: "Release version"
+    description: "Release sha"
     value: ${{ steps.release-info.outputs.sha }}
   release-tag:
-    description: "Release version"
+    description: "Release tag"
     value: ${{ steps.release-info.outputs.tag }}
   release-branch:
-    description: "Release version"
+    description: "Release branch"
     value: ${{ steps.release-info.outputs.branch }}
   release-version:
     description: "Release version"
     value: ${{ steps.release-info.outputs.version }}
   release-channel:
-    description: "Release version"
+    description: "Release channel"
     value: ${{ steps.release-info.outputs.channel }}
 
 runs:
@@ -37,7 +37,7 @@ runs:
 
         tag=${ref_tag#refs/tags/}
         branch=${ref_branch#refs/heads/}
-        version=$(echo "$tag" | awk -F '-' '{print $2-$3})
+        version=$(echo "$tag" | awk -F '-' '{print $2"-"$3}')
 
         ref_channel=$(echo "$tag" | awk -F '-' '{print $3}')
         if [ "$branch" = "${{ github.event.repository.master_branch }}" ]; then
