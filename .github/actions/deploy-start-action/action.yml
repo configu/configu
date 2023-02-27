@@ -22,6 +22,9 @@ outputs:
   release-channel:
     description: "Release channel"
     value: ${{ steps.release-info.outputs.channel }}
+  release-package:
+    description: "Release package"
+    value: ${{ steps.release-info.outputs.package }}
 
 runs:
   using: "composite"
@@ -38,6 +41,7 @@ runs:
         tag=${ref_tag#refs/tags/}
         branch=${ref_branch#refs/heads/}
         version=$(echo "$tag" | awk -F '-' '{print $2"-"$3}')
+        package=$(echo "$tag" | awk -F '-' '{print $1}')
 
         ref_channel=$(echo "$tag" | awk -F '-' '{print $3}')
         if [ "$branch" = "${{ github.event.repository.master_branch }}" ]; then
@@ -57,12 +61,14 @@ runs:
         echo "branch=$branch" >> $GITHUB_OUTPUT
         echo "version=$version" >> $GITHUB_OUTPUT
         echo "channel=$channel" >> $GITHUB_OUTPUT
+        echo "package=$package" >> $GITHUB_OUTPUT
 
         echo "sha: $sha"
         echo "tag: $tag"
         echo "branch: $branch"
         echo "version: $version"
         echo "channel: $channel"
+        echo "package: $package"
 
     - name: Post Slack build message
       id: slack

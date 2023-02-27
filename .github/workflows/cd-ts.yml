@@ -30,7 +30,7 @@ jobs:
       # ----------
       - name: Test output
         run: |
-          echo ${{ toJSON(steps.deployment.outputs) }}
+          echo "${{ toJSON(steps.deployment.outputs) }}"
 
       # - name: Bump package version
       #   run: |
