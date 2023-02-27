@@ -20,22 +20,14 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - name: "Read Git Info"
-      id: "git_info"
-      uses: YunaBraska/git-info-action@main
+    - name: Branch Names
+      -id: git_info
+      uses: tj-actions/branch-names@v6.4
 
     - name: "Print Git Info"
       shell: bash
       run: |
-        echo "is_git_repo          [${{ steps.git_info.outputs.is_git_repo }}]"
-        echo "tag_latest           [${{ steps.git_info.outputs.tag_latest }}]"
-        echo "sha_latest           [${{ steps.git_info.outputs.sha_latest }}]"
-        echo "sha_latest_tag       [${{ steps.git_info.outputs.sha_latest_tag }}]"
-        echo "branch               [${{ steps.git_info.outputs.branch }}]"
-        echo "branch_default       [${{ steps.git_info.outputs.branch_default }}]"
-        echo "has_changes          [${{ steps.git_info.outputs.has_changes }}]"
-        echo "has_local_changes    [${{ steps.git_info.outputs.has_local_changes }}]"
-        echo "x_has_changes_python [${{ steps.git_info.outputs.x_has_changes_python }}]"
+        echo "inputs: ${{ toJSON(git_info.outputs) }}"
 
     # - name: Extract commit SHA version
     #   id: commit-sha
