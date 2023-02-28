@@ -7,24 +7,24 @@ inputs:
     required: true
 
 outputs:
+  release-package:
+    description: "Release package"
+    value: ${{ steps.release-info.outputs.package }}
   release-sha:
     description: "Release sha"
     value: ${{ steps.release-info.outputs.sha }}
-  release-tag:
-    description: "Release tag"
-    value: ${{ steps.release-info.outputs.tag }}
   release-branch:
     description: "Release branch"
     value: ${{ steps.release-info.outputs.branch }}
+  release-tag:
+    description: "Release tag"
+    value: ${{ steps.release-info.outputs.tag }}
   release-version:
     description: "Release version"
     value: ${{ steps.release-info.outputs.version }}
   release-channel:
     description: "Release channel"
     value: ${{ steps.release-info.outputs.channel }}
-  release-package:
-    description: "Release package"
-    value: ${{ steps.release-info.outputs.package }}
 
 runs:
   using: "composite"
@@ -40,10 +40,11 @@ runs:
 
         tag=${ref_tag#refs/tags/}
         branch=${ref_branch#refs/heads/}
-        version=$(echo "$tag" | awk -F '-' '{print $2"-"$3}')
-        package=$(echo "$tag" | awk -F '-' '{print $1}')
 
-        ref_channel=$(echo "$tag" | awk -F '-' '{print $3}')
+        package=$(echo "$tag" | awk -F '-v' '{print $1}')
+        version=$(echo "$tag" | awk -F '-v' '{print $2}')
+
+        ref_channel=$(echo "$version" | awk -F '-' '{print $2}')
         if [ "$branch" = "${{ github.event.repository.master_branch }}" ]; then
           channel=latest
         elif [ "next" = "${ref_channel%.*}" ]; then
@@ -55,19 +56,19 @@ runs:
           exit 1
         fi
 
+        echo "package=$package" >> $GITHUB_OUTPUT
         echo "sha=$sha" >> $GITHUB_OUTPUT
-        echo "tag=$tag" >> $GITHUB_OUTPUT
         echo "branch=$branch" >> $GITHUB_OUTPUT
+        echo "tag=$tag" >> $GITHUB_OUTPUT
         echo "version=$version" >> $GITHUB_OUTPUT
         echo "channel=$channel" >> $GITHUB_OUTPUT
-        echo "package=$package" >> $GITHUB_OUTPUT
 
+        echo "package: $package"
         echo "sha: $sha"
-        echo "tag: $tag"
         echo "branch: $branch"
+        echo "tag: $tag"
         echo "version: $version"
         echo "channel: $channel"
-        echo "package: $package"
 
     - name: Post Slack build message
       id: slack
@@ -75,7 +76,7 @@ runs:
       with:
         payload: |
           {
-            "text": "${{ inputs.package-name }} ${{ steps.release-info.outputs.version }} is now being deployed"
+            "text": "${{ inputs.package-name }} v${{ steps.release-info.outputs.version }} is now being deployed"
           }
       env:
         SLACK_WEBHOOK_URL: ${{ inputs.slack-webhook }}
