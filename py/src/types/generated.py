@@ -255,71 +255,23 @@ class ConfigSet:
         return result
 
 
-class ConfigStoreFeatures:
-    inheritance: bool
-    readonly: bool
-
-    def __init__(self, inheritance: bool, readonly: bool) -> None:
-        self.inheritance = inheritance
-        self.readonly = readonly
-
-    @staticmethod
-    def from_dict(obj: Any) -> 'ConfigStoreFeatures':
-        assert isinstance(obj, dict)
-        inheritance = from_bool(obj.get("inheritance"))
-        readonly = from_bool(obj.get("readonly"))
-        return ConfigStoreFeatures(inheritance, readonly)
-
-    def to_dict(self) -> dict:
-        result: dict = {}
-        result["inheritance"] = from_bool(self.inheritance)
-        result["readonly"] = from_bool(self.readonly)
-        return result
-
-
-class Features:
-    inheritance: bool
-    readonly: bool
-
-    def __init__(self, inheritance: bool, readonly: bool) -> None:
-        self.inheritance = inheritance
-        self.readonly = readonly
-
-    @staticmethod
-    def from_dict(obj: Any) -> 'Features':
-        assert isinstance(obj, dict)
-        inheritance = from_bool(obj.get("inheritance"))
-        readonly = from_bool(obj.get("readonly"))
-        return Features(inheritance, readonly)
-
-    def to_dict(self) -> dict:
-        result: dict = {}
-        result["inheritance"] = from_bool(self.inheritance)
-        result["readonly"] = from_bool(self.readonly)
-        return result
-
-
 class ConfigStore:
     """An interface of a storage, aka ConfigStore
     that I/Os Config records (Config[])
     """
-    features: Features
     type: str
 
-    def __init__(self, features: Features, type: str) -> None:
-        self.features = features
+    def __init__(self, type: str) -> None:
         self.type = type
 
     @staticmethod
     def from_dict(obj: Any) -> 'ConfigStore':
         assert isinstance(obj, dict)
-        features = Features.from_dict(obj.get("features"))
         type = from_str(obj.get("type"))
-        return ConfigStore(features, type)
+        return ConfigStore(type)
 
     def to_dict(self) -> dict:
         result: dict = {}
-        result["features"] = to_class(Features, self.features)
         result["type"] = from_str(self.type)
         return result
 
@@ -434,14 +386,6 @@ def config_set_from_dict(s: Any) -> ConfigSet:
 
 def config_set_to_dict(x: ConfigSet) -> Any:
     return to_class(ConfigSet, x)
-
-
-def config_store_features_from_dict(s: Any) -> ConfigStoreFeatures:
-    return ConfigStoreFeatures.from_dict(s)
-
-
-def config_store_features_to_dict(x: ConfigStoreFeatures) -> Any:
-    return to_class(ConfigStoreFeatures, x)
 
 
 def config_store_from_dict(s: Any) -> ConfigStore:

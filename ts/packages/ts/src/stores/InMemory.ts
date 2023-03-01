@@ -12,7 +12,7 @@ export class InMemoryStore extends ConfigStore {
   async get(queries: ConfigStoreQuery[]): Promise<Config[]> {
     return this.data.filter((config) => {
       return queries.some(({ set, key }) => {
-        return (set === '*' || set === config.set) && (key === '*' || key === config.key);
+        return set === config.set && key === config.key;
       });
     });
   }

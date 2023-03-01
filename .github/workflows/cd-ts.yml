@@ -25,6 +25,7 @@ jobs:
 
       - uses: ./.github/actions/ts-env-action
         with:
+          install-dependencies: false
           dependencies-root: "ts"
 
       # ----------
@@ -33,6 +34,9 @@ jobs:
           cd ${{ env.CWD }}
           npm --no-git-tag-version version ${{ steps.deployment.outputs.release-version }} \
             --workspace=@configu/ts --workspace=@configu/node --workspace=@configu/browser
+          npm pkg set dependencies.@configu/ts=${{ steps.deployment.outputs.release-version }} \
+            --workspace=@configu/node --workspace=@configu/browser
+          npm install
 
       - name: Build package code
         run: |

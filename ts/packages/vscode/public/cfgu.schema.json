@@ -194,24 +194,6 @@
         "path"
       ]
     },
-    "ConfigStoreFeatures": {
-      "type": "object",
-      "properties": {
-        "readonly": {
-          "type": "boolean",
-          "title": "readonly"
-        },
-        "inheritance": {
-          "type": "boolean",
-          "title": "inheritance"
-        }
-      },
-      "additionalProperties": false,
-      "required": [
-        "inheritance",
-        "readonly"
-      ]
-    },
     "ConfigStore": {
       "description": "An interface of a storage, aka ConfigStore\nthat I/Os Config records (Config[])",
       "title": "ConfigStore",
@@ -220,30 +202,10 @@
         "type": {
           "type": "string",
           "title": "type"
-        },
-        "features": {
-          "type": "object",
-          "properties": {
-            "readonly": {
-              "type": "boolean",
-              "title": "readonly"
-            },
-            "inheritance": {
-              "type": "boolean",
-              "title": "inheritance"
-            }
-          },
-          "additionalProperties": false,
-          "required": [
-            "inheritance",
-            "readonly"
-          ],
-          "title": "features"
         }
       },
       "additionalProperties": false,
       "required": [
-        "features",
         "type"
       ]
     },

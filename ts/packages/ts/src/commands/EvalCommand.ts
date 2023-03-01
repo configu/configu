@@ -96,9 +96,6 @@ export class EvalCommand extends Command<EvalCommandReturn> {
       .values()
       .flatMap((current) => {
         const { key } = current.context;
-        if (!store.features.inheritance) {
-          return { set: set.path, key };
-        }
         return set.hierarchy.map((node) => ({ set: node, key }));
       })
       .value();
@@ -199,7 +196,12 @@ export class EvalCommand extends Command<EvalCommandReturn> {
 
           (evalScope[key] as ConfigEvalScope).result.value = TMPL.render(template, {
             ...renderContext,
-            CONFIGU_SET: current.context.set.path,
+            CONFIGU_SET: {
+              path: current.context.set.path,
+              first: _.first(current.context.set.hierarchy),
+              last: _.last(current.context.set.hierarchy),
+              ...current.context.set.hierarchy.reduce((o, c, i) => ({ ...o, [i]: c }), {}),
+            },
           });
           _.pull(templateKeys, key);
           hasRendered = true;

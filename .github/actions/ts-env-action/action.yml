@@ -4,7 +4,7 @@ inputs:
   node-version:
     description: "Node.js version"
     required: true
-    default: "16.x"
+    default: "18.x"
   npm-version:
     description: "npm version"
     required: true

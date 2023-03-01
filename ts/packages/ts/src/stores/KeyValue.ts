@@ -4,7 +4,7 @@ import { ConfigStoreQuery, Config } from '../types';
 
 export abstract class KeyValueStore extends ConfigStore {
   constructor(type: string) {
-    super(type, { readonly: false, inheritance: false });
+    super(type);
   }
 
   protected abstract getByKey(key: string): Promise<string>;
@@ -14,9 +14,6 @@ export abstract class KeyValueStore extends ConfigStore {
   protected abstract delete(key: string): Promise<void>;
 
   private calcKey({ set, key }: ConfigStoreQuery): string {
-    if (set === '*') {
-      throw new Error(`store ${this.constructor.name} don't support bulk operations`);
-    }
     if (!set) {
       return key;
     }
@@ -31,7 +28,7 @@ export abstract class KeyValueStore extends ConfigStore {
   }
 
   private safeJsonParse(value: any) {
-    let jsonValue: Record<string, any> = {};
+    let jsonValue: Record<string, unknown> = {};
     try {
       jsonValue = JSON.parse(value);
     } catch (error) {
@@ -63,27 +60,19 @@ export abstract class KeyValueStore extends ConfigStore {
     const storedConfigs = _(queries)
       .map((q) => {
         const { set, key } = q;
+
         const value = kvDict[this.calcKey(q)];
-
-        const jsonValue = this.safeJsonParse(value);
-
-        if (key === '*') {
-          return Object.entries(jsonValue).map(([k, v]) => {
-            return {
-              set,
-              key: k,
-              value: this.stringifyValue(v),
-            };
-          });
+        if (!set) {
+          return { ...q, value: value ?? '' };
         }
 
+        const jsonValue = this.safeJsonParse(value);
         return {
           set,
           key,
           value: this.stringifyValue(_.get(jsonValue, key)) ?? '',
         };
       })
-      .flatten()
       .filter('value')
       .value();
 

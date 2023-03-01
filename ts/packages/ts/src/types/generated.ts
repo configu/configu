@@ -1,6 +1,6 @@
 // To parse this data:
 //
-//   import { Convert, CfguType, Cfgu, Config, ConfigSchemaType, ConfigSchema, ConfigSchemaContentsValue, ConfigSet, ConfigStoreFeatures, ConfigStore, ConfigStoreQuery, ConfigStoreContentsElement } from "./file";
+//   import { Convert, CfguType, Cfgu, Config, ConfigSchemaType, ConfigSchema, ConfigSchemaContentsValue, ConfigSet, ConfigStore, ConfigStoreQuery, ConfigStoreContentsElement } from "./file";
 //
 //   const cfguType = Convert.toCfguType(json);
 //   const cfgu = Convert.toCfgu(json);
@@ -10,7 +10,6 @@
 //   const configSchemaContentsValue = Convert.toConfigSchemaContentsValue(json);
 //   const configSchemaContents = Convert.toConfigSchemaContents(json);
 //   const configSet = Convert.toConfigSet(json);
-//   const configStoreFeatures = Convert.toConfigStoreFeatures(json);
 //   const configStore = Convert.toConfigStore(json);
 //   const configStoreQuery = Convert.toConfigStoreQuery(json);
 //   const configStoreContentsElement = Convert.toConfigStoreContentsElement(json);
@@ -74,23 +73,12 @@ export interface ConfigSet {
     path:      string;
 }
 
-export interface ConfigStoreFeatures {
-    inheritance: boolean;
-    readonly:    boolean;
-}
-
 /**
  * An interface of a storage, aka ConfigStore
  * that I/Os Config records (Config[])
  */
 export interface ConfigStore {
-    features: Features;
-    type:     string;
-}
-
-export interface Features {
-    inheritance: boolean;
-    readonly:    boolean;
+    type: string;
 }
 
 export interface ConfigStoreQuery {
@@ -169,14 +157,6 @@ export class Convert {
 
     public static configSetToJson(value: ConfigSet): string {
         return JSON.stringify(uncast(value, r("ConfigSet")), null, 2);
-    }
-
-    public static toConfigStoreFeatures(json: string): ConfigStoreFeatures {
-        return cast(JSON.parse(json), r("ConfigStoreFeatures"));
-    }
-
-    public static configStoreFeaturesToJson(value: ConfigStoreFeatures): string {
-        return JSON.stringify(uncast(value, r("ConfigStoreFeatures")), null, 2);
     }
 
     public static toConfigStore(json: string): ConfigStore {
@@ -396,17 +376,8 @@ const typeMap: any = {
         { json: "hierarchy", js: "hierarchy", typ: a("") },
         { json: "path", js: "path", typ: "" },
     ], false),
-    "ConfigStoreFeatures": o([
-        { json: "inheritance", js: "inheritance", typ: true },
-        { json: "readonly", js: "readonly", typ: true },
-    ], false),
     "ConfigStore": o([
-        { json: "features", js: "features", typ: r("Features") },
         { json: "type", js: "type", typ: "" },
-    ], false),
-    "Features": o([
-        { json: "inheritance", js: "inheritance", typ: true },
-        { json: "readonly", js: "readonly", typ: true },
     ], false),
     "ConfigStoreQuery": o([
         { json: "key", js: "key", typ: "" },
