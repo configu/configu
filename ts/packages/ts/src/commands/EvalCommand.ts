@@ -44,6 +44,8 @@ export type EvalCommandReturn = {
   metadata: { [key: string]: Pick<Config, 'key' | 'value'> & Pick<ConfigEvalScope, 'cfgu' | 'result'> };
 };
 
+export type EvaluatedConfigs = EvalCommandReturn['result'];
+
 export class EvalCommand extends Command<EvalCommandReturn> {
   constructor(public parameters: EvalCommandParameters) {
     super(parameters);
