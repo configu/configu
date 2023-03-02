@@ -1,4 +1,4 @@
-import { Cfgu, CfguType, Config } from '@configu/ts';
+import { Cfgu, Config } from '@configu/ts';
 import Dotenv from 'dotenv';
 import _ from 'lodash';
 import { analyzeValueType } from './configAnalyzer';
@@ -65,7 +65,7 @@ export const extractConfigs = ({ filePath, fileContent, options = {} }: ExtractC
       key,
       value,
       cfgu: {
-        type: options.analyzeValuesTypes ? analyzeValueType(value) : CfguType.String,
+        type: options.analyzeValuesTypes ? analyzeValueType(value) : 'String',
         ...(options.useValuesAsDefaults && { default: value }),
       },
     };

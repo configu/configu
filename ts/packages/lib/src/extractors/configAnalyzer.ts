@@ -2,15 +2,15 @@ import { CfguType, ConfigSchema } from '@configu/ts';
 
 // * when adding a new type, update typeCheckOrder array
 export const TYPES_CHECK_ORDER: CfguType[] = [
-  CfguType.Number,
-  CfguType.Boolean,
-  CfguType.Email,
-  CfguType.UUID,
-  CfguType.IPv6,
-  CfguType.IPv4,
-  CfguType.SemVer,
-  CfguType.Domain,
-  CfguType.URL,
+  'Number',
+  'Boolean',
+  'Email',
+  'UUID',
+  'IPv6',
+  'IPv4',
+  'SemVer',
+  'Domain',
+  'URL',
   // ! currently its limited to the types above
   // 'Base64',
   // 'Locale',
@@ -26,8 +26,8 @@ export const TYPES_CHECK_ORDER: CfguType[] = [
 export const analyzeValueType = (value: string): CfguType => {
   if (!value) {
     // * handle empty value case
-    return CfguType.String;
+    return 'String';
   }
-  const analyzedType = TYPES_CHECK_ORDER.find((type) => ConfigSchema.validateValueType({ type, value }));
-  return analyzedType ?? CfguType.String;
+  const analyzedType = TYPES_CHECK_ORDER.find((type) => ConfigSchema.CFGU.TESTS.VAL_TYPE[type]({ type, value }));
+  return analyzedType ?? 'String';
 };
