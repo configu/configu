@@ -4,43 +4,43 @@ import path from 'path';
 import { cwd } from 'process';
 import _ from 'lodash';
 import { paramCase } from 'change-case';
-import { ConfigSchemaType, Cfgu, CfguType } from '@configu/ts';
+import { Cfgu, CfguPath } from '@configu/ts';
 import { extractConfigs } from '@configu/lib';
 import { ConfigSchema } from '@configu/node';
 import { BaseCommand } from '../base';
 import { getPathBasename } from '../helpers/utils';
 
-const POPULATED_SCHEMA: Record<string, { [key: string]: Cfgu }> = {
+const POPULATED_SCHEMA: Record<'GET_STARTED' | 'EXAMPLE', { [key: string]: Cfgu }> = {
   GET_STARTED: {
-    GREETING: { type: CfguType.RegEx, pattern: '^(hello|hey|welcome|salute|bonjour)$', default: 'hello' },
-    SUBJECT: { type: CfguType.String, default: 'world' },
+    GREETING: { type: 'RegEx', pattern: '^(hello|hey|welcome|salute|bonjour)$', default: 'hello' },
+    SUBJECT: { type: 'String', default: 'world' },
     MESSAGE: {
-      type: CfguType.String,
+      type: 'String',
       template: '{{GREETING}}, {{SUBJECT}}!',
       description: 'Generates a full greeting message',
     },
   },
   EXAMPLE: {
-    FOO: { type: CfguType.String, default: 'foo', description: 'string example variable' },
-    BAR: { type: CfguType.RegEx, pattern: '^(foo|bar|baz)$', description: 'regex example variable' },
-    BAZ: { type: CfguType.String, template: '{{FOO}} - {{BAR}}', description: 'template example variable' },
+    FOO: { type: 'String', default: 'foo', description: 'string example variable' },
+    BAR: { type: 'RegEx', pattern: '^(foo|bar|baz)$', description: 'regex example variable' },
+    BAZ: { type: 'String', template: '{{FOO}} - {{BAR}}', description: 'template example variable' },
   },
 };
 
-export default class Init extends BaseCommand {
+export default class Init extends BaseCommand<typeof Init> {
   static description = `creates a config schema ${ConfigSchema.CFGU.EXT} file in the current working dir`;
   static examples = [
-    '<%= config.bin %> <%= command.id %> --uid "cli"',
-    '<%= config.bin %> <%= command.id %> --uid "cli" --dir "./src/cli"',
-    '<%= config.bin %> <%= command.id %> --uid "cli" --import "./src/.env" --defaults --types',
+    '<%= config.bin %> <%= command.id %>',
+    '<%= config.bin %> <%= command.id %> --name "cli" --dir "./src/cli"',
+    '<%= config.bin %> <%= command.id %> --import "./src/.env" --defaults --types',
     '<%= config.bin %> <%= command.id %> --example',
   ];
 
   static flags = {
     ...BaseCommand.flags,
-    uid: Flags.string({
+    name: Flags.string({
       description: `overrides the name for the new ${ConfigSchema.CFGU.EXT} file`,
-      aliases: ['id', 'unique-identifier', 'unique-id', 'name'],
+      aliases: ['id', 'uid', 'unique-identifier', 'unique-id'],
       default: paramCase(getPathBasename()),
     }),
     dir: Flags.string({
@@ -57,7 +57,7 @@ export default class Init extends BaseCommand {
     'get-started': Flags.boolean({
       description: `fills the new ${ConfigSchema.CFGU.EXT} file with a get-started example`,
       exclusive: ['uid', 'import', 'example'],
-      aliases: ['quick-start', 'getting-started'],
+      aliases: ['quick-start', 'getting-started', 'hello-world'],
       default: false,
     }),
     example: Flags.boolean({
@@ -81,39 +81,35 @@ export default class Init extends BaseCommand {
     }),
   };
 
-  async getSchemaUid() {
-    const { flags } = await this.parse(Init);
-
-    if (flags['get-started']) {
+  async getSchemaName() {
+    if (this.flags['get-started']) {
       return 'get-started';
     }
-    if (flags.example) {
+    if (this.flags.example) {
       return 'example';
     }
 
-    const hasOverrideUid = flags.uid !== Init.flags.uid.default;
-    if (hasOverrideUid) {
-      return flags.uid;
+    const isOverrideName = this.flags.name !== Init.flags.name.default;
+    if (isOverrideName) {
+      return this.flags.name;
     }
-    return getPathBasename(flags.dir);
+    return getPathBasename(this.flags.dir);
   }
 
   async getSchemaContents(): Promise<{ [key: string]: Cfgu }> {
-    const { flags } = await this.parse(Init);
-
-    if (flags['get-started']) {
+    if (this.flags['get-started']) {
       return POPULATED_SCHEMA.GET_STARTED;
     }
-    if (flags.example) {
+    if (this.flags.example) {
       return POPULATED_SCHEMA.EXAMPLE;
     }
 
-    if (flags.import) {
-      const fileContent = await this.readFile(flags.import);
+    if (this.flags.import) {
+      const fileContent = await this.readFile(this.flags.import);
       const extractedConfigs = extractConfigs({
-        filePath: flags.import,
+        filePath: this.flags.import,
         fileContent,
-        options: { useValuesAsDefaults: flags.defaults, analyzeValuesTypes: flags.types },
+        options: { useValuesAsDefaults: this.flags.defaults, analyzeValuesTypes: this.flags.types },
       });
       return _(extractedConfigs).keyBy('key').mapValues('cfgu').value();
     }
@@ -122,21 +118,20 @@ export default class Init extends BaseCommand {
   }
 
   public async run(): Promise<void> {
-    const { flags } = await this.parse(Init);
-
-    const fileName = await this.getSchemaUid();
-    const fileNameWithExt = `${fileName}${ConfigSchema.CFGU.EXT}.${ConfigSchemaType.JSON}`;
-    const filePath = path.resolve(flags.dir, fileNameWithExt);
+    const fileName = await this.getSchemaName();
+    const fileNameWithExt = `${fileName}${ConfigSchema.CFGU.EXT}.json`;
+    const filePath = path.resolve(this.flags.dir, fileNameWithExt) as CfguPath;
     const fileContentData = await this.getSchemaContents();
     const fileContent = JSON.stringify(fileContentData, null, 2);
 
+    await fs.writeFile(filePath, fileContent, { flag: this.flags.force ? 'w' : 'wx' }); // * https://nodejs.org/api/fs.html#file-system-flags
+
     const schema = new ConfigSchema(filePath);
-    await fs.writeFile(filePath, fileContent, { flag: flags.force ? 'w' : 'wx' }); // * https://nodejs.org/api/fs.html#file-system-flags
     await ConfigSchema.parse(schema);
 
     const recordsCount = _.keys(fileContentData).length;
-    this.log(`${filePath} generated with ${recordsCount} records`);
-    if (flags.types) {
+    this.log(`${filePath} generated with ${recordsCount} records`, 'success');
+    if (this.flags.types) {
       this.log(`please review the result and validate the assigned types`);
     }
   }

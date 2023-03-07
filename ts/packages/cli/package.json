@@ -40,7 +40,7 @@
     ],
     "update": {
       "node": {
-        "version": "16.17.1",
+        "version": "18.14.2",
         "targets": [
           "linux-arm",
           "linux-x64",
@@ -59,7 +59,7 @@
     }
   },
   "engines": {
-    "node": "=16.17.1"
+    "node": ">=v16.0.0"
   },
   "exports": "./build/index.js",
   "types": "./build/index.d.ts",
@@ -77,41 +77,39 @@
     "configu-cli"
   ],
   "dependencies": {
-    "@aws-sdk/client-lambda": "^3.234.0",
-    "@azure/arm-appservice": "^13.0.3",
-    "@azure/identity": "^3.1.2",
-    "@configu/lib": "0.4.2",
-    "@configu/node": "0.9.1",
-    "@configu/ts": "0.9.1",
-    "@google-cloud/functions": "^2.2.3",
-    "@oclif/core": "^1.22.0",
-    "@oclif/plugin-autocomplete": "^1.3.8",
-    "@oclif/plugin-help": "^5.1.20",
-    "@oclif/plugin-not-found": "^2.3.11",
-    "@oclif/plugin-plugins": "^2.1.9",
-    "@oclif/plugin-update": "^3.0.9",
-    "@oclif/plugin-version": "^1.1.3",
-    "axios": "^0.27.2",
+    "@configu/lib": "^0.5.0-next.1",
+    "@configu/node": "^0.10.0-next.29",
+    "@configu/ts": "^0.10.0-next.29",
+    "@oclif/core": "^2.4.0",
+    "@oclif/plugin-autocomplete": "^2.1.4",
+    "@oclif/plugin-help": "^5.2.7",
+    "@oclif/plugin-not-found": "^2.3.21",
+    "@oclif/plugin-plugins": "^2.3.2",
+    "@oclif/plugin-update": "^3.1.6",
+    "@oclif/plugin-version": "^1.2.1",
+    "axios": "^1.3.4",
     "chalk": "4.1.2",
     "change-case": "^4.1.2",
-    "ci-info": "^3.7.0",
+    "ci-info": "^3.8.0",
     "dotenv": "^16.0.3",
     "fuzzy": "^0.1.3",
     "inquirer": "8.2.5",
     "inquirer-autocomplete-prompt": "2.0.0",
     "lodash": "^4.17.21",
-    "openid-client": "^5.3.1"
+    "log-symbols": "4.1.0",
+    "open": "^8.4.2",
+    "openid-client": "^5.4.0"
   },
   "devDependencies": {
-    "@oclif/test": "^2.2.16",
+    "@oclif/test": "^2.3.9",
     "@types/inquirer": "8.2.5",
     "@types/inquirer-autocomplete-prompt": "3.0.0",
     "@types/lodash": "^4.14.191",
-    "aws-sdk": "^2.1278.0",
+    "aws-sdk": "^2.1328.0",
     "eslint-config-oclif": "^4.0.0",
     "eslint-config-oclif-typescript": "^1.0.3",
     "globby": "11.0.4",
-    "oclif": "^3.4.2",
-    "tslib": "^2.4.1"
+    "oclif": "^3.7.0",
+    "tslib": "^2.5.0"
   }
 }

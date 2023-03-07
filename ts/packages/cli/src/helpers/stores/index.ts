@@ -1,7 +1,8 @@
+import querystring from 'querystring';
 import _, { Dictionary } from 'lodash';
 import inquirer from 'inquirer';
 import fuzzy from 'fuzzy';
-import { CS, ConfigStore } from '@configu/ts';
+import { ConfigStore } from '@configu/ts';
 import { StoreType, STORE_CONFIGURATION, STORE_LABEL } from '@configu/lib';
 import {
   NoopStore,
@@ -23,15 +24,16 @@ import {
 import { defaultInteractiveSession } from './default';
 import { configuInteractiveSession } from './Configu';
 
-const TYPE_TO_STORE: Record<StoreType, (configuration: Dictionary<string>) => ConfigStore> = {
+// todo: change "any" here!
+const TYPE_TO_STORE: Record<StoreType, (configuration: any) => ConfigStore> = {
   noop: () => new NoopStore(),
   'in-memory': () => new InMemoryStore(),
-  configu: ({ org, token, type, endpoint }) => {
-    if (type !== 'Token' && type !== 'Bearer') {
-      throw new Error(`invalid type, can be either "Token" or "Bearer"`);
-    }
+  configu: ({ org, token, endpoint }) => {
+    // if (type && type !== 'Token' && type !== 'Bearer') {
+    //   throw new Error(`invalid type, can be either "Token" or "Bearer"`);
+    // }
     return new ConfiguStore({
-      credentials: { org, token, type },
+      credentials: { org, token },
       source: 'cli',
       endpoint,
     });
@@ -82,7 +84,7 @@ type ConstructStoreReturnType = {
 };
 
 export const constructStoreFromConnectionString = (storeConnectionString: string): ConstructStoreReturnType => {
-  const parsedCS = CS.parse(storeConnectionString);
+  const parsedCS = querystring.parse(storeConnectionString, ';');
   const { store, ...restConfiguration } = parsedCS;
 
   if (typeof store !== 'string') {
@@ -110,7 +112,7 @@ export const constructStoreFromConnectionString = (storeConnectionString: string
 
   return {
     type: store,
-    connectionString: CS.serialize({ store, ...storeConfiguration }),
+    connectionString: querystring.stringify({ store, ...storeConfiguration }, ';'),
     store: constructStoreFunction(storeConfiguration),
   };
 };
@@ -145,7 +147,7 @@ export const constructStoreFromInteractiveSession = async (
 
   return {
     type: store,
-    connectionString: CS.serialize({ store, ...storeConfiguration }),
+    connectionString: querystring.stringify({ store, ...storeConfiguration }, ';'),
     store: constructStoreFunction(storeConfiguration),
   };
 };

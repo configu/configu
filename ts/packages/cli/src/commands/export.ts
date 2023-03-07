@@ -1,50 +1,37 @@
-import { Flags } from '@oclif/core';
+import { Flags, ux } from '@oclif/core';
+import querystring from 'querystring';
+import { cwd } from 'process';
+import { spawnSync } from 'child_process';
 import _ from 'lodash';
-import { paramCase } from 'change-case';
-import { EvaluatedConfigs, EvaluatedConfigsArray, TMPL } from '@configu/ts';
-import { ConfigSet, ConfigSchema, EvalCommand } from '@configu/node';
-import {
-  CONFIG_FORMAT_TYPE,
-  formatConfigs,
-  ConfigFormat,
-  CONFIG_SYNCHRONIZER_TYPE,
-  ConfigSynchronizer,
-} from '@configu/lib';
+import { TMPL, EvaluatedConfigs, EvalCommandParameters, CfguPath, EvalCommandConfigsParameter } from '@configu/ts';
+import { ConfigSet, ConfigSchema, NoopStore, EvalCommand } from '@configu/node';
+import { CONFIG_FORMAT_TYPE, formatConfigs, ConfigFormat } from '@configu/lib';
 import { BaseCommand } from '../base';
 import { constructStoreFromConnectionString } from '../helpers/stores';
-import { SYNCHRONIZERS_FLAGS_DICT, syncIntegration } from '../helpers/synchronizers';
 
 export const NO_CONFIGS_WARNING_TEXT = 'no configuration was fetched';
 export const CONFIG_EXPORT_RUN_DEFAULT_ERROR_TEXT = 'could not export configurations';
-export default class Export extends BaseCommand {
+
+type TemplateContext = { [key: string]: string } | { key: string; value: string }[];
+
+export default class Export extends BaseCommand<typeof Export> {
   static description = 'exports configurations on demand and in multiple forms';
 
   static examples = [
-    '<%= config.bin %> <%= command.id %> --store "configu" --store "secrets" --set "prod" --schema "./node-srv.cfgu.json" --format "Dotenv"',
-    '<%= config.bin %> <%= command.id %> --schema "./node-srv.cfgu.json" --defaults --no-empty',
+    '<%= config.bin %> <%= command.id %> --from "store=configu;set=production;schema=./get-started.cfgu.json" --from "store=configu;set=my-service;schema=./my-service.cfgu.json;K=V" --config "K=V" --format "Dotenv"',
+    '<%= config.bin %> <%= command.id %> --from "schema=./node-srv.cfgu.json" --no-empty',
   ];
 
   static flags = {
-    store: Flags.string({
-      description: 'config-stores to fetch configurations from',
-      exclusive: ['defaults'],
-      multiple: true,
-      default: [],
-    }),
-    defaults: Flags.boolean({
-      description: 'only use the defaults property from the schema to export configurations',
-      exclusive: ['store'],
-      aliases: ['use-defaults'],
-    }),
-
-    set: Flags.string({
-      description: 'hierarchy of the configs',
-      default: '',
-    }),
-    schema: Flags.string({
-      description: 'path to a <schema>.cfgu.[json|yaml] files',
+    from: Flags.string({
+      description: 'connection string to fetch configurations from',
       required: true,
       multiple: true,
+    }),
+    config: Flags.string({
+      description: 'key=value pairs to override fetched configurations',
+      multiple: true,
+      char: 'c',
     }),
 
     label: Flags.string({
@@ -56,16 +43,22 @@ export default class Export extends BaseCommand {
       allowNo: true,
     }),
 
+    explain: Flags.boolean({
+      description: 'outputs metadata on the exported configurations',
+      aliases: ['report'],
+      exclusive: ['format', 'template', 'source', 'run'],
+    }),
+
     format: Flags.string({
       description:
         'format configurations to some common configurations formats. (redirect the output to file, if needed)',
       options: CONFIG_FORMAT_TYPE,
-      exclusive: ['template', 'source', 'sync'],
+      exclusive: ['explain', 'template', 'source', 'run'],
     }),
 
     template: Flags.string({
       description: 'path to a mustache based template to inject configurations into',
-      exclusive: ['format', 'source', 'sync'],
+      exclusive: ['explain', 'format', 'source', 'run'],
     }),
     'template-input': Flags.string({
       description: 'inject configurations to template as object or array or formatted string',
@@ -73,25 +66,20 @@ export default class Export extends BaseCommand {
       dependsOn: ['template'],
     }),
 
-    // * https://medium.com/@charles.wautier/pipe-a-dotenv-in-a-process-with-the-shell-f9c663ff99a0
-    // * (set -a; source .env; set +a; the command)
-    // * https://docs.doppler.com/docs/accessing-secrets#how-do-i-export-doppler-secrets-into-the-current-shell
     // * (set -a; source <(configu export ... --source); set +a && the command)
     source: Flags.boolean({
       description: 'source configurations to the current shell',
-      exclusive: ['format', 'template', 'sync'],
+      exclusive: ['explain', 'format', 'template', 'run'],
     }),
 
-    sync: Flags.string({
-      description: 'syncs configurations to a 3rd party runtime environment',
-      options: CONFIG_SYNCHRONIZER_TYPE,
-      exclusive: ['format', 'template', 'source'],
+    run: Flags.string({
+      description: 'spawns executable as child-process and passes configurations as environment variables',
+      exclusive: ['explain', 'format', 'template', 'source'],
     }),
-    ...SYNCHRONIZERS_FLAGS_DICT,
   };
 
   printStdout(finalConfigData: string) {
-    this.log(finalConfigData, 'stdout');
+    this.log(finalConfigData, undefined, 'stdout');
   }
 
   async exportConfigs(configs: EvaluatedConfigs, label: string) {
@@ -99,12 +87,11 @@ export default class Export extends BaseCommand {
       this.warn(NO_CONFIGS_WARNING_TEXT);
       return;
     }
-    const { flags } = await this.parse(Export);
 
-    if (flags.template) {
-      const templateContent = await this.readFile(flags.template);
-      let templateContext: EvaluatedConfigs | EvaluatedConfigsArray = configs;
-      if (flags['template-input'] === 'array') {
+    if (this.flags.template) {
+      const templateContent = await this.readFile(this.flags.template);
+      let templateContext: TemplateContext = configs;
+      if (this.flags['template-input'] === 'array') {
         templateContext = _(configs)
           .entries()
           .map(([key, value]) => ({
@@ -118,61 +105,107 @@ export default class Export extends BaseCommand {
       return;
     }
 
-    if (flags.source) {
+    if (this.flags.source) {
       const formattedConfigs = formatConfigs({ format: 'Dotenv', json: configs, label, wrap: true });
       this.printStdout(formattedConfigs);
       return;
     }
 
-    if (flags.sync) {
-      await syncIntegration({ synchronizer: flags.sync as ConfigSynchronizer, configs, flags });
+    if (this.flags.run) {
+      spawnSync(this.flags.run, {
+        cwd: cwd(),
+        stdio: 'inherit',
+        env: { ...configs, ...process.env },
+        shell: true,
+      });
       return;
     }
 
     const formattedConfigs = formatConfigs({
-      format: (flags.format as ConfigFormat) ?? 'JSON',
+      format: (this.flags.format as ConfigFormat) ?? 'JSON',
       json: configs,
       label,
     });
     this.printStdout(formattedConfigs);
   }
 
+  async constructEvalCommandParameters(): Promise<EvalCommandParameters> {
+    const fromPromises = this.flags.from.map(async (fromFlag, idx) => {
+      const { store, set, schema, ...configs } = querystring.parse(fromFlag, ';');
+      if (typeof schema !== 'string') {
+        throw new Error(`schema is missing at --from[${idx}]`);
+      }
+
+      Object.entries(configs).forEach(([key, value]) => {
+        if (typeof value !== 'string') {
+          throw new Error(`config value is missing at --from[${idx}].${key}`);
+        }
+      });
+
+      // console.log(store, typeof set, schema, configs);
+      if (typeof store === 'string' && (typeof set === 'string' || typeof set === 'undefined')) {
+        const storeCS = this.config.configData.stores?.[store] ?? store;
+        const { store: storeInstance } = await constructStoreFromConnectionString(storeCS);
+        return {
+          store: storeInstance,
+          set: new ConfigSet(set),
+          schema: new ConfigSchema(schema as CfguPath),
+          configs: configs as EvalCommandConfigsParameter,
+        };
+      }
+
+      return {
+        store: new NoopStore(),
+        set: new ConfigSet(),
+        schema: new ConfigSchema(schema as CfguPath),
+        configs: configs as EvalCommandConfigsParameter,
+      };
+    });
+
+    const from = await Promise.all(fromPromises);
+    const configs = _(this.flags.config)
+      .map((pair, idx) => {
+        const [key, value] = pair.split('=');
+        if (!key) {
+          throw new Error(`config value is missing at --config[${idx}]`);
+        }
+        return { key, value: value ?? '' };
+      })
+      .keyBy('key')
+      .mapValues('value')
+      .value();
+
+    return { from, configs };
+  }
+
   public async run(): Promise<void> {
-    const { flags } = await this.parse(Export);
+    const evalCommandParameters = await this.constructEvalCommandParameters();
+    const evalCommandReturn = await new EvalCommand(evalCommandParameters).run();
 
-    if (flags.defaults) {
-      flags.store = ['store=noop'];
-      flags.set = '';
+    if (this.flags.explain) {
+      const data = _(evalCommandReturn.metadata)
+        .values()
+        .map(({ key, value, result: { from } }) => ({
+          key,
+          value,
+          source: from.source,
+          which: from.which,
+        }))
+        .value();
+      ux.table(data, {
+        key: { header: 'Key' },
+        value: { header: 'Value' },
+        source: { header: 'Source' },
+        which: { header: 'Which' },
+      });
+      return;
     }
 
-    if (_.isEmpty(flags.store)) {
-      throw new Error('missing required flag store');
+    let { result } = evalCommandReturn;
+    if (!this.flags.empty) {
+      result = _.omitBy(result, (v) => v === '');
     }
-
-    const storePromises = flags.store.map(async (storeFlag) => {
-      const storeCS = this.config.configData.stores?.[storeFlag] ?? storeFlag;
-      const { store } = await constructStoreFromConnectionString(storeCS);
-      return store;
-    });
-    const store = await Promise.all(storePromises);
-
-    const set = new ConfigSet(flags.set);
-    const schema = flags.schema.map((schemaFlag) => {
-      return new ConfigSchema(schemaFlag);
-    });
-
-    let { data } = await new EvalCommand({
-      store,
-      set,
-      schema,
-    }).run();
-
-    if (!flags.empty) {
-      data = _.omitBy(data, (v) => v === '');
-    }
-
-    const label = flags.label ?? paramCase(`${set.path} ${_.map(schema, 'name')}`);
-
-    await this.exportConfigs(data, label);
+    const label = this.flags.label ?? this.flags.from.join('>');
+    await this.exportConfigs(result, label);
   }
 }

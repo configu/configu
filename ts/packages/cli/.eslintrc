@@ -7,6 +7,7 @@
     "../../.eslintrc"
   ],
   "rules": {
+    "no-use-before-define":"warn"
     // "unicorn/filename-case": "off",
     // "unicorn/no-array-for-each": "off",
     // "unicorn/no-array-reduce": "off",

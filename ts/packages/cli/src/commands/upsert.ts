@@ -1,12 +1,12 @@
 import { Flags } from '@oclif/core';
 import _ from 'lodash';
-import { EvaluatedConfigsArray } from '@configu/ts';
 import { ConfigSet, ConfigSchema, UpsertCommand } from '@configu/node';
 import { extractConfigs } from '@configu/lib';
+import { CfguPath, UpsertCommandParameters } from '@configu/ts';
 import { BaseCommand } from '../base';
 import { constructStoreFromConnectionString } from '../helpers/stores';
 
-export default class Upsert extends BaseCommand {
+export default class Upsert extends BaseCommand<typeof Upsert> {
   static description = 'creates, updates or deletes configs from a store';
 
   static examples = [
@@ -23,7 +23,7 @@ export default class Upsert extends BaseCommand {
       required: true,
     }),
     schema: Flags.string({
-      description: 'path to a <schema>.cfgu.[json|yaml] file',
+      description: 'path to a <schema>.cfgu.[json] file',
       required: true,
     }),
 
@@ -40,18 +40,16 @@ export default class Upsert extends BaseCommand {
   };
 
   public async run(): Promise<void> {
-    const { flags } = await this.parse(Upsert);
-
-    const storeCS = this.config.configData.stores?.[flags.store] ?? flags.store;
+    const storeCS = this.config.configData.stores?.[this.flags.store] ?? this.flags.store;
     const { store } = await constructStoreFromConnectionString(storeCS);
 
-    const set = new ConfigSet(flags.set);
-    const schema = new ConfigSchema(flags.schema);
+    const set = new ConfigSet(this.flags.set);
+    const schema = new ConfigSchema(this.flags.schema as CfguPath); // todo: remove CfguPath as it enforced in constructor
 
-    let configs: EvaluatedConfigsArray = [];
+    let configs: UpsertCommandParameters['configs'] = []; // todo: change type {[key: string]: string}
 
-    if (flags.config) {
-      configs = flags.config.map((pair) => {
+    if (this.flags.config) {
+      configs = this.flags.config.map((pair) => {
         const [key, ...rest] = pair.split('=');
         const value = rest.join('='); // * ...rest and join used here to handle reference-value formed as connection-string
         if (!key) {
@@ -61,10 +59,10 @@ export default class Upsert extends BaseCommand {
       });
     }
 
-    if (flags.import) {
-      const fileContent = await this.readFile(flags.import);
+    if (this.flags.import) {
+      const fileContent = await this.readFile(this.flags.import);
       const extractedConfigs = extractConfigs({
-        filePath: flags.import,
+        filePath: this.flags.import,
         fileContent,
       });
       configs = extractedConfigs.map((ex) => _.pick(ex, ['key', 'value']));
