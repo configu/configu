@@ -10,7 +10,7 @@ export type UpsertCommandParameters = {
   store: ConfigStore;
   set: ConfigSet;
   schema: ConfigSchema;
-  configs: { key: string; value?: string }[];
+  configs: { [key: string]: string };
 };
 
 export class UpsertCommand extends Command<void> {
@@ -27,7 +27,8 @@ export class UpsertCommand extends Command<void> {
     const schemaContents = await ConfigSchema.parse(schema);
 
     const upsertConfigs = _(configs)
-      .map<Config>(({ key, value = '' }, idx) => {
+      .entries()
+      .map<Config>(([key, value]) => {
         const cfgu = schemaContents[key];
 
         if (!cfgu) {

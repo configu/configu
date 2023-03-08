@@ -3,7 +3,7 @@ import validator from 'validator';
 import { IConfigSchema, ConfigSchemaType, Cfgu, CfguType, Convert } from './types';
 import { ERR, NAME, TMPL } from './utils';
 
-export type CfguPath = `${string}.cfgu.${ConfigSchemaType}`;
+type CfguPath = `${string}.cfgu.${ConfigSchemaType}`;
 
 export abstract class ConfigSchema implements IConfigSchema {
   static CFGU: {
@@ -61,11 +61,11 @@ export abstract class ConfigSchema implements IConfigSchema {
   };
 
   static TYPES = ['json'];
-  static EXT = `.<${ConfigSchema.TYPES.join('|')}>`;
+  static EXT = ConfigSchema.TYPES.map((type) => `${ConfigSchema.CFGU.EXT}.${type}`);
 
   public readonly type: ConfigSchemaType;
 
-  constructor(public readonly path: CfguPath) {
+  constructor(public readonly path: string) {
     const scopeLocation = [`ConfigSchema`, `constructor`];
     const splittedPath = path.split('.');
 
@@ -74,7 +74,7 @@ export abstract class ConfigSchema implements IConfigSchema {
       throw new Error(
         ERR(`invalid path "${path}"`, {
           location: scopeLocation,
-          suggestion: `path extension must be ${ConfigSchema.EXT}`,
+          suggestion: `path extension must be ${ConfigSchema.EXT.join('|')}`,
         }),
       );
     }
@@ -85,7 +85,7 @@ export abstract class ConfigSchema implements IConfigSchema {
       throw new Error(
         ERR(`invalid path "${path}"`, {
           location: scopeLocation,
-          suggestion: `path extension must be ${ConfigSchema.CFGU.EXT}${ConfigSchema.EXT}`,
+          suggestion: `path extension must be ${ConfigSchema.EXT.join('|')}`,
         }),
       );
     }
@@ -150,16 +150,17 @@ export abstract class ConfigSchema implements IConfigSchema {
           );
         }
 
-        const isInvalidTemplate =
-          cfgu.template && TMPL.parse(cfgu.template).some((exp) => exp.type === 'name' && !NAME(exp.key));
-        if (isInvalidTemplate) {
-          throw new Error(
-            ERR(`invalid template property`, {
-              location: [...scopeLocation, key, 'template'],
-              suggestion: `template is invalid or contain reserved words`,
-            }),
-          );
-        }
+        // todo: this is a "weak" validation and NAME() util collides with CONFIGU_SET.[prop]
+        // const isInvalidTemplate =
+        //   cfgu.template && TMPL.parse(cfgu.template).some((exp) => exp.type === 'name' && !NAME(exp.key));
+        // if (isInvalidTemplate) {
+        //   throw new Error(
+        //     ERR(`invalid template property`, {
+        //       location: [...scopeLocation, key, 'template'],
+        //       suggestion: `template is invalid or contain reserved words`,
+        //     }),
+        //   );
+        // }
       });
 
     return schemaContents;

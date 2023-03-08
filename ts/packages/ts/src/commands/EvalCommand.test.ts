@@ -3,7 +3,10 @@ import {
   ConfigSet,
   ConfigSchema as BaseConfigSchema,
   UpsertCommand,
+  UpsertCommandParameters,
   EvalCommand,
+  EvalCommandParameters,
+  EvaluatedConfigs,
   DeleteCommand,
 } from '..';
 import { Cfgu, Convert } from '../types/generated';
@@ -52,7 +55,11 @@ describe(`EvalCommand`, () => {
   });
 
   describe(`EvalCommand`, () => {
-    test.each([
+    test.each<{
+      name: string;
+      parameters: { upsert: UpsertCommandParameters[]; eval: EvalCommandParameters };
+      expected: EvaluatedConfigs | string;
+    }>([
       {
         name: '[ store1 ⋅ set1 ⋅ schema1 ]',
         parameters: {
@@ -61,15 +68,26 @@ describe(`EvalCommand`, () => {
               store: store1,
               set: set1,
               schema: schema1,
-              configs: [
-                { key: 'K12', value: '4' },
-                { key: 'K13', value: 'test' },
-              ],
+              configs: {
+                K12: '4',
+                K13: 'test',
+              },
             },
           ],
           eval: { from: [{ store: store1, set: set1, schema: schema1 }] },
         },
         expected: { K11: 'true', K12: '4', K13: 'test' },
+      },
+      {
+        name: '[ store2 ⋅ set2 ⋅ schema2 ] - override',
+        parameters: {
+          upsert: [],
+          eval: {
+            from: [{ store: store2, set: set2, schema: schema2, configs: { K21: 'baz' } }],
+            configs: { K22: 'test' },
+          },
+        },
+        expected: { K21: 'baz', K22: 'test' },
       },
       {
         name: '[ store1 ⋅ set1 ⋅ schema1 ] - fail required',
@@ -79,7 +97,7 @@ describe(`EvalCommand`, () => {
               store: store1,
               set: set1,
               schema: schema1,
-              configs: [{ key: 'K12', value: '7' }],
+              configs: { K12: '7' },
             },
           ],
           eval: { from: [{ store: store1, set: set1, schema: schema1 }] },
@@ -94,7 +112,7 @@ describe(`EvalCommand`, () => {
               store: store1,
               set: set1,
               schema: schema1,
-              configs: [{ key: 'K13', value: 'test' }],
+              configs: { K13: 'test' },
             },
           ],
           eval: { from: [{ store: store1, set: set1, schema: schema1 }] },
@@ -109,16 +127,18 @@ describe(`EvalCommand`, () => {
               store: store1,
               set: set1,
               schema: schema1,
-              configs: [
-                { key: 'K12', value: '4' },
-                { key: 'K13', value: 'test' },
-              ],
+              configs: {
+                K12: '4',
+                K13: 'test',
+              },
             },
             {
               store: store1,
               set: set2,
               schema: schema1,
-              configs: [{ key: 'K12', value: '7' }],
+              configs: {
+                K12: '7',
+              },
             },
           ],
           eval: {
@@ -138,17 +158,19 @@ describe(`EvalCommand`, () => {
               store: store1,
               set: set1,
               schema: schema1,
-              configs: [
-                { key: 'K11', value: 'false' },
-                { key: 'K12', value: '4' },
-                { key: 'K13', value: 'test' },
-              ],
+              configs: {
+                K11: 'false',
+                K12: '4',
+                K13: 'test',
+              },
             },
             {
               store: store1,
               set: set1,
               schema: schema2,
-              configs: [{ key: 'K21', value: 'foo' }],
+              configs: {
+                K21: 'foo',
+              },
             },
           ],
           eval: {

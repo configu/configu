@@ -41,7 +41,7 @@ type EvalScope = {
 
 export type EvalCommandReturn = {
   result: { [key: string]: string };
-  metadata: { [key: string]: Pick<Config, 'key' | 'value'> & Pick<ConfigEvalScope, 'cfgu' | 'result'> };
+  metadata: { [key: string]: Pick<Config, 'key' | 'value'> & ConfigEvalScope };
 };
 
 export type EvaluatedConfigs = EvalCommandReturn['result'];
@@ -178,7 +178,7 @@ export class EvalCommand extends Command<EvalCommandReturn> {
 
     // evaluate templates until done with all of them or can't render (e.g. because of reference loop etc..)
     const templateKeys = _(evalScope)
-      .pickBy((current) => current.cfgu.template)
+      .pickBy((current) => current.result.from.source === 'schema-template')
       .keys()
       .value();
     const renderContext = _.mapValues(evalScope, (current) => current.result.value);
@@ -286,8 +286,7 @@ export class EvalCommand extends Command<EvalCommandReturn> {
       metadata: _.mapValues(evalScope, (current) => ({
         key: current.context.key,
         value: current.result.value,
-        cfgu: current.cfgu,
-        result: current.result,
+        ...current,
       })),
     };
   }
