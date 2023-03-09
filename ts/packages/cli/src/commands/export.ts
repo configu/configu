@@ -3,11 +3,11 @@ import querystring from 'querystring';
 import { cwd } from 'process';
 import { spawnSync } from 'child_process';
 import _ from 'lodash';
-import { TMPL, EvaluatedConfigs, EvalCommandParameters, CfguPath, EvalCommandConfigsParameter } from '@configu/ts';
+import { TMPL, EvaluatedConfigs, EvalCommandParameters, EvalCommandConfigsParameter } from '@configu/ts';
 import { ConfigSet, ConfigSchema, NoopStore, EvalCommand } from '@configu/node';
 import { CONFIG_FORMAT_TYPE, formatConfigs, ConfigFormat } from '@configu/lib';
 import { BaseCommand } from '../base';
-import { constructStoreFromConnectionString } from '../helpers/stores';
+import { constructStoreFromConnectionString, reduceConfigFlag } from '../helpers';
 
 export const NO_CONFIGS_WARNING_TEXT = 'no configuration was fetched';
 export const CONFIG_EXPORT_RUN_DEFAULT_ERROR_TEXT = 'could not export configurations';
@@ -142,14 +142,13 @@ export default class Export extends BaseCommand<typeof Export> {
         }
       });
 
-      // console.log(store, typeof set, schema, configs);
       if (typeof store === 'string' && (typeof set === 'string' || typeof set === 'undefined')) {
         const storeCS = this.config.configData.stores?.[store] ?? store;
         const { store: storeInstance } = await constructStoreFromConnectionString(storeCS);
         return {
           store: storeInstance,
           set: new ConfigSet(set),
-          schema: new ConfigSchema(schema as CfguPath),
+          schema: new ConfigSchema(schema),
           configs: configs as EvalCommandConfigsParameter,
         };
       }
@@ -157,23 +156,13 @@ export default class Export extends BaseCommand<typeof Export> {
       return {
         store: new NoopStore(),
         set: new ConfigSet(),
-        schema: new ConfigSchema(schema as CfguPath),
+        schema: new ConfigSchema(schema),
         configs: configs as EvalCommandConfigsParameter,
       };
     });
 
     const from = await Promise.all(fromPromises);
-    const configs = _(this.flags.config)
-      .map((pair, idx) => {
-        const [key, value] = pair.split('=');
-        if (!key) {
-          throw new Error(`config value is missing at --config[${idx}]`);
-        }
-        return { key, value: value ?? '' };
-      })
-      .keyBy('key')
-      .mapValues('value')
-      .value();
+    const configs = reduceConfigFlag(this.flags.config);
 
     return { from, configs };
   }

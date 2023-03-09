@@ -4,11 +4,11 @@ import path from 'path';
 import { cwd } from 'process';
 import _ from 'lodash';
 import { paramCase } from 'change-case';
-import { Cfgu, CfguPath } from '@configu/ts';
+import { Cfgu } from '@configu/ts';
 import { extractConfigs } from '@configu/lib';
 import { ConfigSchema } from '@configu/node';
 import { BaseCommand } from '../base';
-import { getPathBasename } from '../helpers/utils';
+import { getPathBasename } from '../helpers';
 
 const POPULATED_SCHEMA: Record<'GET_STARTED' | 'EXAMPLE', { [key: string]: Cfgu }> = {
   GET_STARTED: {
@@ -120,7 +120,7 @@ export default class Init extends BaseCommand<typeof Init> {
   public async run(): Promise<void> {
     const fileName = await this.getSchemaName();
     const fileNameWithExt = `${fileName}${ConfigSchema.CFGU.EXT}.json`;
-    const filePath = path.resolve(this.flags.dir, fileNameWithExt) as CfguPath;
+    const filePath = path.resolve(this.flags.dir, fileNameWithExt);
     const fileContentData = await this.getSchemaContents();
     const fileContent = JSON.stringify(fileContentData, null, 2);
 

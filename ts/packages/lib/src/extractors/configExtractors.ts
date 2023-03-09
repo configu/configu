@@ -44,7 +44,11 @@ type ExtractConfigParameters = {
 };
 type ExtractedConfig = Pick<Config, 'key' | 'value'> & { cfgu: Pick<Cfgu, 'type' | 'default'> };
 
-export const extractConfigs = ({ filePath, fileContent, options = {} }: ExtractConfigParameters): ExtractedConfig[] => {
+export const extractConfigs = ({
+  filePath,
+  fileContent,
+  options = {},
+}: ExtractConfigParameters): Record<string, ExtractedConfig> => {
   if (!fileContent) {
     throw new Error('cannot import an empty file');
   }
@@ -60,7 +64,7 @@ export const extractConfigs = ({ filePath, fileContent, options = {} }: ExtractC
 
   const rawExtractedConfig = extractor?.({ content: fileContent }) ?? {};
 
-  const configs = Object.entries(rawExtractedConfig).map(([key, value]) => {
+  const configs = _.mapValues(rawExtractedConfig, (value, key) => {
     return {
       key,
       value,

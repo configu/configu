@@ -2,9 +2,9 @@ import { Flags } from '@oclif/core';
 import _ from 'lodash';
 import { ConfigSet, ConfigSchema, UpsertCommand } from '@configu/node';
 import { extractConfigs } from '@configu/lib';
-import { CfguPath, UpsertCommandParameters } from '@configu/ts';
+import { UpsertCommandParameters } from '@configu/ts';
 import { BaseCommand } from '../base';
-import { constructStoreFromConnectionString } from '../helpers/stores';
+import { constructStoreFromConnectionString, reduceConfigFlag } from '../helpers';
 
 export default class Upsert extends BaseCommand<typeof Upsert> {
   static description = 'creates, updates or deletes configs from a store';
@@ -44,19 +44,12 @@ export default class Upsert extends BaseCommand<typeof Upsert> {
     const { store } = await constructStoreFromConnectionString(storeCS);
 
     const set = new ConfigSet(this.flags.set);
-    const schema = new ConfigSchema(this.flags.schema as CfguPath); // todo: remove CfguPath as it enforced in constructor
+    const schema = new ConfigSchema(this.flags.schema);
 
-    let configs: UpsertCommandParameters['configs'] = []; // todo: change type {[key: string]: string}
+    let configs: UpsertCommandParameters['configs'] = {};
 
     if (this.flags.config) {
-      configs = this.flags.config.map((pair) => {
-        const [key, ...rest] = pair.split('=');
-        const value = rest.join('='); // * ...rest and join used here to handle reference-value formed as connection-string
-        if (!key) {
-          throw new Error('invalid config flag');
-        }
-        return { key, value };
-      });
+      configs = reduceConfigFlag(this.flags.config);
     }
 
     if (this.flags.import) {
@@ -65,7 +58,7 @@ export default class Upsert extends BaseCommand<typeof Upsert> {
         filePath: this.flags.import,
         fileContent,
       });
-      configs = extractedConfigs.map((ex) => _.pick(ex, ['key', 'value']));
+      configs = extractedConfigs.map((ex) => _.pick(ex, ['key', 'value'])) as any; // todo: fix extract configs from lib
     }
 
     await new UpsertCommand({

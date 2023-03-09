@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { NAME } from '@configu/ts';
 import { getStoreConnectionStringPlaceholder, StoreType, STORE_TYPE } from '@configu/lib';
 import { BaseCommand } from '../../base';
-import { constructStoreFromConnectionString, constructStoreFromInteractiveSession } from '../../helpers/stores';
+import { constructStoreFromConnectionString, constructStoreFromInteractiveSession } from '../../helpers';
 
 export default class StoreUpsert extends BaseCommand<typeof StoreUpsert> {
   static description = 'creates/updates config-store connections';
