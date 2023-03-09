@@ -111,7 +111,7 @@ export default class Init extends BaseCommand<typeof Init> {
         fileContent,
         options: { useValuesAsDefaults: this.flags.defaults, analyzeValuesTypes: this.flags.types },
       });
-      return _(extractedConfigs).keyBy('key').mapValues('cfgu').value();
+      return _.mapValues(extractedConfigs, 'cfgu');
     }
 
     return {};

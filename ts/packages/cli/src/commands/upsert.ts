@@ -4,7 +4,6 @@ import { ConfigSet, ConfigSchema, UpsertCommand } from '@configu/node';
 import { extractConfigs } from '@configu/lib';
 import { UpsertCommandParameters } from '@configu/ts';
 import { BaseCommand } from '../base';
-import { constructStoreFromConnectionString, reduceConfigFlag } from '../helpers';
 
 export default class Upsert extends BaseCommand<typeof Upsert> {
   static description = 'creates, updates or deletes configs from a store';
@@ -40,16 +39,14 @@ export default class Upsert extends BaseCommand<typeof Upsert> {
   };
 
   public async run(): Promise<void> {
-    const storeCS = this.config.configData.stores?.[this.flags.store] ?? this.flags.store;
-    const { store } = await constructStoreFromConnectionString(storeCS);
-
+    const store = await this.getStoreInstanceByStoreFlag(this.flags.store);
     const set = new ConfigSet(this.flags.set);
     const schema = new ConfigSchema(this.flags.schema);
 
     let configs: UpsertCommandParameters['configs'] = {};
 
     if (this.flags.config) {
-      configs = reduceConfigFlag(this.flags.config);
+      configs = this.reduceConfigFlag(this.flags.config);
     }
 
     if (this.flags.import) {
@@ -58,7 +55,7 @@ export default class Upsert extends BaseCommand<typeof Upsert> {
         filePath: this.flags.import,
         fileContent,
       });
-      configs = extractedConfigs.map((ex) => _.pick(ex, ['key', 'value'])) as any; // todo: fix extract configs from lib
+      configs = _.mapValues(extractedConfigs, 'value');
     }
 
     await new UpsertCommand({

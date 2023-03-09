@@ -1,5 +1,4 @@
 import { Flags, ux } from '@oclif/core';
-import querystring from 'querystring';
 import { cwd } from 'process';
 import { spawnSync } from 'child_process';
 import _ from 'lodash';
@@ -7,7 +6,7 @@ import { TMPL, EvaluatedConfigs, EvalCommandParameters, EvalCommandConfigsParame
 import { ConfigSet, ConfigSchema, NoopStore, EvalCommand } from '@configu/node';
 import { CONFIG_FORMAT_TYPE, formatConfigs, ConfigFormat } from '@configu/lib';
 import { BaseCommand } from '../base';
-import { constructStoreFromConnectionString, reduceConfigFlag } from '../helpers';
+import { CS } from '../helpers';
 
 export const NO_CONFIGS_WARNING_TEXT = 'no configuration was fetched';
 export const CONFIG_EXPORT_RUN_DEFAULT_ERROR_TEXT = 'could not export configurations';
@@ -131,7 +130,7 @@ export default class Export extends BaseCommand<typeof Export> {
 
   async constructEvalCommandParameters(): Promise<EvalCommandParameters> {
     const fromPromises = this.flags.from.map(async (fromFlag, idx) => {
-      const { store, set, schema, ...configs } = querystring.parse(fromFlag, ';');
+      const { store, set, schema, ...configs } = CS.parse(fromFlag);
       if (typeof schema !== 'string') {
         throw new Error(`schema is missing at --from[${idx}]`);
       }
@@ -143,8 +142,7 @@ export default class Export extends BaseCommand<typeof Export> {
       });
 
       if (typeof store === 'string' && (typeof set === 'string' || typeof set === 'undefined')) {
-        const storeCS = this.config.configData.stores?.[store] ?? store;
-        const { store: storeInstance } = await constructStoreFromConnectionString(storeCS);
+        const storeInstance = await this.getStoreInstanceByStoreFlag(store);
         return {
           store: storeInstance,
           set: new ConfigSet(set),
@@ -162,7 +160,7 @@ export default class Export extends BaseCommand<typeof Export> {
     });
 
     const from = await Promise.all(fromPromises);
-    const configs = reduceConfigFlag(this.flags.config);
+    const configs = this.reduceConfigFlag(this.flags.config);
 
     return { from, configs };
   }

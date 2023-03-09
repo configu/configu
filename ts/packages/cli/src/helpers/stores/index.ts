@@ -1,4 +1,3 @@
-import querystring from 'querystring';
 import _, { Dictionary } from 'lodash';
 import inquirer from 'inquirer';
 import fuzzy from 'fuzzy';
@@ -23,6 +22,7 @@ import {
 } from '@configu/node';
 import { defaultInteractiveSession } from './default';
 import { configuInteractiveSession } from './Configu';
+import { CS } from '../utils';
 
 // todo: change "any" here!
 const TYPE_TO_STORE: Record<StoreType, (configuration: any) => ConfigStore> = {
@@ -84,7 +84,7 @@ type ConstructStoreReturnType = {
 };
 
 export const constructStoreFromConnectionString = (storeConnectionString: string): ConstructStoreReturnType => {
-  const parsedCS = querystring.parse(storeConnectionString, ';');
+  const parsedCS = CS.parse(storeConnectionString);
   const { store, ...restConfiguration } = parsedCS;
 
   if (typeof store !== 'string') {
@@ -112,7 +112,7 @@ export const constructStoreFromConnectionString = (storeConnectionString: string
 
   return {
     type: store,
-    connectionString: querystring.stringify({ store, ...storeConfiguration }, ';'),
+    connectionString: CS.serialize({ store, ...storeConfiguration }),
     store: constructStoreFunction(storeConfiguration),
   };
 };
@@ -147,7 +147,7 @@ export const constructStoreFromInteractiveSession = async (
 
   return {
     type: store,
-    connectionString: querystring.stringify({ store, ...storeConfiguration }, ';'),
+    connectionString: CS.serialize({ store, ...storeConfiguration }),
     store: constructStoreFunction(storeConfiguration),
   };
 };

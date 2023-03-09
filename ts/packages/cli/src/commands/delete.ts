@@ -1,7 +1,6 @@
 import { Flags } from '@oclif/core';
 import { ConfigSet, ConfigSchema, DeleteCommand } from '@configu/node';
 import { BaseCommand } from '../base';
-import { constructStoreFromConnectionString } from '../helpers';
 
 export default class Delete extends BaseCommand<typeof Delete> {
   static description = 'deletes configs from a store';
@@ -26,9 +25,7 @@ export default class Delete extends BaseCommand<typeof Delete> {
   };
 
   public async run(): Promise<void> {
-    const storeCS = this.config.configData.stores?.[this.flags.store] ?? this.flags.store;
-    const { store } = await constructStoreFromConnectionString(storeCS);
-
+    const store = await this.getStoreInstanceByStoreFlag(this.flags.store);
     const set = new ConfigSet(this.flags.set);
     const schema = new ConfigSchema(this.flags.schema);
 

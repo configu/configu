@@ -8,6 +8,7 @@ import logSymbols from 'log-symbols';
 import ci from 'ci-info';
 import inquirer from 'inquirer';
 import inquirerPrompt from 'inquirer-autocomplete-prompt';
+import { constructStoreFromConnectionString } from './helpers';
 
 inquirer.registerPrompt('autocomplete', inquirerPrompt);
 
@@ -66,6 +67,32 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
   async writeConfigData() {
     const rawConfigData = JSON.stringify(this.config.configData);
     await fs.writeFile(this.config.configFile, rawConfigData);
+  }
+
+  reduceConfigFlag(configFlag?: string[]) {
+    return _(configFlag)
+      .map((pair, idx) => {
+        const [key, value] = pair.split('=');
+        if (!key) {
+          throw new Error(`config key is missing at --config[${idx}]`);
+        }
+        return { key, value: value ?? '' };
+      })
+      .keyBy('key')
+      .mapValues('value')
+      .value();
+  }
+
+  async getStoreInstanceByStoreFlag(storeFlag?: string) {
+    if (!storeFlag) {
+      throw new Error('--store flag is missing');
+    }
+    const storeCS = this.config.configData.stores?.[storeFlag]; /* ?? storeFlag */
+    if (!storeCS) {
+      throw new Error('--store not found, use "configu store upsert --label to add it');
+    }
+    const { store } = await constructStoreFromConnectionString(storeCS);
+    return store;
   }
 
   public async init(): Promise<void> {
