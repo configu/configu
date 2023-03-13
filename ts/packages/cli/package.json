@@ -77,9 +77,9 @@
     "configu-cli"
   ],
   "dependencies": {
-    "@configu/lib": "^0.5.0-next.2",
-    "@configu/node": "^0.10.0-next.30",
-    "@configu/ts": "^0.10.0-next.30",
+    "@configu/lib": "^0.5.0-next.3",
+    "@configu/node": "^0.10.0-next.31",
+    "@configu/ts": "^0.10.0-next.31",
     "@oclif/core": "^2.6.2",
     "@oclif/plugin-autocomplete": "^2.1.5",
     "@oclif/plugin-help": "^5.2.8",
