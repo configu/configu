@@ -1,22 +1,3 @@
-# To use this code, make sure you
-#
-#     import json
-#
-# and then, to convert JSON from a string, do
-#
-#     result = cfgu_type_from_dict(json.loads(json_string))
-#     result = cfgu_from_dict(json.loads(json_string))
-#     result = config_from_dict(json.loads(json_string))
-#     result = config_schema_type_from_dict(json.loads(json_string))
-#     result = config_schema_from_dict(json.loads(json_string))
-#     result = config_schema_contents_value_from_dict(json.loads(json_string))
-#     result = config_schema_contents_from_dict(json.loads(json_string))
-#     result = config_set_from_dict(json.loads(json_string))
-#     result = config_store_from_dict(json.loads(json_string))
-#     result = config_store_query_from_dict(json.loads(json_string))
-#     result = config_store_contents_element_from_dict(json.loads(json_string))
-#     result = config_store_contents_from_dict(json.loads(json_string))
-
 from enum import Enum
 from typing import Optional, List, Any, Dict, TypeVar, Callable, Type, cast
 
@@ -129,12 +110,18 @@ class Cfgu:
 
     def to_dict(self) -> dict:
         result: dict = {}
-        result["default"] = from_union([from_str, from_none], self.default)
-        result["depends"] = from_union([lambda x: from_list(from_str, x), from_none], self.depends)
-        result["description"] = from_union([from_str, from_none], self.description)
-        result["pattern"] = from_union([from_str, from_none], self.pattern)
-        result["required"] = from_union([from_bool, from_none], self.required)
-        result["template"] = from_union([from_str, from_none], self.template)
+        if self.default is not None:
+            result["default"] = from_union([from_str, from_none], self.default)
+        if self.depends is not None:
+            result["depends"] = from_union([lambda x: from_list(from_str, x), from_none], self.depends)
+        if self.description is not None:
+            result["description"] = from_union([from_str, from_none], self.description)
+        if self.pattern is not None:
+            result["pattern"] = from_union([from_str, from_none], self.pattern)
+        if self.required is not None:
+            result["required"] = from_union([from_bool, from_none], self.required)
+        if self.template is not None:
+            result["template"] = from_union([from_str, from_none], self.template)
         result["type"] = to_enum(CfguType, self.type)
         return result
 
@@ -142,13 +129,11 @@ class Cfgu:
 class Config:
     """A generic representation of a software configuration, aka Config"""
     key: str
-    schema: str
     set: str
     value: str
 
-    def __init__(self, key: str, schema: str, set: str, value: str) -> None:
+    def __init__(self, key: str, set: str, value: str) -> None:
         self.key = key
-        self.schema = schema
         self.set = set
         self.value = value
 
@@ -156,15 +141,13 @@ class Config:
     def from_dict(obj: Any) -> 'Config':
         assert isinstance(obj, dict)
         key = from_str(obj.get("key"))
-        schema = from_str(obj.get("schema"))
         set = from_str(obj.get("set"))
         value = from_str(obj.get("value"))
-        return Config(key, schema, set, value)
+        return Config(key, set, value)
 
     def to_dict(self) -> dict:
         result: dict = {}
         result["key"] = from_str(self.key)
-        result["schema"] = from_str(self.schema)
         result["set"] = from_str(self.set)
         result["value"] = from_str(self.value)
         return result
@@ -172,39 +155,30 @@ class Config:
 
 class ConfigSchemaType(Enum):
     JSON = "json"
-    YAML = "yaml"
 
 
 class ConfigSchema:
-    """An interface of a <uid>.cfgu.[json|yaml] file, aka ConfigSchema
-    that contains binding records between a unique Config <key> and its Cfgu declaration
+    """An interface of a <file>.cfgu.json, aka ConfigSchema
+    that contains binding records between a unique Config.<key> and its Cfgu declaration
     """
-    contents: str
     path: str
     type: ConfigSchemaType
-    uid: str
 
-    def __init__(self, contents: str, path: str, type: ConfigSchemaType, uid: str) -> None:
-        self.contents = contents
+    def __init__(self, path: str, type: ConfigSchemaType) -> None:
         self.path = path
         self.type = type
-        self.uid = uid
 
     @staticmethod
     def from_dict(obj: Any) -> 'ConfigSchema':
         assert isinstance(obj, dict)
-        contents = from_str(obj.get("contents"))
         path = from_str(obj.get("path"))
         type = ConfigSchemaType(obj.get("type"))
-        uid = from_str(obj.get("uid"))
-        return ConfigSchema(contents, path, type, uid)
+        return ConfigSchema(path, type)
 
     def to_dict(self) -> dict:
         result: dict = {}
-        result["contents"] = from_str(self.contents)
         result["path"] = from_str(self.path)
         result["type"] = to_enum(ConfigSchemaType, self.type)
-        result["uid"] = from_str(self.uid)
         return result
 
 
@@ -240,19 +214,25 @@ class ConfigSchemaContentsValue:
 
     def to_dict(self) -> dict:
         result: dict = {}
-        result["default"] = from_union([from_str, from_none], self.default)
-        result["depends"] = from_union([lambda x: from_list(from_str, x), from_none], self.depends)
-        result["description"] = from_union([from_str, from_none], self.description)
-        result["pattern"] = from_union([from_str, from_none], self.pattern)
-        result["required"] = from_union([from_bool, from_none], self.required)
-        result["template"] = from_union([from_str, from_none], self.template)
+        if self.default is not None:
+            result["default"] = from_union([from_str, from_none], self.default)
+        if self.depends is not None:
+            result["depends"] = from_union([lambda x: from_list(from_str, x), from_none], self.depends)
+        if self.description is not None:
+            result["description"] = from_union([from_str, from_none], self.description)
+        if self.pattern is not None:
+            result["pattern"] = from_union([from_str, from_none], self.pattern)
+        if self.required is not None:
+            result["required"] = from_union([from_bool, from_none], self.required)
+        if self.template is not None:
+            result["template"] = from_union([from_str, from_none], self.template)
         result["type"] = to_enum(CfguType, self.type)
         return result
 
 
 class ConfigSet:
     """An interface of a path in an hierarchy, aka ConfigSet
-    that contains Config <value> permutation
+    that uniquely groups Config.<key> with their Config.<value>.
     """
     hierarchy: List[str]
     path: str
@@ -277,7 +257,7 @@ class ConfigSet:
 
 class ConfigStore:
     """An interface of a storage, aka ConfigStore
-    that contains Config records (Config[])
+    that I/Os Config records (Config[])
     """
     type: str
 
@@ -298,39 +278,33 @@ class ConfigStore:
 
 class ConfigStoreQuery:
     key: str
-    schema: str
     set: str
 
-    def __init__(self, key: str, schema: str, set: str) -> None:
+    def __init__(self, key: str, set: str) -> None:
         self.key = key
-        self.schema = schema
         self.set = set
 
     @staticmethod
     def from_dict(obj: Any) -> 'ConfigStoreQuery':
         assert isinstance(obj, dict)
         key = from_str(obj.get("key"))
-        schema = from_str(obj.get("schema"))
         set = from_str(obj.get("set"))
-        return ConfigStoreQuery(key, schema, set)
+        return ConfigStoreQuery(key, set)
 
     def to_dict(self) -> dict:
         result: dict = {}
         result["key"] = from_str(self.key)
-        result["schema"] = from_str(self.schema)
         result["set"] = from_str(self.set)
         return result
 
 
 class ConfigStoreContentsElement:
     key: str
-    schema: str
     set: str
     value: str
 
-    def __init__(self, key: str, schema: str, set: str, value: str) -> None:
+    def __init__(self, key: str, set: str, value: str) -> None:
         self.key = key
-        self.schema = schema
         self.set = set
         self.value = value
 
@@ -338,15 +312,13 @@ class ConfigStoreContentsElement:
     def from_dict(obj: Any) -> 'ConfigStoreContentsElement':
         assert isinstance(obj, dict)
         key = from_str(obj.get("key"))
-        schema = from_str(obj.get("schema"))
         set = from_str(obj.get("set"))
         value = from_str(obj.get("value"))
-        return ConfigStoreContentsElement(key, schema, set, value)
+        return ConfigStoreContentsElement(key, set, value)
 
     def to_dict(self) -> dict:
         result: dict = {}
         result["key"] = from_str(self.key)
-        result["schema"] = from_str(self.schema)
         result["set"] = from_str(self.set)
         result["value"] = from_str(self.value)
         return result

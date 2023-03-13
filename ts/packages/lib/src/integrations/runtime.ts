@@ -1,4 +1,4 @@
-export type ConfigSynchronizer =
+export type Runtime =
   | 'Heroku'
   | 'Vercel'
   | 'Netlify'
@@ -8,7 +8,7 @@ export type ConfigSynchronizer =
   | 'GcpCloudFunctions'
   | 'AwsEcs';
 
-export const CONFIG_SYNCHRONIZER_LABEL: Record<ConfigSynchronizer, string> = {
+export const RUNTIME_LABEL: Record<Runtime, string> = {
   Heroku: 'Heroku',
   Vercel: 'Vercel',
   Netlify: 'Netlify',
@@ -19,7 +19,7 @@ export const CONFIG_SYNCHRONIZER_LABEL: Record<ConfigSynchronizer, string> = {
   AwsEcs: 'AWS ECS',
 };
 
-export const CONFIG_SYNCHRONIZER_WEBSITE: Record<ConfigSynchronizer, string> = {
+export const RUNTIME_WEBSITE: Record<Runtime, string> = {
   Heroku: 'https://www.heroku.com/',
   Vercel: 'https://vercel.com/',
   Netlify: 'https://netlify.com/',
@@ -30,4 +30,4 @@ export const CONFIG_SYNCHRONIZER_WEBSITE: Record<ConfigSynchronizer, string> = {
   AwsEcs: 'https://aws.amazon.com/ecs/',
 };
 
-export const CONFIG_SYNCHRONIZER_TYPE = Object.keys(CONFIG_SYNCHRONIZER_LABEL) as ConfigSynchronizer[];
+export const RUNTIME_TYPE = Object.keys(RUNTIME_LABEL) as Runtime[];

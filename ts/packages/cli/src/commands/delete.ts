@@ -1,15 +1,12 @@
 import { Flags } from '@oclif/core';
 import { ConfigSet, ConfigSchema, DeleteCommand } from '@configu/node';
 import { BaseCommand } from '../base';
-import { constructStoreFromConnectionString } from '../helpers/stores';
 
-export default class Delete extends BaseCommand {
+export default class Delete extends BaseCommand<typeof Delete> {
   static description = 'deletes configs from a store';
 
   static examples = [
-    '<%= config.bin %> <%= command.id %> --store "configu" --set "dev/some-branch"',
-    '<%= config.bin %> <%= command.id %> --store "configu" --schema "./node-srv.cfgu.json"',
-    '<%= config.bin %> <%= command.id %> --store "configu" --set "dev" --schema "./node-srv.cfgu.json"',
+    '<%= config.bin %> <%= command.id %> --store "configu" --set "dev/branch" --schema "./node-srv.cfgu.json"',
   ];
 
   static flags = {
@@ -19,20 +16,18 @@ export default class Delete extends BaseCommand {
     }),
     set: Flags.string({
       description: 'hierarchy of the configs',
+      required: true,
     }),
     schema: Flags.string({
-      description: 'path to a <schema>.cfgu.[json|yaml] file',
+      description: 'path to a <schema>.cfgu.[json] file',
+      required: true,
     }),
   };
 
   public async run(): Promise<void> {
-    const { flags } = await this.parse(Delete);
-
-    const storeCS = this.config.configData.stores?.[flags.store] ?? flags.store;
-    const { store } = await constructStoreFromConnectionString(storeCS);
-
-    const set = flags.set ? new ConfigSet(flags.set) : undefined;
-    const schema = flags.schema ? new ConfigSchema(flags.schema) : undefined;
+    const store = await this.getStoreInstanceByStoreFlag(this.flags.store);
+    const set = new ConfigSet(this.flags.set);
+    const schema = new ConfigSchema(this.flags.schema);
 
     await new DeleteCommand({
       store,

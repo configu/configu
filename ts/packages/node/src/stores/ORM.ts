@@ -62,7 +62,6 @@ export abstract class ORMStore extends ConfigStore {
 
     const adjustedQuery = queries.map((entry) => ({
       ...(entry.set !== '*' && { set: entry.set }),
-      ...(entry.schema !== '*' && { schema: entry.schema }),
       ...(entry.key !== '*' && { key: entry.key }),
     }));
 

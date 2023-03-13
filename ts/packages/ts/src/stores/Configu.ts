@@ -1,8 +1,9 @@
 import axios, { Axios } from 'axios';
+import validator from 'validator';
 import { ConfigStore } from '../ConfigStore';
 import { ConfigStoreQuery, Config } from '../types';
 
-type ConfiguStoreCredentialsConfiguration = { org: string; token: string; type: 'Token' | 'Bearer' };
+type ConfiguStoreCredentialsConfiguration = { org: string; token: string };
 
 type ConfiguStoreConfiguration = {
   credentials: ConfiguStoreCredentialsConfiguration;
@@ -24,11 +25,10 @@ export class ConfiguStore extends ConfigStore {
       responseType: 'json',
     });
 
-    if (credentials.type === 'Token') {
-      this.client.defaults.headers.common[credentials.type] = credentials.token;
-    }
-    if (credentials.type === 'Bearer') {
-      this.client.defaults.headers.common.Authorization = `${credentials.type} ${credentials.token}`;
+    if (validator.isJWT(credentials.token)) {
+      this.client.defaults.headers.common.Authorization = `Bearer ${credentials.token}`;
+    } else {
+      this.client.defaults.headers.common.Token = credentials.token;
     }
   }
 

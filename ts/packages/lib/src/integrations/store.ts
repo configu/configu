@@ -25,7 +25,6 @@ export const STORE_CONFIGURATION: Record<StoreType, Record<string, { required: b
   configu: {
     org: { required: true, env: 'CONFIGU_ORG' },
     token: { required: true, env: 'CONFIGU_TOKEN' },
-    type: { required: true },
     endpoint: { required: false },
   },
   'json-file': {

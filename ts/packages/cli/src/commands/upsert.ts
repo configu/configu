@@ -1,12 +1,11 @@
 import { Flags } from '@oclif/core';
 import _ from 'lodash';
-import { EvaluatedConfigsArray } from '@configu/ts';
 import { ConfigSet, ConfigSchema, UpsertCommand } from '@configu/node';
 import { extractConfigs } from '@configu/lib';
+import { UpsertCommandParameters } from '@configu/ts';
 import { BaseCommand } from '../base';
-import { constructStoreFromConnectionString } from '../helpers/stores';
 
-export default class Upsert extends BaseCommand {
+export default class Upsert extends BaseCommand<typeof Upsert> {
   static description = 'creates, updates or deletes configs from a store';
 
   static examples = [
@@ -23,7 +22,7 @@ export default class Upsert extends BaseCommand {
       required: true,
     }),
     schema: Flags.string({
-      description: 'path to a <schema>.cfgu.[json|yaml] file',
+      description: 'path to a <schema>.cfgu.[json] file',
       required: true,
     }),
 
@@ -40,34 +39,23 @@ export default class Upsert extends BaseCommand {
   };
 
   public async run(): Promise<void> {
-    const { flags } = await this.parse(Upsert);
+    const store = await this.getStoreInstanceByStoreFlag(this.flags.store);
+    const set = new ConfigSet(this.flags.set);
+    const schema = new ConfigSchema(this.flags.schema);
 
-    const storeCS = this.config.configData.stores?.[flags.store] ?? flags.store;
-    const { store } = await constructStoreFromConnectionString(storeCS);
+    let configs: UpsertCommandParameters['configs'] = {};
 
-    const set = new ConfigSet(flags.set);
-    const schema = new ConfigSchema(flags.schema);
-
-    let configs: EvaluatedConfigsArray = [];
-
-    if (flags.config) {
-      configs = flags.config.map((pair) => {
-        const [key, ...rest] = pair.split('=');
-        const value = rest.join('='); // * ...rest and join used here to handle reference-value formed as connection-string
-        if (!key) {
-          throw new Error('invalid config flag');
-        }
-        return { key, value };
-      });
+    if (this.flags.config) {
+      configs = this.reduceConfigFlag(this.flags.config);
     }
 
-    if (flags.import) {
-      const fileContent = await this.readFile(flags.import);
+    if (this.flags.import) {
+      const fileContent = await this.readFile(this.flags.import);
       const extractedConfigs = extractConfigs({
-        filePath: flags.import,
+        filePath: this.flags.import,
         fileContent,
       });
-      configs = extractedConfigs.map((ex) => _.pick(ex, ['key', 'value']));
+      configs = _.mapValues(extractedConfigs, 'value');
     }
 
     await new UpsertCommand({

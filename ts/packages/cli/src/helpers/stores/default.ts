@@ -3,12 +3,11 @@ import inquirer, { Question } from 'inquirer';
 import { capitalCase } from 'change-case';
 import { StoreType, STORE_CONFIGURATION } from '@configu/lib';
 
-export const defaultInteractiveSession = async (store: StoreType, skip: string[] = []) => {
+export const defaultInteractiveSession = async (store: StoreType) => {
   const storeConfigurationDefinition = STORE_CONFIGURATION[store];
   const storeConfigurationQuestions = _(storeConfigurationDefinition)
-    .omit(skip)
     .entries()
-    .map<Question>(([key, settings]: [string, typeof storeConfigurationDefinition[string]]) => {
+    .map<Question>(([key, settings]) => {
       return {
         type: 'input',
         name: key,

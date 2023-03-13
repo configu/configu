@@ -18,9 +18,11 @@
     "noImplicitAny": true,
     "useUnknownInCatchVariables": false,
     "strictPropertyInitialization": false,
-    // todo: add "noUncheckedIndexedAccess": true,
-    "experimentalDecorators": true, // todo: try to move to node
-    "emitDecoratorMetadata": true // todo: try to move to node
+    "noUncheckedIndexedAccess": true,
+    // ! Decorators configurations are here for "test:cov"
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    // todo: try to replace typeORM with other orm that not requires decorators
   },
   "exclude": ["node_modules", "build", "src/**/*.test*"]
 }

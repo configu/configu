@@ -1,11 +1,11 @@
-import { Flags, CliUx } from '@oclif/core';
+import { Flags } from '@oclif/core';
 import _ from 'lodash';
-import { ConfigSchema } from '@configu/node';
+import { NAME } from '@configu/ts';
 import { getStoreConnectionStringPlaceholder, StoreType, STORE_TYPE } from '@configu/lib';
 import { BaseCommand } from '../../base';
-import { constructStoreFromConnectionString, constructStoreFromInteractiveSession } from '../../helpers/stores';
+import { constructStoreFromConnectionString, constructStoreFromInteractiveSession } from '../../helpers';
 
-export default class StoreUpsert extends BaseCommand {
+export default class StoreUpsert extends BaseCommand<typeof StoreUpsert> {
   static description = 'creates/updates config-store connections';
 
   static examples = [
@@ -42,27 +42,25 @@ export default class StoreUpsert extends BaseCommand {
   };
 
   public async run(): Promise<void> {
-    const { flags } = await this.parse(StoreUpsert);
-
-    const labels = _.compact(flags.label ?? [flags.type]);
+    const labels = _.compact(this.flags.label ?? [this.flags.type]);
     if (_.isEmpty(labels)) {
       throw new Error(`store label is missing`);
     }
 
     let storeConnection = '';
-    const isInteractive = !this.config.ci.isCI && (flags.interactive || !flags['connection-string']);
+    const isInteractive = !this.config.ci.isCI && (this.flags.interactive || !this.flags['connection-string']);
     if (isInteractive) {
-      const { connectionString } = await constructStoreFromInteractiveSession(flags.type as StoreType | undefined);
+      const { connectionString } = await constructStoreFromInteractiveSession(this.flags.type as StoreType | undefined);
       storeConnection = connectionString;
-    } else if (flags['connection-string']) {
-      const { connectionString } = await constructStoreFromConnectionString(flags['connection-string']);
-      storeConnection = connectionString; // ? flags['connection-string']
+    } else if (this.flags['connection-string']) {
+      const { connectionString } = await constructStoreFromConnectionString(this.flags['connection-string']);
+      storeConnection = connectionString;
     } else {
       throw new Error('config-store connection parameter is missing');
     }
 
     labels.forEach((label) => {
-      if (!ConfigSchema.validateNaming(label)) {
+      if (!NAME(label)) {
         throw new Error(`invalid label name value ${label}`);
       }
       _.set(this.config.configData, `stores.${label}`, storeConnection);

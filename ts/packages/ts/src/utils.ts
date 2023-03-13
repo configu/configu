@@ -1,4 +1,4 @@
-import _, { Dictionary } from 'lodash';
+import _ from 'lodash';
 import Mustache from 'mustache';
 
 export const ERR = (
@@ -8,11 +8,17 @@ export const ERR = (
   return `${message}${!_.isEmpty(location) ? ` at ${location.join(' > ')}` : ''}${suggestion ? `, ${suggestion}` : ''}`;
 };
 
+const NAMING_PATTERN = /^[A-Za-z0-9_-]+$/;
+const RESERVED_NAMES = ['_', '-', 'this', 'cfgu'];
+export const NAME = (name: string) => {
+  return RegExp(NAMING_PATTERN).test(name) && !RESERVED_NAMES.includes(name.toLowerCase());
+};
+
 export const TMPL = {
   parse: (template: string) => {
     return Mustache.parse(template).map(([type, key, start, end]) => {
       if (!['name', 'text'].includes(type)) {
-        throw new Error('invalid template');
+        throw new Error(ERR(`invalid template "${template}"`, { location: ['Template', 'parse'] }));
       }
       return {
         type: type as 'name' | 'text',
@@ -23,20 +29,4 @@ export const TMPL = {
     });
   },
   render: (template: string, context: any) => Mustache.render(template, context, {}, { escape: (value) => value }),
-};
-
-export const CS = {
-  parse: (cs: string): Dictionary<string | undefined> => {
-    return _(_.trim(cs, '; '))
-      .split(';')
-      .map((q) => _.split(q, '='))
-      .fromPairs()
-      .value();
-  },
-  serialize: (dict: Dictionary<string | undefined>): string => {
-    return _(dict)
-      .toPairs()
-      .map(([key, value]) => `${key}${_.isNil(value) ? '' : `=${value}`}`)
-      .join(';');
-  },
 };

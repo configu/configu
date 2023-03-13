@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs';
 import _ from 'lodash';
-import { ConfigStore, ConfigStoreQuery, Config } from '@configu/ts';
+import { ConfigStore, ConfigStoreQuery, Config, Convert } from '@configu/ts';
 
 export class JsonFileStore extends ConfigStore {
   constructor(public path: string) {
@@ -9,11 +9,11 @@ export class JsonFileStore extends ConfigStore {
 
   async read(): Promise<Config[]> {
     const data = await fs.readFile(this.path, 'utf8');
-    return ConfigStore.parse(data);
+    return Convert.toConfigStoreContents(data);
   }
 
   async write(nextConfigs: Config[]): Promise<void> {
-    const data = ConfigStore.serialize(nextConfigs);
+    const data = Convert.configStoreContentsToJson(nextConfigs);
     await fs.writeFile(this.path, data);
   }
 
@@ -21,12 +21,8 @@ export class JsonFileStore extends ConfigStore {
     const storedConfigs = await this.read();
 
     return storedConfigs.filter((config) => {
-      return queries.some(({ set, schema, key }) => {
-        return (
-          (set === '*' || set === config.set) &&
-          (schema === '*' || schema === config.schema) &&
-          (key === '*' || key === config.key)
-        );
+      return queries.some(({ set, key }) => {
+        return (set === '*' || set === config.set) && (key === '*' || key === config.key);
       });
     });
   }
@@ -35,7 +31,7 @@ export class JsonFileStore extends ConfigStore {
     const storedConfigs = await this.read();
 
     const nextConfigs = _([...configs, ...storedConfigs])
-      .uniqBy((config) => `${config.set}.${config.schema}.${config.key}`)
+      .uniqBy((config) => `${config.set}.${config.key}`)
       .filter((config) => Boolean(config.value))
       .value();
 

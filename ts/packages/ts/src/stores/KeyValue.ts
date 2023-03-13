@@ -2,11 +2,8 @@ import _ from 'lodash';
 import { ConfigStore } from '../ConfigStore';
 import { ConfigStoreQuery, Config } from '../types';
 
-type KeyValueStoreConfiguration = {
-  keySeparator?: string;
-};
 export abstract class KeyValueStore extends ConfigStore {
-  constructor(type: string, protected configuration: KeyValueStoreConfiguration = {}) {
+  constructor(type: string) {
     super(type);
   }
 
@@ -16,20 +13,11 @@ export abstract class KeyValueStore extends ConfigStore {
 
   protected abstract delete(key: string): Promise<void>;
 
-  private calcKey({ set, schema }: ConfigStoreQuery): string {
-    if (set === '*' || schema === '*') {
-      throw new Error(`store ${this.constructor.name} don't support bulk operations`);
+  private calcKey({ set, key }: ConfigStoreQuery): string {
+    if (!set) {
+      return key;
     }
-
-    let key = `${set}/${schema}`;
-    if (!set && schema) {
-      key = schema;
-    }
-
-    if (this.configuration.keySeparator) {
-      return key.split('/').join(this.configuration.keySeparator);
-    }
-    return key;
+    return set;
   }
 
   private stringifyValue(value: any) {
@@ -40,7 +28,7 @@ export abstract class KeyValueStore extends ConfigStore {
   }
 
   private safeJsonParse(value: any) {
-    let jsonValue: Record<string, any> = {};
+    let jsonValue: Record<string, unknown> = {};
     try {
       jsonValue = JSON.parse(value);
     } catch (error) {
@@ -71,39 +59,20 @@ export abstract class KeyValueStore extends ConfigStore {
 
     const storedConfigs = _(queries)
       .map((q) => {
-        const { set, schema, key } = q;
-        const value = kvDict[this.calcKey(q)];
+        const { set, key } = q;
 
-        if (!key) {
-          return {
-            set,
-            schema,
-            key,
-            value,
-          };
+        const value = kvDict[this.calcKey(q)];
+        if (!set) {
+          return { ...q, value: value ?? '' };
         }
 
         const jsonValue = this.safeJsonParse(value);
-
-        if (key === '*') {
-          return Object.entries(jsonValue).map(([k, v]) => {
-            return {
-              set,
-              schema,
-              key: k,
-              value: this.stringifyValue(v),
-            };
-          });
-        }
-
         return {
           set,
-          schema,
           key,
           value: this.stringifyValue(_.get(jsonValue, key)) ?? '',
         };
       })
-      .flatten()
       .filter('value')
       .value();
 

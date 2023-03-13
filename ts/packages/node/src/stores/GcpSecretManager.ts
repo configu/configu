@@ -8,7 +8,7 @@ export class GcpSecretManagerStore extends KeyValueStore {
   private projectId: string;
 
   constructor({ keyFile, projectId }: GcpSecretManagerConfiguration) {
-    super('gcp-secret-manager', { keySeparator: '-' });
+    super('gcp-secret-manager');
 
     this.client = new SecretManagerServiceClient({ keyFile });
     this.projectId = projectId;

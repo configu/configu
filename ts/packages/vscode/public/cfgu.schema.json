@@ -65,6 +65,7 @@
           "title": "description"
         }
       },
+      "additionalProperties": false,
       "required": [
         "type"
       ]
@@ -74,40 +75,34 @@
       "title": "Config",
       "type": "object",
       "properties": {
-        "key": {
-          "type": "string",
-          "title": "key"
-        },
-        "schema": {
-          "type": "string",
-          "title": "schema"
-        },
         "set": {
           "type": "string",
           "title": "set"
+        },
+        "key": {
+          "type": "string",
+          "title": "key"
         },
         "value": {
           "type": "string",
           "title": "value"
         }
       },
+      "additionalProperties": false,
       "required": [
         "key",
-        "schema",
         "set",
         "value"
       ]
     },
     "ConfigSchemaType": {
-      "title": "ConfigSchemaType",
+      "type": "string",
       "enum": [
-        "json",
-        "yaml"
-      ],
-      "type": "string"
+        "json"
+      ]
     },
     "ConfigSchema": {
-      "description": "An interface of a <uid>.cfgu.[json|yaml] file, aka ConfigSchema\nthat contains binding records between a unique Config <key> and its Cfgu declaration",
+      "description": "An interface of a <file>.cfgu.json, aka ConfigSchema\nthat contains binding records between a unique Config.<key> and its Cfgu declaration",
       "title": "ConfigSchema",
       "type": "object",
       "properties": {
@@ -116,23 +111,17 @@
           "title": "path"
         },
         "type": {
-          "$ref": "#/definitions/ConfigSchemaType",
+          "type": "string",
+          "enum": [
+            "json"
+          ],
           "title": "type"
-        },
-        "uid": {
-          "type": "string",
-          "title": "uid"
-        },
-        "contents": {
-          "type": "string",
-          "title": "contents"
         }
       },
+      "additionalProperties": false,
       "required": [
-        "contents",
         "path",
-        "type",
-        "uid"
+        "type"
       ]
     },
     "ConfigSchemaContentsValue": {
@@ -171,6 +160,7 @@
           "title": "description"
         }
       },
+      "additionalProperties": false,
       "required": [
         "type"
       ]
@@ -182,7 +172,7 @@
       }
     },
     "ConfigSet": {
-      "description": "An interface of a path in an hierarchy, aka ConfigSet\nthat contains Config <value> permutation",
+      "description": "An interface of a path in an hierarchy, aka ConfigSet\nthat uniquely groups Config.<key> with their Config.<value>.",
       "title": "ConfigSet",
       "type": "object",
       "properties": {
@@ -198,13 +188,14 @@
           "title": "hierarchy"
         }
       },
+      "additionalProperties": false,
       "required": [
         "hierarchy",
         "path"
       ]
     },
     "ConfigStore": {
-      "description": "An interface of a storage, aka ConfigStore\nthat contains Config records (Config[])",
+      "description": "An interface of a storage, aka ConfigStore\nthat I/Os Config records (Config[])",
       "title": "ConfigStore",
       "type": "object",
       "properties": {
@@ -213,29 +204,27 @@
           "title": "type"
         }
       },
+      "additionalProperties": false,
       "required": [
         "type"
       ]
     },
     "ConfigStoreQuery": {
+      "title": "ConfigStoreQuery",
       "type": "object",
       "properties": {
-        "key": {
-          "type": "string",
-          "title": "key"
-        },
-        "schema": {
-          "type": "string",
-          "title": "schema"
-        },
         "set": {
           "type": "string",
           "title": "set"
+        },
+        "key": {
+          "type": "string",
+          "title": "key"
         }
       },
+      "additionalProperties": false,
       "required": [
         "key",
-        "schema",
         "set"
       ]
     },
@@ -243,26 +232,22 @@
       "title": "ConfigStoreContentsElement",
       "type": "object",
       "properties": {
-        "key": {
-          "type": "string",
-          "title": "key"
-        },
-        "schema": {
-          "type": "string",
-          "title": "schema"
-        },
         "set": {
           "type": "string",
           "title": "set"
+        },
+        "key": {
+          "type": "string",
+          "title": "key"
         },
         "value": {
           "type": "string",
           "title": "value"
         }
       },
+      "additionalProperties": false,
       "required": [
         "key",
-        "schema",
         "set",
         "value"
       ]

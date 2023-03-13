@@ -1,7 +1,7 @@
 import _, { Dictionary } from 'lodash';
 import inquirer from 'inquirer';
 import fuzzy from 'fuzzy';
-import { CS, ConfigStore } from '@configu/ts';
+import { ConfigStore } from '@configu/ts';
 import { StoreType, STORE_CONFIGURATION, STORE_LABEL } from '@configu/lib';
 import {
   NoopStore,
@@ -22,16 +22,18 @@ import {
 } from '@configu/node';
 import { defaultInteractiveSession } from './default';
 import { configuInteractiveSession } from './Configu';
+import { CS } from '../utils';
 
-const TYPE_TO_STORE: Record<StoreType, (configuration: Dictionary<string>) => ConfigStore> = {
+// todo: change "any" here!
+const TYPE_TO_STORE: Record<StoreType, (configuration: any) => ConfigStore> = {
   noop: () => new NoopStore(),
   'in-memory': () => new InMemoryStore(),
-  configu: ({ org, token, type, endpoint }) => {
-    if (type !== 'Token' && type !== 'Bearer') {
-      throw new Error(`invalid type, can be either "Token" or "Bearer"`);
-    }
+  configu: ({ org, token, endpoint }) => {
+    // if (type && type !== 'Token' && type !== 'Bearer') {
+    //   throw new Error(`invalid type, can be either "Token" or "Bearer"`);
+    // }
     return new ConfiguStore({
-      credentials: { org, token, type },
+      credentials: { org, token },
       source: 'cli',
       endpoint,
     });
@@ -53,7 +55,7 @@ const TYPE_TO_STORE: Record<StoreType, (configuration: Dictionary<string>) => Co
   mysql: ({ url }) => new MySQLStore({ url }),
   mariadb: ({ url }) => new MariaDBStore({ url }),
   postgres: ({ url }) => new PostgreSQLStore({ url }),
-  cockroachdb: ({ url }) => new CockroachDBStore({ url }),
+  cockroachdb: ({ url }) => new CockroachDBStore({ url, timeTravelQueries: false }),
   mssql: ({ url }) => new MSSQLStore({ url }),
 };
 
