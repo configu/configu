@@ -1,3 +1,3 @@
 import { ConfigSchema } from './ConfigSchema';
 
-describe(`ConfigSchema`, () => {});
+describe.skip(`ConfigSchema`, () => {});

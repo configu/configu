@@ -1,3 +1,3 @@
 import { ConfigStore } from './ConfigStore';
 
-describe(`ConfigStore`, () => {});
+describe.skip(`ConfigStore`, () => {});
