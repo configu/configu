@@ -23,7 +23,7 @@
     "lint:check": "eslint . --cache --ext js,ts --ignore-path ../.gitignore",
     "build": "tsc --build --verbose tsconfig.build.json",
     "test": "jest",
-    "test:cov": "npm run build && npm test -- --coverage --maxWorkers 1",
+    "test:cov": "npm run build && npm test -- --coverage --runInBand",
     "test:watch": "echo 'run test in watch mode'",
     "start": "npm run test:watch"
   },
