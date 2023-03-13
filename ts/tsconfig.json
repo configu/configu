@@ -22,6 +22,7 @@
     // ! Decorators configurations are here for "test:cov"
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    // todo: try to replace typeORM with other orm that not requires decorators
   },
   "exclude": ["node_modules", "build", "src/**/*.test*"]
 }
