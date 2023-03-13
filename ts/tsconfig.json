@@ -19,6 +19,7 @@
     "useUnknownInCatchVariables": false,
     "strictPropertyInitialization": false,
     "noUncheckedIndexedAccess": true,
+    // ! Decorators configurations are here for "test:cov"
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
   },
