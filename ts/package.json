@@ -28,10 +28,10 @@
     "start": "npm run test:watch"
   },
   "devDependencies": {
-    "@types/jest": "^29.4.0",
-    "@types/node": "^18.15.1",
-    "@typescript-eslint/eslint-plugin": "^5.54.1",
-    "@typescript-eslint/parser": "^5.54.1",
+    "@types/jest": "^29.4.1",
+    "@types/node": "^18.15.2",
+    "@typescript-eslint/eslint-plugin": "^5.55.0",
+    "@typescript-eslint/parser": "^5.55.0",
     "concurrently": "^7.6.0",
     "esbuild": "^0.17.11",
     "eslint": "^8.36.0",

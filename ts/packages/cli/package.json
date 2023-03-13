@@ -77,10 +77,10 @@
     "configu-cli"
   ],
   "dependencies": {
-    "@configu/lib": "^0.5.0-next.3",
-    "@configu/node": "^0.10.0-next.31",
-    "@configu/ts": "^0.10.0-next.31",
-    "@oclif/core": "^2.6.2",
+    "@configu/lib": "^0.5.0",
+    "@configu/node": "^0.10.0",
+    "@configu/ts": "^0.10.0",
+    "@oclif/core": "^2.6.3",
     "@oclif/plugin-autocomplete": "^2.1.5",
     "@oclif/plugin-help": "^5.2.8",
     "@oclif/plugin-not-found": "^2.3.22",
@@ -105,7 +105,7 @@
     "@types/inquirer": "8.2.5",
     "@types/inquirer-autocomplete-prompt": "3.0.0",
     "@types/lodash": "^4.14.191",
-    "aws-sdk": "^2.1333.0",
+    "aws-sdk": "^2.1334.0",
     "eslint-config-oclif": "^4.0.0",
     "eslint-config-oclif-typescript": "^1.0.3",
     "globby": "11.0.4",
