@@ -50,7 +50,7 @@ describe(`types`, () => {
   });
 
   describe(`Config`, () => {
-    const errored = { key: 'TEST', set: 'test' };
+    const errored = { key: 'TEST', set: 'test', value: 'test', _id: 'test-id' }; // * with unknown/extra property "_id"
     it(`throw from Convert.toConfig`, async () => {
       const res = () => {
         Convert.toConfig(JSON.stringify(errored));

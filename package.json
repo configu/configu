@@ -5,21 +5,22 @@
   "author": "Configu",
   "devEngines": {
     "git": "*",
-    "node": ">=18.10.0",
+    "node": ">=18.15.0",
     "npm": ">=9.0.0"
   },
   "scripts": {
     "prepare": "(is-ci || husky install) && concurrently \"npm:prepare:*\"",
-    "prepare:ts": "npx quicktype --lang typescript --out ts/packages/ts/src/types/generated.ts --prefer-unions --src-lang typescript --src ./types/*.ts",
-    "prepare:vscode": "npx quicktype --lang schema --out ts/packages/vscode/public/cfgu.schema.json --src-lang typescript --src ./types/*.ts && json -I -f ts/packages/vscode/public/cfgu.schema.json -e 'this.$ref=\"#/definitions/ConfigSchemaContents\"' -e 'this.$schema=undefined'",
-    "prepare:py": "npx quicktype --lang python --out py/src/types/generated.py --src-lang typescript --src ./types/*.ts"
+    "types": "npx quicktype --src-lang typescript --src ./types/*.ts",
+    "prepare:ts": "npm run types -- --lang typescript --out ts/packages/ts/src/types/generated.ts --prefer-unions",
+    "prepare:vscode": "npm run types -- --lang schema --out ts/packages/vscode/public/cfgu.schema.json && json -I -f ts/packages/vscode/public/cfgu.schema.json -e 'this.$ref=\"#/definitions/ConfigSchemaContents\"' -e 'this.$schema=undefined'",
+    "prepare:py": "npm run types -- --lang python --out py/src/types/generated.py"
   },
   "devDependencies": {
     "concurrently": "^7.6.0",
     "husky": "^8.0.3",
     "is-ci": "^3.0.1",
     "json": "^11.0.0",
-    "lint-staged": "^13.1.2",
-    "quicktype": "^23.0.12"
+    "lint-staged": "^13.2.0",
+    "quicktype": "^23.0.15"
   }
 }

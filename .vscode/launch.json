@@ -63,6 +63,7 @@
         "--runInBand"
       ],
       "args": ["ts/src/commands/EvalCommand.test.ts"],
+      // "args": ["ts/src/types/types.test.ts"],
       "outputCapture": "std"
       // "internalConsoleOptions": "neverOpen",
     },
