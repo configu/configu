@@ -124,22 +124,52 @@
         "type"
       ]
     },
-    "ConfigSchemaContents": {
-      "title": "ConfigSchemaContents",
+    "ConfigSchemaContentsValue": {
+      "title": "ConfigSchemaContentsValue",
       "type": "object",
       "properties": {
-        "contents": {
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "#/definitions/Cfgu"
+        "type": {
+          "$ref": "#/definitions/CfguType",
+          "title": "type"
+        },
+        "pattern": {
+          "type": "string",
+          "title": "pattern"
+        },
+        "default": {
+          "type": "string",
+          "title": "default"
+        },
+        "required": {
+          "type": "boolean",
+          "title": "required"
+        },
+        "depends": {
+          "type": "array",
+          "items": {
+            "type": "string"
           },
-          "title": "contents"
+          "title": "depends"
+        },
+        "template": {
+          "type": "string",
+          "title": "template"
+        },
+        "description": {
+          "type": "string",
+          "title": "description"
         }
       },
       "additionalProperties": false,
       "required": [
-        "contents"
+        "type"
       ]
+    },
+    "ConfigSchemaContents": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/ConfigSchemaContentsValue"
+      }
     },
     "ConfigSet": {
       "description": "An interface of a path in an hierarchy, aka ConfigSet\nthat uniquely groups Config.<key> with their Config.<value>.",
