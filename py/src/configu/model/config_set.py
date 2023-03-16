@@ -25,4 +25,4 @@ class ConfigSet(IConfigSet):
                 raise Exception(error_message(f"invalid path {self.path}", scope_location,
                                               f"path is not valid or using reserved name"))
             if step != '':
-                self.hierarchy.append(ConfigSet.SEPARATOR.join([self.hierarchy[-1], step]))
+                self.hierarchy.append(ConfigSet.SEPARATOR.join([self.hierarchy[-1], step])[1:])
