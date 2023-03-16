@@ -1,17 +1,15 @@
-import json
-from typing import TypeVar, Iterable, Callable, Hashable
-
-T = TypeVar("T")
+import re
+from typing import Optional, List
 
 
-def unique_by(items: Iterable[T], fn: Callable[[T], Hashable]) -> Iterable[T]:
-    s = set()
-    for i in items:
-        key = fn(i)
-        if key not in s:
-            yield i
-            s.add(key)
+def error_message(message: str, location: Optional[List[str]] = None, suggestion: Optional[str] = None) -> str:
+    location = f"at {' > '.join(location)}" if location else None
+    return " ".join([detail for detail in [message, location, suggestion] if detail is not None])
 
 
-def pretty_error(msg: str, metadata: dict):
-    return f"{msg}; {json.dumps(metadata, indent=2)}"
+def is_valid_name(name: str) -> bool:
+    naming_pattern = r'^[A-Za-z0-9_-]*$'
+    reserved_names = ['_', '-', 'this', 'cfgu']
+    return name not in reserved_names and re.match(naming_pattern, name) is not None
+
+# TODO TMPL

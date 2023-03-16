@@ -1,4 +1,5 @@
 from enum import Enum
+from dataclasses import dataclass
 from typing import Optional, List, Any, Dict, TypeVar, Callable, Type, cast
 
 
@@ -75,41 +76,34 @@ class CfguType(Enum):
     UUID = "UUID"
 
 
+@dataclass
 class Cfgu:
     """A generic declaration of a Config, aka Cfgu that specifies information about its type and
     other characteristics
     """
-    default: Optional[str]
-    depends: Optional[List[str]]
-    description: Optional[str]
-    pattern: Optional[str]
-    required: Optional[bool]
-    template: Optional[str]
     type: CfguType
-
-    def __init__(self, default: Optional[str], depends: Optional[List[str]], description: Optional[str], pattern: Optional[str], required: Optional[bool], template: Optional[str], type: CfguType) -> None:
-        self.default = default
-        self.depends = depends
-        self.description = description
-        self.pattern = pattern
-        self.required = required
-        self.template = template
-        self.type = type
+    default: Optional[str] = None
+    depends: Optional[List[str]] = None
+    description: Optional[str] = None
+    pattern: Optional[str] = None
+    required: Optional[bool] = None
+    template: Optional[str] = None
 
     @staticmethod
     def from_dict(obj: Any) -> 'Cfgu':
         assert isinstance(obj, dict)
+        type = CfguType(obj.get("type"))
         default = from_union([from_str, from_none], obj.get("default"))
         depends = from_union([lambda x: from_list(from_str, x), from_none], obj.get("depends"))
         description = from_union([from_str, from_none], obj.get("description"))
         pattern = from_union([from_str, from_none], obj.get("pattern"))
         required = from_union([from_bool, from_none], obj.get("required"))
         template = from_union([from_str, from_none], obj.get("template"))
-        type = CfguType(obj.get("type"))
-        return Cfgu(default, depends, description, pattern, required, template, type)
+        return Cfgu(type, default, depends, description, pattern, required, template)
 
     def to_dict(self) -> dict:
         result: dict = {}
+        result["type"] = to_enum(CfguType, self.type)
         if self.default is not None:
             result["default"] = from_union([from_str, from_none], self.default)
         if self.depends is not None:
@@ -122,20 +116,15 @@ class Cfgu:
             result["required"] = from_union([from_bool, from_none], self.required)
         if self.template is not None:
             result["template"] = from_union([from_str, from_none], self.template)
-        result["type"] = to_enum(CfguType, self.type)
         return result
 
 
+@dataclass
 class Config:
     """A generic representation of a software configuration, aka Config"""
     key: str
     set: str
     value: str
-
-    def __init__(self, key: str, set: str, value: str) -> None:
-        self.key = key
-        self.set = set
-        self.value = value
 
     @staticmethod
     def from_dict(obj: Any) -> 'Config':
@@ -157,16 +146,13 @@ class ConfigSchemaType(Enum):
     JSON = "json"
 
 
+@dataclass
 class ConfigSchema:
     """An interface of a <file>.cfgu.json, aka ConfigSchema
     that contains binding records between a unique Config.<key> and its Cfgu declaration
     """
     path: str
     type: ConfigSchemaType
-
-    def __init__(self, path: str, type: ConfigSchemaType) -> None:
-        self.path = path
-        self.type = type
 
     @staticmethod
     def from_dict(obj: Any) -> 'ConfigSchema':
@@ -182,38 +168,31 @@ class ConfigSchema:
         return result
 
 
+@dataclass
 class ConfigSchemaContentsValue:
-    default: Optional[str]
-    depends: Optional[List[str]]
-    description: Optional[str]
-    pattern: Optional[str]
-    required: Optional[bool]
-    template: Optional[str]
     type: CfguType
-
-    def __init__(self, default: Optional[str], depends: Optional[List[str]], description: Optional[str], pattern: Optional[str], required: Optional[bool], template: Optional[str], type: CfguType) -> None:
-        self.default = default
-        self.depends = depends
-        self.description = description
-        self.pattern = pattern
-        self.required = required
-        self.template = template
-        self.type = type
+    default: Optional[str] = None
+    depends: Optional[List[str]] = None
+    description: Optional[str] = None
+    pattern: Optional[str] = None
+    required: Optional[bool] = None
+    template: Optional[str] = None
 
     @staticmethod
     def from_dict(obj: Any) -> 'ConfigSchemaContentsValue':
         assert isinstance(obj, dict)
+        type = CfguType(obj.get("type"))
         default = from_union([from_str, from_none], obj.get("default"))
         depends = from_union([lambda x: from_list(from_str, x), from_none], obj.get("depends"))
         description = from_union([from_str, from_none], obj.get("description"))
         pattern = from_union([from_str, from_none], obj.get("pattern"))
         required = from_union([from_bool, from_none], obj.get("required"))
         template = from_union([from_str, from_none], obj.get("template"))
-        type = CfguType(obj.get("type"))
-        return ConfigSchemaContentsValue(default, depends, description, pattern, required, template, type)
+        return ConfigSchemaContentsValue(type, default, depends, description, pattern, required, template)
 
     def to_dict(self) -> dict:
         result: dict = {}
+        result["type"] = to_enum(CfguType, self.type)
         if self.default is not None:
             result["default"] = from_union([from_str, from_none], self.default)
         if self.depends is not None:
@@ -226,20 +205,16 @@ class ConfigSchemaContentsValue:
             result["required"] = from_union([from_bool, from_none], self.required)
         if self.template is not None:
             result["template"] = from_union([from_str, from_none], self.template)
-        result["type"] = to_enum(CfguType, self.type)
         return result
 
 
+@dataclass
 class ConfigSet:
     """An interface of a path in an hierarchy, aka ConfigSet
     that uniquely groups Config.<key> with their Config.<value>.
     """
     hierarchy: List[str]
     path: str
-
-    def __init__(self, hierarchy: List[str], path: str) -> None:
-        self.hierarchy = hierarchy
-        self.path = path
 
     @staticmethod
     def from_dict(obj: Any) -> 'ConfigSet':
@@ -255,14 +230,12 @@ class ConfigSet:
         return result
 
 
+@dataclass
 class ConfigStore:
     """An interface of a storage, aka ConfigStore
     that I/Os Config records (Config[])
     """
     type: str
-
-    def __init__(self, type: str) -> None:
-        self.type = type
 
     @staticmethod
     def from_dict(obj: Any) -> 'ConfigStore':
@@ -276,13 +249,10 @@ class ConfigStore:
         return result
 
 
+@dataclass
 class ConfigStoreQuery:
     key: str
     set: str
-
-    def __init__(self, key: str, set: str) -> None:
-        self.key = key
-        self.set = set
 
     @staticmethod
     def from_dict(obj: Any) -> 'ConfigStoreQuery':
@@ -298,15 +268,11 @@ class ConfigStoreQuery:
         return result
 
 
+@dataclass
 class ConfigStoreContentsElement:
     key: str
     set: str
     value: str
-
-    def __init__(self, key: str, set: str, value: str) -> None:
-        self.key = key
-        self.set = set
-        self.value = value
 
     @staticmethod
     def from_dict(obj: Any) -> 'ConfigStoreContentsElement':
