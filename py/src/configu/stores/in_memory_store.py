@@ -8,7 +8,7 @@ class InMemoryStore(ConfigStore):
     _data: List[Config]
 
     def __init__(self) -> None:
-        super().__init__('in-memory')
+        super().__init__(type='in-memory')
         self._data = []
 
     def get(self, queries: List[ConfigStoreQuery]) -> List[Config]:
