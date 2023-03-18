@@ -12,10 +12,10 @@ class ConfigSet(IConfigSet):
     def __init__(self, path: str = None) -> None:
         super().__init__(hierarchy=[''], path=ConfigSet.ROOT if path is None else path)
         error_location = [self.__class__.__name__, self.__init__.__name__]
-        if self.path.startswith(ConfigSet.ROOT_LABEL):
+        if self.path[0] == ConfigSet.ROOT_LABEL:
             self.path = self.path[1:]
 
-        if self.path.endswith(ConfigSet.SEPARATOR):
+        if self.path[-1] == ConfigSet.SEPARATOR:
             raise ValueError(error_message(f"invalid path {self.path}", error_location,
                                            f"path mustn't end with {ConfigSet.SEPARATOR} character"))
 
@@ -23,5 +23,5 @@ class ConfigSet(IConfigSet):
             if not is_valid_name(step):
                 raise ValueError(error_message(f"invalid path {self.path}", error_location,
                                                f"path is not valid or using reserved name"))
-            if step != '':
+            if step != ConfigSet.ROOT:
                 self.hierarchy.append(ConfigSet.SEPARATOR.join([self.hierarchy[-1], step])[1:])
