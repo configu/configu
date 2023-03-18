@@ -1,7 +1,9 @@
+import functools
+
 from .generated import ConfigStoreQuery as IConfigStoreQuery
 
 
 class ConfigStoreQuery(IConfigStoreQuery):
-    @property
+    @functools.cached_property
     def id(self):
         return f"{self.set}.{self.key}"

@@ -1,7 +1,9 @@
+import functools
+
 from .generated import Config as IConfig
 
 
 class Config(IConfig):
-    @property
+    @functools.cached_property
     def id(self):
         return f"{self.set}.{self.key}"

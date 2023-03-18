@@ -2,7 +2,6 @@ from enum import Enum
 from dataclasses import dataclass
 from typing import Optional, List, Any, Dict, TypeVar, Callable, Type, cast
 
-
 T = TypeVar("T")
 EnumT = TypeVar("EnumT", bound=Enum)
 
@@ -48,7 +47,7 @@ def to_class(c: Type[T], x: Any) -> dict:
 
 def from_dict(f: Callable[[Any], T], x: Any) -> Dict[str, T]:
     assert isinstance(x, dict)
-    return { k: f(v) for (k, v) in x.items() }
+    return {k: f(v) for (k, v) in x.items()}
 
 
 class CfguType(Enum):

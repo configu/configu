@@ -1,7 +1,7 @@
 from typing import List
 
-from .. import Config, ConfigStoreQuery
-from .. import ConfigStore
+from ..model import Config, ConfigStoreQuery
+from ..model import ConfigStore
 
 
 class InMemoryStore(ConfigStore):
