@@ -1,6 +1,8 @@
 import re
 from typing import Optional, List
 
+import pystache
+
 
 def error_message(message: str, location: Optional[List[str]] = None, suggestion: Optional[str] = None) -> str:
     location = f"at {' > '.join(location)}" if location else None
@@ -12,4 +14,6 @@ def is_valid_name(name: str) -> bool:
     reserved_names = ['_', '-', 'this', 'cfgu']
     return name not in reserved_names and re.match(naming_pattern, name) is not None
 
-# TODO TMPL
+
+def parse_template(template: str):
+    return pystache.parse(template)

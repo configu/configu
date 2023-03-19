@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from typing import List, Dict, Union, Literal, Optional, Any
 
 from pydantic import BaseModel, Field
@@ -12,46 +13,35 @@ class EvalCommandFromParameter(BaseModel):
     schema_: ConfigSchema = Field(alias='schema')
 
 
-EvaluatedConfigSource = Literal[
-    'global-override',
-    'local-override',
-    'store-set',
-    'schema-template',
-    'schema-default',
-    'empty'
-]
-
-
 class ConfigEvalScopeContext(EvalCommandFromParameter):
     key: str
     from_: int
 
 
-class ConfigEvalScopeResultFrom(BaseModel):
-    source: EvaluatedConfigSource
+@dataclass
+class ConfigEvalScopeResultFrom:
+    source: Literal[
+        'global-override',
+        'local-override',
+        'store-set',
+        'schema-template',
+        'schema-default',
+        'empty'
+    ]
     which: str
 
 
-class ConfigEvalScopeResult(BaseModel):
+@dataclass
+class ConfigEvalScopeResult:
     value: str
     from_: ConfigEvalScopeResultFrom
 
 
-class ConfigEvalScope(BaseModel):
+@dataclass
+class ConfigEvalScope:
     context: ConfigEvalScopeContext
     cfgu: Cfgu
     result: ConfigEvalScopeResult
-
-
-class EvalScope:
-    def __init__(self):
-        self.scopes = {}
-
-    def __getitem__(self, key: str) -> ConfigEvalScope:
-        return self.scopes[key]
-
-    def __setitem__(self, key: str, value: ConfigEvalScope):
-        self.scopes[key] = value
 
 
 class EvalCommandFromParameterWithOverrides(EvalCommandFromParameter):
@@ -64,6 +54,31 @@ class EvalCommandParameters(BaseModel):
     configs: Optional[Dict[str, str]]
 
 
+def _eval_result_from_store(context: ConfigEvalScopeContext) -> ConfigEvalScopeResult:
+    queries = [ConfigStoreQuery(context.key, store_set) for store_set in context.set.hierarchy]
+    results = context.store.get(queries)
+    results = sorted(results, key=lambda query_result: len(query_result.set.split(context.set.SEPARATOR)))
+    if len(results):
+        value = results[-1].value
+        which = f'parameters.from[{context.from_}]:store={context.store.type}:set={context.set.path}'
+        from_ = ConfigEvalScopeResultFrom(source='store-set', which=which)
+        return ConfigEvalScopeResult(value=value, from_=from_)
+    return ConfigEvalScopeResult(value='', from_=ConfigEvalScopeResultFrom(source='empty', which=''))
+
+
+def _eval_result_from_schema(context: ConfigEvalScopeContext, cfgu: Cfgu) -> ConfigEvalScopeResult:
+    if cfgu.template is not None:
+        which = f'parameters.from[{context.from_}]:schema.template={cfgu.template}'
+        from_ = ConfigEvalScopeResultFrom(source='schema-template', which=which)
+        return ConfigEvalScopeResult(value='', from_=from_)
+    if cfgu.default is not None:
+        value = cfgu.default
+        which = f'parameters.from[{context.from_}]:schema.default={cfgu.default}'
+        from_ = ConfigEvalScopeResultFrom(source='schema-default', which=which)
+        return ConfigEvalScopeResult(value=value, from_=from_)
+    return ConfigEvalScopeResult(value='', from_=ConfigEvalScopeResultFrom(source='empty', which=''))
+
+
 class EvalCommand(Command):
     parameters: EvalCommandParameters
 
@@ -72,57 +87,36 @@ class EvalCommand(Command):
             parameters = EvalCommandParameters.parse_obj(parameters)
         super().__init__(parameters)
 
-    def _get_result_from_schema(self, context: ConfigEvalScopeContext, cfgu: Cfgu) -> ConfigEvalScopeResult:
-        if cfgu.template is not None:
-            from_ = ConfigEvalScopeResultFrom(source='schema-template',
-                                              which=f'parameters.from[{context.from_}]:schema.template={cfgu.template}')
-            return ConfigEvalScopeResult(value='', from_=from_)
-        elif cfgu.default is not None:
-            value = cfgu.default
-            from_ = ConfigEvalScopeResultFrom(source='schema-default',
-                                              which=f'parameters.from[{context.from_}]:schema.default={cfgu.default}')
-            ConfigEvalScopeResult(value=value, from_=from_)
-
-        return ConfigEvalScopeResult(value='', from_=ConfigEvalScopeResultFrom(source='empty', which=''))
-
-    def _get_result_from_store(self, context: ConfigEvalScopeContext, cfgu: Cfgu) -> ConfigEvalScopeResult:
-        if cfgu.template is None:
-            queries = [ConfigStoreQuery(context.key, store_set) for store_set in context.set.hierarchy]
-            results = context.store.get(queries)
-            results = sorted(results, key=lambda query_result: len(query_result.set.split(context.set.SEPARATOR)))
-            if len(results):
-                value = results[-1].value
-                from_ = ConfigEvalScopeResultFrom(source='store-set',
-                                                  which=f'parameters.from[{context.from_}]:store={context.store.type}'
-                                                        f':set={context.set.path}')
-                return ConfigEvalScopeResult(value=value, from_=from_)
-        return self._get_result_from_schema(context, cfgu)
-
-    def _get_result(self, context: ConfigEvalScopeContext, cfgu: Cfgu) -> ConfigEvalScopeResult:
+    def _eval_result(self, context: ConfigEvalScopeContext, cfgu: Cfgu) -> ConfigEvalScopeResult:
         if self.parameters.configs is not None and context.key in self.parameters.configs:
             value = self.parameters.configs.get(context.key)
-            from_ = ConfigEvalScopeResultFrom(source='global-override',
-                                              which=f'parameters.configs.{context.key}={value}')
+            which = f'parameters.configs.{context.key}={value}'
+            from_ = ConfigEvalScopeResultFrom(source='global-override', which=which)
             return ConfigEvalScopeResult(value=value, from_=from_)
-        if all([
-            context.from_ < len(self.parameters.from_),
-            self.parameters.from_[context.from_].configs is not None,
-        ]) and context.key in self.parameters.from_[context.from_].configs:
+        if (
+            context.from_ < len(self.parameters.from_)
+            and self.parameters.from_[context.from_].configs is not None
+            and context.key in self.parameters.from_[context.from_].configs
+        ):
             value = self.parameters.from_[context.from_].configs.get('key')
-            from_ = ConfigEvalScopeResultFrom(source='local-override',
-                                              which=f'parameters.from[{context.from_}].configs.{context.key}=${value}')
+            which = f'parameters.from[{context.from_}].configs.{context.key}=${value}'
+            from_ = ConfigEvalScopeResultFrom(source='local-override', which=which)
             return ConfigEvalScopeResult(value=value, from_=from_)
-        return self._get_result_from_store(context, cfgu)
-        # return ConfigEvalScopeResult(value='', from_=ConfigEvalScopeResultFrom(source='empty', which=''))
+        return _eval_result_from_store(context) if cfgu.template is None else _eval_result_from_schema(context, cfgu)
 
     def run(self) -> Any:
-        eval_scope = EvalScope()
+        eval_scope = {}
         for i, eval_from in enumerate(self.parameters.from_):
             eval_from.store.init()
             schema_contents = ConfigSchema.parse(eval_from.schema_)
+            from_context = {
+                "store": eval_from.store,
+                "set": eval_from.set,
+                "schema": eval_from.schema_,
+                "from_": i,
+            }
             for key, cfgu in schema_contents.items():
-                context = ConfigEvalScopeContext(store=eval_from.store, set=eval_from.set, schema=eval_from.schema_,
-                                                 key=key, from_=i)
-                result = self._get_result(context, cfgu)
+                context = ConfigEvalScopeContext(**from_context, key=key)
+                result = self._eval_result(context, cfgu)
                 eval_scope[key] = ConfigEvalScope(context=context, cfgu=cfgu, result=result)
-        print(eval_scope.scopes.keys())
+        print(eval_scope.keys())
