@@ -81,6 +81,7 @@ class EvalCommand(Command):
             value = cfgu.default
             from_ = ConfigEvalScopeResultFrom(source='schema-default',
                                               which=f'parameters.from[{context.from_}]:schema.default={cfgu.default}')
+            ConfigEvalScopeResult(value=value, from_=from_)
 
         return ConfigEvalScopeResult(value='', from_=ConfigEvalScopeResultFrom(source='empty', which=''))
 
