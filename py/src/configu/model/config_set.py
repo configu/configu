@@ -19,10 +19,11 @@ class ConfigSet(IConfigSet):
             raise ValueError(error_message(f"invalid path {path}", error_location,
                                            f"path mustn't end with {ConfigSet.SEPARATOR} character"))
 
-        for step in path.split(ConfigSet.SEPARATOR):
+        for i, step in enumerate(path.split(ConfigSet.SEPARATOR)):
             if not is_valid_name(step):
                 raise ValueError(error_message(f"invalid path {path}", error_location,
                                                f"path is not valid or using reserved name"))
             if step != ConfigSet.ROOT:
-                hierarchy.append(ConfigSet.SEPARATOR.join([hierarchy[-1], step])[1:])
+                step = [hierarchy[-1], step] if i > 0 else [step]
+                hierarchy.append(ConfigSet.SEPARATOR.join(step))
         super().__init__(hierarchy=hierarchy, path=path)
