@@ -1,3 +1,4 @@
+from .command import Command
 from .config import Config
 from .config_query import ConfigStoreQuery
 from .config_schema import ConfigSchema

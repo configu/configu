@@ -7,7 +7,7 @@ from json import JSONDecodeError
 from pathlib import Path
 from typing import Dict, Callable, List
 
-import pyvalidator as validator
+import pyvalidator
 
 from .generated import ConfigSchema as IConfigSchema, Cfgu, ConfigSchemaType, CfguType, from_dict
 from ..utils import error_message, is_valid_name
@@ -22,36 +22,36 @@ class ConfigSchemaDefinition:
     def __post_init__(self):
         if self.VALIDATORS is None:
             self.VALIDATORS = {
-                "Boolean": validator.is_boolean,
-                "Number": validator.is_number,
+                "Boolean": pyvalidator.is_boolean,
+                "Number": pyvalidator.is_number,
                 "String": lambda value: isinstance(value, str),
-                "UUID": validator.is_uuid,
-                "SemVer": validator.is_semantic_version,
-                "Email": validator.is_email,
-                "MobilePhone": validator.is_mobile_number,
-                "LatLong": validator.is_lat_long,
+                "UUID": pyvalidator.is_uuid,
+                "SemVer": pyvalidator.is_semantic_version,
+                "Email": pyvalidator.is_email,
+                "MobilePhone": pyvalidator.is_mobile_number,
+                "LatLong": pyvalidator.is_lat_long,
                 "Color": lambda value: (
-                    validator.is_hexadecimal(value)
-                    or validator.is_hsl(value)
-                    or validator.is_rgb_color(value)
+                    pyvalidator.is_hexadecimal(value)
+                    or pyvalidator.is_hsl(value)
+                    or pyvalidator.is_rgb_color(value)
                 ),
-                "IPv4": lambda value: validator.is_ip(value, 4),
-                "IPv6": lambda value: validator.is_ip(value, 6),
-                "Domain": validator.is_fqdn,
-                "URL": validator.is_url,
+                "IPv4": lambda value: pyvalidator.is_ip(value, 4),
+                "IPv6": lambda value: pyvalidator.is_ip(value, 6),
+                "Domain": pyvalidator.is_fqdn,
+                "URL": pyvalidator.is_url,
                 "ConnectionString": lambda value: re.fullmatch(
                     r"^(?:([^:/?#\s]+):/{2})?(?:([^@/?#\s]+)@)?([^/?#\s]+)?(?:/([^?#\s]*))?(?:[?]([^#\s]+))?\S*$",
                     value, re.RegexFlag.M) is not None,
-                "Hex": validator.is_hexadecimal,
-                "Base64": validator.is_base64,
-                "MD5": validator.is_md5,
+                "Hex": pyvalidator.is_hexadecimal,
+                "Base64": pyvalidator.is_base64,
+                "MD5": pyvalidator.is_md5,
                 "SHA": lambda value: (
-                    validator.is_hash(value, 'sha1')
-                    or validator.is_hash(value, 'sha256')
-                    or validator.is_hash(value, 'sha384')
-                    or validator.is_hash(value, 'sha512')
+                    pyvalidator.is_hash(value, 'sha1')
+                    or pyvalidator.is_hash(value, 'sha256')
+                    or pyvalidator.is_hash(value, 'sha384')
+                    or pyvalidator.is_hash(value, 'sha512')
                 ),
-                "Currency": validator.is_currency,
+                "Currency": pyvalidator.is_currency,
             }
 
     @functools.cached_property

@@ -1,5 +1,4 @@
 from abc import abstractmethod, ABC
-
 from typing import List
 
 from .generated import ConfigStore as IConfigStore, ConfigStoreQuery, Config
@@ -11,8 +10,8 @@ class ConfigStore(ABC, IConfigStore):
 
     @abstractmethod
     def get(self, queries: List[ConfigStoreQuery]) -> List[Config]:
-        raise NotImplemented()
+        pass
 
     @abstractmethod
     def set(self, configs: List[Config]) -> None:
-        raise NotImplemented()
+        pass
