@@ -83,6 +83,7 @@ class EvalCommandReturn(BaseModel):
 def _eval_results_from_store(
     context: ConfigEvalScopeContext, cfgu: Cfgu
 ) -> ConfigEvalScopeResult:
+    """"""
     if cfgu.template is None:
         queries = [
             ConfigStoreQuery(context.key, store_set)
@@ -104,6 +105,7 @@ def _eval_results_from_store(
 def _eval_results_from_schema(
     context: ConfigEvalScopeContext, cfgu: Cfgu
 ) -> ConfigEvalScopeResult:
+    """"""
     if cfgu.template is not None:
         value = ""
         which = f"parameters.from[{context.from_}]:schema.template={cfgu.template}"
@@ -120,6 +122,7 @@ def _eval_results_from_schema(
 
 
 def _validate_scope(eval_scope):
+    """"""
     error_scope = ["EvalCommand", "run"]
     result = {"result": {}, "metadata": {}}
     for key, config_eval_scope in eval_scope.items():
@@ -177,6 +180,8 @@ def _validate_scope(eval_scope):
 
 
 class EvalCommand(Command):
+    """"""
+
     parameters: EvalCommandParameters
 
     def __init__(self, parameters: Union[EvalCommandParameters, dict]) -> None:
@@ -228,5 +233,4 @@ class EvalCommand(Command):
     def run(self) -> EvalCommandReturn:
         eval_scope = self._evaluate_scope()
         result = _validate_scope(eval_scope)
-
         return result
