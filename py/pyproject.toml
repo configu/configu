@@ -3,12 +3,13 @@ name = "configu-sdk"
 version = "0.1.0"
 description = ""
 authors = ["Shriekin’ Ninja <ninja@l-m-group.com>"]
+maintainers = ["Or Levi <orlevi128@gmail.com>"]
 license = "Apache-2.0"
 readme = "README.md"
 packages = [{ include = "configu", from = "src" }]
 
 [tool.poetry.dependencies]
-python = ">=3.7,<4.0"
+python = ">=3.9,<3.12"
 requests = "^2.28.1"
 py-validator = "^0.17.0"
 pydantic = "^1.10.6"

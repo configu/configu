@@ -11,7 +11,7 @@ from ..model import (
     ConfigStoreQuery,
     CfguType,
 )
-from ..utils import parse_template, render_template, error_message
+from ..utils import parse_template, render_template, error_message, is_template_valid
 
 
 class EvalCommandFromParameter(BaseModel):
@@ -127,6 +127,14 @@ def _validate_scope(eval_scope):
     result = {"result": {}, "metadata": {}}
     for key, config_eval_scope in eval_scope.items():
         if config_eval_scope.cfgu.template is not None:
+            if not is_template_valid(config_eval_scope.cfgu.template, list(eval_scope.keys()), key, True):
+                raise ValueError(
+                    error_message(
+                        f"invalid template property",
+                        error_scope + [key, "template"],
+                    ),
+                    f"{config_eval_scope.template} must contain valid variables",
+                )
             template_vars = parse_template(config_eval_scope.cfgu.template)
             template_values = {
                 var: value.result.value
@@ -159,7 +167,7 @@ def _validate_scope(eval_scope):
                     True
                     for dep in config_eval_scope.cfgu.depends
                     if dep not in eval_scope.keys()
-                    or not bool(eval_scope[dep].result.value)
+                       or not bool(eval_scope[dep].result.value)
                 ]
             ):
                 raise ValueError(

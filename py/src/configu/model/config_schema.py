@@ -16,7 +16,7 @@ from .generated import (
     CfguType,
     from_dict,
 )
-from ..utils import error_message, is_valid_name, validate_template
+from ..utils import error_message, is_valid_name, is_template_valid
 
 
 @dataclass
@@ -51,7 +51,7 @@ class ConfigSchemaDefinition:
                     value,
                     re.RegexFlag.M,
                 )
-                is not None,
+                                                  is not None,
                 "Hex": pyvalidator.is_hexadecimal,
                 "Base64": pyvalidator.is_base64,
                 "MD5": pyvalidator.is_md5,
@@ -139,9 +139,10 @@ class ConfigSchema(IConfigSchema):
                     ),
                     f"type '{cfgu.type.value}' must come with a pattern property",
                 )
-            # todo - ran - validate template can be here
+            # todo - ran - validate template can be here i understand you want to merge params from
+            #  other schema.cfg.json files in eval_cmd but i dont thing it makes this valid at this scope.
             if cfgu.template is not None:
-                if not validate_template(cfgu.template, schema_content, key):
+                if not is_template_valid(cfgu.template, list(schema_content.keys()), key):
                     raise ValueError(
                         error_message(
                             f"invalid template property",

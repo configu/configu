@@ -3,8 +3,6 @@ from typing import Optional, List, Dict
 
 import chevron
 
-from .model.generated import Cfgu
-
 
 def error_message(
     message: str, location: Optional[List[str]] = None, suggestion: Optional[str] = None
@@ -33,16 +31,15 @@ def render_template(template: str, context: Dict[str, str]) -> str:
     return chevron.render(template, context)
 
 
-def validate_template(template: str, schema_content: Dict[str, Cfgu], key=str) -> bool:
+def is_template_valid(template: str, scope_keys: List[str], key=str,
+                      validate_all_existing: bool = False) -> bool:
+    print(scope_keys)
     template_vars = parse_template(template)
-    return (
-        len(template_vars) > 0
-        and key not in template_vars
-        and all(
-            [
-                False
-                for template_var in template_vars
-                if template_var not in schema_content.keys()
-            ]
-        )
-    )
+    is_valid = len(template_vars) > 0 and key not in template_vars
+    if validate_all_existing:
+        is_valid = is_valid and all([
+            False
+            for template_var in template_vars
+            if template_var not in scope_keys
+        ])
+    return is_valid
