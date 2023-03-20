@@ -33,6 +33,8 @@ def render_template(template: str, context: Dict[str, str]) -> str:
     return chevron.render(template, context)
 
 
+
+
 def validate_template(template: str, schema_content: Dict[str, Cfgu], key=str) -> bool:
     template_vars = parse_template(template)
     return (
