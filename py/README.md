@@ -17,4 +17,5 @@
 ### Setup
 > Make sure you're in configu/py directory 
 1. Run `pyenv install`
-2. 
+2. Run `poetry env use python`
+3. Run `poetry install`
