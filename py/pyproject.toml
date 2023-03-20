@@ -2,7 +2,7 @@
 name = "configu-sdk"
 version = "0.1.0"
 description = ""
-authors = ["Or Levi <orlevi128@gmail.com>"]
+authors = ["Shriekin’ Ninja <ninja@l-m-group.com>"]
 license = "Apache-2.0"
 readme = "README.md"
 packages = [

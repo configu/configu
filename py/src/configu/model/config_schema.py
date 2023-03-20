@@ -9,14 +9,20 @@ from typing import Dict, Callable, List
 
 import pyvalidator
 
-from .generated import ConfigSchema as IConfigSchema, Cfgu, ConfigSchemaType, CfguType, from_dict
+from .generated import (
+    ConfigSchema as IConfigSchema,
+    Cfgu,
+    ConfigSchemaType,
+    CfguType,
+    from_dict,
+)
 from ..utils import error_message, is_valid_name, validate_template
 
 
 @dataclass
 class ConfigSchemaDefinition:
-    NAME: str = 'cfgu'
-    EXT: str = '.cfgu'
+    NAME: str = "cfgu"
+    EXT: str = ".cfgu"
     VALIDATORS: Dict[str, Callable[[str], bool]] = None
 
     def __post_init__(self):
@@ -42,26 +48,33 @@ class ConfigSchemaDefinition:
                 "URL": pyvalidator.is_url,
                 "ConnectionString": lambda value: re.fullmatch(
                     r"^(?:([^:/?#\s]+):/{2})?(?:([^@/?#\s]+)@)?([^/?#\s]+)?(?:/([^?#\s]*))?(?:[?]([^#\s]+))?\S*$",
-                    value, re.RegexFlag.M) is not None,
+                    value,
+                    re.RegexFlag.M,
+                )
+                is not None,
                 "Hex": pyvalidator.is_hexadecimal,
                 "Base64": pyvalidator.is_base64,
                 "MD5": pyvalidator.is_md5,
                 "SHA": lambda value: (
-                    pyvalidator.is_hash(value, 'sha1')
-                    or pyvalidator.is_hash(value, 'sha256')
-                    or pyvalidator.is_hash(value, 'sha384')
-                    or pyvalidator.is_hash(value, 'sha512')
+                    pyvalidator.is_hash(value, "sha1")
+                    or pyvalidator.is_hash(value, "sha256")
+                    or pyvalidator.is_hash(value, "sha384")
+                    or pyvalidator.is_hash(value, "sha512")
                 ),
                 "Currency": pyvalidator.is_currency,
             }
 
     @functools.cached_property
     def ext(self) -> str:
-        return " | ".join(["".join(ext) for ext in zip(cycle(self.EXT), self.types.keys())])
+        return " | ".join(
+            ["".join(ext) for ext in zip(cycle(self.EXT), self.types.keys())]
+        )
 
     @functools.cached_property
     def types(self) -> Dict[str, ConfigSchemaType]:
-        return {f'.{schema_type.value}': schema_type for schema_type in ConfigSchemaType}
+        return {
+            f".{schema_type.value}": schema_type for schema_type in ConfigSchemaType
+        }
 
     @functools.cached_property
     def props(self) -> List[str]:
@@ -70,6 +83,7 @@ class ConfigSchemaDefinition:
 
 class ConfigSchema(IConfigSchema):
     """"""
+
     # todo nothing is done with PROPS.. ?
     #  why is this here anyway? i guess there will be other Schema types?
     #  if so this needs elevation or better if ConfigSchemaType will contain all this. if not its redundant.
@@ -77,23 +91,30 @@ class ConfigSchema(IConfigSchema):
 
     def __init__(self, path: str) -> None:
         error_location = [self.__class__.__name__, self.__init__.__name__]
-        if re.match(rf'.*({ConfigSchema.SchemaDefinition.ext})', path) is None:
-            raise ValueError(error_message(f"invalid path {path}", error_location,
-                                           f"file extension must be {ConfigSchema.SchemaDefinition.ext}"))
-        super().__init__(path=path, type=ConfigSchema.SchemaDefinition.types[Path(path).suffix])
+        if re.match(rf".*({ConfigSchema.SchemaDefinition.ext})", path) is None:
+            raise ValueError(
+                error_message(
+                    f"invalid path {path}",
+                    error_location,
+                    f"file extension must be {ConfigSchema.SchemaDefinition.ext}",
+                )
+            )
+        super().__init__(
+            path=path, type=ConfigSchema.SchemaDefinition.types[Path(path).suffix]
+        )
 
     def read(self) -> str:
         try:
-            with open(self.path, mode='r', encoding='utf-8') as schema_file:
+            with open(self.path, mode="r", encoding="utf-8") as schema_file:
                 file_content = schema_file.read()
             return file_content
         except (OSError, Exception):
-            return ''
+            return ""
 
     @classmethod
     def parse(cls, scheme: "ConfigSchema") -> Dict[str, Cfgu]:
         """"""
-        error_location = [cls.__name__, 'parse']
+        error_location = [cls.__name__, "parse"]
         # Read file as text
         schema_content = scheme.read()
         # parse per type
@@ -108,31 +129,65 @@ class ConfigSchema(IConfigSchema):
         for key, cfgu in schema_content.items():
             if not is_valid_name(key):
                 # todo `path nodes mustn't contain reserved words "{key}"` this is not a good suggestion
-                raise ValueError(error_message(f"invalid key {key}", error_location + [key]))
+                raise ValueError(
+                    error_message(f"invalid key {key}", error_location + [key])
+                )
             if cfgu.type == CfguType.REG_EX and cfgu.pattern is None:
                 # todo suggestion grammar
-                raise ValueError(error_message(f"invalid type property", error_location + [key, cfgu.type.value]),
-                                 f'type {cfgu.type.value}" must come with a pattern property')
+                raise ValueError(
+                    error_message(
+                        f"invalid type property",
+                        error_location + [key, cfgu.type.value],
+                    ),
+                    f'type {cfgu.type.value}" must come with a pattern property',
+                )
             # todo - ran - validate template can be here
             if cfgu.template is not None:
                 if not validate_template(cfgu.template, schema_content, key):
-                    raise ValueError(error_message(f"invalid template property", error_location + [key, 'template']),
-                                     f'{cfgu.template} must contain valid variables')
+                    raise ValueError(
+                        error_message(
+                            f"invalid template property",
+                            error_location + [key, "template"],
+                        ),
+                        f"{cfgu.template} must contain valid variables",
+                    )
             if cfgu.default is not None:
                 if cfgu.required is not None or cfgu.template is not None:
                     # todo suggestion grammar
-                    raise ValueError(error_message(f"invalid default property", error_location + [key, 'default']),
-                                     f"default mustn't set together with required or template properties")
+                    raise ValueError(
+                        error_message(
+                            f"invalid default property",
+                            error_location + [key, "default"],
+                        ),
+                        f"default mustn't set together with required or template properties",
+                    )
                 else:
-                    type_test = ConfigSchema.SchemaDefinition.VALIDATORS.get(cfgu.type.value, lambda: False)
-                    test_values = (cfgu.default, cfgu.pattern) if cfgu.type == CfguType.REG_EX else (cfgu.default,)
+                    type_test = ConfigSchema.SchemaDefinition.VALIDATORS.get(
+                        cfgu.type.value, lambda: False
+                    )
+                    test_values = (
+                        (cfgu.default, cfgu.pattern)
+                        if cfgu.type == CfguType.REG_EX
+                        else (cfgu.default,)
+                    )
                     if not type_test(*test_values):
-                        raise ValueError(error_message(f"invalid default property", error_location + [key, 'default']),
-                                         f"{cfgu.default} must be of type {cfgu.type.value} (or match Regex)")
+                        raise ValueError(
+                            error_message(
+                                f"invalid default property",
+                                error_location + [key, "default"],
+                            ),
+                            f"{cfgu.default} must be of type {cfgu.type.value} (or match Regex)",
+                        )
 
-            if cfgu.depends is not None and (not len(cfgu.depends)
-                                             or any([not is_valid_name(dependency) for dependency in cfgu.depends])):
-                raise ValueError(error_message(f"invalid depends property", error_location + [key, 'depends']),
-                                 f"depends is empty or contain reserved words")
+            if cfgu.depends is not None and (
+                not len(cfgu.depends)
+                or any([not is_valid_name(dependency) for dependency in cfgu.depends])
+            ):
+                raise ValueError(
+                    error_message(
+                        f"invalid depends property", error_location + [key, "depends"]
+                    ),
+                    f"depends is empty or contain reserved words",
+                )
 
         return schema_content

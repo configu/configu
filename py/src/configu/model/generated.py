@@ -80,6 +80,7 @@ class Cfgu:
     """A generic declaration of a Config, aka Cfgu that specifies information about its type and
     other characteristics
     """
+
     type: CfguType
     default: Optional[str] = None
     depends: Optional[List[str]] = None
@@ -89,11 +90,13 @@ class Cfgu:
     template: Optional[str] = None
 
     @staticmethod
-    def from_dict(obj: Any) -> 'Cfgu':
+    def from_dict(obj: Any) -> "Cfgu":
         assert isinstance(obj, dict)
         type = CfguType(obj.get("type"))
         default = from_union([from_str, from_none], obj.get("default"))
-        depends = from_union([lambda x: from_list(from_str, x), from_none], obj.get("depends"))
+        depends = from_union(
+            [lambda x: from_list(from_str, x), from_none], obj.get("depends")
+        )
         description = from_union([from_str, from_none], obj.get("description"))
         pattern = from_union([from_str, from_none], obj.get("pattern"))
         required = from_union([from_bool, from_none], obj.get("required"))
@@ -106,7 +109,9 @@ class Cfgu:
         if self.default is not None:
             result["default"] = from_union([from_str, from_none], self.default)
         if self.depends is not None:
-            result["depends"] = from_union([lambda x: from_list(from_str, x), from_none], self.depends)
+            result["depends"] = from_union(
+                [lambda x: from_list(from_str, x), from_none], self.depends
+            )
         if self.description is not None:
             result["description"] = from_union([from_str, from_none], self.description)
         if self.pattern is not None:
@@ -121,12 +126,13 @@ class Cfgu:
 @dataclass
 class Config:
     """A generic representation of a software configuration, aka Config"""
+
     key: str
     set: str
     value: str
 
     @staticmethod
-    def from_dict(obj: Any) -> 'Config':
+    def from_dict(obj: Any) -> "Config":
         assert isinstance(obj, dict)
         key = from_str(obj.get("key"))
         set = from_str(obj.get("set"))
@@ -150,11 +156,12 @@ class ConfigSchema:
     """An interface of a <file>.cfgu.json, aka ConfigSchema
     that contains binding records between a unique Config.<key> and its Cfgu declaration
     """
+
     path: str
     type: ConfigSchemaType
 
     @staticmethod
-    def from_dict(obj: Any) -> 'ConfigSchema':
+    def from_dict(obj: Any) -> "ConfigSchema":
         assert isinstance(obj, dict)
         path = from_str(obj.get("path"))
         type = ConfigSchemaType(obj.get("type"))
@@ -178,16 +185,20 @@ class ConfigSchemaContentsValue:
     template: Optional[str] = None
 
     @staticmethod
-    def from_dict(obj: Any) -> 'ConfigSchemaContentsValue':
+    def from_dict(obj: Any) -> "ConfigSchemaContentsValue":
         assert isinstance(obj, dict)
         type = CfguType(obj.get("type"))
         default = from_union([from_str, from_none], obj.get("default"))
-        depends = from_union([lambda x: from_list(from_str, x), from_none], obj.get("depends"))
+        depends = from_union(
+            [lambda x: from_list(from_str, x), from_none], obj.get("depends")
+        )
         description = from_union([from_str, from_none], obj.get("description"))
         pattern = from_union([from_str, from_none], obj.get("pattern"))
         required = from_union([from_bool, from_none], obj.get("required"))
         template = from_union([from_str, from_none], obj.get("template"))
-        return ConfigSchemaContentsValue(type, default, depends, description, pattern, required, template)
+        return ConfigSchemaContentsValue(
+            type, default, depends, description, pattern, required, template
+        )
 
     def to_dict(self) -> dict:
         result: dict = {}
@@ -195,7 +206,9 @@ class ConfigSchemaContentsValue:
         if self.default is not None:
             result["default"] = from_union([from_str, from_none], self.default)
         if self.depends is not None:
-            result["depends"] = from_union([lambda x: from_list(from_str, x), from_none], self.depends)
+            result["depends"] = from_union(
+                [lambda x: from_list(from_str, x), from_none], self.depends
+            )
         if self.description is not None:
             result["description"] = from_union([from_str, from_none], self.description)
         if self.pattern is not None:
@@ -212,11 +225,12 @@ class ConfigSet:
     """An interface of a path in an hierarchy, aka ConfigSet
     that uniquely groups Config.<key> with their Config.<value>.
     """
+
     hierarchy: List[str]
     path: str
 
     @staticmethod
-    def from_dict(obj: Any) -> 'ConfigSet':
+    def from_dict(obj: Any) -> "ConfigSet":
         assert isinstance(obj, dict)
         hierarchy = from_list(from_str, obj.get("hierarchy"))
         path = from_str(obj.get("path"))
@@ -234,10 +248,11 @@ class ConfigStore:
     """An interface of a storage, aka ConfigStore
     that I/Os Config records (Config[])
     """
+
     type: str
 
     @staticmethod
-    def from_dict(obj: Any) -> 'ConfigStore':
+    def from_dict(obj: Any) -> "ConfigStore":
         assert isinstance(obj, dict)
         type = from_str(obj.get("type"))
         return ConfigStore(type)
@@ -254,7 +269,7 @@ class ConfigStoreQuery:
     set: str
 
     @staticmethod
-    def from_dict(obj: Any) -> 'ConfigStoreQuery':
+    def from_dict(obj: Any) -> "ConfigStoreQuery":
         assert isinstance(obj, dict)
         key = from_str(obj.get("key"))
         set = from_str(obj.get("set"))
@@ -274,7 +289,7 @@ class ConfigStoreContentsElement:
     value: str
 
     @staticmethod
-    def from_dict(obj: Any) -> 'ConfigStoreContentsElement':
+    def from_dict(obj: Any) -> "ConfigStoreContentsElement":
         assert isinstance(obj, dict)
         key = from_str(obj.get("key"))
         set = from_str(obj.get("set"))

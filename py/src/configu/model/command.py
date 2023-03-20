@@ -7,6 +7,7 @@ from typing import Any
 @dataclass
 class Command(ABC):
     """"""
+
     parameters: Mapping[str, Any]
 
     @abstractmethod
