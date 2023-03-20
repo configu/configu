@@ -1,5 +1,5 @@
 module.exports = {
   '**/*.py?(x)': (filenames) => [
-    `echo ${filenames}`,
+    `black ${filenames}`,
   ],
 };
