@@ -246,30 +246,15 @@ dotenv = ["python-dotenv (>=0.10.4)"]
 email = ["email-validator (>=1.0.3)"]
 
 [[package]]
-name = "pystache"
-version = "0.6.0"
-description = "Mustache for Python"
-category = "main"
-optional = false
-python-versions = ">=3.6"
-files = [
-    {file = "pystache-0.6.0.tar.gz", hash = "sha256:93bf92b2149a4c4b58d12142e2c4c6dd5c08d89e4c95afccd4b6efe2ee1d470d"},
-]
-
-[package.extras]
-cov = ["coverage", "coverage_python_version"]
-test = ["nose"]
-
-[[package]]
 name = "pytz"
-version = "2022.7"
+version = "2022.7.1"
 description = "World timezone definitions, modern and historical"
 category = "main"
 optional = false
 python-versions = "*"
 files = [
-    {file = "pytz-2022.7-py2.py3-none-any.whl", hash = "sha256:93007def75ae22f7cd991c84e02d434876818661f8df9ad5df9e950ff4e52cfd"},
-    {file = "pytz-2022.7.tar.gz", hash = "sha256:7ccfae7b4b2c067464a6733c6261673fdb8fd1be905460396b97a073e9fa683a"},
+    {file = "pytz-2022.7.1-py2.py3-none-any.whl", hash = "sha256:78f4f37d8198e0627c5f1143240bb0206b8691d8d7ac6d78fee88b78733f8c4a"},
+    {file = "pytz-2022.7.1.tar.gz", hash = "sha256:01a0681c4b9684a28304615eba55d1ab31ae00bf68ec157ec3708a8182dbbcd0"},
 ]
 
 [[package]]
@@ -415,4 +400,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.7,<4.0"
-content-hash = "172c396816c03c14197addb0799dcf6a8a44babd5471374bdd22d57567eddcbf"
+content-hash = "547b2afb4dde20c8610976914433b6bd47b13334e2a2225fe6b8831f2f077f85"

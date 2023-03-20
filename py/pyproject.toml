@@ -15,8 +15,6 @@ requests = "^2.28.1"
 py-validator = "^0.17.0"
 pydantic = "^1.10.6"
 chevron = "^0.14.0"
-pystache = "^0.6.0"
-
 
 [tool.poetry.group.dev.dependencies]
 black = "^22.12.0"

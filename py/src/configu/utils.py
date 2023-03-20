@@ -1,7 +1,9 @@
 import re
-from typing import Optional, List
+from typing import Optional, List, Dict
 
-import pystache
+import chevron
+
+from .model.generated import Cfgu
 
 
 def error_message(message: str, location: Optional[List[str]] = None, suggestion: Optional[str] = None) -> str:
@@ -15,5 +17,16 @@ def is_valid_name(name: str) -> bool:
     return name not in reserved_names and re.match(naming_pattern, name) is not None
 
 
-def parse_template(template: str):
-    return pystache.parse(template)
+def parse_template(template: str) -> List[str]:
+    return [var for var_type, var in chevron.tokenizer.tokenize(template) if var_type == 'variable']
+
+
+def render_template(template: str, context: Dict[str, str]) -> str:
+    return chevron.render(template, context)
+
+
+def validate_template(template: str, schema_content: Dict[str, Cfgu], key=str) -> bool:
+    template_vars = parse_template(template)
+    return len(template_vars) > 0 and key not in template_vars and all([
+        False for template_var in template_vars if template_var not in schema_content.keys()
+    ])

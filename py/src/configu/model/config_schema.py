@@ -10,7 +10,7 @@ from typing import Dict, Callable, List
 import pyvalidator
 
 from .generated import ConfigSchema as IConfigSchema, Cfgu, ConfigSchemaType, CfguType, from_dict
-from ..utils import error_message, is_valid_name
+from ..utils import error_message, is_valid_name, validate_template
 
 
 @dataclass
@@ -25,6 +25,7 @@ class ConfigSchemaDefinition:
                 "Boolean": pyvalidator.is_boolean,
                 "Number": pyvalidator.is_number,
                 "String": lambda value: isinstance(value, str),
+                "RegEx": lambda *args: re.fullmatch(args[0], args[1]) is None,
                 "UUID": pyvalidator.is_uuid,
                 "SemVer": pyvalidator.is_semantic_version,
                 "Email": pyvalidator.is_email,
@@ -72,14 +73,14 @@ class ConfigSchema(IConfigSchema):
     # todo nothing is done with PROPS.. ?
     #  why is this here anyway? i guess there will be other Schema types?
     #  if so this needs elevation or better if ConfigSchemaType will contain all this. if not its redundant.
-    _SchemaDefinition = ConfigSchemaDefinition()
+    SchemaDefinition = ConfigSchemaDefinition()
 
     def __init__(self, path: str) -> None:
         error_location = [self.__class__.__name__, self.__init__.__name__]
-        if re.match(rf'.*({ConfigSchema._SchemaDefinition.ext})', path) is None:
+        if re.match(rf'.*({ConfigSchema.SchemaDefinition.ext})', path) is None:
             raise ValueError(error_message(f"invalid path {path}", error_location,
-                                           f"file extension must be {ConfigSchema._SchemaDefinition.ext}"))
-        super().__init__(path=path, type=ConfigSchema._SchemaDefinition.types[Path(path).suffix])
+                                           f"file extension must be {ConfigSchema.SchemaDefinition.ext}"))
+        super().__init__(path=path, type=ConfigSchema.SchemaDefinition.types[Path(path).suffix])
 
     def read(self) -> str:
         try:
@@ -112,20 +113,22 @@ class ConfigSchema(IConfigSchema):
                 # todo suggestion grammar
                 raise ValueError(error_message(f"invalid type property", error_location + [key, cfgu.type.value]),
                                  f'type {cfgu.type.value}" must come with a pattern property')
+            # todo - ran - validate template can be here
+            if cfgu.template is not None:
+                if not validate_template(cfgu.template, schema_content, key):
+                    raise ValueError(error_message(f"invalid template property", error_location + [key, 'template']),
+                                     f'{cfgu.template} must contain valid variables')
             if cfgu.default is not None:
                 if cfgu.required is not None or cfgu.template is not None:
                     # todo suggestion grammar
                     raise ValueError(error_message(f"invalid default property", error_location + [key, 'default']),
                                      f"default mustn't set together with required or template properties")
-                if cfgu.type == CfguType.REG_EX:
-                    if re.fullmatch(cfgu.pattern, cfgu.default) is None:
-                        raise ValueError(error_message(f"invalid default property", error_location + [key, 'default']),
-                                         f"{cfgu.default} doesn't match {cfgu.pattern}")
                 else:
-                    type_test = ConfigSchema._SchemaDefinition.VALIDATORS.get(cfgu.type.value, lambda: False)
-                    if not type_test(cfgu.default):
+                    type_test = ConfigSchema.SchemaDefinition.VALIDATORS.get(cfgu.type.value, lambda: False)
+                    test_values = (cfgu.default, cfgu.pattern) if cfgu.type == CfguType.REG_EX else (cfgu.default,)
+                    if not type_test(*test_values):
                         raise ValueError(error_message(f"invalid default property", error_location + [key, 'default']),
-                                         f"{cfgu.default} must be of type {cfgu.type.value}")
+                                         f"{cfgu.default} must be of type {cfgu.type.value} (or match Regex)")
 
             if cfgu.depends is not None and (not len(cfgu.depends)
                                              or any([not is_valid_name(dependency) for dependency in cfgu.depends])):
