@@ -5,9 +5,7 @@ description = ""
 authors = ["Shriekin’ Ninja <ninja@l-m-group.com>"]
 license = "Apache-2.0"
 readme = "README.md"
-packages = [
-  { include = "configu", from = "src" },
-]
+packages = [{ include = "configu", from = "src" }]
 
 [tool.poetry.dependencies]
 python = ">=3.7,<4.0"
@@ -15,6 +13,9 @@ requests = "^2.28.1"
 py-validator = "^0.17.0"
 pydantic = "^1.10.6"
 chevron = "^0.14.0"
+
+[tool.poetry.group.dev]
+optional = true
 
 [tool.poetry.group.dev.dependencies]
 black = "^22.12.0"
