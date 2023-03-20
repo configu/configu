@@ -87,21 +87,19 @@ class ConfigSchema(IConfigSchema):
     # todo nothing is done with PROPS.. ?
     #  why is this here anyway? i guess there will be other Schema types?
     #  if so this needs elevation or better if ConfigSchemaType will contain all this. if not its redundant.
-    SchemaDefinition = ConfigSchemaDefinition()
+    CFGU = ConfigSchemaDefinition()
 
     def __init__(self, path: str) -> None:
         error_location = [self.__class__.__name__, self.__init__.__name__]
-        if re.match(rf".*({ConfigSchema.SchemaDefinition.ext})", path) is None:
+        if re.match(rf".*({ConfigSchema.CFGU.ext})", path) is None:
             raise ValueError(
                 error_message(
                     f"invalid path {path}",
                     error_location,
-                    f"file extension must be {ConfigSchema.SchemaDefinition.ext}",
+                    f"file extension must be {ConfigSchema.CFGU.ext}",
                 )
             )
-        super().__init__(
-            path=path, type=ConfigSchema.SchemaDefinition.types[Path(path).suffix]
-        )
+        super().__init__(path=path, type=ConfigSchema.CFGU.types[Path(path).suffix])
 
     def read(self) -> str:
         try:
@@ -123,7 +121,7 @@ class ConfigSchema(IConfigSchema):
                 schema_content = json.loads(schema_content)
                 schema_content = from_dict(Cfgu.from_dict, schema_content)
             except (JSONDecodeError, Exception):
-                raise ValueError(error_message(f"Couldn't read or parse the file"))
+                raise ValueError(error_message(f"Couldn't parse schema file"))
 
         # validate parsed
         for key, cfgu in schema_content.items():
@@ -139,7 +137,7 @@ class ConfigSchema(IConfigSchema):
                         f"invalid type property",
                         error_location + [key, cfgu.type.value],
                     ),
-                    f'type {cfgu.type.value}" must come with a pattern property',
+                    f"type '{cfgu.type.value}' must come with a pattern property",
                 )
             # todo - ran - validate template can be here
             if cfgu.template is not None:
@@ -162,7 +160,7 @@ class ConfigSchema(IConfigSchema):
                         f"default mustn't set together with required or template properties",
                     )
                 else:
-                    type_test = ConfigSchema.SchemaDefinition.VALIDATORS.get(
+                    type_test = ConfigSchema.CFGU.VALIDATORS.get(
                         cfgu.type.value, lambda: False
                     )
                     test_values = (

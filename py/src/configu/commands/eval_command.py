@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from typing import List, Dict, Union, Literal, Optional
 
 from pydantic import BaseModel, Field
@@ -24,12 +23,15 @@ class EvalCommandFromParameter(BaseModel):
 
 
 class ConfigEvalScopeContext(EvalCommandFromParameter):
+    """"""
+
     key: str
-    from_: int
+    from_: int = Field(alias="from")
 
 
-@dataclass
-class ConfigEvalScopeResultFrom:
+class ConfigEvalScopeResultFrom(BaseModel):
+    """"""
+
     source: Literal[
         "global-override",
         "local-override",
@@ -41,20 +43,24 @@ class ConfigEvalScopeResultFrom:
     which: str
 
 
-@dataclass
-class ConfigEvalScopeResult:
+class ConfigEvalScopeResult(BaseModel):
+    """"""
+
     value: str
-    from_: ConfigEvalScopeResultFrom
+    from_: ConfigEvalScopeResultFrom = Field(alias="from")
 
 
-@dataclass
-class ConfigEvalScope:
+class ConfigEvalScope(BaseModel):
+    """"""
+
     context: ConfigEvalScopeContext
     cfgu: Cfgu
     result: ConfigEvalScopeResult
 
 
 class EvalCommandFromParameterWithOverrides(EvalCommandFromParameter):
+    """"""
+
     configs: Optional[Dict[str, str]]
 
 
@@ -66,8 +72,12 @@ class EvalCommandParameters(BaseModel):
 
 
 class EvalCommandReturn(BaseModel):
+    """"""
+
     result: Dict[str, str]
-    metadata: Dict[str, Dict[str, Union[ConfigEvalScope, str]]]
+    metadata: Dict[
+        str, Dict[str, Union[ConfigEvalScopeContext, Cfgu, ConfigEvalScopeResult, str]]
+    ]
 
 
 def _eval_results_from_store(
@@ -87,7 +97,7 @@ def _eval_results_from_store(
             value = results[-1].value
             which = f"parameters.from[{context.from_}]:store={context.store.type}:set={context.set.path}"
             from_ = ConfigEvalScopeResultFrom(source="store-set", which=which)
-            return ConfigEvalScopeResult(value=value, from_=from_)
+            return ConfigEvalScopeResult(**{"value": value, "from": from_})
     return _eval_results_from_schema(context, cfgu)
 
 
@@ -95,16 +105,17 @@ def _eval_results_from_schema(
     context: ConfigEvalScopeContext, cfgu: Cfgu
 ) -> ConfigEvalScopeResult:
     if cfgu.template is not None:
+        value = ""
         which = f"parameters.from[{context.from_}]:schema.template={cfgu.template}"
         from_ = ConfigEvalScopeResultFrom(source="schema-template", which=which)
-        return ConfigEvalScopeResult(value="", from_=from_)
+        return ConfigEvalScopeResult(**{"value": value, "from": from_})
     if cfgu.default is not None:
         value = cfgu.default
         which = f"parameters.from[{context.from_}]:schema.default={cfgu.default}"
         from_ = ConfigEvalScopeResultFrom(source="schema-default", which=which)
-        return ConfigEvalScopeResult(value=value, from_=from_)
+        return ConfigEvalScopeResult(**{"value": value, "from": from_})
     return ConfigEvalScopeResult(
-        value="", from_=ConfigEvalScopeResultFrom(source="empty", which="")
+        **{"value": "", "from": ConfigEvalScopeResultFrom(source="empty", which="")}
     )
 
 
@@ -122,7 +133,7 @@ def _validate_scope(eval_scope):
             config_eval_scope.result.value = render_template(
                 config_eval_scope.cfgu.template, template_values
             )
-        type_test = ConfigSchema.SchemaDefinition.VALIDATORS.get(
+        type_test = ConfigSchema.CFGU.VALIDATORS.get(
             config_eval_scope.cfgu.type.value, lambda: False
         )
         test_values = (
@@ -145,7 +156,7 @@ def _validate_scope(eval_scope):
                     True
                     for dep in config_eval_scope.cfgu.depends
                     if dep not in eval_scope.keys()
-                       or not bool(eval_scope[dep].result.value)
+                    or not bool(eval_scope[dep].result.value)
                 ]
             ):
                 raise ValueError(
@@ -158,7 +169,9 @@ def _validate_scope(eval_scope):
         result["metadata"][key] = {
             "key": key,
             "value": test_values[0],
-            "context": config_eval_scope,
+            "context": config_eval_scope.context,
+            "cfgu": config_eval_scope.cfgu,
+            "result": config_eval_scope.result,
         }
     return EvalCommandReturn.parse_obj(result)
 
@@ -181,7 +194,7 @@ class EvalCommand(Command):
             value = self.parameters.configs.get(context.key)
             which = f"parameters.configs.{context.key}={value}"
             from_ = ConfigEvalScopeResultFrom(source="global-override", which=which)
-            return ConfigEvalScopeResult(value=value, from_=from_)
+            return ConfigEvalScopeResult(**{"value": value, "from": from_})
         if (
             context.from_ < len(self.parameters.from_)
             and self.parameters.from_[context.from_].configs is not None
@@ -190,7 +203,7 @@ class EvalCommand(Command):
             value = self.parameters.from_[context.from_].configs.get("key")
             which = f"parameters.from[{context.from_}].configs.{context.key}=${value}"
             from_ = ConfigEvalScopeResultFrom(source="local-override", which=which)
-            return ConfigEvalScopeResult(value=value, from_=from_)
+            return ConfigEvalScopeResult(**{"value": value, "from": from_})
         return _eval_results_from_store(context, cfgu)
 
     def _evaluate_scope(self):
@@ -202,7 +215,7 @@ class EvalCommand(Command):
                 "store": eval_from.store,
                 "set": eval_from.set,
                 "schema": eval_from.schema_,
-                "from_": i,
+                "from": i,
             }
             for key, cfgu in schema_contents.items():
                 context = ConfigEvalScopeContext(**from_context, key=key)
