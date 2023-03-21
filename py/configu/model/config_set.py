@@ -34,6 +34,6 @@ class ConfigSet(IConfigSet):
                     )
                 )
             if step != ConfigSet.ROOT:
-                step = [hierarchy[-1], step] if i > 0 else [step]
-                hierarchy.append(ConfigSet.SEPARATOR.join(step))
+                steps = [hierarchy[-1], step] if i > 0 else [step]
+                hierarchy.append(ConfigSet.SEPARATOR.join(steps))
         super().__init__(hierarchy=hierarchy, path=path)
