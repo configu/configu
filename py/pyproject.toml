@@ -6,7 +6,7 @@ authors = ["Shriekin’ Ninja <ninja@l-m-group.com>"]
 maintainers = ["Or Levi <orlevi128@gmail.com>"]
 license = "Apache-2.0"
 readme = "README.md"
-packages = [{ include = "configu", from = "src" }]
+packages = [{ include = "configu" }]
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.12"
@@ -16,7 +16,27 @@ pydantic = "^1.10.6"
 chevron = "^0.14.0"
 
 [tool.poetry.group.dev.dependencies]
-black = "^22.12.0"
+flake8 = "^6.0.0"
+black = "^23.1.0"
+
+# https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html#
+[tool.black]
+line-length = 79
+target-version = ['py39']
+include = '\.pyi?$'
+
+[tool.poetry.group.test.dependencies]
+pytest = "^7.2.2"
+pytest-cov = "^4.0.0"
+
+# https://docs.pytest.org/en/7.1.x/reference/reference.html#ini-options-ref
+# https://pytest-cov.readthedocs.io/en/latest/config.html
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q -p no:cacheprovider --cov=configu tests/ --cov-report html:.htmlcov"
+testpaths = [
+  "tests"
+]
 
 [build-system]
 requires = ["poetry-core"]

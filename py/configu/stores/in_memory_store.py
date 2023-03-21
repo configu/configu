@@ -17,5 +17,9 @@ class InMemoryStore(ConfigStore):
 
     def set(self, configs: List[Config]) -> None:
         set_config_ids = [config.id for config in configs]
-        existing = [config for config in self._data if config.id not in set_config_ids]
-        self._data = [config for config in existing + configs if bool(config.value)]
+        existing = [
+            config for config in self._data if config.id not in set_config_ids
+        ]
+        self._data = [
+            config for config in existing + configs if bool(config.value)
+        ]

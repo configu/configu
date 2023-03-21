@@ -30,7 +30,7 @@ class ConfigSet(IConfigSet):
                     error_message(
                         f"invalid path {path}",
                         error_location,
-                        f"path is not valid or using reserved name",
+                        "path is not valid or using reserved name",
                     )
                 )
             if step != ConfigSet.ROOT:

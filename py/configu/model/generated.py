@@ -101,7 +101,9 @@ class Cfgu:
         pattern = from_union([from_str, from_none], obj.get("pattern"))
         required = from_union([from_bool, from_none], obj.get("required"))
         template = from_union([from_str, from_none], obj.get("template"))
-        return Cfgu(type, default, depends, description, pattern, required, template)
+        return Cfgu(
+            type, default, depends, description, pattern, required, template
+        )
 
     def to_dict(self) -> dict:
         result: dict = {}
@@ -113,13 +115,19 @@ class Cfgu:
                 [lambda x: from_list(from_str, x), from_none], self.depends
             )
         if self.description is not None:
-            result["description"] = from_union([from_str, from_none], self.description)
+            result["description"] = from_union(
+                [from_str, from_none], self.description
+            )
         if self.pattern is not None:
             result["pattern"] = from_union([from_str, from_none], self.pattern)
         if self.required is not None:
-            result["required"] = from_union([from_bool, from_none], self.required)
+            result["required"] = from_union(
+                [from_bool, from_none], self.required
+            )
         if self.template is not None:
-            result["template"] = from_union([from_str, from_none], self.template)
+            result["template"] = from_union(
+                [from_str, from_none], self.template
+            )
         return result
 
 
@@ -210,13 +218,19 @@ class ConfigSchemaContentsValue:
                 [lambda x: from_list(from_str, x), from_none], self.depends
             )
         if self.description is not None:
-            result["description"] = from_union([from_str, from_none], self.description)
+            result["description"] = from_union(
+                [from_str, from_none], self.description
+            )
         if self.pattern is not None:
             result["pattern"] = from_union([from_str, from_none], self.pattern)
         if self.required is not None:
-            result["required"] = from_union([from_bool, from_none], self.required)
+            result["required"] = from_union(
+                [from_bool, from_none], self.required
+            )
         if self.template is not None:
-            result["template"] = from_union([from_str, from_none], self.template)
+            result["template"] = from_union(
+                [from_str, from_none], self.template
+            )
         return result
 
 
@@ -344,7 +358,9 @@ def config_schema_to_dict(x: ConfigSchema) -> Any:
     return to_class(ConfigSchema, x)
 
 
-def config_schema_contents_value_from_dict(s: Any) -> ConfigSchemaContentsValue:
+def config_schema_contents_value_from_dict(
+    s: Any,
+) -> ConfigSchemaContentsValue:
     return ConfigSchemaContentsValue.from_dict(s)
 
 
@@ -352,11 +368,15 @@ def config_schema_contents_value_to_dict(x: ConfigSchemaContentsValue) -> Any:
     return to_class(ConfigSchemaContentsValue, x)
 
 
-def config_schema_contents_from_dict(s: Any) -> Dict[str, ConfigSchemaContentsValue]:
+def config_schema_contents_from_dict(
+    s: Any,
+) -> Dict[str, ConfigSchemaContentsValue]:
     return from_dict(ConfigSchemaContentsValue.from_dict, s)
 
 
-def config_schema_contents_to_dict(x: Dict[str, ConfigSchemaContentsValue]) -> Any:
+def config_schema_contents_to_dict(
+    x: Dict[str, ConfigSchemaContentsValue]
+) -> Any:
     return from_dict(lambda x: to_class(ConfigSchemaContentsValue, x), x)
 
 
@@ -384,15 +404,21 @@ def config_store_query_to_dict(x: ConfigStoreQuery) -> Any:
     return to_class(ConfigStoreQuery, x)
 
 
-def config_store_contents_element_from_dict(s: Any) -> ConfigStoreContentsElement:
+def config_store_contents_element_from_dict(
+    s: Any,
+) -> ConfigStoreContentsElement:
     return ConfigStoreContentsElement.from_dict(s)
 
 
-def config_store_contents_element_to_dict(x: ConfigStoreContentsElement) -> Any:
+def config_store_contents_element_to_dict(
+    x: ConfigStoreContentsElement,
+) -> Any:
     return to_class(ConfigStoreContentsElement, x)
 
 
-def config_store_contents_from_dict(s: Any) -> List[ConfigStoreContentsElement]:
+def config_store_contents_from_dict(
+    s: Any,
+) -> List[ConfigStoreContentsElement]:
     return from_list(ConfigStoreContentsElement.from_dict, s)
 
 

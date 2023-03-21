@@ -11,7 +11,12 @@ from ..model import (
     ConfigStoreQuery,
     CfguType,
 )
-from ..utils import parse_template, render_template, error_message, is_template_valid
+from ..utils import (
+    parse_template,
+    render_template,
+    error_message,
+    is_template_valid,
+)
 
 
 class EvalCommandFromParameter(BaseModel):
@@ -76,7 +81,11 @@ class EvalCommandReturn(BaseModel):
 
     result: Dict[str, str]
     metadata: Dict[
-        str, Dict[str, Union[ConfigEvalScopeContext, Cfgu, ConfigEvalScopeResult, str]]
+        str,
+        Dict[
+            str,
+            Union[ConfigEvalScopeContext, Cfgu, ConfigEvalScopeResult, str],
+        ],
     ]
 
 
@@ -92,11 +101,17 @@ def _eval_results_from_store(
         results = context.store.get(queries)
         results = sorted(
             results,
-            key=lambda query_result: len(query_result.set.split(context.set.SEPARATOR)),
+            key=lambda query_result: len(
+                query_result.set.split(context.set.SEPARATOR)
+            ),
         )
         if len(results):
             value = results[-1].value
-            which = f"parameters.from[{context.from_}]:store={context.store.type}:set={context.set.path}"
+            which = (
+                f"parameters.from[{context.from_}]"
+                f":store={context.store.type}"
+                f":set={context.set.path}"
+            )
             from_ = ConfigEvalScopeResultFrom(source="store-set", which=which)
             return ConfigEvalScopeResult(**{"value": value, "from": from_})
     return _eval_results_from_schema(context, cfgu)
@@ -108,16 +123,27 @@ def _eval_results_from_schema(
     """"""
     if cfgu.template is not None:
         value = ""
-        which = f"parameters.from[{context.from_}]:schema.template={cfgu.template}"
-        from_ = ConfigEvalScopeResultFrom(source="schema-template", which=which)
+        which = (
+            f"parameters.from[{context.from_}]"
+            f":schema.template={cfgu.template}"
+        )
+        from_ = ConfigEvalScopeResultFrom(
+            source="schema-template", which=which
+        )
         return ConfigEvalScopeResult(**{"value": value, "from": from_})
     if cfgu.default is not None:
         value = cfgu.default
-        which = f"parameters.from[{context.from_}]:schema.default={cfgu.default}"
+        which = (
+            f"parameters.from[{context.from_}]"
+            f":schema.default={cfgu.default}"
+        )
         from_ = ConfigEvalScopeResultFrom(source="schema-default", which=which)
         return ConfigEvalScopeResult(**{"value": value, "from": from_})
     return ConfigEvalScopeResult(
-        **{"value": "", "from": ConfigEvalScopeResultFrom(source="empty", which="")}
+        **{
+            "value": "",
+            "from": ConfigEvalScopeResultFrom(source="empty", which=""),
+        }
     )
 
 
@@ -127,13 +153,19 @@ def _validate_scope(eval_scope):
     result = {"result": {}, "metadata": {}}
     for key, config_eval_scope in eval_scope.items():
         if config_eval_scope.cfgu.template is not None:
-            if not is_template_valid(config_eval_scope.cfgu.template, list(eval_scope.keys()), key, True):
+            if not is_template_valid(
+                config_eval_scope.cfgu.template,
+                list(eval_scope.keys()),
+                key,
+                True,
+            ):
                 raise ValueError(
                     error_message(
-                        f"invalid template property",
+                        "invalid template property",
                         error_scope + [key, "template"],
                     ),
-                    f"{config_eval_scope.template} must contain valid variables",
+                    f"{config_eval_scope.template} must contain"
+                    f" valid variables",
                 )
             template_vars = parse_template(config_eval_scope.cfgu.template)
             template_values = {
@@ -154,12 +186,19 @@ def _validate_scope(eval_scope):
         )
         if not type_test(*test_values):
             raise ValueError(
-                error_message(f"invalid value type for key '{key}'", error_scope),
-                f"value '{test_values[0]}' must be a '{config_eval_scope.cfgu.type}'",
+                error_message(
+                    f"invalid value type for key '{key}'", error_scope
+                ),
+                f"value '{test_values[0]}' must be"
+                f" a '{config_eval_scope.cfgu.type}'",
             )
-        if config_eval_scope.cfgu.required is not None and not bool(test_values[0]):
+        if config_eval_scope.cfgu.required is not None and not bool(
+            test_values[0]
+        ):
             raise ValueError(
-                error_message(f"required key '{key}' is missing a value", error_scope)
+                error_message(
+                    f"required key '{key}' is missing a value", error_scope
+                )
             )
         if bool(test_values[0]) and config_eval_scope.cfgu.depends is not None:
             if any(
@@ -167,12 +206,13 @@ def _validate_scope(eval_scope):
                     True
                     for dep in config_eval_scope.cfgu.depends
                     if dep not in eval_scope.keys()
-                       or not bool(eval_scope[dep].result.value)
+                    or not bool(eval_scope[dep].result.value)
                 ]
             ):
                 raise ValueError(
                     error_message(
-                        f"one or more depends of key '{key}' is missing a value",
+                        f"one or more depends of key '{key}'"
+                        f" is missing a value",
                         error_scope,
                     )
                 )
@@ -206,7 +246,9 @@ class EvalCommand(Command):
         ):
             value = self.parameters.configs.get(context.key)
             which = f"parameters.configs.{context.key}={value}"
-            from_ = ConfigEvalScopeResultFrom(source="global-override", which=which)
+            from_ = ConfigEvalScopeResultFrom(
+                source="global-override", which=which
+            )
             return ConfigEvalScopeResult(**{"value": value, "from": from_})
         if (
             context.from_ < len(self.parameters.from_)
@@ -214,8 +256,13 @@ class EvalCommand(Command):
             and context.key in self.parameters.from_[context.from_].configs
         ):
             value = self.parameters.from_[context.from_].configs.get("key")
-            which = f"parameters.from[{context.from_}].configs.{context.key}=${value}"
-            from_ = ConfigEvalScopeResultFrom(source="local-override", which=which)
+            which = (
+                f"parameters.from[{context.from_}]"
+                f".configs.{context.key}={value}"
+            )
+            from_ = ConfigEvalScopeResultFrom(
+                source="local-override", which=which
+            )
             return ConfigEvalScopeResult(**{"value": value, "from": from_})
         return _eval_results_from_store(context, cfgu)
 

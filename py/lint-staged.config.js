@@ -1,5 +1,7 @@
 module.exports = {
   '**/*.py?(x)': (filenames) => [
-    `echo "whatever"`,
+    'black configu',
+    'flake8 configu',
+    'pytest'
   ],
 };

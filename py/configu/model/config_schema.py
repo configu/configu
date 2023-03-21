@@ -47,11 +47,11 @@ class ConfigSchemaDefinition:
                 "Domain": pyvalidator.is_fqdn,
                 "URL": pyvalidator.is_url,
                 "ConnectionString": lambda value: re.fullmatch(
-                    r"^(?:([^:/?#\s]+):/{2})?(?:([^@/?#\s]+)@)?([^/?#\s]+)?(?:/([^?#\s]*))?(?:[?]([^#\s]+))?\S*$",
+                    r"^(?:([^:/?#\s]+):/{2})?(?:([^@/?#\s]+)@)?([^/?#\s]+)?(?:/([^?#\s]*))?(?:[?]([^#\s]+))?\S*$",  # noqa: E501
                     value,
                     re.RegexFlag.M,
                 )
-                                                  is not None,
+                is not None,
                 "Hex": pyvalidator.is_hexadecimal,
                 "Base64": pyvalidator.is_base64,
                 "MD5": pyvalidator.is_md5,
@@ -73,7 +73,8 @@ class ConfigSchemaDefinition:
     @functools.cached_property
     def types(self) -> Dict[str, ConfigSchemaType]:
         return {
-            f".{schema_type.value}": schema_type for schema_type in ConfigSchemaType
+            f".{schema_type.value}": schema_type
+            for schema_type in ConfigSchemaType
         }
 
     @functools.cached_property
@@ -86,7 +87,8 @@ class ConfigSchema(IConfigSchema):
 
     # todo nothing is done with PROPS.. ?
     #  why is this here anyway? i guess there will be other Schema types?
-    #  if so this needs elevation or better if ConfigSchemaType will contain all this. if not its redundant.
+    #  if so this needs elevation or better if ConfigSchemaType will
+    #  contain all this. if not its redundant.
     CFGU = ConfigSchemaDefinition()
 
     def __init__(self, path: str) -> None:
@@ -99,7 +101,9 @@ class ConfigSchema(IConfigSchema):
                     f"file extension must be {ConfigSchema.CFGU.ext}",
                 )
             )
-        super().__init__(path=path, type=ConfigSchema.CFGU.types[Path(path).suffix])
+        super().__init__(
+            path=path, type=ConfigSchema.CFGU.types[Path(path).suffix]
+        )
 
     def read(self) -> str:
         try:
@@ -121,12 +125,13 @@ class ConfigSchema(IConfigSchema):
                 schema_content = json.loads(schema_content)
                 schema_content = from_dict(Cfgu.from_dict, schema_content)
             except (JSONDecodeError, Exception):
-                raise ValueError(error_message(f"Couldn't parse schema file"))
+                raise ValueError(error_message("Couldn't parse schema file"))
 
         # validate parsed
         for key, cfgu in schema_content.items():
             if not is_valid_name(key):
-                # todo `path nodes mustn't contain reserved words "{key}"` this is not a good suggestion
+                # todo `path nodes mustn't contain reserved
+                #  words "{key}"` this is not a good suggestion
                 raise ValueError(
                     error_message(f"invalid key {key}", error_location + [key])
                 )
@@ -134,18 +139,23 @@ class ConfigSchema(IConfigSchema):
                 # todo suggestion grammar
                 raise ValueError(
                     error_message(
-                        f"invalid type property",
+                        "invalid type property",
                         error_location + [key, cfgu.type.value],
                     ),
-                    f"type '{cfgu.type.value}' must come with a pattern property",
+                    f"type '{cfgu.type.value}' must come with"
+                    f" a pattern property",
                 )
-            # todo - ran - validate template can be here i understand you want to merge params from
-            #  other schema.cfg.json files in eval_cmd but i dont thing it makes this valid at this scope.
+            # todo - ran - validate template can be here
+            #  i understand you want to merge params from
+            #  other schema.cfg.json files in eval_cmd
+            #  but i dont thing it makes this valid at this scope.
             if cfgu.template is not None:
-                if not is_template_valid(cfgu.template, list(schema_content.keys()), key):
+                if not is_template_valid(
+                    cfgu.template, list(schema_content.keys()), key
+                ):
                     raise ValueError(
                         error_message(
-                            f"invalid template property",
+                            "invalid template property",
                             error_location + [key, "template"],
                         ),
                         f"{cfgu.template} must contain valid variables",
@@ -155,10 +165,11 @@ class ConfigSchema(IConfigSchema):
                     # todo suggestion grammar
                     raise ValueError(
                         error_message(
-                            f"invalid default property",
+                            "invalid default property",
                             error_location + [key, "default"],
                         ),
-                        f"default mustn't set together with required or template properties",
+                        "default mustn't set together with required "
+                        "or template properties",
                     )
                 else:
                     type_test = ConfigSchema.CFGU.VALIDATORS.get(
@@ -172,21 +183,28 @@ class ConfigSchema(IConfigSchema):
                     if not type_test(*test_values):
                         raise ValueError(
                             error_message(
-                                f"invalid default property",
+                                "invalid default property",
                                 error_location + [key, "default"],
                             ),
-                            f"{cfgu.default} must be of type {cfgu.type.value} (or match Regex)",
+                            f"{cfgu.default} must be of type {cfgu.type.value}"
+                            f" or match Regex",
                         )
 
             if cfgu.depends is not None and (
                 not len(cfgu.depends)
-                or any([not is_valid_name(dependency) for dependency in cfgu.depends])
+                or any(
+                    [
+                        not is_valid_name(dependency)
+                        for dependency in cfgu.depends
+                    ]
+                )
             ):
                 raise ValueError(
                     error_message(
-                        f"invalid depends property", error_location + [key, "depends"]
+                        "invalid depends property",
+                        error_location + [key, "depends"],
                     ),
-                    f"depends is empty or contain reserved words",
+                    "depends is empty or contain reserved words",
                 )
 
         return schema_content
