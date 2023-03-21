@@ -1,0 +1,6 @@
+# https://flake8.pycqa.org/en/latest/user/configuration.html
+[flake8]
+extend-ignore = E203
+per-file-ignores =
+  configu/*/__init__.py:F401
+  configu/model/generated.py:E722,E501
