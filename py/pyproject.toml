@@ -18,7 +18,6 @@ chevron = "^0.14.0"
 [tool.poetry.group.dev.dependencies]
 flake8 = "^6.0.0" # configs at .flake8
 black = "^23.1.0"
-mypy = "^1.1.1"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.2.2"

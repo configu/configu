@@ -2,7 +2,7 @@ from typing import List, Dict, Union, Literal, Optional
 
 from pydantic import BaseModel, Field
 
-from ..model import (
+from ..core import (
     Command,
     ConfigStore,
     ConfigSet,

@@ -1,5 +1,5 @@
 from .commands import EvalCommand
-from .model import (
+from .core import (
     Command,
     Config,
     ConfigStoreQuery,
