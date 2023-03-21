@@ -33,7 +33,7 @@ class TokenAuth(AuthBase):
         self.token = token
 
     def __call__(self, r):
-        r.headers["Token"] = self.token
+        r.headers["token"] = self.token
         return r
 
 
