@@ -1,7 +1,6 @@
 from typing import List
 
-from ..core import Config, ConfigStoreQuery
-from ..core import ConfigStore
+from ..core import Config, ConfigStoreQuery, ConfigStore
 
 
 class InMemoryStore(ConfigStore):
