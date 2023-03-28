@@ -1,9 +1,12 @@
 [tool.poetry]
-name = "configu-python-sdk"
-version = "0.1.0"
+name = "configu-sdk"
+version = "0.0.0"
 description = "Configu Python SDK"
-authors = ["Shriekin’ Ninja <ninja@l-m-group.com>"]
-maintainers = ["Or Levi <orlevi128@gmail.com>"]
+authors = ["Configu <configu@configu.com>"]
+maintainers = [
+  "Shriekin’ Ninja <ninja@l-m-group.com>",
+  "Or Levi <orlevi128@gmail.com>"
+]
 license = "Apache-2.0"
 readme = "README.md"
 homepage = "https://configu.com/"
@@ -50,7 +53,7 @@ include = '\.pyi?$'
 [tool.pytest.ini_options]
 cache_dir = 'tmp/pytest_cache'
 minversion = "6.0"
-addopts = "-ra -q -p no:cacheprovider" # if coverage --cov=configu tests/ --cov-report html:tmp/coverage
+addopts = "-ra -q -p no:cacheprovider" # --cov=configu tests/ --cov-report html:tmp/coverage
 testpaths = [
   "tests"
 ]

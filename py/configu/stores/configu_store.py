@@ -73,7 +73,11 @@ class ConfiguStore(ConfigStore):
         print([Config(**args) for args in response.json()])
         return [Config(**args) for args in response.json()]
 
-    def set(self, configs: List[Config]) -> None:
+    def set(self, configs: List[Union[Config, dict]]) -> None:
+        configs = [
+            Config(**config) if isinstance(config, dict) else config
+            for config in configs
+        ]
         configs_json = {"configs": [config.to_dict() for config in configs]}
         response = requests.put(
             url=self._url,
