@@ -29,6 +29,7 @@ def is_valid_name(name: str) -> bool:
 
 
 def parse_template(template: str) -> List[str]:
+    # todo if not literal or variable raise exception
     return [
         var
         for var_type, var in chevron.tokenizer.tokenize(template)
@@ -40,6 +41,7 @@ def render_template(template: str, context: Dict[str, str]) -> str:
     return chevron.render(template, context)
 
 
+# todo move to
 def is_template_valid(
     template: str,
     key=str,
