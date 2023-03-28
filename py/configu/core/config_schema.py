@@ -16,7 +16,7 @@ from .generated import (
     CfguType,
     from_dict,
 )
-from ..utils import error_message, is_valid_name, is_template_valid
+from ..utils import error_message, is_valid_name
 
 
 @dataclass
@@ -24,6 +24,8 @@ class ConfigSchemaDefinition:
     NAME: str = "cfgu"
     EXT: str = ".cfgu"
     VALIDATORS: Dict[str, Callable[[str], bool]] = None
+
+    _cs_regex = r"^(?:([^:/?#\s]+):/{2})?(?:([^@/?#\s]+)@)?([^/?#\s]+)?(?:/([^?#\s]*))?(?:[?]([^#\s]+))?\S*$"  # noqa: E501
 
     def __post_init__(self):
         if self.VALIDATORS is None:
@@ -47,7 +49,7 @@ class ConfigSchemaDefinition:
                 "Domain": pyvalidator.is_fqdn,
                 "URL": pyvalidator.is_url,
                 "ConnectionString": lambda value: re.fullmatch(
-                    r"^(?:([^:/?#\s]+):/{2})?(?:([^@/?#\s]+)@)?([^/?#\s]+)?(?:/([^?#\s]*))?(?:[?]([^#\s]+))?\S*$",  # noqa: E501
+                    self._cs_regex,
                     value,
                     re.RegexFlag.M,
                 )
@@ -124,7 +126,8 @@ class ConfigSchema(IConfigSchema):
             try:
                 schema_content = json.loads(schema_content)
                 schema_content = from_dict(Cfgu.from_dict, schema_content)
-            except (JSONDecodeError, Exception):
+            except (JSONDecodeError, Exception) as e:
+                print(e)
                 raise ValueError(error_message("Couldn't parse schema file"))
 
         # validate parsed
@@ -145,21 +148,6 @@ class ConfigSchema(IConfigSchema):
                     f"type '{cfgu.type.value}' must come with"
                     f" a pattern property",
                 )
-            # todo - ran - validate template can be here
-            #  i understand you want to merge params from
-            #  other schema.cfg.json files in eval_cmd
-            #  but i dont thing it makes this valid at this scope.
-            if cfgu.template is not None:
-                if not is_template_valid(
-                    cfgu.template, list(schema_content.keys()), key
-                ):
-                    raise ValueError(
-                        error_message(
-                            "invalid template property",
-                            error_location + [key, "template"],
-                        ),
-                        f"{cfgu.template} must contain valid variables",
-                    )
             if cfgu.default is not None:
                 if cfgu.required is not None or cfgu.template is not None:
                     # todo suggestion grammar

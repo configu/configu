@@ -70,7 +70,8 @@ class ConfiguStore(ConfigStore):
             json=queries_json,
         )
         response.raise_for_status()
-        return response.json()
+        print([Config(**args) for args in response.json()])
+        return [Config(**args) for args in response.json()]
 
     def set(self, configs: List[Config]) -> None:
         configs_json = {"configs": [config.to_dict() for config in configs]}

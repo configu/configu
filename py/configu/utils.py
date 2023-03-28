@@ -1,5 +1,5 @@
 import re
-from typing import Optional, List, Dict
+from typing import Optional, List, Dict, Tuple
 
 import chevron
 
@@ -42,19 +42,8 @@ def render_template(template: str, context: Dict[str, str]) -> str:
 
 def is_template_valid(
     template: str,
-    scope_keys: List[str],
     key=str,
-    validate_all_existing: bool = False,
-) -> bool:
-    print(scope_keys)
+) -> Tuple[bool, List[str]]:
     template_vars = parse_template(template)
-    is_valid = len(template_vars) > 0 and key not in template_vars
-    if validate_all_existing:
-        is_valid = is_valid and all(
-            [
-                False
-                for template_var in template_vars
-                if template_var not in scope_keys
-            ]
-        )
-    return is_valid
+    is_valid = key not in template_vars
+    return is_valid, template_vars

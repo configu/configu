@@ -46,8 +46,3 @@ oclif.manifest.json
 
 # pycharm
 .idea/
-
-# python specific
-py/.coverage
-py/.htmlcov
-py/.idea
