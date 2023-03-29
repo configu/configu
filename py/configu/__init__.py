@@ -1,4 +1,4 @@
-from .commands import EvalCommand
+from .commands import EvalCommand, UpsertCommand
 from .core import (
     Command,
     Config,
@@ -14,6 +14,7 @@ from .stores import InMemoryStore, ConfiguStore, JsonFileStore
 
 __all__ = [
     "EvalCommand",
+    "UpsertCommand",
     "Command",
     "Config",
     "ConfigStoreQuery",
