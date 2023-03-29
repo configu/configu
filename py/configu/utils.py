@@ -1,5 +1,5 @@
 import re
-from typing import Optional, List, Dict, Tuple
+from typing import Optional, List, Dict
 
 import chevron
 
@@ -29,23 +29,18 @@ def is_valid_name(name: str) -> bool:
 
 
 def parse_template(template: str) -> List[str]:
-    # todo if not literal or variable raise exception
-    return [
-        var
-        for var_type, var in chevron.tokenizer.tokenize(template)
-        if var_type == "variable"
-    ]
+    template_vars = []
+    for tag_type, tag_key in chevron.tokenizer.tokenize(template):
+        if tag_type not in ["variable", "literal"]:
+            raise Exception(
+                error_message(
+                    f'invalid template "{template}"', ["Template", "parse"]
+                )
+            )
+        if tag_type == "variable":
+            template_vars.append(tag_key)
+    return template_vars
 
 
 def render_template(template: str, context: Dict[str, str]) -> str:
     return chevron.render(template, context)
-
-
-# todo move to
-def is_template_valid(
-    template: str,
-    key=str,
-) -> Tuple[bool, List[str]]:
-    template_vars = parse_template(template)
-    is_valid = key not in template_vars
-    return is_valid, template_vars
