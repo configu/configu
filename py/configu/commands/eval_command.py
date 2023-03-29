@@ -345,15 +345,17 @@ class EvalCommand(Command[EvalCommandReturn]):
                     {
                         **render_context,
                         **{
-                            "path": current.context.set.path,
-                            "first": current.context.set.hierarchy[0],
-                            "last": current.context.set.hierarchy[-1],
-                            **{
-                                str(index): path
-                                for index, path in enumerate(
-                                    current.context.set.hierarchy
-                                )
-                            },
+                            "CONFIGU_SET": {
+                                "path": current.context.set.path,
+                                "first": current.context.set.hierarchy[0],
+                                "last": current.context.set.hierarchy[-1],
+                                **{
+                                    str(index): path
+                                    for index, path in enumerate(
+                                        current.context.set.hierarchy
+                                    )
+                                },
+                            }
                         },
                     },
                 )
@@ -431,27 +433,3 @@ class EvalCommand(Command[EvalCommandReturn]):
                 "result": config_eval_scope.result,
             }
         return EvalCommandReturn.parse_obj(result)
-
-
-#
-# def get_empty_sources(self) -> Dict[str, ConfigEvalScope]:
-#     return {
-#         key: scope
-#         for key, scope in self.items()
-#         if scope.result.from_.source == "empty"
-#     }
-#
-# def get_empty_source_not_template(self) -> Dict[str, ConfigEvalScope]:
-#     return {
-#         key: scope
-#         for key, scope in self.items()
-#         if scope.result.from_.source == "empty"
-#         and scope.cfgu.template is None
-#     }
-#
-# def get_source_template(self) -> Dict[str, ConfigEvalScope]:
-#     return
-#
-
-#
-# def get_result(self) -> EvalCommandReturn:
