@@ -1,7 +1,3 @@
 module.exports = {
-  '**/*.py?(x)': (filenames) => [
-    'black configu',
-    'flake8 configu',
-    'pytest'
-  ],
+  '**/*.py?(x)': (filenames) => filenames.flatMap(filename => [`black ${filename}`, `flake8 ${filename}`]).concat(['pytest']),
 };
