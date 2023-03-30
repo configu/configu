@@ -1,0 +1,53 @@
+name: "Python Environment Setup"
+
+inputs:
+  pythen-version:
+    description: "Python version"
+    required: true
+    default: "3.9"
+  poetry-version:
+    description: "poetry version"
+    required: true
+    default: "1.4"
+  poetry-token:
+    required: true
+    default: ""
+  install-dependencies:
+    required: true
+    default: "true"
+  dependencies-root:
+    description: "Runs poetry install in this directory"
+    required: true
+    default: "py"
+
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install Python ${{ inputs.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ inputs.python-version }}
+
+    - name: Install Poetry ${{ inputs.poetry-version }}
+      uses: abatilo/actions-poetry@v2
+      with:
+        poetry-version: ${{ inputs.poetry-version }}
+
+    - name: Set CWD environment variable
+      shell: bash
+      run: |
+        echo "CWD=${{ inputs.dependencies-root }}" >> $GITHUB_ENV
+
+    - name: Install dependencies
+      shell: bash
+      if: ${{ inputs.install-dependencies == 'true' }} # * there is a bug in gh-actions causing booleans to be strings in composite actions - see: https://github.com/actions/runner/issues/1483#issuecomment-1042393939
+      run: |
+        cd ${{ env.CWD }}
+        poetry install
+
+    - name: Set Potry publish token
+      shell: bash
+      if: ${{ inputs.poetry-token != '' }}
+      run: poetry poetry config pypi-token.pypi ${{ inputs.poetry-token }}
+

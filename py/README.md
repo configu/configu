@@ -8,7 +8,7 @@
 
 > pip install configu
 
-## Dev
+## CONTRIBUTING
 
 ### Requirements
 
