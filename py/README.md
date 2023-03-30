@@ -1,7 +1,3 @@
-<a href="https://configu.com" target="_blank">
-  <img style="float:right; max-width: 80px; width:100%" src="https://app.configu.com/logo192.png" alt="configu logo">
-</a>
-
 # @configu/py
 
 ## Install
