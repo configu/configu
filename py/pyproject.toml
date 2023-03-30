@@ -22,7 +22,8 @@ keywords = [
 classifiers = [
   "Development Status :: 3 - Alpha", # Development Status :: 5 - Production/Stable after CR
   "Intended Audience :: Developers",
-  "Intended Audience :: System Administrators",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3 :: Only",
   "Topic :: Software Development"
 ]
 packages = [{ include = "configu" }]

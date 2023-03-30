@@ -1,4 +1,4 @@
-name: "CI Python Tests"
+name: "CI: Python Tests"
 on:
   pull_request:
     branches:
@@ -14,6 +14,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
       - uses: ./.github/actions/py-env-action
+
       - name: Run Tests
         run: cd ${{ env.CWD }} && poetry run pytest
