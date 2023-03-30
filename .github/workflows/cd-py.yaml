@@ -39,7 +39,7 @@ jobs:
       - name: Publish to pypi
         run: |
           cd ${{ env.CWD }}
-          poetry poetry config pypi-token.pypi ${{ secrets.PYPI_TOKEN }}
+          poetry config pypi-token.pypi ${{ secrets.PYPI_TOKEN }}
           poetry publish
       # ----------
 
