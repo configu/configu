@@ -12,7 +12,3 @@ def test_config():
         Config(**obj)
     except Exception as e:
         assert isinstance(e, TypeError) and "__init__() got an unexpected keyword argument" in str(e)
-
-
-def test_config_store_contents():
-    obj = [{k: k for k in ['key', 'set']}]

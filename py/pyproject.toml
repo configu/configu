@@ -1,10 +1,10 @@
 [tool.poetry]
-name = "configu-sdk"
+name = "configu"
 version = "0.0.0"
 description = "Configu Python SDK"
-authors = ["Configu <configu@configu.com>"]
+authors = ["Configu <info@configu.com>"]
 maintainers = [
-  "Shriekin’ Ninja <ninja@l-m-group.com>",
+  "Ron Roditi <ron@configu.com>",
   "Or Levi <orlevi128@gmail.com>"
 ]
 license = "Apache-2.0"
@@ -47,6 +47,7 @@ pytest-cov = "^4.0.0"
 line-length = 79
 target-version = ['py39']
 include = '\.pyi?$'
+extend-exclude = 'configu/core/generated.py'
 
 # https://docs.pytest.org/en/7.1.x/reference/reference.html#ini-options-ref
 # https://pytest-cov.readthedocs.io/en/latest/config.html
@@ -54,6 +55,7 @@ include = '\.pyi?$'
 cache_dir = 'tmp/pytest_cache'
 minversion = "6.0"
 addopts = "-ra -q -p no:cacheprovider" # --cov=configu tests/ --cov-report html:tmp/coverage
+filterwarnings = 'ignore::DeprecationWarning'
 testpaths = [
   "tests"
 ]

@@ -1,7 +1,7 @@
 module.exports = {
   '**/*.py?(x)': (filenames) => [
-    'black configu',
-    'flake9 configu',
-    'pytest'
+    'poetry run black configu',
+    'poetry run flake8 configu',
+    'poetry run pytest'
   ]
 };
