@@ -14,7 +14,7 @@ See example in the examples folder
 ### Requirements
 
 1. Follow the instructions on the main [CONTRIBUTING.md](https://github.com/configu/configu/blob/main/CONTRIBUTING.md)
-   to set up node and npm
+   to set up node and npm. This is necessary for lint-staged workflow
 2. Install [pyenv](https://github.com/pyenv/pyenv)
 3. Install [poetry](https://python-poetry.org/)
 
