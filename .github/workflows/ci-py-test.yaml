@@ -17,5 +17,17 @@ jobs:
 
       - uses: ./.github/actions/py-env-action
 
+      - name: Run black
+        run: |
+          cd ${{ env.CWD }}
+          poetry run black configu
+
+      - name: Run flake8
+        run: |
+          cd ${{ env.CWD }}
+          poetry run flake8 configu
+
       - name: Run Tests
-        run: cd ${{ env.CWD }} && poetry run pytest
+        run: |
+          cd ${{ env.CWD }}
+          poetry run pytest
