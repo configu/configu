@@ -8,7 +8,7 @@ on:
 
 jobs:
   ci:
-    name: Run pytest
+    name: Black, Flake8 and Tests
     strategy:
       fail-fast: false
     runs-on: ubuntu-latest
