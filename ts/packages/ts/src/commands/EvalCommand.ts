@@ -201,9 +201,9 @@ export class EvalCommand extends Command<EvalCommandReturn> {
             CONFIGU_SET: {
               path: current.context.set.path,
               hierarchy: current.context.set.hierarchy,
-              ...current.context.set.hierarchy.reduce((o, c, i) => ({ ...o, [i]: c }), {}),
               first: _.first(current.context.set.hierarchy), // always the root set which is ''
               last: _.last(current.context.set.hierarchy),
+              ...current.context.set.hierarchy.reduce((o, c, i) => ({ ...o, [i]: c }), {}),
             },
           });
           _.pull(templateKeys, key);
