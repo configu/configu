@@ -19,27 +19,6 @@ coverage
 *-debug.log
 *-error.log
 
-# ----------
-
-# ts spesific:
-
 # dependencies
 node_modules
-/.pnp
-.pnp.js
 .npm
-
-# linter
-.eslintcache
-
-# output
-*.tsbuildinfo
-
-# oclif
-oclif.manifest.json
-
-# local env files
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
