@@ -53,6 +53,23 @@ describe(`commands`, () => {
       template: '{{K21}}::{{K11}}:{{K12}}:{{K13}}',
     },
   });
+  const schema3 = new ConfigSchema({
+    K31: {
+      type: 'String',
+      description: "email's prefix",
+      template: '{{CONFIGU_SET.1}}-{{CONFIGU_SET.hierarchy.1}}',
+    },
+    K32: {
+      type: 'Domain',
+      description: "email's suffix",
+    },
+    K33: {
+      type: 'Email',
+      template: '{{CONFIGU_SET.last}}-{{K31}}@{{K32}}',
+      required: true,
+      depends: ['K31', 'K32'],
+    },
+  });
 
   describe(`EvalCommand`, () => {
     test.each<{
@@ -181,6 +198,23 @@ describe(`commands`, () => {
           },
         },
         expected: { K11: 'false', K12: '4', K13: 'test', K21: 'foo', K22: 'foo::false:4:test' },
+      },
+      {
+        name: '[ store2 ⋅ set1 ⋅ schema3 ] - template of a template & CONFIGU_SET',
+        parameters: {
+          upsert: [
+            {
+              store: store2,
+              set: set1,
+              schema: schema3,
+              configs: {
+                K32: 'configu.com',
+              },
+            },
+          ],
+          eval: { from: [{ store: store2, set: set1, schema: schema3 }] },
+        },
+        expected: { K31: 'test-test', K32: 'configu.com', K33: 'test-test-test@configu.com' },
       },
     ])('$name', async ({ parameters, expected }) => {
       const upsertPromises = parameters.upsert.map((p) => new UpsertCommand(p).run());
