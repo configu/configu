@@ -181,10 +181,10 @@ export class EvalCommand extends Command<EvalCommandReturn> {
       .pickBy((current) => current.result.from.source === 'schema-template')
       .keys()
       .value();
-    const renderContext = _.mapValues(evalScope, (current) => current.result.value);
     let runAgain = true;
     while (!_.isEmpty(templateKeys) && runAgain) {
       let hasRendered = false;
+      const renderContext = _.mapValues(evalScope, (current) => current.result.value);
       _(templateKeys)
         .cloneDeep()
         .forEach((key) => {
@@ -200,7 +200,8 @@ export class EvalCommand extends Command<EvalCommandReturn> {
             ...renderContext,
             CONFIGU_SET: {
               path: current.context.set.path,
-              first: _.first(current.context.set.hierarchy),
+              hierarchy: current.context.set.hierarchy,
+              first: _.first(current.context.set.hierarchy), // always the root set which is ''
               last: _.last(current.context.set.hierarchy),
               ...current.context.set.hierarchy.reduce((o, c, i) => ({ ...o, [i]: c }), {}),
             },

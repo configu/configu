@@ -14,16 +14,17 @@ See example in the examples folder
 ### Requirements
 
 1. Follow the instructions on the main [CONTRIBUTING.md](https://github.com/configu/configu/blob/main/CONTRIBUTING.md)
-   to set up node and npm. This is necessary for lint-staged workflow
-2. Install [pyenv](https://github.com/pyenv/pyenv)
-3. Install [poetry](https://python-poetry.org/)
+   to set up node and npm. This is necessary for lint-staged workflow.
+2. Install [pyenv](https://github.com/pyenv/pyenv) | [Homebrew](https://formulae.brew.sh/formula/pyenv)
+3. Install [poetry](https://python-poetry.org/) | [Homebrew](https://formulae.brew.sh/formula/poetry)
 
 ### Setup
 
->  <span style="color:#FF392B">**Make sure you're in configu/py directory**</span>
-
 #### Run these commands in order
 
+```bash
+cd py
+```
 
 ```bash
 pyenv install
@@ -34,7 +35,7 @@ pyenv local 3.9.16
 ```
 
 ```bash
-poetry env use python
+poetry env use $(pyenv which python)
 ```
 
 ```bash

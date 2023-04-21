@@ -326,13 +326,12 @@ class EvalCommand(Command[EvalCommandReturn]):
             }.keys()
         )
 
-        render_context = {
-            key: value.result.value for key, value in eval_scope.items()
-        }
-
         run_again = True
         while len(template_keys) > 0 and run_again:
             has_rendered = False
+            render_context = {
+                key: value.result.value for key, value in eval_scope.items()
+            }
             for key in deepcopy(template_keys):
                 current: ConfigEvalScope = eval_scope[key]
                 template: str = current.cfgu.template
@@ -347,6 +346,7 @@ class EvalCommand(Command[EvalCommandReturn]):
                         **{
                             "CONFIGU_SET": {
                                 "path": current.context.set.path,
+                                "hierarchy": current.context.set.hierarchy,
                                 "first": current.context.set.hierarchy[0],
                                 "last": current.context.set.hierarchy[-1],
                                 **{
