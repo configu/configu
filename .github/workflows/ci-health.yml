@@ -16,4 +16,4 @@ jobs:
         uses: lycheeverse/lychee-action@v1.7.0
         with:
           fail: true
-          args: --exclude-all-private --exclude 'stackoverflow.com' --exclude-path 'examples/create-react-app/public/index.html'
+          args: '.' --verbose --no-progress --exclude-all-private --exclude 'stackoverflow.com' --exclude-path 'examples/create-react-app/public/index.html'
