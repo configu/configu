@@ -7,10 +7,10 @@
   "icon": "public/icon.png",
   "main": "./build/extension.js",
   "scripts": {
-    "build:clean": "npx rimraf build dist tsconfig.tsbuildinfo",
+    "build:clean": "shx rm -rf build dist tsconfig.tsbuildinfo",
     "build:tsc": "tsc --build",
-    "build:esbuild": "npx esbuild ./src/extension.ts --outfile=./build/extension.js --bundle --minify --platform=node --format=cjs --external:vscode --define:extension=true",
-    "build:package": "npx vsce package --out ./build --no-dependencies --allow-missing-repository",
+    "build:esbuild": "esbuild ./src/extension.ts --outfile=./build/extension.js --bundle --minify --platform=node --format=cjs --external:vscode --define:extension=true",
+    "build:package": "vsce package --out ./build --no-dependencies --allow-missing-repository",
     "build": "npm run build:clean && npm run build:tsc && npm run build:esbuild && npm run build:package"
   },
   "engines": {

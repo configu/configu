@@ -23,7 +23,7 @@ Consider a web application that uses multiple configurations to display differen
 - Connected Git Repository: **github.com/configu/configu**
 - Environment variables: **CONFIGU_ORG**, **CONFIGU_TOKEN**, **CONFIGU_SET**
 
-### [GitHub Actions](.github/workflows/cd-cra.yml)
+### [GitHub Actions](../../.github/workflows/cd-cra.yml)
 
 <!-- TODO: finish explaining about this -->
 

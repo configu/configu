@@ -1,5 +1,7 @@
 # @configu/py
 
+> configu python sdk
+
 ## Install
 
 ```bash

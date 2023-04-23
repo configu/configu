@@ -1,10 +1,10 @@
 name: "Action: Python Environment Setup"
 description: ""
 inputs:
-  pythen-version:
+  python-version:
     description: "Python Version"
     required: true
-    default: "3.9"
+    default: "3.9.16"
   poetry-version:
     description: "Poetry Version"
     required: true
@@ -17,7 +17,6 @@ inputs:
     description: "Runs poetry install in this directory"
     required: true
     default: "py"
-
 
 runs:
   using: "composite"
@@ -43,4 +42,3 @@ runs:
       run: |
         cd ${{ env.CWD }}
         poetry install
-

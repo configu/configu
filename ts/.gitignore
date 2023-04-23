@@ -15,6 +15,9 @@ node_modules
 # oclif
 oclif.manifest.json
 
+# docs
+docs
+
 # local env files
 .env.local
 .env.development.local

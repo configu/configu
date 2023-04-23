@@ -12,7 +12,11 @@ import { getPathBasename } from '../helpers';
 
 const POPULATED_SCHEMA: Record<'GET_STARTED' | 'EXAMPLE', { [key: string]: Cfgu }> = {
   GET_STARTED: {
-    GREETING: { type: 'RegEx', pattern: '^(hello|hey|welcome|salute|bonjour)$', default: 'hello' },
+    GREETING: {
+      type: 'RegEx',
+      pattern: '^(hello|hey|welcome|hola|salute|bonjour|shalom|marhabaan)$',
+      default: 'hello',
+    },
     SUBJECT: { type: 'String', default: 'world' },
     MESSAGE: {
       type: 'String',

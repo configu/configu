@@ -47,7 +47,7 @@ jobs:
       - name: Publish to npm
         run: |
           cd ${{ env.CWD }}
-          npm publish --access public --tag ${{ steps.deployment.outputs.release-channel }} \
+          npm publish --access public --provenance --tag ${{ steps.deployment.outputs.release-channel }} \
             --workspace=@configu/ts --workspace=@configu/node --workspace=@configu/browser
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
