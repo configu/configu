@@ -15,7 +15,7 @@ export class ConfigSchema extends BaseConfigSchema {
   }
 
   async read() {
-    this.contents = await this.blob.text();
+    return this.blob.text();
   }
 
   static async init(): Promise<ConfigSchema> {

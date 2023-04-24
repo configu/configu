@@ -1,21 +1,15 @@
-import { Cfgu } from "./Cfgu";
+import { Cfgu } from './Cfgu';
 
-export enum ConfigSchemaType {
-  Json = "json",
-  Yaml = "yaml",
-}
+export type ConfigSchemaType = "json";
 
 /**
- * An interface of a <uid>.cfgu.[json|yaml] file, aka ConfigSchema
- * that contains binding records between a unique Config <key> and its Cfgu declaration
+ * An interface of a <file>.cfgu.json, aka ConfigSchema
+ * that contains binding records between a unique Config.<key> and its Cfgu declaration
  */
 export interface ConfigSchema {
   path: string;
   type: ConfigSchemaType;
-  uid: string;
-  contents: string;
 }
-
 
 export interface ConfigSchemaContentsValue extends Cfgu {};
 export type ConfigSchemaContents = { [key: string]: ConfigSchemaContentsValue };

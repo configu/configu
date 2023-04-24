@@ -21,7 +21,6 @@ jobs:
         with:
           package-name: ${{ env.PACKAGE_NAME }}
           slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-          google-chat-webhook: ${{ secrets.GOOGLE_CHAT_WEBHOOK }}
 
       - uses: ./.github/actions/ts-env-action
 
@@ -33,12 +32,14 @@ jobs:
       - name: Bump package version
         run: |
           cd ${{ env.CWD }}
-          npm --no-git-tag-version version ${{ steps.deployment.outputs.release-version }} --workspace=${{ env.PACKAGE_NAME }}
+          npm --no-git-tag-version version ${{ steps.deployment.outputs.release-version }} \
+            --workspace=${{ env.PACKAGE_NAME }}
 
       - name: Build extension
         run: |
           cd ${{ env.CWD }}
-          npm run --workspace=${{ env.PACKAGE_NAME }} build
+          npm run build \
+            --workspace=${{ env.PACKAGE_NAME }}
 
       - name: Upload vsix artifact
         uses: actions/upload-artifact@v3
@@ -66,4 +67,3 @@ jobs:
           package-name: ${{ env.PACKAGE_NAME }}
           package-version: ${{ steps.deployment.outputs.release-version }}
           slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-          google-chat-webhook: ${{ secrets.GOOGLE_CHAT_WEBHOOK }}

@@ -7,8 +7,6 @@ inputs:
     required: true
   slack-webhook:
     required: true
-  google-chat-webhook:
-    required: true
 
 runs:
   using: "composite"
@@ -21,11 +19,3 @@ runs:
         fields: repo,message,commit,author,action,eventName,ref,workflow
       env:
         SLACK_WEBHOOK_URL: ${{ inputs.slack-webhook }}
-
-    - name: Post Google Chat build status
-      uses: Co-qn/google-chat-notification@v1
-      if: always()
-      with:
-        name: ${{ inputs.package-name }} v${{ inputs.package-version }} deployment
-        url: ${{ inputs.google-chat-webhook }}
-        status: ${{ job.status }}

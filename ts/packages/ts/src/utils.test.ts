@@ -1,4 +1,4 @@
-import { ERR, TMPL, CS } from './utils';
+import { ERR, TMPL } from './utils';
 
 describe(`utils`, () => {
   describe(`ERR`, () => {
@@ -61,35 +61,6 @@ describe(`utils`, () => {
       it(`return partially rendered - missing name node in context`, async () => {
         const res = TMPL.render(template, { notTest: 'render' });
         expect(res).toBe(' TMPL');
-      });
-    });
-  });
-
-  describe(`CS`, () => {
-    const cs = 'store=configu;org=configu;token=test-token';
-    const parsed = { store: 'configu', org: 'configu', token: 'test-token' };
-    describe(`parse`, () => {
-      it(`return parsed connection string`, async () => {
-        const res = CS.parse(cs);
-        expect(res).toEqual(parsed);
-      });
-      it(`return parsed connection string with undefined value`, async () => {
-        const res = CS.parse(`${cs};p1=;p2`);
-        expect(res).toEqual({ ...parsed, p1: '', p2: undefined });
-      });
-      it(`return parsed connection string after trimming`, async () => {
-        const res = CS.parse(`; ${cs}  ; `);
-        expect(res).toEqual(parsed);
-      });
-    });
-    describe(`serialize`, () => {
-      it(`return serialize connection string`, async () => {
-        const res = CS.serialize(parsed);
-        expect(res).toEqual(cs);
-      });
-      it(`return parsed connection string with undefined value`, async () => {
-        const res = CS.serialize({ ...parsed, p1: '', p2: undefined });
-        expect(res).toBe(`${cs};p1=;p2`);
       });
     });
   });

@@ -1,8 +1,8 @@
-import _ from 'lodash';
-import { CliUx } from '@oclif/core';
+import { ux } from '@oclif/core';
 import axios from 'axios';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
+import open from 'open';
 import { Issuer, errors } from 'openid-client';
 import { defaultInteractiveSession } from './default';
 
@@ -50,13 +50,13 @@ const loginWithAuth0 = async () => {
     const handle = await client.deviceAuthorization({ audience: AUTH0_API_IDENTIFIER });
     const { user_code: userCode, verification_uri_complete: verificationUriComplete, expires_in: expiresIn } = handle;
 
-    await CliUx.ux.anykey(
+    await ux.anykey(
       `${chalk.bold('press any key')} to open up the browser to login or press ctrl-c to abort.
 you should see the following code: ${chalk.bold(userCode)}. it expires in ${
         expiresIn % 60 === 0 ? `${expiresIn / 60} minutes` : `${expiresIn} seconds`
       }.`,
     );
-    await CliUx.ux.open(verificationUriComplete);
+    await open(verificationUriComplete);
 
     const tokens = await handle.poll();
 
@@ -102,7 +102,7 @@ export const configuInteractiveSession = async () => {
     },
   ]);
   if (type === 'Token') {
-    const storeConfiguration = await defaultInteractiveSession('configu', ['type']);
+    const storeConfiguration = await defaultInteractiveSession('configu');
     return { ...storeConfiguration, type: 'Token' } as const;
   }
   return loginWithAuth0();

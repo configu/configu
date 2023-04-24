@@ -7,10 +7,19 @@
   "browserslist": [
     "defaults and supports es6-module"
   ],
-  "exports": "./build/index.js",
+  "main": "./build/index.cjs",
+  "module": "./build/index.mjs",
   "types": "./build/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./build/index.cjs",
+      "import": "./build/index.mjs",
+      "types": "./build/index.d.ts"
+    }
+  },
   "files": [
-    "/build"
+    "/build",
+    "/dist"
   ],
   "homepage": "https://configu.com",
   "keywords": [
@@ -20,16 +29,20 @@
     "configu-browser-sdk"
   ],
   "scripts": {
-    "build": "tsc --build --verbose"
+    "build:clean": "shx rm -rf build dist tsconfig.tsbuildinfo",
+    "build:tsc": "tsc --build --verbose",
+    "build:esbuild": "node bundle.js",
+    "build": "npm run build:clean && npm run build:tsc && npm run build:esbuild"
   },
   "dependencies": {
     "@configu/ts": "*",
-    "axios": "^0.27.2",
-    "browser-fs-access": "^0.31.1",
+    "axios": "^1.3.6",
+    "browser-fs-access": "^0.33.1",
     "localforage": "^1.10.0",
     "lodash": "^4.17.21"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.191"
+    "@types/lodash": "^4.14.194",
+    "esbuild-plugin-umd-wrapper": "^1.0.7"
   }
 }

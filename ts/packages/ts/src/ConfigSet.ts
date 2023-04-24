@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import { IConfigSet } from './types';
-import { ERR } from './utils';
-import { ConfigSchema } from './ConfigSchema';
+import { ERR, NAME } from './utils';
 
 export class ConfigSet implements IConfigSet {
   static SEPARATOR = '/' as const;
@@ -11,6 +10,8 @@ export class ConfigSet implements IConfigSet {
   public readonly hierarchy: string[] = [];
 
   constructor(public readonly path: string = ConfigSet.ROOT) {
+    const scopeLocation = [`ConfigSet`, `constructor`];
+
     if (this.path.startsWith(ConfigSet.ROOT_LABEL)) {
       this.path = this.path.slice(1);
     }
@@ -18,7 +19,7 @@ export class ConfigSet implements IConfigSet {
     if (this.path.endsWith(ConfigSet.SEPARATOR)) {
       throw new Error(
         ERR(`invalid path "${path}"`, {
-          location: [`ConfigSet`, `constructor`],
+          location: scopeLocation,
           suggestion: `path mustn't end with ${ConfigSet.SEPARATOR} character`,
         }),
       );
@@ -30,10 +31,10 @@ export class ConfigSet implements IConfigSet {
     }
 
     this.hierarchy = this.path.split(ConfigSet.SEPARATOR).map((cur, idx, sets) => {
-      if (!ConfigSchema.validateNaming(cur)) {
+      if (!NAME(cur)) {
         throw new Error(
           ERR(`invalid path "${path}"`, {
-            location: [`ConfigSet`, `constructor`],
+            location: scopeLocation,
             suggestion: `path nodes mustn't contain reserved words "${cur}"`,
           }),
         );

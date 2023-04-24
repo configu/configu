@@ -27,7 +27,6 @@ jobs:
         with:
           package-name: ${{ env.PACKAGE_NAME }}
           slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-          google-chat-webhook: ${{ secrets.GOOGLE_CHAT_WEBHOOK }}
 
       - uses: ./.github/actions/ts-env-action
 
@@ -35,7 +34,7 @@ jobs:
         with:
           dependencies-root: "ts"
 
-      - uses: aws-actions/configure-aws-credentials@v1
+      - uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -45,12 +44,14 @@ jobs:
       - name: Bump package version
         run: |
           cd ${{ env.CWD }}
-          npm --no-git-tag-version version ${{ steps.deployment.outputs.release-version }} --workspace=${{ env.PACKAGE_NAME }}
+          npm --no-git-tag-version version ${{ steps.deployment.outputs.release-version }} \
+            --workspace=${{ env.PACKAGE_NAME }}
 
       - name: Build package code and produce tarballs
         run: |
           cd ${{ env.CWD }}
-          npm run build:oclif --workspace=${{ env.PACKAGE_NAME }}
+          npm run build:oclif \
+            --workspace=${{ env.PACKAGE_NAME }}
 
       # https://github.com/oclif/oclif
       # https://github.com/oclif/oclif/blob/61cb7664ce38f1b7827ff652f063c3be7adeb1af/src/tarballs/config.ts
@@ -58,9 +59,11 @@ jobs:
         run: |
           cd ${{ env.CWD }}/${{ env.PACKAGE_PATH }}
           npx oclif upload tarballs
+          if [ "${{ steps.deployment.outputs.release-channel }}" = "latest" ]; then channel="stable"; else channel="${{ steps.deployment.outputs.release-channel }}"; fi
           npx oclif promote \
+            --channel $channel \
             --version ${{ steps.deployment.outputs.release-version }} \
-            --sha ${{ steps.deployment.outputs.commit-sha }} \
+            --sha ${{ steps.deployment.outputs.release-sha }} \
             --indexes
 
       - name: Copy installation scripts to storage
@@ -93,7 +96,7 @@ jobs:
         with:
           context: ${{ env.CWD }}/${{ env.PACKAGE_PATH }}
           platforms: linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8
-          tags: ${{ env.DOCKERHUB_REPOSITORY }}:${{ steps.deployment.outputs.release-version }},${{ env.DOCKERHUB_REPOSITORY }}:latest
+          tags: ${{ env.DOCKERHUB_REPOSITORY }}:${{ steps.deployment.outputs.release-version }},${{ env.DOCKERHUB_REPOSITORY }}:${{ steps.deployment.outputs.release-channel }}
           push: true
       # ----------
 
@@ -103,4 +106,3 @@ jobs:
           package-name: ${{ env.PACKAGE_NAME }}
           package-version: ${{ steps.deployment.outputs.release-version }}
           slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-          google-chat-webhook: ${{ secrets.GOOGLE_CHAT_WEBHOOK }}

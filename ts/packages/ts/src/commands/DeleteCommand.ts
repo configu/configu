@@ -8,8 +8,8 @@ import { ConfigSchema } from '../ConfigSchema';
 
 export type DeleteCommandParameters = {
   store: ConfigStore;
-  set?: ConfigSet;
-  schema?: ConfigSchema;
+  set: ConfigSet;
+  schema: ConfigSchema;
 };
 
 export class DeleteCommand extends Command<void> {
@@ -18,20 +18,18 @@ export class DeleteCommand extends Command<void> {
   }
 
   async run() {
+    const scopeLocation = [`DeleteCommand`, 'run'];
     const { store, set, schema } = this.parameters;
-
-    if (!set && !schema) {
-      throw new Error(
-        ERR('invalid set or schema parameters', {
-          location: [`DeleteCommand`, 'run'],
-          suggestion: 'one of them must be supplied',
-        }),
-      );
-    }
 
     await store.init();
 
-    const storedConfigs = await store.get([{ set: set?.path ?? '*', schema: schema?.uid ?? '*', key: '*' }]);
+    const schemaContents = await ConfigSchema.parse(schema);
+    const storeQueries = _(schemaContents)
+      .keys()
+      .map((key) => ({ set: set.path, key }))
+      .value();
+
+    const storedConfigs = await store.get(storeQueries);
 
     const deleteConfigs = _(storedConfigs)
       .map<Config>((config) => {
@@ -43,7 +41,5 @@ export class DeleteCommand extends Command<void> {
       .value();
 
     await store.set(deleteConfigs);
-
-    return { data: undefined };
   }
 }

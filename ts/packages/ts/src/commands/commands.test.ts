@@ -1,75 +1,235 @@
-import { InMemoryStore, ConfigSet, ConfigSchema, UpsertCommand, EvalCommand } from '..';
+import {
+  InMemoryStore,
+  ConfigSet,
+  ConfigSchema as BaseConfigSchema,
+  UpsertCommand,
+  UpsertCommandParameters,
+  EvalCommand,
+  EvalCommandParameters,
+  EvaluatedConfigs,
+  DeleteCommand,
+} from '..';
+import { Cfgu, Convert } from '../types/generated';
+
+class ConfigSchema extends BaseConfigSchema {
+  constructor(public contents: { [key: string]: Cfgu }) {
+    super('.cfgu.json');
+  }
+
+  async read(): Promise<string> {
+    return Convert.configSchemaContentsToJson(this.contents);
+  }
+}
 
 describe(`commands`, () => {
-  const mainStore = new InMemoryStore();
-  const secondaryStore = new InMemoryStore();
+  const store1 = new InMemoryStore();
+  const store2 = new InMemoryStore();
 
-  const set = new ConfigSet('test');
+  const set1 = new ConfigSet('test');
+  const set11 = new ConfigSet('test1/test11');
+  const set2 = new ConfigSet('test2');
 
-  const s1 = new ConfigSchema('s1.cfgu.json');
-  s1.contents = JSON.stringify({
-    S11: {
+  const schema1 = new ConfigSchema({
+    K11: {
+      type: 'Boolean',
+      default: 'true',
+    },
+    K12: {
       type: 'Number',
     },
-    S12: {
+    K13: {
       type: 'String',
-      default: 'test',
-      depends: ['S11'],
-    },
-    S13: {
-      type: 'String',
-      template: '{{S11}}-{{S12}}@{{S21}}',
+      required: true,
+      depends: ['K12'],
     },
   });
-  const s2 = new ConfigSchema('s2.cfgu.json');
-  s2.contents = JSON.stringify({
-    S21: {
+  const schema2 = new ConfigSchema({
+    K21: {
       type: 'RegEx',
       pattern: '^(foo|bar|baz)$',
     },
+    K22: {
+      type: 'String',
+      template: '{{K21}}::{{K11}}:{{K12}}:{{K13}}',
+    },
   });
-
-  describe(`UpsertCommand`, () => {
-    it(`throw invalid type`, async () => {
-      const resPromise = new UpsertCommand({
-        store: mainStore,
-        set,
-        schema: s1,
-        configs: [{ key: 'S11', value: 'ran' }],
-      }).run();
-      await expect(resPromise).rejects.toThrow();
-    });
+  const schema3 = new ConfigSchema({
+    K31: {
+      type: 'String',
+      description: "email's prefix",
+      template: '{{CONFIGU_SET.1}}-{{CONFIGU_SET.hierarchy.1}}',
+    },
+    K32: {
+      type: 'Domain',
+      description: "email's suffix",
+    },
+    K33: {
+      type: 'Email',
+      template: '{{CONFIGU_SET.last}}-{{K31}}@{{K32}}',
+      required: true,
+      depends: ['K31', 'K32'],
+    },
   });
 
   describe(`EvalCommand`, () => {
-    it(`with reference`, async () => {
-      await new UpsertCommand({
-        store: secondaryStore,
-        set,
-        schema: s1,
-        configs: [{ key: 'S11', value: '4' }],
-      }).run();
-      await new UpsertCommand({
-        store: mainStore,
-        set,
-        schema: s1,
-        configs: [{ key: 'S11', value: '{{ store=in-memory;query=test/s1.S11 }}' }],
-      }).run();
-      await new UpsertCommand({
-        store: mainStore,
-        set,
-        schema: s2,
-        configs: [{ key: 'S21', value: 'baz' }],
-      }).run();
+    test.each<{
+      name: string;
+      parameters: { upsert: UpsertCommandParameters[]; eval: EvalCommandParameters };
+      expected: EvaluatedConfigs | string;
+    }>([
+      {
+        name: '[ store1 ⋅ set1 ⋅ schema1 ]',
+        parameters: {
+          upsert: [
+            {
+              store: store1,
+              set: set1,
+              schema: schema1,
+              configs: {
+                K12: '4',
+                K13: 'test',
+              },
+            },
+          ],
+          eval: { from: [{ store: store1, set: set1, schema: schema1 }] },
+        },
+        expected: { K11: 'true', K12: '4', K13: 'test' },
+      },
+      {
+        name: '[ store2 ⋅ set2 ⋅ schema2 ] - override',
+        parameters: {
+          upsert: [],
+          eval: {
+            from: [{ store: store2, set: set2, schema: schema2, configs: { K21: 'baz' } }],
+            configs: { K22: 'test' },
+          },
+        },
+        expected: { K21: 'baz', K22: 'test' },
+      },
+      {
+        name: '[ store1 ⋅ set1 ⋅ schema1 ] - fail required',
+        parameters: {
+          upsert: [
+            {
+              store: store1,
+              set: set1,
+              schema: schema1,
+              configs: { K12: '7' },
+            },
+          ],
+          eval: { from: [{ store: store1, set: set1, schema: schema1 }] },
+        },
+        expected: 'required',
+      },
+      {
+        name: '[ store1 ⋅ set1 ⋅ schema1 ] - fail depends',
+        parameters: {
+          upsert: [
+            {
+              store: store1,
+              set: set1,
+              schema: schema1,
+              configs: { K13: 'test' },
+            },
+          ],
+          eval: { from: [{ store: store1, set: set1, schema: schema1 }] },
+        },
+        expected: 'depends',
+      },
+      {
+        name: '[ store1 ⋅ set1 ⋅ schema1 ] + [ store1 ⋅ set2 ⋅ schema1 ]',
+        parameters: {
+          upsert: [
+            {
+              store: store1,
+              set: set1,
+              schema: schema1,
+              configs: {
+                K12: '4',
+                K13: 'test',
+              },
+            },
+            {
+              store: store1,
+              set: set2,
+              schema: schema1,
+              configs: {
+                K12: '7',
+              },
+            },
+          ],
+          eval: {
+            from: [
+              { store: store1, set: set1, schema: schema1 },
+              { store: store1, set: set2, schema: schema1 },
+            ],
+          },
+        },
+        expected: { K11: 'true', K12: '7', K13: 'test' },
+      },
+      {
+        name: '[ store1 ⋅ set1 ⋅ schema1 ] + [ store1 ⋅ set1 ⋅ schema2 ]',
+        parameters: {
+          upsert: [
+            {
+              store: store1,
+              set: set1,
+              schema: schema1,
+              configs: {
+                K11: 'false',
+                K12: '4',
+                K13: 'test',
+              },
+            },
+            {
+              store: store1,
+              set: set1,
+              schema: schema2,
+              configs: {
+                K21: 'foo',
+              },
+            },
+          ],
+          eval: {
+            from: [
+              { store: store1, set: set1, schema: schema1 },
+              { store: store1, set: set1, schema: schema2 },
+            ],
+          },
+        },
+        expected: { K11: 'false', K12: '4', K13: 'test', K21: 'foo', K22: 'foo::false:4:test' },
+      },
+      {
+        name: '[ store2 ⋅ set1 ⋅ schema3 ] - template of a template & CONFIGU_SET',
+        parameters: {
+          upsert: [
+            {
+              store: store2,
+              set: set1,
+              schema: schema3,
+              configs: {
+                K32: 'configu.com',
+              },
+            },
+          ],
+          eval: { from: [{ store: store2, set: set1, schema: schema3 }] },
+        },
+        expected: { K31: 'test-test', K32: 'configu.com', K33: 'test-test-test@configu.com' },
+      },
+    ])('$name', async ({ parameters, expected }) => {
+      const upsertPromises = parameters.upsert.map((p) => new UpsertCommand(p).run());
+      await Promise.all(upsertPromises);
 
-      const { data } = await new EvalCommand({
-        store: [mainStore, secondaryStore],
-        set,
-        schema: [s1, s2],
-      }).run();
-
-      expect(data).toHaveProperty('S11', '4');
-      expect(data).toHaveProperty('S21', 'baz');
+      try {
+        const { result } = await new EvalCommand(parameters.eval).run();
+        expect(result).toStrictEqual(expected);
+      } catch (error) {
+        // eslint-disable-next-line jest/no-conditional-expect
+        expect(error.message).toContain(expected);
+      } finally {
+        const deletePromises = parameters.upsert.map((p) => new DeleteCommand(p).run());
+        await Promise.all(deletePromises);
+      }
     });
   });
 });
