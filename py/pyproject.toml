@@ -20,7 +20,7 @@ keywords = [
 ]
 # https://pypi.org/classifiers/
 classifiers = [
-  "Development Status :: 5 - Production/Stable after",
+  "Development Status :: 5 - Production/Stable",
   "Intended Audience :: Developers",
   "Operating System :: OS Independent",
   "Programming Language :: Python :: 3 :: Only",
