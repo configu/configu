@@ -82,11 +82,11 @@ This repository is a monorepo that contains the Configu user interface packages.
       </td>
       <td>
         <a href="https://www.npmjs.com/package/@configu/node" target="_blank"> 
-          <img alt="npm (scoped)" align="absmiddle" src="https://img.shields.io/npm/v/@configu/node?color=%230066F5&label=%40configu%2Fnode&logo=npm">
+          <img alt="npm" align="absmiddle" src="https://img.shields.io/npm/v/@configu/node?color=%230066F5&label=%40configu%2Fnode&logo=npm">
         </a>
       </td>
       <td>
-        <!-- <a href="https://configu.com/docs/node-sdk-setup/" target="_blank">Instructions</a> -->
+        <a href="ts/packages/node/README.md#install" target="_blank">Instructions</a>
       </td>
       <td>
         <a href="ts/packages/node" target="_blank">ts/packages/node</a>
@@ -102,11 +102,11 @@ This repository is a monorepo that contains the Configu user interface packages.
       </td>
       <td>
         <a href="https://www.npmjs.com/package/@configu/browser" target="_blank"> 
-          <img alt="npm (scoped)" align="absmiddle" src="https://img.shields.io/npm/v/@configu/browser?color=%230066F5&label=%40configu%2Fbrowser&logo=npm">
+          <img alt="npm" align="absmiddle" src="https://img.shields.io/npm/v/@configu/browser?color=%230066F5&label=%40configu%2Fbrowser&logo=npm">
         </a>
       </td>
       <td>
-        <!-- <a href="https://configu.com/docs/browser-sdk-setup/" target="_blank">Instructions</a> -->
+        <a href="ts/packages/browser/README.md#install" target="_blank">Instructions</a>
       </td>
       <td>
         <a href="ts/packages/browser" target="_blank">ts/packages/browser</a>
@@ -121,16 +121,18 @@ This repository is a monorepo that contains the Configu user interface packages.
         <strong>Python SDK</strong>
       </td>
       <td>
-        coming soon
+        <a href="https://pypi.org/project/configu/" target="_blank"> 
+          <img alt="pypi" align="absmiddle" src="https://img.shields.io/pypi/v/configu?color=%230066F5&label=%40configu%2Fpy&logo=pypi">
+        </a>
       </td>
       <td>
-        <!-- <a href="https://configu.com/docs/python-sdk-setup/" target="_blank">Instructions</a> -->
+        <a href="py/README.md#install" target="_blank">Instructions</a>
       </td>
       <td>
         <a href="py" target="_blank">py</a>
       </td>
       <td>
-        <!-- <img alt="GitHub Workflow Status" align="absmiddle" src="https://img.shields.io/github/actions/workflow/status/configu/configu/cd-py.yml?label=CD&logo=github"> -->
+        <img alt="GitHub Workflow Status" align="absmiddle" src="https://img.shields.io/github/actions/workflow/status/configu/configu/cd-py.yml?label=CD&logo=github">
       </td>
     </tr>
     <tr>

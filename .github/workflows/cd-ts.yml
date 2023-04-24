@@ -28,6 +28,12 @@ jobs:
           install-dependencies: false
           dependencies-root: "ts"
 
+      - uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
       # ----------
       - name: Bump package version
         run: |
@@ -47,10 +53,26 @@ jobs:
       - name: Publish to npm
         run: |
           cd ${{ env.CWD }}
-          npm publish --access public --tag ${{ steps.deployment.outputs.release-channel }} \
+          npm publish --access public --provenance --tag ${{ steps.deployment.outputs.release-channel }} \
             --workspace=@configu/ts --workspace=@configu/node --workspace=@configu/browser
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Build package docs
+        if: ${{ steps.deployment.outputs.release-channel == 'latest' }}
+        run: |
+          cd ${{ env.CWD }}
+          npm run build:docs
+
+      - name: Publish docs
+        if: ${{ steps.deployment.outputs.release-channel == 'latest' }}
+        run: |
+          aws s3 sync ${{ env.CWD }}/docs s3://${{ env.S3_BUCKET }}/${{ env.S3_FOLDER }}"
+          aws cloudfront create-invalidation --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION }} --paths "/${{ env.S3_FOLDER }}*"
+        env:
+          S3_BUCKET: "oss.configu.com"
+          S3_FOLDER: "ts"
+          CLOUDFRONT_DISTRIBUTION: "E7C5AL5O299SC"
       # ----------
 
       - uses: ./.github/actions/deploy-end-action

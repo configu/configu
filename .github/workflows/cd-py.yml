@@ -6,7 +6,7 @@ on:
       - py-*
 
 env:
-  PACKAGE_NAME: "configu"
+  PACKAGE_NAME: "@configu/py"
 
 jobs:
   build_and_deploy:
@@ -25,6 +25,12 @@ jobs:
 
       - uses: ./.github/actions/py-env-action
 
+      - uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
       # ----------
       - name: Bump package version
         run: |
@@ -41,6 +47,20 @@ jobs:
           cd ${{ env.CWD }}
           poetry config pypi-token.pypi ${{ secrets.PYPI_TOKEN }}
           poetry publish
+
+      - name: Build package docs
+        run: |
+          cd ${{ env.CWD }}
+          poetry run pdoc -o docs configu --logo https://app.configu.com/logo192.png --favicon https://app.configu.com/favicon.ico
+
+      - name: Publish docs
+        run: |
+          aws s3 sync ${{ env.CWD }}/docs s3://${{ env.S3_BUCKET }}/${{ env.S3_FOLDER }}"
+          aws cloudfront create-invalidation --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION }} --paths "/${{ env.S3_FOLDER }}*"
+        env:
+          S3_BUCKET: "oss.configu.com"
+          S3_FOLDER: "py"
+          CLOUDFRONT_DISTRIBUTION: "E7C5AL5O299SC"
       # ----------
 
       - uses: ./.github/actions/deploy-end-action
