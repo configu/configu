@@ -88,8 +88,8 @@
     "@oclif/plugin-autocomplete": "^2.1.9",
     "@oclif/plugin-help": "^5.2.9",
     "@oclif/plugin-not-found": "^2.3.23",
-    "@oclif/plugin-plugins": "^2.4.6",
-    "@oclif/plugin-update": "^3.1.12",
+    "@oclif/plugin-plugins": "^2.4.7",
+    "@oclif/plugin-update": "^3.1.13",
     "@oclif/plugin-version": "^1.3.3",
     "axios": "^1.3.6",
     "chalk": "4.1.2",
@@ -102,14 +102,14 @@
     "lodash": "^4.17.21",
     "log-symbols": "4.1.0",
     "open": "8.4.2",
-    "openid-client": "^5.4.0"
+    "openid-client": "^5.4.1"
   },
   "devDependencies": {
-    "@oclif/test": "^2.3.16",
+    "@oclif/test": "^2.3.17",
     "@types/inquirer": "8.2.5",
     "@types/inquirer-autocomplete-prompt": "3.0.0",
     "@types/lodash": "^4.14.194",
-    "aws-sdk": "^2.1362.0",
+    "aws-sdk": "^2.1363.0",
     "eslint-config-oclif": "^4.0.0",
     "eslint-config-oclif-typescript": "^1.0.3",
     "globby": "11.0.4",

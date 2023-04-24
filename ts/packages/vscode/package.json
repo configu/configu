@@ -76,10 +76,10 @@
     "@configu/ts": "0.9.0"
   },
   "devDependencies": {
-    "@types/glob": "^8.0.0",
+    "@types/glob": "^8.1.0",
     "@types/vscode": "1.60.0",
-    "@vscode/test-electron": "^2.2.1",
-    "glob": "^8.0.3",
+    "@vscode/test-electron": "^2.3.0",
+    "glob": "^8.1.0",
     "vsce": "^2.15.0"
   }
 }
