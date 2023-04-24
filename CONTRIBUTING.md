@@ -10,7 +10,7 @@ We ask all contributors to abide by our [Code of Conduct](CODE_OF_CONDUCT.md). T
 
 ## Reporting Issues and Asking Questions
 
-Before opening an issue, please search the [issue tracker](https://github.com/configu/confgiu/issues) to make sure your issue hasn't already been reported.
+Before opening an issue, please search the [issue tracker](https://github.com/configu/configu/issues) to make sure your issue hasn't already been reported.
 
 ### Bugs and Improvements
 
@@ -62,9 +62,9 @@ The [./types](./types) directory holds the core types of the Configu project. Th
 
 #### [./examples](./examples)
 
-The [./examples](./examples) directory demonstrate various concepts and best practices with some real-world use-cases of Configu.
+The [./examples](./examples) directory demonstrates various concepts and best practices with some real-world use-cases of Configu.
 
-#### [`documentation`]((https://github.com/configu/docs))
+#### [`documentation`](https://github.com/configu/docs)
 
 The [documentation repository](https://github.com/configu/docs) holds the official Configu docs. Improvements to the documentation are always welcome. We use [Gatsby](https://github.com/gatsbyjs/gatsby) to build our documentation website. The website is published automatically whenever the master branch is updated.
 
@@ -90,11 +90,11 @@ The [./py](./py) directory will shortly contain the Python SDK.
 
 For non-trivial changes, please open an issue with a proposal for a new feature or refactoring before starting on the work. We don't want you to waste your efforts on a pull request that we won't want to accept.
 
-On the other hand, sometimes the best way to start a conversation _is_ to send a pull request. Use your best judgement!
+On the other hand, sometimes the best way to start a conversation _is_ to send a pull request. Use your best judgment!
 
 In general, the contribution workflow looks like this:
 
-- Open a new issue in the [Issue tracker](https://github.com/reduxjs/redux/issues).
+- Open a new issue in the [Issue tracker](https://github.com/configu/configu/issues).
 - Fork the repo.
 - Create a new feature branch based off the `main` branch.
 - Make sure all tests pass and there are no linting errors.
@@ -106,11 +106,11 @@ After you have submitted your pull request, we'll try to get back to you as soon
 
 ## Resources
 
-> Working on your first Pull Request? You can learn how from this *free* series, [How to Contribute to an Open Source Project on GitHub](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github).
+> Working on your first Pull Request? You can learn how from this *free* series, [How to Contribute to an Open Source Project on GitHub](https://app.egghead.io/playlists/how-to-contribute-to-an-open-source-project-on-github).
 
 - https://opensource.guide/how-to-contribute/
 - [GitHub Help](https://help.github.com)
-- https://help.github.com/articles/about-pull-requests/)
+- https://help.github.com/articles/about-pull-requests/
 - http://makeapullrequest.com/
 - http://www.firsttimersonly.com/
 - [JavaScript Standard Style](https://standardjs.com/)

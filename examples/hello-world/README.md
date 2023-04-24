@@ -6,17 +6,19 @@
   ```bash
   configu init --get-started
   ```
-- Set the default store as JsonFileStore - with path `./store.json`
+- Set the default store as ConfiguStore with your org and user/token
   ```bash
-  configu store upsert --type "json-file"
+  configu store upsert --type "configu"
   ```
 - Upsert config
   ```bash
-  configu upsert --store "json-file" --set "" --schema "get-started.cfgu.json" --config "GREETING=hey" --config "SUBJECT=<VALUE>"
-  configu upsert --store "json-file" --set "dev" --schema "get-started.cfgu.json" -c "SUBJECT=<VALUE>"
-  configu upsert --store "json-file" --set "prod" --schema "get-started.cfgu.json" -c "SUBJECT=<VALUE>"
+  configu upsert --store "configu" --set "dev" --schema "get-started.cfgu.json" --config "GREETING=hey" --config "SUBJECT=<VALUE>"
+  configu upsert --store "configu" --set "prod" --schema "get-started.cfgu.json" -c "SUBJECT=<VALUE>"
+  configu upsert --store "configu" --set "prod/region" --schema "get-started.cfgu.json" -c "GREETING=welcome"
   ```
 - Export
   ```bash
-  set -a; source <(configu export --store "json-file" --set "dev" --schema "get-started.cfgu.json" --source); set +a && <EXECUTABLE>
+  configu export --store "configu" --set "dev" --schema "get-started.cfgu.json" --run "<EXECUTABLE>"
+
+  set -a; source <(configu export --store "configu" --set "dev" --schema "get-started.cfgu.json" --source); set +a && <EXECUTABLE>
   ```

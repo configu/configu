@@ -10,12 +10,15 @@
     "build:tsc": "tsc --build",
     "build:docker": "docker build --progress plain -t configu/cli -f ./Dockerfile .",
     "build:oclif": "oclif pack tarballs --parallel",
-    "prebuild:oclif": "concurrently \"npm:clean:*\" && shx cp ../../package-lock.json ./package-lock.json && npm run build:tsc && oclif manifest && oclif readme --no-aliases",
+    "prebuild:oclif": "conc \"npm:clean:*\" && shx cp ../../package-lock.json ./package-lock.json && npm run build:tsc && oclif manifest && oclif readme --no-aliases",
     "postbuild:oclif": "npm run clean:cache",
     "test": "echo NO TESTS"
   },
   "oclif": {
     "bin": "configu",
+    "binAliases": [
+      "cfgu"
+    ],
     "dirname": "configu",
     "scope": "configu",
     "commands": "./build/commands",
@@ -64,7 +67,8 @@
   "exports": "./build/index.js",
   "types": "./build/index.d.ts",
   "bin": {
-    "configu": "./bin/run"
+    "configu": "./bin/run",
+    "cfgu": "./bin/run"
   },
   "files": [
     "/bin",
@@ -80,14 +84,14 @@
     "@configu/lib": "^0.5.0",
     "@configu/node": "^0.10.0",
     "@configu/ts": "^0.10.0",
-    "@oclif/core": "^2.6.3",
-    "@oclif/plugin-autocomplete": "^2.1.5",
-    "@oclif/plugin-help": "^5.2.8",
-    "@oclif/plugin-not-found": "^2.3.22",
-    "@oclif/plugin-plugins": "^2.4.1",
-    "@oclif/plugin-update": "^3.1.7",
-    "@oclif/plugin-version": "^1.2.1",
-    "axios": "^1.3.4",
+    "@oclif/core": "^2.8.2",
+    "@oclif/plugin-autocomplete": "^2.1.9",
+    "@oclif/plugin-help": "^5.2.9",
+    "@oclif/plugin-not-found": "^2.3.23",
+    "@oclif/plugin-plugins": "^2.4.7",
+    "@oclif/plugin-update": "^3.1.13",
+    "@oclif/plugin-version": "^1.3.3",
+    "axios": "^1.3.6",
     "chalk": "4.1.2",
     "change-case": "^4.1.2",
     "ci-info": "^3.8.0",
@@ -97,19 +101,19 @@
     "inquirer-autocomplete-prompt": "2.0.0",
     "lodash": "^4.17.21",
     "log-symbols": "4.1.0",
-    "open": "^8.4.2",
-    "openid-client": "^5.4.0"
+    "open": "8.4.2",
+    "openid-client": "^5.4.1"
   },
   "devDependencies": {
-    "@oclif/test": "^2.3.10",
+    "@oclif/test": "^2.3.17",
     "@types/inquirer": "8.2.5",
     "@types/inquirer-autocomplete-prompt": "3.0.0",
-    "@types/lodash": "^4.14.191",
-    "aws-sdk": "^2.1334.0",
+    "@types/lodash": "^4.14.194",
+    "aws-sdk": "^2.1363.0",
     "eslint-config-oclif": "^4.0.0",
     "eslint-config-oclif-typescript": "^1.0.3",
     "globby": "11.0.4",
-    "oclif": "^3.7.0",
+    "oclif": "^3.8.1",
     "tslib": "^2.5.0"
   }
 }
