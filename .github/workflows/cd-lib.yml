@@ -66,7 +66,7 @@ jobs:
       - name: Publish docs
         if: ${{ steps.deployment.outputs.release-channel == 'latest' }}
         run: |
-          aws s3 sync ${{ env.CWD }}/docs s3://${{ env.S3_BUCKET }}/${{ env.S3_FOLDER }}"
+          aws s3 sync ${{ env.CWD }}/docs s3://${{ env.S3_BUCKET }}/${{ env.S3_FOLDER }}
           aws cloudfront create-invalidation --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION }} --paths "/${{ env.S3_FOLDER }}*"
         env:
           S3_BUCKET: "oss.configu.com"
