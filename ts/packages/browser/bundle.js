@@ -20,6 +20,7 @@ const { umdWrapper } = require('esbuild-plugin-umd-wrapper');
     outExtension: { '.js': '.mjs' },
   });
 
+  // https://github.com/Inqnuam/esbuild-plugin-umd-wrapper
   const umdBuildPromise = esbuild.build({
     entryPoints: ['./src/index.ts'],
     outfile: './dist/configu.min.js',

@@ -1,7 +1,7 @@
 /** @type {import('typedoc').TypeDocOptions} */
 module.exports = {
   basePath: './',
-  cname: 'sdk.configu.com',
+  cname: 'oss.configu.com',
   entryPoints: ['packages/ts', 'packages/node', 'packages/browser', 'packages/lib'],
   entryPointStrategy: 'packages',
   out: 'docs',
