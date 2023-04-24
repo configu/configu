@@ -24,7 +24,7 @@
     "build": "tsc --build --verbose tsconfig.build.json",
     "build:docs": "typedoc",
     "test": "jest",
-    "test:cov": "npm run build && npm test -- --coverage",
+    "test:cov": "npm run build && npm test -- --maxWorkers=2 --coverage",
     "test:watch": "echo 'run test in watch mode'",
     "start": "npm run test:watch"
   },

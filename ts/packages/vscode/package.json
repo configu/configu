@@ -6,6 +6,15 @@
   "description": "Configu VSCode extension",
   "icon": "public/icon.png",
   "main": "./build/extension.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/configu/configu",
+    "directory": "ts/packages/vscode"
+  },
+  "bugs": {
+    "url": "https://github.com/configu/configu/issues",
+    "email": "support@configu.com"
+  },
   "scripts": {
     "build:clean": "shx rm -rf build dist tsconfig.tsbuildinfo",
     "build:tsc": "tsc --build",

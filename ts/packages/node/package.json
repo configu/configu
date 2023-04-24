@@ -12,6 +12,18 @@
   "files": [
     "/build"
   ],
+  "publishConfig": {
+    "provenance": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/configu/configu",
+    "directory": "ts/packages/node"
+  },
+  "bugs": {
+    "url": "https://github.com/configu/configu/issues",
+    "email": "support@configu.com"
+  },
   "homepage": "https://configu.com",
   "keywords": [
     "cfgu",
