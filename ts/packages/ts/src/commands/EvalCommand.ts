@@ -19,6 +19,7 @@ export type EvalCommandParameters = {
     }
   >;
   configs?: EvalCommandConfigsParameter;
+  validate?: boolean;
 };
 
 export type EvaluatedConfigSource =
@@ -219,6 +220,10 @@ export class EvalCommand extends Command<EvalCommandReturn> {
   }
 
   private validateScope(scope: EvalScope): void {
+    if (!(this.parameters.validate ?? true)) {
+      return;
+    }
+
     const evaluatedConfigsDict = _.mapValues(scope, (current) => current.result.value);
     // * validate the eval result against the provided schema
     _(scope)

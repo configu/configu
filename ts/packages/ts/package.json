@@ -31,7 +31,7 @@
     "build": "tsc --build --verbose"
   },
   "dependencies": {
-    "axios": "^1.3.6",
+    "axios": "^1.4.0",
     "lodash": "^4.17.21",
     "mustache": "^4.2.0",
     "validator": "^13.9.0"
@@ -39,6 +39,6 @@
   "devDependencies": {
     "@types/lodash": "^4.14.194",
     "@types/mustache": "^4.2.2",
-    "@types/validator": "^13.7.15"
+    "@types/validator": "^13.7.17"
   }
 }

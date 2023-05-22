@@ -20,7 +20,7 @@
     "husky": "^8.0.3",
     "is-ci": "^3.0.1",
     "json": "^11.0.0",
-    "lint-staged": "^13.2.1",
-    "quicktype": "^23.0.21"
+    "lint-staged": "^13.2.2",
+    "quicktype": "^23.0.36"
   }
 }

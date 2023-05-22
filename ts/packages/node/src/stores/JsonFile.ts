@@ -22,7 +22,7 @@ export class JsonFileStore extends ConfigStore {
 
     return storedConfigs.filter((config) => {
       return queries.some(({ set, key }) => {
-        return (set === '*' || set === config.set) && (key === '*' || key === config.key);
+        return set === config.set && key === config.key;
       });
     });
   }
