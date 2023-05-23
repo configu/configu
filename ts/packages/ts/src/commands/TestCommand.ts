@@ -1,9 +1,9 @@
-import { createHash } from 'crypto';
 import { Command } from '../Command';
 import { ConfigStore } from '../ConfigStore';
 
 export type TestCommandParameters = {
   store: ConfigStore;
+  clean?: boolean;
 };
 
 export class TestCommand extends Command<boolean> {
@@ -12,14 +12,27 @@ export class TestCommand extends Command<boolean> {
   }
 
   async run(): Promise<boolean> {
-    await this.parameters.store.init();
-    await this.parameters.store.set([
-      {
-        set: '',
-        key: 'CONFIGU_TEST',
-        value: createHash('md5').update(new Date().toString()).digest('hex'),
-      },
-    ]);
-    return Promise.resolve(false);
+    return Promise.all([
+      this.parameters.store.init(),
+      this.parameters.store.set([
+        {
+          set: '',
+          key: 'CONFIGU_TEST',
+          value: Date.now().toString(),
+        },
+      ]),
+      (async () =>
+        this.parameters.clean
+          ? this.parameters.store.set([
+              {
+                set: '',
+                key: 'CONFIGU_TEST',
+                value: '',
+              },
+            ])
+          : true)(),
+    ])
+      .then(() => true)
+      .catch(() => false);
   }
 }
