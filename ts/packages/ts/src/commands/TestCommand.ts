@@ -12,27 +12,21 @@ export class TestCommand extends Command<boolean> {
   }
 
   async run(): Promise<boolean> {
-    return Promise.all([
-      this.parameters.store.init(),
-      this.parameters.store.set([
-        {
-          set: '',
-          key: 'CONFIGU_TEST',
-          value: Date.now().toString(),
-        },
-      ]),
-      (async () =>
-        this.parameters.clean
-          ? this.parameters.store.set([
-              {
-                set: '',
-                key: 'CONFIGU_TEST',
-                value: '',
-              },
-            ])
-          : true)(),
-    ])
-      .then(() => true)
-      .catch(() => false);
+    const testConfig = {
+      set: '',
+      key: 'CONFIGU_TEST',
+      value: Date.now().toString(),
+    };
+    try {
+      await this.parameters.store.init();
+      await this.parameters.store.set([testConfig]);
+      if (this.parameters.clean) {
+        testConfig.value = '';
+        await this.parameters.store.set([testConfig]);
+      }
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 }
