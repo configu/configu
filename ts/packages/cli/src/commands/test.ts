@@ -25,7 +25,7 @@ export default class Test extends BaseCommand<typeof Test> {
     const { clean } = this.flags;
     const testResult = await new TestCommand({ store, clean }).run();
     // TODO: better messages from @ran
-    if (testResult) this.log(`credentials and write access`);
-    else this.log(`no credentials and write access`);
+    if (testResult) this.log(`Credentials and write access available`);
+    else this.log(`Please login to Configu using: configu store upsert --type "configu"`);
   }
 }
