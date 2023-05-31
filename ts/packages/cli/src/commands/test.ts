@@ -23,9 +23,11 @@ export default class Test extends BaseCommand<typeof Test> {
   public async run(): Promise<void> {
     const store = await this.getStoreInstanceByStoreFlag(this.flags.store);
     const { clean } = this.flags;
-    const testResult = await new TestCommand({ store, clean }).run();
-    // TODO: better messages from @ran
-    if (testResult) this.log(`Credentials and write access available`);
-    else this.log(`Please login to Configu using: configu store upsert --type "configu"`);
+    try {
+      await new TestCommand({ store, clean }).run();
+      this.log(`store ${store.type} test passed`);
+    } catch (error) {
+      this.error(`store ${store.type} test failed with error: ${error.message}`);
+    }
   }
 }

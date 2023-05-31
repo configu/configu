@@ -6,27 +6,22 @@ export type TestCommandParameters = {
   clean?: boolean;
 };
 
-export class TestCommand extends Command<boolean> {
+export class TestCommand extends Command<void> {
   constructor(public parameters: TestCommandParameters) {
     super(parameters);
   }
 
-  async run(): Promise<boolean> {
+  async run(): Promise<void> {
     const testConfig = {
       set: '',
       key: 'CONFIGU_TEST',
       value: Date.now().toString(),
     };
-    try {
-      await this.parameters.store.init();
+    await this.parameters.store.init();
+    await this.parameters.store.set([testConfig]);
+    if (this.parameters.clean) {
+      testConfig.value = '';
       await this.parameters.store.set([testConfig]);
-      if (this.parameters.clean) {
-        testConfig.value = '';
-        await this.parameters.store.set([testConfig]);
-      }
-      return true;
-    } catch (e) {
-      return false;
     }
   }
 }
