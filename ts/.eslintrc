@@ -32,6 +32,8 @@
     "no-unused-expressions": "off",
     "class-methods-use-this": "off",
     "max-classes-per-file": "off",
+    "no-shadow": "off",
+    "@typescript-eslint/no-shadow": ["error"],
     "spellcheck/spell-checker": ["warn", {
       "skipWords": [
         "configu",

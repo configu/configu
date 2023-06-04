@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import {
   InMemoryStore,
   ConfigSet,
@@ -6,8 +7,8 @@ import {
   UpsertCommandParameters,
   EvalCommand,
   EvalCommandParameters,
-  EvaluatedConfigs,
   DeleteCommand,
+  EvalCommandReturn,
 } from '..';
 import { Cfgu, Convert } from '../types/generated';
 
@@ -33,6 +34,7 @@ describe(`commands`, () => {
     K11: {
       type: 'Boolean',
       default: 'true',
+      depends: ['K12'],
     },
     K12: {
       type: 'Number',
@@ -40,7 +42,6 @@ describe(`commands`, () => {
     K13: {
       type: 'String',
       required: true,
-      depends: ['K12'],
     },
   });
   const schema2 = new ConfigSchema({
@@ -74,8 +75,8 @@ describe(`commands`, () => {
   describe(`EvalCommand`, () => {
     test.each<{
       name: string;
-      parameters: { upsert: UpsertCommandParameters[]; eval: EvalCommandParameters };
-      expected: EvaluatedConfigs | string;
+      parameters: { upsert: UpsertCommandParameters[]; eval: EvalCommandParameters[] };
+      expected: { [key: string]: string } | string;
     }>([
       {
         name: '[ store1 ⋅ set1 ⋅ schema1 ]',
@@ -91,7 +92,7 @@ describe(`commands`, () => {
               },
             },
           ],
-          eval: { from: [{ store: store1, set: set1, schema: schema1 }] },
+          eval: [{ store: store1, set: set1, schema: schema1 }],
         },
         expected: { K11: 'true', K12: '4', K13: 'test' },
       },
@@ -99,10 +100,7 @@ describe(`commands`, () => {
         name: '[ store2 ⋅ set2 ⋅ schema2 ] - override',
         parameters: {
           upsert: [],
-          eval: {
-            from: [{ store: store2, set: set2, schema: schema2, configs: { K21: 'baz' } }],
-            configs: { K22: 'test' },
-          },
+          eval: [{ store: store2, set: set2, schema: schema2, configs: { K21: 'baz', K22: 'test' } }],
         },
         expected: { K21: 'baz', K22: 'test' },
       },
@@ -117,7 +115,7 @@ describe(`commands`, () => {
               configs: { K12: '7' },
             },
           ],
-          eval: { from: [{ store: store1, set: set1, schema: schema1 }] },
+          eval: [{ store: store1, set: set1, schema: schema1 }],
         },
         expected: 'required',
       },
@@ -132,7 +130,7 @@ describe(`commands`, () => {
               configs: { K13: 'test' },
             },
           ],
-          eval: { from: [{ store: store1, set: set1, schema: schema1 }] },
+          eval: [{ store: store1, set: set1, schema: schema1 }],
         },
         expected: 'depends',
       },
@@ -158,12 +156,10 @@ describe(`commands`, () => {
               },
             },
           ],
-          eval: {
-            from: [
-              { store: store1, set: set1, schema: schema1 },
-              { store: store1, set: set2, schema: schema1 },
-            ],
-          },
+          eval: [
+            { store: store1, set: set1, schema: schema1 },
+            { store: store1, set: set2, schema: schema1 },
+          ],
         },
         expected: { K11: 'true', K12: '7', K13: 'test' },
       },
@@ -190,12 +186,10 @@ describe(`commands`, () => {
               },
             },
           ],
-          eval: {
-            from: [
-              { store: store1, set: set1, schema: schema1 },
-              { store: store1, set: set1, schema: schema2 },
-            ],
-          },
+          eval: [
+            { store: store1, set: set1, schema: schema1 },
+            { store: store1, set: set1, schema: schema2 },
+          ],
         },
         expected: { K11: 'false', K12: '4', K13: 'test', K21: 'foo', K22: 'foo::false:4:test' },
       },
@@ -212,17 +206,24 @@ describe(`commands`, () => {
               },
             },
           ],
-          eval: { from: [{ store: store2, set: set1, schema: schema3 }] },
+          eval: [{ store: store2, set: set1, schema: schema3 }],
         },
         expected: { K31: 'test-test', K32: 'configu.com', K33: 'test-test-test@configu.com' },
       },
     ])('$name', async ({ parameters, expected }) => {
-      const upsertPromises = parameters.upsert.map((p) => new UpsertCommand(p).run());
-      await Promise.all(upsertPromises);
-
       try {
-        const { result } = await new EvalCommand(parameters.eval).run();
-        expect(result).toStrictEqual(expected);
+        const upsertPromises = parameters.upsert.map((p) => new UpsertCommand(p).run());
+        await Promise.all(upsertPromises);
+
+        const evalResult = await parameters.eval.reduce<Promise<EvalCommandReturn>>(
+          async (promisedPrevious, current) => {
+            const previous = await promisedPrevious;
+            return new EvalCommand({ ...current, previous }).run();
+          },
+          undefined as any,
+        );
+        const evaluatedConfigs = _.mapValues(evalResult, (current) => current.result.value);
+        expect(evaluatedConfigs).toStrictEqual(expected);
       } catch (error) {
         // eslint-disable-next-line jest/no-conditional-expect
         expect(error.message).toContain(expected);

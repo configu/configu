@@ -1,101 +1,64 @@
 import _ from 'lodash';
 import { Command } from '../Command';
-import { Config, Cfgu } from '../types';
+import { Cfgu } from '../types';
 import { ERR, TMPL } from '../utils';
 import { ConfigStore } from '../ConfigStore';
 import { ConfigSet } from '../ConfigSet';
 import { ConfigSchema } from '../ConfigSchema';
 
-export type EvalCommandFromParameter = {
+export enum EvaluatedConfigOrigin {
+  ConfigsOverride = 'CONFIGS_OVERRIDE',
+  StoreSet = 'STORE_SET',
+  SchemaTemplate = 'SCHEMA_TEMPLATE',
+  SchemaDefault = 'SCHEMA_DEFAULT',
+  EmptyValue = 'EMPTY_VALUE',
+}
+
+export type EvalCommandReturn = {
+  [key: string]: {
+    context: { store: string; set: string; schema: string; key: string; cfgu: Cfgu };
+    result: { origin: EvaluatedConfigOrigin; source: string; value: string };
+  };
+};
+
+export type EvalCommandParameters = {
   store: ConfigStore;
   set: ConfigSet;
   schema: ConfigSchema;
-};
-export type EvalCommandConfigsParameter = { [key: string]: string }; // override feature
-export type EvalCommandParameters = {
-  from: Array<
-    EvalCommandFromParameter & {
-      configs?: EvalCommandConfigsParameter;
-    }
-  >;
-  configs?: EvalCommandConfigsParameter;
+  configs?: { [key: string]: string };
   validate?: boolean;
+  previous?: EvalCommandReturn;
 };
-
-export type EvaluatedConfigSource =
-  | 'global-override'
-  | 'local-override'
-  | 'store-set'
-  | 'schema-template'
-  | 'schema-default'
-  | 'empty';
-
-type ConfigEvalScope = {
-  context: EvalCommandFromParameter & { key: string; from: number };
-  cfgu: Cfgu;
-  result: { value: string; from: { source: EvaluatedConfigSource; which: string } };
-};
-
-type EvalScope = {
-  [key: string]: ConfigEvalScope;
-};
-
-export type EvalCommandReturn = {
-  result: { [key: string]: string };
-  metadata: { [key: string]: Pick<Config, 'key' | 'value'> & ConfigEvalScope };
-};
-
-export type EvaluatedConfigs = EvalCommandReturn['result'];
 
 export class EvalCommand extends Command<EvalCommandReturn> {
   constructor(public parameters: EvalCommandParameters) {
     super(parameters);
   }
 
-  private evalFromOverride(scope: EvalScope): EvalScope {
-    return _.mapValues(scope, (current) => {
+  private evalFromConfigsOverride(result: EvalCommandReturn): EvalCommandReturn {
+    return _.mapValues(result, (current) => {
       const { context } = current;
+      const configOverrideValue = this.parameters.configs?.[context.key];
 
-      const globalOverride = this.parameters.configs?.[context.key];
-      if (globalOverride) {
-        return <ConfigEvalScope>{
-          ...current,
-          result: {
-            value: globalOverride,
-            from: {
-              source: 'global-override',
-              which: `parameters.configs.${context.key}=${globalOverride}`,
-            },
-          },
-        };
+      if (!configOverrideValue) {
+        return current;
       }
 
-      const localOverride = this.parameters.from[context.from]?.configs?.[context.key];
-      if (localOverride) {
-        return <ConfigEvalScope>{
-          ...current,
-          result: {
-            value: localOverride,
-            from: {
-              source: 'local-override',
-              which: `parameters.from[${context.from}].configs.${context.key}=${localOverride}`,
-            },
-          },
-        };
-      }
-
-      return current;
+      return {
+        ...current,
+        result: {
+          origin: EvaluatedConfigOrigin.ConfigsOverride,
+          source: `parameters.configs.${context.key}=${configOverrideValue}`,
+          value: configOverrideValue,
+        },
+      };
     });
   }
 
-  private async evalFromStore(scope: EvalScope): Promise<EvalScope> {
-    const scopeSample = _.sample(scope);
-    if (!scopeSample) {
-      return scope;
-    }
-    const { store, set } = scopeSample.context;
+  private async evalFromStoreSet(result: EvalCommandReturn): Promise<EvalCommandReturn> {
+    const { store, set } = this.parameters;
 
-    const storeQueries = _(scope)
+    const storeQueries = _(result)
       .values()
       .flatMap((current) => {
         const { key } = current.context;
@@ -109,128 +72,147 @@ export class EvalCommand extends Command<EvalCommandReturn> {
       .keyBy((config) => config.key)
       .value();
 
-    return _.mapValues(scope, (current) => {
+    return _.mapValues(result, (current) => {
       const { context } = current;
-
       const storeConfig = storeConfigsDict[context.key];
-      if (storeConfig) {
-        return <ConfigEvalScope>{
-          ...current,
-          result: {
-            value: storeConfig.value,
-            from: {
-              source: 'store-set',
-              which: `parameters.from[${context.from}]:store=${context.store.type}:set=${context.set.path}`,
-            },
-          },
-        };
+
+      if (!storeConfig) {
+        return current;
       }
 
-      return current;
+      return {
+        ...current,
+        result: {
+          origin: EvaluatedConfigOrigin.StoreSet,
+          source: `parameters.store=${context.store},parameters.set=${context.set}`,
+          value: storeConfig.value,
+        },
+      };
     });
   }
 
-  private evalFromSchema(scope: EvalScope): EvalScope {
-    return _.mapValues(scope, (current) => {
-      const { cfgu, context } = current;
+  private evalFromSchema(result: EvalCommandReturn): EvalCommandReturn {
+    return _.mapValues(result, (current) => {
+      const { context } = current;
+      const { cfgu } = context;
 
       if (cfgu.template) {
-        return <ConfigEvalScope>{
+        return {
           ...current,
           result: {
+            origin: EvaluatedConfigOrigin.SchemaTemplate,
+            source: `parameters.schema=${context.schema}.template=${cfgu.template}`,
             value: '',
-            from: {
-              source: 'schema-template',
-              which: `parameters.from[${context.from}]:schema.template=${cfgu.template}`,
-            },
           },
         };
       }
 
       if (cfgu.default) {
-        return <ConfigEvalScope>{
+        return {
           ...current,
           result: {
+            origin: EvaluatedConfigOrigin.SchemaDefault,
+            source: `parameters.schema=${context.schema}.default=${cfgu.default}`,
             value: cfgu.default,
-            from: {
-              source: 'schema-default',
-              which: `parameters.from[${context.from}]:schema.default=${cfgu.default}`,
-            },
           },
-        };
+        } as const;
       }
 
       return current;
     });
   }
 
-  private evalScope(scopeArray: EvalScope[]): EvalScope {
-    // calculate final scope keys according to "from parameter" ordered right to left
-    const evalScope = _(scopeArray)
-      .flatMap((scope) => _.values(scope))
-      .reduceRight<EvalScope>((scope, current) => {
+  private evalPrevious(result: EvalCommandReturn): EvalCommandReturn {
+    const { previous } = this.parameters;
+
+    if (!previous) {
+      return result;
+    }
+
+    const mergedResults = _([previous, result])
+      .flatMap((current) => _.values(current))
+      .reduceRight<EvalCommandReturn>((merged, current) => {
         const { key } = current.context;
-        const configScope = scope[key];
-        if (!configScope || (configScope.result.from.source === 'empty' && current.result.from.source !== 'empty')) {
-          return { ...scope, [key]: current };
+        const mergedResult = merged[key];
+        if (
+          !mergedResult ||
+          (mergedResult.result.origin === EvaluatedConfigOrigin.EmptyValue &&
+            current.result.origin !== EvaluatedConfigOrigin.EmptyValue)
+        ) {
+          return { ...merged, [key]: current };
         }
-        return scope;
+        return merged;
       }, {});
 
-    // evaluate templates until done with all of them or can't render (e.g. because of reference loop etc..)
-    const templateKeys = _(evalScope)
-      .pickBy((current) => current.result.from.source === 'schema-template')
+    return mergedResults;
+  }
+
+  private evalTemplates(result: EvalCommandReturn): EvalCommandReturn {
+    const templateKeys = _(result)
+      .pickBy((current) => current.result.origin === EvaluatedConfigOrigin.SchemaTemplate)
       .keys()
       .value();
-    let runAgain = true;
-    while (!_.isEmpty(templateKeys) && runAgain) {
-      let hasRendered = false;
-      const renderContext = _.mapValues(evalScope, (current) => current.result.value);
-      _(templateKeys)
-        .cloneDeep()
-        .forEach((key) => {
-          const current = evalScope[key] as ConfigEvalScope;
-          const template = current.cfgu.template as string;
+    const resultWithTemplates = { ...result };
 
-          const expressions = TMPL.parse(template);
-          if (expressions.some((exp) => templateKeys.includes(exp.key))) {
-            return;
-          }
+    let shouldRerenderTemplates = true;
+    while (!_.isEmpty(templateKeys) && shouldRerenderTemplates) {
+      let hasRenderedAtLeastOnce = false;
 
-          (evalScope[key] as ConfigEvalScope).result.value = TMPL.render(template, {
-            ...renderContext,
-            CONFIGU_SET: {
-              path: current.context.set.path,
-              hierarchy: current.context.set.hierarchy,
-              first: _.first(current.context.set.hierarchy), // always the root set which is ''
-              last: _.last(current.context.set.hierarchy),
-              ...current.context.set.hierarchy.reduce((o, c, i) => ({ ...o, [i]: c }), {}),
-            },
-          });
-          _.pull(templateKeys, key);
-          hasRendered = true;
-        });
-      runAgain = hasRendered;
+      templateKeys.forEach((key) => {
+        const { context } = resultWithTemplates[key] as EvalCommandReturn['string'];
+        const template = context.cfgu.template as string;
+
+        const expressions = TMPL.parse(template);
+        if (expressions.some((exp) => templateKeys.includes(exp.key))) {
+          return;
+        }
+
+        const contextConfigSet = new ConfigSet(context.set);
+        const renderContext = {
+          ..._.mapValues(resultWithTemplates, (current) => current.result.value),
+          CONFIGU_STORE: {
+            type: context.store,
+          },
+          CONFIGU_SET: {
+            path: contextConfigSet.path,
+            hierarchy: contextConfigSet.hierarchy,
+            first: _.first(contextConfigSet.hierarchy), // always the root set which is ''
+            last: _.last(contextConfigSet.hierarchy),
+            ...contextConfigSet.hierarchy.reduce((o, c, i) => ({ ...o, [i]: c }), {}),
+          },
+          CONFIGU_SCHEMA: {
+            path: context.schema,
+          },
+        };
+
+        (resultWithTemplates[key] as EvalCommandReturn['string']).result.value = TMPL.render(template, renderContext);
+        _.pull(templateKeys, key);
+        hasRenderedAtLeastOnce = true;
+      });
+
+      shouldRerenderTemplates = hasRenderedAtLeastOnce;
     }
+
     // if (!_.isEmpty(templateKeys)) {
     //   warn.push(`failed to render template of keys "${templateKeys.join(', ')}", check for reference loop`);
     // }
 
-    return evalScope;
+    return resultWithTemplates;
   }
 
-  private validateScope(scope: EvalScope): void {
-    if (!(this.parameters.validate ?? true)) {
+  private validateResult(result: EvalCommandReturn): void {
+    const { validate = true } = this.parameters;
+
+    if (!validate) {
       return;
     }
 
-    const evaluatedConfigsDict = _.mapValues(scope, (current) => current.result.value);
+    const evaluatedConfigsDict = _.mapValues(result, (current) => current.result.value);
     // * validate the eval result against the provided schema
-    _(scope)
+    _(result)
       .values()
       .forEach((current) => {
-        const { key } = current.context;
-        const { cfgu } = current;
+        const { key, cfgu } = current.context;
         const evaluatedValue = current.result.value;
 
         if (!ConfigSchema.CFGU.TESTS.VAL_TYPE[cfgu.type]({ ...cfgu, value: evaluatedValue })) {
@@ -255,45 +237,52 @@ export class EvalCommand extends Command<EvalCommandReturn> {
   }
 
   async run() {
-    const evalScopePromises = this.parameters.from.map(async ({ store, set, schema }, index) => {
-      await store.init();
-      const schemaContents = await ConfigSchema.parse(schema);
+    const { store, set, schema } = this.parameters;
 
-      let evalScope: EvalScope = _.mapValues<typeof schemaContents, ConfigEvalScope>(schemaContents, (cfgu, key) => ({
+    await store.init();
+    const schemaContents = await ConfigSchema.parse(schema);
+
+    let result = _.mapValues<typeof schemaContents, EvalCommandReturn['string']>(schemaContents, (cfgu, key) => {
+      return {
         context: {
-          store,
-          set,
-          schema,
+          store: store.type,
+          set: set.path,
+          schema: schema.path,
           key,
-          from: index,
+          cfgu,
         },
-        cfgu,
-        result: { value: '', from: { source: 'empty', which: `` } },
-      }));
-
-      evalScope = { ...evalScope, ...this.evalFromOverride(evalScope) };
-      const evaluatedStoreConfigs = await this.evalFromStore(
-        _.pickBy(evalScope, (current) => current.result.from.source === 'empty' && !current.cfgu.template),
-      );
-      evalScope = { ...evalScope, ...evaluatedStoreConfigs };
-      evalScope = {
-        ...evalScope,
-        ...this.evalFromSchema(_.pickBy(evalScope, (current) => current.result.from.source === 'empty')),
+        result: {
+          origin: EvaluatedConfigOrigin.EmptyValue,
+          source: '',
+          value: '',
+        },
       };
-
-      return evalScope;
     });
-    const evalScopeArray = await Promise.all(evalScopePromises);
-    const evalScope = this.evalScope(evalScopeArray);
-    this.validateScope(evalScope);
-
-    return {
-      result: _.mapValues(evalScope, (current) => current.result.value),
-      metadata: _.mapValues(evalScope, (current) => ({
-        key: current.context.key,
-        value: current.result.value,
-        ...current,
-      })),
+    result = { ...result, ...this.evalFromConfigsOverride(result) };
+    result = {
+      ...result,
+      ...(await this.evalFromStoreSet(
+        _.pickBy(
+          result,
+          (current) => current.result.origin === EvaluatedConfigOrigin.EmptyValue && !current.context.cfgu.template,
+        ),
+      )),
     };
+    result = {
+      ...result,
+      ...this.evalFromSchema(_.pickBy(result, (current) => current.result.origin === EvaluatedConfigOrigin.EmptyValue)),
+    };
+    result = {
+      ...result,
+      ...this.evalPrevious(result),
+    };
+    result = {
+      ...result,
+      ...this.evalTemplates(result),
+    };
+
+    this.validateResult(result);
+
+    return result;
   }
 }
