@@ -1,6 +1,7 @@
 import axios, { Axios } from 'axios';
 import { KeyValueConfigStore } from '@configu/ts';
 
+// todo: add support for env vars
 type HashiCorpVaultConfigStoreConfiguration = { address: string; token: string; engine: string };
 
 // ! supports K/V2 engine only

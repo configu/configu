@@ -2,6 +2,7 @@ import _ from 'lodash';
 import { KubeConfig, CoreV1Api, PatchUtils } from '@kubernetes/client-node';
 import { KeyValueConfigStore } from '@configu/ts';
 
+// todo: check if KUBECONFIG env works with loadFromDefaults()
 type KubernetesSecretConfigStoreConfiguration = {
   namespace: string;
   kubeconfig?: string;

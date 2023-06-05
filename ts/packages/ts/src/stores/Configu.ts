@@ -3,6 +3,7 @@ import validator from 'validator';
 import { ConfigStore } from '../ConfigStore';
 import { ConfigStoreQuery, Config } from '../types';
 
+// todo: add support for env vars auth
 type ConfiguConfigStoreConfiguration = {
   credentials: { org: string; token: string };
   endpoint?: string;

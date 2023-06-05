@@ -18,5 +18,5 @@ export * from './stores/PostgreSQL';
 export * from './stores/CockroachDB';
 export * from './stores/MSSQL';
 
-export { UpsertCommand, EvalCommand, DeleteCommand, TestCommand } from '@configu/ts';
+export { TestCommand, UpsertCommand, DeleteCommand, EvalCommand } from '@configu/ts';
 export * from './commands/ExportCommand';

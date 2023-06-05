@@ -6,4 +6,11 @@ export { NoopConfigStore, InMemoryConfigStore, ConfiguConfigStore } from '@confi
 
 export * from './stores/LocalForage';
 
-export { UpsertCommand, EvalCommand, DeleteCommand, ExportCommand, ExportCommandReturn } from '@configu/ts';
+export {
+  TestCommand,
+  UpsertCommand,
+  DeleteCommand,
+  EvalCommand,
+  ExportCommand,
+  ExportCommandReturn,
+} from '@configu/ts';
