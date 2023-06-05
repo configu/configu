@@ -1,7 +1,7 @@
 import localForage from 'localforage';
-import { KeyValueStore } from '@configu/ts';
+import { KeyValueConfigStore } from '@configu/ts';
 
-export class LocalForageStore extends KeyValueStore {
+export class LocalForageConfigStore extends KeyValueConfigStore {
   private client: LocalForage;
   constructor(configuration: LocalForageOptions) {
     super('localforage');

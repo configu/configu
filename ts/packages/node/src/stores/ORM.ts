@@ -20,7 +20,7 @@ class Config {
   value: string;
 }
 
-export abstract class ORMStore extends ConfigStore {
+export abstract class ORMConfigStore extends ConfigStore {
   readonly dataSource: DataSource;
 
   constructor(type: string, dataSourceOptions: DataSourceOptions) {

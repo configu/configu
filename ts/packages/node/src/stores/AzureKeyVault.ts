@@ -1,19 +1,19 @@
-import { ClientSecretCredential } from '@azure/identity';
-import { SecretClient } from '@azure/keyvault-secrets';
-import { KeyValueStore } from '@configu/ts';
+import { DefaultAzureCredential, DefaultAzureCredentialClientIdOptions } from '@azure/identity';
+import { SecretClient, SecretClientOptions } from '@azure/keyvault-secrets';
+import { KeyValueConfigStore } from '@configu/ts';
 
-type AzureKeyVaultConfiguration = {
-  credentials: { tenantId: string; clientId: string; clientSecret: string };
+type AzureKeyVaultConfigStoreConfiguration = {
   vaultUrl: string;
+  credential: DefaultAzureCredentialClientIdOptions;
+  options?: SecretClientOptions;
 };
 
-export class AzureKeyVaultStore extends KeyValueStore {
+export class AzureKeyVaultConfigStore extends KeyValueConfigStore {
   private client: SecretClient;
-  constructor({ credentials: { clientId, clientSecret, tenantId }, vaultUrl }: AzureKeyVaultConfiguration) {
+  constructor({ vaultUrl, credential, options }: AzureKeyVaultConfigStoreConfiguration) {
     super('azure-key-vault');
 
-    const clientCredentials = new ClientSecretCredential(tenantId, clientId, clientSecret);
-    this.client = new SecretClient(vaultUrl, clientCredentials);
+    this.client = new SecretClient(vaultUrl, new DefaultAzureCredential(credential), options);
   }
 
   // * https://learn.microsoft.com/en-us/javascript/api/@azure/keyvault-secrets/secretclient?view=azure-node-latest#@azure-keyvault-secrets-secretclient-getsecret

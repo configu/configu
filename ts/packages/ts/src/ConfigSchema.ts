@@ -166,3 +166,13 @@ export abstract class ConfigSchema implements IConfigSchema {
     return schemaContents;
   }
 }
+
+export class InMemoryConfigSchema extends ConfigSchema {
+  constructor(public contents: { [key: string]: Cfgu }, public name: string = '') {
+    super(`${name}.cfgu.json`);
+  }
+
+  async read(): Promise<string> {
+    return Convert.configSchemaContentsToJson(this.contents);
+  }
+}

@@ -3,17 +3,15 @@ import validator from 'validator';
 import { ConfigStore } from '../ConfigStore';
 import { ConfigStoreQuery, Config } from '../types';
 
-type ConfiguStoreCredentialsConfiguration = { org: string; token: string };
-
-type ConfiguStoreConfiguration = {
-  credentials: ConfiguStoreCredentialsConfiguration;
+type ConfiguConfigStoreConfiguration = {
+  credentials: { org: string; token: string };
   endpoint?: string;
   source?: string;
 };
 
-export class ConfiguStore extends ConfigStore {
+export class ConfiguConfigStore extends ConfigStore {
   private client: Axios;
-  constructor({ credentials, endpoint = `https://api.configu.com`, source = 'sdk' }: ConfiguStoreConfiguration) {
+  constructor({ credentials, endpoint = `https://api.configu.com`, source = 'sdk' }: ConfiguConfigStoreConfiguration) {
     super('configu');
 
     this.client = axios.create({

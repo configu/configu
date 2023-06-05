@@ -1,8 +1,8 @@
 import _ from 'lodash';
 import {
-  InMemoryStore,
+  InMemoryConfigStore,
   ConfigSet,
-  ConfigSchema as BaseConfigSchema,
+  InMemoryConfigSchema,
   UpsertCommand,
   UpsertCommandParameters,
   EvalCommand,
@@ -10,67 +10,65 @@ import {
   DeleteCommand,
   EvalCommandReturn,
 } from '..';
-import { Cfgu, Convert } from '../types/generated';
-
-class ConfigSchema extends BaseConfigSchema {
-  constructor(public contents: { [key: string]: Cfgu }) {
-    super('.cfgu.json');
-  }
-
-  async read(): Promise<string> {
-    return Convert.configSchemaContentsToJson(this.contents);
-  }
-}
 
 describe(`commands`, () => {
-  const store1 = new InMemoryStore();
-  const store2 = new InMemoryStore();
+  const store1 = new InMemoryConfigStore();
+  const store2 = new InMemoryConfigStore();
 
   const set1 = new ConfigSet('test');
   const set11 = new ConfigSet('test1/test11');
   const set2 = new ConfigSet('test2');
 
-  const schema1 = new ConfigSchema({
-    K11: {
-      type: 'Boolean',
-      default: 'true',
-      depends: ['K12'],
+  const schema1 = new InMemoryConfigSchema(
+    {
+      K11: {
+        type: 'Boolean',
+        default: 'true',
+        depends: ['K12'],
+      },
+      K12: {
+        type: 'Number',
+      },
+      K13: {
+        type: 'String',
+        required: true,
+      },
     },
-    K12: {
-      type: 'Number',
+    's1',
+  );
+  const schema2 = new InMemoryConfigSchema(
+    {
+      K21: {
+        type: 'RegEx',
+        pattern: '^(foo|bar|baz)$',
+      },
+      K22: {
+        type: 'String',
+        template: '{{K21}}::{{K11}}:{{K12}}:{{K13}}',
+      },
     },
-    K13: {
-      type: 'String',
-      required: true,
+    's2',
+  );
+  const schema3 = new InMemoryConfigSchema(
+    {
+      K31: {
+        type: 'String',
+        description: "email's prefix",
+        template: '{{CONFIGU_SET.1}}-{{CONFIGU_SET.hierarchy.1}}',
+      },
+      K32: {
+        type: 'Domain',
+        description: "email's suffix",
+      },
+      K33: {
+        type: 'Email',
+        template: '{{CONFIGU_SET.last}}-{{K31}}@{{K32}}',
+        required: true,
+        depends: ['K31', 'K32'],
+      },
     },
-  });
-  const schema2 = new ConfigSchema({
-    K21: {
-      type: 'RegEx',
-      pattern: '^(foo|bar|baz)$',
-    },
-    K22: {
-      type: 'String',
-      template: '{{K21}}::{{K11}}:{{K12}}:{{K13}}',
-    },
-  });
-  const schema3 = new ConfigSchema({
-    K31: {
-      type: 'String',
-      description: "email's prefix",
-      template: '{{CONFIGU_SET.1}}-{{CONFIGU_SET.hierarchy.1}}',
-    },
-    K32: {
-      type: 'Domain',
-      description: "email's suffix",
-    },
-    K33: {
-      type: 'Email',
-      template: '{{CONFIGU_SET.last}}-{{K31}}@{{K32}}',
-      required: true,
-      depends: ['K31', 'K32'],
-    },
-  });
+    's3',
+  );
 
   describe(`EvalCommand`, () => {
     test.each<{

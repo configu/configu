@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { ConfigStore } from '../ConfigStore';
 import { ConfigStoreQuery, Config } from '../types';
 
-export abstract class KeyValueStore extends ConfigStore {
+export abstract class KeyValueConfigStore extends ConfigStore {
   constructor(type: string) {
     super(type);
   }
