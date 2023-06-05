@@ -11,7 +11,7 @@ describe(`utils`, () => {
     });
     it(`return message and location`, async () => {
       const res = ERR(message, { location });
-      expect(res).toBe(`${message} at ${location.join(' > ')}`);
+      expect(res).toBe(`${message} at ${location.join('.')}`);
     });
     it(`return message and suggestion`, async () => {
       const res = ERR(message, { suggestion });
@@ -19,7 +19,7 @@ describe(`utils`, () => {
     });
     it(`return decorated message`, async () => {
       const res = ERR(message, { location, suggestion });
-      expect(res).toBe(`${message} at ${location.join(' > ')}, ${suggestion}`);
+      expect(res).toBe(`${message} at ${location.join('.')}, ${suggestion}`);
     });
   });
 
