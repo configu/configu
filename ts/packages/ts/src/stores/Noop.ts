@@ -1,7 +1,7 @@
 import { ConfigStore } from '../ConfigStore';
 import { ConfigStoreQuery, Config } from '../types';
 
-export class NoopStore extends ConfigStore {
+export class NoopConfigStore extends ConfigStore {
   constructor() {
     super('noop');
   }

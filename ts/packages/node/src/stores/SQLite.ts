@@ -1,7 +1,7 @@
 import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionOptions';
-import { ORMStore } from './ORM';
+import { ORMConfigStore } from './ORM';
 
-export class SQLiteStore extends ORMStore {
+export class SQLiteConfigStore extends ORMConfigStore {
   constructor(configuration: Omit<SqliteConnectionOptions, 'type'>) {
     super('sqlite', { ...configuration, type: 'sqlite' });
   }

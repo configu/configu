@@ -1,7 +1,7 @@
 import { SqlServerConnectionOptions } from 'typeorm/driver/sqlserver/SqlServerConnectionOptions';
-import { ORMStore } from './ORM';
+import { ORMConfigStore } from './ORM';
 
-export class MSSQLStore extends ORMStore {
+export class MSSQLConfigStore extends ORMConfigStore {
   constructor(configuration: Omit<SqlServerConnectionOptions, 'type'>) {
     super('mssql', { ...configuration, type: 'mssql' });
   }

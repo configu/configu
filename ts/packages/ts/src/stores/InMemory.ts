@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { ConfigStore } from '../ConfigStore';
 import { ConfigStoreQuery, Config } from '../types';
 
-export class InMemoryStore extends ConfigStore {
+export class InMemoryConfigStore extends ConfigStore {
   private data: Config[] = [];
 
   constructor() {

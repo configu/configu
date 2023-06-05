@@ -1,10 +1,10 @@
 import _ from 'lodash';
-import { ConfiguStore } from '..';
+import { ConfiguConfigStore } from '..';
 
-describe(`ConfiguStore`, () => {
+describe(`ConfiguConfigStore`, () => {
   describe(`constructor`, () => {
     it(`sets client header Authorization`, () => {
-      const store = new ConfiguStore({
+      const store = new ConfiguConfigStore({
         credentials: {
           org: 'test',
           token:
@@ -21,7 +21,7 @@ describe(`ConfiguStore`, () => {
       expect(String(headers.common.Authorization).startsWith('Bearer')).toBe(true);
     });
     it(`sets client header Token`, () => {
-      const store = new ConfiguStore({
+      const store = new ConfiguConfigStore({
         credentials: {
           org: 'test',
           token: _.repeat('t', 40),

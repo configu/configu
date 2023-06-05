@@ -11,7 +11,8 @@ export * from './stores/KeyValue';
 export * from './stores/Configu';
 
 export * from './Command';
-export * from './commands/UpsertCommand';
-export * from './commands/EvalCommand';
-export * from './commands/DeleteCommand';
 export * from './commands/TestCommand';
+export * from './commands/UpsertCommand';
+export * from './commands/DeleteCommand';
+export * from './commands/EvalCommand';
+export * from './commands/ExportCommand';

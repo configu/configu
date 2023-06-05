@@ -4,28 +4,23 @@ import { Entity, Column, DataSource, DataSourceOptions, Index, PrimaryGeneratedC
 import _ from 'lodash';
 
 @Entity()
-@Index(['schema', 'set'])
-@Index(['schema', 'set', 'key'], { unique: true })
+@Index(['set', 'key'], { unique: true })
 class Config {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Index('schema')
-  @Column({ type: 'varchar', length: 100 })
-  schema: string;
-
   @Index('set')
-  @Column({ type: 'varchar', length: 100 })
+  @Column('text')
   set: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column('text')
   key: string;
 
-  @Column('varchar')
+  @Column('text')
   value: string;
 }
 
-export abstract class ORMStore extends ConfigStore {
+export abstract class ORMConfigStore extends ConfigStore {
   readonly dataSource: DataSource;
 
   constructor(type: string, dataSourceOptions: DataSourceOptions) {
@@ -53,7 +48,7 @@ export abstract class ORMStore extends ConfigStore {
     const configRepository = this.dataSource.getRepository(Config);
 
     if (configs.length > 0) {
-      await configRepository.upsert(configs, ['schema', 'set', 'key']);
+      await configRepository.upsert(configs, ['set', 'key']);
     }
   }
 
@@ -61,8 +56,8 @@ export abstract class ORMStore extends ConfigStore {
     const configRepository = this.dataSource.getRepository(Config);
 
     const adjustedQuery = queries.map((entry) => ({
-      ...(entry.set !== '*' && { set: entry.set }),
-      ...(entry.key !== '*' && { key: entry.key }),
+      set: entry.set,
+      key: entry.key,
     }));
 
     return configRepository.find({ where: adjustedQuery });

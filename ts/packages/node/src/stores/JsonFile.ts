@@ -2,9 +2,11 @@ import { promises as fs } from 'fs';
 import _ from 'lodash';
 import { ConfigStore, ConfigStoreQuery, Config, Convert } from '@configu/ts';
 
-export class JsonFileStore extends ConfigStore {
-  constructor(public path: string) {
+export class JsonFileConfigStore extends ConfigStore {
+  private readonly path: string;
+  constructor({ path }: { path: string }) {
     super('json-file');
+    this.path = path;
   }
 
   async read(): Promise<Config[]> {
@@ -22,7 +24,7 @@ export class JsonFileStore extends ConfigStore {
 
     return storedConfigs.filter((config) => {
       return queries.some(({ set, key }) => {
-        return (set === '*' || set === config.set) && (key === '*' || key === config.key);
+        return set === config.set && key === config.key;
       });
     });
   }

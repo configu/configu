@@ -1,7 +1,7 @@
 import { CockroachConnectionOptions } from 'typeorm/driver/cockroachdb/CockroachConnectionOptions';
-import { ORMStore } from './ORM';
+import { ORMConfigStore } from './ORM';
 
-export class CockroachDBStore extends ORMStore {
+export class CockroachDBConfigStore extends ORMConfigStore {
   constructor(configuration: Omit<CockroachConnectionOptions, 'type'>) {
     super('cockroachdb', { ...configuration, type: 'cockroachdb' });
   }

@@ -1,81 +1,80 @@
+import _ from 'lodash';
 import {
-  InMemoryStore,
+  InMemoryConfigStore,
   ConfigSet,
-  ConfigSchema as BaseConfigSchema,
+  InMemoryConfigSchema,
   UpsertCommand,
   UpsertCommandParameters,
   EvalCommand,
   EvalCommandParameters,
-  EvaluatedConfigs,
   DeleteCommand,
+  EvalCommandReturn,
 } from '..';
-import { Cfgu, Convert } from '../types/generated';
-
-class ConfigSchema extends BaseConfigSchema {
-  constructor(public contents: { [key: string]: Cfgu }) {
-    super('.cfgu.json');
-  }
-
-  async read(): Promise<string> {
-    return Convert.configSchemaContentsToJson(this.contents);
-  }
-}
 
 describe(`commands`, () => {
-  const store1 = new InMemoryStore();
-  const store2 = new InMemoryStore();
+  const store1 = new InMemoryConfigStore();
+  const store2 = new InMemoryConfigStore();
 
   const set1 = new ConfigSet('test');
   const set11 = new ConfigSet('test1/test11');
   const set2 = new ConfigSet('test2');
 
-  const schema1 = new ConfigSchema({
-    K11: {
-      type: 'Boolean',
-      default: 'true',
+  const schema1 = new InMemoryConfigSchema(
+    {
+      K11: {
+        type: 'Boolean',
+        default: 'true',
+        depends: ['K12'],
+      },
+      K12: {
+        type: 'Number',
+      },
+      K13: {
+        type: 'String',
+        required: true,
+      },
     },
-    K12: {
-      type: 'Number',
+    's1',
+  );
+  const schema2 = new InMemoryConfigSchema(
+    {
+      K21: {
+        type: 'RegEx',
+        pattern: '^(foo|bar|baz)$',
+      },
+      K22: {
+        type: 'String',
+        template: '{{K21}}::{{K11}}:{{K12}}:{{K13}}',
+      },
     },
-    K13: {
-      type: 'String',
-      required: true,
-      depends: ['K12'],
+    's2',
+  );
+  const schema3 = new InMemoryConfigSchema(
+    {
+      K31: {
+        type: 'String',
+        description: "email's prefix",
+        template: '{{CONFIGU_SET.1}}-{{CONFIGU_SET.hierarchy.1}}',
+      },
+      K32: {
+        type: 'Domain',
+        description: "email's suffix",
+      },
+      K33: {
+        type: 'Email',
+        template: '{{CONFIGU_SET.last}}-{{K31}}@{{K32}}',
+        required: true,
+        depends: ['K31', 'K32'],
+      },
     },
-  });
-  const schema2 = new ConfigSchema({
-    K21: {
-      type: 'RegEx',
-      pattern: '^(foo|bar|baz)$',
-    },
-    K22: {
-      type: 'String',
-      template: '{{K21}}::{{K11}}:{{K12}}:{{K13}}',
-    },
-  });
-  const schema3 = new ConfigSchema({
-    K31: {
-      type: 'String',
-      description: "email's prefix",
-      template: '{{CONFIGU_SET.1}}-{{CONFIGU_SET.hierarchy.1}}',
-    },
-    K32: {
-      type: 'Domain',
-      description: "email's suffix",
-    },
-    K33: {
-      type: 'Email',
-      template: '{{CONFIGU_SET.last}}-{{K31}}@{{K32}}',
-      required: true,
-      depends: ['K31', 'K32'],
-    },
-  });
+    's3',
+  );
 
   describe(`EvalCommand`, () => {
     test.each<{
       name: string;
-      parameters: { upsert: UpsertCommandParameters[]; eval: EvalCommandParameters };
-      expected: EvaluatedConfigs | string;
+      parameters: { upsert: UpsertCommandParameters[]; eval: EvalCommandParameters[] };
+      expected: { [key: string]: string } | string;
     }>([
       {
         name: '[ store1 ⋅ set1 ⋅ schema1 ]',
@@ -91,7 +90,7 @@ describe(`commands`, () => {
               },
             },
           ],
-          eval: { from: [{ store: store1, set: set1, schema: schema1 }] },
+          eval: [{ store: store1, set: set1, schema: schema1 }],
         },
         expected: { K11: 'true', K12: '4', K13: 'test' },
       },
@@ -99,10 +98,7 @@ describe(`commands`, () => {
         name: '[ store2 ⋅ set2 ⋅ schema2 ] - override',
         parameters: {
           upsert: [],
-          eval: {
-            from: [{ store: store2, set: set2, schema: schema2, configs: { K21: 'baz' } }],
-            configs: { K22: 'test' },
-          },
+          eval: [{ store: store2, set: set2, schema: schema2, configs: { K21: 'baz', K22: 'test' } }],
         },
         expected: { K21: 'baz', K22: 'test' },
       },
@@ -117,7 +113,7 @@ describe(`commands`, () => {
               configs: { K12: '7' },
             },
           ],
-          eval: { from: [{ store: store1, set: set1, schema: schema1 }] },
+          eval: [{ store: store1, set: set1, schema: schema1 }],
         },
         expected: 'required',
       },
@@ -132,7 +128,7 @@ describe(`commands`, () => {
               configs: { K13: 'test' },
             },
           ],
-          eval: { from: [{ store: store1, set: set1, schema: schema1 }] },
+          eval: [{ store: store1, set: set1, schema: schema1 }],
         },
         expected: 'depends',
       },
@@ -158,12 +154,10 @@ describe(`commands`, () => {
               },
             },
           ],
-          eval: {
-            from: [
-              { store: store1, set: set1, schema: schema1 },
-              { store: store1, set: set2, schema: schema1 },
-            ],
-          },
+          eval: [
+            { store: store1, set: set1, schema: schema1 },
+            { store: store1, set: set2, schema: schema1 },
+          ],
         },
         expected: { K11: 'true', K12: '7', K13: 'test' },
       },
@@ -190,12 +184,10 @@ describe(`commands`, () => {
               },
             },
           ],
-          eval: {
-            from: [
-              { store: store1, set: set1, schema: schema1 },
-              { store: store1, set: set1, schema: schema2 },
-            ],
-          },
+          eval: [
+            { store: store1, set: set1, schema: schema1 },
+            { store: store1, set: set1, schema: schema2 },
+          ],
         },
         expected: { K11: 'false', K12: '4', K13: 'test', K21: 'foo', K22: 'foo::false:4:test' },
       },
@@ -212,17 +204,24 @@ describe(`commands`, () => {
               },
             },
           ],
-          eval: { from: [{ store: store2, set: set1, schema: schema3 }] },
+          eval: [{ store: store2, set: set1, schema: schema3 }],
         },
         expected: { K31: 'test-test', K32: 'configu.com', K33: 'test-test-test@configu.com' },
       },
     ])('$name', async ({ parameters, expected }) => {
-      const upsertPromises = parameters.upsert.map((p) => new UpsertCommand(p).run());
-      await Promise.all(upsertPromises);
-
       try {
-        const { result } = await new EvalCommand(parameters.eval).run();
-        expect(result).toStrictEqual(expected);
+        const upsertPromises = parameters.upsert.map((p) => new UpsertCommand(p).run());
+        await Promise.all(upsertPromises);
+
+        const evalResult = await parameters.eval.reduce<Promise<EvalCommandReturn>>(
+          async (promisedPrevious, current) => {
+            const previous = await promisedPrevious;
+            return new EvalCommand({ ...current, previous }).run();
+          },
+          undefined as any,
+        );
+        const evaluatedConfigs = _.mapValues(evalResult, (current) => current.result.value);
+        expect(evaluatedConfigs).toStrictEqual(expected);
       } catch (error) {
         // eslint-disable-next-line jest/no-conditional-expect
         expect(error.message).toContain(expected);

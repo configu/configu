@@ -1,19 +1,25 @@
 import _ from 'lodash';
 import { KubeConfig, CoreV1Api, PatchUtils } from '@kubernetes/client-node';
-import { KeyValueStore } from '@configu/ts';
+import { KeyValueConfigStore } from '@configu/ts';
 
-type KubernetesSecretConfiguration = {
-  kubeconfigFilePath: string;
+// todo: check if KUBECONFIG env works with loadFromDefaults()
+type KubernetesSecretConfigStoreConfiguration = {
   namespace: string;
+  kubeconfig?: string;
 };
 
-export class KubernetesSecretStore extends KeyValueStore {
+export class KubernetesSecretConfigStore extends KeyValueConfigStore {
   private client: CoreV1Api;
   private namespace: string;
-  constructor({ kubeconfigFilePath, namespace }: KubernetesSecretConfiguration) {
+  constructor({ namespace, kubeconfig }: KubernetesSecretConfigStoreConfiguration) {
     super('kubernetes-secret');
     const kubernetesConfig = new KubeConfig();
-    kubernetesConfig.loadFromFile(kubeconfigFilePath);
+    if (kubeconfig) {
+      kubernetesConfig.loadFromFile(kubeconfig);
+    } else {
+      kubernetesConfig.loadFromDefault();
+    }
+
     this.client = kubernetesConfig.makeApiClient(CoreV1Api);
     this.namespace = namespace;
   }

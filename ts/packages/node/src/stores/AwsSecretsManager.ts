@@ -6,10 +6,10 @@ import {
   CreateSecretCommand,
   DeleteSecretCommand,
 } from '@aws-sdk/client-secrets-manager';
-import { KeyValueStore } from '@configu/ts';
+import { KeyValueConfigStore } from '@configu/ts';
 
 // ! supports JSON secrets only
-export class AwsSecretsManagerStore extends KeyValueStore {
+export class AWSSecretsManagerConfigStore extends KeyValueConfigStore {
   private client: SecretsManagerClient;
   constructor(configuration: SecretsManagerClientConfig) {
     super('aws-secrets-manager');
