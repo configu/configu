@@ -14,3 +14,4 @@ export * from './Command';
 export * from './commands/UpsertCommand';
 export * from './commands/EvalCommand';
 export * from './commands/DeleteCommand';
+export * from './commands/TestCommand';
