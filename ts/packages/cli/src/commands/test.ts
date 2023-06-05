@@ -1,6 +1,4 @@
 import { Flags } from '@oclif/core';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import { TestCommand } from '@configu/ts';
 import { BaseCommand } from '../base';
 
