@@ -3,9 +3,9 @@ import { KubeConfig, CoreV1Api, PatchUtils } from '@kubernetes/client-node';
 import { KeyValueConfigStore } from '@configu/ts';
 
 // todo: check if KUBECONFIG env works with loadFromDefaults()
-type KubernetesSecretConfigStoreConfiguration = {
-  namespace: string;
+export type KubernetesSecretConfigStoreConfiguration = {
   kubeconfig?: string;
+  namespace: string;
 };
 
 export class KubernetesSecretConfigStore extends KeyValueConfigStore {

@@ -159,10 +159,10 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     try {
       const previous = JSON.parse(stdin) as EvalCommandReturn;
       if (Object.values(previous).some((value) => !value.context || !value.result)) {
-        throw new Error();
+        throw new Error('fail');
       }
       return previous;
-    } catch (error) {
+    } catch {
       throw new Error(`failed to parse previous eval command return data from stdin`);
     }
   }
@@ -184,7 +184,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     try {
       await fs.mkdir(this.config.configDir, { recursive: true });
       await fs.mkdir(this.config.cacheDir, { recursive: true });
-    } catch (error) {
+    } catch {
       throw new Error(`fail to initialize ${this.config.name} cli`);
     }
 
@@ -192,7 +192,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       const rawCredentialsData = await this.readFile(this.config.credentialsFile, true);
       const credentialsData = JSON.parse(rawCredentialsData);
       this.config.credentialsData = credentialsData;
-    } catch (error) {
+    } catch {
       this.config.credentialsData = {};
     }
 

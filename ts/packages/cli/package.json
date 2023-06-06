@@ -112,9 +112,10 @@
     "@oclif/test": "^2.3.22",
     "@types/inquirer": "8.2.5",
     "@types/lodash": "^4.14.195",
-    "aws-sdk": "^2.1391.0",
+    "aws-sdk": "^2.1392.0",
     "eslint-config-oclif": "^4.0.0",
     "eslint-config-oclif-typescript": "^1.0.3",
+    "eslint-plugin-unicorn": "^47.0.0",
     "globby": "11.0.4",
     "oclif": "^3.9.0",
     "tslib": "^2.5.3"

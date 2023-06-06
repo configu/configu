@@ -1,15 +1,15 @@
 import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
 import { KeyValueConfigStore } from '@configu/ts';
 
-type GcpSecretManagerConfigStoreConfiguration = ConstructorParameters<typeof SecretManagerServiceClient>['0'] & {
+export type GCPSecretManagerConfigStoreConfiguration = ConstructorParameters<typeof SecretManagerServiceClient>['0'] & {
   projectId: string;
 };
 
-export class GcpSecretManagerConfigStore extends KeyValueConfigStore {
+export class GCPSecretManagerConfigStore extends KeyValueConfigStore {
   private client: SecretManagerServiceClient;
   private projectId: string;
 
-  constructor({ projectId, ...configuration }: GcpSecretManagerConfigStoreConfiguration) {
+  constructor({ projectId, ...configuration }: GCPSecretManagerConfigStoreConfiguration) {
     super('gcp-secret-manager');
 
     this.client = new SecretManagerServiceClient(configuration);

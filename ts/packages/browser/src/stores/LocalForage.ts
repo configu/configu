@@ -1,9 +1,11 @@
 import localForage from 'localforage';
 import { KeyValueConfigStore } from '@configu/ts';
 
+export type LocalForageConfigStoreConfiguration = LocalForageOptions;
+
 export class LocalForageConfigStore extends KeyValueConfigStore {
   private client: LocalForage;
-  constructor(configuration: LocalForageOptions) {
+  constructor(configuration: LocalForageConfigStoreConfiguration) {
     super('localforage');
     this.client = localForage.createInstance(configuration);
   }

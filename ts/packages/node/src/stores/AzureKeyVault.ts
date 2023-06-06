@@ -2,7 +2,7 @@ import { DefaultAzureCredential, DefaultAzureCredentialClientIdOptions } from '@
 import { SecretClient, SecretClientOptions } from '@azure/keyvault-secrets';
 import { KeyValueConfigStore } from '@configu/ts';
 
-type AzureKeyVaultConfigStoreConfiguration = {
+export type AzureKeyVaultConfigStoreConfiguration = {
   vaultUrl: string;
   credential: DefaultAzureCredentialClientIdOptions;
   options?: SecretClientOptions;
