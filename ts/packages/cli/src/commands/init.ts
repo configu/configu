@@ -35,8 +35,8 @@ export default class Init extends BaseCommand<typeof Init> {
   static description = `creates a config schema ${ConfigSchema.CFGU.EXT} file in the current working dir`;
   static examples = [
     '<%= config.bin %> <%= command.id %>',
-    '<%= config.bin %> <%= command.id %> --name "cli" --dir "./src/cli"',
-    '<%= config.bin %> <%= command.id %> --import "./src/.env" --defaults --types',
+    "<%= config.bin %> <%= command.id %> --name 'cli' --dir './src/cli'",
+    "<%= config.bin %> <%= command.id %> --import './src/.env' --defaults --types",
     '<%= config.bin %> <%= command.id %> --example',
   ];
 
@@ -60,13 +60,13 @@ export default class Init extends BaseCommand<typeof Init> {
 
     'get-started': Flags.boolean({
       description: `fills the new ${ConfigSchema.CFGU.EXT} file with a get-started example`,
-      exclusive: ['uid', 'import', 'example'],
+      exclusive: ['name', 'import', 'example'],
       aliases: ['quick-start', 'getting-started', 'hello-world'],
       default: false,
     }),
     example: Flags.boolean({
       description: `fills the new ${ConfigSchema.CFGU.EXT} file with a variety of detailed examples`,
-      exclusive: ['uid', 'import', 'get-started'],
+      exclusive: ['name', 'import', 'get-started'],
       aliases: ['examples', 'foo'],
       default: false,
     }),

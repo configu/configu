@@ -2,11 +2,10 @@ import { Flags, ux } from '@oclif/core';
 import { cwd } from 'process';
 import { spawnSync } from 'child_process';
 import _ from 'lodash';
-import { TMPL, EvaluatedConfigs, EvalCommandParameters, EvalCommandConfigsParameter } from '@configu/ts';
-import { ConfigSet, ConfigSchema, NoopStore, EvalCommand } from '@configu/node';
+import { TMPL, EvalCommandReturn, EvaluatedConfigOrigin, ExportCommandReturn } from '@configu/ts';
+import { ExportCommand } from '@configu/node';
 import { CONFIG_FORMAT_TYPE, formatConfigs, ConfigFormat } from '@configu/lib';
 import { BaseCommand } from '../base';
-import { CS } from '../helpers';
 
 export const NO_CONFIGS_WARNING_TEXT = 'no configuration was fetched';
 export const CONFIG_EXPORT_RUN_DEFAULT_ERROR_TEXT = 'could not export configurations';
@@ -14,25 +13,11 @@ export const CONFIG_EXPORT_RUN_DEFAULT_ERROR_TEXT = 'could not export configurat
 type TemplateContext = { [key: string]: string } | { key: string; value: string }[];
 
 export default class Export extends BaseCommand<typeof Export> {
-  static description = 'exports configurations on demand and in multiple forms';
+  static description = 'exports configs as configuration data in multiple modes';
 
-  static examples = [
-    '<%= config.bin %> <%= command.id %> --from "store=configu;set=production;schema=./get-started.cfgu.json" --from "store=configu;set=my-service;schema=./my-service.cfgu.json;K=V" --config "K=V" --format "Dotenv"',
-    '<%= config.bin %> <%= command.id %> --from "schema=./node-srv.cfgu.json" --no-empty',
-  ];
+  static examples = ["<%= config.bin %> eval ... | <%= config.bin %> <%= command.id %> --format 'Dotenv'"];
 
   static flags = {
-    from: Flags.string({
-      description: 'connection string to fetch configurations from',
-      required: true,
-      multiple: true,
-    }),
-    config: Flags.string({
-      description: 'key=value pairs to override fetched configurations',
-      multiple: true,
-      char: 'c',
-    }),
-
     label: Flags.string({
       description: 'metadata required in some formats like k8s ConfigMaps',
     }),
@@ -81,12 +66,25 @@ export default class Export extends BaseCommand<typeof Export> {
     this.log(finalConfigData, undefined, 'stdout');
   }
 
-  async exportConfigs(configs: EvaluatedConfigs, label: string) {
-    if (_.isEmpty(configs)) {
-      this.warn(NO_CONFIGS_WARNING_TEXT);
-      return;
-    }
+  explainConfigs(configs: EvalCommandReturn) {
+    const data = _(configs)
+      .values()
+      .map(({ context: { key }, result: { value, origin, source } }) => ({
+        key,
+        value,
+        origin,
+        source,
+      }))
+      .value();
+    ux.table(data, {
+      key: { header: 'Key' },
+      value: { header: 'Value' },
+      origin: { header: 'Origin' },
+      source: { header: 'Source' },
+    });
+  }
 
+  async exportConfigs(configs: ExportCommandReturn, label: string) {
     if (this.flags.template) {
       const templateContent = await this.readFile(this.flags.template);
       let templateContext: TemplateContext = configs;
@@ -128,71 +126,25 @@ export default class Export extends BaseCommand<typeof Export> {
     this.printStdout(formattedConfigs);
   }
 
-  async constructEvalCommandParameters(): Promise<EvalCommandParameters> {
-    const fromPromises = this.flags.from.map(async (fromFlag, idx) => {
-      const { store, set, schema, ...configs } = CS.parse(fromFlag);
-      if (typeof schema !== 'string') {
-        throw new Error(`schema is missing at --from[${idx}]`);
-      }
-
-      Object.entries(configs).forEach(([key, value]) => {
-        if (typeof value !== 'string') {
-          throw new Error(`config value is missing at --from[${idx}].${key}`);
-        }
-      });
-
-      if (typeof store === 'string' && (typeof set === 'string' || typeof set === 'undefined')) {
-        const storeInstance = await this.getStoreInstanceByStoreFlag(store);
-        return {
-          store: storeInstance,
-          set: new ConfigSet(set),
-          schema: new ConfigSchema(schema),
-          configs: configs as EvalCommandConfigsParameter,
-        };
-      }
-
-      return {
-        store: new NoopStore(),
-        set: new ConfigSet(),
-        schema: new ConfigSchema(schema),
-        configs: configs as EvalCommandConfigsParameter,
-      };
-    });
-
-    const from = await Promise.all(fromPromises);
-    const configs = this.reduceConfigFlag(this.flags.config);
-
-    return { from, configs };
-  }
-
   public async run(): Promise<void> {
-    const evalCommandParameters = await this.constructEvalCommandParameters();
-    const evalCommandReturn = await new EvalCommand(evalCommandParameters).run();
+    let previous = await this.readPreviousEvalCommandReturn();
 
-    if (this.flags.explain) {
-      const data = _(evalCommandReturn.metadata)
-        .values()
-        .map(({ key, value, result: { from } }) => ({
-          key,
-          value,
-          source: from.source,
-          which: from.which,
-        }))
-        .value();
-      ux.table(data, {
-        key: { header: 'Key' },
-        value: { header: 'Value' },
-        source: { header: 'Source' },
-        which: { header: 'Which' },
-      });
+    if (_.isEmpty(previous)) {
+      this.warn(NO_CONFIGS_WARNING_TEXT);
       return;
     }
 
-    let { result } = evalCommandReturn;
     if (!this.flags.empty) {
-      result = _.omitBy(result, (v) => v === '');
+      previous = _.omitBy(previous, ({ result: { origin } }) => origin === EvaluatedConfigOrigin.EmptyValue);
     }
-    const label = this.flags.label ?? this.flags.from.join('>');
+
+    if (this.flags.explain) {
+      this.explainConfigs(previous);
+      return;
+    }
+
+    const label = this.flags.label ?? `configs-${Date.now()}`;
+    const result = await new ExportCommand({ data: previous, env: false }).run();
     await this.exportConfigs(result, label);
   }
 }

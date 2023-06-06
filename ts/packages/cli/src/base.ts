@@ -2,17 +2,35 @@ import { Config, Command, Flags, Interfaces, Errors, ux } from '@oclif/core';
 import fs from 'fs/promises';
 import path from 'path';
 import _ from 'lodash';
+import { cosmiconfig } from 'cosmiconfig';
 import axios from 'axios';
 import chalk from 'chalk';
 import logSymbols from 'log-symbols';
 import ci from 'ci-info';
-import inquirer from 'inquirer';
-import inquirerPrompt from 'inquirer-autocomplete-prompt';
-import { constructStoreFromConnectionString } from './helpers';
+import { EvalCommandReturn } from '@configu/ts';
+import { ConfiguConfigStore } from '@configu/node';
+import { constructStore } from './helpers';
 
-inquirer.registerPrompt('autocomplete', inquirerPrompt);
+export const CLI_NAME = 'configu';
+const ConfigProvider = cosmiconfig(CLI_NAME, { searchPlaces: [`.${CLI_NAME}`] });
+const UNICODE_NULL = '\u0000';
 
-type BaseConfig = Config & { ci: typeof ci; configFile: string; configData: { stores?: Record<string, string> } };
+type CredentialsData = ConstructorParameters<typeof ConfiguConfigStore>['0']['credentials'] | Record<string, never>;
+
+type ConfigDataStores = Record<string, { type: string; configuration: Record<string, any> }>;
+type ConfigData = Partial<{
+  stores: ConfigDataStores;
+  // todo: implement snippet command
+  // snippets: Record<string, Record<string, any>>;
+}>;
+
+type BaseConfig = Config & {
+  ci: typeof ci;
+  credentialsFile: string;
+  credentialsData: CredentialsData;
+  configFile?: string;
+  configData: ConfigData;
+};
 
 export type Flags<T extends typeof Command> = Interfaces.InferredFlags<(typeof BaseCommand)['baseFlags'] & T['flags']>;
 export type Args<T extends typeof Command> = Interfaces.InferredArgs<T['args']>;
@@ -64,12 +82,56 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     }
   }
 
-  async writeConfigData() {
-    const rawConfigData = JSON.stringify(this.config.configData);
-    await fs.writeFile(this.config.configFile, rawConfigData);
+  async readStdin() {
+    const { stdin } = process;
+    if (stdin.isTTY) {
+      return '';
+    }
+    return new Promise<string>((resolve) => {
+      const chunks: Uint8Array[] = [];
+      stdin.on('data', (chunk) => {
+        chunks.push(chunk);
+      });
+      stdin.on('end', () => {
+        resolve(Buffer.concat(chunks).toString('utf8'));
+      });
+    });
+  }
+
+  getStoreInstanceByStoreFlag(storeFlag?: string) {
+    if (!storeFlag) {
+      throw new Error('--store flag is missing');
+    }
+
+    const storeType = this.config.configData.stores?.[storeFlag]?.type;
+    const storeConfiguration = this.config.configData.stores?.[storeFlag]?.configuration;
+
+    if (storeFlag === CLI_NAME || storeType === CLI_NAME) {
+      return constructStore(
+        CLI_NAME,
+        _.merge(
+          {
+            credentials: this.config.credentialsData,
+          },
+          storeConfiguration,
+          {
+            source: 'cli',
+          },
+        ),
+      );
+    }
+    if (storeType) {
+      return constructStore(storeType, storeConfiguration);
+    }
+
+    throw new Error('--store flag is invalid');
   }
 
   reduceConfigFlag(configFlag?: string[]) {
+    if (!configFlag) {
+      return {};
+    }
+
     return _(configFlag)
       .map((pair, idx) => {
         const [key, value] = pair.split('=');
@@ -83,16 +145,26 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       .value();
   }
 
-  async getStoreInstanceByStoreFlag(storeFlag?: string) {
-    if (!storeFlag) {
-      throw new Error('--store flag is missing');
+  async readPreviousEvalCommandReturn() {
+    const stdin = await this.readStdin();
+
+    if (!stdin) {
+      return undefined;
     }
-    const storeCS = this.config.configData.stores?.[storeFlag]; /* ?? storeFlag */
-    if (!storeCS) {
-      throw new Error('--store not found, use "configu store upsert --label to add it');
+
+    if (stdin === UNICODE_NULL) {
+      this.exit(1);
     }
-    const { store } = await constructStoreFromConnectionString(storeCS);
-    return store;
+
+    try {
+      const previous = JSON.parse(stdin) as EvalCommandReturn;
+      if (Object.values(previous).some((value) => !value.context || !value.result)) {
+        throw new Error();
+      }
+      return previous;
+    } catch (error) {
+      throw new Error(`failed to parse previous eval command return data from stdin`);
+    }
   }
 
   public async init(): Promise<void> {
@@ -107,7 +179,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     this.args = args as Args<T>;
 
     this.config.ci = ci;
-    this.config.configFile = path.join(this.config.configDir, 'config.json');
+    this.config.credentialsFile = path.join(this.config.configDir, 'credentials.json');
 
     try {
       await fs.mkdir(this.config.configDir, { recursive: true });
@@ -117,15 +189,26 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     }
 
     try {
-      const rawConfigData = await this.readFile(this.config.configFile, true);
-      const configData = JSON.parse(rawConfigData);
-      this.config.configData = configData;
+      const rawCredentialsData = await this.readFile(this.config.credentialsFile, true);
+      const credentialsData = JSON.parse(rawCredentialsData);
+      this.config.credentialsData = credentialsData;
     } catch (error) {
-      this.config.configData = {};
+      this.config.credentialsData = {};
+    }
+
+    try {
+      const configResult = await ConfigProvider.search();
+      this.config.configFile = configResult?.filepath;
+      this.config.configData = configResult?.config ?? {};
+    } catch (error) {
+      throw new Error(`invalid configuration file ${error.message}`);
     }
   }
 
   protected async catch(error: Error & { exitCode?: number }): Promise<any> {
+    // * on any error inject a 'NULL' unicode character so if next command in the pipeline try to read stdin it will fail
+    this.log(UNICODE_NULL, 'error', 'stdout');
+
     if (!axios.isAxiosError(error)) {
       return super.catch(error);
     }

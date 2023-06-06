@@ -3,24 +3,27 @@ import { ConfigSet, ConfigSchema, DeleteCommand } from '@configu/node';
 import { BaseCommand } from '../base';
 
 export default class Delete extends BaseCommand<typeof Delete> {
-  static description = 'deletes configs from a store';
+  static description = 'deletes configs from a config-store';
 
   static examples = [
-    '<%= config.bin %> <%= command.id %> --store "configu" --set "dev/branch" --schema "./node-srv.cfgu.json"',
+    "<%= config.bin %> <%= command.id %> --store 'configu' --set 'dev/branch' --schema './node-srv.cfgu.json'",
   ];
 
   static flags = {
     store: Flags.string({
-      description: 'config-store to delete configurations from',
+      description: `config-store (configs data-source) to delete configs from`,
       required: true,
+      aliases: ['st'],
     }),
     set: Flags.string({
-      description: 'hierarchy of the configs',
+      description: `config-set (config-values context) hierarchy path to delete configs from`,
       required: true,
+      aliases: ['se'],
     }),
     schema: Flags.string({
-      description: 'path to a <schema>.cfgu.[json] file',
+      description: `config-schema (config-keys declaration) path/to/[schema].cfgu.json file to delete configs from`,
       required: true,
+      aliases: ['sc'],
     }),
   };
 

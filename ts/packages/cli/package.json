@@ -23,11 +23,7 @@
     "scope": "configu",
     "commands": "./build/commands",
     "topicSeparator": " ",
-    "topics": {
-      "store": {
-        "description": "manage config-store connection as labels to later be used with the --store flag value in following commands"
-      }
-    },
+    "topics": {},
     "plugins": [
       "@oclif/plugin-autocomplete",
       "@oclif/plugin-help",
@@ -91,38 +87,36 @@
   ],
   "dependencies": {
     "@configu/lib": "^0.5.0",
-    "@configu/node": "^0.11.1",
-    "@configu/ts": "^0.11.1",
-    "@oclif/core": "^2.8.2",
-    "@oclif/plugin-autocomplete": "^2.1.9",
+    "@configu/node": "^0.12.0",
+    "@configu/ts": "^0.12.0",
+    "@oclif/core": "^2.8.5",
+    "@oclif/plugin-autocomplete": "^2.3.0",
     "@oclif/plugin-help": "^5.2.9",
-    "@oclif/plugin-not-found": "^2.3.23",
-    "@oclif/plugin-plugins": "^2.4.7",
-    "@oclif/plugin-update": "^3.1.13",
-    "@oclif/plugin-version": "^1.3.3",
-    "axios": "^1.3.6",
+    "@oclif/plugin-not-found": "^2.3.24",
+    "@oclif/plugin-plugins": "^3.1.2",
+    "@oclif/plugin-update": "^3.1.17",
+    "@oclif/plugin-version": "^1.3.4",
+    "axios": "^1.4.0",
     "chalk": "4.1.2",
     "change-case": "^4.1.2",
     "ci-info": "^3.8.0",
-    "dotenv": "^16.0.3",
-    "fuzzy": "^0.1.3",
+    "cosmiconfig": "^8.2.0",
+    "dotenv": "^16.1.4",
     "inquirer": "8.2.5",
-    "inquirer-autocomplete-prompt": "2.0.0",
     "lodash": "^4.17.21",
     "log-symbols": "4.1.0",
     "open": "8.4.2",
-    "openid-client": "^5.4.1"
+    "openid-client": "^5.4.2"
   },
   "devDependencies": {
-    "@oclif/test": "^2.3.17",
+    "@oclif/test": "^2.3.22",
     "@types/inquirer": "8.2.5",
-    "@types/inquirer-autocomplete-prompt": "3.0.0",
-    "@types/lodash": "^4.14.194",
-    "aws-sdk": "^2.1363.0",
+    "@types/lodash": "^4.14.195",
+    "aws-sdk": "^2.1391.0",
     "eslint-config-oclif": "^4.0.0",
     "eslint-config-oclif-typescript": "^1.0.3",
     "globby": "11.0.4",
-    "oclif": "^3.8.1",
-    "tslib": "^2.5.0"
+    "oclif": "^3.9.0",
+    "tslib": "^2.5.3"
   }
 }
