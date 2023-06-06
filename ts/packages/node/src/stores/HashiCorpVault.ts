@@ -1,15 +1,17 @@
 import axios, { Axios } from 'axios';
 import { KeyValueConfigStore } from '@configu/ts';
 
-// todo: add support for env vars
-type HashiCorpVaultConfigStoreConfiguration = { address: string; token: string; engine: string };
+export type HashiCorpVaultConfigStoreConfiguration = { address?: string; token?: string; engine: string };
 
 // ! supports K/V2 engine only
 export class HashiCorpVaultConfigStore extends KeyValueConfigStore {
   private client: Axios;
   private engine: string;
-  constructor({ address, token, engine }: HashiCorpVaultConfigStoreConfiguration) {
+  constructor(configuration: HashiCorpVaultConfigStoreConfiguration) {
     super('hashicorp-vault');
+
+    const address = configuration.address ?? process.env.VAULT_ADDR;
+    const token = configuration.token ?? process.env.VAULT_TOKEN;
 
     this.client = axios.create({
       baseURL: `${address}/v1`,
@@ -18,7 +20,7 @@ export class HashiCorpVaultConfigStore extends KeyValueConfigStore {
       },
       responseType: 'json',
     });
-    this.engine = engine;
+    this.engine = configuration.engine;
   }
 
   private formatKey(key: string): string {

@@ -43,7 +43,7 @@ export default class Eval extends BaseCommand<typeof Eval> {
     const configs = this.reduceConfigFlag(config);
     const previous = await this.readPreviousEvalCommandReturn();
 
-    if (typeof store === 'string' && (typeof set === 'string' || typeof set === 'undefined')) {
+    if (typeof store === 'string' && (typeof set === 'string' || set === undefined)) {
       const storeInstance = this.getStoreInstanceByStoreFlag(store);
       return {
         store: storeInstance,

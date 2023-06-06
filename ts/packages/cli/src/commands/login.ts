@@ -87,15 +87,20 @@ export default class Login extends BaseCommand<typeof Login> {
       return { org: orgId, token: tokens.access_token, type: 'Bearer' } as const;
     } catch (error) {
       switch (error.error) {
-        case 'access_denied': // end-user declined the device confirmation prompt, consent or rules failed
+        case 'access_denied': {
+          // end-user declined the device confirmation prompt, consent or rules failed
           throw new Error('\n\ncancelled interaction');
-        case 'expired_token': // end-user did not complete the interaction in time
+        }
+        case 'expired_token': {
+          // end-user did not complete the interaction in time
           throw new Error('\n\ndevice flow expired');
-        default:
+        }
+        default: {
           if (error instanceof errors.OPError) {
             throw new TypeError(`\n\nerror = ${error.error}; error_description = ${error.error_description}`);
           }
           throw error;
+        }
       }
     }
   }

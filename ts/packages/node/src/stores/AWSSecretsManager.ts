@@ -8,10 +8,12 @@ import {
 } from '@aws-sdk/client-secrets-manager';
 import { KeyValueConfigStore } from '@configu/ts';
 
+export type AWSSecretsManagerConfigStoreConfiguration = SecretsManagerClientConfig;
+
 // ! supports JSON secrets only
 export class AWSSecretsManagerConfigStore extends KeyValueConfigStore {
   private client: SecretsManagerClient;
-  constructor(configuration: SecretsManagerClientConfig) {
+  constructor(configuration: AWSSecretsManagerConfigStoreConfiguration) {
     super('aws-secrets-manager');
     this.client = new SecretsManagerClient(configuration);
   }

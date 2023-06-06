@@ -1,7 +1,7 @@
 import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
 import { KeyValueConfigStore } from '@configu/ts';
 
-type GCPSecretManagerConfigStoreConfiguration = ConstructorParameters<typeof SecretManagerServiceClient>['0'] & {
+export type GCPSecretManagerConfigStoreConfiguration = ConstructorParameters<typeof SecretManagerServiceClient>['0'] & {
   projectId: string;
 };
 

@@ -2,9 +2,11 @@ import { promises as fs } from 'fs';
 import _ from 'lodash';
 import { ConfigStore, ConfigStoreQuery, Config, Convert } from '@configu/ts';
 
+export type JsonFileConfigStoreConfiguration = { path: string };
+
 export class JsonFileConfigStore extends ConfigStore {
   private readonly path: string;
-  constructor({ path }: { path: string }) {
+  constructor({ path }: JsonFileConfigStoreConfiguration) {
     super('json-file');
     this.path = path;
   }
