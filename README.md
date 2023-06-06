@@ -57,7 +57,7 @@ This repository is a monorepo that contains the Configu user interface packages.
   <tbody>
     <tr>
       <td>
-        <img alt="Bash" height="24" align="absmiddle" src="https://cdn.svgporn.com/logos/bash-icon.svg">
+        <img alt="Bash" height="24" width="24" align="absmiddle" src="https://cdn.svgporn.com/logos/bash-icon.svg">
         <strong>Configu CLI</strong>
       </td>
       <td>
@@ -77,7 +77,7 @@ This repository is a monorepo that contains the Configu user interface packages.
     </tr>
     <tr>
       <td>
-        <img alt="Node.js" height="24" align="absmiddle" src="https://cdn.svgporn.com/logos/nodejs-icon.svg">
+        <img alt="Node.js" height="24" width="24" align="absmiddle" src="https://cdn.svgporn.com/logos/nodejs-icon.svg">
         <strong>Node.js SDK</strong>
       </td>
       <td>
@@ -97,7 +97,7 @@ This repository is a monorepo that contains the Configu user interface packages.
     </tr>
     <tr>
       <td>
-        <img alt="Internet Explorer" height="24" align="absmiddle" src="https://cdn.svgporn.com/logos/internetexplorer.svg">
+        <img alt="Internet Explorer" height="24" width="24" align="absmiddle" src="https://cdn.svgporn.com/logos/internetexplorer.svg">
         <strong>Browser SDK</strong>
       </td>
       <td>
@@ -117,7 +117,7 @@ This repository is a monorepo that contains the Configu user interface packages.
     </tr>
     <tr>
       <td>
-        <img alt="Python" height="24" align="absmiddle" src="https://cdn.svgporn.com/logos/python.svg">
+        <img alt="Python" height="24" width="24" align="absmiddle" src="https://cdn.svgporn.com/logos/python.svg">
         <strong>Python SDK</strong>
       </td>
       <td>
@@ -137,7 +137,7 @@ This repository is a monorepo that contains the Configu user interface packages.
     </tr>
     <tr>
       <td>
-        <img alt="Java" height="24" align="absmiddle" src="https://cdn.svgporn.com/logos/java.svg">
+        <img alt="Java" height="24" width="24" align="absmiddle" src="https://cdn.svgporn.com/logos/java.svg">
         <strong>Java SDK</strong>
       </td>
       <td>
@@ -155,7 +155,97 @@ This repository is a monorepo that contains the Configu user interface packages.
     </tr>
     <tr>
       <td>
-        <img alt="Visual Studio Code" height="24" align="absmiddle" src="https://cdn.svgporn.com/logos/visual-studio-code.svg">
+        <img alt=".NET" height="24" width="24" align="absmiddle" src="https://cdn.svgporn.com/logos/dotnet.svg">
+        <strong>.NET SDK</strong>
+      </td>
+      <td>
+        coming soon
+      </td>
+      <td>
+      </td>
+      <td>
+      </td>
+      <td>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <img alt="C++" height="24" width="24" align="absmiddle" src="https://cdn.svgporn.com/logos/c-plusplus.svg">
+        <strong>C++ SDK</strong>
+      </td>
+      <td>
+        coming soon
+      </td>
+      <td>
+      </td>
+      <td>
+      </td>
+      <td>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <img alt="PHP" height="24" width="24" align="absmiddle" src="https://cdn.svgporn.com/logos/php.svg">
+        <strong>PHP SDK</strong>
+      </td>
+      <td>
+        coming soon
+      </td>
+      <td>
+      </td>
+      <td>
+      </td>
+      <td>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <img alt="Go" height="24" width="24" align="absmiddle" src="https://cdn.svgporn.com/logos/go.svg">
+        <strong>Go SDK</strong>
+      </td>
+      <td>
+        coming soon
+      </td>
+      <td>
+      </td>
+      <td>
+      </td>
+      <td>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <img alt="Rust" height="24" width="24" align="absmiddle" src="https://cdn.svgporn.com/logos/rust.svg">
+        <strong>Rust SDK</strong>
+      </td>
+      <td>
+        coming soon
+      </td>
+      <td>
+      </td>
+      <td>
+      </td>
+      <td>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <img alt="Ruby" height="24" width="24" align="absmiddle" src="https://cdn.svgporn.com/logos/ruby.svg">
+        <strong>Ruby SDK</strong>
+      </td>
+      <td>
+        coming soon
+      </td>
+      <td>
+      </td>
+      <td>
+      </td>
+      <td>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <img alt="Visual Studio Code" height="24" width="24" align="absmiddle" src="https://cdn.svgporn.com/logos/visual-studio-code.svg">
         <strong>VSCode Extension</strong>
       </td>
       <td>
