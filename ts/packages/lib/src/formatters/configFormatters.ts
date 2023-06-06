@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { camelCase, snakeCase } from 'change-case';
 import { dump as ymlStringify } from 'js-yaml';
 import validator from 'validator';
-import type { EvaluatedConfigs } from '@configu/ts';
+import type { ExportCommandReturn } from '@configu/ts';
 import type { ConfigFormat } from './ConfigFormat';
 
 const hasWhitespace = (str: string) => {
@@ -10,7 +10,7 @@ const hasWhitespace = (str: string) => {
 };
 
 type FormatterParameters = {
-  json: EvaluatedConfigs;
+  json: ExportCommandReturn;
   label: string;
   wrap?: boolean; // * Wraps all values with quotes
 };

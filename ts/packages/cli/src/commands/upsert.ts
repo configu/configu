@@ -2,32 +2,34 @@ import { Flags } from '@oclif/core';
 import _ from 'lodash';
 import { ConfigSet, ConfigSchema, UpsertCommand } from '@configu/node';
 import { extractConfigs } from '@configu/lib';
-import { UpsertCommandParameters } from '@configu/ts';
 import { BaseCommand } from '../base';
 
 export default class Upsert extends BaseCommand<typeof Upsert> {
-  static description = 'creates, updates or deletes configs from a store';
+  static description = 'creates, updates or deletes configs from a config-store';
 
   static examples = [
-    '<%= config.bin %> <%= command.id %> --store "configu" --set "prod" --schema "./node-srv.cfgu.json" --config NODE_ENV=production --config LOG_LEVEL=error',
+    "<%= config.bin %> <%= command.id %> --store 'configu' --set 'prod' --schema './node-srv.cfgu.json' --config 'NODE_ENV=production' --config 'LOG_LEVEL=error'",
   ];
 
   static flags = {
     store: Flags.string({
-      description: 'config-store to upsert configurations to',
+      description: `config-store (configs data-source) to upsert configs to`,
       required: true,
+      aliases: ['st'],
     }),
     set: Flags.string({
-      description: 'hierarchy of the configs',
+      description: `config-set (config-values context) hierarchy path to upsert configs to`,
       required: true,
+      aliases: ['se'],
     }),
     schema: Flags.string({
-      description: 'path to a <schema>.cfgu.[json] file',
+      description: `config-schema (config-keys declaration) path/to/[schema].cfgu.json file to upsert configs to`,
       required: true,
+      aliases: ['sc'],
     }),
 
     config: Flags.string({
-      description: 'key=value pairs to upsert (empty value means delete)',
+      description: 'key=value pairs to upsert configs (empty value means delete)',
       exclusive: ['import'],
       multiple: true,
       char: 'c',
@@ -43,12 +45,7 @@ export default class Upsert extends BaseCommand<typeof Upsert> {
     const set = new ConfigSet(this.flags.set);
     const schema = new ConfigSchema(this.flags.schema);
 
-    let configs: UpsertCommandParameters['configs'] = {};
-
-    if (this.flags.config) {
-      configs = this.reduceConfigFlag(this.flags.config);
-    }
-
+    let configs = this.reduceConfigFlag(this.flags.config);
     if (this.flags.import) {
       const fileContent = await this.readFile(this.flags.import);
       const extractedConfigs = extractConfigs({
