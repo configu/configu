@@ -103,7 +103,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       throw new Error('--store flag is missing');
     }
 
-    const storeType = this.config.configData.stores?.[storeFlag]?.type;
+    const storeType = this.config.configData.stores?.[storeFlag]?.type ?? storeFlag;
     const storeConfiguration = this.config.configData.stores?.[storeFlag]?.configuration;
 
     if (storeFlag === CLI_NAME || storeType === CLI_NAME) {
@@ -120,11 +120,8 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
         ),
       );
     }
-    if (storeType) {
-      return constructStore(storeType, storeConfiguration);
-    }
 
-    throw new Error('--store flag is invalid');
+    return constructStore(storeType, storeConfiguration);
   }
 
   reduceConfigFlag(configFlag?: string[]) {
