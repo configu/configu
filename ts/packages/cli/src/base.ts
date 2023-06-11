@@ -7,25 +7,21 @@ import axios from 'axios';
 import chalk from 'chalk';
 import logSymbols from 'log-symbols';
 import ci from 'ci-info';
-import { EvalCommandReturn } from '@configu/ts';
+import { EvalCommandReturn, TMPL } from '@configu/ts';
 import { ConfiguConfigStore } from '@configu/node';
 import { constructStore } from './helpers';
-
-export const CLI_NAME = 'configu';
-const ConfigProvider = cosmiconfig(CLI_NAME, { searchPlaces: [`.${CLI_NAME}`] });
-const UNICODE_NULL = '\u0000';
 
 type CredentialsData = ConstructorParameters<typeof ConfiguConfigStore>['0']['credentials'] | Record<string, never>;
 
 type ConfigDataStores = Record<string, { type: string; configuration: Record<string, any> }>;
 type ConfigData = Partial<{
   stores: ConfigDataStores;
-  // todo: implement snippet command
-  // snippets: Record<string, Record<string, any>>;
+  scripts: Record<string, string>;
 }>;
 
 type BaseConfig = Config & {
   ci: typeof ci;
+  UNICODE_NULL: '\u0000';
   credentialsFile: string;
   credentialsData: CredentialsData;
   configFile?: string;
@@ -106,9 +102,9 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     const storeType = this.config.configData.stores?.[storeFlag]?.type ?? storeFlag;
     const storeConfiguration = this.config.configData.stores?.[storeFlag]?.configuration;
 
-    if (storeFlag === CLI_NAME || storeType === CLI_NAME) {
+    if (storeFlag === this.config.bin || storeType === this.config.bin) {
       return constructStore(
-        CLI_NAME,
+        this.config.bin,
         _.merge(
           {
             credentials: this.config.credentialsData,
@@ -149,7 +145,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       return undefined;
     }
 
-    if (stdin === UNICODE_NULL) {
+    if (stdin === this.config.UNICODE_NULL) {
       this.exit(1);
     }
 
@@ -176,6 +172,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     this.args = args as Args<T>;
 
     this.config.ci = ci;
+    this.config.UNICODE_NULL = '\u0000';
     this.config.credentialsFile = path.join(this.config.configDir, 'credentials.json');
 
     try {
@@ -194,9 +191,16 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     }
 
     try {
+      const ConfigProvider = cosmiconfig(this.config.bin, { searchPlaces: [`.${this.config.bin}`] });
       const configResult = await ConfigProvider.search();
       this.config.configFile = configResult?.filepath;
-      this.config.configData = configResult?.config ?? {};
+      const rawConfigData = JSON.stringify(configResult?.config ?? {});
+      const compiledConfigData = TMPL.render(rawConfigData, {
+        ...process.env,
+        ..._.mapKeys(process.env, (k) => `${k}`),
+      });
+      const configData = JSON.parse(compiledConfigData);
+      this.config.configData = configData;
     } catch (error) {
       throw new Error(`invalid configuration file ${error.message}`);
     }
@@ -204,7 +208,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
 
   protected async catch(error: Error & { exitCode?: number }): Promise<any> {
     // * on any error inject a 'NULL' unicode character so if next command in the pipeline try to read stdin it will fail
-    this.log(UNICODE_NULL, 'error', 'stdout');
+    this.log(this.config.UNICODE_NULL, 'error', 'stdout');
 
     if (!axios.isAxiosError(error)) {
       return super.catch(error);

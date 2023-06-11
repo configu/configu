@@ -21,13 +21,12 @@ export default class Test extends BaseCommand<typeof Test> {
 
   public async run(): Promise<void> {
     const store = await this.getStoreInstanceByStoreFlag(this.flags.store);
-    const { clean } = this.flags;
 
     try {
-      await new TestCommand({ store, clean }).run();
-      this.log(`store ${store.type} test passed`);
+      await new TestCommand({ store, clean: this.flags.clean }).run();
+      this.log(`test passed for store ${this.flags.store} of type ${store.type}`);
     } catch (error) {
-      throw new Error(`store ${store.type} test failed with error: ${error.message}`);
+      throw new Error(`test failed for store ${this.flags.store} of type ${store.type} with error: ${error.message}`);
     }
   }
 }
