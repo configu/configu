@@ -11,21 +11,20 @@ import { EvalCommandReturn, TMPL } from '@configu/ts';
 import { ConfiguConfigStore } from '@configu/node';
 import { constructStore } from './helpers';
 
-type CredentialsData = ConstructorParameters<typeof ConfiguConfigStore>['0']['credentials'] | Record<string, never>;
-
-type ConfigDataStores = Record<string, { type: string; configuration: Record<string, any> }>;
-type ConfigData = Partial<{
-  stores: ConfigDataStores;
-  scripts: Record<string, string>;
-}>;
-
 type BaseConfig = Config & {
   ci: typeof ci;
   UNICODE_NULL: '\u0000';
-  credentialsFile: string;
-  credentialsData: CredentialsData;
-  configFile?: string;
-  configData: ConfigData;
+  configu: {
+    file: string; // $HOME/.config/configu/config.json
+    data: ConstructorParameters<typeof ConfiguConfigStore>['0'] | Record<string, never>;
+  };
+  cli: {
+    file?: string; // .configu file
+    data: Partial<{
+      stores: Record<string, { type: string; configuration: Record<string, any> }>;
+      scripts: Record<string, string>;
+    }>;
+  };
 };
 
 export type Flags<T extends typeof Command> = Interfaces.InferredFlags<(typeof BaseCommand)['baseFlags'] & T['flags']>;
@@ -99,22 +98,12 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       throw new Error('--store flag is missing');
     }
 
-    const storeType = this.config.configData.stores?.[storeFlag]?.type ?? storeFlag;
-    const storeConfiguration = this.config.configData.stores?.[storeFlag]?.configuration;
+    const storeType = this.config.cli.data.stores?.[storeFlag]?.type ?? storeFlag;
+    // * stores may support independent configuration e.g from env vars, local config file etc.
+    const storeConfiguration = this.config.cli.data.stores?.[storeFlag]?.configuration;
 
     if (storeFlag === this.config.bin || storeType === this.config.bin) {
-      return constructStore(
-        this.config.bin,
-        _.merge(
-          {
-            credentials: this.config.credentialsData,
-          },
-          storeConfiguration,
-          {
-            source: 'cli',
-          },
-        ),
-      );
+      return constructStore(this.config.bin, _.merge(this.config.configu.data, storeConfiguration, { source: 'cli' }));
     }
 
     return constructStore(storeType, storeConfiguration);
@@ -161,6 +150,9 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
   }
 
   public async init(): Promise<void> {
+    this.config.ci = ci;
+    this.config.UNICODE_NULL = '\u0000';
+
     await super.init();
     const { args, flags } = await this.parse({
       flags: this.ctor.flags,
@@ -171,10 +163,6 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     this.flags = flags as Flags<T>;
     this.args = args as Args<T>;
 
-    this.config.ci = ci;
-    this.config.UNICODE_NULL = '\u0000';
-    this.config.credentialsFile = path.join(this.config.configDir, 'credentials.json');
-
     try {
       await fs.mkdir(this.config.configDir, { recursive: true });
       await fs.mkdir(this.config.cacheDir, { recursive: true });
@@ -182,25 +170,32 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       throw new Error(`fail to initialize ${this.config.name} cli`);
     }
 
+    this.config.configu = {
+      file: path.join(this.config.configDir, 'config.json'),
+      data: {},
+    };
     try {
-      const rawCredentialsData = await this.readFile(this.config.credentialsFile, true);
-      const credentialsData = JSON.parse(rawCredentialsData);
-      this.config.credentialsData = credentialsData;
+      const rawConfiguConfigData = await this.readFile(this.config.configu.file, true);
+      const configuConfigData = JSON.parse(rawConfiguConfigData);
+      this.config.configu.data = configuConfigData;
     } catch {
-      this.config.credentialsData = {};
+      this.config.configu.data = {};
     }
 
     try {
       const ConfigProvider = cosmiconfig(this.config.bin, { searchPlaces: [`.${this.config.bin}`] });
       const configResult = await ConfigProvider.search();
-      this.config.configFile = configResult?.filepath;
-      const rawConfigData = JSON.stringify(configResult?.config ?? {});
-      const compiledConfigData = TMPL.render(rawConfigData, {
+      this.config.cli = {
+        file: configResult?.filepath,
+        data: {},
+      };
+      const rawCliConfigData = JSON.stringify(configResult?.config ?? this.config.cli.data);
+      const compiledCliConfigData = TMPL.render(rawCliConfigData, {
         ...process.env,
         ..._.mapKeys(process.env, (k) => `${k}`),
       });
-      const configData = JSON.parse(compiledConfigData);
-      this.config.configData = configData;
+      const cliConfigData = JSON.parse(compiledCliConfigData);
+      this.config.cli.data = cliConfigData;
     } catch (error) {
       throw new Error(`invalid configuration file ${error.message}`);
     }

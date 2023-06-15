@@ -13,51 +13,75 @@ export const CONFIG_EXPORT_RUN_DEFAULT_ERROR_TEXT = 'could not export configurat
 type TemplateContext = { [key: string]: string } | { key: string; value: string }[];
 
 export default class Export extends BaseCommand<typeof Export> {
-  static description = 'exports configs as configuration data in multiple modes';
+  static description = `Export \`Configs\` as configuration data in various modes`;
 
-  static examples = ["<%= config.bin %> eval ... | <%= config.bin %> <%= command.id %> --format 'Dotenv'"];
+  static examples = [
+    {
+      description: `Pipe eval commands result to export command to output metadata on the exported \`Configs\``,
+      command: `<%= config.bin %> eval ... | <%= config.bin %> <%= command.id %> --explain`,
+    },
+    {
+      description: `Pipe eval commands result to export command to create a Dotenv .env file`,
+      command: `<%= config.bin %> eval ... | <%= config.bin %> <%= command.id %> --format 'Dotenv'`,
+    },
+    {
+      description: `Pipe eval commands result to export command to create a Kubernetes ConfigMap .yaml`,
+      command: `<%= config.bin %> eval ... | <%= config.bin %> <%= command.id %> --format 'KubernetesConfigMap' --label 'service-prod.yaml'`,
+    },
+    {
+      description: `Pipe eval commands result to export command to render \`Configs\` into a mustache '{{ }}' template file`,
+      command: `<%= config.bin %> eval ... | <%= config.bin %> <%= command.id %> --template 'mustache.tmpl.yaml'`,
+    },
+    {
+      description: `Pipe eval commands result to export command to source \`Configs\` as environment variables to the current shell`,
+      command: `(set -a; source <(<%= config.bin %> eval ... | <%= config.bin %> <%= command.id %> --source); set +a && <command-that-uses-the-envs>)`,
+    },
+    {
+      description: `Pipe eval commands result to export command to pass \`Configs\` as environment variables to a child-process`,
+      command: `<%= config.bin %> eval ... | <%= config.bin %> <%= command.id %> --run 'node index.js'`,
+    },
+  ];
 
   static flags = {
-    label: Flags.string({
-      description: 'metadata required in some formats like k8s ConfigMaps',
-    }),
     empty: Flags.boolean({
-      description: 'omits all non-value configurations in the current set',
+      description: `Omits all empty (non-value) from the exported \`Configs\``,
       default: true,
       allowNo: true,
     }),
 
     explain: Flags.boolean({
-      description: 'outputs metadata on the exported configurations',
+      description: `Outputs metadata on the exported \`Configs\``,
       aliases: ['report'],
       exclusive: ['format', 'template', 'source', 'run'],
     }),
 
     format: Flags.string({
-      description:
-        'format configurations to some common configurations formats. (redirect the output to file, if needed)',
+      description: `Format exported \`Configs\` to common configuration formats. Redirect the output to file, if needed`,
       options: CONFIG_FORMAT_TYPE,
       exclusive: ['explain', 'template', 'source', 'run'],
     }),
+    label: Flags.string({
+      description: `Metadata required in some formats like Kubernetes ConfigMap`,
+    }),
 
     template: Flags.string({
-      description: 'path to a mustache based template to inject configurations into',
+      description: `Path to a file containing {{mustache}} templates to render (inject/substitute) the exported \`Configs\` into`,
       exclusive: ['explain', 'format', 'source', 'run'],
     }),
     'template-input': Flags.string({
-      description: 'inject configurations to template as object or array or formatted string',
+      description: `Inject \`Configs\` to template as object or array of \`{key: string, value: string}[]\``,
       options: ['object', 'array'],
       dependsOn: ['template'],
     }),
 
     // * (set -a; source <(configu export ... --source); set +a && the command)
     source: Flags.boolean({
-      description: 'source configurations to the current shell',
+      description: `Source exported \`Configs\` as environment variables to the current shell`,
       exclusive: ['explain', 'format', 'template', 'run'],
     }),
 
     run: Flags.string({
-      description: 'spawns executable as child-process and passes configurations as environment variables',
+      description: `Spawns executable as child-process and pass exported \`Configs\` as environment variables`,
       exclusive: ['explain', 'format', 'template', 'source'],
     }),
   };

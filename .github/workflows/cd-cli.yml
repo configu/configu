@@ -98,6 +98,18 @@ jobs:
           platforms: linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8
           tags: ${{ env.DOCKERHUB_REPOSITORY }}:${{ steps.deployment.outputs.release-version }},${{ env.DOCKERHUB_REPOSITORY }}:${{ steps.deployment.outputs.release-channel }}
           push: true
+
+      - name: Publish docs
+        if: ${{ steps.deployment.outputs.release-channel == 'latest' }}
+        run: |
+          cd ${{ env.CWD }}/${{ env.PACKAGE_PATH }}
+          aws s3 cp ./oclif.manifest.json s3://${{ env.S3_BUCKET }}/${{ env.S3_FOLDER }}/manifest.json
+          aws s3 cp ./README.md s3://${{ env.S3_BUCKET }}/${{ env.S3_FOLDER }}/README.md
+          aws cloudfront create-invalidation --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION }} --paths "/${{ env.S3_FOLDER }}*"
+        env:
+          S3_BUCKET: "oss.configu.com"
+          S3_FOLDER: "cli"
+          CLOUDFRONT_DISTRIBUTION: "E7C5AL5O299SC"
       # ----------
 
       - uses: ./.github/actions/deploy-end-action

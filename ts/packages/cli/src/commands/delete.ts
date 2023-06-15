@@ -3,25 +3,32 @@ import { ConfigSet, ConfigSchema, DeleteCommand } from '@configu/node';
 import { BaseCommand } from '../base';
 
 export default class Delete extends BaseCommand<typeof Delete> {
-  static description = 'deletes configs from a config-store';
+  static description = `Bulk delete \`Configs\` from a \`ConfigStore\``;
 
   static examples = [
-    "<%= config.bin %> <%= command.id %> --store 'configu' --set 'dev/branch' --schema './node-srv.cfgu.json'",
+    {
+      description: `Delete all \`Configs\` declared at \`ConfigSchema\` file at './config/schema.cfgu.json' from a \`ConfigSet\` called 'dev/branch' within a 'configu' \`ConfigStore\``,
+      command: `<%= config.bin %> <%= command.id %> --store 'configu' --set 'dev/branch' --schema './config/schema.cfgu.json'`,
+    },
+    {
+      description: `Delete all \`Configs\` declared at \`ConfigSchema\` file at './config/schema.cfgu.json' from the 'staging' \`ConfigSet\` within a 'hashicorp-vault' \`ConfigStore\``,
+      command: `<%= config.bin %> <%= command.id %> --store 'hashicorp-vault' --set 'staging' --schema './config/schema.cfgu.json'`,
+    },
   ];
 
   static flags = {
     store: Flags.string({
-      description: `config-store (configs data-source) to delete configs from`,
+      description: `\`ConfigStore\` (configs data-source) to delete \`Configs\` from`,
       required: true,
       aliases: ['st'],
     }),
     set: Flags.string({
-      description: `config-set (config-values context) hierarchy path to delete configs from`,
+      description: `\`ConfigSet\` (config-values context) to delete \`Configs\` from. Use an empty string for the root set`,
       required: true,
       aliases: ['se'],
     }),
     schema: Flags.string({
-      description: `config-schema (config-keys declaration) path/to/[schema].cfgu.json file to delete configs from`,
+      description: `\`ConfigSchema\` (config-keys declaration) path/to/[schema].cfgu.json file to operate the delete against. The keys declared in the \`ConfigSchema\` and its values from the \`ConfigSet\` will be deleted from the \`ConfigStore\``,
       required: true,
       aliases: ['sc'],
     }),
@@ -37,6 +44,6 @@ export default class Delete extends BaseCommand<typeof Delete> {
       set,
       schema,
     }).run();
-    this.log(`configs deleted successfully`);
+    this.log(`Configs deleted successfully`);
   }
 }

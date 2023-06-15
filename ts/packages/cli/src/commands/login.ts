@@ -1,4 +1,4 @@
-import { ux } from '@oclif/core';
+import { Flags, ux } from '@oclif/core';
 import fs from 'fs/promises';
 import axios from 'axios';
 import chalk from 'chalk';
@@ -6,21 +6,27 @@ import inquirer from 'inquirer';
 import open from 'open';
 import { Issuer, errors } from 'openid-client';
 import { BaseCommand } from '../base';
+import { isDev } from '../helpers';
 
-const CONFIGU_API_URL =
-  process.env.CONFIGU_API_URL ??
-  (process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : 'https://api.configu.com');
+const CONFIGU_API_URL = process.env.CONFIGU_API_URL ?? (isDev ? 'http://localhost:8080' : 'https://api.configu.com');
+const CONFIGU_APP_URL = process.env.CONFIGU_APP_URL ?? (isDev ? 'http://localhost:3000' : 'https://app.configu.com');
 const AUTH0_DOMAIN = 'configu.us.auth0.com';
 const AUTH0_CLIENT_ID = 'qxv0WQpwqApo4BNEYMMb4rfn1Xam9A4D';
 const AUTH0_API_IDENTIFIER = CONFIGU_API_URL;
-const SETUP_ERROR_MESSAGE = 'initial setup in not completed';
+const SETUP_ERROR_MESSAGE = `Initial setup in not completed. Go to ${CONFIGU_APP_URL} activate your user and create your first organization`;
 
 export default class Login extends BaseCommand<typeof Login> {
-  static description = 'initiate interactive login session to configu config-store';
+  static description = `Initiate interactive login session to Configu \`ConfigStore\``;
 
-  static examples = ['<%= config.bin %> <%= command.id %>'];
+  static examples = [`<%= config.bin %> <%= command.id %>`];
 
-  static flags = {};
+  static flags = {
+    endpoint: Flags.string({
+      hidden: true,
+      default: CONFIGU_API_URL,
+      env: 'CONFIGU_API_URL',
+    }),
+  };
 
   private async getDataUser(token: string) {
     try {
@@ -59,8 +65,8 @@ export default class Login extends BaseCommand<typeof Login> {
       const { user_code: userCode, verification_uri_complete: verificationUriComplete, expires_in: expiresIn } = handle;
 
       await ux.anykey(
-        `${chalk.bold('press any key')} to open up the browser to login or press ctrl-c to abort.
-  you should see the following code: ${chalk.bold(userCode)}. it expires in ${
+        `${chalk.bold('Press any key')} to open up the browser to login or press ctrl-c to abort.
+  You should see the following code: ${chalk.bold(userCode)}. It expires in ${
           expiresIn % 60 === 0 ? `${expiresIn / 60} minutes` : `${expiresIn} seconds`
         }.`,
       );
@@ -79,7 +85,7 @@ export default class Login extends BaseCommand<typeof Login> {
         {
           type: 'list',
           name: 'orgId',
-          message: 'select organization',
+          message: 'Select default organization',
           choices,
         },
       ]);
@@ -106,8 +112,12 @@ export default class Login extends BaseCommand<typeof Login> {
   }
 
   public async run(): Promise<void> {
-    this.config.credentialsData = await this.loginWithAuth0();
-    const rawCredentialsData = JSON.stringify(this.config.credentialsData);
-    await fs.writeFile(this.config.credentialsFile, rawCredentialsData);
+    const credentials = await this.loginWithAuth0();
+    this.config.configu.data = {
+      credentials,
+      endpoint: this.flags.endpoint,
+    };
+    const rawConfiguConfigData = JSON.stringify(this.config.configu.data);
+    await fs.writeFile(this.config.configu.file, rawConfiguConfigData);
   }
 }
