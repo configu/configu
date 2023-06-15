@@ -32,55 +32,75 @@ const POPULATED_SCHEMA: Record<'GET_STARTED' | 'EXAMPLE', { [key: string]: Cfgu 
 };
 
 export default class Init extends BaseCommand<typeof Init> {
-  static description = `creates a config schema ${ConfigSchema.CFGU.EXT} file in the current working dir`;
+  static description = `Create a \`ConfigSchema\` .cfgu file in the current working dir`;
   static examples = [
-    '<%= config.bin %> <%= command.id %>',
-    "<%= config.bin %> <%= command.id %> --name 'cli' --dir './src/cli'",
-    "<%= config.bin %> <%= command.id %> --import './src/.env' --defaults --types",
-    '<%= config.bin %> <%= command.id %> --example',
+    {
+      description: `Create a new .cfgu file in the current directory with the default name (current directory name in parameter-case)`,
+      command: `<%= config.bin %> <%= command.id %>`,
+    },
+    {
+      description: `Create a new .cfgu file in the current directory with a specific name (my-project.cfgu)`,
+      command: `<%= config.bin %> <%= command.id %> --name 'my-project'`,
+    },
+    {
+      description: `Create a new .cfgu file in a specific directory (./config) with a specific name (my-project.cfgu)`,
+      command: `<%= config.bin %> <%= command.id %> --dir './config' --name 'my-project'`,
+    },
+    {
+      description: `Import an existing flat .json file and create a new .cfgu file from it's records`,
+      command: `<%= config.bin %> <%= command.id %> --import './config.json'`,
+    },
+    {
+      description: `Import an existing .env file and create a new .cfgu file from it's records, assigning the values as the default value for the keys in the .cfgu file and inferring the Cfgu type of the values and assigning them to the keys in the .cfgu file`,
+      command: `<%= config.bin %> <%= command.id %> --import './.env' --defaults --types`,
+    },
+    {
+      description: `Create a new get-started.cfgu file filled with a variety of pre-made, detailed record examples`,
+      command: `<%= config.bin %> <%= command.id %> --get-started`,
+    },
   ];
 
   static flags = {
     ...BaseCommand.flags,
     name: Flags.string({
-      description: `overrides the name for the new ${ConfigSchema.CFGU.EXT} file`,
-      aliases: ['id', 'uid', 'unique-identifier', 'unique-id'],
+      description: `Set the name of the new .cfgu file. The default is the current directory name in parameter-case`,
+      aliases: ['id', 'uid'],
       default: paramCase(getPathBasename()),
     }),
     dir: Flags.string({
-      description: `overrides the directory that will contain the new ${ConfigSchema.CFGU.EXT} file`,
-      aliases: ['cwd', 'working-directory'],
+      description: `Set the directory that will contain the new .cfgu file. The default is the current directory`,
+      aliases: ['cwd'],
       default: cwd(),
     }),
     force: Flags.boolean({
-      description: `overrides the ${ConfigSchema.CFGU.EXT} file in case it already exists`,
+      description: `Override the .cfgu file in case it already exists`,
       char: 'f',
       default: false,
     }),
 
     'get-started': Flags.boolean({
-      description: `fills the new ${ConfigSchema.CFGU.EXT} file with a get-started example`,
+      description: `Fills the new .cfgu file with a get-started example`,
       exclusive: ['name', 'import', 'example'],
       aliases: ['quick-start', 'getting-started', 'hello-world'],
       default: false,
     }),
     example: Flags.boolean({
-      description: `fills the new ${ConfigSchema.CFGU.EXT} file with a variety of detailed examples`,
+      description: `Fills the new .cfgu file with a variety of detailed examples`,
       exclusive: ['name', 'import', 'get-started'],
       aliases: ['examples', 'foo'],
       default: false,
     }),
 
     import: Flags.string({
-      description: `use this flag to import an existing .env file and create a ${ConfigSchema.CFGU.EXT} file from it. Then push the newly created ${ConfigSchema.CFGU.NAME} to create a Configu schema`,
+      description: `Import an existing .env or flat .json file and create a new .cfgu file from its records`,
       exclusive: ['example', 'get-started'],
     }),
     defaults: Flags.boolean({
-      description: `use this flag to assign the values from your .env file as the default value for the keys that will be created in the ${ConfigSchema.CFGU.EXT} file.`,
+      description: `Assign the values from the imported file as the default value for the keys that will be created in the .cfgu file`,
       dependsOn: ['import'],
     }),
     types: Flags.boolean({
-      description: `use this flag, so that Configu will infer the types of your keys from their values, and create the ${ConfigSchema.CFGU.NAME} with those types. Otherwise all keys are created with the String type.`,
+      description: `Infer the Cfgu type of the values from the imported file and assign them to the keys that will be created in the .cfgu file. The default is String`,
       dependsOn: ['import'],
     }),
   };
@@ -136,7 +156,7 @@ export default class Init extends BaseCommand<typeof Init> {
     const recordsCount = _.keys(fileContentData).length;
     this.log(`${filePath} generated with ${recordsCount} records`, 'success');
     if (this.flags.types) {
-      this.log(`please review the result and validate the assigned types`);
+      this.log(`Please review the result and validate the assigned types`);
     }
   }
 }

@@ -5,37 +5,51 @@ import { extractConfigs } from '@configu/lib';
 import { BaseCommand } from '../base';
 
 export default class Upsert extends BaseCommand<typeof Upsert> {
-  static description = 'creates, updates or deletes configs from a config-store';
+  static description = `Create, update or delete \`Configs\` from a \`ConfigStore\``;
 
   static examples = [
-    "<%= config.bin %> <%= command.id %> --store 'configu' --set 'prod' --schema './node-srv.cfgu.json' --config 'NODE_ENV=production' --config 'LOG_LEVEL=error'",
+    {
+      description: `Upsert a \`Config\` to the 'root' \`ConfigSet\` of a 'configu' \`ConfigStore\` using a \`ConfigSchema\` file at './config/schema.cfgu'`,
+      command: `<%= config.bin %> <%= command.id %> --store 'configu' --set '' --schema './config/schema.cfgu.json' --config 'key=value'`,
+    },
+    {
+      description: `Upsert multiple \`Configs\` to a \`ConfigSet\` called 'prod' within a 'configu' \`ConfigStore\` using a \`ConfigSchema\` file at './config/schema.cfgu.json'`,
+      command: `<%= config.bin %> <%= command.id %> --store 'configu' --set 'prod' --schema './config/schema.cfgu.json' --config 'key1=value1' -c 'key2=value2' -c 'key3=value3'`,
+    },
+    {
+      description: `Delete a \`Config\` from a \`ConfigSet\` called 'prod' within a 'configu' \`ConfigStore\` using a \`ConfigSchema\` file at './config/schema.cfgu.json'`,
+      command: `<%= config.bin %> <%= command.id %> --store 'configu' --set 'prod' --schema './config/schema.cfgu.json' --config 'keyToDelete='`,
+    },
+    {
+      description: `Upsert a \`Config\` to a \`ConfigSet\` called 'prod' within 'hashicorp-vault' \`ConfigStore\` using a \`ConfigSchema\` file at './config/schema.cfgu.json'`,
+      command: `<%= config.bin %> <%= command.id %> --store 'hashicorp-vault' --set 'prod' --schema './config/schema.cfgu.json' --config 'secretKey=secretValue'`,
+    },
   ];
 
   static flags = {
     store: Flags.string({
-      description: `config-store (configs data-source) to upsert configs to`,
+      description: `\`ConfigStore\` (configs data-source) to upsert \`Configs\` to`,
       required: true,
       aliases: ['st'],
     }),
     set: Flags.string({
-      description: `config-set (config-values context) hierarchy path to upsert configs to`,
+      description: `\`ConfigSet\` (config-values context) to assign the upserted \`Configs\`. Use an empty string for the root set`,
       required: true,
       aliases: ['se'],
     }),
     schema: Flags.string({
-      description: `config-schema (config-keys declaration) path/to/[schema].cfgu.json file to upsert configs to`,
+      description: `\`ConfigSchema\` (config-keys declaration) path/to/[schema].cfgu.json file to operate the upsert against. The keys declared in the \`ConfigSchema\` can be assigned a value in the \`ConfigSet\` that will be upserted as a \`Config\` to the \`ConfigStore\``,
       required: true,
       aliases: ['sc'],
     }),
-
     config: Flags.string({
-      description: 'key=value pairs to upsert configs (empty value means delete)',
+      description: `'key=value' pairs to upsert. Use an empty value to delete a \`Config\``,
       exclusive: ['import'],
       multiple: true,
       char: 'c',
     }),
     import: Flags.string({
-      description: 'use this flag to import an existing .env file and create configs from it',
+      description: `Import an existing .env or flat .json file and create \`Configs\` from its records`,
       exclusive: ['config'],
     }),
   };
@@ -61,6 +75,6 @@ export default class Upsert extends BaseCommand<typeof Upsert> {
       schema,
       configs,
     }).run();
-    this.log(`configs upserted successfully`);
+    this.log(`Configs upserted successfully`);
   }
 }

@@ -3,18 +3,27 @@ import { TestCommand } from '@configu/node';
 import { BaseCommand } from '../base';
 
 export default class Test extends BaseCommand<typeof Test> {
-  static description = 'verify credentials and write access to a config-store';
+  static description = `Verify credentials and write access to a \`ConfigStore\``;
 
-  static examples = ["<%= config.bin %> <%= command.id %> --store 'configu' --clean"];
+  static examples = [
+    {
+      description: `Test connection to a 'configu' \`ConfigStore\``,
+      command: `<%= config.bin %> <%= command.id %> --store 'configu'`,
+    },
+    {
+      description: `Test connection to a 'configu' \`ConfigStore\` and clean afterwards`,
+      command: `<%= config.bin %> <%= command.id %> --store 'configu' --clean`,
+    },
+  ];
 
   static flags = {
     store: Flags.string({
-      description: `config-store (configs data-source) to upsert CONFIGU_TEST to`,
+      description: `\`ConfigStore\` (configs data-source) to upsert \`CONFIGU_TEST\` config to`,
       required: true,
       aliases: ['st'],
     }),
     clean: Flags.boolean({
-      description: 'delete CONFIGU_TEST from the config-store after test',
+      description: `Delete \`CONFIGU_TEST\` config from the \`ConfigStore\` after test completed`,
       default: false,
     }),
   };
@@ -24,9 +33,9 @@ export default class Test extends BaseCommand<typeof Test> {
 
     try {
       await new TestCommand({ store, clean: this.flags.clean }).run();
-      this.log(`test passed for store ${this.flags.store} of type ${store.type}`);
+      this.log(`Test passed for store ${this.flags.store} of type ${store.type}`);
     } catch (error) {
-      throw new Error(`test failed for store ${this.flags.store} of type ${store.type} with error: ${error.message}`);
+      throw new Error(`Test failed for store ${this.flags.store} of type ${store.type} with error: ${error.message}`);
     }
   }
 }
