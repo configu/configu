@@ -9,8 +9,9 @@
     "clean:cache": "shx rm -rf oclif.manifest.json package-lock.json tsconfig.tsbuildinfo tmp",
     "build:tsc": "tsc --build",
     "build:docker": "docker build --progress plain -t configu/cli -f ./Dockerfile .",
+    "build:docs": "oclif manifest && oclif readme --no-aliases",
     "build:oclif": "oclif pack tarballs --parallel",
-    "prebuild:oclif": "conc \"npm:clean:*\" && shx cp ../../package-lock.json ./package-lock.json && npm run build:tsc && oclif manifest && oclif readme --no-aliases",
+    "prebuild:oclif": "conc \"npm:clean:*\" && shx cp ../../package-lock.json ./package-lock.json && npm run build:tsc && npm run build:docs",
     "postbuild:oclif": "npm run clean:cache",
     "test": "echo NO TESTS"
   },

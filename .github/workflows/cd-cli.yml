@@ -103,6 +103,7 @@ jobs:
         if: ${{ steps.deployment.outputs.release-channel == 'latest' }}
         run: |
           cd ${{ env.CWD }}/${{ env.PACKAGE_PATH }}
+          npm run build:docs
           aws s3 cp ./oclif.manifest.json s3://${{ env.S3_BUCKET }}/${{ env.S3_FOLDER }}/manifest.json
           aws s3 cp ./README.md s3://${{ env.S3_BUCKET }}/${{ env.S3_FOLDER }}/README.md
           aws cloudfront create-invalidation --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION }} --paths "/${{ env.S3_FOLDER }}*"
