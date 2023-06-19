@@ -6,12 +6,12 @@
   "author": "Configu",
   "scripts": {
     "clean:build": "shx rm -rf build dist",
-    "clean:cache": "shx rm -rf oclif.manifest.json package-lock.json tsconfig.tsbuildinfo tmp",
+    "clean:cache": "shx rm -rf package-lock.json tsconfig.tsbuildinfo tmp",
     "build:tsc": "tsc --build",
     "build:docker": "docker build --progress plain -t configu/cli -f ./Dockerfile .",
-    "build:docs": "shx mv -f README.md README.tmp.md && shx mv -f manifest.tmpl.md README.md && oclif manifest && oclif readme --no-aliases && shx mv -f README.md manifest.md && shx mv -f README.tmp.md README.md",
+    "build:manifest": "shx mv -f README.md README.tmp.md && shx mv -f manifest.tmpl.md README.md && oclif manifest && oclif readme --no-aliases && shx mv -f README.md manifest.md && shx mv -f README.tmp.md README.md",
     "build:oclif": "oclif pack tarballs --parallel",
-    "prebuild:oclif": "conc \"npm:clean:*\" && shx cp ../../package-lock.json ./package-lock.json && npm run build:tsc && npm run build:docs",
+    "prebuild:oclif": "conc \"npm:clean:*\" && shx cp ../../package-lock.json ./package-lock.json && npm run build:tsc && npm run build:manifest",
     "postbuild:oclif": "npm run clean:cache",
     "test": "echo NO TESTS"
   },
