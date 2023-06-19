@@ -66,25 +66,29 @@ The [./examples](./examples) directory demonstrates various concepts and best pr
 
 #### [`documentation`](https://github.com/configu/docs)
 
-The [documentation repository](https://github.com/configu/docs) holds the official Configu docs. Improvements to the documentation are always welcome. We use [Gatsby](https://github.com/gatsbyjs/gatsby) to build our documentation website. The website is published automatically whenever the master branch is updated.
+The [documentation repository](https://github.com/configu/docs) holds the official Configu docs. Improvements to the documentation are always welcome. We use [Gatsby](https://github.com/gatsbyjs/gatsby) to build our documentation website. The website is published automatically whenever the `main` branch is updated.
 
 #### [./ts](./ts)
 
 The [./ts](./ts) directory houses a sub-monorepo that includes the following packages:
 
-- [ts/packages/ts](ts/packages/ts) - shared code for both the node and browser SDKs
+- [ts/packages/ts](ts/packages/ts) - shared code for both the Node.js and browser SDKs
   - [ts/packages/ts/src/stores](ts/packages/ts/src/stores) - [ConfigStores](https://configu.com/docs/config-store/) supported for all TS based packages.
   - [ts/packages/ts/src/commands](ts/packages/ts/src/commands) - [Commands](https://configu.com/docs/commands/) supported for all TS based packages.
-- [ts/packages/node](ts/packages/node) - the actual node SDK
+- [ts/packages/node](ts/packages/node) - the actual Node.js SDK
 - [ts/packages/browser](ts/packages/browser) - the actual browser SDK
-- [ts/packages/cli](ts/packages/cli) - Configu CLI, which is built using the node SDK
+- [ts/packages/cli](ts/packages/cli) - Configu CLI, which is built using [oclif](https://oclif.io/) and the Node.js SDK
 - [ts/packages/vscode](ts/packages/vscode) - a VSCode plugin for working with .cfgu files
 
 > To start working on the `ts` codebase you will have to install its dependencies by running `cd ts; npm i`.
 
 #### [./py](./py)
 
-The [./py](./py) directory will shortly contain the Python SDK.
+The [./py](./py) directory houses the Python SDK that is powered by [Poetry](https://python-poetry.org/).
+
+#### [./java](./java)
+
+The [./java](./java) directory will shortly contain the Java SDK.
 
 ### Sending a Pull Request
 
