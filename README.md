@@ -20,9 +20,9 @@ The documentation is divided into several sections:
 
 * [Introduction & Overview](https://configu.com/docs/)
 * [Concepts](https://configu.com/docs/terminology/)
-* [CLI](https://configu.com/docs/cli-setup/)
-* SDK (coming soon)
-* Recipes (coming soon)
+* [CLI](https://configu.com/docs/cli-overview/)
+* [SDK](https://configu.com/docs/sdk-overview/)
+* Recipes
 
 ### Contributing
 
