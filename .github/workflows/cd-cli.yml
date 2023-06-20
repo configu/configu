@@ -99,13 +99,12 @@ jobs:
           tags: ${{ env.DOCKERHUB_REPOSITORY }}:${{ steps.deployment.outputs.release-version }},${{ env.DOCKERHUB_REPOSITORY }}:${{ steps.deployment.outputs.release-channel }}
           push: true
 
-      - name: Publish docs
+      - name: Publish manifest
         if: ${{ steps.deployment.outputs.release-channel == 'latest' }}
         run: |
           cd ${{ env.CWD }}/${{ env.PACKAGE_PATH }}
-          npm run build:docs
           aws s3 cp ./oclif.manifest.json s3://${{ env.S3_BUCKET }}/${{ env.S3_FOLDER }}/manifest.json
-          aws s3 cp ./README.md s3://${{ env.S3_BUCKET }}/${{ env.S3_FOLDER }}/README.md
+          aws s3 cp ./manifest.md s3://${{ env.S3_BUCKET }}/${{ env.S3_FOLDER }}/manifest.md
           aws cloudfront create-invalidation --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION }} --paths "/${{ env.S3_FOLDER }}*"
         env:
           S3_BUCKET: "oss.configu.com"
