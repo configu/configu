@@ -2,26 +2,21 @@ import random
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from copy import deepcopy
 from functools import reduce
-from typing import List, Dict, Union, Literal
+from typing import Dict, List, Literal, Union
 
 from pydantic import BaseModel, Field
 
 from ..core import (
-    Command,
-    ConfigStore,
-    ConfigSet,
-    ConfigSchema,
     Cfgu,
-    ConfigStoreQuery,
+    Command,
     Config,
+    ConfigSchema,
+    ConfigSet,
+    ConfigStore,
+    ConfigStoreQuery,
 )
-from ..core.command import CommandReturn
-from ..core.generated import ConfigSchemaContentsValue, CfguType
-from ..utils import (
-    render_template,
-    parse_template,
-    error_message,
-)
+from ..core.generated import CfguType, ConfigSchemaContentsValue
+from ..utils import error_message, parse_template, render_template
 
 
 class EvalCommandFromParameter(BaseModel):
@@ -417,7 +412,7 @@ class EvalCommand(Command[EvalCommandReturn]):
                         )
                     )
 
-    def run(self) -> CommandReturn:
+    def run(self):
         eval_scope_array = self._eval_from_parameters()
         eval_scope = self._eval_scope(eval_scope_array)
         self._validate_scope(eval_scope)

@@ -25,7 +25,7 @@ class ConfigSchemaDefinition:
         "Boolean": pyvalidator.is_boolean,
         "Number": pyvalidator.is_number,
         "String": lambda value: isinstance(value, str),
-        "RegEx": lambda *args: re.fullmatch(args[0], args[1]) is None,
+        "RegEx": lambda *args: re.fullmatch(args[1], args[0]) is not None,
         "UUID": pyvalidator.is_uuid,
         "SemVer": pyvalidator.is_semantic_version,
         "Email": pyvalidator.is_email,

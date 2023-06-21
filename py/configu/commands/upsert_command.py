@@ -3,14 +3,13 @@ from typing import Dict, Union
 from pydantic import BaseModel, Field
 
 from ..core import (
+    CfguType,
+    Command,
+    Config,
+    ConfigSchema,
     ConfigSet,
     ConfigStore,
-    ConfigSchema,
-    CfguType,
-    Config,
-    Command,
 )
-from ..core.command import CommandReturn
 from ..utils import error_message
 
 
@@ -33,7 +32,7 @@ class UpsertCommand(Command[None]):
             parameters = UpsertCommandParameters.parse_obj(parameters)
         super().__init__(parameters)
 
-    def run(self) -> CommandReturn:
+    def run(self):
         scope_location = ["UpsertCommand", "run"]
         store = self.parameters.store
         set_ = self.parameters.set

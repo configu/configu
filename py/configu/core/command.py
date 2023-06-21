@@ -1,7 +1,7 @@
 from abc import abstractmethod
 from collections.abc import Mapping
 from dataclasses import dataclass
-from typing import Any, TypeVar, Generic
+from typing import Any, Generic, TypeVar
 
 CommandReturn = TypeVar("CommandReturn")
 

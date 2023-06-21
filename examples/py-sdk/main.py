@@ -6,6 +6,7 @@ if __name__ == "__main__":
     config_set = configu.ConfigSet("development")
     greeting = configu.Config("GREETING", config_set.path, "hello")
     subject = configu.Config("SUBJECT", config_set.path, "world")
+    configu.UpsertCommand()
     store.set([greeting, subject])
     result = configu.EvalCommand(
         {
