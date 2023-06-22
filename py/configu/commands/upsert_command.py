@@ -22,6 +22,8 @@ UpsertCommandParameters = TypedDict(
 
 
 class UpsertCommand(Command):
+    """"""
+
     parameters: UpsertCommandParameters
 
     def __init__(self, parameters: UpsertCommandParameters) -> None:

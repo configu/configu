@@ -68,6 +68,8 @@ EvalCommandParameters = TypedDict(
 
 
 class EvalCommand(Command[EvalCommandReturn]):
+    """"""
+
     parameters: EvalCommandParameters
 
     def __init__(self, parameters: EvalCommandParameters) -> None:

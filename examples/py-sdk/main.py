@@ -12,11 +12,13 @@ if __name__ == "__main__":
             "configs": {"GREETING": "hello", "SUBJECT": "world"},
         }
     ).run()
-    result = configu.EvalCommand(
+    eval_result = configu.EvalCommand(
         {
             "store": store,
             "set": config_set,
             "schema": schema,
         }
     ).run()
-    print(result)
+    export_result = configu.ExportCommand({"data": eval_result}).run()
+    print(export_result)
+    """"{'GREETING': 'hello', 'SUBJECT': 'larry', 'MESSAGE': 'hello, world!'}"""

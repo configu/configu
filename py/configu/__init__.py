@@ -1,24 +1,25 @@
-from .commands import EvalCommand, UpsertCommand
+from .commands import EvalCommand, ExportCommand, UpsertCommand
 from .core import (
-    Command,
-    Config,
-    ConfigStoreQuery,
-    ConfigSchema,
-    ConfigSet,
-    ConfigStore,
     Cfgu,
     CfguType,
+    Command,
+    Config,
+    ConfigSchema,
     ConfigSchemaType,
+    ConfigSet,
+    ConfigStore,
+    ConfigStoreQuery,
 )
 from .stores import (
-    InMemoryConfigStore,
     ConfiguConfigStore,
+    InMemoryConfigStore,
     JsonFileConfigStore,
 )
 
 __all__ = [
     "EvalCommand",
     "UpsertCommand",
+    "ExportCommand",
     "Command",
     "Config",
     "ConfigStoreQuery",
