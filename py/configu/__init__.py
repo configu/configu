@@ -10,7 +10,11 @@ from .core import (
     CfguType,
     ConfigSchemaType,
 )
-from .stores import InMemoryStore, ConfiguStore, JsonFileStore
+from .stores import (
+    InMemoryConfigStore,
+    ConfiguConfigStore,
+    JsonFileConfigStore,
+)
 
 __all__ = [
     "EvalCommand",
@@ -24,7 +28,7 @@ __all__ = [
     "Cfgu",
     "CfguType",
     "ConfigSchemaType",
-    "InMemoryStore",
-    "ConfiguStore",
-    "JsonFileStore",
+    "InMemoryConfigStore",
+    "ConfiguConfigStore",
+    "JsonFileConfigStore",
 ]

@@ -37,7 +37,7 @@ class TokenAuth(AuthBase):
         return r
 
 
-class ConfiguStore(ConfigStore):
+class ConfiguConfigStore(ConfigStore):
     _headers: Dict
     _auth: AuthBase
     _url: str
@@ -48,7 +48,6 @@ class ConfiguStore(ConfigStore):
         super().__init__(type="configu")
         if isinstance(store_config, dict):
             store_config = ConfiguStoreConfiguration.parse_obj(store_config)
-            print(store_config)
         self._headers = {
             "Org": store_config.credentials.org,
             "Source": store_config.source,

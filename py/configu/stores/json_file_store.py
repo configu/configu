@@ -11,7 +11,7 @@ from ..core.generated import (
 )
 
 
-class JsonFileStore(ConfigStore):
+class JsonFileConfigStore(ConfigStore):
     _path: str
 
     def __init__(self, path: str) -> None:
