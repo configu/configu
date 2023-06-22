@@ -1,13 +1,10 @@
-import random
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from copy import deepcopy
+from enum import Enum
 from functools import reduce
-from typing import Dict, List, Literal, Union
-
-from pydantic import BaseModel, Field
+from typing import Dict, Optional, Tuple, TypedDict, Union
 
 from ..core import (
     Cfgu,
+    CfguType,
     Command,
     Config,
     ConfigSchema,
@@ -15,416 +12,312 @@ from ..core import (
     ConfigStore,
     ConfigStoreQuery,
 )
-from ..core.generated import CfguType, ConfigSchemaContentsValue
+from ..core.generated import ConfigSchemaContentsValue
 from ..utils import error_message, parse_template, render_template
 
 
-class EvalCommandFromParameter(BaseModel):
-    """"""
-
-    store: ConfigStore
-    set: ConfigSet
-    schema_: ConfigSchema = Field(alias="schema")
-
-
-class EvalCommandConfigsParameter(Dict[str, str]):
-    """Dict with key:value"""
+class EvaluatedConfigOrigin(Enum):
+    ConfigsOverride = "CONFIGS_OVERRIDE"
+    StoreSet = "STORE_SET"
+    SchemaTemplate = "SCHEMA_TEMPLATE"
+    SchemaDefault = "SCHEMA_DEFAULT"
+    EmptyValue = "EMPTY_VALUE"
 
 
-class FromParameterWithConfigsParameter(EvalCommandFromParameter):
-    """"""
+EvalCommandReturnContext = TypedDict(
+    "EvalCommandReturnContext",
+    {
+        "store": str,
+        "set": str,
+        "schema": str,
+        "key": str,
+        "cfgu": Union[ConfigSchemaContentsValue, Cfgu],
+    },
+)
 
-    configs: EvalCommandConfigsParameter = Field(
-        default=EvalCommandConfigsParameter()
-    )
+EvalCommandReturnResult = TypedDict(
+    "EvalCommandReturnResult",
+    {
+        "origin": EvaluatedConfigOrigin,
+        "source": str,
+        "value": str,
+    },
+)
 
+EvalCommandReturnValue = TypedDict(
+    "EvalCommandReturnValue",
+    {
+        "context": EvalCommandReturnContext,
+        "result": EvalCommandReturnResult,
+    },
+)
+EvalCommandReturn = Dict[str, EvalCommandReturnValue]
 
-class EvalCommandParameters(BaseModel):
-    """"""
-
-    from_: List[FromParameterWithConfigsParameter] = Field(alias="from")
-    configs: EvalCommandConfigsParameter = Field(
-        default=EvalCommandConfigsParameter()
-    )
-
-
-EvaluatedConfigSource = Literal[
-    "global-override",
-    "local-override",
-    "store-set",
-    "schema-template",
-    "schema-default",
-    "empty",
-]
-
-
-class FromParameterWithKeyAndFrom(EvalCommandFromParameter):
-    """"""
-
-    key: str
-    from_: int = Field(alias="from")
-
-
-class ConfigEvalScopeResultFrom(BaseModel):
-    """"""
-
-    source: EvaluatedConfigSource
-    which: str
-
-
-class ConfigEvalScopeResult(BaseModel):
-    """"""
-
-    value: str
-    from_: ConfigEvalScopeResultFrom = Field(alias="from")
-
-
-class ConfigEvalScope(BaseModel):
-    """"""
-
-    context: FromParameterWithKeyAndFrom
-    cfgu: Union[Cfgu, ConfigSchemaContentsValue]
-    result: ConfigEvalScopeResult
-
-
-class EvalScope(Dict[str, ConfigEvalScope]):
-    """"""
-
-
-class EvalCommandReturn(BaseModel):
-    """"""
-
-    result: Dict[str, str]
-    metadata: Dict[
-        str,
-        Dict[
-            str,
-            Union[
-                FromParameterWithKeyAndFrom,
-                Cfgu,
-                ConfigEvalScopeResult,
-                ConfigSchemaContentsValue,
-                str,
-            ],
-        ],
-    ]
+EvalCommandParameters = TypedDict(
+    "EvalCommandParameters",
+    {
+        "store": ConfigStore,
+        "set": ConfigSet,
+        "schema": ConfigSchema,
+        "configs": Optional[Dict[str, str]],
+        "validate": Optional[bool],
+        "previous": Optional[EvalCommandReturn],
+    },
+    total=False,
+)
 
 
 class EvalCommand(Command[EvalCommandReturn]):
-    """"""
-
     parameters: EvalCommandParameters
 
-    def __init__(self, parameters: Union[EvalCommandParameters, dict]) -> None:
-        if isinstance(parameters, dict):
-            parameters = EvalCommandParameters.parse_obj(parameters)
+    def __init__(self, parameters: EvalCommandParameters) -> None:
         super().__init__(parameters)
 
-    def _eval_from_override(
-        self,
-        eval_scope: Union[EvalScope, Dict[str, ConfigEvalScope]],
-    ) -> Dict[str, ConfigEvalScope]:
-        for key, current in eval_scope.items():
-            context = current.context
-            result = current.result
-            global_override = self.parameters.configs.get(key)
-            local_override = self.parameters.from_[context.from_].configs.get(
-                key
-            )
-            if global_override is not None:
-                result.value = global_override
-                result.from_.source = "global-override"
-                result.from_.which = f"parameters.configs.{key}={result.value}"
+    def _eval_from_configs_override(
+        self, result: EvalCommandReturn
+    ) -> EvalCommandReturn:
+        if not self.parameters.get("configs"):
+            return {}
+        for key, value in result.items():
+            if key in self.parameters["configs"]:
+                override_value = self.parameters["configs"][key]
+                value["result"][
+                    "origin"
+                ] = EvaluatedConfigOrigin.ConfigsOverride
+                value["result"][
+                    "source"
+                ] = f"parameters.configs.{key}={override_value}"
+                value["result"]["value"] = override_value
+        return result
 
-            elif local_override is not None:
-                result.value = local_override
-                result.from_.source = "local-override"
-                result.from_.which = (
-                    f"parameters.from[{context.from_}]"
-                    f".configs.{key}={result.value}"
-                )
-
-        return eval_scope
-
-    @staticmethod
-    def _eval_from_store(
-        eval_scope: Union[EvalScope, Dict[str, ConfigEvalScope]],
-    ) -> Dict[str, ConfigEvalScope]:
-        try:
-            sample: ConfigEvalScope = random.choice(list(eval_scope.values()))
-            context = sample.context
-            store = context.store
-            set_ = context.set
-        except IndexError:
-            return eval_scope
-        queries = [
+    def _eval_from_store_set(
+        self, result: EvalCommandReturn
+    ) -> EvalCommandReturn:
+        store = self.parameters["store"]
+        set_ = self.parameters["set"]
+        store_queries = [
             ConfigStoreQuery(key, store_set)
             for store_set in set_.hierarchy
-            for key, config_eval_scope in eval_scope.items()
+            for key in result
         ]
-        results: Dict[str, Config] = {
+        store_configs: Dict[str, Config] = {
             result.key: result
             for result in sorted(
-                store.get(queries),
+                store.get(store_queries),
                 key=lambda query_result: len(
                     query_result.set.split(set_.SEPARATOR)
                 ),
             )
         }
-        for key, config in results.items():
-            result = eval_scope[key].result
-            result.value = config.value
-            result.from_.source = "store-set"
-            result.from_.which = (
-                f"parameters.from[{context.from_}]"
-                f":store={store.type}"
-                f":set={set_.path}"
-            )
+        for key, value in result.items():
+            if key in store_configs:
+                store_config = store_configs[key]
+                value["result"]["origin"] = EvaluatedConfigOrigin.StoreSet
+                value["result"]["source"] = (
+                    f"parameters.store=${value['context']['store']},"
+                    f"parameters.set=${value['context']['set']}"
+                )
+                value["result"]["value"] = store_config.value
+        return result
 
-        return eval_scope
-
-    @staticmethod
     def _eval_from_schema(
-        eval_scope: Union[EvalScope, Dict[str, ConfigEvalScope]],
-    ) -> Union[EvalScope, Dict[str, ConfigEvalScope]]:
-        for (
-            key,
-            config_eval_scope,
-        ) in eval_scope.items():
-            cfgu = config_eval_scope.cfgu
-            context = config_eval_scope.context
-            result = config_eval_scope.result
-            if cfgu.template is not None:
-                result.value = ""
-                result.from_.source = "schema-template"
-                result.from_.which = (
-                    f"parameters.from[{context.from_}]"
-                    f":schema.template={cfgu.template}"
+        self, result: EvalCommandReturn
+    ) -> EvalCommandReturn:
+        for key, value in result.items():
+            context = value["context"]
+            cfgu = context["cfgu"]
+            if cfgu.template:
+                value["result"][
+                    "origin"
+                ] = EvaluatedConfigOrigin.SchemaTemplate
+                value["result"]["source"] = (
+                    f"parameters.schema=${context['schema']}"
+                    f".template=${cfgu.template}"
                 )
-            if cfgu.default is not None:
-                result.value = cfgu.default
-                result.from_.source = "schema-default"
-                result.from_.which = (
-                    f"parameters.from[{context.from_}]"
-                    f":schema.default={cfgu.default}"
+                value["result"]["value"] = ""
+
+            if cfgu.default:
+                value["result"]["origin"] = EvaluatedConfigOrigin.SchemaDefault
+                value["result"]["source"] = (
+                    f"parameters.schema=${context['schema']}"
+                    f".default=${cfgu.template}"
                 )
-        return eval_scope
+                value["result"]["value"] = cfgu.default
+        return result
 
-    def _eval_from_parameter(
-        self,
-        index: int,
-        from_parameter: FromParameterWithConfigsParameter,
-    ) -> EvalScope:
-        from_parameter.store.init()
-        schema_contents = ConfigSchema.parse(from_parameter.schema_)
-        eval_scope = EvalScope()
-        for key, cfgu in schema_contents.items():
-            config_context = {
-                "store": from_parameter.store,
-                "set": from_parameter.set,
-                "schema": from_parameter.schema_,
-                "from": index,
-            }
-            context = FromParameterWithKeyAndFrom(**config_context, key=key)
-            result = ConfigEvalScopeResult.parse_obj(
-                {"value": "", "from": {"source": "empty", "which": ""}}
-            )
-            eval_scope[key] = ConfigEvalScope(
-                context=context,
-                cfgu=cfgu,
-                result=result,
-            )
-        eval_scope = {
-            **eval_scope,
-            **self._eval_from_override(deepcopy(eval_scope)),
-        }
-        eval_scope = {
-            **eval_scope,
-            **self._eval_from_store(
-                deepcopy(
-                    {
-                        key: scope
-                        for key, scope in eval_scope.items()
-                        if scope.result.from_.source == "empty"
-                        and scope.cfgu.template is None
-                    }
+    def _validate_result(self, result: EvalCommandReturn):
+        if self.parameters.get("validate", True):
+            error_scope = ["EvalCommand", "run"]
+            for key, value in result.items():
+                cfgu = value["context"]["cfgu"]
+                evaluated_value = value["result"]["value"]
+
+                type_test = ConfigSchema.CFGU.VALIDATORS.get(
+                    cfgu.type.value, lambda: False
                 )
-            ),
-        }
-        eval_scope = {
-            **eval_scope,
-            **self._eval_from_schema(
-                deepcopy(
-                    {
-                        key: scope
-                        for key, scope in eval_scope.items()
-                        if scope.result.from_.source == "empty"
-                    }
-                )
-            ),
-        }
-        return eval_scope
-
-    def _eval_from_parameters(self):
-        eval_scope_array = []
-        with ThreadPoolExecutor() as executor:
-            eval_scope_futures = {
-                executor.submit(
-                    self._eval_from_parameter, index, from_parameter
-                ): index
-                for index, from_parameter in enumerate(self.parameters.from_)
-            }
-            for future in as_completed(eval_scope_futures):
-                index = eval_scope_futures[future]
-                try:
-                    eval_scope: EvalScope = future.result()
-                except Exception as e:
-                    print(f"_eval_from_parameter({index}) raised: {e}")
-                else:
-                    eval_scope_array.append((index, eval_scope))
-        return [
-            v[1] for v in sorted(eval_scope_array, key=lambda scope: scope[0])
-        ]
-
-    @staticmethod
-    def _eval_scope(ordered_eval_scopes: List[EvalScope]) -> EvalScope:
-        """"""
-
-        def reduce_scopes(
-            scope: EvalScope, current_scope: ConfigEvalScope
-        ) -> EvalScope:
-            key = current_scope.context.key
-            if key not in scope or (
-                scope[key].result.from_.source == "empty"
-                and current_scope.result.from_.source != "empty"
-            ):
-                scope[key] = current_scope
-            return scope
-
-        eval_scope: EvalScope = reduce(
-            reduce_scopes,
-            reversed(
-                [
-                    scope
-                    for scopes in ordered_eval_scopes
-                    for scope in scopes.values()
-                ]
-            ),
-            EvalScope(),
-        )
-
-        template_keys = list(
-            {
-                key: scope
-                for key, scope in eval_scope.items()
-                if scope.result.from_.source == "schema-template"
-            }.keys()
-        )
-
-        run_again = True
-        while len(template_keys) > 0 and run_again:
-            has_rendered = False
-            render_context = {
-                key: value.result.value for key, value in eval_scope.items()
-            }
-            for key in deepcopy(template_keys):
-                current: ConfigEvalScope = eval_scope[key]
-                template: str = current.cfgu.template
-                expressions = parse_template(template)
-                if any([True for exp in expressions if exp in template_keys]):
-                    continue
-
-                eval_scope[key].result.value = render_template(
-                    template,
-                    {
-                        **render_context,
-                        **{
-                            "CONFIGU_SET": {
-                                "path": current.context.set.path,
-                                "hierarchy": current.context.set.hierarchy,
-                                "first": current.context.set.hierarchy[0],
-                                "last": current.context.set.hierarchy[-1],
-                                **{
-                                    str(index): path
-                                    for index, path in enumerate(
-                                        current.context.set.hierarchy
-                                    )
-                                },
-                            }
-                        },
-                    },
-                )
-                template_keys.remove(key)
-                has_rendered = True
-            run_again = has_rendered
-
-        return eval_scope
-
-    @staticmethod
-    def _validate_scope(scope: EvalScope):
-        """"""
-        error_scope = ["EvalCommand", "run"]
-        for key, config_eval_scope in scope.items():
-            type_test = ConfigSchema.CFGU.VALIDATORS.get(
-                config_eval_scope.cfgu.type.value, lambda: False
-            )
-            test_values = (
-                (
-                    config_eval_scope.result.value,
-                    config_eval_scope.cfgu.pattern,
-                )
-                if config_eval_scope.cfgu.type == CfguType.REG_EX
-                else (config_eval_scope.result.value,)
-            )
-            if not type_test(*test_values):
-                raise ValueError(
-                    error_message(
-                        f"invalid value type for key '{key}'", error_scope
-                    ),
-                    f"value '{test_values[0]}' must be"
-                    f" a '{config_eval_scope.cfgu.type}'",
-                )
-            if config_eval_scope.cfgu.required is not None and not bool(
-                test_values[0]
-            ):
-                raise ValueError(
-                    error_message(
-                        f"required key '{key}' is missing a value", error_scope
+                test_values = (
+                    (
+                        evaluated_value,
+                        cfgu.pattern,
                     )
+                    if cfgu.type == CfguType.REG_EX
+                    else (evaluated_value,)
                 )
-            if (
-                bool(test_values[0])
-                and config_eval_scope.cfgu.depends is not None
-            ):
-                if any(
-                    [
-                        True
-                        for dep in config_eval_scope.cfgu.depends
-                        if dep not in scope.keys()
-                        or not bool(scope[dep].result.value)
-                    ]
-                ):
+                if not type_test(*test_values):
                     raise ValueError(
                         error_message(
-                            f"one or more depends of key '{key}'"
-                            f" is missing a value",
+                            f"invalid value type for key '{key}'", error_scope
+                        ),
+                        f"value '{test_values[0]}' must be a "
+                        f"'{cfgu.type.value}'",
+                    )
+                if cfgu.required is not None and not bool(test_values[0]):
+                    raise ValueError(
+                        error_message(
+                            f"required key '{key}' is missing a value",
                             error_scope,
                         )
                     )
+                if bool(test_values[0]) and cfgu.depends is not None:
+                    if any(
+                        [
+                            True
+                            for dep in cfgu.depends
+                            if dep not in result.keys()
+                            or not bool(result[dep]["result"]["value"])
+                        ]
+                    ):
+                        raise ValueError(
+                            error_message(
+                                f"one or more depends of key '{key}'"
+                                f" is missing a value",
+                                error_scope,
+                            )
+                        )
+
+    def _eval_previous(self, result: EvalCommandReturn) -> EvalCommandReturn:
+        previous_result = self.parameters.get("previous")
+        if not previous_result:
+            return {}
+
+        def reduce_prev(
+            merged: EvalCommandReturn,
+            current: Tuple[str, EvalCommandReturnValue],
+        ):
+            key, value = current
+            if key not in merged or (
+                merged[key]["result"]["origin"]
+                == EvaluatedConfigOrigin.EmptyValue
+                and value["result"]["origin"]
+                != EvaluatedConfigOrigin.EmptyValue
+            ):
+                merged[key] = value
+            return merged
+
+        return reduce(
+            reduce_prev,
+            reversed(list(previous_result.items()) + list(result.items())),
+            {},
+        )
+
+    def _eval_templates(self, result: EvalCommandReturn) -> EvalCommandReturn:
+        template_keys = list(
+            {
+                key
+                for key, value in result.items()
+                if value["result"]["origin"]
+                == EvaluatedConfigOrigin.SchemaTemplate
+            }
+        )
+        should_render_templates = True
+        while len(template_keys) and should_render_templates:
+            has_rendered_at_least_once = False
+            for key in template_keys:
+                context = result[key]["context"]
+                template = context["cfgu"].template
+                expressions = parse_template(template)
+                if any([True for exp in expressions if exp in template_keys]):
+                    continue
+                context_config_set = ConfigSet(context["set"])
+                render_context = {
+                    **{
+                        key: value["result"]["value"]
+                        for key, value in result.items()
+                    },
+                    "CONFIGU_STORE": {"type": context["store"]},
+                    **{
+                        "CONFIGU_SET": {
+                            "path": context_config_set.path,
+                            "hierarchy": context_config_set.hierarchy,
+                            "first": context_config_set.hierarchy[0],
+                            "last": context_config_set.hierarchy[-1],
+                            **{
+                                str(index): path
+                                for index, path in enumerate(
+                                    context_config_set.hierarchy
+                                )
+                            },
+                        }
+                    },
+                    "CONFIGU_SCHEMA": {"path": context["schema"]},
+                }
+                result[key]["result"]["value"] = render_template(
+                    template, render_context
+                )
+                template_keys.remove(key)
+                has_rendered_at_least_once = True
+            should_render_templates = has_rendered_at_least_once
+        return result
 
     def run(self):
-        eval_scope_array = self._eval_from_parameters()
-        eval_scope = self._eval_scope(eval_scope_array)
-        self._validate_scope(eval_scope)
-        result = {"result": {}, "metadata": {}}
-        for key, config_eval_scope in eval_scope.items():
-            value = config_eval_scope.result.value
-            result["result"][key] = value
-            result["metadata"][key] = {
-                "key": key,
-                "value": value,
-                "context": config_eval_scope.context,
-                "cfgu": config_eval_scope.cfgu,
-                "result": config_eval_scope.result,
+        store = self.parameters["store"]
+        set_ = self.parameters["set"]
+        schema = self.parameters["schema"]
+        store.init()
+        schema_contents = ConfigSchema.parse(schema)
+        result: EvalCommandReturn = {
+            key: {
+                "context": {
+                    "store": store.type,
+                    "set": set_.path,
+                    "schema": schema.path,
+                    "key": key,
+                    "cfgu": cfgu,
+                },
+                "result": {
+                    "origin": EvaluatedConfigOrigin.EmptyValue,
+                    "source": "",
+                    "value": "",
+                },
             }
-        return EvalCommandReturn.parse_obj(result)
+            for key, cfgu in schema_contents.items()
+        }
+        result = {**result, **self._eval_from_configs_override(result)}
+        result = {
+            **result,
+            **self._eval_from_store_set(
+                {
+                    key: value
+                    for key, value in result.items()
+                    if value["result"]["origin"]
+                    == EvaluatedConfigOrigin.EmptyValue
+                    and not value["context"]["cfgu"].template
+                }
+            ),
+        }
+        result = {
+            **result,
+            **self._eval_from_schema(
+                {
+                    key: value
+                    for key, value in result.items()
+                    if value["result"]["origin"]
+                    == EvaluatedConfigOrigin.EmptyValue
+                }
+            ),
+        }
+        result = {**result, **self._eval_previous(result)}
+        result = {**result, **self._eval_templates(result)}
+        self._validate_result(result)
+
+        return result
