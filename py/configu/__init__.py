@@ -14,6 +14,7 @@ from .stores import (
     ConfiguConfigStore,
     InMemoryConfigStore,
     JsonFileConfigStore,
+    AWSSecretsManagerConfigStore,
 )
 
 __all__ = [
@@ -32,4 +33,5 @@ __all__ = [
     "InMemoryConfigStore",
     "ConfiguConfigStore",
     "JsonFileConfigStore",
+    "AWSSecretsManagerConfigStore",
 ]
