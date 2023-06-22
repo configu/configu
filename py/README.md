@@ -13,6 +13,8 @@ pip install configu
 ## Usage
 
 ```py
+import os
+
 import configu
 
 config_store = configu.InMemoryConfigStore()
@@ -35,10 +37,10 @@ data = configu.EvalCommand({
     "schema": schema,
 }).run()
 
-configuration_data = configu.ExportCommand({
-    "data": data,
-}).run()
+configuration_data = configu.ExportCommand({"data": data}).run()
 
+print(os.environ["MESSAGE"])
+# hey, configu python sdk!
 print(configuration_data)
 # {'GREETING': 'hey', 'SUBJECT': 'configu python sdk', 'MESSAGE': 'hey, configu python sdk!'}
 ```

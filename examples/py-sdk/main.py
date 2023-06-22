@@ -1,3 +1,5 @@
+import os
+
 import configu
 
 if __name__ == "__main__":
@@ -22,11 +24,9 @@ if __name__ == "__main__":
         }
     ).run()
 
-    configuration_data = configu.ExportCommand(
-        {
-            "data": data,
-        }
-    ).run()
+    configuration_data = configu.ExportCommand({"data": data}).run()
 
+    print(os.environ["MESSAGE"])
+    # hey, configu python sdk!
     print(configuration_data)
     # {'GREETING': 'hey', 'SUBJECT': 'configu python sdk', 'MESSAGE': 'hey, configu python sdk!'}
