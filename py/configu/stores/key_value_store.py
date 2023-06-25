@@ -38,7 +38,7 @@ class KeyValueConfigStore(ConfigStore):
         """
         ...
 
-    def safe_json_parse(self, value):
+    def _safe_json_parse(self, value):
         """
         Try parsing the data as json.
         :param value: The value to parse
@@ -46,19 +46,19 @@ class KeyValueConfigStore(ConfigStore):
         """
         try:
             return json.loads(value)
-        except Exception:
+        except (Exception,):
             return {}
 
-    def calc_key(self, query: Union[ConfigStoreQuery, Config]) -> str:
+    def _calc_key(self, query: Union[ConfigStoreQuery, Config]) -> str:
         """
         Calculate the storage system key referenced in a query.
         If `set` is populated, will use that. Otherwise defaults to `key`
         :param query: The query to be calculated.
         """
-        return getattr(query, "set", query.key)
+        return query.set or query.key
 
     def get(self, queries: List[ConfigStoreQuery]) -> List[Config]:
-        keys = {self.calc_key(q) for q in queries}
+        keys = {self._calc_key(q) for q in queries}
         key_value_dict = {}
         for key in keys:
             try:
@@ -68,12 +68,12 @@ class KeyValueConfigStore(ConfigStore):
                         f"key {key} has no value at {self.__class__.__name__}"
                     )
                 key_value_dict[key] = value
-            except Exception:
+            except (Exception,):
                 key_value_dict[key] = ""
 
         json_values: List[Config] = []
         for query in queries:
-            value = key_value_dict[self.calc_key(query)]
+            value = key_value_dict[self._calc_key(query)]
             if not query.set:
                 json_values.append(
                     Config.from_dict(
@@ -85,7 +85,7 @@ class KeyValueConfigStore(ConfigStore):
                     )
                 )
                 continue
-            json_value = self.safe_json_parse(value)
+            json_value = self._safe_json_parse(value)
             json_values.append(
                 Config.from_dict(
                     {
@@ -100,7 +100,7 @@ class KeyValueConfigStore(ConfigStore):
     def set(self, configs: List[Config]):
         key_value_dict: Dict[str, Dict[str, str]] = {}
         for config in configs:
-            key = self.calc_key(config)
+            key = self._calc_key(config)
             if key not in key_value_dict:
                 key_value_dict[key] = {}
             if not config.value:

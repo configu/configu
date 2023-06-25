@@ -38,7 +38,7 @@ class TokenAuth(AuthBase):
 
 
 class ConfiguConfigStore(ConfigStore):
-    """A `ConfigStore` persisted by Configu"""
+    """A `ConfigStore` persisted by Configu (https://app.configu.com)"""
 
     _headers: Dict
     _auth: AuthBase

@@ -6,22 +6,22 @@ from .key_value_store import KeyValueConfigStore
 class AWSSecretsManagerConfigStore(KeyValueConfigStore):
     """A `ConfigStore` persisted in AWS Secrets Manager"""
 
-    client: SecretsManagerClient
+    _client: SecretsManagerClient
 
     def __init__(self) -> None:
-        self.client = boto3.client("secretsmanager")
+        self._client = boto3.client("secretsmanager")
         super().__init__(type="aws-secrets-manager")
 
     def get_by_key(self, key: str) -> str:
-        return self.client.get_secret_value(SecretId=key).get(
+        return self._client.get_secret_value(SecretId=key).get(
             "SecretString", ""
         )
 
     def upsert(self, key: str, value: str):
         try:
-            self.client.update_secret(SecretId=key, SecretString=value)
-        except Exception:
-            self.client.create_secret(Name=key, SecretString=value)
+            self._client.update_secret(SecretId=key, SecretString=value)
+        except (Exception,):
+            self._client.create_secret(Name=key, SecretString=value)
 
     def delete(self, key: str):
-        self.client.delete_secret(SecretId=key)
+        self._client.delete_secret(SecretId=key)
