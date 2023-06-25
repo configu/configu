@@ -1,17 +1,32 @@
+import os
+
 import configu
 
 if __name__ == "__main__":
-    store = configu.InMemoryStore()
+    config_store = configu.InMemoryConfigStore()
+    test_set = configu.ConfigSet("test")
     schema = configu.ConfigSchema("get-started.cfgu.json")
-    config_set = configu.ConfigSet("development")
-    greeting = configu.Config("GREETING", config_set.path, "hello")
-    subject = configu.Config("SUBJECT", config_set.path, "world")
-    store.set([greeting, subject])
-    result = configu.EvalCommand(
+
+    configu.UpsertCommand(
         {
-            "from": [
-                {"store": store, "set": config_set, "schema": schema},
-            ]
+            "store": config_store,
+            "set": test_set,
+            "schema": schema,
+            "configs": {"GREETING": "hey", "SUBJECT": "configu python sdk"},
         }
     ).run()
-    print(result.result.get("MESSAGE"))
+
+    data = configu.EvalCommand(
+        {
+            "store": config_store,
+            "set": test_set,
+            "schema": schema,
+        }
+    ).run()
+
+    configuration_data = configu.ExportCommand({"data": data}).run()
+
+    print(os.environ["MESSAGE"])
+    # hey, configu python sdk!
+    print(configuration_data)
+    # {'GREETING': 'hey', 'SUBJECT': 'configu python sdk', 'MESSAGE': 'hey, configu python sdk!'}

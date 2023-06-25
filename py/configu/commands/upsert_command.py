@@ -1,44 +1,40 @@
-from typing import Dict, Union
-
-from pydantic import BaseModel, Field
+from typing import Dict, TypedDict
 
 from ..core import (
+    CfguType,
+    Command,
+    Config,
+    ConfigSchema,
     ConfigSet,
     ConfigStore,
-    ConfigSchema,
-    CfguType,
-    Config,
-    Command,
 )
-from ..core.command import CommandReturn
 from ..utils import error_message
 
+UpsertCommandParameters = TypedDict(
+    "UpsertCommandParameters",
+    {
+        "store": ConfigStore,
+        "set": ConfigSet,
+        "schema": ConfigSchema,
+        "configs": Dict[str, str],
+    },
+)
 
-class UpsertCommandParameters(BaseModel):
+
+class UpsertCommand(Command):
     """"""
 
-    store: ConfigStore
-    set: ConfigSet
-    schema_: ConfigSchema = Field(alias="schema")
-    configs: Dict[str, str]
-
-
-class UpsertCommand(Command[None]):
     parameters: UpsertCommandParameters
 
-    def __init__(
-        self, parameters: Union[UpsertCommandParameters, dict]
-    ) -> None:
-        if isinstance(parameters, dict):
-            parameters = UpsertCommandParameters.parse_obj(parameters)
+    def __init__(self, parameters: UpsertCommandParameters) -> None:
         super().__init__(parameters)
 
-    def run(self) -> CommandReturn:
+    def run(self):
         scope_location = ["UpsertCommand", "run"]
-        store = self.parameters.store
-        set_ = self.parameters.set
-        schema = self.parameters.schema_
-        configs = self.parameters.configs
+        store = self.parameters["store"]
+        set_ = self.parameters["set"]
+        schema = self.parameters["schema"]
+        configs = self.parameters["configs"]
         store.init()
         schema_content = ConfigSchema.parse(schema)
         upset_configs = []
@@ -82,4 +78,3 @@ class UpsertCommand(Command[None]):
                 )
             upset_configs.append(Config(set=set_.path, key=key, value=value))
         store.set(upset_configs)
-        return

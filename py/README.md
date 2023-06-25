@@ -13,31 +13,36 @@ pip install configu
 ## Usage
 
 ```py
+import os
+
 import configu
 
-store = configu.InMemoryStore()
-set = configu.ConfigSet("test")
+config_store = configu.InMemoryConfigStore()
+test_set = configu.ConfigSet("test")
 schema = configu.ConfigSchema("get-started.cfgu.json")
 
-UpsertCommand({
-  store,
-  set,
-  schema,
-  configs: {
-    'GREETING': 'hey',
-    'SUBJECT': 'configu python sdk'
-  },
+configu.UpsertCommand({
+    "store": config_store,
+    "set": test_set,
+    "schema": schema,
+    "configs": {
+        'GREETING': 'hey',
+        'SUBJECT': 'configu python sdk'
+    },
 }).run()
 
-data = EvalCommand({
-  store,
-  set,
-  schema,
+data = configu.EvalCommand({
+    "store": config_store,
+    "set": test_set,
+    "schema": schema,
 }).run()
 
-configurationData = ExportCommand({
-  data,
-}).run()
+configuration_data = configu.ExportCommand({"data": data}).run()
+
+print(os.environ["MESSAGE"])
+# hey, configu python sdk!
+print(configuration_data)
+# {'GREETING': 'hey', 'SUBJECT': 'configu python sdk', 'MESSAGE': 'hey, configu python sdk!'}
 ```
 
 ## Reference

@@ -1,5 +1,5 @@
 import re
-from typing import Optional, List, Dict
+from typing import Any, Dict, List, Optional
 
 import chevron
 
@@ -42,5 +42,5 @@ def parse_template(template: str) -> List[str]:
     return template_vars
 
 
-def render_template(template: str, context: Dict[str, str]) -> str:
+def render_template(template: str, context: Dict[str, Any]) -> str:
     return chevron.render(template, context)

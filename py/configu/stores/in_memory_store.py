@@ -4,7 +4,7 @@ from ..core import Config, ConfigStoreQuery, ConfigStore
 from ..core.generated import config_store_query_from_dict, config_from_dict
 
 
-class InMemoryStore(ConfigStore):
+class InMemoryConfigStore(ConfigStore):
     _data: List[Config]
 
     def __init__(self) -> None:
