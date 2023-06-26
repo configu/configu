@@ -11,20 +11,20 @@ import { BaseCommand } from '../base';
 export default class Find extends BaseCommand<typeof Find> {
   private ignoredFiles: Set<string> = new Set(['build', 'dist', 'node_modules']);
 
-  static description = `Scan source code for cfgu usage`;
+  static description = `Finding all config parameters and their usage in the source code based on CFGU files`;
 
   static examples = [
     {
-      description: `Scan for .cfgu.json files and usage in current directory`,
-      command: `<%= config.bin %> <%= command.id %> <PATH_TO_SCAN>`,
+      description: `Find all config parameters and their usage in current directory`,
+      command: `<%= config.bin %> <%= command.id %>`,
     },
     {
-      description: `Scan for .cfgu.json files and usage in a specific directory`,
-      command: `<%= config.bin %> <%= command.id %> <PATH_TO_SCAN> --cfgu <PATH_TO_CFGU> --unused`,
+      description: `Find all config parameters and their usage in specific directory from provided CFGU file`,
+      command: `<%= config.bin %> <%= command.id %> <PATH_TO_SCAN> --cfgu <PATH_TO_CFGU>`,
     },
     {
-      description: `Scan for .cfgu.json files and usage in a specific directory`,
-      command: `<%= config.bin %> <%= command.id %> <PATH_TO_SCAN> --ignore '*.md,*.xml'`,
+      description: `Find all unused config parameters in specific directory`,
+      command: `<%= config.bin %> <%= command.id %> <PATH_TO_SCAN> --unused`,
     },
   ];
 
@@ -38,16 +38,16 @@ export default class Find extends BaseCommand<typeof Find> {
 
   static flags = {
     cfgu: Flags.file({
-      description: 'Path to .cfgu.json file',
+      description: 'Path to a specific .cfgu file (default: all CFGU files in the source code)',
       required: false,
     }),
     unused: Flags.boolean({
-      description: 'Only show unused keys',
+      description: 'Only show unused parameters',
       required: false,
       default: false,
     }),
     ignore: Flags.string({
-      description: 'Comma separated list of glob patterns to ignore',
+      description: 'Comma separated list of glob patterns to ignore. (ex. --ignore "*.xml,**/*.md")',
       required: false,
       default: '',
     }),
@@ -80,7 +80,6 @@ export default class Find extends BaseCommand<typeof Find> {
       crlfDelay: Number.POSITIVE_INFINITY,
     });
     const result: any[] = [];
-
     let lineIndex = 1;
     readLine.on('line', (line) => {
       const lineResult = onLine(line, lineIndex);
