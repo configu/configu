@@ -113,10 +113,10 @@ export default class Find extends BaseCommand<typeof Find> {
       }),
     );
 
-    const keysRegEx: { [key: string]: { regex: RegExp; count: number } } = _.mapValues(
+    const keysRegEx: { [key: string]: { pattern: RegExp; count: number } } = _.mapValues(
       _.mapKeys([...new Set(keysFromCfgu.flat())]),
       (value, key) => ({
-        regex: new RegExp(key, 'g'),
+        pattern: new RegExp(key, 'g'),
         count: 0,
       }),
     );
@@ -125,13 +125,14 @@ export default class Find extends BaseCommand<typeof Find> {
       dot: true,
       ignore: [...[...this.ignoredFiles].map((dirName) => path.join(projectPath, `/**/${dirName}`)), '/**/*.json'],
     });
+
     await Promise.all(
       files.map((file) =>
         this.processLineByLine(file, (line, lineIndex) => {
           Object.keys(keysRegEx).map(async (key) => {
             const keyRegEx = keysRegEx[key];
             if (keyRegEx) {
-              const regEx = keyRegEx.regex;
+              const regEx = keyRegEx.pattern;
               const match = regEx.exec(line);
               if (line && match) {
                 keyRegEx.count += 1;
@@ -144,7 +145,7 @@ export default class Find extends BaseCommand<typeof Find> {
       ),
     );
     const unusedKeys = Object.keys(keysRegEx).filter((key) => keysRegEx[key]?.count === 0);
-    if (unusedKeys.length > 0) this.log(`Unused configs found: ${unusedKeys.join(',')}`);
+    if (unusedKeys.length > 0) this.log(`Unused configs found: ${unusedKeys.join(', ')}`);
     else if (unusedOnly) this.log('No unused configs found');
   }
 
