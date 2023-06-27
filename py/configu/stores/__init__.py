@@ -3,6 +3,7 @@ from .configu_store import ConfiguConfigStore
 from .in_memory_store import InMemoryConfigStore
 from .json_file_store import JsonFileConfigStore
 from .hashicorp_vault_store import HashicorpVaultConfigStore
+from .azure_key_vault_store import AzureKeyVaultConfigStore
 
 __all_ = [
     "AWSSecretsManagerConfigStore",
@@ -10,4 +11,5 @@ __all_ = [
     "ConfiguConfigStore",
     "JsonFileConfigStore",
     "HashicorpVaultConfigStore",
+    "AzureKeyVaultConfigStore",
 ]
