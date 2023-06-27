@@ -5,6 +5,7 @@ from .json_file_store import JsonFileConfigStore
 from .hashicorp_vault_store import HashicorpVaultConfigStore
 from .azure_key_vault_store import AzureKeyVaultConfigStore
 from .gcp_secret_manager import GCPSecretManagerConfigStore
+from .kubernetes_secret_store import KubernetesSecretConfigStore
 
 __all_ = [
     "AWSSecretsManagerConfigStore",
@@ -14,4 +15,5 @@ __all_ = [
     "HashicorpVaultConfigStore",
     "AzureKeyVaultConfigStore",
     "GCPSecretManagerConfigStore",
+    "KubernetesSecretConfigStore",
 ]

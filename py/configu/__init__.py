@@ -18,6 +18,7 @@ from .stores import (
     HashicorpVaultConfigStore,
     AzureKeyVaultConfigStore,
     GCPSecretManagerConfigStore,
+    KubernetesSecretConfigStore,
 )
 
 __all__ = [
@@ -40,4 +41,5 @@ __all__ = [
     "HashicorpVaultConfigStore",
     "AzureKeyVaultConfigStore",
     "GCPSecretManagerConfigStore",
+    "KubernetesSecretConfigStore",
 ]
