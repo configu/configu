@@ -15,6 +15,7 @@ from .stores import (
     InMemoryConfigStore,
     JsonFileConfigStore,
     AWSSecretsManagerConfigStore,
+    HashicorpVaultConfigStore,
 )
 
 __all__ = [
@@ -34,4 +35,5 @@ __all__ = [
     "ConfiguConfigStore",
     "JsonFileConfigStore",
     "AWSSecretsManagerConfigStore",
+    "HashicorpVaultConfigStore",
 ]
