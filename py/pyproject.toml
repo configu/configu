@@ -38,6 +38,7 @@ boto3 = "^1.26.155"
 boto3-stubs = { extras = ["secretsmanager"], version = "^1.26.155" }
 azure-keyvault-secrets = "^4.7.0"
 azure-identity = "^1.13.0"
+google-cloud-secret-manager = "^2.16.1"
 
 [tool.poetry.group.dev.dependencies]
 flake8 = "^6.0.0" # configs at .flake8
