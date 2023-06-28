@@ -39,18 +39,11 @@ class JsonFileConfigStore(ConfigStore):
             for query in queries
         ]
         query_ids = [f"{query.set}.{query.key}" for query in queries]
-        results = []
-        for config in stored_configs:
-            for query in queries:
-                if any(
-                    [
-                        f"{config.set}.{config.key}" in query_ids,
-                        (query.set == "*" or query.set == config.set)
-                        and (query.key == "*" or query.key == config.key),
-                    ]
-                ):
-                    results.append(config)
-        return results
+        return [
+            config
+            for config in stored_configs
+            if f"{config.set}.{config.key}" in query_ids
+        ]
 
     def set(self, configs: List[Union[Config, dict]]) -> None:
         stored_configs = self.read()

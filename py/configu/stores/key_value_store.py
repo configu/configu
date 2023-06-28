@@ -58,53 +58,41 @@ class KeyValueConfigStore(ConfigStore):
         return query.set or query.key
 
     def get(self, queries: List[ConfigStoreQuery]) -> List[Config]:
-        keys = {self._calc_key(q) for q in queries}
-        key_value_dict = {}
-        for key in keys:
-            try:
-                value = self.get_by_key(key)
-                if not value:
-                    raise KeyError(
-                        f"key {key} has no value at {self.__class__.__name__}"
-                    )
-                key_value_dict[key] = value
-            except (Exception,):
-                key_value_dict[key] = ""
-
-        json_values: List[Config] = []
+        stored_configs = []
         for query in queries:
-            value = key_value_dict[self._calc_key(query)]
-            if not query.set:
-                json_values.append(
+            try:
+                value = self.get_by_key(self._calc_key(query))
+                if query.set:
+                    value = str(
+                        self._safe_json_parse(value).get(query.key, "")
+                    )
+            except (Exception,):
+                value = None
+            if value:
+                stored_configs.append(
                     Config.from_dict(
                         {
                             "key": query.key,
                             "set": query.set,
-                            "value": value if value is not None else "",
+                            "value": value,
                         }
                     )
                 )
-                continue
-            json_value = self._safe_json_parse(value)
-            json_values.append(
-                Config.from_dict(
-                    {
-                        "set": query.set,
-                        "key": query.key,
-                        "value": str(json_value.get(query.key, "")),
-                    }
-                )
-            )
-        return json_values
+        return stored_configs
 
     def set(self, configs: List[Config]):
-        key_value_dict: Dict[str, Dict[str, str]] = {}
+        key_value_dict: Dict[str, Union[str, Dict[str, str]]] = {}
         for config in configs:
             key = self._calc_key(config)
-            if key not in key_value_dict:
-                key_value_dict[key] = {}
-            if not config.value:
+            if not config.set:
+                key_value_dict[key] = config.value
                 continue
+
+            if key not in key_value_dict or not isinstance(
+                key_value_dict[key], dict
+            ):
+                key_value_dict[key] = {}
+
             key_value_dict[key] = {
                 **key_value_dict[key],
                 config.key: config.value,

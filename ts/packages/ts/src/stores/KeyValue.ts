@@ -14,10 +14,7 @@ export abstract class KeyValueConfigStore extends ConfigStore {
   protected abstract delete(key: string): Promise<void>;
 
   private calcKey({ set, key }: ConfigStoreQuery): string {
-    if (!set) {
-      return key;
-    }
-    return set;
+    return set || key;
   }
 
   private stringifyValue(value: any) {
@@ -80,16 +77,17 @@ export abstract class KeyValueConfigStore extends ConfigStore {
   }
 
   async set(configs: Config[]): Promise<void> {
-    const kvDict: Record<string, Record<string, string>> = {};
+    const kvDict: Record<string, Record<string, string> | string> = {};
     configs.forEach((config) => {
       const key = this.calcKey(config);
-      if (!kvDict[key]) {
-        kvDict[key] = {};
-      }
-      if (!config.value) {
+      if (!config.set) {
+        kvDict[key] = config.value;
         return;
       }
-      kvDict[key] = { ...kvDict[key], [config.key]: config.value };
+      if (!kvDict[key] || !(kvDict[key] instanceof Object)) {
+        kvDict[key] = {};
+      }
+      kvDict[key] = { ...(kvDict[key] as Record<string, string>), [config.key]: config.value };
     });
 
     const setConfigsPromises = Object.entries(kvDict).map(async ([key, value]) => {
