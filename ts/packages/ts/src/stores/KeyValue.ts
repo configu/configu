@@ -77,7 +77,7 @@ export abstract class KeyValueConfigStore extends ConfigStore {
   }
 
   async set(configs: Config[]): Promise<void> {
-    const kvDict: Record<string, Record<string, string> | string> = {};
+    const kvDict: Record<string, string | Record<string, string>> = {};
     configs.forEach((config) => {
       const key = this.calcKey(config);
       if (!config.set) {
