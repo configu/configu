@@ -1,7 +1,8 @@
 import json
-from typing import List, Dict, Union
+from typing import Dict, List, Union
 from abc import abstractmethod
-from ..core import ConfigStore, ConfigStoreQuery, Config
+
+from ..core import Config, ConfigStore, ConfigStoreQuery
 
 
 class KeyValueConfigStore(ConfigStore):
@@ -66,18 +67,18 @@ class KeyValueConfigStore(ConfigStore):
                     value = str(
                         self._safe_json_parse(value).get(query.key, "")
                     )
-            except (Exception,):
-                value = None
-            if value:
-                stored_configs.append(
-                    Config.from_dict(
-                        {
-                            "key": query.key,
-                            "set": query.set,
-                            "value": value,
-                        }
+                if value:
+                    stored_configs.append(
+                        Config.from_dict(
+                            {
+                                "key": query.key,
+                                "set": query.set,
+                                "value": value,
+                            }
+                        )
                     )
-                )
+            except (Exception,):
+                continue
         return stored_configs
 
     def set(self, configs: List[Config]):
