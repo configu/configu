@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { ConfigStore } from '../ConfigStore';
-import { ConfigStoreQuery, Config } from '../types';
+import { Config, ConfigStoreQuery } from '../types';
 
 export abstract class KeyValueConfigStore extends ConfigStore {
   constructor(type: string) {
@@ -84,7 +84,7 @@ export abstract class KeyValueConfigStore extends ConfigStore {
         kvDict[key] = config.value;
         return;
       }
-      if (!kvDict[key] || !(kvDict[key] instanceof Object)) {
+      if (!kvDict[key] || !_.isPlainObject(kvDict[key])) {
         kvDict[key] = {};
       }
       kvDict[key] = { ...(kvDict[key] as Record<string, string>), [config.key]: config.value };
