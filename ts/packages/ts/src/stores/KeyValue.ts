@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { ConfigStore } from '../ConfigStore';
-import { ConfigStoreQuery, Config } from '../types';
+import { Config, ConfigStoreQuery } from '../types';
 
 export abstract class KeyValueConfigStore extends ConfigStore {
   constructor(type: string) {
@@ -80,16 +80,17 @@ export abstract class KeyValueConfigStore extends ConfigStore {
   }
 
   async set(configs: Config[]): Promise<void> {
-    const kvDict: Record<string, Record<string, string>> = {};
+    const kvDict: Record<string, string | Record<string, string>> = {};
     configs.forEach((config) => {
       const key = this.calcKey(config);
-      if (!kvDict[key]) {
-        kvDict[key] = {};
-      }
-      if (!config.value) {
+      if (!config.set) {
+        kvDict[key] = config.value;
         return;
       }
-      kvDict[key] = { ...kvDict[key], [config.key]: config.value };
+      if (!kvDict[key] || !_.isPlainObject(kvDict[key])) {
+        kvDict[key] = {};
+      }
+      kvDict[key] = { ...(kvDict[key] as Record<string, string>), [config.key]: config.value };
     });
 
     const setConfigsPromises = Object.entries(kvDict).map(async ([key, value]) => {

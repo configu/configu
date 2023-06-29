@@ -71,7 +71,6 @@ class ConfiguConfigStore(ConfigStore):
             json=queries_json,
         )
         response.raise_for_status()
-        print([Config(**args) for args in response.json()])
         return [Config(**args) for args in response.json()]
 
     def set(self, configs: List[Union[Config, dict]]) -> None:
