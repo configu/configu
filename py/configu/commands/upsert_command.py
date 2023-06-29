@@ -22,14 +22,29 @@ UpsertCommandParameters = TypedDict(
 
 
 class UpsertCommand(Command):
-    """"""
+    """
+    The Upsert command is used to create, update or delete Configs from a
+    ConfigStore
+    """
 
     parameters: UpsertCommandParameters
 
     def __init__(self, parameters: UpsertCommandParameters) -> None:
+        """
+        Creates a new UpsertCommand.
+        :param parameters: dict
+            The command's parameters. Includes the following:
+            - store: the `ConfigStore` to which the command will write
+            - set: the `ConfigSet` to which the command will write
+            - schema: `ConfigSchema` to validate config being written
+            - configs: a dictionary of `Config`s to upsert
+        """
         super().__init__(parameters)
 
     def run(self):
+        """
+        Runs the upsert command.
+        """
         scope_location = ["UpsertCommand", "run"]
         store = self.parameters["store"]
         set_ = self.parameters["set"]

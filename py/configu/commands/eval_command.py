@@ -68,11 +68,24 @@ EvalCommandParameters = TypedDict(
 
 
 class EvalCommand(Command[EvalCommandReturn]):
-    """"""
+    """
+    The Eval command is used to fetch and validate `Config`s from `ConfigStore`
+    on demand.
+    """
 
     parameters: EvalCommandParameters
 
     def __init__(self, parameters: EvalCommandParameters) -> None:
+        """
+        Creates a new EvalCommand.
+        :param parameters: dict
+            The command's parameters. Includes the following:
+             - store: the `ConfigStore` from which to fetch
+             - set: the `ConfigSet` to fetch
+             - schema: `ConfigSchema` to validate the config being fetched
+             - configs (optional): a dictionary of overrides to the fetched
+                `Config`s
+        """
         super().__init__(parameters)
 
     def _eval_from_configs_override(
@@ -272,6 +285,11 @@ class EvalCommand(Command[EvalCommandReturn]):
         return result
 
     def run(self):
+        """
+        Runs the eval command.
+        :return EvalCommandReturn:
+        Contains the command's results and metadata
+        """
         store = self.parameters["store"]
         set_ = self.parameters["set"]
         schema = self.parameters["schema"]
