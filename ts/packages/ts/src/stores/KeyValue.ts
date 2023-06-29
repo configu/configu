@@ -14,7 +14,10 @@ export abstract class KeyValueConfigStore extends ConfigStore {
   protected abstract delete(key: string): Promise<void>;
 
   private calcKey({ set, key }: ConfigStoreQuery): string {
-    return set || key;
+    if (!set) {
+      return key;
+    }
+    return set;
   }
 
   private stringifyValue(value: any) {
