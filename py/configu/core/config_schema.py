@@ -61,7 +61,9 @@ class ConfigSchemaDefinition:
 
 
 class ConfigSchema(IConfigSchema):
-    """"""
+    """
+    A Python representation of the schema stored in a .cfgu.json file.
+    """
 
     CFGU = ConfigSchemaDefinition
 
@@ -74,6 +76,10 @@ class ConfigSchema(IConfigSchema):
     )
 
     def __init__(self, path: str) -> None:
+        """
+        Creates a new ConfigSchema
+        :param path: path the the config file
+        """
         error_location = [self.__class__.__name__, self.__init__.__name__]
         if re.match(rf".*({ConfigSchema.EXT})", path) is None:
             raise ValueError(
@@ -86,6 +92,10 @@ class ConfigSchema(IConfigSchema):
         super().__init__(path=path, type=ConfigSchema.TYPES[Path(path).suffix])
 
     def read(self) -> str:
+        """
+        Reads the config schema file
+        :return: contents of the config schema
+        """
         try:
             with open(self.path, mode="r", encoding="utf-8") as schema_file:
                 file_content = schema_file.read()
@@ -95,7 +105,11 @@ class ConfigSchema(IConfigSchema):
 
     @classmethod
     def parse(cls, scheme: "ConfigSchema") -> Dict[str, Cfgu]:
-        """"""
+        """
+        Parses the given ConfigSchema
+        :param scheme: The ConfigSchema to parse
+        :return: A dictionary of configurations.
+        """
         error_location = [cls.__name__, "parse"]
         schema_content = scheme.read()
         if scheme.type == ConfigSchemaType.JSON:

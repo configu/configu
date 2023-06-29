@@ -5,6 +5,8 @@ from ..core.generated import config_store_query_from_dict, config_from_dict
 
 
 class InMemoryConfigStore(ConfigStore):
+    """A `ConfigStore` persisted in-memory"""
+
     _data: List[Config]
 
     def __init__(self) -> None:
