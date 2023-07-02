@@ -5,6 +5,7 @@ import { createInterface } from 'readline';
 import { createReadStream } from 'fs';
 import { once } from 'events';
 import _ from 'lodash';
+import { TMPL } from '@configu/ts';
 import FastGlob = require('fast-glob');
 import { BaseCommand } from '../base';
 
@@ -43,6 +44,11 @@ export default class Find extends BaseCommand<typeof Find> {
     }),
     unused: Flags.boolean({
       description: 'Only show unused parameters',
+      required: false,
+      default: false,
+    }),
+    'show-templates': Flags.boolean({
+      description: 'Ignore parameters that are parts of templates and treat them as used parameters',
       required: false,
       default: false,
     }),
@@ -93,6 +99,7 @@ export default class Find extends BaseCommand<typeof Find> {
   private async find() {
     const projectPath = path.resolve(this.args.path);
     const unusedOnly = this.flags.unused;
+    const showTemplateKeys = this.flags['show-templates'];
     await this.updateIgnoredFiles(projectPath);
     const cfguPaths = this.flags.cfgu ? [this.flags.cfgu] : this.findCfgu(projectPath);
 
@@ -105,7 +112,25 @@ export default class Find extends BaseCommand<typeof Find> {
       cfguPaths.map(async (cfguFile) => {
         try {
           const schemaContents = await ConfigSchema.parse(new ConfigSchema(cfguFile));
-          return Object.keys(schemaContents);
+          const schemaKeys = Object.keys(schemaContents);
+          if (!showTemplateKeys) {
+            try {
+              const schemaEntries = Object.entries(schemaContents);
+              const ignoredKeys = new Set(
+                schemaEntries
+                  .filter(([key, cfgu]) => !!cfgu.template)
+                  .flatMap(([key, cfgu]) => {
+                    return TMPL.parse(cfgu.template as string)
+                      .filter((templateSpan) => templateSpan.type === 'name')
+                      .map((templateSpan) => templateSpan.key);
+                  }),
+              );
+              return schemaEntries.filter(([key, cfgu]) => !ignoredKeys.has(key)).map(([key, cfgu]) => key);
+            } catch {
+              return schemaKeys;
+            }
+          }
+          return schemaKeys;
         } catch {
           return [];
         }
