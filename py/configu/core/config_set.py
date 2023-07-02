@@ -3,11 +3,22 @@ from ..utils import error_message, is_valid_name
 
 
 class ConfigSet(IConfigSet):
+    """
+    A mechanism for organizing and grouping configurations in a hierarchical
+    structure. It serves as a path within the configuration tree, enabling
+    you to associate specific configuration values with different contexts,
+    such as environments, tenants, or any other use case you require.
+    """
+
     SEPARATOR = "/"
     ROOT = ""
     ROOT_LABEL = "/"
 
     def __init__(self, path: str = None) -> None:
+        """
+        Creates a new ConfigSet.
+        :param: Path of the ConfigSet in a hierarchical structure.
+        """
         error_location = [self.__class__.__name__, self.__init__.__name__]
         if path is None:
             path = ConfigSet.ROOT

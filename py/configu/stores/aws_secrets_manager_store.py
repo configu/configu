@@ -8,8 +8,8 @@ class AWSSecretsManagerConfigStore(KeyValueConfigStore):
 
     _client: SecretsManagerClient
 
-    def __init__(self) -> None:
-        self._client = boto3.client("secretsmanager")
+    def __init__(self, **boto3kwargs) -> None:
+        self._client = boto3.client("secretsmanager", **boto3kwargs)
         super().__init__(type="aws-secrets-manager")
 
     def get_by_key(self, key: str) -> str:
