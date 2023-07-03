@@ -76,7 +76,7 @@ export default class Find extends BaseCommand<typeof Find> {
 
   private findCfgu(projectPath: string) {
     return FastGlob.sync([path.join(projectPath, '/**/*.cfgu.json')], {
-      ignore: [...this.ignoredFiles].map((dirName) => path.join(projectPath, `/**/${dirName}`)),
+      ignore: [...this.ignoredFiles].map((ignoreFile) => path.join(projectPath, `/**/${ignoreFile}`)),
     });
   }
 
@@ -112,38 +112,30 @@ export default class Find extends BaseCommand<typeof Find> {
       cfguPaths.map(async (cfguFile) => {
         try {
           const schemaContents = await ConfigSchema.parse(new ConfigSchema(cfguFile));
-          const schemaKeys = Object.keys(schemaContents);
           if (!showTemplateKeys) {
-            try {
-              const schemaEntries = Object.entries(schemaContents);
-              const ignoredKeys = new Set(
-                schemaEntries
-                  .filter(([key, cfgu]) => !!cfgu.template)
-                  .flatMap(([key, cfgu]) => {
-                    return TMPL.parse(cfgu.template as string)
-                      .filter((templateSpan) => templateSpan.type === 'name')
-                      .map((templateSpan) => templateSpan.key);
-                  }),
-              );
-              return schemaEntries.filter(([key, cfgu]) => !ignoredKeys.has(key)).map(([key, cfgu]) => key);
-            } catch {
-              return schemaKeys;
-            }
+            const schemaEntries = Object.entries(schemaContents);
+            const ignoredKeys = new Set(
+              schemaEntries
+                .filter(([key, cfgu]) => !!cfgu.template)
+                .flatMap(([key, cfgu]) => {
+                  return TMPL.parse(cfgu.template as string)
+                    .filter((templateSpan) => templateSpan.type === 'name')
+                    .map((templateSpan) => templateSpan.key);
+                }),
+            );
+            return schemaEntries.filter(([key, cfgu]) => !ignoredKeys.has(key)).map(([key, cfgu]) => key);
           }
-          return schemaKeys;
+          return Object.keys(schemaContents);
         } catch {
           return [];
         }
       }),
     );
 
-    const keysRegEx: { [key: string]: { pattern: RegExp; count: number } } = _.mapValues(
-      _.mapKeys([...new Set(keysFromCfgu.flat())]),
-      (value, key) => ({
-        pattern: new RegExp(key, 'g'),
-        count: 0,
-      }),
-    );
+    const keysRegEx = _.mapValues(_.keyBy([...new Set(keysFromCfgu.flat())]), (key) => ({
+      pattern: new RegExp(key, 'g'),
+      count: 0,
+    }));
 
     const files = FastGlob.sync([path.join(projectPath, '/**/*.*')], {
       dot: true,
