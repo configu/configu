@@ -1,7 +1,7 @@
-from abc import abstractmethod, ABC
+from abc import ABC, abstractmethod
 from typing import List
 
-from .generated import ConfigStore as IConfigStore, ConfigStoreQuery, Config
+from .generated import Config, ConfigStore as IConfigStore, ConfigStoreQuery
 
 
 class ConfigStore(ABC, IConfigStore):
@@ -24,7 +24,6 @@ class ConfigStore(ABC, IConfigStore):
         retrieved.
         :return: A list of `Config`s from the store.
         """
-        pass
 
     @abstractmethod
     def set(self, configs: List[Config]) -> None:
@@ -32,4 +31,3 @@ class ConfigStore(ABC, IConfigStore):
         Upserts a set of `Config`s.
         :param configs: a list of `Config`s to be set in the store.
         """
-        pass

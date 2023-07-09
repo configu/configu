@@ -1,9 +1,8 @@
 import json
 import re
 from itertools import cycle
-from json import JSONDecodeError
 from pathlib import Path
-from typing import Callable, Dict
+from typing import Callable, Dict, Union
 
 import pyvalidator
 
@@ -97,17 +96,14 @@ class ConfigSchema(IConfigSchema):
         Reads the config schema file
         :return: contents of the config schema
         """
-        try:
-            with open(self.path, mode="r", encoding="utf-8") as schema_file:
-                file_content = schema_file.read()
-            return file_content
-        except (OSError, Exception):
-            return ""
+        with open(self.path, mode="r", encoding="utf-8") as schema_file:
+            file_content = schema_file.read()
+        return file_content
 
     @classmethod
     def parse(
         cls, scheme: "ConfigSchema"
-    ) -> Dict[str, ConfigSchemaContentsValue]:
+    ) -> Dict[str, Union[Cfgu, ConfigSchemaContentsValue]]:
         """
         Parses the given ConfigSchema
         :param scheme: The ConfigSchema to parse
@@ -116,14 +112,8 @@ class ConfigSchema(IConfigSchema):
         error_location = [cls.__name__, "parse"]
         schema_content = scheme.read()
         if scheme.type == ConfigSchemaType.JSON:
-            try:
-                schema_content = json.loads(schema_content)
-                schema_content = config_schema_contents_from_dict(
-                    schema_content
-                )
-            except (JSONDecodeError, Exception) as e:
-                print(e)
-                raise ValueError(error_message("Couldn't parse schema file"))
+            schema_content = json.loads(schema_content)
+            schema_content = config_schema_contents_from_dict(schema_content)
 
         # validate parsed
         for key, cfgu in schema_content.items():

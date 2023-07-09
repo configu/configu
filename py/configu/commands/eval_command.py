@@ -63,7 +63,6 @@ EvalCommandParameters = TypedDict(
         "validate": Optional[bool],
         "previous": Optional[EvalCommandReturn],
     },
-    total=False,
 )
 
 
@@ -75,18 +74,35 @@ class EvalCommand(Command[EvalCommandReturn]):
 
     parameters: EvalCommandParameters
 
-    def __init__(self, parameters: EvalCommandParameters) -> None:
+    def __init__(
+        self,
+        *,
+        store: ConfigStore,
+        set: ConfigSet,
+        schema: ConfigSchema,
+        configs: Dict[str, str] = None,
+        validate: bool = True,
+        previous: EvalCommandReturn = None,
+    ) -> None:
         """
         Creates a new EvalCommand.
-        :param parameters: dict
-            The command's parameters. Includes the following:
-             - store: the `ConfigStore` from which to fetch
-             - set: the `ConfigSet` to fetch
-             - schema: `ConfigSchema` to validate the config being fetched
-             - configs (optional): a dictionary of overrides to the fetched
-                `Config`s
+        :param store: the `ConfigStore` from which to fetch
+        :param set: the `ConfigSet` to fetch
+        :param schema: `ConfigSchema` to validate the config being fetched
+        :param configs: (optional) a dictionary of overrides to the fetched Config`s # noqa: E501
+        :param validate: (optional) run validation against schema. default True
+        :param previous: (optional) the return of the previous EvalCommand in case of pipes # noqa: E501
         """
-        super().__init__(parameters)
+        super().__init__(
+            EvalCommandParameters(
+                store=store,
+                set=set,
+                schema=schema,
+                configs=configs,
+                validate=validate,
+                previous=previous,
+            )
+        )
 
     def _eval_from_configs_override(
         self, result: EvalCommandReturn

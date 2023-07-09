@@ -13,7 +13,6 @@ ExportCommandParameters = TypedDict(
         "env": bool,
         "override": bool,
     },
-    total=False,
 )
 
 ExportCommandReturn = Dict[str, str]
@@ -24,8 +23,16 @@ class ExportCommand(Command[ExportCommandReturn]):
 
     parameters: ExportCommandParameters
 
-    def __init__(self, parameters: ExportCommandParameters) -> None:
-        super().__init__(parameters)
+    def __init__(
+        self,
+        data: EvalCommandReturn,
+        *,
+        env: bool = True,
+        override: bool = True,
+    ) -> None:
+        super().__init__(
+            ExportCommandParameters(data=data, env=env, override=override)
+        )
 
     def run(self):
         data = self.parameters["data"]

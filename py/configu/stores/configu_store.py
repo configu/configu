@@ -1,22 +1,17 @@
-from typing import List, Union, Dict
+from dataclasses import dataclass
+from typing import Dict, List
 
 import pyvalidator
 import requests
-from pydantic import BaseModel
 from requests.auth import AuthBase
 
-from ..core import ConfigStore, ConfigStoreQuery, Config
+from ..core import Config, ConfigStore, ConfigStoreQuery
 
 
-class ConfiguStoreCredentialsConfiguration(BaseModel):
+@dataclass
+class ConfiguStoreCredentials:
     org: str
     token: str
-
-
-class ConfiguStoreConfiguration(BaseModel):
-    credentials: ConfiguStoreCredentialsConfiguration
-    endpoint: str = "https://api.configu.com"
-    source: str = "sdk"
 
 
 class BearerAuth(AuthBase):
@@ -45,22 +40,23 @@ class ConfiguConfigStore(ConfigStore):
     _url: str
 
     def __init__(
-        self, store_config: Union[ConfiguStoreConfiguration, dict]
+        self,
+        credentials: ConfiguStoreCredentials,
+        endpoint: str = "https://api.configu.com",
+        source: str = "sdk",
     ) -> None:
         super().__init__(type="configu")
-        if isinstance(store_config, dict):
-            store_config = ConfiguStoreConfiguration.parse_obj(store_config)
         self._headers = {
-            "Org": store_config.credentials.org,
-            "Source": store_config.source,
+            "Org": credentials.org,
+            "Source": source,
         }
-        token = store_config.credentials.token
+        token = credentials.token
         self._auth = (
             BearerAuth(token)
             if pyvalidator.is_jwt(token)
             else TokenAuth(token)
         )
-        self._url = f"{store_config.endpoint}/config"
+        self._url = f"{endpoint}/config"
 
     def get(self, queries: List[ConfigStoreQuery]) -> List[Config]:
         queries_json = {"queries": [query.to_dict() for query in queries]}
@@ -73,12 +69,9 @@ class ConfiguConfigStore(ConfigStore):
         response.raise_for_status()
         return [Config(**args) for args in response.json()]
 
-    def set(self, configs: List[Union[Config, dict]]) -> None:
-        configs = [
-            Config(**config) if isinstance(config, dict) else config
-            for config in configs
-        ]
+    def set(self, configs: List[Config]) -> None:
         configs_json = {"configs": [config.to_dict() for config in configs]}
+
         response = requests.put(
             url=self._url,
             headers=self._headers,

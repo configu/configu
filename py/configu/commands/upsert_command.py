@@ -29,21 +29,31 @@ class UpsertCommand(Command):
 
     parameters: UpsertCommandParameters
 
-    def __init__(self, parameters: UpsertCommandParameters) -> None:
+    def __init__(
+        self,
+        *,
+        store: ConfigStore,
+        set: ConfigSet,
+        schema: ConfigSchema,
+        configs: Dict[str, str],
+    ) -> None:
         """
         Creates a new UpsertCommand.
-        :param parameters: dict
-            The command's parameters. Includes the following:
-            - store: the `ConfigStore` to which the command will write
-            - set: the `ConfigSet` to which the command will write
-            - schema: `ConfigSchema` to validate config being written
-            - configs: a dictionary of `Config`s to upsert
+        :param store: the `ConfigStore` to which the command will write
+        :param set: the `ConfigSet` to which the command will write
+        :param schema: `ConfigSchema` to validate config being written
+        :param configs: a dictionary of `Config`s to upsert
         """
-        super().__init__(parameters)
+        super().__init__(
+            UpsertCommandParameters(
+                store=store, set=set, schema=schema, configs=configs
+            )
+        )
 
     def run(self):
         """
-        Runs the upsert command.
+        Validates the configs against the schema and upsert to the store
+        :raise ValueError if any config is invalid for the schema
         """
         scope_location = ["UpsertCommand", "run"]
         store = self.parameters["store"]
