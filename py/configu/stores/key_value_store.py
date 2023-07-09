@@ -105,5 +105,7 @@ class KeyValueConfigStore(ConfigStore):
             else:
                 self.upsert(
                     key,
-                    json.dumps(value) if isinstance(value, dict) else value,
+                    json.dumps(value)
+                    if isinstance(value, dict)
+                    else str(value),
                 )
