@@ -103,4 +103,7 @@ class KeyValueConfigStore(ConfigStore):
             if value == "" or value is None:
                 self.delete(key)
             else:
-                self.upsert(key, json.dumps(value))
+                self.upsert(
+                    key,
+                    json.dumps(value) if isinstance(value, dict) else value,
+                )

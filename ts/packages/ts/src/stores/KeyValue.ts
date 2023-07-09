@@ -99,7 +99,7 @@ export abstract class KeyValueConfigStore extends ConfigStore {
         return;
       }
 
-      await this.upsert(key, JSON.stringify(value));
+      await this.upsert(key, _.isPlainObject(value) ? JSON.stringify(value) : String(value));
     });
 
     await Promise.all(setConfigsPromises);
