@@ -3,15 +3,16 @@ import re
 from itertools import cycle
 from json import JSONDecodeError
 from pathlib import Path
-from typing import Dict, Callable
+from typing import Callable, Dict
 
 import pyvalidator
 
 from .generated import (
-    ConfigSchema as IConfigSchema,
     Cfgu,
-    ConfigSchemaType,
     CfguType,
+    ConfigSchema as IConfigSchema,
+    ConfigSchemaContentsValue,
+    ConfigSchemaType,
     config_schema_contents_from_dict,
 )
 from ..utils import error_message, is_valid_name
@@ -78,7 +79,7 @@ class ConfigSchema(IConfigSchema):
     def __init__(self, path: str) -> None:
         """
         Creates a new ConfigSchema
-        :param path: path the the config file
+        :param path: path to the schema file (.cfgu.json)
         """
         error_location = [self.__class__.__name__, self.__init__.__name__]
         if re.match(rf".*({ConfigSchema.EXT})", path) is None:
@@ -104,7 +105,9 @@ class ConfigSchema(IConfigSchema):
             return ""
 
     @classmethod
-    def parse(cls, scheme: "ConfigSchema") -> Dict[str, Cfgu]:
+    def parse(
+        cls, scheme: "ConfigSchema"
+    ) -> Dict[str, ConfigSchemaContentsValue]:
         """
         Parses the given ConfigSchema
         :param scheme: The ConfigSchema to parse
