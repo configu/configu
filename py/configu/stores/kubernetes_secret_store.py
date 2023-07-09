@@ -12,7 +12,7 @@ class KubernetesSecretConfigStore(KeyValueConfigStore):
 
     def __init__(self, namespace: str, kubeconfig=None) -> None:
         """
-        :param namepace: The namespace of your secrets
+        :param namespace: The namespace of your secrets
         :param kubeconfig: (Optional) Path to your kube-config file.
         """
         config.load_kube_config(kubeconfig)

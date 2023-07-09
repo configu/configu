@@ -35,7 +35,7 @@ class TokenAuth(AuthBase):
 class ConfiguConfigStore(ConfigStore):
     """A `ConfigStore` persisted by Configu (https://app.configu.com)"""
 
-    _headers: Dict
+    _headers: Dict[str, str]
     _auth: AuthBase
     _url: str
 
@@ -71,7 +71,6 @@ class ConfiguConfigStore(ConfigStore):
 
     def set(self, configs: List[Config]) -> None:
         configs_json = {"configs": [config.to_dict() for config in configs]}
-
         response = requests.put(
             url=self._url,
             headers=self._headers,

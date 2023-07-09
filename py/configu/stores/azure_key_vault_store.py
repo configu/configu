@@ -13,7 +13,7 @@ class AzureKeyVaultConfigStore(KeyValueConfigStore):
         self,
         vault_url: str,
         credentials: TokenCredential = DefaultAzureCredential(),
-        **kwargs,
+        **client_kwargs,
     ) -> None:
         """
         :param vault_url: URL of the vault
@@ -23,8 +23,8 @@ class AzureKeyVaultConfigStore(KeyValueConfigStore):
           secrets client (see
           https://learn.microsoft.com/en-us/python/api/azure-keyvault-secrets/azure.keyvault.secrets.secretclient?view=azure-python)
         """
-        self._client = SecretClient(vault_url, credentials, **kwargs)
         super().__init__(type="azure-key-vault")
+        self._client = SecretClient(vault_url, credentials, **client_kwargs)
 
     def get_by_key(self, key: str) -> str:
         return self._client.get_secret(key).value or ""
