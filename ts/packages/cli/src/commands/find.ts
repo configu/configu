@@ -19,11 +19,11 @@ export default class Find extends BaseCommand<typeof Find> {
     },
     {
       description: `Find all config parameters and their usage in specific directory from provided CFGU file`,
-      command: `<%= config.bin %> <%= command.id %> <PATH_TO_SCAN> --cfgu <PATH_TO_CFGU>`,
+      command: `<%= config.bin %> <%= command.id %> --dir <PATH_TO_SCAN> --include <PATH_TO_CFGU>`,
     },
     {
       description: `Find all unused config parameters in specific directory`,
-      command: `<%= config.bin %> <%= command.id %> <PATH_TO_SCAN> --unused`,
+      command: `<%= config.bin %> <%= command.id %> --dir <PATH_TO_SCAN> --unused`,
     },
   ];
 
@@ -51,7 +51,7 @@ export default class Find extends BaseCommand<typeof Find> {
       default: false,
     }),
     templates: Flags.boolean({
-      description: 'Ignore parameters that are parts of templates and treat them as used parameters',
+      description: '[default: false] Show parameters that are parts of templates and treat them as used parameters',
       required: false,
       default: false,
       allowNo: true,
