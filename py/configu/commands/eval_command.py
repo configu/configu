@@ -51,7 +51,7 @@ EvalCommandReturnValue = TypedDict(
         "result": EvalCommandReturnResult,
     },
 )
-EvalCommandReturn = Dict[str, EvalCommandReturnValue]
+EvalCommandReturn = dict[str, EvalCommandReturnValue]
 
 EvalCommandParameters = TypedDict(
     "EvalCommandParameters",
@@ -311,23 +311,25 @@ class EvalCommand(Command[EvalCommandReturn]):
         schema = self.parameters["schema"]
         store.init()
         schema_contents = ConfigSchema.parse(schema)
-        result: EvalCommandReturn = {
-            key: {
-                "context": {
-                    "store": store.type,
-                    "set": set_.path,
-                    "schema": schema.path,
-                    "key": key,
-                    "cfgu": cfgu,
-                },
-                "result": {
-                    "origin": EvaluatedConfigOrigin.EmptyValue,
-                    "source": "",
-                    "value": "",
-                },
+        result = EvalCommandReturn(
+            {
+                key: {
+                    "context": {
+                        "store": store.type,
+                        "set": set_.path,
+                        "schema": schema.path,
+                        "key": key,
+                        "cfgu": cfgu,
+                    },
+                    "result": {
+                        "origin": EvaluatedConfigOrigin.EmptyValue,
+                        "source": "",
+                        "value": "",
+                    },
+                }
+                for key, cfgu in schema_contents.items()
             }
-            for key, cfgu in schema_contents.items()
-        }
+        )
         result = {**result, **self._eval_from_configs_override(result)}
         result = {
             **result,
