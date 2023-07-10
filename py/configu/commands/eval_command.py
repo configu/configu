@@ -70,6 +70,16 @@ class EvalCommand(Command[EvalCommandReturn]):
     """
     The Eval command is used to fetch and validate `Config`s from `ConfigStore`
     on demand.
+
+    :param ConfigStore store: the store from which to fetch
+    :param ConfigSet set: the set` to fetch
+    :param ConfigSchema schema: schema to validate the config being fetched
+    :param Dict[str,str] configs: (optional) a dictionary of overrides
+    to the fetched Config`s
+    :param bool validate: (optional) run validation against schema.
+     default True
+    :param EvalCommandReturn previous: (optional) the return of the
+    previous EvalCommand in case of pipes
     """
 
     parameters: EvalCommandParameters
@@ -84,15 +94,6 @@ class EvalCommand(Command[EvalCommandReturn]):
         validate: bool = True,
         previous: EvalCommandReturn = None,
     ) -> None:
-        """
-        Creates a new EvalCommand.
-        :param store: the `ConfigStore` from which to fetch
-        :param set: the `ConfigSet` to fetch
-        :param schema: `ConfigSchema` to validate the config being fetched
-        :param configs: (optional) a dictionary of overrides to the fetched Config`s # noqa: E501
-        :param validate: (optional) run validation against schema. default True
-        :param previous: (optional) the return of the previous EvalCommand in case of pipes # noqa: E501
-        """
         super().__init__(
             EvalCommandParameters(
                 store=store,
@@ -303,8 +304,10 @@ class EvalCommand(Command[EvalCommandReturn]):
     def run(self):
         """
         Runs the eval command.
-        :return EvalCommandReturn:
-        Contains the command's results and metadata
+        :returns The evaluated configs contains the command's
+        results and metadata
+        :rtype EvalCommandReturn
+        :raises AnyError: If anything bad happens.
         """
         store = self.parameters["store"]
         set_ = self.parameters["set"]
