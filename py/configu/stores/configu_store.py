@@ -42,6 +42,7 @@ class ConfiguConfigStore(ConfigStore):
     def __init__(
         self,
         credentials: ConfiguStoreCredentials,
+        *,
         endpoint: str = "https://api.configu.com",
         source: str = "sdk",
     ) -> None:
