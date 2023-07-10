@@ -68,18 +68,20 @@ EvalCommandParameters = TypedDict(
 
 class EvalCommand(Command[EvalCommandReturn]):
     """
-    The Eval command is used to fetch and validate `Config`s from `ConfigStore`
+    The Eval command is used to fetch and validate `Config`s from ConfigStore
     on demand.
-
-    :param ConfigStore store: the store from which to fetch
-    :param ConfigSet set: the set` to fetch
-    :param ConfigSchema schema: schema to validate the config being fetched
-    :param Dict[str,str] configs: (optional) a dictionary of overrides
-    to the fetched Config`s
-    :param bool validate: (optional) run validation against schema.
-     default True
-    :param EvalCommandReturn previous: (optional) the return of the
-    previous EvalCommand in case of pipes
+    :param store: the store from which to fetch
+    :type store: ConfigStore
+    :param set: the set` to fetch
+    :type set: ConfigSet
+    :param schema: schema to validate the config being fetched
+    :type schema: ConfigSchema
+    :param configs: a dictionary of overrides to the fetched Config`s
+    :type configs: Dict[str,str], optional
+    :param validate: run validation against schema, defaults to True
+    :type validate:bool. optional
+    :param previous: the return of the previous EvalCommand in case of pipes
+    :type previous: EvalCommandReturn. optional
     """
 
     parameters: EvalCommandParameters
