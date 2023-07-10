@@ -106,29 +106,28 @@ export default class Find extends BaseCommand<typeof Find> {
         `no cfgu file found or provided. If you have another type of configuration file, run configu init --import=<CONFIG-FILE> --defaults to generate a cfgu from it`,
       );
 
-    const keysFromCfgu = await Promise.all(
-      cfguPaths.map(async (cfguFile) => {
-        try {
-          const schemaContents = await ConfigSchema.parse(new ConfigSchema(cfguFile));
-          if (!showTemplateKeys) {
-            const schemaEntries = Object.entries(schemaContents);
-            const ignoredKeys = new Set(
-              schemaEntries
-                .filter(([key, cfgu]) => !!cfgu.template)
-                .flatMap(([key, cfgu]) => {
-                  return TMPL.parse(cfgu.template as string)
-                    .filter((templateSpan) => templateSpan.type === 'name')
-                    .map((templateSpan) => templateSpan.key);
-                }),
-            );
-            return schemaEntries.filter(([key, cfgu]) => !ignoredKeys.has(key)).map(([key, cfgu]) => key);
-          }
-          return Object.keys(schemaContents);
-        } catch {
-          return [];
+    const keysFromCfguPromises = cfguPaths.map(async (cfguFile) => {
+      try {
+        const schemaContents = await ConfigSchema.parse(new ConfigSchema(cfguFile));
+        if (!showTemplateKeys) {
+          const schemaEntries = Object.entries(schemaContents);
+          const ignoredKeys = new Set(
+            schemaEntries
+              .filter(([key, cfgu]) => !!cfgu.template)
+              .flatMap(([key, cfgu]) => {
+                return TMPL.parse(cfgu.template as string)
+                  .filter((templateSpan) => templateSpan.type === 'name')
+                  .map((templateSpan) => templateSpan.key);
+              }),
+          );
+          return schemaEntries.filter(([key, cfgu]) => !ignoredKeys.has(key)).map(([key, cfgu]) => key);
         }
-      }),
-    );
+        return Object.keys(schemaContents);
+      } catch {
+        return [];
+      }
+    });
+    const keysFromCfgu = await Promise.all(keysFromCfguPromises);
 
     const keysRegEx = _.mapValues(_.keyBy([...new Set(keysFromCfgu.flat())]), (key) => ({
       pattern: new RegExp(key, 'g'),
@@ -139,25 +138,24 @@ export default class Find extends BaseCommand<typeof Find> {
       dot: true,
       ignore: [...[...ignoredFiles].map((dirName) => path.join(findInDirectory, `/**/${dirName}`)), '/**/*.json'],
     });
-
-    await Promise.all(
-      files.map((file) =>
-        this.processLineByLine(file, (line, lineIndex) => {
-          Object.keys(keysRegEx).map(async (key) => {
-            const keyRegEx = keysRegEx[key];
-            if (keyRegEx) {
-              const regEx = keyRegEx.pattern;
-              const match = regEx.exec(line);
-              if (line && match) {
-                keyRegEx.count += 1;
-                if (!showUnusedOnly)
-                  this.log(`${file.replace(findInDirectory, '...')}:${lineIndex}:${match.index} [${regEx.source}]`);
-              }
+    const findInFilesPromises = files.map((file) =>
+      this.processLineByLine(file, (line, lineIndex) => {
+        Object.keys(keysRegEx).map(async (key) => {
+          const keyRegEx = keysRegEx[key];
+          if (keyRegEx) {
+            const regEx = keyRegEx.pattern;
+            const match = regEx.exec(line);
+            if (line && match) {
+              keyRegEx.count += 1;
+              if (!showUnusedOnly)
+                this.log(`${file.replace(findInDirectory, '...')}:${lineIndex}:${match.index} [${regEx.source}]`);
             }
-          });
-        }),
-      ),
+          }
+        });
+      }),
     );
+    await Promise.all(findInFilesPromises);
+
     const unusedKeys = Object.keys(keysRegEx).filter((key) => keysRegEx[key]?.count === 0);
     if (unusedKeys.length > 0) this.log(`Unused configs found: ${unusedKeys.join(', ')}`);
     else if (showUnusedOnly) this.log('No unused configs found');
