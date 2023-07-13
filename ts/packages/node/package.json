@@ -51,6 +51,7 @@
     "typeorm": "^0.3.16"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.195"
+    "@types/lodash": "^4.14.195",
+    "keyv": "^4.5.2"
   }
 }
