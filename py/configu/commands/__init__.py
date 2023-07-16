@@ -21,6 +21,7 @@ __all__ = [
     "EvalCommandReturnResult",
     "EvalCommandReturnValue",
     "UpsertCommand",
+    "UpsertCommandParameters",
     "ExportCommand",
     "ExportCommandParameters",
     "ExportCommandReturn",
