@@ -21,23 +21,21 @@ config_store = configu.InMemoryConfigStore()
 test_set = configu.ConfigSet("test")
 schema = configu.ConfigSchema("get-started.cfgu.json")
 
-configu.UpsertCommand({
-    "store": config_store,
-    "set": test_set,
-    "schema": schema,
-    "configs": {
-        'GREETING': 'hey',
-        'SUBJECT': 'configu python sdk'
-    },
-}).run()
+configu.UpsertCommand(
+  store=config_store,
+  set=test_set,
+  schema=schema,
+  configs={
+    "GREETING": "hello",
+    "SUBJECT": "configu python sdk",
+  },
+).run()
 
-data = configu.EvalCommand({
-    "store": config_store,
-    "set": test_set,
-    "schema": schema,
-}).run()
+data = configu.EvalCommand(
+  store=config_store, set=test_set, schema=schema
+).run()
 
-configuration_data = configu.ExportCommand({"data": data}).run()
+configuration_data = configu.ExportCommand(data=data).run()
 
 print(os.environ["MESSAGE"])
 # hey, configu python sdk!
@@ -53,7 +51,8 @@ See [oss.configu.com/py](https://oss.configu.com/py/configu.html)
 
 ### Requirements
 
-1. Follow the [Development](https://github.com/configu/configu/blob/main/CONTRIBUTING.md#development) section from the `CONTRIBUTING.md`.
+1. Follow the [Development](https://github.com/configu/configu/blob/main/CONTRIBUTING.md#development) section from
+   the `CONTRIBUTING.md`.
 2. Install [pyenv](https://github.com/pyenv/pyenv) | [Homebrew](https://formulae.brew.sh/formula/pyenv)
 3. Install [poetry](https://python-poetry.org/) | [Homebrew](https://formulae.brew.sh/formula/poetry)
 
@@ -83,4 +82,5 @@ poetry install
 
 ### Contribute
 
-Follow the [Sending a Pull Request](https://github.com/configu/configu/blob/main/CONTRIBUTING.md#sending-a-pull-request) section from the `CONTRIBUTING.md`.
+Follow the [Sending a Pull Request](https://github.com/configu/configu/blob/main/CONTRIBUTING.md#sending-a-pull-request)
+section from the `CONTRIBUTING.md`.
