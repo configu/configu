@@ -53,9 +53,7 @@ class ConfiguConfigStore(ConfigStore):
         }
         token = credentials.token
         self._auth = (
-            BearerAuth(token)
-            if pyvalidator.is_jwt(token)
-            else TokenAuth(token)
+            BearerAuth(token) if pyvalidator.is_jwt(token) else TokenAuth(token)
         )
         self._url = f"{endpoint}/config"
 

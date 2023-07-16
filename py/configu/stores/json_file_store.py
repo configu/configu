@@ -49,7 +49,5 @@ class JsonFileConfigStore(ConfigStore):
             for config in stored_configs
             if f"{config.set}.{config.key}" not in set_config_ids
         ]
-        next_configs = [
-            config for config in existing + configs if bool(config.value)
-        ]
+        next_configs = [config for config in existing + configs if bool(config.value)]
         self.write(next_configs)

@@ -64,9 +64,7 @@ class KeyValueConfigStore(ConfigStore):
             try:
                 value = self.get_by_key(self._calc_key(query))
                 if query.set:
-                    value = str(
-                        self._safe_json_parse(value).get(query.key, "")
-                    )
+                    value = str(self._safe_json_parse(value).get(query.key, ""))
                 if value:
                     stored_configs.append(
                         Config.from_dict(
@@ -89,9 +87,7 @@ class KeyValueConfigStore(ConfigStore):
                 key_value_dict[key] = config.value
                 continue
 
-            if key not in key_value_dict or not isinstance(
-                key_value_dict[key], dict
-            ):
+            if key not in key_value_dict or not isinstance(key_value_dict[key], dict):
                 key_value_dict[key] = {}
 
             key_value_dict[key] = {
@@ -105,7 +101,5 @@ class KeyValueConfigStore(ConfigStore):
             else:
                 self.upsert(
                     key,
-                    json.dumps(value)
-                    if isinstance(value, dict)
-                    else str(value),
+                    json.dumps(value) if isinstance(value, dict) else str(value),
                 )

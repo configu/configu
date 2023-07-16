@@ -67,13 +67,8 @@ class ConfigSchema(IConfigSchema):
 
     CFGU = ConfigSchemaDefinition
 
-    TYPES = {
-        f".{schema_type.value}": schema_type
-        for schema_type in ConfigSchemaType
-    }
-    EXT = " | ".join(
-        ["".join(ext) for ext in zip(cycle(CFGU.EXT), TYPES.keys())]
-    )
+    TYPES = {f".{schema_type.value}": schema_type for schema_type in ConfigSchemaType}
+    EXT = " | ".join(["".join(ext) for ext in zip(cycle(CFGU.EXT), TYPES.keys())])
 
     def __init__(self, path: str) -> None:
         """
@@ -122,8 +117,7 @@ class ConfigSchema(IConfigSchema):
                     error_message(
                         f"invalid key {key}",
                         error_location + [key],
-                        f"path nodes mustn't contain "
-                        f"reserved words '${key}'",
+                        f"path nodes mustn't contain " f"reserved words '${key}'",
                     )
                 )
             if cfgu.type == CfguType.REG_EX and cfgu.pattern is None:
@@ -132,8 +126,7 @@ class ConfigSchema(IConfigSchema):
                         "invalid type property",
                         error_location + [key, cfgu.type.value],
                     ),
-                    f"type '{cfgu.type.value}' must come with"
-                    f" a pattern property",
+                    f"type '{cfgu.type.value}' must come with" f" a pattern property",
                 )
             if cfgu.default is not None:
                 if cfgu.required is not None or cfgu.template is not None:
@@ -166,12 +159,7 @@ class ConfigSchema(IConfigSchema):
 
             if cfgu.depends is not None and (
                 not len(cfgu.depends)
-                or any(
-                    [
-                        not is_valid_name(dependency)
-                        for dependency in cfgu.depends
-                    ]
-                )
+                or any([not is_valid_name(dependency) for dependency in cfgu.depends])
             ):
                 raise ValueError(
                     error_message(
