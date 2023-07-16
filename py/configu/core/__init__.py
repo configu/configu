@@ -1,23 +1,23 @@
+from .generated import (
+    Cfgu,
+    CfguType,
+    Config,
+    ConfigSchemaType,
+    ConfigStoreQuery,
+)
 from .command import Command
 from .config_schema import ConfigSchema
 from .config_set import ConfigSet
 from .config_store import ConfigStore
-from .generated import (
-    Cfgu,
-    CfguType,
-    ConfigSchemaType,
-    Config,
-    ConfigStoreQuery,
-)
 
-__all_ = [
-    "Command",
+__all__ = [
+    "Cfgu",
+    "CfguType",
     "Config",
+    "ConfigSchemaType",
     "ConfigStoreQuery",
+    "Command",
     "ConfigSchema",
     "ConfigSet",
     "ConfigStore",
-    "Cfgu",
-    "CfguType",
-    "ConfigSchemaType",
 ]

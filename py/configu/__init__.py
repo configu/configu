@@ -1,45 +1,25 @@
-from .commands import EvalCommand, ExportCommand, UpsertCommand
 from .core import (
-    Cfgu,
-    CfguType,
-    Command,
     Config,
     ConfigSchema,
-    ConfigSchemaType,
     ConfigSet,
-    ConfigStore,
     ConfigStoreQuery,
 )
 from .stores import (
+    AWSSecretsManagerConfigStore,
+    AzureKeyVaultConfigStore,
     ConfiguConfigStore,
+    ConfiguStoreCredentials,
+    GCPSecretManagerConfigStore,
+    HashicorpVaultConfigStore,
     InMemoryConfigStore,
     JsonFileConfigStore,
-    AWSSecretsManagerConfigStore,
-    HashicorpVaultConfigStore,
-    AzureKeyVaultConfigStore,
-    GCPSecretManagerConfigStore,
     KubernetesSecretConfigStore,
 )
+from .commands import (
+    EvalCommand,
+    ExportCommand,
+    UpsertCommand,
+)
 
-__all__ = [
-    "EvalCommand",
-    "UpsertCommand",
-    "ExportCommand",
-    "Command",
-    "Config",
-    "ConfigStoreQuery",
-    "ConfigSchema",
-    "ConfigSet",
-    "ConfigStore",
-    "Cfgu",
-    "CfguType",
-    "ConfigSchemaType",
-    "InMemoryConfigStore",
-    "ConfiguConfigStore",
-    "JsonFileConfigStore",
-    "AWSSecretsManagerConfigStore",
-    "HashicorpVaultConfigStore",
-    "AzureKeyVaultConfigStore",
-    "GCPSecretManagerConfigStore",
-    "KubernetesSecretConfigStore",
-]
+__doc__ = """.. include:: ../DOCS.md"""
+__all__ = ["core", "stores", "commands"]

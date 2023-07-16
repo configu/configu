@@ -6,16 +6,15 @@ from ..core import (
     Command,
 )
 
-ExportCommandParameters = TypedDict(
-    "ExportCommandParameters",
-    {
-        "data": EvalCommandReturn,
-        "env": bool,
-        "override": bool,
-    },
-)
 
-ExportCommandReturn = Dict[str, str]
+class ExportCommandParameters(TypedDict):
+    data: EvalCommandReturn
+    env: bool
+    override: bool
+
+
+class ExportCommandReturn(Dict[str, str]):
+    """Dict of key:value"""
 
 
 class ExportCommand(Command[ExportCommandReturn]):
@@ -30,9 +29,7 @@ class ExportCommand(Command[ExportCommandReturn]):
         env: bool = True,
         override: bool = True,
     ) -> None:
-        super().__init__(
-            ExportCommandParameters(data=data, env=env, override=override)
-        )
+        super().__init__(ExportCommandParameters(data=data, env=env, override=override))
 
     def run(self):
         data = self.parameters["data"]

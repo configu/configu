@@ -10,15 +10,12 @@ from ..core import (
 )
 from ..utils import error_message
 
-UpsertCommandParameters = TypedDict(
-    "UpsertCommandParameters",
-    {
-        "store": ConfigStore,
-        "set": ConfigSet,
-        "schema": ConfigSchema,
-        "configs": Dict[str, str],
-    },
-)
+
+class UpsertCommandParameters(TypedDict):
+    store: ConfigStore
+    set: ConfigSet
+    schema: ConfigSchema
+    configs: Dict[str, str]
 
 
 class UpsertCommand(Command):
@@ -39,10 +36,10 @@ class UpsertCommand(Command):
     ) -> None:
         """
         Creates a new UpsertCommand.
-        :param store: the `ConfigStore` to which the command will write
-        :param set: the `ConfigSet` to which the command will write
-        :param schema: `ConfigSchema` to validate config being written
-        :param configs: a dictionary of `Config`s to upsert
+        :param store: the `configu.core.ConfigStore` to which the command will write
+        :param set: the `configu.core.ConfigSet` to which the command will write
+        :param schema: `configu.core.ConfigSchema` to validate config being written
+        :param configs: a dictionary of configs to upsert
         """
         super().__init__(
             UpsertCommandParameters(
@@ -51,9 +48,9 @@ class UpsertCommand(Command):
         )
 
     def run(self):
-        """
-        Validates the configs against the schema and upsert to the store
-        :raise ValueError if any config is invalid for the schema
+        """Validates the configs against the schema and upsert to the store
+
+        :raises ValueError: if any config is invalid for the schema
         """
         scope_location = ["UpsertCommand", "run"]
         store = self.parameters["store"]
@@ -70,8 +67,7 @@ class UpsertCommand(Command):
                     error_message(
                         f"invalid config key '{key}'",
                         scope_location,
-                        f"key '{key}' must be declared"
-                        f" on schema {schema.path}",
+                        f"key '{key}' must be declared" f" on schema {schema.path}",
                     )
                 )
             if value and cfgu.template is not None:
@@ -82,9 +78,7 @@ class UpsertCommand(Command):
                         "keys declared with template mustn't have a value",
                     )
                 )
-            type_test = ConfigSchema.CFGU.VALIDATORS.get(
-                cfgu.type.value, lambda: False
-            )
+            type_test = ConfigSchema.CFGU.VALIDATORS.get(cfgu.type.value, lambda: False)
             test_values = (
                 (
                     value,
