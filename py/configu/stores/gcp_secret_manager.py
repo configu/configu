@@ -1,5 +1,8 @@
 from google.cloud.secretmanager import SecretManagerServiceClient
-from google.cloud.secretmanager_v1 import Secret, SecretPayload
+from google.cloud.secretmanager_v1 import (
+    Secret,
+    SecretPayload,
+)
 
 from .key_value_store import KeyValueConfigStore
 
@@ -33,9 +36,14 @@ class GCPSecretManagerConfigStore(KeyValueConfigStore):
         formatted_key = self._format_key(key)
         secret = Secret()
         secret.replication.automatic = {}
-        self._client.create_secret(
-            parent=f"projects/{self._project_id}", secret_id=key, secret=secret
-        )
+        try:
+            self._client.create_secret(
+                parent=f"projects/{self._project_id}",
+                secret_id=key,
+                secret=secret,
+            )
+        except (Exception,):
+            pass
         self._add_secret_version(formatted_key, value)
 
     def delete(self, key: str):
