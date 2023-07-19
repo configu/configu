@@ -13,7 +13,7 @@ class JsonFileConfigStore(ConfigStore):
         super().__init__(type="json-file")
         self._path = path
 
-    def read(self) -> List[Config]:
+    def _read(self) -> List[Config]:
         """
         Reads JSON file contents
         :return: The file contents, represented as a list of Config
@@ -23,7 +23,7 @@ class JsonFileConfigStore(ConfigStore):
             data = json.load(json_file)
         return [Config(**args) for args in data]
 
-    def write(self, configs: List[Config]) -> None:
+    def _write(self, configs: List[Config]) -> None:
         """
         Writes to the JSON file
         :param configs: a list of key/set/value dicts to write
@@ -33,7 +33,7 @@ class JsonFileConfigStore(ConfigStore):
             json.dump(data, json_file)
 
     def get(self, queries: List[ConfigStoreQuery]) -> List[Config]:
-        stored_configs = self.read()
+        stored_configs = self._read()
         query_ids = [f"{query.set}.{query.key}" for query in queries]
         return [
             config
@@ -42,7 +42,7 @@ class JsonFileConfigStore(ConfigStore):
         ]
 
     def set(self, configs: List[Config]) -> None:
-        stored_configs = self.read()
+        stored_configs = self._read()
         set_config_ids = [f"{config.set}.{config.key}" for config in configs]
         existing = [
             config
@@ -50,4 +50,4 @@ class JsonFileConfigStore(ConfigStore):
             if f"{config.set}.{config.key}" not in set_config_ids
         ]
         next_configs = [config for config in existing + configs if bool(config.value)]
-        self.write(next_configs)
+        self._write(next_configs)
