@@ -21,5 +21,8 @@ from .commands import (
     UpsertCommand,
 )
 
-__doc__ = """.. include:: ../DOCS.md"""
+__doc__ = """
+.. include:: ../README.md
+.. include:: ../DOCS.md
+"""
 __all__ = ["core", "stores", "commands"]

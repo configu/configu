@@ -1,58 +1,15 @@
-# @configu/py
+# Package Table of Contents
 
-Configu SDK for Python
-
-## Install
-
-To install the this package, simply type install [configu](https://pypi.org/project/configu/) using pip:
-
-```bash
-pip install configu
-```
-
-## Usage
-
-```py
-import os
-
-import configu
-
-config_store = configu.InMemoryConfigStore()
-dev_set = configu.ConfigSet("Development")
-schema = configu.ConfigSchema("get-started.cfgu.json")
-
-configu.UpsertCommand(
-  store=config_store,
-  set=dev_set,
-  schema=schema,
-  configs={
-    "GREETING": "hello",
-    "SUBJECT": "configu python sdk",
-  }
-).run()
-
-data = configu.EvalCommand(store=config_store, set=dev_set, schema=schema).run()
-configuration_data = configu.ExportCommand(data=data).run()
-
-print(os.environ["MESSAGE"])
-# hey, configu python sdk!
-
-print(configuration_data)
-# {'GREETING': 'hey', 'SUBJECT': 'configu python sdk', 'MESSAGE': 'hey, configu python sdk!'}
-```
-
-# Core
-
-### [TBD] Description
+## Core
 
 - Config - `configu.core.Config`
 - ConfigSchema - `configu.core.ConfigSchema`
 - ConfigSet - `configu.core.ConfigSet`
 - ConfigStoreQuery - `configu.core.ConfigStoreQuery`
 
-# Stores
+###### See also: [Terminology](https://configu.com/docs/terminology/)
 
-### [TBD] Description
+## Stores
 
 - ConfiguConfigStore - `configu.stores.ConfiguConfigStore`
 - AWSSecretsManagerConfigStore - `configu.stores.AWSSecretsManagerConfigStore`
@@ -63,11 +20,13 @@ print(configuration_data)
 - JsonFileConfigStore - `configu.stores.JsonFileConfigStore`
 - KubernetesSecretConfigStore - `configu.stores.KubernetesSecretConfigStore`
 
-# Commands
+###### See also: [Available Stores](https://configu.com/docs/config-store/#available-stores)
 
-### [TBD] Description
+## Commands
 
 - UpsertCommand - `configu.commands.UpsertCommand`
 - EvalCommand - `configu.commands.EvalCommand`
 - ExportCommand - `configu.commands.ExportCommand`
+
+###### See also: [Commands](https://configu.com/docs/commands/)
 

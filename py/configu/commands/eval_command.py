@@ -1,8 +1,9 @@
 from enum import Enum
 from functools import reduce
-from typing import Any, Dict, Tuple, TypedDict
+from typing import Dict, Tuple, TypedDict
 
 from ..core import (
+    Cfgu,
     CfguType,
     Command,
     Config,
@@ -27,11 +28,11 @@ class EvalCommandReturnContext(TypedDict):
     set: str
     schema: str
     key: str
-    cfgu: Dict[str, Any]
+    cfgu: Cfgu
 
 
 class EvalCommandReturnResult(TypedDict):
-    origin: str
+    origin: EvaluatedConfigOrigin
     source: str
     value: str
 
@@ -102,7 +103,7 @@ class EvalCommand(Command[EvalCommandReturn]):
         for key, value in result.items():
             if key in self.parameters["configs"]:
                 override_value = self.parameters["configs"][key]
-                value["result"]["origin"] = EvaluatedConfigOrigin.ConfigsOverride.value
+                value["result"]["origin"] = EvaluatedConfigOrigin.ConfigsOverride
                 value["result"]["source"] = f"parameters.configs.{key}={override_value}"
                 value["result"]["value"] = override_value
         return result
@@ -125,7 +126,7 @@ class EvalCommand(Command[EvalCommandReturn]):
         for key, value in result.items():
             if key in store_configs:
                 store_config = store_configs[key]
-                value["result"]["origin"] = EvaluatedConfigOrigin.StoreSet.value
+                value["result"]["origin"] = EvaluatedConfigOrigin.StoreSet
                 value["result"]["source"] = (
                     f"parameters.store={value['context']['store']},"
                     f"parameters.set={value['context']['set']}"
@@ -138,21 +139,20 @@ class EvalCommand(Command[EvalCommandReturn]):
         for key, value in result.items():
             context = value["context"]
             cfgu = context["cfgu"]
-            if cfgu.get("template"):
-                value["result"]["origin"] = EvaluatedConfigOrigin.SchemaTemplate.value
+            if cfgu.template:
+                value["result"]["origin"] = EvaluatedConfigOrigin.SchemaTemplate
                 value["result"]["source"] = (
                     f"parameters.schema={context['schema']}"
-                    f".template={cfgu.get('template')}"
+                    f".template={cfgu.template}"
                 )
                 value["result"]["value"] = ""
 
-            if cfgu.get("default"):
-                value["result"]["origin"] = EvaluatedConfigOrigin.SchemaDefault.value
+            if cfgu.default:
+                value["result"]["origin"] = EvaluatedConfigOrigin.SchemaDefault
                 value["result"]["source"] = (
-                    f"parameters.schema={context['schema']}"
-                    f".default={cfgu.get('default')}"
+                    f"parameters.schema={context['schema']}" f".default={cfgu.default}"
                 )
-                value["result"]["value"] = cfgu.get("default")
+                value["result"]["value"] = cfgu.default
         return result
 
     def _validate_result(self, result: EvalCommandReturn):
@@ -162,14 +162,14 @@ class EvalCommand(Command[EvalCommandReturn]):
                 cfgu = value["context"]["cfgu"]
                 evaluated_value = value["result"]["value"]
                 type_test = ConfigSchema.CFGU.VALIDATORS.get(
-                    cfgu.get("type"), lambda: False
+                    cfgu.type.value, lambda: False
                 )
                 test_values = (
                     (
                         evaluated_value,
-                        cfgu.get("pattern"),
+                        cfgu.pattern,
                     )
-                    if cfgu.get("type") == CfguType.REG_EX.value
+                    if cfgu.type == CfguType.REG_EX
                     else (evaluated_value,)
                 )
                 if not type_test(*test_values):
@@ -177,20 +177,20 @@ class EvalCommand(Command[EvalCommandReturn]):
                         error_message(
                             f"invalid value type for key '{key}'", error_scope
                         ),
-                        f"value '{test_values[0]}' must be a " f"'{cfgu.get('type')}'",
+                        f"value '{test_values[0]}' must be a " f"'{cfgu.type}'",
                     )
-                if cfgu.get("required") is not None and not bool(test_values[0]):
+                if cfgu.required is not None and not bool(test_values[0]):
                     raise ValueError(
                         error_message(
                             f"required key '{key}' is missing a value",
                             error_scope,
                         )
                     )
-                if bool(test_values[0]) and cfgu.get("depends") is not None:
+                if bool(test_values[0]) and cfgu.depends is not None:
                     if any(
                         [
                             True
-                            for dep in cfgu.get("depends")
+                            for dep in cfgu.depends
                             if dep not in result.keys()
                             or not bool(result[dep]["result"]["value"])
                         ]
@@ -214,9 +214,8 @@ class EvalCommand(Command[EvalCommandReturn]):
         ):
             key, value = current
             if key not in merged or (
-                merged[key]["result"]["origin"]
-                == EvaluatedConfigOrigin.EmptyValue.value
-                and value["result"]["origin"] != EvaluatedConfigOrigin.EmptyValue.value
+                merged[key]["result"]["origin"] == EvaluatedConfigOrigin.EmptyValue
+                and value["result"]["origin"] != EvaluatedConfigOrigin.EmptyValue
             ):
                 merged[key] = value
             return merged
@@ -233,8 +232,7 @@ class EvalCommand(Command[EvalCommandReturn]):
             {
                 key
                 for key, value in result.items()
-                if value["result"]["origin"]
-                == EvaluatedConfigOrigin.SchemaTemplate.value
+                if value["result"]["origin"] == EvaluatedConfigOrigin.SchemaTemplate
             }
         )
         should_render_templates = True
@@ -242,7 +240,7 @@ class EvalCommand(Command[EvalCommandReturn]):
             has_rendered_at_least_once = False
             for key in template_keys:
                 context = result[key]["context"]
-                template = context["cfgu"].get("template")
+                template = context["cfgu"].template
                 expressions = parse_template(template)
                 if any([True for exp in expressions if exp in template_keys]):
                     continue
@@ -297,10 +295,10 @@ class EvalCommand(Command[EvalCommandReturn]):
                         "set": set_.path,
                         "schema": schema.path,
                         "key": key,
-                        "cfgu": cfgu.to_dict(),
+                        "cfgu": cfgu,
                     },
                     "result": {
-                        "origin": EvaluatedConfigOrigin.EmptyValue.value,
+                        "origin": EvaluatedConfigOrigin.EmptyValue,
                         "source": "",
                         "value": "",
                     },
@@ -320,8 +318,8 @@ class EvalCommand(Command[EvalCommandReturn]):
                             key: value
                             for key, value in result.items()
                             if value["result"]["origin"]
-                            == EvaluatedConfigOrigin.EmptyValue.value
-                            and not value["context"]["cfgu"].get("template")
+                            == EvaluatedConfigOrigin.EmptyValue
+                            and not value["context"]["cfgu"].template
                         }
                     )
                 ),
@@ -336,7 +334,7 @@ class EvalCommand(Command[EvalCommandReturn]):
                             key: value
                             for key, value in result.items()
                             if value["result"]["origin"]
-                            == EvaluatedConfigOrigin.EmptyValue.value
+                            == EvaluatedConfigOrigin.EmptyValue
                         }
                     )
                 ),
