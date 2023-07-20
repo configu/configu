@@ -2,7 +2,7 @@ import json
 import re
 from itertools import cycle
 from pathlib import Path
-from typing import Callable, Dict, Union
+from typing import Callable, Dict
 
 import pyvalidator
 
@@ -10,9 +10,7 @@ from .generated import (
     Cfgu,
     CfguType,
     ConfigSchema as IConfigSchema,
-    ConfigSchemaContentsValue,
     ConfigSchemaType,
-    config_schema_contents_from_dict,
 )
 from ..utils import error_message, is_valid_name
 
@@ -96,9 +94,7 @@ class ConfigSchema(IConfigSchema):
         return file_content
 
     @classmethod
-    def parse(
-        cls, scheme: "ConfigSchema"
-    ) -> Dict[str, Union[Cfgu, ConfigSchemaContentsValue]]:
+    def parse(cls, scheme: "ConfigSchema") -> Dict[str, Cfgu]:
         """
         Parses the given ConfigSchema
         :param scheme: The ConfigSchema to parse
@@ -108,7 +104,8 @@ class ConfigSchema(IConfigSchema):
         schema_content = scheme.read()
         if scheme.type == ConfigSchemaType.JSON:
             schema_content = json.loads(schema_content)
-            schema_content = config_schema_contents_from_dict(schema_content)
+            assert isinstance(schema_content, dict)
+            schema_content = {k: Cfgu.from_dict(v) for (k, v) in schema_content.items()}
 
         # validate parsed
         for key, cfgu in schema_content.items():
