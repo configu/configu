@@ -88,11 +88,14 @@ class UpsertCommand(Command):
                 else (value,)
             )
             if value and not type_test(*test_values):
+                of_type = cfgu.type.value
+                if cfgu.type == CfguType.REG_EX:
+                    of_type += f"({cfgu.pattern})"
                 raise ValueError(
                     error_message(
                         f"invalid config value '{value}' for key '{key}'",
                         scope_location,
-                        f"value '{value}' must be of type '{cfgu.type.value}'",
+                        f"value '{value}' must be of type '{of_type}'",
                     )
                 )
             upset_configs.append(Config(set=set_.path, key=key, value=value))
