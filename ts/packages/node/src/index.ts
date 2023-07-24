@@ -12,6 +12,7 @@ export * from './stores/AzureKeyVault';
 export * from './stores/GCPSecretManager';
 export * from './stores/HashiCorpVault';
 export * from './stores/KubernetesSecret';
+export * from './stores/LaunchDarkly';
 
 export * from './stores/SQLite';
 export * from './stores/MySQL';
