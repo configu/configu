@@ -1,21 +1,26 @@
 import { Config, ConfigStore, ConfigStoreQuery } from '@configu/ts';
 import axios, { Axios } from 'axios';
 import assert from 'node:assert';
+import * as fs from 'fs';
 
-export type LaunchDarklyConfigStoreConfigurations = { token: string; projectKey: string };
+export type LaunchDarklyConfigStoreConfigurations = { apitoken: string; defaultproject: string } | string;
 
 export class LaunchDarklyConfigStore extends ConfigStore {
   private client: Axios;
   private readonly projectKey: string;
   private environments: string[];
 
-  constructor({ token, projectKey }: LaunchDarklyConfigStoreConfigurations) {
+  constructor(configurations: LaunchDarklyConfigStoreConfigurations) {
     super('launch-darkly');
-    this.projectKey = projectKey;
+    const configs =
+      typeof configurations === 'string'
+        ? JSON.parse(fs.readFileSync('ldc.json').toString())[configurations]
+        : configurations;
+    this.projectKey = configs.defaultproject;
     this.client = axios.create({
-      baseURL: `https://app.launchdarkly.com/api/v2`,
+      baseURL: `${configs.server ? configs.server : 'https://app.launchdarkly.com'}/api/v2`,
       headers: {
-        Authorization: token,
+        Authorization: configs.apitoken,
       },
       responseType: 'json',
     });
