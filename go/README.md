@@ -16,7 +16,7 @@ go get github.com/configu/configu/go
 package main
 
 import (
-	go "github.com/configu/configu/go"
+	configu "github.com/configu/configu/go"
 	"fmt"
 )
 
@@ -31,7 +31,7 @@ func main() {
 		Configs: map[string]string{"GREETING": "hey", "SUBJECT": "configu go SDK"},
 	}.Run()
 	config, err := configu.EvalCommand{
-		Store:  store,
+		Store:  &store,
 		Set:    set,
 		Schema: schema,
 	}.Run()
@@ -54,7 +54,13 @@ func main() {
 
 ### Setup
 
-Simply install Go and you'll be good to go
+```bash
+cd go
+```
+
+```bash
+go install
+```
 
 ### Contribute
 
