@@ -1,12 +1,8 @@
-package core
+package configu
 
 import (
 	"fmt"
 	"strings"
-
-	configu "github.com/configu/configu/go"
-
-	"github.com/configu/configu/go/core/generated"
 )
 
 const (
@@ -15,8 +11,6 @@ const (
 	ROOT_LABEL string = "/"
 )
 
-type ConfigSet generated.ConfigSet
-
 func NewConfigSet(path string) (set ConfigSet, err error) {
 	if path == "" {
 		path = ROOT
@@ -24,7 +18,7 @@ func NewConfigSet(path string) (set ConfigSet, err error) {
 	hierarchy := []string{ROOT}
 	path = strings.TrimPrefix(path, ROOT_LABEL)
 	if strings.HasSuffix(path, SEPARATOR) {
-		err = configu.ConfiguError{
+		err = ConfiguError{
 			Message:    fmt.Sprintf("invalid path %v", path),
 			Location:   []string{"core", "NewConfigSet"},
 			Suggestion: fmt.Sprintf("path mustn't end with %v character", SEPARATOR),
@@ -32,8 +26,8 @@ func NewConfigSet(path string) (set ConfigSet, err error) {
 		return
 	}
 	for i, step := range strings.Split(path, SEPARATOR) {
-		if !configu.IsValidName(step) {
-			err = configu.ConfiguError{
+		if !isValidName(step) {
+			err = ConfiguError{
 				Message:    fmt.Sprintf("invalid path %v", path),
 				Location:   []string{"core", "NewConfigSet"},
 				Suggestion: "path is not valid or using reserved name",

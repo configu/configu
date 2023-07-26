@@ -37,7 +37,7 @@
 //    configStoreContents, err := UnmarshalConfigStoreContents(bytes)
 //    bytes, err = configStoreContents.Marshal()
 
-package generated
+package configu
 
 import "encoding/json"
 

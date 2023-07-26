@@ -1,14 +1,10 @@
-package commands
+package configu
 
 import (
 	"fmt"
 	"sort"
 	"strconv"
 	"strings"
-
-	configu "github.com/configu/configu/go"
-	"github.com/configu/configu/go/core"
-	"github.com/configu/configu/go/core/generated"
 
 	"github.com/hoisie/mustache"
 	"golang.org/x/exp/slices"
@@ -29,7 +25,7 @@ type EvalCommandReturnContext struct {
 	Set    string
 	Schema string
 	Key    string
-	Cfgu   generated.ConfigSchemaContentsValue
+	Cfgu   ConfigSchemaContentsValue
 }
 
 type EvalCommandReturnResult struct {
@@ -46,16 +42,19 @@ type EvalCommandReturnValue struct {
 }
 
 type EvalCommand struct {
-	Store    core.ConfigStore
-	Set      core.ConfigSet
-	Schema   core.ConfigSchema
+	Store    IConfigStore
+	Set      ConfigSet
+	Schema   ConfigSchema
 	Configs  map[string]string
 	Validate *bool
 	Previous *EvalCommandReturn
 }
 
-func (c EvalCommand) Run() (interface{}, error) {
-	schema_contents, _ := c.Schema.Parse()
+func (c EvalCommand) Run() (EvalCommandReturn, error) {
+	schema_contents, err := c.Schema.Parse()
+	if err != nil {
+		return nil, err
+	}
 	result := make(EvalCommandReturn, 0)
 	for key, cfgu := range schema_contents {
 		result[key] = &EvalCommandReturnValue{
@@ -75,9 +74,13 @@ func (c EvalCommand) Run() (interface{}, error) {
 	result = c.evalFromStoreSet(result)
 	result = c.evalFromSchema(result)
 	result = c.evalPrevious(result)
-	result = c.evalTemplates(result)
-	err := c.validateResult(result)
-	return result, err
+	if result, err = c.evalTemplates(result); err != nil {
+		return nil, err
+	}
+	if c.validateResult(result) != nil {
+		return nil, err
+	}
+	return result, nil
 }
 
 func (c EvalCommand) evalFromConfigsOverride(result EvalCommandReturn) EvalCommandReturn {
@@ -97,16 +100,16 @@ func (c EvalCommand) evalFromConfigsOverride(result EvalCommandReturn) EvalComma
 }
 
 func (c EvalCommand) evalFromStoreSet(result EvalCommandReturn) EvalCommandReturn {
-	store_queries := make([]generated.ConfigStoreQuery, 0)
+	store_queries := make([]ConfigStoreQuery, 0)
 	for key := range result {
 		for _, store_set := range c.Set.Hierarchy {
-			store_queries = append(store_queries, generated.ConfigStoreQuery{Key: key, Set: store_set})
+			store_queries = append(store_queries, ConfigStoreQuery{Key: key, Set: store_set})
 		}
 	}
-	store_configs := make(map[string]generated.Config)
+	store_configs := make(map[string]Config)
 	store_results := c.Store.Get(store_queries)
 	sort.Slice(store_results, func(i, j int) bool {
-		return len(strings.Split(store_results[i].Set, core.SEPARATOR)) < len(strings.Split(store_results[j].Set, core.SEPARATOR))
+		return len(strings.Split(store_results[i].Set, SEPARATOR)) < len(strings.Split(store_results[j].Set, SEPARATOR))
 	})
 	for _, v := range store_results {
 		store_configs[v.Key] = v
@@ -168,7 +171,7 @@ func (c EvalCommand) evalPrevious(result EvalCommandReturn) EvalCommandReturn {
 	return merged_result
 }
 
-func (c EvalCommand) evalTemplates(result EvalCommandReturn) EvalCommandReturn {
+func (c EvalCommand) evalTemplates(result EvalCommandReturn) (EvalCommandReturn, error) {
 	template_keys := make([]string, 0)
 	for key, value := range result {
 		if value.Result.Origin == SchemaTemplate {
@@ -180,13 +183,16 @@ func (c EvalCommand) evalTemplates(result EvalCommandReturn) EvalCommandReturn {
 		has_rendered_at_least_once := false
 	Loop:
 		for _, key := range template_keys {
-			expressions := GrabMustacheTemplateVars(*result[key].Context.Cfgu.Template)
+			expressions := grabMustacheTemplateVars(*result[key].Context.Cfgu.Template)
 			for _, exp := range expressions {
 				if slices.Contains(template_keys, exp) {
 					continue Loop
 				}
 			}
-			context_config_set, _ := core.NewConfigSet(result[key].Context.Set)
+			context_config_set, err := NewConfigSet(result[key].Context.Set)
+			if err != nil {
+				return nil, err
+			}
 			render_context := make(map[string]interface{})
 			for key, value := range result {
 				render_context[key] = value.Result.Value
@@ -209,7 +215,7 @@ func (c EvalCommand) evalTemplates(result EvalCommandReturn) EvalCommandReturn {
 		}
 		should_render_templates = has_rendered_at_least_once
 	}
-	return result
+	return result, nil
 }
 
 func (c EvalCommand) validateResult(result EvalCommandReturn) error {
@@ -218,15 +224,15 @@ func (c EvalCommand) validateResult(result EvalCommandReturn) error {
 		return nil
 	}
 	for key, value := range result {
-		if !core.ValidateCfguType(value.Context.Cfgu, value.Result.Value) {
-			return configu.ConfiguError{
+		if !validateCfguType(value.Context.Cfgu, value.Result.Value) {
+			return ConfiguError{
 				Message:    fmt.Sprintf("invalid value type for key %s", key),
 				Location:   []string{"EvalCommand", "Run"},
 				Suggestion: fmt.Sprintf("Value %s must be a %s", value.Result.Value, value.Context.Cfgu.Type),
 			}
 		}
 		if value.Context.Cfgu.Required != nil && *value.Context.Cfgu.Required && value.Result.Value == "" {
-			return configu.ConfiguError{
+			return ConfiguError{
 				Message:  fmt.Sprintf("required key '%s' is missing a value", key),
 				Location: []string{"EvalCommand", "Run"},
 			}
@@ -234,7 +240,7 @@ func (c EvalCommand) validateResult(result EvalCommandReturn) error {
 		if value.Result.Value != "" && len(value.Context.Cfgu.Depends) > 0 {
 			for _, dep := range value.Context.Cfgu.Depends {
 				if _, ok := result[dep]; !ok || result[dep].Result.Value == "" {
-					return configu.ConfiguError{
+					return ConfiguError{
 						Message:  fmt.Sprintf("one or more depends of key '%s is missing a value", key),
 						Location: []string{"EvalCommand", "Run"},
 					}
@@ -245,20 +251,18 @@ func (c EvalCommand) validateResult(result EvalCommandReturn) error {
 	return nil
 }
 
-func GrabMustacheTemplateVars(template string) []string {
-	var template_ string
-	template_ = template
+func grabMustacheTemplateVars(template string) []string {
+	var found bool
 	found_vars := make([]string, 0)
 	for {
-		_, template, found := strings.Cut(template_, "{{")
-		template_ = template
+		_, template, found = strings.Cut(template, "{{")
 		if !found {
 			// No more templates started
 			break
 		}
 		current_tag_invalid := slices.Contains([]string{"{", "!", "#", "^", "/", ">", "=", "&"}, string(template[0]))
-		current_tag, template, found := strings.Cut(template, "}}")
-		template_ = template
+		var current_tag string
+		current_tag, template, found = strings.Cut(template, "}}")
 		if current_tag_invalid {
 			// Invalid escape sequence, skip the current one.
 			continue

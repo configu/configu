@@ -1,12 +1,10 @@
-package stores
+package configu
 
 import (
 	"bytes"
 	"encoding/json"
 	"fmt"
 	"net/http"
-
-	"github.com/configu/configu/go/core/generated"
 )
 
 type ConfiguConfigStore struct {
@@ -15,14 +13,14 @@ type ConfiguConfigStore struct {
 }
 
 type getRequestPayload struct {
-	Queries []generated.ConfigStoreQuery `json:"queries"`
+	Queries []ConfigStoreQuery `json:"queries"`
 }
 
 type setRequestPayload struct {
-	Configs []generated.Config `json:"configs"`
+	Configs []Config `json:"configs"`
 }
 
-func (s ConfiguConfigStore) Get(queries []generated.ConfigStoreQuery) []generated.Config {
+func (s ConfiguConfigStore) Get(queries []ConfigStoreQuery) []Config {
 	payload, _ := json.Marshal(getRequestPayload{queries})
 	request, _ := http.NewRequest("GET", "https://api.configu.com/config", bytes.NewBuffer(payload))
 	request.Header.Set("Content-Type", "application/json")
@@ -34,12 +32,12 @@ func (s ConfiguConfigStore) Get(queries []generated.ConfigStoreQuery) []generate
 		fmt.Println("Something's gone wrong")
 	}
 	defer resp.Body.Close()
-	var responseBody []generated.Config
+	var responseBody []Config
 	json.NewDecoder(resp.Body).Decode(&responseBody)
 	return responseBody
 }
 
-func (s ConfiguConfigStore) Set(configs []generated.Config) {
+func (s ConfiguConfigStore) Set(configs []Config) {
 	payload, _ := json.Marshal(setRequestPayload{configs})
 	request, _ := http.NewRequest("PUT", "https://api.configu.com/config", bytes.NewBuffer(payload))
 	request.Header.Set("Content-Type", "application/json")

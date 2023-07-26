@@ -1,5 +1,5 @@
-package core
+package configu
 
 type Command[T any] interface {
-	Run() T
+	Run() (T, error)
 }

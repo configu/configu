@@ -19,7 +19,7 @@ func (err ConfiguError) Error() string {
 	return strings.Join([]string{err.Message, location, err.Suggestion}, " ")
 }
 
-func IsValidName(name string) bool {
+func isValidName(name string) bool {
 	namingPattern := "^[A-Za-z0-9_-]*$"
 	reservedNames := [4]string{"_", "-", "this", "cfgu"}
 	for _, reservedName := range reservedNames {

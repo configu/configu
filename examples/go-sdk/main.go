@@ -3,23 +3,21 @@ package main
 import (
 	"fmt"
 
-	"github.com/configu/configu/go/commands"
-	"github.com/configu/configu/go/core"
-	"github.com/configu/configu/go/stores"
+	configu "github.com/configu/configu/go"
 )
 
 func main() {
-	store := stores.InMemoryStore{}
-	set, _ := core.NewConfigSet("test")
-	schema, _ := core.NewConfigSchema("get-started.cfgu.json")
-	commands.UpsertCommand{
+	store := configu.InMemoryStore{}
+	set, _ := configu.NewConfigSet("test")
+	schema, _ := configu.NewConfigSchema("get-started.cfgu.json")
+	configu.UpsertCommand{
 		Store:   &store,
 		Set:     set,
 		Schema:  schema,
 		Configs: map[string]string{"GREETING": "hey", "SUBJECT": "go python SDK"},
 	}.Run()
-	config, err := commands.EvalCommand{
-		Store:  store,
+	config, err := configu.EvalCommand{
+		Store:  &store,
 		Set:    set,
 		Schema: schema,
 	}.Run()
