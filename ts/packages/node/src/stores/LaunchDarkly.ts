@@ -27,6 +27,7 @@ export class LaunchDarklyConfigStore extends ConfigStore {
     this.environments = [];
   }
 
+  // https://apidocs.launchdarkly.com/tag/Feature-flags#operation/patchFeatureFlag
   private async patchUpdate(config: Config, patchData: Record<string, any>) {
     const { data } = await this.client.patch(`/flags/${this.projectKey}/${config.key}`, patchData, {
       headers: { 'Content-Type': 'application/json; domain-model=launchdarkly.semanticpatch' },
@@ -46,7 +47,7 @@ export class LaunchDarklyConfigStore extends ConfigStore {
 
   private async createEnvironment(config: Config) {
     await this.client.post(`/projects/${this.projectKey}/environments`, {
-      color: 'FFFFFF',
+      color: 'FFFFFF', // This field is required for creating an environment
       key: config.set,
       name: config.set,
     });
@@ -76,15 +77,6 @@ export class LaunchDarklyConfigStore extends ConfigStore {
   }
 
   private async updateDefaultFallthroughVariation(config: Config, variationId: string) {
-    const updateDefaultVariationData = {
-      instructions: [
-        {
-          kind: 'updateDefaultVariation',
-          OnVariationValue: config.value,
-          OffVariationValue: '',
-        },
-      ],
-    };
     const updateFallthroughVariationData = {
       environmentKey: config.set,
       instructions: [
@@ -94,7 +86,6 @@ export class LaunchDarklyConfigStore extends ConfigStore {
         },
       ],
     };
-    await this.patchUpdate(config, updateDefaultVariationData);
     return this.patchUpdate(config, updateFallthroughVariationData);
   }
 
@@ -153,21 +144,19 @@ export class LaunchDarklyConfigStore extends ConfigStore {
           .filter((value: [string, any]) => value[1].isFallthrough)
           .map((value) => featureFlag.variations[parseInt(value[0], 10)].value)[0];
         return { key: featureFlag.key, set: env, value: featureFlag.environments[env].on ? onValue : '' };
-      });
+      })
+      .filter((config: Config) => config.value);
   }
 
   async get(queries: ConfigStoreQuery[]): Promise<Config[]> {
-    try {
-      const [env, keys] = await this.validateQueries(queries);
-      return this.getEnvFeatureFlags(env, keys);
-    } catch (e) {
-      return [];
-    }
+    const [env, keys] = await this.validateQueries(queries);
+    return this.getEnvFeatureFlags(env, keys);
   }
 
   async set(configs: Config[]): Promise<void> {
     this.assertNotSettingToRoot(configs);
     await this.updateEnvironments();
-    configs.forEach(this.upsert.bind(this));
+    const upsertPromises = configs.map(this.upsert.bind(this));
+    await Promise.all(upsertPromises);
   }
 }
