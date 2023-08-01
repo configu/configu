@@ -45,8 +45,7 @@ export const STORE_WEBSITE: Record<StoreType, string> = {
   configu: 'https://configu.com/',
   'json-file': 'https://www.json.org/json-en.html',
   'hashicorp-vault': 'https://www.vaultproject.io/',
-  'aws-parameter-store':
-    'https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html',
+  'aws-parameter-store': 'https://aws.amazon.com/systems-manager/features/#Parameter_Store',
   'aws-secrets-manager': 'https://aws.amazon.com/secrets-manager/',
   'azure-key-vault': 'https://azure.microsoft.com/en-us/services/key-vault/',
   'gcp-secret-manager': 'https://cloud.google.com/secret-manager/',
