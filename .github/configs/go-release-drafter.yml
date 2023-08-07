@@ -1,5 +1,5 @@
 include-paths:
-  - "py/"
+  - "go/"
 name-template: "go-v$RESOLVED_VERSION"
 tag-template: "go-v$RESOLVED_VERSION"
 tag-prefix: "go-"

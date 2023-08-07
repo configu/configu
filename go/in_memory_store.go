@@ -10,7 +10,7 @@ type InMemoryStore struct {
 	data []Config
 }
 
-func (s *InMemoryStore) Get(queries []ConfigStoreQuery) []Config {
+func (s *InMemoryStore) Get(queries []ConfigStoreQuery) ([]Config, error) {
 	query_ids := make([]string, len(queries))
 	for i, query := range queries {
 		query_ids[i] = fmt.Sprintf("%s.%s", query.Set, query.Key)
@@ -21,10 +21,10 @@ func (s *InMemoryStore) Get(queries []ConfigStoreQuery) []Config {
 			results = append(results, d)
 		}
 	}
-	return results
+	return results, nil
 }
 
-func (s *InMemoryStore) Set(configs []Config) {
+func (s *InMemoryStore) Set(configs []Config) error {
 	set_config_ids := make([]string, len(configs))
 	for i, d := range s.data {
 		set_config_ids[i] = fmt.Sprintf("%s.%s", d.Set, d.Key)
@@ -36,6 +36,7 @@ func (s *InMemoryStore) Set(configs []Config) {
 		}
 	}
 	s.data = append(existing, configs...)
+	return nil
 }
 
 func (s *InMemoryStore) GetType() string {

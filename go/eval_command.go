@@ -71,7 +71,10 @@ func (c EvalCommand) Run() (EvalCommandReturn, error) {
 		}
 	}
 	result = c.evalFromConfigsOverride(result)
-	result = c.evalFromStoreSet(result)
+	result, err = c.evalFromStoreSet(result)
+	if err != nil {
+		return nil, err
+	}
 	result = c.evalFromSchema(result)
 	result = c.evalPrevious(result)
 	if result, err = c.evalTemplates(result); err != nil {
@@ -99,7 +102,7 @@ func (c EvalCommand) evalFromConfigsOverride(result EvalCommandReturn) EvalComma
 	return result
 }
 
-func (c EvalCommand) evalFromStoreSet(result EvalCommandReturn) EvalCommandReturn {
+func (c EvalCommand) evalFromStoreSet(result EvalCommandReturn) (EvalCommandReturn, error) {
 	store_queries := make([]ConfigStoreQuery, 0)
 	for key := range result {
 		for _, store_set := range c.Set.Hierarchy {
@@ -107,7 +110,10 @@ func (c EvalCommand) evalFromStoreSet(result EvalCommandReturn) EvalCommandRetur
 		}
 	}
 	store_configs := make(map[string]Config)
-	store_results := c.Store.Get(store_queries)
+	store_results, err := c.Store.Get(store_queries)
+	if err != nil {
+		return nil, err
+	}
 	sort.Slice(store_results, func(i, j int) bool {
 		return len(strings.Split(store_results[i].Set, SEPARATOR)) < len(strings.Split(store_results[j].Set, SEPARATOR))
 	})
@@ -122,7 +128,7 @@ func (c EvalCommand) evalFromStoreSet(result EvalCommandReturn) EvalCommandRetur
 			value.Result.Value = store_config.Value
 		}
 	}
-	return result
+	return result, nil
 }
 
 func (c EvalCommand) evalFromSchema(result EvalCommandReturn) EvalCommandReturn {

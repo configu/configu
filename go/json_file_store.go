@@ -12,20 +12,31 @@ type JsonFileConfigStore struct {
 	Path string
 }
 
-func (s JsonFileConfigStore) Read() []ConfigStoreContentsElement {
-	content, _ := os.ReadFile(s.Path)
+func (s JsonFileConfigStore) Read() ([]ConfigStoreContentsElement, error) {
+	content, err := os.ReadFile(s.Path)
+	if err != nil {
+		return nil, err
+	}
 	res := make([]ConfigStoreContentsElement, 0)
-	json.Unmarshal(content, &res)
-	return res
+	if json.Unmarshal(content, &res) != nil {
+		return nil, err
+	}
+	return res, nil
 }
 
-func (s JsonFileConfigStore) Write(elements []ConfigStoreContentsElement) {
-	data, _ := json.Marshal(elements)
-	os.WriteFile(s.Path, data, 0644)
+func (s JsonFileConfigStore) Write(elements []ConfigStoreContentsElement) error {
+	data, err := json.Marshal(elements)
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(s.Path, data, 0644)
 }
 
-func (s JsonFileConfigStore) Get(queries []ConfigStoreQuery) []Config {
-	stored_configs := s.Read()
+func (s JsonFileConfigStore) Get(queries []ConfigStoreQuery) ([]Config, error) {
+	stored_configs, err := s.Read()
+	if err != nil {
+		return nil, err
+	}
 	query_ids := make([]string, len(queries))
 	for i, query := range queries {
 		query_ids[i] = fmt.Sprintf("%s.%s", query.Set, query.Key)
@@ -36,11 +47,14 @@ func (s JsonFileConfigStore) Get(queries []ConfigStoreQuery) []Config {
 			results = append(results, Config(d))
 		}
 	}
-	return results
+	return results, nil
 }
 
-func (s JsonFileConfigStore) Set(configs []Config) {
-	stored_configs := s.Read()
+func (s JsonFileConfigStore) Set(configs []Config) error {
+	stored_configs, err := s.Read()
+	if err != nil {
+		return err
+	}
 	set_config_ids := make([]string, len(configs))
 	for i, d := range stored_configs {
 		set_config_ids[i] = fmt.Sprintf("%s.%s", d.Set, d.Key)
@@ -55,7 +69,7 @@ func (s JsonFileConfigStore) Set(configs []Config) {
 	for _, d := range configs {
 		config_store_elements = append(config_store_elements, ConfigStoreContentsElement(d))
 	}
-	s.Write(append(existing, config_store_elements...))
+	return s.Write(append(existing, config_store_elements...))
 }
 
 func (s JsonFileConfigStore) GetType() string {

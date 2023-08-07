@@ -20,7 +20,7 @@ type setRequestPayload struct {
 	Configs []Config `json:"configs"`
 }
 
-func (s ConfiguConfigStore) Get(queries []ConfigStoreQuery) []Config {
+func (s ConfiguConfigStore) Get(queries []ConfigStoreQuery) ([]Config, error) {
 	payload, _ := json.Marshal(getRequestPayload{queries})
 	request, _ := http.NewRequest("GET", "https://api.configu.com/config", bytes.NewBuffer(payload))
 	request.Header.Set("Content-Type", "application/json")
@@ -29,21 +29,39 @@ func (s ConfiguConfigStore) Get(queries []ConfigStoreQuery) []Config {
 
 	resp, err := (&http.Client{}).Do(request)
 	if err != nil {
-		fmt.Println("Something's gone wrong")
+		return nil, err
 	}
 	defer resp.Body.Close()
 	var responseBody []Config
-	json.NewDecoder(resp.Body).Decode(&responseBody)
-	return responseBody
+	if err = json.NewDecoder(resp.Body).Decode(&responseBody); err != nil {
+		return nil, err
+	}
+	return responseBody, nil
 }
 
-func (s ConfiguConfigStore) Set(configs []Config) {
-	payload, _ := json.Marshal(setRequestPayload{configs})
-	request, _ := http.NewRequest("PUT", "https://api.configu.com/config", bytes.NewBuffer(payload))
+func (s ConfiguConfigStore) Set(configs []Config) error {
+	payload, err := json.Marshal(setRequestPayload{configs})
+	if err != nil {
+		return err
+	}
+	request, err := http.NewRequest("PUT", "https://api.configu.com/config", bytes.NewBuffer(payload))
+	if err != nil {
+		return err
+	}
 	request.Header.Set("Content-Type", "application/json")
 	request.Header.Set("Org", s.Org)
 	request.Header.Set("Authorization", fmt.Sprintf("Bearer %s", s.Token))
-	(&http.Client{}).Do(request)
+	resp, err := (&http.Client{}).Do(request)
+	if err != nil {
+		return err
+	}
+	if resp.StatusCode >= 300 {
+		return ConfiguError{
+			Message:  fmt.Sprintf("failed to set configs in configu store. Received status code %v", resp.StatusCode),
+			Location: []string{"ConfiguConfigStore", "Set"},
+		}
+	}
+	return nil
 }
 
 func (s ConfiguConfigStore) GetType() string {

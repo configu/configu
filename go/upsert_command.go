@@ -47,6 +47,5 @@ func (c UpsertCommand) Run() (interface{}, error) {
 			Value: value,
 		})
 	}
-	c.Store.Set(upsert_configs)
-	return nil, nil
+	return nil, c.Store.Set(upsert_configs)
 }
