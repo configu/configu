@@ -17,10 +17,14 @@ export class LaunchDarklyConfigStore extends ConfigStore {
   constructor(configurations: LaunchDarklyConfigStoreParams) {
     super('launch-darkly');
     // * ldc.json is the default config file name. see https://github.com/launchdarkly-labs/ldc
-    const configs =
+    const fileConfigs =
       configurations.ldcJsonPath && configurations.ldcConfiguration
         ? JSON.parse(fs.readFileSync(configurations.ldcJsonPath).toString())[configurations.ldcConfiguration]
-        : { apitoken: configurations.apitoken, defaultproject: configurations.apitoken };
+        : {};
+    const configs = {
+      ...{ apitoken: configurations.apitoken, defaultproject: configurations.apitoken },
+      ...fileConfigs,
+    };
     this.projectKey = configs.defaultproject;
     this.client = axios.create({
       baseURL: `${configs.server ? configs.server : 'https://app.launchdarkly.com'}/api/v2`,
