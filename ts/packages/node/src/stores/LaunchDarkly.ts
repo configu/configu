@@ -3,19 +3,24 @@ import axios, { Axios } from 'axios';
 import * as fs from 'fs';
 import _ from 'lodash';
 
-export type LaunchDarklyConfigStoreConfigurations = { apitoken: string; defaultproject: string } | string;
+export interface LaunchDarklyConfigStoreParams {
+  apitoken?: string;
+  defaultproject?: string;
+  ldcJsonPath?: string;
+  ldcConfiguration?: string;
+}
 
 export class LaunchDarklyConfigStore extends ConfigStore {
   private client: Axios;
   private readonly projectKey: string;
 
-  constructor(configurations: LaunchDarklyConfigStoreConfigurations) {
+  constructor(configurations: LaunchDarklyConfigStoreParams) {
     super('launch-darkly');
-    // ldc.json is the default config file name. see https://github.com/launchdarkly-labs/ldc
+    // * ldc.json is the default config file name. see https://github.com/launchdarkly-labs/ldc
     const configs =
-      typeof configurations === 'string'
-        ? JSON.parse(fs.readFileSync('ldc.json').toString())[configurations]
-        : configurations;
+      configurations.ldcJsonPath && configurations.ldcConfiguration
+        ? JSON.parse(fs.readFileSync(configurations.ldcJsonPath).toString())[configurations.ldcConfiguration]
+        : { apitoken: configurations.apitoken, defaultproject: configurations.apitoken };
     this.projectKey = configs.defaultproject;
     this.client = axios.create({
       baseURL: `${configs.server ? configs.server : 'https://app.launchdarkly.com'}/api/v2`,
@@ -26,8 +31,8 @@ export class LaunchDarklyConfigStore extends ConfigStore {
     });
   }
 
-  // * https://apidocs.launchdarkly.com/tag/Feature-flags#operation/patchFeatureFlag
   private async patchUpdate(config: Config, patchData: Record<string, any>) {
+    // * https://apidocs.launchdarkly.com/tag/Feature-flags#operation/patchFeatureFlag
     const { data } = await this.client.patch(`/flags/${this.projectKey}/${config.key}`, patchData, {
       headers: { 'Content-Type': 'application/json; domain-model=launchdarkly.semanticpatch' },
     });
@@ -35,18 +40,21 @@ export class LaunchDarklyConfigStore extends ConfigStore {
   }
 
   private async getEnvironments(): Promise<string[]> {
+    // * https://apidocs.launchdarkly.com/tag/Environments#operation/getEnvironmentsByProject
     const { data: environments } = await this.client.get(`/projects/${this.projectKey}/environments`);
     return environments.items.map((env: any) => env.key);
   }
 
   private async getFeatureFlag(config: Config) {
+    // * https://apidocs.launchdarkly.com/tag/Feature-flags#operation/getFeatureFlag
     const { data: featureFlag } = await this.client.get(`/flags/${this.projectKey}/${config.key}`);
     return featureFlag;
   }
 
   private async createEnvironment(config: Config) {
+    // * https://apidocs.launchdarkly.com/tag/Environments#operation/postEnvironment
     await this.client.post(`/projects/${this.projectKey}/environments`, {
-      color: 'FFFFFF', // This field is required for creating an environment
+      color: 'FFFFFF',
       key: config.set,
       name: config.set,
     });
@@ -72,6 +80,7 @@ export class LaunchDarklyConfigStore extends ConfigStore {
       name: config.key,
       variations: [{ value: fallthroughValue }, { value: offValue }],
     };
+    // * https://apidocs.launchdarkly.com/tag/Feature-flags#operation/postFeatureFlag
     const { data: featureFlag } = await this.client.post(`/flags/${this.projectKey}`, createData);
     return { featureFlag, onValue: fallthroughValue };
   }
@@ -104,6 +113,7 @@ export class LaunchDarklyConfigStore extends ConfigStore {
   }
 
   private async getEnvFeatureFlags(env: string, keys: string[]): Promise<Config[]> {
+    // * https://apidocs.launchdarkly.com/tag/Feature-flags#operation/getFeatureFlags
     const { data: featureFlags } = await this.client.get(`/flags/${this.projectKey}?env=${env}&summary=0`);
     return featureFlags.items
       .filter((featureFlag: any) => keys.includes(featureFlag.key))
