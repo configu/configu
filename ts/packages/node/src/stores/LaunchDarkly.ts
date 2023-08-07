@@ -26,7 +26,7 @@ export class LaunchDarklyConfigStore extends ConfigStore {
     });
   }
 
-  // https://apidocs.launchdarkly.com/tag/Feature-flags#operation/patchFeatureFlag
+  // * https://apidocs.launchdarkly.com/tag/Feature-flags#operation/patchFeatureFlag
   private async patchUpdate(config: Config, patchData: Record<string, any>) {
     const { data } = await this.client.patch(`/flags/${this.projectKey}/${config.key}`, patchData, {
       headers: { 'Content-Type': 'application/json; domain-model=launchdarkly.semanticpatch' },
