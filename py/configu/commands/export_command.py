@@ -13,8 +13,7 @@ class ExportCommandParameters(TypedDict):
     override: bool
 
 
-class ExportCommandReturn(Dict[str, str]):
-    """Dict of key:value"""
+ExportCommandReturn = Dict[str, str]
 
 
 class ExportCommand(Command[ExportCommandReturn]):
@@ -31,11 +30,11 @@ class ExportCommand(Command[ExportCommandReturn]):
     ) -> None:
         super().__init__(ExportCommandParameters(data=data, env=env, override=override))
 
-    def run(self):
+    def run(self) -> ExportCommandReturn:
         data = self.parameters["data"]
         env = self.parameters.get("env", True)
         override = self.parameters.get("override", True)
-        exported_configs = {
+        exported_configs: ExportCommandReturn = {
             key: value["result"]["value"] for key, value in data.items()
         }
         if env:

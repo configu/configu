@@ -114,7 +114,7 @@ class ConfigSchema(IConfigSchema):
                     error_message(
                         f"invalid key {key}",
                         error_location + [key],
-                        f"path nodes mustn't contain " f"reserved words '${key}'",
+                        f"path nodes mustn't contain reserved words '${key}'",
                     )
                 )
             if cfgu.type == CfguType.REG_EX and cfgu.pattern is None:
@@ -123,7 +123,7 @@ class ConfigSchema(IConfigSchema):
                         "invalid type property",
                         error_location + [key, cfgu.type.value],
                     ),
-                    f"type '{cfgu.type.value}' must come with" f" a pattern property",
+                    f"type '{cfgu.type.value}' must come with a pattern property",
                 )
             if cfgu.default is not None:
                 if cfgu.required is not None or cfgu.template is not None:

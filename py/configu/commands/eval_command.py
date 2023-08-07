@@ -42,10 +42,7 @@ class EvalCommandReturnValue(TypedDict):
     result: EvalCommandReturnResult
 
 
-class EvalCommandReturn(Dict[str, EvalCommandReturnValue]):
-    """
-    Dict of keys:EvalCommandReturnValue`
-    """
+EvalCommandReturn = Dict[str, EvalCommandReturnValue]
 
 
 class EvalCommandParameters(TypedDict):
@@ -99,7 +96,7 @@ class EvalCommand(Command[EvalCommandReturn]):
         self, result: EvalCommandReturn
     ) -> EvalCommandReturn:
         if not self.parameters.get("configs"):
-            return EvalCommandReturn()
+            return {}
         for key, value in result.items():
             if key in self.parameters["configs"]:
                 override_value = self.parameters["configs"][key]
@@ -206,7 +203,7 @@ class EvalCommand(Command[EvalCommandReturn]):
     def _eval_previous(self, result: EvalCommandReturn) -> EvalCommandReturn:
         previous_result = self.parameters.get("previous")
         if not previous_result:
-            return EvalCommandReturn()
+            return {}
 
         def reduce_prev(
             merged: EvalCommandReturn,
@@ -223,7 +220,7 @@ class EvalCommand(Command[EvalCommandReturn]):
         return reduce(
             reduce_prev,
             reversed(list(previous_result.items()) + list(result.items())),
-            EvalCommandReturn(),
+            {},
         )
 
     @staticmethod
@@ -287,61 +284,51 @@ class EvalCommand(Command[EvalCommandReturn]):
         schema = self.parameters["schema"]
         store.init()
         schema_contents = ConfigSchema.parse(schema)
-        result = EvalCommandReturn(
-            {
-                key: {
-                    "context": {
-                        "store": store.type,
-                        "set": set_.path,
-                        "schema": schema.path,
-                        "key": key,
-                        "cfgu": cfgu,
-                    },
-                    "result": {
-                        "origin": EvaluatedConfigOrigin.EmptyValue,
-                        "source": "",
-                        "value": "",
-                    },
+        result: EvalCommandReturn = {
+            key: {
+                "context": {
+                    "store": store.type,
+                    "set": set_.path,
+                    "schema": schema.path,
+                    "key": key,
+                    "cfgu": cfgu,
+                },
+                "result": {
+                    "origin": EvaluatedConfigOrigin.EmptyValue,
+                    "source": "",
+                    "value": "",
+                },
+            }
+            for key, cfgu in schema_contents.items()
+        }
+
+        result = {**result, **self._eval_from_configs_override(result)}
+
+        result = {
+            **result,
+            **self._eval_from_store_set(
+                {
+                    key: value
+                    for key, value in result.items()
+                    if value["result"]["origin"] == EvaluatedConfigOrigin.EmptyValue
+                    and not value["context"]["cfgu"].template
                 }
-                for key, cfgu in schema_contents.items()
-            }
-        )
-        result = EvalCommandReturn(
-            {**result, **self._eval_from_configs_override(result)}
-        )
-        result = EvalCommandReturn(
-            {
-                **result,
-                **self._eval_from_store_set(
-                    EvalCommandReturn(
-                        {
-                            key: value
-                            for key, value in result.items()
-                            if value["result"]["origin"]
-                            == EvaluatedConfigOrigin.EmptyValue
-                            and not value["context"]["cfgu"].template
-                        }
-                    )
-                ),
-            }
-        )
-        result = EvalCommandReturn(
-            {
-                **result,
-                **self._eval_from_schema(
-                    EvalCommandReturn(
-                        {
-                            key: value
-                            for key, value in result.items()
-                            if value["result"]["origin"]
-                            == EvaluatedConfigOrigin.EmptyValue
-                        }
-                    )
-                ),
-            }
-        )
-        result = EvalCommandReturn({**result, **self._eval_previous(result)})
-        result = EvalCommandReturn({**result, **self._eval_templates(result)})
+            ),
+        }
+
+        result = {
+            **result,
+            **self._eval_from_schema(
+                {
+                    key: value
+                    for key, value in result.items()
+                    if value["result"]["origin"] == EvaluatedConfigOrigin.EmptyValue
+                }
+            ),
+        }
+
+        result = {**result, **self._eval_previous(result)}
+        result = {**result, **self._eval_templates(result)}
         self._validate_result(result)
 
         return result
