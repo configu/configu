@@ -1,6 +1,5 @@
 import { Config, ConfigStore, ConfigStoreQuery } from '@configu/ts';
 import axios, { Axios } from 'axios';
-import assert from 'node:assert';
 import * as fs from 'fs';
 
 export type LaunchDarklyConfigStoreConfigurations = { apitoken: string; defaultproject: string } | string;
@@ -8,10 +7,10 @@ export type LaunchDarklyConfigStoreConfigurations = { apitoken: string; defaultp
 export class LaunchDarklyConfigStore extends ConfigStore {
   private client: Axios;
   private readonly projectKey: string;
-  private environments: string[];
 
   constructor(configurations: LaunchDarklyConfigStoreConfigurations) {
     super('launch-darkly');
+    // ldc.json is the default config file name. see https://github.com/launchdarkly-labs/ldc
     const configs =
       typeof configurations === 'string'
         ? JSON.parse(fs.readFileSync('ldc.json').toString())[configurations]
@@ -24,7 +23,6 @@ export class LaunchDarklyConfigStore extends ConfigStore {
       },
       responseType: 'json',
     });
-    this.environments = [];
   }
 
   // https://apidocs.launchdarkly.com/tag/Feature-flags#operation/patchFeatureFlag
@@ -35,9 +33,9 @@ export class LaunchDarklyConfigStore extends ConfigStore {
     return data;
   }
 
-  private async updateEnvironments() {
+  private async getEnvironments(): Promise<string[]> {
     const { data: environments } = await this.client.get(`/projects/${this.projectKey}/environments`);
-    this.environments = [...this.environments, ...environments.items.map((env: any) => env.key)];
+    return environments.items.map((env: any) => env.key);
   }
 
   private async getFeatureFlag(config: Config) {
@@ -51,29 +49,44 @@ export class LaunchDarklyConfigStore extends ConfigStore {
       key: config.set,
       name: config.set,
     });
-    this.environments = [...this.environments, config.set];
+    return config.set;
   }
 
   private async createFeatureFlag(config: Config) {
+    let onValue: any;
+    let offValue: any;
+    try {
+      onValue = JSON.parse(config.value);
+      if (typeof onValue === 'boolean') {
+        offValue = !onValue;
+      } else {
+        offValue = Number.isNaN(onValue) ? {} : 0;
+      }
+    } catch (e) {
+      onValue = config.value;
+      offValue = '';
+    }
     const createData = {
-      clientSideAvailability: {
-        usingEnvironmentId: true,
-        usingMobileKey: true,
-      },
       key: config.key,
       name: config.key,
-      variations: [{ value: config.value }, { value: '' }],
+      variations: [{ value: onValue }, { value: offValue }],
     };
     const { data: featureFlag } = await this.client.post(`/flags/${this.projectKey}`, createData);
-    return featureFlag;
+    return { featureFlag, onValue };
   }
 
   private async createVariation(config: Config) {
+    let onValue: any;
+    try {
+      onValue = JSON.parse(config.value);
+    } catch (e) {
+      onValue = config.value;
+    }
     const createVariationData = {
-      instructions: [{ kind: 'addVariation', value: config.value }],
+      instructions: [{ kind: 'addVariation', value: onValue }],
     };
     const data = await this.patchUpdate(config, createVariationData);
-    return data.variations.find((variation: any) => variation.value === config.value);
+    return data.variations.find((variation: any) => variation.value === onValue);
   }
 
   private async updateDefaultFallthroughVariation(config: Config, variationId: string) {
@@ -89,52 +102,6 @@ export class LaunchDarklyConfigStore extends ConfigStore {
     return this.patchUpdate(config, updateFallthroughVariationData);
   }
 
-  private async upsert(config: Config) {
-    if (!this.environments.includes(config.set)) {
-      await this.createEnvironment(config);
-    }
-    let featureFlag;
-    try {
-      featureFlag = await this.getFeatureFlag(config);
-      const existingVariation =
-        featureFlag.variations.find((variation: any) => variation.value === config.value) ||
-        (await this.createVariation(config));
-      if (existingVariation) featureFlag = await this.updateDefaultFallthroughVariation(config, existingVariation._id);
-    } catch (e) {
-      if (e.response.status === 404) featureFlag = await this.createFeatureFlag(config);
-      else throw e;
-    }
-    if (featureFlag && !featureFlag.environments[config.set].on) {
-      const onData = {
-        environmentKey: config.set,
-        instructions: [{ kind: 'turnFlagOn' }],
-      };
-      await this.patchUpdate(config, onData);
-    }
-  }
-
-  private async validateQueries(queries: ConfigStoreQuery[]): Promise<[string, string[]]> {
-    await this.updateEnvironments();
-    queries.forEach((query) => {
-      assert(query.set.split('/').length === 1, 'Subsets are not supported in LaunchDarklyStore');
-    });
-    const noRootQueries = queries.filter((query) => query.set !== '' && this.environments.includes(query.set));
-    if (noRootQueries[0]) {
-      const env = noRootQueries[0].set;
-      const keys = noRootQueries.map((value) => value.key);
-      return [env, keys];
-    }
-    throw new Error('No valid queries');
-  }
-
-  private assertNotSettingToRoot(configs: Config[]) {
-    assert.strictEqual(
-      configs.some((config) => config.set === ''),
-      false,
-      'ConfigSet cannot be empty string',
-    );
-  }
-
   private async getEnvFeatureFlags(env: string, keys: string[]): Promise<Config[]> {
     const { data: featureFlags } = await this.client.get(`/flags/${this.projectKey}?env=${env}`);
     return featureFlags.items
@@ -143,20 +110,45 @@ export class LaunchDarklyConfigStore extends ConfigStore {
         const onValue = Object.entries(featureFlag.environments[env]._summary.variations)
           .filter((value: [string, any]) => value[1].isFallthrough)
           .map((value) => featureFlag.variations[parseInt(value[0], 10)].value)[0];
-        return { key: featureFlag.key, set: env, value: featureFlag.environments[env].on ? onValue : '' };
+        return { key: featureFlag.key, set: env, value: JSON.stringify(onValue) };
       })
       .filter((config: Config) => config.value);
   }
 
   async get(queries: ConfigStoreQuery[]): Promise<Config[]> {
-    const [env, keys] = await this.validateQueries(queries);
-    return this.getEnvFeatureFlags(env, keys);
+    if (queries.some((query) => query.set.split('/').length > 1))
+      throw new Error('Subsets are not supported in LaunchDarklyConfigStore');
+    const environments = await this.getEnvironments();
+    const noRootQueries = queries.filter((query) => query.set !== '' && environments.includes(query.set));
+    if (noRootQueries[0]) {
+      const env = noRootQueries[0].set;
+      const keys = noRootQueries.map((value) => value.key);
+      return this.getEnvFeatureFlags(env, keys);
+    }
+    throw new Error('No valid queries');
   }
 
   async set(configs: Config[]): Promise<void> {
-    this.assertNotSettingToRoot(configs);
-    await this.updateEnvironments();
-    const upsertPromises = configs.map(this.upsert.bind(this));
+    if (configs.some((config) => config.set === '')) throw new Error('ConfigSet cannot be empty string');
+    const environments = await this.getEnvironments();
+    const upsertPromises = configs.map(async (config) => {
+      if (!environments.includes(config.set)) {
+        environments.push(await this.createEnvironment(config));
+      }
+      let fallThroughVariation;
+      try {
+        const featureFlag = await this.getFeatureFlag(config);
+        fallThroughVariation =
+          featureFlag.variations.find((variation: any) => variation.value === config.value) ||
+          (await this.createVariation(config));
+      } catch (e) {
+        if (e.response.status === 404) {
+          const { featureFlag, onValue } = await this.createFeatureFlag(config);
+          fallThroughVariation = featureFlag.variations.find((variation: any) => variation.value === onValue);
+        } else throw e;
+      }
+      if (fallThroughVariation) await this.updateDefaultFallthroughVariation(config, fallThroughVariation._id);
+    });
     await Promise.all(upsertPromises);
   }
 }
