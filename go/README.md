@@ -1,4 +1,4 @@
-# @configu/py
+# @configu/go
 
 Configu SDK for Go
 
