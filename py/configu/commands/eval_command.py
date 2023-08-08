@@ -1,6 +1,6 @@
 from enum import Enum
 from functools import reduce
-from typing import Dict, Tuple, TypedDict
+from typing import Dict, Tuple, TypedDict, Optional
 
 from ..core import (
     Cfgu,
@@ -49,9 +49,9 @@ class EvalCommandParameters(TypedDict):
     store: ConfigStore
     set: ConfigSet
     schema: ConfigSchema
-    configs: Dict[str, str]
+    configs: Optional[Dict[str, str]]
     validate: bool
-    previous: EvalCommandReturn
+    previous: Optional[EvalCommandReturn]
 
 
 class EvalCommand(Command[EvalCommandReturn]):
