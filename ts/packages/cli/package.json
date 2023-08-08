@@ -95,8 +95,8 @@
     "configu-cli"
   ],
   "dependencies": {
-    "@configu/lib": "^0.6.1",
-    "@configu/node": "^0.15.0",
+    "@configu/lib": "^0.6.2",
+    "@configu/node": "^0.16.0",
     "@configu/ts": "^0.13.0",
     "@oclif/core": "^2.8.6",
     "@oclif/plugin-autocomplete": "^2.3.0",
