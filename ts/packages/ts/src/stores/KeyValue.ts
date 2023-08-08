@@ -94,12 +94,27 @@ export abstract class KeyValueConfigStore extends ConfigStore {
     });
 
     const setConfigsPromises = Object.entries(kvDict).map(async ([key, value]) => {
-      if (_.isEmpty(value)) {
+      let prevValue;
+      let nextValue;
+
+      if (_.isPlainObject(value)) {
+        try {
+          const result = await this.getByKey(key);
+          prevValue = this.safeJsonParse(result);
+        } catch (error) {
+          prevValue = {};
+        }
+        nextValue = _(prevValue).merge(value).omitBy(_.isEmpty).value();
+      } else {
+        nextValue = value;
+      }
+
+      if (_.isEmpty(nextValue)) {
         await this.delete(key);
         return;
       }
 
-      await this.upsert(key, _.isPlainObject(value) ? JSON.stringify(value) : String(value));
+      await this.upsert(key, _.isPlainObject(nextValue) ? JSON.stringify(nextValue) : String(nextValue));
     });
 
     await Promise.all(setConfigsPromises);
