@@ -17,7 +17,6 @@ export class LaunchDarklyConfigStore extends ConfigStore {
 
   constructor(configurations: LaunchDarklyConfigStoreParams) {
     super('launch-darkly');
-    // * ldc.json is the default config file name. see https://github.com/launchdarkly-labs/ldc
     const { ldcJsonPath, ldcConfigurationKey, ...restConfigurations } = configurations;
     const ldcConfigurations =
       ldcJsonPath && ldcConfigurationKey
