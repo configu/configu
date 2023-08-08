@@ -67,7 +67,7 @@ class UpsertCommand(Command):
                     error_message(
                         f"invalid config key '{key}'",
                         scope_location,
-                        f"key '{key}' must be declared" f" on schema {schema.path}",
+                        f"key '{key}' must be declared on schema {schema.path}",
                     )
                 )
             if value and cfgu.template is not None:
