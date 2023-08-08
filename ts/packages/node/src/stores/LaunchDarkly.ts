@@ -6,8 +6,9 @@ import _ from 'lodash';
 export interface LaunchDarklyConfigStoreParams {
   apitoken?: string;
   defaultproject?: string;
+  // * https://github.com/launchdarkly-labs/ldc
   ldcJsonPath?: string;
-  ldcConfiguration?: string;
+  ldcConfigurationKey?: string;
 }
 
 export class LaunchDarklyConfigStore extends ConfigStore {
@@ -17,14 +18,12 @@ export class LaunchDarklyConfigStore extends ConfigStore {
   constructor(configurations: LaunchDarklyConfigStoreParams) {
     super('launch-darkly');
     // * ldc.json is the default config file name. see https://github.com/launchdarkly-labs/ldc
-    const fileConfigs =
-      configurations.ldcJsonPath && configurations.ldcConfiguration
-        ? JSON.parse(fs.readFileSync(configurations.ldcJsonPath).toString())[configurations.ldcConfiguration]
+    const { ldcJsonPath, ldcConfigurationKey, ...restConfigurations } = configurations;
+    const ldcConfigurations =
+      ldcJsonPath && ldcConfigurationKey
+        ? JSON.parse(fs.readFileSync(ldcJsonPath).toString())[ldcConfigurationKey]
         : {};
-    const configs = {
-      ...{ apitoken: configurations.apitoken, defaultproject: configurations.apitoken },
-      ...fileConfigs,
-    };
+    const configs = _.merge(restConfigurations, ldcConfigurations);
     this.projectKey = configs.defaultproject;
     this.client = axios.create({
       baseURL: `${configs.server ? configs.server : 'https://app.launchdarkly.com'}/api/v2`,
