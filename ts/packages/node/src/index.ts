@@ -6,8 +6,9 @@ export { NoopConfigStore, InMemoryConfigStore } from '@configu/ts';
 
 export * from './stores/Configu';
 export * from './stores/JsonFile';
+export * from './stores/IniFile';
 
-export * from './stores/AWSParameterStore'
+export * from './stores/AWSParameterStore';
 export * from './stores/AWSSecretsManager';
 export * from './stores/AzureKeyVault';
 export * from './stores/GCPSecretManager';

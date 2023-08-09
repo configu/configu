@@ -1,7 +1,7 @@
 import { promises as fs } from 'fs';
 import _ from 'lodash';
 import ini from 'ini';
-import { ConfigStore, ConfigStoreQuery, Config, Convert } from '@configu/ts';
+import { ConfigStore, ConfigStoreQuery, Config } from '@configu/ts';
 
 export type IniFileConfigStoreConfiguration = { path: string };
 
@@ -14,24 +14,32 @@ export class IniFileConfigStore extends ConfigStore {
 
   async read(): Promise<Config[]> {
     const data = await fs.readFile(this.path, 'utf8');
-    const jsonData = JSON.stringify(ini.parse(data));
-    return Convert.toConfigStoreContents(jsonData);
+    const iniObject = ini.parse(data);
+
+    return Object.entries(iniObject).flatMap(([set, keyValuePairs]) =>
+      Object.entries(keyValuePairs)
+        .filter(([, value]) => typeof value === 'string' && !Array.isArray(value))
+        .map(([key, value]) => ({ set, key, value: value as string })),
+    );
   }
 
   async write(nextConfigs: Config[]): Promise<void> {
-    const jsonData = Convert.configStoreContentsToJson(nextConfigs);
-    const data = ini.stringify(JSON.parse(jsonData));
+    const iniObject = nextConfigs.reduce<Record<string, Record<string, string>>>((acc, config) => {
+      const set = config.set || '';
+      if (!acc[set]) {
+        acc[set] = {};
+      }
+      acc[set]![config.key] = config.value;
+      return acc;
+    }, {});
+
+    const data = ini.stringify(iniObject);
     await fs.writeFile(this.path, data);
   }
 
   async get(queries: ConfigStoreQuery[]): Promise<Config[]> {
     const storedConfigs = await this.read();
-
-    return storedConfigs.filter((config) => {
-      return queries.some(({ set, key }) => {
-        return set === config.set && key === config.key;
-      });
-    });
+    return storedConfigs.filter((config) => queries.some(({ set, key }) => set === config.set && key === config.key));
   }
 
   async set(configs: Config[]): Promise<void> {
