@@ -56,10 +56,10 @@ export abstract class ConfigSchema implements IConfigSchema {
           validator.isHash(value, 'sha512'),
         Country: ({ value }) => validator.isISO31661Alpha2(value) || validator.isISO31661Alpha3(value),
         Currency: ({ value }) => validator.isISO4217(value),
-        DockerImage: ({ value }) => 
+        DockerImage: ({ value }) =>
           // eslint-disable-next-line no-useless-escape
-          /^(?:(([a-z0-9]|[a-z0-9][a-z0-9\\-]*[a-z0-9])\.)+([a-z0-9]|[a-z0-9][a-z0-9\\-]*[a-z0-9])(:[0-9]+\/)?(?:[0-9a-z-]+[/@])(?:([0-9a-z-]+))[/@]?(?:([0-9a-z-]+))?(?::[a-z0-9\\.-]+)?|([^:\/?#\s]+):\/\/(?:([^@\/?#\s]+)@)?([^\/?#\s]+)?(?:\/([^?#\s]*))?(?:[?]([^#\s]+))?\S*)$/gm.test(
-            value,
+          /^(?:(?=[^:\/]{1,253})(?!-)[a-zA-Z0-9-]{1,63}(?<!-)(?:\.(?!-)[a-zA-Z0-9-]{1,63}(?<!-))*(?::[0-9]{1,5})?\/)?((?![._-])(?:[a-z0-9._-]*)(?<![._-])(?:\/(?![._-])[a-z0-9._-]*(?<![._-]))*)(?::(?![.-])[a-zA-Z0-9_.-]{1,128})?$/gm.test(
+            value
           ),
       },
     },
