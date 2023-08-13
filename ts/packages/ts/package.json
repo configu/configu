@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "axios": "^1.4.0",
+    "dayjs": "^1.11.9",
     "lodash": "^4.17.21",
     "mustache": "^4.2.0",
     "validator": "^13.9.0"
