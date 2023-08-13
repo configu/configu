@@ -56,6 +56,11 @@ export abstract class ConfigSchema implements IConfigSchema {
           validator.isHash(value, 'sha512'),
         Country: ({ value }) => validator.isISO31661Alpha2(value) || validator.isISO31661Alpha3(value),
         Currency: ({ value }) => validator.isISO4217(value),
+        DockerImage: ({ value }) =>
+          // eslint-disable-next-line no-useless-escape
+          /^(?:(?=[^:\/]{1,253})(?!-)[a-zA-Z0-9-]{1,63}(?<!-)(?:\.(?!-)[a-zA-Z0-9-]{1,63}(?<!-))*(?::[0-9]{1,5})?\/)?((?![._-])(?:[a-z0-9._-]*)(?<![._-])(?:\/(?![._-])[a-z0-9._-]*(?<![._-]))*)(?::(?![.-])[a-zA-Z0-9_.-]{1,128})?$/gm.test(
+            value
+          ),
       },
     },
   };

@@ -36,6 +36,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-secrets-manager": "^3.347.0",
+    "@aws-sdk/client-ssm": "^3.379.1",
     "@azure/identity": "^3.2.2",
     "@azure/keyvault-secrets": "^4.7.0",
     "@configu/ts": "*",
