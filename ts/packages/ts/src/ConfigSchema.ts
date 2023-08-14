@@ -43,7 +43,7 @@ export abstract class ConfigSchema implements IConfigSchema {
         URL: ({ value }) => validator.isURL(value),
         ConnectionString: ({ value }) =>
           // eslint-disable-next-line no-useless-escape
-          /^((?:[a-z0-9]([-a-z0-9]*[a-z0-9])?\.)+[a-z]{2,6}(?::\d{1,5})?\/)?[a-z0-9]+(?:[._\-\/:][a-z0-9]+)*$/gm.test(
+          /^(?:([^:\/?#\s]+):\/{2})?(?:([^@\/?#\s]+)@)?([^\/?#\s]+)?(?:\/([^?#\s]*))?(?:[?]([^#\s]+))?\S*$/gm.test(
             value,
           ),
         Hex: ({ value }) => validator.isHexadecimal(value),
@@ -58,7 +58,7 @@ export abstract class ConfigSchema implements IConfigSchema {
         Currency: ({ value }) => validator.isISO4217(value),
         DockerImage: ({ value }) =>
           // eslint-disable-next-line no-useless-escape
-          /^([\w.-]+\/)?[\w.-]+(?::[\w.-]+)?(\/[\w.-]+)*(?::[\w.-]+)?$/gm.test(
+          /^((?:[a-z0-9]([-a-z0-9]*[a-z0-9])?\.)+[a-z]{2,6}(?::\d{1,5})?\/)?[a-z0-9]+(?:[._\-\/:][a-z0-9]+)*$/gm.test(
             value
           ),
       },
