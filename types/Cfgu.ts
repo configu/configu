@@ -12,6 +12,7 @@ export type CfguType =
   | "ConnectionString"
   | "Hex"
   | "Base64"
+  | "MACAddress"
   | "MD5"
   | "SHA"
   | "Color"
