@@ -21,7 +21,8 @@ export type CfguType =
   | "LatLong"
   | "Country"
   | "Currency"
-  | "DockerImage";
+  | "DockerImage"
+  | "DateTime";
 
 /**
  * A generic declaration of a Config, aka Cfgu that specifies information about its type and other characteristics

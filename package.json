@@ -22,5 +22,8 @@
     "json": "^11.0.0",
     "lint-staged": "^13.2.2",
     "quicktype": "^23.0.48"
+  },
+  "dependencies": {
+    "dayjs": "^1.11.9"
   }
 }
