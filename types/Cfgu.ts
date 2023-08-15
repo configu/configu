@@ -21,7 +21,13 @@ export type CfguType =
   | "LatLong"
   | "Country"
   | "Currency"
-  | "DockerImage";
+  | "DockerImage"
+  | "AwsRegion"
+  | "AZRegion"
+  | "GCPRegion"
+  | "OracleRegion"
+  | "IBMRegion"
+  | "AlibabaRegion";
 
 /**
  * A generic declaration of a Config, aka Cfgu that specifies information about its type and other characteristics
