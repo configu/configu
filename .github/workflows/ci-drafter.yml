@@ -32,6 +32,13 @@ jobs:
 
       - uses: release-drafter/release-drafter@v5
         with:
+          config-name: configs/go-release-drafter.yml
+          disable-autolabeler: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: release-drafter/release-drafter@v5
+        with:
           config-name: configs/lib-release-drafter.yml
           disable-autolabeler: true
         env:
