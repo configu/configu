@@ -2,6 +2,7 @@ import _ from 'lodash';
 import validator from 'validator';
 import { IConfigSchema, ConfigSchemaType, Cfgu, CfguType, Convert } from './types';
 import { ERR, NAME, TMPL } from './utils';
+import { INVALID_DEFAULT_PROPERTY_ERROR, INVALID_DEPENDS_PROPERTY_ERROR, INVALID_KEY_ERROR, INVALID_PATH_ERROR, INVALID_TYPE_PROPERTY_ERROR } from './ErrorConstants';
 
 type CfguPath = `${string}.cfgu.${ConfigSchemaType}`;
 
@@ -77,7 +78,7 @@ export abstract class ConfigSchema implements IConfigSchema {
     const fileExt = splittedPath.pop();
     if (!fileExt || !ConfigSchema.TYPES.includes(fileExt)) {
       throw new Error(
-        ERR(`invalid path "${path}"`, {
+        ERR(INVALID_PATH_ERROR.replace("%s", path), {
           location: scopeLocation,
           suggestion: `path extension must be ${ConfigSchema.EXT.join('|')}`,
         }),
@@ -88,7 +89,7 @@ export abstract class ConfigSchema implements IConfigSchema {
     const cfguExt = splittedPath.pop();
     if (cfguExt !== ConfigSchema.CFGU.NAME) {
       throw new Error(
-        ERR(`invalid path "${path}"`, {
+        ERR(INVALID_PATH_ERROR.replace("%s", path), {
           location: scopeLocation,
           suggestion: `path extension must be ${ConfigSchema.EXT.join('|')}`,
         }),
@@ -110,7 +111,7 @@ export abstract class ConfigSchema implements IConfigSchema {
 
         if (!NAME(key)) {
           throw new Error(
-            ERR(`invalid key "${key}"`, {
+            ERR(INVALID_KEY_ERROR.replace("%s", key), {
               location: [...scopeLocation, key],
               suggestion: `path nodes mustn't contain reserved words "${key}"`,
             }),
@@ -119,7 +120,7 @@ export abstract class ConfigSchema implements IConfigSchema {
 
         if (type === 'RegEx' && !cfgu.pattern) {
           throw new Error(
-            ERR(`invalid type property`, {
+            ERR(INVALID_TYPE_PROPERTY_ERROR, {
               location: [...scopeLocation, key, 'type'],
               suggestion: `type "${type}" must come with a pattern property`,
             }),
@@ -128,7 +129,7 @@ export abstract class ConfigSchema implements IConfigSchema {
 
         if (cfgu.default && (cfgu.required || cfgu.template)) {
           throw new Error(
-            ERR(`invalid default property`, {
+            ERR(INVALID_DEFAULT_PROPERTY_ERROR, {
               location: [...scopeLocation, key, 'default'],
               suggestion: `default mustn't set together with required or template properties`,
             }),
@@ -137,7 +138,7 @@ export abstract class ConfigSchema implements IConfigSchema {
 
         if (cfgu.default && !ConfigSchema.CFGU.TESTS.VAL_TYPE[type]?.({ ...cfgu, value: cfgu.default })) {
           throw new Error(
-            ERR(`invalid default property`, {
+            ERR(INVALID_DEFAULT_PROPERTY_ERROR, {
               location: [...scopeLocation, key, 'default'],
               suggestion: `"${cfgu.default}" must be a "${type}"`,
             }),
@@ -148,7 +149,7 @@ export abstract class ConfigSchema implements IConfigSchema {
           cfgu.depends && (_.isEmpty(cfgu.depends) || cfgu.depends.some((depend) => !NAME(depend)));
         if (isInvalidDepends) {
           throw new Error(
-            ERR(`invalid depends property`, {
+            ERR(INVALID_DEPENDS_PROPERTY_ERROR, {
               location: [...scopeLocation, key, 'depends'],
               suggestion: `depends is empty or contain reserved words`,
             }),
