@@ -11,21 +11,14 @@ def error_message(
 ) -> str:
     location = f"at {' > '.join(location)}" if location else None
     return " ".join(
-        [
-            detail
-            for detail in [message, location, suggestion]
-            if detail is not None
-        ]
+        [detail for detail in [message, location, suggestion] if detail is not None]
     )
 
 
 def is_valid_name(name: str) -> bool:
     naming_pattern = r"^[A-Za-z0-9_-]*$"
     reserved_names = ["_", "-", "this", "cfgu"]
-    return (
-        name not in reserved_names
-        and re.match(naming_pattern, name) is not None
-    )
+    return name not in reserved_names and re.match(naming_pattern, name) is not None
 
 
 def parse_template(template: str) -> List[str]:
@@ -33,9 +26,7 @@ def parse_template(template: str) -> List[str]:
     for tag_type, tag_key in chevron.tokenizer.tokenize(template):
         if tag_type not in ["variable", "literal"]:
             raise Exception(
-                error_message(
-                    f'invalid template "{template}"', ["Template", "parse"]
-                )
+                error_message(f'invalid template "{template}"', ["Template", "parse"])
             )
         if tag_type == "variable":
             template_vars.append(tag_key)
