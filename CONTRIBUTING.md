@@ -90,6 +90,10 @@ The [./py](./py) directory houses the Python SDK that is powered by [Poetry](htt
 
 The [./java](./java) directory will shortly contain the Java SDK.
 
+#### [./go](./go)
+
+The [./go](./go) directory will shortly contain the Go SDK
+
 ### Sending a Pull Request
 
 For non-trivial changes, please open an issue with a proposal for a new feature or refactoring before starting on the work. We don't want you to waste your efforts on a pull request that we won't want to accept.
