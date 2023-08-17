@@ -61,8 +61,8 @@ export abstract class ConfigSchema implements IConfigSchema {
           /^((?:[a-z0-9]([-a-z0-9]*[a-z0-9])?\.)+[a-z]{2,6}(?::\d{1,5})?\/)?[a-z0-9]+(?:[._\-\/:][a-z0-9]+)*$/gm.test(
             value
           ),
-        MIMEType: ({ value }) => validator.isMimeType(value),
         MACAddress: ({ value }) => validator.isMACAddress(value),
+        MIMEType: ({ value }) => validator.isMimeType(value),
       },
     },
   };
