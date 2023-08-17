@@ -52,7 +52,7 @@ class UpsertCommand(Command):
 
         :raises ValueError: if any config is invalid for the schema
         """
-        scope_location = ["UpsertCommand", "run"]
+        error_scope = ["UpsertCommand", "run"]
         store = self.parameters["store"]
         set_ = self.parameters["set"]
         schema = self.parameters["schema"]
@@ -66,7 +66,7 @@ class UpsertCommand(Command):
                 raise ValueError(
                     error_message(
                         f"invalid config key '{key}'",
-                        scope_location,
+                        error_scope,
                         f"key '{key}' must be declared on schema {schema.path}",
                     )
                 )
@@ -74,29 +74,41 @@ class UpsertCommand(Command):
                 raise ValueError(
                     error_message(
                         f"invalid assignment to config key '{key}'",
-                        scope_location,
+                        error_scope,
                         "keys declared with template mustn't have a value",
                     )
                 )
-            type_test = ConfigSchema.CFGU.VALIDATORS.get(cfgu.type.value, lambda: False)
-            test_values = (
-                (
-                    value,
-                    cfgu.pattern,
-                )
-                if cfgu.type == CfguType.REG_EX
-                else (value,)
-            )
-            if value and not type_test(*test_values):
-                of_type = cfgu.type.value
-                if cfgu.type == CfguType.REG_EX:
-                    of_type += f"({cfgu.pattern})"
-                raise ValueError(
-                    error_message(
-                        f"invalid config value '{value}' for key '{key}'",
-                        scope_location,
-                        f"value '{value}' must be of type '{of_type}'",
+            try:
+                type_test = ConfigSchema.CFGU.VALIDATORS[cfgu.type.value]
+                test_values = (
+                    (
+                        value,
+                        cfgu.pattern,
                     )
+                    if cfgu.type == CfguType.REG_EX
+                    else (value,)
                 )
+                if value and not type_test(*test_values):
+                    of_type = cfgu.type.value
+                    if cfgu.type == CfguType.REG_EX:
+                        of_type += f"({cfgu.pattern})"
+                    raise ValueError(
+                        error_message(
+                            f"invalid config value '{value}' for key '{key}'",
+                            error_scope,
+                            f"value '{value}' must be of type '{of_type}'",
+                        )
+                    )
+            except KeyError:
+                raise KeyError(
+                    error_message("invalid type property", error_scope + [key, "type"]),
+                    f"type '{cfgu.type.value}' is not yet supported in this SDK. "
+                    f"For the time being, please utilize the String type. "
+                    f"We'd greatly appreciate it if you could open an issue "
+                    f"regarding this at "
+                    f"https://github.com/configu/configu/issues/new/choose "
+                    f"so we can address it in future updates.",
+                )
+
             upset_configs.append(Config(set=set_.path, key=key, value=value))
         store.set(upset_configs)
