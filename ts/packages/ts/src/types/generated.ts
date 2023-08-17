@@ -32,7 +32,7 @@ export interface Cfgu {
     type:         CfguType;
 }
 
-export type CfguType = "Base64" | "Boolean" | "Color" | "ConnectionString" | "Country" | "Currency" | "Domain" | "Email" | "Hex" | "IPv4" | "IPv6" | "LatLong" | "Locale" | "MD5" | "MobilePhone" | "Number" | "RegEx" | "SHA" | "SemVer" | "String" | "URL" | "UUID" | "DockerImage" | "MACAddress";
+export type CfguType = "Base64" | "Boolean" | "Color" | "ConnectionString" | "Country" | "Currency" | "Domain" | "Email" | "Hex" | "IPv4" | "IPv6" | "LatLong" | "Locale" | "MD5" | "MobilePhone" | "Number" | "RegEx" | "SHA" | "SemVer" | "String" | "URL" | "UUID" | "DockerImage" | "MACAddress" | "MIMEType";
 
 /**
  * A generic representation of a software configuration, aka Config
@@ -405,6 +405,7 @@ const typeMap: any = {
         "Locale",
         "MACAddress",
         "MD5",
+        "MIMEType",
         "MobilePhone",
         "Number",
         "RegEx",

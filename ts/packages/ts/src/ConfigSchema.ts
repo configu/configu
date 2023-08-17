@@ -62,6 +62,7 @@ export abstract class ConfigSchema implements IConfigSchema {
             value
           ),
         MACAddress: ({ value }) => validator.isMACAddress(value),
+        MIMEType: ({ value }) => validator.isMimeType(value),
       },
     },
   };
