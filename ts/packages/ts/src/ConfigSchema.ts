@@ -58,7 +58,7 @@ export abstract class ConfigSchema implements IConfigSchema {
         Currency: ({ value }) => validator.isISO4217(value),
         DockerImage: ({ value }) =>
           // eslint-disable-next-line no-useless-escape
-          /^(?:(?=[^:\/]{1,253})(?!-)[a-zA-Z0-9-]{1,63}(?<!-)(?:\.(?!-)[a-zA-Z0-9-]{1,63}(?<!-))*(?::[0-9]{1,5})?\/)?((?![._-])(?:[a-z0-9._-]*)(?<![._-])(?:\/(?![._-])[a-z0-9._-]*(?<![._-]))*)(?::(?![.-])[a-zA-Z0-9_.-]{1,128})?$/gm.test(
+          /^((?:[a-z0-9]([-a-z0-9]*[a-z0-9])?\.)+[a-z]{2,6}(?::\d{1,5})?\/)?[a-z0-9]+(?:[._\-\/:][a-z0-9]+)*$/gm.test(
             value
           ),
         MACAddress: ({ value }) => validator.isMACAddress(value),
