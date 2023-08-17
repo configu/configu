@@ -58,9 +58,59 @@ export abstract class ConfigSchema implements IConfigSchema {
         Currency: ({ value }) => validator.isISO4217(value),
         DockerImage: ({ value }) =>
           // eslint-disable-next-line no-useless-escape
-          /^(?:(?=[^:\/]{1,253})(?!-)[a-zA-Z0-9-]{1,63}(?<!-)(?:\.(?!-)[a-zA-Z0-9-]{1,63}(?<!-))*(?::[0-9]{1,5})?\/)?((?![._-])(?:[a-z0-9._-]*)(?<![._-])(?:\/(?![._-])[a-z0-9._-]*(?<![._-]))*)(?::(?![.-])[a-zA-Z0-9_.-]{1,128})?$/gm.test(
+          /^((?:[a-z0-9]([-a-z0-9]*[a-z0-9])?\.)+[a-z]{2,6}(?::\d{1,5})?\/)?[a-z0-9]+(?:[._\-\/:][a-z0-9]+)*$/gm.test(
             value
           ),
+        MACAddress: ({ value }) => validator.isMACAddress(value),
+        MIMEType: ({ value }) => validator.isMimeType(value),
+        AwsRegion: ({ value }) => new Set([
+          "af-south-1", "ap-east-1", "ap-northeast-1", "ap-northeast-2", "ap-northeast-3",
+          "ap-south-1", "ap-southeast-1", "ap-southeast-2", "ca-central-1", "cn-north-1",
+          "cn-northwest-1", "eu-central-1", "eu-north-1", "eu-south-1", "eu-west-1",
+          "eu-west-2", "eu-west-3", "me-south-1", "sa-east-1", "us-east-1", "us-east-2",
+          "us-gov-east-1", "us-gov-west-1", "us-west-1", "us-west-2"
+        ]).has(value),
+        AZRegion: ({ value }) => new Set([
+          "eastus", "eastus2", "centralus", "northcentralus", "southcentralus", "westcentralus",
+          "westus", "westus2", "canadacentral", "canadaeast", "brazilsouth", "brazilsoutheast",
+          "northeurope", "westeurope", "uksouth", "ukwest", "francecentral", "francesouth",
+          "switzerlandnorth", "switzerlandwest", "germanywestcentral", "norwayeast", "norwaywest",
+          "eastasia", "southeastasia", "australiaeast", "australiasoutheast", "australiacentral",
+          "australiacentral2", "japaneast", "japanwest", "koreacentral", "koreasouth",
+          "southafricanorth", "southafricawest", "uaenorth", "uaecentral", "usgovarizona",
+          "usgovtexas", "usdodeast", "usdodcentral", "usgovvirginia", "usgoviowa",
+          "usgovcalifornia", "ussecwest", "usseceast"
+        ]).has(value),
+        GCPRegion: ({ value }) => new Set([
+          "us-east1", "us-east4", "us-west1", "us-west2", "us-west3", "us-central1",
+          "northamerica-northeast1", "southamerica-east1", "europe-north1", "europe-west1",
+          "europe-west2", "europe-west3", "europe-west4", "europe-west6", "asia-east1",
+          "asia-east2", "asia-northeast1", "asia-northeast2", "asia-northeast3", "asia-south1",
+          "asia-southeast1", "australia-southeast1", "australia-southeast2", "southasia-east1",
+          "northamerica-northeast2", "europe-central2", "asia-southeast2", "asia-east3",
+          "europe-west7", "us-west4", "europe-west8", "asia-northeast4", "asia-southeast3",
+          "us-west5", "us-central2", "us-east5", "us-north1", "northamerica-northeast3", "us-west6"
+        ]).has(value),
+        OracleRegion: ({ value }) => new Set([
+          "us-ashburn-1", "us-phoenix-1", "ca-toronto-1", "sa-saopaulo-1", "uk-london-1",
+          "uk-gov-london-1", "eu-frankfurt-1", "eu-zurich-1", "eu-amsterdam-1", "me-jeddah-1",
+          "ap-mumbai-1", "ap-osaka-1", "ap-seoul-1", "ap-sydney-1", "ap-tokyo-1", "ap-chuncheon-1",
+          "ap-melbourne-1", "ap-hyderabad-1", "ca-montreal-1", "us-sanjose-1", "us-luke-1",
+          "me-dubai-1", "us-gov-ashburn-1", "us-gov-chicago-1", "us-gov-phoenix-1",
+          "us-gov-orlando-1", "us-gov-sanjose-1", "us-gov-ashburn-2"
+        ]).has(value),
+        IBMRegion: ({ value }) => new Set([
+          "us-south", "us-east", "us-north", "us-west", "eu-gb", "eu-de", "eu-nl", "eu-fr",
+          "eu-it", "ap-north", "ap-south", "ap-east", "ap-jp", "ap-au", "ca-toronto", "ca-central",
+          "sa-saopaulo", "sa-mexico", "sa-buenosaires", "sa-lima", "sa-santiago", "af-za", "af-eg",
+          "af-dz", "af-ma"
+        ]).has(value),
+        AlibabaRegion: ({ value }) => new Set([
+          "cn-hangzhou", "cn-shanghai", "cn-beijing", "cn-shenzhen", "cn-zhangjiakou", "cn-huhehaote",
+          "cn-wulanchabu", "ap-southeast-1", "ap-southeast-2", "ap-southeast-3", "ap-southeast-5",
+          "ap-northeast-1", "ap-south-1", "ap-south-2", "us-west-1", "us-east-1", "eu-west-1",
+          "eu-central-1", "me-east-1", "ap-southwest-1"
+        ]).has(value),
         Language: ({ value }) => validator.isISO6391(value),
       },
     },

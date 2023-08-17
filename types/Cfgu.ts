@@ -22,6 +22,14 @@ export type CfguType =
   | "Country"
   | "Currency"
   | "DockerImage"
+  | "MACAddress"
+  | "MIMEType"
+  | "AwsRegion"
+  | "AZRegion"
+  | "GCPRegion"
+  | "OracleRegion"
+  | "IBMRegion"
+  | "AlibabaRegion"
   | "Language";
 
 /**
