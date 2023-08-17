@@ -58,10 +58,12 @@ export abstract class ConfigSchema implements IConfigSchema {
         Currency: ({ value }) => validator.isISO4217(value),
         DockerImage: ({ value }) =>
           // eslint-disable-next-line no-useless-escape
-          /^(?:(?=[^:\/]{1,253})(?!-)[a-zA-Z0-9-]{1,63}(?<!-)(?:\.(?!-)[a-zA-Z0-9-]{1,63}(?<!-))*(?::[0-9]{1,5})?\/)?((?![._-])(?:[a-z0-9._-]*)(?<![._-])(?:\/(?![._-])[a-z0-9._-]*(?<![._-]))*)(?::(?![.-])[a-zA-Z0-9_.-]{1,128})?$/gm.test(
+          /^((?:[a-z0-9]([-a-z0-9]*[a-z0-9])?\.)+[a-z]{2,6}(?::\d{1,5})?\/)?[a-z0-9]+(?:[._\-\/:][a-z0-9]+)*$/gm.test(
             value
           ),
-        AwsRegion: ({ value }) => new Set([
+        MACAddress: ({ value }) => validator.isMACAddress(value),
+        MIMEType: ({ value }) => validator.isMimeType(value),
+                AwsRegion: ({ value }) => new Set([
           "af-south-1", "ap-east-1", "ap-northeast-1", "ap-northeast-2", "ap-northeast-3",
           "ap-south-1", "ap-southeast-1", "ap-southeast-2", "ca-central-1", "cn-north-1",
           "cn-northwest-1", "eu-central-1", "eu-north-1", "eu-south-1", "eu-west-1",
