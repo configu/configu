@@ -44,7 +44,7 @@ export abstract class ConfigSchema implements IConfigSchema {
         ConnectionString: ({ value }) =>
           // eslint-disable-next-line no-useless-escape
           /^(?:([^:\/?#\s]+):\/{2})?(?:([^@\/?#\s]+)@)?([^\/?#\s]+)?(?:\/([^?#\s]*))?(?:[?]([^#\s]+))?\S*$/gm.test(
-            value
+            value,
           ),
         Hex: ({ value }) => validator.isHexadecimal(value),
         Base64: ({ value }) => validator.isBase64(value),
@@ -59,7 +59,7 @@ export abstract class ConfigSchema implements IConfigSchema {
         DockerImage: ({ value }) =>
           // eslint-disable-next-line no-useless-escape
           /^((?:[a-z0-9]([-a-z0-9]*[a-z0-9])?\.)+[a-z]{2,6}(?::\d{1,5})?\/)?[a-z0-9]+(?:[._\-\/:][a-z0-9]+)*$/gm.test(
-            value
+            value,
           ),
         MACAddress: ({ value }) => validator.isMACAddress(value),
         MIMEType: ({ value }) => validator.isMimeType(value),
