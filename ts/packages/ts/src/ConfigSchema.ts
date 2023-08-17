@@ -63,7 +63,7 @@ export abstract class ConfigSchema implements IConfigSchema {
           ),
         MACAddress: ({ value }) => validator.isMACAddress(value),
         MIMEType: ({ value }) => validator.isMimeType(value),
-                AwsRegion: ({ value }) => new Set([
+        AwsRegion: ({ value }) => new Set([
           "af-south-1", "ap-east-1", "ap-northeast-1", "ap-northeast-2", "ap-northeast-3",
           "ap-south-1", "ap-southeast-1", "ap-southeast-2", "ca-central-1", "cn-north-1",
           "cn-northwest-1", "eu-central-1", "eu-north-1", "eu-south-1", "eu-west-1",
@@ -111,6 +111,7 @@ export abstract class ConfigSchema implements IConfigSchema {
           "ap-northeast-1", "ap-south-1", "ap-south-2", "us-west-1", "us-east-1", "eu-west-1",
           "eu-central-1", "me-east-1", "ap-southwest-1"
         ]).has(value),
+        Language: ({ value }) => validator.isISO6391(value),
       },
     },
   };
