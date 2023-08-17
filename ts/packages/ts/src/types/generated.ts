@@ -32,7 +32,7 @@ export interface Cfgu {
     type:         CfguType;
 }
 
-export type CfguType = "Base64" | "Boolean" | "Color" | "ConnectionString" | "Country" | "Currency" | "Domain" | "Email" | "Hex" | "IPv4" | "IPv6" | "LatLong" | "Locale" | "MD5" | "MobilePhone" | "Number" | "RegEx" | "SHA" | "SemVer" | "String" | "URL" | "UUID" | "DockerImage" | "MACAddress" | "MIMEType" | "AwsRegion" | "AZRegion" | "GCPRegion" | "OracleRegion" | "IBMRegion" | "AlibabaRegion" | "Language";
+export type CfguType = "AZRegion" | "AlibabaRegion" | "AwsRegion" | "Base64" | "Boolean" | "Color" | "ConnectionString" | "Country" | "Currency" | "DockerImage" | "Domain" | "Email" | "GCPRegion" | "Hex" | "IBMRegion" | "IPv4" | "IPv6" | "Language" | "LatLong" | "Locale" | "MACAddress" | "MD5" | "MIMEType" | "MobilePhone" | "Number" | "OracleRegion" | "RegEx" | "SHA" | "SemVer" | "String" | "URL" | "UUID";
 
 /**
  * A generic representation of a software configuration, aka Config
@@ -389,9 +389,9 @@ const typeMap: any = {
         { json: "value", js: "value", typ: "" },
     ], false),
     "CfguType": [
+        "AZRegion",
         "AlibabaRegion",
         "AwsRegion",
-        "AZRegion",
         "Base64",
         "Boolean",
         "Color",
@@ -410,8 +410,8 @@ const typeMap: any = {
         "LatLong",
         "Locale",
         "MACAddress",
-        "MD5",
         "MIMEType",
+        "MD5",
         "MobilePhone",
         "Number",
         "OracleRegion",
