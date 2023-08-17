@@ -22,7 +22,9 @@ export type CfguType =
   | "Country"
   | "Currency"
   | "DockerImage"
+  | "MACAddress"
   | "MIMEType";
+
 
 /**
  * A generic declaration of a Config, aka Cfgu that specifies information about its type and other characteristics
