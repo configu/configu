@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import validator from 'validator';
-import { Cfgu, CfguType, ConfigSchemaType, Convert, IConfigSchema } from './types';
-import { ERR, NAME } from './utils';
+import { IConfigSchema, ConfigSchemaType, Cfgu, CfguType, Convert } from './types';
+import { ERR, NAME, TMPL } from './utils';
 
 type CfguPath = `${string}.cfgu.${ConfigSchemaType}`;
 
