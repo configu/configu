@@ -43,6 +43,7 @@
     "@google-cloud/secret-manager": "^4.2.2",
     "@kubernetes/client-node": "^0.18.1",
     "axios": "^1.4.0",
+    "keyv": "^4.5.3",
     "lodash": "^4.17.21",
     "mssql": "^9.1.1",
     "mysql": "^2.18.1",
@@ -52,7 +53,6 @@
     "typeorm": "^0.3.16"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.195",
-    "keyv": "^4.5.2"
+    "@types/lodash": "^4.14.195"
   }
 }
