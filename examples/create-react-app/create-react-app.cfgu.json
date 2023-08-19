@@ -6,7 +6,7 @@
   },
   "REACT_APP_LOGO_SRC": {
     "type": "URL",
-    "default": "https://raw.githubusercontent.com/configu/configu/main/assets/logo.svg",
+    "default": "https://raw.githubusercontent.com/configu/configu/main/assets/icon.svg",
     "description": "Determines the source of the spined logo displayed in the app"
   },
   "DEPLOYMENT_PLATFORM": {

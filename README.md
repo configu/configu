@@ -1,7 +1,7 @@
 # Configu
 
 <a href="https://configu.com" target="_blank">
-  <img align="right" src="https://raw.githubusercontent.com/configu/configu/main/assets/logo.svg" height="150px" alt="configu icon">
+  <img align="right" src="https://raw.githubusercontent.com/configu/configu/main/assets/icon.svg" height="150px" alt="configu icon">
 </a>
 
 [**Configu**](https://configu.com/docs/) is a _simple_, _modern_, and _generic_ standard for managing and collaborating **software configurations ⚙️**. 
