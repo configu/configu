@@ -1,6 +1,5 @@
 import _ from 'lodash';
 import validator from 'validator';
-import dayjs from 'dayjs';
 import { IConfigSchema, ConfigSchemaType, Cfgu, CfguType, Convert } from './types';
 import { ERR, NAME, TMPL } from './utils';
 
@@ -62,9 +61,7 @@ export abstract class ConfigSchema implements IConfigSchema {
           /^((?:[a-z0-9]([-a-z0-9]*[a-z0-9])?\.)+[a-z]{2,6}(?::\d{1,5})?\/)?[a-z0-9]+(?:[._\-\/:][a-z0-9]+)*$/gm.test(
             value
           ),
-
-        DateTime: ({ value }) => validator.isDate(value) || validator.isTime(value) || dayjs(value, 'YYYY-MM-DD', true).isValid() || dayjs(value, 'YYYY/MM/DD', true).isValid(),
-
+        DateTime: ({ value }) => validator.isDate(value) || validator.isTime(value) || !isNaN(new Date(value).getTime()),
         MACAddress: ({ value }) => validator.isMACAddress(value),
         MIMEType: ({ value }) => validator.isMimeType(value),
         AwsRegion: ({ value }) =>
