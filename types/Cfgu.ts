@@ -22,7 +22,7 @@ export type CfguType =
   | "Country"
   | "Currency"
   | "DockerImage"
-  | "DateTime";
+  | "DateTime"
   | "MACAddress"
   | "MIMEType"
   | "AwsRegion"
