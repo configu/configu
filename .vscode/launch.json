@@ -9,19 +9,22 @@
       "program": "${workspaceRoot}/ts/packages/cli/bin/dev",
       "env": {
         // "VAULT_ADDR": "http://127.0.0.1:8200",
-        // "VAULT_TOKEN": "root"
+        // "VAULT_TOKEN": "root",
+        "CONFIGU_ORG": "playground",
+        "CONFIGU_TOKEN": "EiUe5wEUKqCB4KbWMpAj1yRp1GwAnPFVjWPx3r1d"
       },
       "args": [
         // "upsert",
         // "export",
-        "delete",
+        // "delete",
+        "test",
 
-        // "--store", "configu-prod",
-        "--store", "store=configu;org=playground;token=8Jka0Ey8VjbUFWc80RQKQIKWkq3mPohZkyB5MQsq;type=Token;endpoint=http://localhost:8080",
+        "--store", "configu",
+        // "--store", "store=configu;org=playground;token=8Jka0Ey8VjbUFWc80RQKQIKWkq3mPohZkyB5MQsq;type=Token;endpoint=http://localhost:8080",
         // "--store", "json-file://ts/packages/node/test/db.json",
         // "--store", "hashicorp-vault://-",
 
-        "--set", "dev",
+        // "--set", "dev",
         // "--set", "/prod/us-east-1",
         // "--set", "demo",
 

@@ -9,6 +9,7 @@
         "ConnectionString",
         "Country",
         "Currency",
+        "DockerImage",
         "Domain",
         "Email",
         "Hex",

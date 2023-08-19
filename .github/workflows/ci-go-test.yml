@@ -17,7 +17,8 @@ jobs:
 
       - uses: ./.github/actions/go-env-action
 
-      - uses: golangci/golangci-lint-action@v3
+      - name: Run linter
+        uses: golangci/golangci-lint-action@v3
         with:
           working-directory: ${{ env.CWD }}
           args: --exclude "Error return value of \`.*\` is not checked"

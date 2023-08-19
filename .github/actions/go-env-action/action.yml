@@ -24,10 +24,12 @@ runs:
       uses: actions/setup-go@v4
       with:
         go-version: ${{ inputs.go-version }}
+
     - name: Set CWD environment variable
       shell: bash
       run: |
         echo "CWD=${{ inputs.dependencies-root }}" >> $GITHUB_ENV
+
     - name: Install dependencies
       shell: bash
       if: ${{ inputs.install-dependencies == 'true' }} # * there is a bug in gh-actions causing booleans to be strings in composite actions - see: https://github.com/actions/runner/issues/1483#issuecomment-1042393939

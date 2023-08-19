@@ -58,6 +58,7 @@ class CfguType(Enum):
     CONNECTION_STRING = "ConnectionString"
     COUNTRY = "Country"
     CURRENCY = "Currency"
+    DOCKER_IMAGE = "DockerImage"
     DOMAIN = "Domain"
     EMAIL = "Email"
     HEX = "Hex"
