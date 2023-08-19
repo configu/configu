@@ -1,14 +1,13 @@
-import { Config, Command, Flags, Interfaces, Errors, ux } from '@oclif/core';
 import fs from 'fs/promises';
 import path from 'path';
+import { Config, Command, Flags, Interfaces, Errors, ux } from '@oclif/core';
 import _ from 'lodash';
 import { cosmiconfig } from 'cosmiconfig';
 import axios from 'axios';
 import chalk from 'chalk';
 import logSymbols from 'log-symbols';
 import ci from 'ci-info';
-import { EvalCommandReturn, TMPL } from '@configu/ts';
-import { ConfiguConfigStore } from '@configu/node';
+import { EvalCommandReturn, ConfiguConfigStore, TMPL } from '@configu/ts';
 import { constructStore } from './helpers';
 
 type BaseConfig = Config & {
@@ -103,7 +102,22 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     const storeConfiguration = this.config.cli.data.stores?.[storeFlag]?.configuration;
 
     if (storeFlag === this.config.bin || storeType === this.config.bin) {
-      return constructStore(this.config.bin, _.merge(this.config.configu.data, storeConfiguration, { source: 'cli' }));
+      return constructStore(
+        this.config.bin,
+        _.merge(
+          this.config.configu.data, // from configu login
+          {
+            // from environment variables
+            credentials: {
+              org: process.env.CONFIGU_ORG,
+              token: process.env.CONFIGU_TOKEN,
+            },
+            endpoint: process.env.CONFIGU_ENDPOINT,
+          },
+          storeConfiguration, // from .configu file
+          { source: 'cli' },
+        ),
+      );
     }
 
     return constructStore(storeType, storeConfiguration);
