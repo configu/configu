@@ -35,8 +35,8 @@
     "build": "tsc --build --verbose"
   },
   "dependencies": {
-    "@aws-sdk/client-secrets-manager": "^3.391.0",
-    "@aws-sdk/client-ssm": "^3.391.0",
+    "@aws-sdk/client-secrets-manager": "^3.395.0",
+    "@aws-sdk/client-ssm": "^3.395.0",
     "@azure/identity": "^3.3.0",
     "@azure/keyvault-secrets": "^4.7.0",
     "@configu/ts": "*",
