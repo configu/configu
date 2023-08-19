@@ -11,30 +11,16 @@
         // "VAULT_ADDR": "http://127.0.0.1:8200",
         // "VAULT_TOKEN": "root",
         "CONFIGU_ORG": "playground",
-        "CONFIGU_TOKEN": "EiUe5wEUKqCB4KbWMpAj1yRp1GwAnPFVjWPx3r1d"
+        "CONFIGU_TOKEN": ""
       },
       "args": [
+        // "test",
         // "upsert",
         // "export",
+        // "eval",
         // "delete",
-        "test",
 
         "--store", "configu",
-        // "--store", "store=configu;org=playground;token=8Jka0Ey8VjbUFWc80RQKQIKWkq3mPohZkyB5MQsq;type=Token;endpoint=http://localhost:8080",
-        // "--store", "json-file://ts/packages/node/test/db.json",
-        // "--store", "hashicorp-vault://-",
-
-        // "--set", "dev",
-        // "--set", "/prod/us-east-1",
-        // "--set", "demo",
-
-        // "--schema", "ts/packages/cli/cli.cfgu.json",
-        // "--schema", "ts/packages/node/test/s2.cfgu.json",
-        // "--schema", "~/dev/saas/saas.cfgu.json",
-
-        // "--config", "S1V1=44", //"S1V1={{hashicorp-vault://secret/prod/service/NPM_TOKEN}}"
-        // "--config", "MY_FIRST_CONFIG=test"
-        // "--config", "MY_FIRST_CONFIG={{store=aws-secrets-manager;query=cra.secret}}"
       ],
       "outFiles": [
         "${workspaceFolder}/**/*.js",
