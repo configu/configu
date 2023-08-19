@@ -1,6 +1,6 @@
+import * as fs from 'fs';
 import { Config, ConfigStore, ConfigStoreQuery } from '@configu/ts';
 import axios, { Axios } from 'axios';
-import * as fs from 'fs';
 import _ from 'lodash';
 
 export interface LaunchDarklyConfigStoreParams {

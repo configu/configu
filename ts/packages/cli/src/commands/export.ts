@@ -1,6 +1,6 @@
-import { Flags, ux } from '@oclif/core';
 import { cwd } from 'process';
 import { spawnSync } from 'child_process';
+import { Flags, ux } from '@oclif/core';
 import _ from 'lodash';
 import { TMPL, EvalCommandReturn, EvaluatedConfigOrigin, ExportCommandReturn } from '@configu/ts';
 import { ExportCommand } from '@configu/node';

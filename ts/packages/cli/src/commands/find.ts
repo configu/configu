@@ -1,9 +1,9 @@
-import { Flags } from '@oclif/core';
 import path from 'path';
-import { ConfigSchema } from '@configu/node';
 import { createInterface } from 'readline';
 import { createReadStream } from 'fs';
 import { once } from 'events';
+import { ConfigSchema } from '@configu/node';
+import { Flags } from '@oclif/core';
 import _ from 'lodash';
 import { TMPL } from '@configu/ts';
 import FastGlob = require('fast-glob');

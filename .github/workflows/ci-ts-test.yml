@@ -22,6 +22,11 @@ jobs:
         with:
           dependencies-root: "ts"
 
+      - name: Run linter
+        run: |
+          cd ${{ env.CWD }}
+          npm run lint:check
+
       - name: Run tests & Generate coverage report
         run: |
           cd ${{ env.CWD }}

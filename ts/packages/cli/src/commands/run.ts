@@ -1,6 +1,6 @@
-import { Flags } from '@oclif/core';
 import { cwd } from 'process';
 import { spawnSync } from 'child_process';
+import { Flags } from '@oclif/core';
 import { BaseCommand } from '../base';
 
 export default class Run extends BaseCommand<typeof Run> {
