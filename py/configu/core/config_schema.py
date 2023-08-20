@@ -138,32 +138,32 @@ class ConfigSchema(IConfigSchema):
                 else:
                     try:
                         type_test = ConfigSchema.CFGU.VALIDATORS[cfgu.type.value]
-                        test_values = (
-                            (cfgu.default, cfgu.pattern)
-                            if cfgu.type == CfguType.REG_EX
-                            else (cfgu.default,)
-                        )
-                        if not type_test(*test_values):
-                            raise ValueError(
-                                error_message(
-                                    "invalid default property",
-                                    error_scope + [key, "default"],
-                                ),
-                                f"{cfgu.default} must be of type {cfgu.type.value}"
-                                f" or match Regex",
-                            )
-                    except KeyError:
+                    except KeyError as e:
                         raise KeyError(
                             error_message(
                                 "invalid type property", error_scope + [key, "type"]
                             ),
                             f"type '{cfgu.type.value}' is not yet "
-                            f"supported in this SDK. For the time being, "
-                            f"please utilize the String type. "
-                            f"We'd greatly appreciate it if you could open an issue "
-                            f"regarding this at "
-                            f"https://github.com/configu/configu/issues/new/choose "
-                            f"so we can address it in future updates.",
+                            "supported in this SDK. For the time being, "
+                            "please utilize the String type. "
+                            "We'd greatly appreciate it if you could open an issue "
+                            "regarding this at "
+                            "https://github.com/configu/configu/issues/new/choose "
+                            "so we can address it in future updates.",
+                        ) from e
+                    test_values = (
+                        (cfgu.default, cfgu.pattern)
+                        if cfgu.type == CfguType.REG_EX
+                        else (cfgu.default,)
+                    )
+                    if not type_test(*test_values):
+                        raise ValueError(
+                            error_message(
+                                "invalid default property",
+                                error_scope + [key, "default"],
+                            ),
+                            f"{cfgu.default} must be of type {cfgu.type.value}"
+                            f" or match Regex",
                         )
 
             if cfgu.depends is not None and (

@@ -160,32 +160,32 @@ class EvalCommand(Command[EvalCommandReturn]):
                 evaluated_value = value["result"]["value"]
                 try:
                     type_test = ConfigSchema.CFGU.VALIDATORS[cfgu.type.value]
-                    test_values = (
-                        (
-                            evaluated_value,
-                            cfgu.pattern,
-                        )
-                        if cfgu.type == CfguType.REG_EX
-                        else (evaluated_value,)
-                    )
-                    if not type_test(*test_values):
-                        raise ValueError(
-                            error_message(
-                                f"invalid value type for key '{key}'", error_scope
-                            ),
-                            f"value '{test_values[0]}' must be a " f"'{cfgu.type}'",
-                        )
-                except KeyError:
+                except KeyError as e:
                     raise KeyError(
                         error_message(
                             "invalid type property", error_scope + [key, "type"]
                         ),
                         f"type '{cfgu.type.value}' is not yet supported in this SDK. "
-                        f"For the time being, please utilize the String type. "
-                        f"We'd greatly appreciate it if you could open an issue "
-                        f"regarding this at "
-                        f"https://github.com/configu/configu/issues/new/choose "
-                        f"so we can address it in future updates.",
+                        "For the time being, please utilize the String type. "
+                        "We'd greatly appreciate it if you could open an issue "
+                        "regarding this at "
+                        "https://github.com/configu/configu/issues/new/choose "
+                        "so we can address it in future updates.",
+                    ) from e
+                test_values = (
+                    (
+                        evaluated_value,
+                        cfgu.pattern,
+                    )
+                    if cfgu.type == CfguType.REG_EX
+                    else (evaluated_value,)
+                )
+                if not type_test(*test_values):
+                    raise ValueError(
+                        error_message(
+                            f"invalid value type for key '{key}'", error_scope
+                        ),
+                        f"value '{test_values[0]}' must be a " f"'{cfgu.type}'",
                     )
 
                 if cfgu.required is not None and not bool(test_values[0]):

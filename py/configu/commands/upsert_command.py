@@ -80,34 +80,34 @@ class UpsertCommand(Command):
                 )
             try:
                 type_test = ConfigSchema.CFGU.VALIDATORS[cfgu.type.value]
-                test_values = (
-                    (
-                        value,
-                        cfgu.pattern,
-                    )
-                    if cfgu.type == CfguType.REG_EX
-                    else (value,)
-                )
-                if value and not type_test(*test_values):
-                    of_type = cfgu.type.value
-                    if cfgu.type == CfguType.REG_EX:
-                        of_type += f"({cfgu.pattern})"
-                    raise ValueError(
-                        error_message(
-                            f"invalid config value '{value}' for key '{key}'",
-                            error_scope,
-                            f"value '{value}' must be of type '{of_type}'",
-                        )
-                    )
-            except KeyError:
+            except KeyError as e:
                 raise KeyError(
                     error_message("invalid type property", error_scope + [key, "type"]),
                     f"type '{cfgu.type.value}' is not yet supported in this SDK. "
-                    f"For the time being, please utilize the String type. "
-                    f"We'd greatly appreciate it if you could open an issue "
-                    f"regarding this at "
-                    f"https://github.com/configu/configu/issues/new/choose "
-                    f"so we can address it in future updates.",
+                    "For the time being, please utilize the String type. "
+                    "We'd greatly appreciate it if you could open an issue "
+                    "regarding this at "
+                    "https://github.com/configu/configu/issues/new/choose "
+                    "so we can address it in future updates.",
+                ) from e
+            test_values = (
+                (
+                    value,
+                    cfgu.pattern,
+                )
+                if cfgu.type == CfguType.REG_EX
+                else (value,)
+            )
+            if value and not type_test(*test_values):
+                of_type = cfgu.type.value
+                if cfgu.type == CfguType.REG_EX:
+                    of_type += f"({cfgu.pattern})"
+                raise ValueError(
+                    error_message(
+                        f"invalid config value '{value}' for key '{key}'",
+                        error_scope,
+                        f"value '{value}' must be of type '{of_type}'",
+                    )
                 )
 
             upset_configs.append(Config(set=set_.path, key=key, value=value))
