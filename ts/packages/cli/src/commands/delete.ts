@@ -44,6 +44,6 @@ export default class Delete extends BaseCommand<typeof Delete> {
       set,
       schema,
     }).run();
-    this.log(`Configs deleted successfully`);
+    this.print(`Configs deleted successfully`, { symbol: 'success' });
   }
 }
