@@ -30,17 +30,17 @@
     "build": "tsc --build --verbose"
   },
   "dependencies": {
-    "@configu/ts": "^0.13.0",
+    "@configu/ts": "^0.18.1",
     "change-case": "^4.1.2",
-    "dotenv": "^16.1.4",
+    "dotenv": "^16.3.1",
     "js-yaml": "^4.1.0",
     "lodash": "^4.17.21",
-    "type-fest": "^3.11.1",
-    "validator": "^13.9.0"
+    "type-fest": "^4.2.0",
+    "validator": "^13.11.0"
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.5",
-    "@types/lodash": "^4.14.195",
-    "@types/validator": "^13.7.17"
+    "@types/lodash": "^4.14.197",
+    "@types/validator": "^13.11.1"
   }
 }

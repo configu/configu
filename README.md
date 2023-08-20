@@ -1,7 +1,7 @@
 # Configu
 
 <a href="https://configu.com" target="_blank">
-  <img align="right" src="https://app.configu.com/logo192.png" height="150px" alt="configu logo">
+  <img align="right" src="https://raw.githubusercontent.com/configu/configu/main/assets/icon.svg" height="150px" alt="configu icon">
 </a>
 
 [**Configu**](https://configu.com/docs/) is a _simple_, _modern_, and _generic_ standard for managing and collaborating **software configurations ⚙️**. 
@@ -62,7 +62,7 @@ This repository is a monorepo that contains the Configu user interface packages.
       </td>
       <td>
         <a href="https://cli.configu.com/channels/stable/configu-linux-x64-buildmanifest"> 
-          <img alt="cli version" src="https://img.shields.io/badge/dynamic/json?color=%230066F5&label=%40configu%2Fcli&prefix=v&query=version&url=https%3A%2F%2Fcli.configu.com%2Fchannels%2Fstable%2Fconfigu-linux-x64-buildmanifest">
+          <img alt="cli version" src="https://img.shields.io/badge/dynamic/json?color=%230066F5&label=%40configu%2Fcli&prefix=v&logo=windowsterminal&query=version&url=https%3A%2F%2Fcli.configu.com%2Fchannels%2Fstable%2Fconfigu-linux-x64-buildmanifest">
         </a>
       </td>
       <td>
@@ -72,7 +72,7 @@ This repository is a monorepo that contains the Configu user interface packages.
         <a href="ts/packages/cli" target="_blank">ts/packages/cli</a>
       </td>
       <td>
-        <img alt="GitHub Workflow Status" align="absmiddle" src="https://img.shields.io/github/actions/workflow/status/configu/configu/cd-cli.yml?label=CD&logo=github">
+        <img alt="GitHub Workflow Status" align="absmiddle" src="https://img.shields.io/github/actions/workflow/status/configu/configu/cd-cli.yml?label=CD&logo=githubactions&logoColor=white">
       </td>
     </tr>
     <tr>
@@ -92,7 +92,7 @@ This repository is a monorepo that contains the Configu user interface packages.
         <a href="ts/packages/node" target="_blank">ts/packages/node</a>
       </td>
       <td>
-        <img alt="GitHub Workflow Status" align="absmiddle" src="https://img.shields.io/github/actions/workflow/status/configu/configu/cd-ts.yml?label=CD&logo=github">
+        <img alt="GitHub Workflow Status" align="absmiddle" src="https://img.shields.io/github/actions/workflow/status/configu/configu/cd-ts.yml?label=CD&logo=githubactions&logoColor=white">
       </td>
     </tr>
     <tr>
@@ -112,7 +112,7 @@ This repository is a monorepo that contains the Configu user interface packages.
         <a href="ts/packages/browser" target="_blank">ts/packages/browser</a>
       </td>
       <td>
-        <img alt="GitHub Workflow Status" align="absmiddle" src="https://img.shields.io/github/actions/workflow/status/configu/configu/cd-ts.yml?label=CD&logo=github">
+        <img alt="GitHub Workflow Status" align="absmiddle" src="https://img.shields.io/github/actions/workflow/status/configu/configu/cd-ts.yml?label=CD&logo=githubactions&logoColor=white">
       </td>
     </tr>
     <tr>
@@ -132,7 +132,7 @@ This repository is a monorepo that contains the Configu user interface packages.
         <a href="py" target="_blank">py</a>
       </td>
       <td>
-        <img alt="GitHub Workflow Status" align="absmiddle" src="https://img.shields.io/github/actions/workflow/status/configu/configu/cd-py.yml?label=CD&logo=github">
+        <img alt="GitHub Workflow Status" align="absmiddle" src="https://img.shields.io/github/actions/workflow/status/configu/configu/cd-py.yml?label=CD&logo=githubactions&logoColor=white">
       </td>
     </tr>
     <tr>
@@ -150,7 +150,7 @@ This repository is a monorepo that contains the Configu user interface packages.
         <!-- <a href="java" target="_blank">java</a> -->
       </td>
       <td>
-        <!-- <img alt="GitHub Workflow Status" align="absmiddle" src="https://img.shields.io/github/actions/workflow/status/configu/configu/cd-java.yml?label=CD&logo=github"> -->
+        <!-- <img alt="GitHub Workflow Status" align="absmiddle" src="https://img.shields.io/github/actions/workflow/status/configu/configu/cd-java.yml?label=CD&logo=githubactions&logoColor=white"> -->
       </td>
     </tr>
     <tr>
@@ -204,13 +204,18 @@ This repository is a monorepo that contains the Configu user interface packages.
         <strong>Go SDK</strong>
       </td>
       <td>
-        coming soon
+        <a href="https://pkg.go.dev/github.com/configu/configu/go" target="_blank"> 
+          <img alt="go" align="absmiddle" src="https://img.shields.io/github/v/tag/configu/configu?filter=go-&color=%230066F5&label=%40configu%2Fgo&logo=github">
+        </a>
       </td>
       <td>
+        <a href="go/README.md#install" target="_blank">Instructions</a>
       </td>
       <td>
+        <a href="go" target="_blank">go</a>
       </td>
       <td>
+        <img alt="GitHub Workflow Status" align="absmiddle" src="https://img.shields.io/github/actions/workflow/status/configu/configu/cd-go.yml?label=CD&logo=githubactions&logoColor=white">
       </td>
     </tr>
     <tr>
@@ -260,7 +265,7 @@ This repository is a monorepo that contains the Configu user interface packages.
         <a href="ts/packages/vscode" target="_blank">ts/packages/vscode</a>
       </td>
       <td>
-        <img alt="GitHub Workflow Status" align="absmiddle" src="https://img.shields.io/github/actions/workflow/status/configu/configu/cd-vscode.yml?label=CD&logo=github">
+        <img alt="GitHub Workflow Status" align="absmiddle" src="https://img.shields.io/github/actions/workflow/status/configu/configu/cd-vscode.yml?label=CD&logo=githubactions&logoColor=white">
       </td>
     </tr>
   </tbody>

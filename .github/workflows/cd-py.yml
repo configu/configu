@@ -51,7 +51,7 @@ jobs:
       - name: Build package docs
         run: |
           cd ${{ env.CWD }}
-          poetry run pdoc -o docs configu --logo https://app.configu.com/logo192.png --favicon https://app.configu.com/favicon.ico
+          poetry run pdoc -o docs configu --logo https://raw.githubusercontent.com/configu/configu/main/assets/icon.svg --favicon https://raw.githubusercontent.com/configu/configu/main/assets/favicon.ico
 
       - name: Publish docs
         run: |
