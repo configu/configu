@@ -1,7 +1,7 @@
-import { Flags } from '@oclif/core';
 import fs from 'fs/promises';
 import path from 'path';
 import { cwd } from 'process';
+import { Flags } from '@oclif/core';
 import _ from 'lodash';
 import { paramCase } from 'change-case';
 import { Cfgu } from '@configu/ts';

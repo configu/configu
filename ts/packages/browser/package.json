@@ -54,7 +54,7 @@
     "lodash": "^4.17.21"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.195",
+    "@types/lodash": "^4.14.197",
     "esbuild-plugin-umd-wrapper": "^1.0.7"
   }
 }
