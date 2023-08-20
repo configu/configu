@@ -67,7 +67,6 @@ export default class Export extends BaseCommand<typeof Export> {
       description: `Adds EOL (\\n on POSIX \\r\\n on Windows) to the end of the stdout`,
       aliases: ['EOL'],
       dependsOn: ['format'],
-      default: false,
     }),
 
     template: Flags.string({
