@@ -12,6 +12,7 @@
         "ConnectionString",
         "Country",
         "Currency",
+        "DateTime",
         "DockerImage",
         "Domain",
         "Email",

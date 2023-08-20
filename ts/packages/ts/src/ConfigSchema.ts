@@ -265,7 +265,8 @@ export abstract class ConfigSchema implements IConfigSchema {
             'ap-southwest-1',
           ]).has(value),
         Language: ({ value }) => validator.isISO6391(value),
-        DateTime: ({ value }) => validator.isDate(value) || validator.isTime(value) || !isNaN(new Date(value).getTime()),
+        DateTime: ({ value }) =>
+          validator.isDate(value) || validator.isTime(value) || !Number.isNaN(new Date(value).getTime()),
       },
     },
   };
