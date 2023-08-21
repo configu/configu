@@ -16,11 +16,22 @@ export class IniFileConfigStore extends ConfigStore {
     const data = await fs.readFile(this.path, 'utf8');
     const iniObject = ini.parse(data);
 
-    return Object.entries(iniObject).flatMap(([set, keyValuePairs]) =>
-      Object.entries(keyValuePairs)
-        .filter(([, value]) => typeof value === 'string' && !Array.isArray(value))
-        .map(([key, value]) => ({ set, key, value: value as string })),
-    );
+    return Object.entries(iniObject).flatMap(([key, value]) => {
+      if (typeof value === 'string') {
+        return { set: '', key, value };
+      }
+      if (_.isPlainObject(value)) {
+        return _(Object.entries(value))
+          .filter(([, innerValue]) => typeof innerValue === 'string')
+          .map(([innerKey, innerValue]) => ({
+            set: key,
+            key: innerKey,
+            value: innerValue as string,
+          }))
+          .value();
+      }
+      return [];
+    });
   }
 
   async write(nextConfigs: Config[]): Promise<void> {
