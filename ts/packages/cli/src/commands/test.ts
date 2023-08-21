@@ -33,7 +33,7 @@ export default class Test extends BaseCommand<typeof Test> {
 
     try {
       await new TestCommand({ store, clean: this.flags.clean }).run();
-      this.log(`Test passed for store ${this.flags.store} of type ${store.type}`);
+      this.print(`Test passed for store ${this.flags.store} of type ${store.type}`, { symbol: 'success' });
     } catch (error) {
       throw new Error(`Test failed for store ${this.flags.store} of type ${store.type} with error: ${error.message}`);
     }
