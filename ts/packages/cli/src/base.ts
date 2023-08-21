@@ -1,3 +1,4 @@
+import os from 'os';
 import fs from 'fs/promises';
 import path from 'path';
 import { Config, Command, Flags, Interfaces, Errors, ux } from '@oclif/core';
@@ -37,9 +38,31 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
   protected args!: Args<T>;
 
   public config: BaseConfig;
-  public log(text: string, symbol: keyof typeof logSymbols = 'info', stdout: 'stdout' | 'stderr' = 'stderr') {
-    const prettyText = stdout === 'stderr' ? chalk.dim(`${logSymbols[symbol]} ${text}\n`) : text;
-    process[stdout].write(prettyText);
+
+  log = this.print;
+  logToStderr = this.print;
+
+  public print(
+    text: string,
+    options: {
+      symbol?: keyof typeof logSymbols;
+      stdout?: 'stdout' | 'stderr';
+      eol?: boolean;
+    } = {},
+  ) {
+    const { symbol = 'info', stdout = 'stderr' } = options;
+    let { eol = false } = options;
+
+    let decoratedText = text;
+    if (stdout === 'stderr') {
+      decoratedText = chalk.dim(`${logSymbols[symbol]} ${text}`);
+      eol = true;
+    }
+    if (eol) {
+      decoratedText = `${text}${os.EOL}`;
+    }
+
+    process[stdout].write(decoratedText);
   }
 
   public start(text: string) {
@@ -217,7 +240,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
 
   protected async catch(error: Error & { exitCode?: number }): Promise<any> {
     // * on any error inject a 'NULL' unicode character so if next command in the pipeline try to read stdin it will fail
-    this.log(this.config.UNICODE_NULL, 'error', 'stdout');
+    this.print(this.config.UNICODE_NULL, { symbol: 'error', stdout: 'stdout' });
 
     if (!axios.isAxiosError(error)) {
       return super.catch(error);

@@ -95,9 +95,9 @@
     "configu-cli"
   ],
   "dependencies": {
-    "@configu/lib": "^0.6.2",
-    "@configu/node": "^0.18.0",
-    "@configu/ts": "^0.18.0",
+    "@configu/lib": "^0.6.3",
+    "@configu/node": "^0.18.1",
+    "@configu/ts": "^0.18.1",
     "@oclif/core": "^2.11.8",
     "@oclif/plugin-autocomplete": "^2.3.6",
     "@oclif/plugin-not-found": "^2.3.37",
@@ -116,7 +116,7 @@
     "openid-client": "^5.4.3"
   },
   "devDependencies": {
-    "@oclif/test": "^2.4.5",
+    "@oclif/test": "^2.4.6",
     "@types/inquirer": "8.2.5",
     "@types/lodash": "^4.14.197",
     "aws-sdk": "^2.1440.0",
