@@ -18,7 +18,7 @@ export class IniFileConfigStore extends ConfigStore {
 
     return Object.entries(iniObject).flatMap(([key, value]) => {
       if (typeof value === 'string') {
-        return { set: '', key, value };
+        return [{ set: '', key, value }];
       }
       if (_.isPlainObject(value)) {
         return _(Object.entries(value))
