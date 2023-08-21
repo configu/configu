@@ -9,6 +9,8 @@ describe('IniFileConfigStore', () => {
     await fs.writeFile(
       testIniFilePath,
       `
+rootkey=rootvalue
+
 [section]
 key=value
         `,
@@ -22,17 +24,30 @@ key=value
   test('should read configurations from INI file', async () => {
     const store = new IniFileConfigStore({ path: testIniFilePath });
     const configs = await store.read();
-    expect(configs).toEqual([{ set: 'section', key: 'key', value: 'value' }]);
+    expect(configs).toEqual([
+      { set: '', key: 'rootkey', value: 'rootvalue' },
+      { set: 'section', key: 'key', value: 'value' },
+    ]);
   });
 
   test('should write configurations to INI file', async () => {
     const store = new IniFileConfigStore({ path: testIniFilePath });
-    const newConfigs = [{ set: 'default', section: 'section2', key: 'key2', value: 'value2' }];
+    const newConfigs = [
+      { set: '', key: 'global_key', value: 'global_value' },
+      { set: 'section', key: 'section_key', value: 'section_value' },
+    ];
     await store.write(newConfigs);
 
     // Read the file again to verify the write operation
     const writtenData = await fs.readFile(testIniFilePath, 'utf8');
-    expect(writtenData.trim()).toContain('key2=value2');
+    expect(writtenData.trim()).toContain('global_key=global_value\n\n[section]\nsection_key=section_value');
+  });
+
+  test('should query global configurations', async () => {
+    const store = new IniFileConfigStore({ path: testIniFilePath });
+    const queries = [{ set: '', key: 'rootkey' }];
+    const results = await store.get(queries);
+    expect(results).toEqual([{ set: '', key: 'rootkey', value: 'rootvalue' }]);
   });
 
   test('should query configurations', async () => {
