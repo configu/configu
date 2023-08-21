@@ -24,14 +24,12 @@ export class IniFileConfigStore extends ConfigStore {
   }
 
   async write(nextConfigs: Config[]): Promise<void> {
-    const iniObject = nextConfigs.reduce<Record<string, Record<string, string>>>((acc, config) => {
-      const set = config.set || '';
-      if (!acc[set]) {
-        acc[set] = {};
-      }
-      acc[set]![config.key] = config.value;
-      return acc;
-    }, {});
+    const groupedConfigs = _(nextConfigs)
+      .groupBy('set')
+      .mapValues((setConfigs) => _.merge({}, ...setConfigs.map((config) => ({ [config.key]: config.value }))))
+      .value();
+    const rootConfigs = groupedConfigs[''];
+    const iniObject = _.merge(rootConfigs, _.omit(groupedConfigs, ''));
 
     const data = ini.stringify(iniObject);
     await fs.writeFile(this.path, data);
