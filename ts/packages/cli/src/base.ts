@@ -1,14 +1,14 @@
-import { Config, Command, Flags, Interfaces, Errors, ux } from '@oclif/core';
+import os from 'os';
 import fs from 'fs/promises';
 import path from 'path';
+import { Config, Command, Flags, Interfaces, Errors, ux } from '@oclif/core';
 import _ from 'lodash';
 import { cosmiconfig } from 'cosmiconfig';
 import axios from 'axios';
 import chalk from 'chalk';
 import logSymbols from 'log-symbols';
 import ci from 'ci-info';
-import { EvalCommandReturn, TMPL } from '@configu/ts';
-import { ConfiguConfigStore } from '@configu/node';
+import { EvalCommandReturn, ConfiguConfigStore, TMPL } from '@configu/ts';
 import { constructStore } from './helpers';
 
 type BaseConfig = Config & {
@@ -38,9 +38,31 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
   protected args!: Args<T>;
 
   public config: BaseConfig;
-  public log(text: string, symbol: keyof typeof logSymbols = 'info', stdout: 'stdout' | 'stderr' = 'stderr') {
-    const prettyText = stdout === 'stderr' ? chalk.dim(`${logSymbols[symbol]} ${text}\n`) : text;
-    process[stdout].write(prettyText);
+
+  log = this.print;
+  logToStderr = this.print;
+
+  public print(
+    text: string,
+    options: {
+      symbol?: keyof typeof logSymbols;
+      stdout?: 'stdout' | 'stderr';
+      eol?: boolean;
+    } = {},
+  ) {
+    const { symbol = 'info', stdout = 'stderr' } = options;
+    let { eol = false } = options;
+
+    let decoratedText = text;
+    if (stdout === 'stderr') {
+      decoratedText = chalk.dim(`${logSymbols[symbol]} ${text}`);
+      eol = true;
+    }
+    if (eol) {
+      decoratedText = `${text}${os.EOL}`;
+    }
+
+    process[stdout].write(decoratedText);
   }
 
   public start(text: string) {
@@ -103,7 +125,22 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     const storeConfiguration = this.config.cli.data.stores?.[storeFlag]?.configuration;
 
     if (storeFlag === this.config.bin || storeType === this.config.bin) {
-      return constructStore(this.config.bin, _.merge(this.config.configu.data, storeConfiguration, { source: 'cli' }));
+      return constructStore(
+        this.config.bin,
+        _.merge(
+          this.config.configu.data, // from configu login
+          {
+            // from environment variables
+            credentials: {
+              org: process.env.CONFIGU_ORG,
+              token: process.env.CONFIGU_TOKEN,
+            },
+            endpoint: process.env.CONFIGU_ENDPOINT,
+          },
+          storeConfiguration, // from .configu file
+          { source: 'cli' },
+        ),
+      );
     }
 
     return constructStore(storeType, storeConfiguration);
@@ -203,7 +240,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
 
   protected async catch(error: Error & { exitCode?: number }): Promise<any> {
     // * on any error inject a 'NULL' unicode character so if next command in the pipeline try to read stdin it will fail
-    this.log(this.config.UNICODE_NULL, 'error', 'stdout');
+    this.print(this.config.UNICODE_NULL, { symbol: 'error', stdout: 'stdout' });
 
     if (!axios.isAxiosError(error)) {
       return super.catch(error);

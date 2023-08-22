@@ -17,7 +17,7 @@ class ConfigSet(IConfigSet):
     def __init__(self, path: str = None) -> None:
         """
         Creates a new ConfigSet.
-        :param: Path of the ConfigSet in a hierarchical structure.
+        :param: path of the ConfigSet in a hierarchical structure.
         """
         error_location = [self.__class__.__name__, self.__init__.__name__]
         if path is None:

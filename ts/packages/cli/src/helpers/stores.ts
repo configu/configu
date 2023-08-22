@@ -1,20 +1,21 @@
 import { ConfigStore } from '@configu/ts';
 import { StoreType } from '@configu/lib';
 import {
-  NoopConfigStore,
-  InMemoryConfigStore,
-  ConfiguConfigStore,
   AWSParameterStoreConfigStore,
   AWSSecretsManagerConfigStore,
   AzureKeyVaultConfigStore,
   CockroachDBConfigStore,
+  ConfiguConfigStore,
   GCPSecretManagerConfigStore,
   HashiCorpVaultConfigStore,
+  InMemoryConfigStore,
   JsonFileConfigStore,
   KubernetesSecretConfigStore,
+  LaunchDarklyConfigStore,
   MariaDBConfigStore,
   MSSQLConfigStore,
   MySQLConfigStore,
+  NoopConfigStore,
   PostgreSQLConfigStore,
   SQLiteConfigStore,
 } from '@configu/node';
@@ -29,6 +30,7 @@ const TYPE_TO_STORE_CTOR: Record<StoreType, ConfigStoreCtor> = {
   'hashicorp-vault': HashiCorpVaultConfigStore,
   'aws-parameter-store': AWSParameterStoreConfigStore,
   'aws-secrets-manager': AWSSecretsManagerConfigStore,
+  'launch-darkly': LaunchDarklyConfigStore,
   'azure-key-vault': AzureKeyVaultConfigStore,
   'gcp-secret-manager': GCPSecretManagerConfigStore,
   'kubernetes-secret': KubernetesSecretConfigStore,

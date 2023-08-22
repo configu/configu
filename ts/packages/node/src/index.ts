@@ -2,9 +2,8 @@ export { ConfigSet } from '@configu/ts';
 export { ConfigSchema } from './ConfigSchema';
 export { InMemoryConfigSchema } from '@configu/ts';
 
-export { NoopConfigStore, InMemoryConfigStore } from '@configu/ts';
+export { NoopConfigStore, InMemoryConfigStore, ConfiguConfigStore } from '@configu/ts';
 
-export * from './stores/Configu';
 export * from './stores/JsonFile';
 export * from './stores/IniFile';
 
@@ -14,6 +13,7 @@ export * from './stores/AzureKeyVault';
 export * from './stores/GCPSecretManager';
 export * from './stores/HashiCorpVault';
 export * from './stores/KubernetesSecret';
+export * from './stores/LaunchDarkly';
 
 export * from './stores/SQLite';
 export * from './stores/MySQL';

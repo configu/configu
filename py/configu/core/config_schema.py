@@ -1,18 +1,16 @@
 import json
 import re
 from itertools import cycle
-from json import JSONDecodeError
 from pathlib import Path
-from typing import Dict, Callable
+from typing import Callable, Dict
 
 import pyvalidator
 
 from .generated import (
-    ConfigSchema as IConfigSchema,
     Cfgu,
-    ConfigSchemaType,
     CfguType,
-    config_schema_contents_from_dict,
+    ConfigSchema as IConfigSchema,
+    ConfigSchemaType,
 )
 from ..utils import error_message, is_valid_name
 
@@ -67,18 +65,13 @@ class ConfigSchema(IConfigSchema):
 
     CFGU = ConfigSchemaDefinition
 
-    TYPES = {
-        f".{schema_type.value}": schema_type
-        for schema_type in ConfigSchemaType
-    }
-    EXT = " | ".join(
-        ["".join(ext) for ext in zip(cycle(CFGU.EXT), TYPES.keys())]
-    )
+    TYPES = {f".{schema_type.value}": schema_type for schema_type in ConfigSchemaType}
+    EXT = " | ".join(["".join(ext) for ext in zip(cycle(CFGU.EXT), TYPES.keys())])
 
     def __init__(self, path: str) -> None:
         """
         Creates a new ConfigSchema
-        :param path: path the the config file
+        :param path: path to the schema file (.cfgu.json)
         """
         error_location = [self.__class__.__name__, self.__init__.__name__]
         if re.match(rf".*({ConfigSchema.EXT})", path) is None:
@@ -96,12 +89,9 @@ class ConfigSchema(IConfigSchema):
         Reads the config schema file
         :return: contents of the config schema
         """
-        try:
-            with open(self.path, mode="r", encoding="utf-8") as schema_file:
-                file_content = schema_file.read()
-            return file_content
-        except (OSError, Exception):
-            return ""
+        with open(self.path, mode="r", encoding="utf-8") as schema_file:
+            file_content = schema_file.read()
+        return file_content
 
     @classmethod
     def parse(cls, scheme: "ConfigSchema") -> Dict[str, Cfgu]:
@@ -113,14 +103,9 @@ class ConfigSchema(IConfigSchema):
         error_location = [cls.__name__, "parse"]
         schema_content = scheme.read()
         if scheme.type == ConfigSchemaType.JSON:
-            try:
-                schema_content = json.loads(schema_content)
-                schema_content = config_schema_contents_from_dict(
-                    schema_content
-                )
-            except (JSONDecodeError, Exception) as e:
-                print(e)
-                raise ValueError(error_message("Couldn't parse schema file"))
+            schema_content = json.loads(schema_content)
+            assert isinstance(schema_content, dict)
+            schema_content = {k: Cfgu.from_dict(v) for (k, v) in schema_content.items()}
 
         # validate parsed
         for key, cfgu in schema_content.items():
@@ -129,8 +114,7 @@ class ConfigSchema(IConfigSchema):
                     error_message(
                         f"invalid key {key}",
                         error_location + [key],
-                        f"path nodes mustn't contain "
-                        f"reserved words '${key}'",
+                        f"path nodes mustn't contain reserved words '${key}'",
                     )
                 )
             if cfgu.type == CfguType.REG_EX and cfgu.pattern is None:
@@ -139,8 +123,7 @@ class ConfigSchema(IConfigSchema):
                         "invalid type property",
                         error_location + [key, cfgu.type.value],
                     ),
-                    f"type '{cfgu.type.value}' must come with"
-                    f" a pattern property",
+                    f"type '{cfgu.type.value}' must come with a pattern property",
                 )
             if cfgu.default is not None:
                 if cfgu.required is not None or cfgu.template is not None:
@@ -173,12 +156,7 @@ class ConfigSchema(IConfigSchema):
 
             if cfgu.depends is not None and (
                 not len(cfgu.depends)
-                or any(
-                    [
-                        not is_valid_name(dependency)
-                        for dependency in cfgu.depends
-                    ]
-                )
+                or any([not is_valid_name(dependency) for dependency in cfgu.depends])
             ):
                 raise ValueError(
                     error_message(

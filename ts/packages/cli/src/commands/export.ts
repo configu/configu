@@ -1,6 +1,6 @@
-import { Flags, ux } from '@oclif/core';
 import { cwd } from 'process';
 import { spawnSync } from 'child_process';
+import { Flags, ux } from '@oclif/core';
 import _ from 'lodash';
 import { TMPL, EvalCommandReturn, EvaluatedConfigOrigin, ExportCommandReturn } from '@configu/ts';
 import { ExportCommand } from '@configu/node';
@@ -63,6 +63,11 @@ export default class Export extends BaseCommand<typeof Export> {
     label: Flags.string({
       description: `Metadata required in some formats like Kubernetes ConfigMap`,
     }),
+    eol: Flags.boolean({
+      description: `Adds EOL (\\n on POSIX \\r\\n on Windows) to the end of the stdout`,
+      aliases: ['EOL'],
+      dependsOn: ['format'],
+    }),
 
     template: Flags.string({
       description: `Path to a file containing {{mustache}} templates to render (inject/substitute) the exported \`Configs\` into`,
@@ -87,7 +92,7 @@ export default class Export extends BaseCommand<typeof Export> {
   };
 
   printStdout(finalConfigData: string) {
-    this.log(finalConfigData, undefined, 'stdout');
+    this.print(finalConfigData, { stdout: 'stdout', eol: this.flags.eol });
   }
 
   explainConfigs(configs: EvalCommandReturn) {

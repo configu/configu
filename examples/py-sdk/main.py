@@ -8,23 +8,20 @@ if __name__ == "__main__":
     schema = configu.ConfigSchema("get-started.cfgu.json")
 
     configu.UpsertCommand(
-        {
-            "store": config_store,
-            "set": test_set,
-            "schema": schema,
-            "configs": {"GREETING": "hey", "SUBJECT": "configu python sdk"},
-        }
+        store=config_store,
+        set=test_set,
+        schema=schema,
+        configs={
+            "GREETING": "hello",
+            "SUBJECT": "configu python sdk",
+        },
     ).run()
 
     data = configu.EvalCommand(
-        {
-            "store": config_store,
-            "set": test_set,
-            "schema": schema,
-        }
+        store=config_store, set=test_set, schema=schema
     ).run()
 
-    configuration_data = configu.ExportCommand({"data": data}).run()
+    configuration_data = configu.ExportCommand(data=data).run()
 
     print(os.environ["MESSAGE"])
     # hey, configu python sdk!

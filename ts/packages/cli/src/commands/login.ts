@@ -1,5 +1,5 @@
-import { Flags, ux } from '@oclif/core';
 import fs from 'fs/promises';
+import { Flags, ux } from '@oclif/core';
 import axios from 'axios';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
@@ -12,7 +12,7 @@ const CONFIGU_API_URL = process.env.CONFIGU_API_URL ?? (isDev ? 'http://localhos
 const CONFIGU_APP_URL = process.env.CONFIGU_APP_URL ?? (isDev ? 'http://localhost:3000' : 'https://app.configu.com');
 const AUTH0_DOMAIN = 'configu.us.auth0.com';
 const AUTH0_CLIENT_ID = 'qxv0WQpwqApo4BNEYMMb4rfn1Xam9A4D';
-const AUTH0_API_IDENTIFIER = CONFIGU_API_URL;
+const AUTH0_API_IDENTIFIER = 'https://api.configu.com';
 const SETUP_ERROR_MESSAGE = `Initial setup in not completed. Go to ${CONFIGU_APP_URL} activate your user and create your first organization`;
 
 export default class Login extends BaseCommand<typeof Login> {
@@ -67,8 +67,8 @@ export default class Login extends BaseCommand<typeof Login> {
       await ux.anykey(
         `${chalk.bold('Press any key')} to open up the browser to login or press ctrl-c to abort.
   You should see the following code: ${chalk.bold(userCode)}. It expires in ${
-          expiresIn % 60 === 0 ? `${expiresIn / 60} minutes` : `${expiresIn} seconds`
-        }.`,
+    expiresIn % 60 === 0 ? `${expiresIn / 60} minutes` : `${expiresIn} seconds`
+  }.`,
       );
       await open(verificationUriComplete);
 

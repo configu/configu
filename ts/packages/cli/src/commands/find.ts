@@ -1,9 +1,9 @@
-import { Flags } from '@oclif/core';
 import path from 'path';
-import { ConfigSchema } from '@configu/node';
 import { createInterface } from 'readline';
 import { createReadStream } from 'fs';
 import { once } from 'events';
+import { ConfigSchema } from '@configu/node';
+import { Flags } from '@oclif/core';
 import _ from 'lodash';
 import { TMPL } from '@configu/ts';
 import FastGlob = require('fast-glob');
@@ -148,7 +148,7 @@ export default class Find extends BaseCommand<typeof Find> {
             if (line && match) {
               keyRegEx.count += 1;
               if (!showUnusedOnly)
-                this.log(`${file.replace(findInDirectory, '...')}:${lineIndex}:${match.index} [${regEx.source}]`);
+                this.print(`${file.replace(findInDirectory, '...')}:${lineIndex}:${match.index} [${regEx.source}]`);
             }
           }
         });
@@ -157,7 +157,7 @@ export default class Find extends BaseCommand<typeof Find> {
     await Promise.all(findInFilesPromises);
 
     const unusedKeys = Object.keys(keysRegEx).filter((key) => keysRegEx[key]?.count === 0);
-    if (unusedKeys.length > 0) this.log(`Unused configs found: ${unusedKeys.join(', ')}`);
-    else if (showUnusedOnly) this.log('No unused configs found');
+    if (unusedKeys.length > 0) this.print(`Unused configs found: ${unusedKeys.join(', ')}`);
+    else if (showUnusedOnly) this.print('No unused configs found');
   }
 }

@@ -8,6 +8,7 @@ export type StoreType = LiteralUnion<
   | 'hashicorp-vault'
   | 'aws-parameter-store'
   | 'aws-secrets-manager'
+  | 'launch-darkly'
   | 'azure-key-vault'
   | 'gcp-secret-manager'
   | 'kubernetes-secret'
@@ -28,6 +29,7 @@ export const STORE_LABEL: Record<StoreType, string> = {
   'hashicorp-vault': 'HashiCorp Vault',
   'aws-parameter-store': 'AWS Parameter Store',
   'aws-secrets-manager': 'AWS Secrets Manager',
+  'launch-darkly': 'LaunchDarkly',
   'azure-key-vault': 'Azure Key Vault',
   'gcp-secret-manager': 'GCP Secret Manager',
   'kubernetes-secret': 'Kubernetes Secret',
@@ -47,6 +49,7 @@ export const STORE_WEBSITE: Record<StoreType, string> = {
   'hashicorp-vault': 'https://www.vaultproject.io/',
   'aws-parameter-store': 'https://aws.amazon.com/systems-manager/features/#Parameter_Store',
   'aws-secrets-manager': 'https://aws.amazon.com/secrets-manager/',
+  'launch-darkly': 'https://launchdarkly.com/',
   'azure-key-vault': 'https://azure.microsoft.com/en-us/services/key-vault/',
   'gcp-secret-manager': 'https://cloud.google.com/secret-manager/',
   'kubernetes-secret': 'https://kubernetes.io/docs/concepts/configuration/secret/',

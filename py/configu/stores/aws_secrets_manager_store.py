@@ -8,14 +8,12 @@ class AWSSecretsManagerConfigStore(KeyValueConfigStore):
 
     _client: SecretsManagerClient
 
-    def __init__(self, **boto3kwargs) -> None:
-        self._client = boto3.client("secretsmanager", **boto3kwargs)
+    def __init__(self, **client_kwargs) -> None:
         super().__init__(type="aws-secrets-manager")
+        self._client = boto3.client("secretsmanager", **client_kwargs)
 
     def get_by_key(self, key: str) -> str:
-        return self._client.get_secret_value(SecretId=key).get(
-            "SecretString", ""
-        )
+        return self._client.get_secret_value(SecretId=key).get("SecretString", "")
 
     def upsert(self, key: str, value: str):
         try:

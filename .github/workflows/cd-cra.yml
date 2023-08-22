@@ -33,10 +33,11 @@ jobs:
       - name: Fetch configurations
         run: |
           cd ${{ env.ROOT_DIRECTORY }}
-          configu export \
-            --store 'store=configu;type=Token' \
+          configu eval \
+            --store 'configu' \
             --set '${{ github.event.inputs.CONFIGU_SET }}' \
             --schema './create-react-app.cfgu.json' \
+          | configu export \
             --format 'Dotenv' \
             > .env
         env:
