@@ -38,7 +38,7 @@ key=value
     ];
     await store.write(newConfigs);
 
-    // Read the file again to verify the write operation
+    // * Read the file again to verify the write operation
     const writtenData = await fs.readFile(testIniFilePath, 'utf8');
     expect(writtenData.trim()).toContain('global_key=global_value\n\n[section]\nsection_key=section_value');
   });
