@@ -1,0 +1,7 @@
+{
+  "container_name": {
+    "type": "String",
+    "default": "ExampleNginxContainer",
+    "description": "Value of the name for the Docker container"
+  }
+}
