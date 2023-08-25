@@ -1,0 +1,7 @@
+{
+  "GREETING": {
+    "type": "String",
+    "default": "foo",
+    "required": true
+  }
+}

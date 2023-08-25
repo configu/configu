@@ -1,0 +1,14 @@
+{
+  "this": {
+    "type": "String"
+  },
+  "cfgu": {
+    "type": "String"
+  },
+  "-": {
+    "type": "String"
+  },
+  "_": {
+    "type": "String"
+  }
+}
