@@ -237,6 +237,7 @@ const (
 	ConnectionString CfguType = "ConnectionString"
 	Country          CfguType = "Country"
 	Currency         CfguType = "Currency"
+	DateTime         CfguType = "DateTime"
 	DockerImage      CfguType = "DockerImage"
 	Domain           CfguType = "Domain"
 	Email            CfguType = "Email"
