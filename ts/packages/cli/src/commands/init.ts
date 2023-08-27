@@ -5,31 +5,10 @@ import { Flags } from '@oclif/core';
 import _ from 'lodash';
 import { paramCase } from 'change-case';
 import { Cfgu } from '@configu/ts';
-import { extractConfigs } from '@configu/lib';
+import { extractConfigs, GET_STARTED, FOO } from '@configu/lib';
 import { ConfigSchema } from '@configu/node';
 import { BaseCommand } from '../base';
 import { getPathBasename } from '../helpers';
-
-const POPULATED_SCHEMA: Record<'GET_STARTED' | 'EXAMPLE', { [key: string]: Cfgu }> = {
-  GET_STARTED: {
-    GREETING: {
-      type: 'RegEx',
-      pattern: '^(hello|hey|welcome|hola|salute|bonjour|shalom|marhabaan)$',
-      default: 'hello',
-    },
-    SUBJECT: { type: 'String', default: 'world' },
-    MESSAGE: {
-      type: 'String',
-      template: '{{GREETING}}, {{SUBJECT}}!',
-      description: 'Generates a full greeting message',
-    },
-  },
-  EXAMPLE: {
-    FOO: { type: 'String', default: 'foo', description: 'string example variable' },
-    BAR: { type: 'RegEx', pattern: '^(foo|bar|baz)$', description: 'regex example variable' },
-    BAZ: { type: 'String', template: '{{FOO}} - {{BAR}}', description: 'template example variable' },
-  },
-};
 
 export default class Init extends BaseCommand<typeof Init> {
   static description = `Create a \`ConfigSchema\` .cfgu file in the current working dir`;
@@ -122,10 +101,10 @@ export default class Init extends BaseCommand<typeof Init> {
 
   async getSchemaContents(): Promise<{ [key: string]: Cfgu }> {
     if (this.flags['get-started']) {
-      return POPULATED_SCHEMA.GET_STARTED;
+      return GET_STARTED;
     }
     if (this.flags.example) {
-      return POPULATED_SCHEMA.EXAMPLE;
+      return FOO;
     }
 
     if (this.flags.import) {
@@ -154,9 +133,9 @@ export default class Init extends BaseCommand<typeof Init> {
     await ConfigSchema.parse(schema);
 
     const recordsCount = _.keys(fileContentData).length;
-    this.log(`${filePath} generated with ${recordsCount} records`, 'success');
+    this.print(`${filePath} generated with ${recordsCount} records`, { symbol: 'success' });
     if (this.flags.types) {
-      this.log(`Please review the result and validate the assigned types`);
+      this.print(`Please review the result and validate the assigned types`);
     }
   }
 }

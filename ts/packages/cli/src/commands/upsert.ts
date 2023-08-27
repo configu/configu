@@ -75,6 +75,6 @@ export default class Upsert extends BaseCommand<typeof Upsert> {
       schema,
       configs,
     }).run();
-    this.log(`Configs upserted successfully`);
+    this.print(`Configs upserted successfully`, { symbol: 'success' });
   }
 }

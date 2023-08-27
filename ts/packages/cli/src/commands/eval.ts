@@ -80,6 +80,6 @@ export default class Eval extends BaseCommand<typeof Eval> {
     const evalCommandParameters = await this.constructEvalCommandParameters();
     const evalCommandReturn = await new EvalCommand(evalCommandParameters).run();
 
-    this.log(JSON.stringify(evalCommandReturn), undefined, 'stdout');
+    this.print(JSON.stringify(evalCommandReturn), { stdout: 'stdout' });
   }
 }
