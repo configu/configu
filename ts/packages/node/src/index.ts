@@ -5,6 +5,7 @@ export { InMemoryConfigSchema } from '@configu/ts';
 export { NoopConfigStore, InMemoryConfigStore, ConfiguConfigStore } from '@configu/ts';
 
 export * from './stores/JsonFile';
+export * from './stores/IniFile';
 
 export * from './stores/AWSParameterStore';
 export * from './stores/AWSSecretsManager';
