@@ -52,7 +52,7 @@ class UpsertCommand(Command):
 
         :raises ValueError: if any config is invalid for the schema
         """
-        scope_location = ["UpsertCommand", "run"]
+        error_scope = ["UpsertCommand", "run"]
         store = self.parameters["store"]
         set_ = self.parameters["set"]
         schema = self.parameters["schema"]
@@ -66,7 +66,7 @@ class UpsertCommand(Command):
                 raise ValueError(
                     error_message(
                         f"invalid config key '{key}'",
-                        scope_location,
+                        error_scope,
                         f"key '{key}' must be declared on schema {schema.path}",
                     )
                 )
@@ -74,11 +74,22 @@ class UpsertCommand(Command):
                 raise ValueError(
                     error_message(
                         f"invalid assignment to config key '{key}'",
-                        scope_location,
+                        error_scope,
                         "keys declared with template mustn't have a value",
                     )
                 )
-            type_test = ConfigSchema.CFGU.VALIDATORS.get(cfgu.type.value, lambda: False)
+            try:
+                type_test = ConfigSchema.CFGU.VALIDATORS[cfgu.type.value]
+            except KeyError as e:
+                raise KeyError(
+                    error_message("invalid type property", error_scope + [key, "type"]),
+                    f"type '{cfgu.type.value}' is not yet supported in this SDK. "
+                    "For the time being, please utilize the String type. "
+                    "We'd greatly appreciate it if you could open an issue "
+                    "regarding this at "
+                    "https://github.com/configu/configu/issues/new/choose "
+                    "so we can address it in future updates.",
+                ) from e
             test_values = (
                 (
                     value,
@@ -94,9 +105,10 @@ class UpsertCommand(Command):
                 raise ValueError(
                     error_message(
                         f"invalid config value '{value}' for key '{key}'",
-                        scope_location,
+                        error_scope,
                         f"value '{value}' must be of type '{of_type}'",
                     )
                 )
+
             upset_configs.append(Config(set=set_.path, key=key, value=value))
         store.set(upset_configs)

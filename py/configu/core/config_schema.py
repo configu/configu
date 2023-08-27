@@ -310,7 +310,7 @@ class ConfigSchema(IConfigSchema):
         :param scheme: The ConfigSchema to parse
         :return: A dictionary of configurations.
         """
-        error_location = [cls.__name__, "parse"]
+        error_scope = [cls.__name__, "parse"]
         schema_content = scheme.read()
         if scheme.type == ConfigSchemaType.JSON:
             schema_content = json.loads(schema_content)
@@ -323,7 +323,7 @@ class ConfigSchema(IConfigSchema):
                 raise ValueError(
                     error_message(
                         f"invalid key {key}",
-                        error_location + [key],
+                        error_scope + [key],
                         f"path nodes mustn't contain reserved words '${key}'",
                     )
                 )
@@ -331,7 +331,7 @@ class ConfigSchema(IConfigSchema):
                 raise ValueError(
                     error_message(
                         "invalid type property",
-                        error_location + [key, cfgu.type.value],
+                        error_scope + [key, cfgu.type.value],
                     ),
                     f"type '{cfgu.type.value}' must come with a pattern property",
                 )
@@ -340,15 +340,27 @@ class ConfigSchema(IConfigSchema):
                     raise ValueError(
                         error_message(
                             "invalid default property",
-                            error_location + [key, "default"],
+                            error_scope + [key, "default"],
                         ),
                         "default mustn't set together with required "
                         "or template properties",
                     )
                 else:
-                    type_test = ConfigSchema.CFGU.VALIDATORS.get(
-                        cfgu.type.value, lambda: False
-                    )
+                    try:
+                        type_test = ConfigSchema.CFGU.VALIDATORS[cfgu.type.value]
+                    except KeyError as e:
+                        raise KeyError(
+                            error_message(
+                                "invalid type property", error_scope + [key, "type"]
+                            ),
+                            f"type '{cfgu.type.value}' is not yet "
+                            "supported in this SDK. For the time being, "
+                            "please utilize the String type. "
+                            "We'd greatly appreciate it if you could open an issue "
+                            "regarding this at "
+                            "https://github.com/configu/configu/issues/new/choose "
+                            "so we can address it in future updates.",
+                        ) from e
                     test_values = (
                         (cfgu.default, cfgu.pattern)
                         if cfgu.type == CfguType.REG_EX
@@ -358,7 +370,7 @@ class ConfigSchema(IConfigSchema):
                         raise ValueError(
                             error_message(
                                 "invalid default property",
-                                error_location + [key, "default"],
+                                error_scope + [key, "default"],
                             ),
                             f"{cfgu.default} must be of type {cfgu.type.value}"
                             f" or match Regex",
@@ -371,7 +383,7 @@ class ConfigSchema(IConfigSchema):
                 raise ValueError(
                     error_message(
                         "invalid depends property",
-                        error_location + [key, "depends"],
+                        error_scope + [key, "depends"],
                     ),
                     "depends is empty or contain reserved words",
                 )
