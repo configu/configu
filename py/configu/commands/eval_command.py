@@ -1,6 +1,6 @@
 from enum import Enum
 from functools import reduce
-from typing import Dict, Tuple, TypedDict, Optional
+from typing import Dict, Optional, Tuple, TypedDict
 
 from ..core import (
     Cfgu,
@@ -158,9 +158,20 @@ class EvalCommand(Command[EvalCommandReturn]):
             for key, value in result.items():
                 cfgu = value["context"]["cfgu"]
                 evaluated_value = value["result"]["value"]
-                type_test = ConfigSchema.CFGU.VALIDATORS.get(
-                    cfgu.type.value, lambda: False
-                )
+                try:
+                    type_test = ConfigSchema.CFGU.VALIDATORS[cfgu.type.value]
+                except KeyError as e:
+                    raise KeyError(
+                        error_message(
+                            "invalid type property", error_scope + [key, "type"]
+                        ),
+                        f"type '{cfgu.type.value}' is not yet supported in this SDK. "
+                        "For the time being, please utilize the String type. "
+                        "We'd greatly appreciate it if you could open an issue "
+                        "regarding this at "
+                        "https://github.com/configu/configu/issues/new/choose "
+                        "so we can address it in future updates.",
+                    ) from e
                 test_values = (
                     (
                         evaluated_value,
@@ -176,6 +187,7 @@ class EvalCommand(Command[EvalCommandReturn]):
                         ),
                         f"value '{test_values[0]}' must be a " f"'{cfgu.type}'",
                     )
+
                 if cfgu.required is not None and not bool(test_values[0]):
                     raise ValueError(
                         error_message(

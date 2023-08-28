@@ -24,13 +24,15 @@ export type CfguType =
   | "DockerImage"
   | "MACAddress"
   | "MIMEType"
+  | "MongoId"
   | "AwsRegion"
   | "AZRegion"
   | "GCPRegion"
   | "OracleRegion"
   | "IBMRegion"
   | "AlibabaRegion"
-  | "Language";
+  | "Language"
+  | "DateTime";
 
 /**
  * A generic declaration of a Config, aka Cfgu that specifies information about its type and other characteristics
