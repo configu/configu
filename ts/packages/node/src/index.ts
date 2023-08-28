@@ -12,6 +12,7 @@ export * from './stores/AWSSecretsManager';
 export * from './stores/AzureKeyVault';
 export * from './stores/GCPSecretManager';
 export * from './stores/HashiCorpVault';
+export * from './stores/Keyv';
 export * from './stores/KubernetesSecret';
 export * from './stores/LaunchDarkly';
 
