@@ -26,6 +26,7 @@ export interface Cfgu {
     default?:     string;
     depends?:     string[];
     description?: string;
+    options?:     string[];
     pattern?:     string;
     required?:    boolean;
     template?:    string;
@@ -58,6 +59,7 @@ export interface ConfigSchemaContents {
     default?:     string;
     depends?:     string[];
     description?: string;
+    options?:     string[];
     pattern?:     string;
     required?:    boolean;
     template?:    string;
@@ -349,6 +351,7 @@ const typeMap: any = {
         { json: "default", js: "default", typ: u(undefined, "") },
         { json: "depends", js: "depends", typ: u(undefined, a("")) },
         { json: "description", js: "description", typ: u(undefined, "") },
+        { json: "options", js: "options", typ: u(undefined, a("")) },
         { json: "pattern", js: "pattern", typ: u(undefined, "") },
         { json: "required", js: "required", typ: u(undefined, true) },
         { json: "template", js: "template", typ: u(undefined, "") },
@@ -367,6 +370,7 @@ const typeMap: any = {
         { json: "default", js: "default", typ: u(undefined, "") },
         { json: "depends", js: "depends", typ: u(undefined, a("")) },
         { json: "description", js: "description", typ: u(undefined, "") },
+        { json: "options", js: "options", typ: u(undefined, a("")) },
         { json: "pattern", js: "pattern", typ: u(undefined, "") },
         { json: "required", js: "required", typ: u(undefined, true) },
         { json: "template", js: "template", typ: u(undefined, "") },
