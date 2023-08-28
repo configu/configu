@@ -263,6 +263,7 @@ class ConfigSchemaDefinition:
         "Language": pyvalidator.is_iso6391,
         "MACAddress": pyvalidator.is_mac_address,
         "MIMEType": pyvalidator.is_mime_type,
+        "MongoId": pyvalidator.is_mongo_id,
     }
     PROPS = list(Cfgu.__annotations__.keys())
 

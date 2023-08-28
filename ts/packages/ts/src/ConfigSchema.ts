@@ -63,6 +63,7 @@ export abstract class ConfigSchema implements IConfigSchema {
           ),
         MACAddress: ({ value }) => validator.isMACAddress(value),
         MIMEType: ({ value }) => validator.isMimeType(value),
+        MongoId: ({ value }) => validator.isMongoId(value),
         AwsRegion: ({ value }) =>
           new Set([
             'af-south-1',
