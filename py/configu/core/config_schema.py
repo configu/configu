@@ -336,7 +336,70 @@ class ConfigSchema(IConfigSchema):
                     ),
                     f"type '{cfgu.type.value}' must come with a pattern property",
                 )
+            if cfgu.options is not None:
+                if len(cfgu.options) == 0:
+                    raise ValueError(
+                        error_message(
+                            "invalid options property",
+                            error_scope + [key, "options"],
+                        ),
+                        "options mustn't be empty if set",
+                    )
+                if cfgu.template is not None:
+                    raise ValueError(
+                        error_message(
+                            "invalid options property", error_scope + [key, "options"]
+                        ),
+                        "options mustn't set together with template properties",
+                    )
+                for idx, option in enumerate(cfgu.options):
+                    if option == "":
+                        raise ValueError(
+                            error_message(
+                                "invalid options property",
+                                error_scope + [f"{key}[{idx}]"],
+                            ),
+                            "options mustn't contain an empty string",
+                        )
+                    try:
+                        type_test = ConfigSchema.CFGU.VALIDATORS[cfgu.type.value]
+                    except KeyError as e:
+                        raise KeyError(
+                            error_message(
+                                "invalid type property", error_scope + [key, "type"]
+                            ),
+                            f"type '{cfgu.type.value}' is not yet "
+                            "supported in this SDK. For the time being, "
+                            "please utilize the String type. "
+                            "We'd greatly appreciate it if you could open an issue "
+                            "regarding this at "
+                            "https://github.com/configu/configu/issues/new/choose "
+                            "so we can address it in future updates.",
+                        ) from e
+                    test_values = (
+                        (option, cfgu.pattern)
+                        if cfgu.type == CfguType.REG_EX
+                        else (option,)
+                    )
+                    if not type_test(*test_values):
+                        raise ValueError(
+                            error_message(
+                                "invalid options property",
+                                error_scope + [key, f"options[{idx}]"],
+                            ),
+                            f"{option} must be of type {cfgu.type.value}"
+                            f" or match Regex",
+                        )
             if cfgu.default is not None:
+                if cfgu.options is not None and cfgu.default not in cfgu.options:
+                    raise ValueError(
+                        error_message(
+                            "invalid default property",
+                            error_scope + [key, "default"],
+                        ),
+                        f"value '{cfgu.default}' must be one of "
+                        + ",".join([f"'{option}'" for option in cfgu.options]),
+                    )
                 if cfgu.required is not None or cfgu.template is not None:
                     raise ValueError(
                         error_message(

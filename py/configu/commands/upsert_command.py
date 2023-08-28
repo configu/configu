@@ -110,5 +110,12 @@ class UpsertCommand(Command):
                     )
                 )
 
+            if bool(value) and cfgu.options is not None and value not in cfgu.options:
+                raise ValueError(
+                    error_message(f"invalid value for key '{key}'", error_scope),
+                    f"value '{value}' must be one of "
+                    + ",".join([f"'{option}'" for option in cfgu.options]),
+                )
+
             upset_configs.append(Config(set=set_.path, key=key, value=value))
         store.set(upset_configs)

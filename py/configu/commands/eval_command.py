@@ -185,7 +185,18 @@ class EvalCommand(Command[EvalCommandReturn]):
                         error_message(
                             f"invalid value type for key '{key}'", error_scope
                         ),
-                        f"value '{test_values[0]}' must be a " f"'{cfgu.type}'",
+                        f"value '{test_values[0]}' must be a '{cfgu.type}'",
+                    )
+
+                if (
+                    bool(test_values[0])
+                    and cfgu.options is not None
+                    and test_values[0] not in cfgu.options
+                ):
+                    raise ValueError(
+                        error_message(f"invalid value for key '{key}'", error_scope),
+                        f"value '{test_values[0]}' must be one of "
+                        + ",".join([f"'{option}'" for option in cfgu.options]),
                     )
 
                 if cfgu.required is not None and not bool(test_values[0]):
