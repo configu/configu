@@ -84,8 +84,8 @@ class CfguType(Enum):
     SHA = "SHA"
     STRING = "String"
     URL = "URL"
-    UUID = "UUID",
-    ARN = "ARN",
+    UUID = "UUID"
+    ARN = "ARN"
 
 
 @dataclass
