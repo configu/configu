@@ -115,6 +115,8 @@ func anyInvalidDependencyNames(value ConfigSchemaContentsValue) bool {
 
 func validateCfguType(schema ConfigSchemaContentsValue, value string) bool {
 	switch schema.Type {
+	case ARN:
+		return isValidARN(value);
 	case Base64:
 		return isValidBase64(value)
 	case Boolean:
@@ -141,6 +143,8 @@ func validateCfguType(schema ConfigSchemaContentsValue, value string) bool {
 		return isValidLatLong(value)
 	case Md5:
 		return isValidMd5(value)
+	case MongoId:
+		return isValidMongoId(value)
 	case Number:
 		return isValidNumber(value)
 	case RegEx:
@@ -158,6 +162,10 @@ func validateCfguType(schema ConfigSchemaContentsValue, value string) bool {
 	default:
 		return false
 	}
+}
+
+func isValidARN(value string) bool {
+	return regexp.MustCompile(`^arn:([^:\n]+):([^:\n]+):(?:[^:\n]*):(?:([^:\n]*)):([^:\/\n]+)(?:(:[^\n]+)|(\/[^:\n]+))?$`).MatchString(value)
 }
 
 func isValidBase64(value string) bool {
@@ -258,6 +266,13 @@ func isValidLatLong(value string) bool {
 func isValidMd5(value string) bool {
 	type MyStruct struct {
 		Value string `validate:"required,md5"`
+	}
+	return validator.New().Struct(MyStruct{value}) == nil
+}
+
+func isValidMongoId(value string) bool {
+	type MyStruct struct {
+		Value string `validate:"required,mongodb"`
 	}
 	return validator.New().Struct(MyStruct{value}) == nil
 }

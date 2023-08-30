@@ -261,6 +261,7 @@ const (
 	String           CfguType = "String"
 	URL              CfguType = "URL"
 	UUID             CfguType = "UUID"
+	ARN							 CfguType = "ARN"
 )
 
 type ConfigSchemaType string

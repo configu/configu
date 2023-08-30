@@ -17,6 +17,7 @@ from ..utils import error_message, is_valid_name
 class ConfigSchemaDefinition:
     _cs_regex = r"^(?:([^:/?#\s]+):/{2})?(?:([^@/?#\s]+)@)?([^/?#\s]+)?(?:/([^?#\s]*))?(?:[?]([^#\s]+))?\S*$"  # noqa: E501
     _docker_regex = r"^((?:[a-z0-9]([-a-z0-9]*[a-z0-9])?\.)+[a-z]{2,6}(?::\d{1,5})?\/)?[a-z0-9]+(?:[._\-\/:][a-z0-9]+)*$"  # noqa: E501
+    _arn_regex = r"^arn:([^:\n]+):([^:\n]+):(?:[^:\n]*):(?:([^:\n]*)):([^:\/\n]+)(?:(:[^\n]+)|(\/[^:\n]+))?$"  # noqa: E501
     NAME: str = "cfgu"
     EXT: str = ".cfgu"
     VALIDATORS: Dict[str, Callable[[str], bool]] = {
@@ -257,6 +258,12 @@ class ConfigSchemaDefinition:
         },
         "DockerImage": lambda value: re.fullmatch(
             ConfigSchemaDefinition._docker_regex,
+            value,
+            re.RegexFlag.M,
+        )
+        is not None,
+        "ARN": lambda value: re.fullmatch(
+            ConfigSchemaDefinition._arn_regex,
             value,
             re.RegexFlag.M,
         )

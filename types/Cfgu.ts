@@ -31,7 +31,8 @@ export type CfguType =
   | "IBMRegion"
   | "AlibabaRegion"
   | "Language"
-  | "DateTime";
+  | "DateTime"
+  | "ARN";
 
 /**
  * A generic declaration of a Config, aka Cfgu that specifies information about its type and other characteristics
