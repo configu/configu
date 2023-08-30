@@ -9,6 +9,7 @@ export * from './stores/JsonFile';
 export * from './stores/AWSParameterStore';
 export * from './stores/AWSSecretsManager';
 export * from './stores/AzureKeyVault';
+export * from './stores/etcd';
 export * from './stores/GCPSecretManager';
 export * from './stores/HashiCorpVault';
 export * from './stores/KubernetesSecret';
