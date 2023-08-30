@@ -77,6 +77,7 @@ class CfguType(Enum):
     MD5 = "MD5"
     MIME_TYPE = "MIMEType"
     MOBILE_PHONE = "MobilePhone"
+    MONGOID = "MongoId"
     NUMBER = "Number"
     ORACLE_REGION = "OracleRegion"
     REG_EX = "RegEx"
