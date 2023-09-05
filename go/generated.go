@@ -228,9 +228,9 @@ type ConfigStoreContentsElement struct {
 type CfguType string
 
 const (
+	AWSRegion        CfguType = "AWSRegion"
 	AZRegion         CfguType = "AZRegion"
 	AlibabaRegion    CfguType = "AlibabaRegion"
-	AwsRegion        CfguType = "AwsRegion"
 	Base64           CfguType = "Base64"
 	Boolean          CfguType = "Boolean"
 	Color            CfguType = "Color"

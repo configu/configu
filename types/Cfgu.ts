@@ -25,7 +25,7 @@ export type CfguType =
   | "MACAddress"
   | "MIMEType"
   | "MongoId"
-  | "AwsRegion"
+  | "AWSRegion"
   | "AZRegion"
   | "GCPRegion"
   | "OracleRegion"

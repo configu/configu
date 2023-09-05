@@ -53,7 +53,7 @@ def from_dict(f: Callable[[Any], T], x: Any) -> Dict[str, T]:
 
 class CfguType(Enum):
     ALIBABA_REGION = "AlibabaRegion"
-    AWS_REGION = "AwsRegion"
+    AWS_REGION = "AWSRegion"
     AZ_REGION = "AZRegion"
     BASE64 = "Base64"
     BOOLEAN = "Boolean"

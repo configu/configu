@@ -3,9 +3,9 @@
     "CfguType": {
       "title": "CfguType",
       "enum": [
+        "AWSRegion",
         "AZRegion",
         "AlibabaRegion",
-        "AwsRegion",
         "Base64",
         "Boolean",
         "Color",
