@@ -32,7 +32,7 @@ export interface Cfgu {
     type:         CfguType;
 }
 
-export type CfguType = "AZRegion" | "AlibabaRegion" | "AwsRegion" | "Base64" | "Boolean" | "Color" | "ConnectionString" | "Country" | "Currency" | "DateTime" | "DockerImage" | "Domain" | "Email" | "GCPRegion" | "Hex" | "IBMRegion" | "IPv4" | "IPv6" | "Language" | "LatLong" | "Locale" | "MACAddress" | "MD5" | "MIMEType" | "MobilePhone" | "MongoId" | "Number" | "OracleRegion" | "RegEx" | "SHA" | "SemVer" | "String" | "URL" | "UUID" | "ARN";
+export type CfguType = "ARN" | "AZRegion" | "AlibabaRegion" | "AwsRegion" | "Base64" | "Boolean" | "Color" | "ConnectionString" | "Country" | "Currency" | "DateTime" | "DockerImage" | "Domain" | "Email" | "GCPRegion" | "Hex" | "IBMRegion" | "IPv4" | "IPv6" | "Language" | "LatLong" | "Locale" | "MACAddress" | "MD5" | "MIMEType" | "MobilePhone" | "MongoId" | "Number" | "OracleRegion" | "RegEx" | "SHA" | "SemVer" | "String" | "URL" | "UUID";
 
 /**
  * A generic representation of a software configuration, aka Config
@@ -391,6 +391,7 @@ const typeMap: any = {
     "CfguType": [
         "AZRegion",
         "AlibabaRegion",
+        "ARN",
         "AwsRegion",
         "Base64",
         "Boolean",
@@ -423,7 +424,6 @@ const typeMap: any = {
         "String",
         "URL",
         "UUID",
-        "ARN",
     ],
     "ConfigSchemaType": [
         "json",
