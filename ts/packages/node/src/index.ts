@@ -10,12 +10,12 @@ export * from './stores/IniFile';
 export * from './stores/AWSParameterStore';
 export * from './stores/AWSSecretsManager';
 export * from './stores/AzureKeyVault';
-export * from './stores/etcd3';
 export * from './stores/GCPSecretManager';
 export * from './stores/HashiCorpVault';
 export * from './stores/KubernetesSecret';
 export * from './stores/LaunchDarkly';
 
+export * from './stores/Etcd';
 export * from './stores/SQLite';
 export * from './stores/MySQL';
 export * from './stores/MariaDB';
