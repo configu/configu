@@ -17,11 +17,11 @@
     "prepare:go": "npm run types -- --lang go --package configu --out go/generated.go"
   },
   "devDependencies": {
-    "concurrently": "^8.2.0",
+    "concurrently": "^8.2.1",
     "husky": "^8.0.3",
     "is-ci": "^3.0.1",
     "json": "^11.0.0",
-    "lint-staged": "^14.0.0",
-    "quicktype": "^23.0.71"
+    "lint-staged": "^14.0.1",
+    "quicktype": "^23.0.75"
   }
 }
