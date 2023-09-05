@@ -32,7 +32,7 @@ export interface Cfgu {
     type:         CfguType;
 }
 
-export type CfguType = "AZRegion" | "AlibabaRegion" | "AwsRegion" | "Base64" | "Boolean" | "Color" | "ConnectionString" | "Country" | "Currency" | "DockerImage" | "Domain" | "Email" | "GCPRegion" | "Hex" | "IBMRegion" | "IPv4" | "IPv6" | "Language" | "LatLong" | "Locale" | "MACAddress" | "MD5" | "MIMEType" | "MobilePhone" | "Number" | "OracleRegion" | "RegEx" | "SHA" | "SemVer" | "String" | "URL" | "UUID";
+export type CfguType = "AZRegion" | "AlibabaRegion" | "AwsRegion" | "Base64" | "Boolean" | "Color" | "ConnectionString" | "Country" | "Currency" | "DateTime" | "DockerImage" | "Domain" | "Email" | "GCPRegion" | "Hex" | "IBMRegion" | "IPv4" | "IPv6" | "Language" | "LatLong" | "Locale" | "MACAddress" | "MD5" | "MIMEType" | "MobilePhone" | "MongoId" | "Number" | "OracleRegion" | "RegEx" | "SHA" | "SemVer" | "String" | "URL" | "UUID";
 
 /**
  * A generic representation of a software configuration, aka Config
@@ -398,6 +398,7 @@ const typeMap: any = {
         "ConnectionString",
         "Country",
         "Currency",
+        "DateTime",
         "DockerImage",
         "Domain",
         "Email",
@@ -413,6 +414,7 @@ const typeMap: any = {
         "MIMEType",
         "MD5",
         "MobilePhone",
+        "MongoId",
         "Number",
         "OracleRegion",
         "RegEx",
