@@ -28,11 +28,12 @@ export interface Cfgu {
     description?: string;
     pattern?:     string;
     required?:    boolean;
+    schema?:      { [key: string]: any };
     template?:    string;
     type:         CfguType;
 }
 
-export type CfguType = "AWSRegion" | "AZRegion" | "AlibabaRegion" | "Base64" | "Boolean" | "Color" | "ConnectionString" | "Country" | "Currency" | "DateTime" | "DockerImage" | "Domain" | "Email" | "GCPRegion" | "Hex" | "IBMRegion" | "IPv4" | "IPv6" | "Language" | "LatLong" | "Locale" | "MACAddress" | "MD5" | "MIMEType" | "MobilePhone" | "MongoId" | "Number" | "OracleRegion" | "RegEx" | "SHA" | "SemVer" | "String" | "URL" | "UUID";
+export type CfguType = "AWSRegion" | "AZRegion" | "AlibabaRegion" | "Base64" | "Boolean" | "Color" | "ConnectionString" | "Country" | "Currency" | "DateTime" | "DockerImage" | "Domain" | "Email" | "GCPRegion" | "Hex" | "IBMRegion" | "IPv4" | "IPv6" | "JSONSchema" | "Language" | "LatLong" | "Locale" | "MACAddress" | "MD5" | "MIMEType" | "MobilePhone" | "MongoId" | "Number" | "OracleRegion" | "RegEx" | "SHA" | "SemVer" | "String" | "URL" | "UUID";
 
 /**
  * A generic representation of a software configuration, aka Config
@@ -60,6 +61,7 @@ export interface ConfigSchemaContents {
     description?: string;
     pattern?:     string;
     required?:    boolean;
+    schema?:      { [key: string]: any };
     template?:    string;
     type:         CfguType;
 }
@@ -351,6 +353,7 @@ const typeMap: any = {
         { json: "description", js: "description", typ: u(undefined, "") },
         { json: "pattern", js: "pattern", typ: u(undefined, "") },
         { json: "required", js: "required", typ: u(undefined, true) },
+        { json: "schema", js: "schema", typ: u(undefined, m("any")) },
         { json: "template", js: "template", typ: u(undefined, "") },
         { json: "type", js: "type", typ: r("CfguType") },
     ], false),
@@ -369,6 +372,7 @@ const typeMap: any = {
         { json: "description", js: "description", typ: u(undefined, "") },
         { json: "pattern", js: "pattern", typ: u(undefined, "") },
         { json: "required", js: "required", typ: u(undefined, true) },
+        { json: "schema", js: "schema", typ: u(undefined, m("any")) },
         { json: "template", js: "template", typ: u(undefined, "") },
         { json: "type", js: "type", typ: r("CfguType") },
     ], false),
@@ -407,6 +411,7 @@ const typeMap: any = {
         "IBMRegion",
         "IPv4",
         "IPv6",
+        "JSONSchema",
         "Language",
         "LatLong",
         "Locale",

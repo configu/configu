@@ -168,13 +168,14 @@ func (r *ConfigStoreContents) Marshal() ([]byte, error) {
 // A generic declaration of a Config, aka Cfgu that specifies information about its type and
 // other characteristics
 type Cfgu struct {
-	Default     *string  `json:"default,omitempty"`
-	Depends     []string `json:"depends,omitempty"`
-	Description *string  `json:"description,omitempty"`
-	Pattern     *string  `json:"pattern,omitempty"`
-	Required    *bool    `json:"required,omitempty"`
-	Template    *string  `json:"template,omitempty"`
-	Type        CfguType `json:"type"`
+	Default     *string                `json:"default,omitempty"`
+	Depends     []string               `json:"depends,omitempty"`
+	Description *string                `json:"description,omitempty"`
+	Pattern     *string                `json:"pattern,omitempty"`
+	Required    *bool                  `json:"required,omitempty"`
+	Schema      map[string]interface{} `json:"schema,omitempty"`
+	Template    *string                `json:"template,omitempty"`
+	Type        CfguType               `json:"type"`
 }
 
 // A generic representation of a software configuration, aka Config
@@ -192,13 +193,14 @@ type ConfigSchema struct {
 }
 
 type ConfigSchemaContentsValue struct {
-	Default     *string  `json:"default,omitempty"`
-	Depends     []string `json:"depends,omitempty"`
-	Description *string  `json:"description,omitempty"`
-	Pattern     *string  `json:"pattern,omitempty"`
-	Required    *bool    `json:"required,omitempty"`
-	Template    *string  `json:"template,omitempty"`
-	Type        CfguType `json:"type"`
+	Default     *string                `json:"default,omitempty"`
+	Depends     []string               `json:"depends,omitempty"`
+	Description *string                `json:"description,omitempty"`
+	Pattern     *string                `json:"pattern,omitempty"`
+	Required    *bool                  `json:"required,omitempty"`
+	Schema      map[string]interface{} `json:"schema,omitempty"`
+	Template    *string                `json:"template,omitempty"`
+	Type        CfguType               `json:"type"`
 }
 
 // An interface of a path in an hierarchy, aka ConfigSet
@@ -246,6 +248,7 @@ const (
 	IBMRegion        CfguType = "IBMRegion"
 	IPv4             CfguType = "IPv4"
 	IPv6             CfguType = "IPv6"
+	JSONSchema       CfguType = "JSONSchema"
 	Language         CfguType = "Language"
 	LatLong          CfguType = "LatLong"
 	Locale           CfguType = "Locale"

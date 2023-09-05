@@ -21,6 +21,7 @@
         "IBMRegion",
         "IPv4",
         "IPv6",
+        "JSONSchema",
         "Language",
         "LatLong",
         "Locale",
@@ -52,6 +53,11 @@
         "pattern": {
           "type": "string",
           "title": "pattern"
+        },
+        "schema": {
+          "type": "object",
+          "additionalProperties": {},
+          "title": "schema"
         },
         "default": {
           "type": "string",
@@ -147,6 +153,11 @@
         "pattern": {
           "type": "string",
           "title": "pattern"
+        },
+        "schema": {
+          "type": "object",
+          "additionalProperties": {},
+          "title": "schema"
         },
         "default": {
           "type": "string",

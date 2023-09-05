@@ -1,6 +1,6 @@
 from enum import Enum
 from dataclasses import dataclass
-from typing import Optional, List, Any, Dict, TypeVar, Callable, Type, cast
+from typing import Optional, List, Dict, Any, TypeVar, Callable, Type, cast
 
 
 T = TypeVar("T")
@@ -36,6 +36,11 @@ def from_bool(x: Any) -> bool:
     return x
 
 
+def from_dict(f: Callable[[Any], T], x: Any) -> Dict[str, T]:
+    assert isinstance(x, dict)
+    return { k: f(v) for (k, v) in x.items() }
+
+
 def to_enum(c: Type[EnumT], x: Any) -> EnumT:
     assert isinstance(x, c)
     return x.value
@@ -44,11 +49,6 @@ def to_enum(c: Type[EnumT], x: Any) -> EnumT:
 def to_class(c: Type[T], x: Any) -> dict:
     assert isinstance(x, c)
     return cast(Any, x).to_dict()
-
-
-def from_dict(f: Callable[[Any], T], x: Any) -> Dict[str, T]:
-    assert isinstance(x, dict)
-    return { k: f(v) for (k, v) in x.items() }
 
 
 class CfguType(Enum):
@@ -70,6 +70,7 @@ class CfguType(Enum):
     IBM_REGION = "IBMRegion"
     I_PV4 = "IPv4"
     I_PV6 = "IPv6"
+    JSON_SCHEMA = "JSONSchema"
     LANGUAGE = "Language"
     LAT_LONG = "LatLong"
     LOCALE = "Locale"
@@ -99,6 +100,7 @@ class Cfgu:
     description: Optional[str] = None
     pattern: Optional[str] = None
     required: Optional[bool] = None
+    schema: Optional[Dict[str, Any]] = None
     template: Optional[str] = None
 
     @staticmethod
@@ -110,8 +112,9 @@ class Cfgu:
         description = from_union([from_str, from_none], obj.get("description"))
         pattern = from_union([from_str, from_none], obj.get("pattern"))
         required = from_union([from_bool, from_none], obj.get("required"))
+        schema = from_union([lambda x: from_dict(lambda x: x, x), from_none], obj.get("schema"))
         template = from_union([from_str, from_none], obj.get("template"))
-        return Cfgu(type, default, depends, description, pattern, required, template)
+        return Cfgu(type, default, depends, description, pattern, required, schema, template)
 
     def to_dict(self) -> dict:
         result: dict = {}
@@ -126,6 +129,8 @@ class Cfgu:
             result["pattern"] = from_union([from_str, from_none], self.pattern)
         if self.required is not None:
             result["required"] = from_union([from_bool, from_none], self.required)
+        if self.schema is not None:
+            result["schema"] = from_union([lambda x: from_dict(lambda x: x, x), from_none], self.schema)
         if self.template is not None:
             result["template"] = from_union([from_str, from_none], self.template)
         return result
@@ -188,6 +193,7 @@ class ConfigSchemaContentsValue:
     description: Optional[str] = None
     pattern: Optional[str] = None
     required: Optional[bool] = None
+    schema: Optional[Dict[str, Any]] = None
     template: Optional[str] = None
 
     @staticmethod
@@ -199,8 +205,9 @@ class ConfigSchemaContentsValue:
         description = from_union([from_str, from_none], obj.get("description"))
         pattern = from_union([from_str, from_none], obj.get("pattern"))
         required = from_union([from_bool, from_none], obj.get("required"))
+        schema = from_union([lambda x: from_dict(lambda x: x, x), from_none], obj.get("schema"))
         template = from_union([from_str, from_none], obj.get("template"))
-        return ConfigSchemaContentsValue(type, default, depends, description, pattern, required, template)
+        return ConfigSchemaContentsValue(type, default, depends, description, pattern, required, schema, template)
 
     def to_dict(self) -> dict:
         result: dict = {}
@@ -215,6 +222,8 @@ class ConfigSchemaContentsValue:
             result["pattern"] = from_union([from_str, from_none], self.pattern)
         if self.required is not None:
             result["required"] = from_union([from_bool, from_none], self.required)
+        if self.schema is not None:
+            result["schema"] = from_union([lambda x: from_dict(lambda x: x, x), from_none], self.schema)
         if self.template is not None:
             result["template"] = from_union([from_str, from_none], self.template)
         return result
