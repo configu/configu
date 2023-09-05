@@ -253,7 +253,7 @@ const (
 	MIMEType         CfguType = "MIMEType"
 	Md5              CfguType = "MD5"
 	MobilePhone      CfguType = "MobilePhone"
-	MongoId					 CfguType = "MongoId"	
+	MongoID          CfguType = "MongoId"
 	Number           CfguType = "Number"
 	OracleRegion     CfguType = "OracleRegion"
 	RegEx            CfguType = "RegEx"
