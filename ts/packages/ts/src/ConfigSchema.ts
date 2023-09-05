@@ -63,11 +63,10 @@ export abstract class ConfigSchema implements IConfigSchema {
           ),
         ARN: ({ value }) =>
           // eslint-disable-next-line no-useless-escape
-          /^arn:([^:\n]+):([^:\n]+):(?:[^:\n]*):(?:([^:\n]*)):([^:\/\n]+)(?:(:[^\n]+)|(\/[^:\n]+))?$/gm.test(
-            value,
-          ),
+          /^arn:([^:\n]+):([^:\n]+):(?:[^:\n]*):(?:([^:\n]*)):([^:\/\n]+)(?:(:[^\n]+)|(\/[^:\n]+))?$/gm.test(value),
         MACAddress: ({ value }) => validator.isMACAddress(value),
         MIMEType: ({ value }) => validator.isMimeType(value),
+        MongoId: ({ value }) => validator.isMongoId(value),
         AwsRegion: ({ value }) =>
           new Set([
             'af-south-1',

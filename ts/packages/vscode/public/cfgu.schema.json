@@ -29,6 +29,7 @@
         "MD5",
         "MIMEType",
         "MobilePhone",
+        "MongoId",
         "Number",
         "OracleRegion",
         "RegEx",

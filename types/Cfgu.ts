@@ -24,6 +24,7 @@ export type CfguType =
   | "DockerImage"
   | "MACAddress"
   | "MIMEType"
+  | "MongoId"
   | "AwsRegion"
   | "AZRegion"
   | "GCPRegion"
