@@ -1,6 +1,5 @@
 import json
 import re
-from itertools import cycle
 from pathlib import Path
 from typing import Callable, Dict
 import pyvalidator
@@ -284,7 +283,7 @@ class ConfigSchema(IConfigSchema):
     CFGU = ConfigSchemaDefinition
 
     TYPES = {f".{schema_type.value}": schema_type for schema_type in ConfigSchemaType}
-    EXT = " | ".join(["".join(ext) for ext in zip(cycle(CFGU.EXT), TYPES.keys())])
+    EXT = " | ".join(["".join(ext) for ext in zip([CFGU.EXT], TYPES.keys())])
 
     def __init__(self, path: str) -> None:
         """

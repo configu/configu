@@ -1,0 +1,6 @@
+{
+  "GREETING": {
+    "type": "Boolean",
+    "default": "hello"
+  }
+}
