@@ -63,6 +63,9 @@ export abstract class ConfigSchema implements IConfigSchema {
           /^((?:[a-z0-9]([-a-z0-9]*[a-z0-9])?\.)+[a-z]{2,6}(?::\d{1,5})?\/)?[a-z0-9]+(?:[._\-\/:][a-z0-9]+)*$/gm.test(
             value,
           ),
+        ARN: ({ value }) =>
+          // eslint-disable-next-line no-useless-escape
+          /^arn:([^:\n]+):([^:\n]+):(?:[^:\n]*):(?:([^:\n]*)):([^:\/\n]+)(?:(:[^\n]+)|(\/[^:\n]+))?$/gm.test(value),
         MACAddress: ({ value }) => validator.isMACAddress(value),
         MIMEType: ({ value }) => validator.isMimeType(value),
         MongoId: ({ value }) => validator.isMongoId(value),
@@ -327,7 +330,7 @@ export abstract class ConfigSchema implements IConfigSchema {
     _(schemaContents)
       .entries()
       .forEach(([key, cfgu]) => {
-        const { type } = cfgu;
+        const { type, options } = cfgu;
 
         if (!NAME(key)) {
           throw new Error(
@@ -356,6 +359,50 @@ export abstract class ConfigSchema implements IConfigSchema {
           );
         }
 
+        if (options) {
+          if (!options.length) {
+            throw new Error(
+              ERR('invalid options property', {
+                location: [...scopeLocation, key, 'options'],
+                suggestion: "options mustn't be empty if set",
+              }),
+            );
+          }
+          if (cfgu.template) {
+            throw new Error(
+              ERR('invalid options property', {
+                location: [...scopeLocation, key, 'options'],
+                suggestion: "options mustn't set together with template properties",
+              }),
+            );
+          }
+          options.forEach((option, idx) => {
+            if (option === '') {
+              throw new Error(
+                ERR('Invalid options property', {
+                  location: [...scopeLocation, `${key}[${idx}]`],
+                  suggestion: `options mustn't contain an empty string`,
+                }),
+              );
+            }
+            if (option && !ConfigSchema.CFGU.TESTS.VAL_TYPE[type]?.({ ...cfgu, value: option })) {
+              throw new Error(
+                ERR('Invalid options property', {
+                  location: [...scopeLocation, `${key}[${idx}]`],
+                  suggestion: `${option} must be a "${type}"`,
+                }),
+              );
+            }
+          });
+        }
+        if (cfgu.default && options && !options.some((option) => option === cfgu.default)) {
+          throw new Error(
+            ERR('Invalid default property', {
+              location: [...scopeLocation, 'default'],
+              suggestion: `value ${cfgu.default} must be one of ${_.map(options, (option) => `'${option}'`).join(',')}`,
+            }),
+          );
+        }
         if (cfgu.default && (cfgu.required || cfgu.template)) {
           throw new Error(
             ERR(`invalid default property`, {

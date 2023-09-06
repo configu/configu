@@ -171,6 +171,7 @@ type Cfgu struct {
 	Default     *string                `json:"default,omitempty"`
 	Depends     []string               `json:"depends,omitempty"`
 	Description *string                `json:"description,omitempty"`
+	Options     []string               `json:"options,omitempty"`
 	Pattern     *string                `json:"pattern,omitempty"`
 	Required    *bool                  `json:"required,omitempty"`
 	Schema      map[string]interface{} `json:"schema,omitempty"`
@@ -196,6 +197,7 @@ type ConfigSchemaContentsValue struct {
 	Default     *string                `json:"default,omitempty"`
 	Depends     []string               `json:"depends,omitempty"`
 	Description *string                `json:"description,omitempty"`
+	Options     []string               `json:"options,omitempty"`
 	Pattern     *string                `json:"pattern,omitempty"`
 	Required    *bool                  `json:"required,omitempty"`
 	Schema      map[string]interface{} `json:"schema,omitempty"`
@@ -233,6 +235,7 @@ const (
 	AWSRegion        CfguType = "AWSRegion"
 	AZRegion         CfguType = "AZRegion"
 	AlibabaRegion    CfguType = "AlibabaRegion"
+	Arn              CfguType = "ARN"
 	Base64           CfguType = "Base64"
 	Boolean          CfguType = "Boolean"
 	Color            CfguType = "Color"

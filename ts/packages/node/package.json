@@ -43,6 +43,7 @@
     "@google-cloud/secret-manager": "^5.0.0",
     "@kubernetes/client-node": "^0.18.1",
     "axios": "^1.4.0",
+    "etcd3": "^1.1.2",
     "ini": "^4.1.1",
     "keyv": "^4.5.3",
     "lodash": "^4.17.21",

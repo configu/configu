@@ -3,6 +3,7 @@
     "CfguType": {
       "title": "CfguType",
       "enum": [
+        "ARN",
         "AWSRegion",
         "AZRegion",
         "AlibabaRegion",
@@ -81,6 +82,13 @@
         "description": {
           "type": "string",
           "title": "description"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "options"
         }
       },
       "additionalProperties": false,
@@ -181,6 +189,13 @@
         "description": {
           "type": "string",
           "title": "description"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "options"
         }
       },
       "additionalProperties": false,

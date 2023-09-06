@@ -1,6 +1,5 @@
 import json
 import re
-from itertools import cycle
 from pathlib import Path
 from typing import Callable, Dict
 import pyvalidator
@@ -17,6 +16,7 @@ from ..utils import error_message, is_valid_name
 class ConfigSchemaDefinition:
     _cs_regex = r"^(?:([^:/?#\s]+):/{2})?(?:([^@/?#\s]+)@)?([^/?#\s]+)?(?:/([^?#\s]*))?(?:[?]([^#\s]+))?\S*$"  # noqa: E501
     _docker_regex = r"^((?:[a-z0-9]([-a-z0-9]*[a-z0-9])?\.)+[a-z]{2,6}(?::\d{1,5})?\/)?[a-z0-9]+(?:[._\-\/:][a-z0-9]+)*$"  # noqa: E501
+    _arn_regex = r"^arn:([^:\n]+):([^:\n]+):(?:[^:\n]*):(?:([^:\n]*)):([^:\/\n]+)(?:(:[^\n]+)|(\/[^:\n]+))?$"  # noqa: E501
     NAME: str = "cfgu"
     EXT: str = ".cfgu"
     VALIDATORS: Dict[str, Callable[[str], bool]] = {
@@ -261,6 +261,12 @@ class ConfigSchemaDefinition:
             re.RegexFlag.M,
         )
         is not None,
+        "ARN": lambda value: re.fullmatch(
+            ConfigSchemaDefinition._arn_regex,
+            value,
+            re.RegexFlag.M,
+        )
+        is not None,
         "Language": pyvalidator.is_iso6391,
         "MACAddress": pyvalidator.is_mac_address,
         "MIMEType": pyvalidator.is_mime_type,
@@ -277,7 +283,7 @@ class ConfigSchema(IConfigSchema):
     CFGU = ConfigSchemaDefinition
 
     TYPES = {f".{schema_type.value}": schema_type for schema_type in ConfigSchemaType}
-    EXT = " | ".join(["".join(ext) for ext in zip(cycle(CFGU.EXT), TYPES.keys())])
+    EXT = " | ".join(["".join(ext) for ext in zip([CFGU.EXT], TYPES.keys())])
 
     def __init__(self, path: str) -> None:
         """
@@ -336,7 +342,70 @@ class ConfigSchema(IConfigSchema):
                     ),
                     f"type '{cfgu.type.value}' must come with a pattern property",
                 )
+            if cfgu.options is not None:
+                if len(cfgu.options) == 0:
+                    raise ValueError(
+                        error_message(
+                            "invalid options property",
+                            error_scope + [key, "options"],
+                        ),
+                        "options mustn't be empty if set",
+                    )
+                if cfgu.template is not None:
+                    raise ValueError(
+                        error_message(
+                            "invalid options property", error_scope + [key, "options"]
+                        ),
+                        "options mustn't set together with template properties",
+                    )
+                for idx, option in enumerate(cfgu.options):
+                    if option == "":
+                        raise ValueError(
+                            error_message(
+                                "invalid options property",
+                                error_scope + [f"{key}[{idx}]"],
+                            ),
+                            "options mustn't contain an empty string",
+                        )
+                    try:
+                        type_test = ConfigSchema.CFGU.VALIDATORS[cfgu.type.value]
+                    except KeyError as e:
+                        raise KeyError(
+                            error_message(
+                                "invalid type property", error_scope + [key, "type"]
+                            ),
+                            f"type '{cfgu.type.value}' is not yet "
+                            "supported in this SDK. For the time being, "
+                            "please utilize the String type. "
+                            "We'd greatly appreciate it if you could open an issue "
+                            "regarding this at "
+                            "https://github.com/configu/configu/issues/new/choose "
+                            "so we can address it in future updates.",
+                        ) from e
+                    test_values = (
+                        (option, cfgu.pattern)
+                        if cfgu.type == CfguType.REG_EX
+                        else (option,)
+                    )
+                    if not type_test(*test_values):
+                        raise ValueError(
+                            error_message(
+                                "invalid options property",
+                                error_scope + [key, f"options[{idx}]"],
+                            ),
+                            f"{option} must be of type {cfgu.type.value}"
+                            f" or match Regex",
+                        )
             if cfgu.default is not None:
+                if cfgu.options is not None and cfgu.default not in cfgu.options:
+                    raise ValueError(
+                        error_message(
+                            "invalid default property",
+                            error_scope + [key, "default"],
+                        ),
+                        f"value '{cfgu.default}' must be one of "
+                        + ",".join([f"'{option}'" for option in cfgu.options]),
+                    )
                 if cfgu.required is not None or cfgu.template is not None:
                     raise ValueError(
                         error_message(

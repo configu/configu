@@ -39,7 +39,7 @@ class ExportCommand(Command[ExportCommandReturn]):
         }
         if env:
             for key, value in exported_configs.items():
-                if override or key in os.environ:
+                if override or key not in os.environ:
                     os.environ[key] = value
 
         return exported_configs

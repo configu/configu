@@ -26,6 +26,7 @@ export interface Cfgu {
     default?:     string;
     depends?:     string[];
     description?: string;
+    options?:     string[];
     pattern?:     string;
     required?:    boolean;
     schema?:      { [key: string]: any };
@@ -33,7 +34,7 @@ export interface Cfgu {
     type:         CfguType;
 }
 
-export type CfguType = "AWSRegion" | "AZRegion" | "AlibabaRegion" | "Base64" | "Boolean" | "Color" | "ConnectionString" | "Country" | "Currency" | "DateTime" | "DockerImage" | "Domain" | "Email" | "GCPRegion" | "Hex" | "IBMRegion" | "IPv4" | "IPv6" | "JSONSchema" | "Language" | "LatLong" | "Locale" | "MACAddress" | "MD5" | "MIMEType" | "MobilePhone" | "MongoId" | "Number" | "OracleRegion" | "RegEx" | "SHA" | "SemVer" | "String" | "URL" | "UUID";
+export type CfguType = "ARN" | "AWSRegion" | "AZRegion" | "AlibabaRegion" | "Base64" | "Boolean" | "Color" | "ConnectionString" | "Country" | "Currency" | "DateTime" | "DockerImage" | "Domain" | "Email" | "GCPRegion" | "Hex" | "IBMRegion" | "IPv4" | "IPv6" | "JSONSchema" | "Language" | "LatLong" | "Locale" | "MACAddress" | "MD5" | "MIMEType" | "MobilePhone" | "MongoId" | "Number" | "OracleRegion" | "RegEx" | "SHA" | "SemVer" | "String" | "URL" | "UUID";
 
 /**
  * A generic representation of a software configuration, aka Config
@@ -59,6 +60,7 @@ export interface ConfigSchemaContents {
     default?:     string;
     depends?:     string[];
     description?: string;
+    options?:     string[];
     pattern?:     string;
     required?:    boolean;
     schema?:      { [key: string]: any };
@@ -351,6 +353,7 @@ const typeMap: any = {
         { json: "default", js: "default", typ: u(undefined, "") },
         { json: "depends", js: "depends", typ: u(undefined, a("")) },
         { json: "description", js: "description", typ: u(undefined, "") },
+        { json: "options", js: "options", typ: u(undefined, a("")) },
         { json: "pattern", js: "pattern", typ: u(undefined, "") },
         { json: "required", js: "required", typ: u(undefined, true) },
         { json: "schema", js: "schema", typ: u(undefined, m("any")) },
@@ -370,6 +373,7 @@ const typeMap: any = {
         { json: "default", js: "default", typ: u(undefined, "") },
         { json: "depends", js: "depends", typ: u(undefined, a("")) },
         { json: "description", js: "description", typ: u(undefined, "") },
+        { json: "options", js: "options", typ: u(undefined, a("")) },
         { json: "pattern", js: "pattern", typ: u(undefined, "") },
         { json: "required", js: "required", typ: u(undefined, true) },
         { json: "schema", js: "schema", typ: u(undefined, m("any")) },
@@ -396,6 +400,7 @@ const typeMap: any = {
         "AWSRegion",
         "AZRegion",
         "AlibabaRegion",
+        "ARN",
         "Base64",
         "Boolean",
         "Color",

@@ -234,6 +234,18 @@ export class EvalCommand extends Command<EvalCommandReturn> {
           );
         }
 
+        if (evaluatedValue && cfgu.options && !cfgu.options.some((option) => option === evaluatedValue)) {
+          throw new Error(
+            ERR(`invalid value for key '${key}'`, {
+              location: ['EvalCommand', 'run'],
+              suggestion: `value '${evaluatedValue} must be one of ${_.map(
+                cfgu.options,
+                (option) => `'${option}'`,
+              ).join(',')}`,
+            }),
+          );
+        }
+
         if (cfgu.required && !evaluatedValue) {
           throw new Error(ERR(`required key "${key}" is missing a value`, { location: [`EvalCommand`, 'run'] }));
         }
