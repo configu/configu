@@ -77,7 +77,7 @@ class ConfigSchemaDefinition:
             "me-east-1",
             "ap-southwest-1",
         },
-        "AwsRegion": lambda value: value
+        "AWSRegion": lambda value: value
         in {
             "af-south-1",
             "ap-east-1",

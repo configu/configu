@@ -221,14 +221,15 @@ export class EvalCommand extends Command<EvalCommandReturn> {
         const evaluatedValue = current.result.value;
 
         if (evaluatedValue && !ConfigSchema.CFGU.TESTS.VAL_TYPE[cfgu.type]({ ...cfgu, value: evaluatedValue })) {
-          let suggestion = `value "${evaluatedValue}" must be a "${cfgu.type}"`;
-          if (cfgu.type === 'RegEx') {
-            suggestion = `value "${evaluatedValue}" must match the pattern ${cfgu.pattern}`;
-          }
+          // todo: fix #164 in a common place.
+          // let suggestion = `value "${evaluatedValue}" must be a "${cfgu.type}"`;
+          // if (cfgu.type === 'RegEx') {
+          //   suggestion = `value "${evaluatedValue}" must match the pattern ${cfgu.pattern}`;
+          // }
           throw new Error(
             ERR(`invalid value type for key "${key}"`, {
               location: [`EvalCommand`, 'run'],
-              suggestion,
+              suggestion: `value "${evaluatedValue}" must be of type "${cfgu.type}"`,
             }),
           );
         }

@@ -1,8 +1,10 @@
 import _ from 'lodash';
 import validator from 'validator';
+import Ajv, { JSONSchemaType } from 'ajv';
 import { IConfigSchema, ConfigSchemaType, Cfgu, CfguType, Convert } from './types';
 import { ERR, NAME, TMPL } from './utils';
 
+const ajv = new Ajv();
 type CfguPath = `${string}.cfgu.${ConfigSchemaType}`;
 
 export abstract class ConfigSchema implements IConfigSchema {
@@ -14,7 +16,7 @@ export abstract class ConfigSchema implements IConfigSchema {
   } = {
     NAME: 'cfgu',
     EXT: `.cfgu`,
-    PROPS: ['type', 'pattern', 'default', 'required', 'depends', 'template', 'description'],
+    PROPS: ['type', 'pattern', 'schema', 'default', 'required', 'depends', 'template', 'description'],
     TESTS: {
       VAL_TYPE: {
         Boolean: ({ value }) => validator.isBoolean(value, { loose: true }),
@@ -67,7 +69,7 @@ export abstract class ConfigSchema implements IConfigSchema {
         MACAddress: ({ value }) => validator.isMACAddress(value),
         MIMEType: ({ value }) => validator.isMimeType(value),
         MongoId: ({ value }) => validator.isMongoId(value),
-        AwsRegion: ({ value }) =>
+        AWSRegion: ({ value }) =>
           new Set([
             'af-south-1',
             'ap-east-1',
@@ -271,6 +273,18 @@ export abstract class ConfigSchema implements IConfigSchema {
         Language: ({ value }) => validator.isISO6391(value),
         DateTime: ({ value }) =>
           validator.isDate(value) || validator.isTime(value) || !Number.isNaN(new Date(value).getTime()),
+        JSONSchema: ({ value, schema }) => {
+          if (!schema) {
+            return false;
+          }
+          const validate = ajv.compile(schema);
+          try {
+            const jsonValue = JSON.parse(value);
+            return validate(jsonValue); // validate.errors;
+          } catch (e) {
+            return validate(value);
+          }
+        },
       },
     },
   };
@@ -336,6 +350,15 @@ export abstract class ConfigSchema implements IConfigSchema {
           );
         }
 
+        if (type === 'JSONSchema' && !cfgu.schema) {
+          throw new Error(
+            ERR(`invalid type property`, {
+              location: [...scopeLocation, key, 'type'],
+              suggestion: `type "${type}" must come with a schema property`,
+            }),
+          );
+        }
+
         if (options) {
           if (!options.length) {
             throw new Error(
@@ -393,7 +416,7 @@ export abstract class ConfigSchema implements IConfigSchema {
           throw new Error(
             ERR(`invalid default property`, {
               location: [...scopeLocation, key, 'default'],
-              suggestion: `"${cfgu.default}" must be a "${type}"`,
+              suggestion: `value "${cfgu.default}" must be of type "${type}"`,
             }),
           );
         }

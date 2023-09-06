@@ -25,7 +25,7 @@ export type CfguType =
   | "MACAddress"
   | "MIMEType"
   | "MongoId"
-  | "AwsRegion"
+  | "AWSRegion"
   | "AZRegion"
   | "GCPRegion"
   | "OracleRegion"
@@ -33,7 +33,8 @@ export type CfguType =
   | "AlibabaRegion"
   | "Language"
   | "DateTime"
-  | "ARN";
+  | "ARN"
+  | "JSONSchema";
 
 /**
  * A generic declaration of a Config, aka Cfgu that specifies information about its type and other characteristics
@@ -41,6 +42,7 @@ export type CfguType =
 export interface Cfgu {
   type: CfguType;
   pattern?: string;
+  schema?: { [key: string]: any };
   default?: string;
   required?: boolean;
   depends?: string[];
