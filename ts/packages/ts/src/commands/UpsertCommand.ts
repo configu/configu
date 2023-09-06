@@ -58,6 +58,15 @@ export class UpsertCommand extends Command<void> {
           );
         }
 
+        if (value && cfgu.options && !cfgu.options.some((option) => option === value)) {
+          throw new Error(
+            ERR(`invalid config value "${value}" for key "${key}"`, {
+              location: scopeLocation,
+              suggestion: `value '${value} must be one of ${_.map(cfgu.options, (option) => `'${option}'`).join(',')}`,
+            }),
+          );
+        }
+
         return {
           set: set.path,
           key,

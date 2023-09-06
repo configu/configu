@@ -98,6 +98,7 @@ class Cfgu:
     default: Optional[str] = None
     depends: Optional[List[str]] = None
     description: Optional[str] = None
+    options: Optional[List[str]] = None
     pattern: Optional[str] = None
     required: Optional[bool] = None
     template: Optional[str] = None
@@ -109,10 +110,11 @@ class Cfgu:
         default = from_union([from_str, from_none], obj.get("default"))
         depends = from_union([lambda x: from_list(from_str, x), from_none], obj.get("depends"))
         description = from_union([from_str, from_none], obj.get("description"))
+        options = from_union([lambda x: from_list(from_str, x), from_none], obj.get("options"))
         pattern = from_union([from_str, from_none], obj.get("pattern"))
         required = from_union([from_bool, from_none], obj.get("required"))
         template = from_union([from_str, from_none], obj.get("template"))
-        return Cfgu(type, default, depends, description, pattern, required, template)
+        return Cfgu(type, default, depends, description, options, pattern, required, template)
 
     def to_dict(self) -> dict:
         result: dict = {}
@@ -123,6 +125,8 @@ class Cfgu:
             result["depends"] = from_union([lambda x: from_list(from_str, x), from_none], self.depends)
         if self.description is not None:
             result["description"] = from_union([from_str, from_none], self.description)
+        if self.options is not None:
+            result["options"] = from_union([lambda x: from_list(from_str, x), from_none], self.options)
         if self.pattern is not None:
             result["pattern"] = from_union([from_str, from_none], self.pattern)
         if self.required is not None:
@@ -187,6 +191,7 @@ class ConfigSchemaContentsValue:
     default: Optional[str] = None
     depends: Optional[List[str]] = None
     description: Optional[str] = None
+    options: Optional[List[str]] = None
     pattern: Optional[str] = None
     required: Optional[bool] = None
     template: Optional[str] = None
@@ -198,10 +203,11 @@ class ConfigSchemaContentsValue:
         default = from_union([from_str, from_none], obj.get("default"))
         depends = from_union([lambda x: from_list(from_str, x), from_none], obj.get("depends"))
         description = from_union([from_str, from_none], obj.get("description"))
+        options = from_union([lambda x: from_list(from_str, x), from_none], obj.get("options"))
         pattern = from_union([from_str, from_none], obj.get("pattern"))
         required = from_union([from_bool, from_none], obj.get("required"))
         template = from_union([from_str, from_none], obj.get("template"))
-        return ConfigSchemaContentsValue(type, default, depends, description, pattern, required, template)
+        return ConfigSchemaContentsValue(type, default, depends, description, options, pattern, required, template)
 
     def to_dict(self) -> dict:
         result: dict = {}
@@ -212,6 +218,8 @@ class ConfigSchemaContentsValue:
             result["depends"] = from_union([lambda x: from_list(from_str, x), from_none], self.depends)
         if self.description is not None:
             result["description"] = from_union([from_str, from_none], self.description)
+        if self.options is not None:
+            result["options"] = from_union([lambda x: from_list(from_str, x), from_none], self.options)
         if self.pattern is not None:
             result["pattern"] = from_union([from_str, from_none], self.pattern)
         if self.required is not None:

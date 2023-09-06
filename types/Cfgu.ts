@@ -46,4 +46,5 @@ export interface Cfgu {
   depends?: string[];
   template?: string;
   description?: string;
+  options?: string[];
 }
