@@ -230,6 +230,7 @@ type CfguType string
 const (
 	AZRegion         CfguType = "AZRegion"
 	AlibabaRegion    CfguType = "AlibabaRegion"
+	Arn              CfguType = "ARN"
 	AwsRegion        CfguType = "AwsRegion"
 	Base64           CfguType = "Base64"
 	Boolean          CfguType = "Boolean"
