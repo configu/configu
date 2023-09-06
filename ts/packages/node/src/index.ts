@@ -16,6 +16,7 @@ export * from './stores/Keyv';
 export * from './stores/KubernetesSecret';
 export * from './stores/LaunchDarkly';
 
+export * from './stores/Etcd';
 export * from './stores/SQLite';
 export * from './stores/MySQL';
 export * from './stores/MariaDB';

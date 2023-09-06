@@ -61,6 +61,9 @@ export abstract class ConfigSchema implements IConfigSchema {
           /^((?:[a-z0-9]([-a-z0-9]*[a-z0-9])?\.)+[a-z]{2,6}(?::\d{1,5})?\/)?[a-z0-9]+(?:[._\-\/:][a-z0-9]+)*$/gm.test(
             value,
           ),
+        ARN: ({ value }) =>
+          // eslint-disable-next-line no-useless-escape
+          /^arn:([^:\n]+):([^:\n]+):(?:[^:\n]*):(?:([^:\n]*)):([^:\/\n]+)(?:(:[^\n]+)|(\/[^:\n]+))?$/gm.test(value),
         MACAddress: ({ value }) => validator.isMACAddress(value),
         MIMEType: ({ value }) => validator.isMimeType(value),
         MongoId: ({ value }) => validator.isMongoId(value),

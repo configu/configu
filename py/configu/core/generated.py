@@ -53,6 +53,7 @@ def from_dict(f: Callable[[Any], T], x: Any) -> Dict[str, T]:
 
 class CfguType(Enum):
     ALIBABA_REGION = "AlibabaRegion"
+    ARN = "ARN"
     AWS_REGION = "AwsRegion"
     AZ_REGION = "AZRegion"
     BASE64 = "Base64"
@@ -77,7 +78,7 @@ class CfguType(Enum):
     MD5 = "MD5"
     MIME_TYPE = "MIMEType"
     MOBILE_PHONE = "MobilePhone"
-    MONGOID = "MongoId"
+    MONGO_ID = "MongoId"
     NUMBER = "Number"
     ORACLE_REGION = "OracleRegion"
     REG_EX = "RegEx"

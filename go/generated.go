@@ -230,6 +230,7 @@ type CfguType string
 const (
 	AZRegion         CfguType = "AZRegion"
 	AlibabaRegion    CfguType = "AlibabaRegion"
+	Arn              CfguType = "ARN"
 	AwsRegion        CfguType = "AwsRegion"
 	Base64           CfguType = "Base64"
 	Boolean          CfguType = "Boolean"
@@ -253,7 +254,7 @@ const (
 	MIMEType         CfguType = "MIMEType"
 	Md5              CfguType = "MD5"
 	MobilePhone      CfguType = "MobilePhone"
-	MongoId					 CfguType = "MongoId"	
+	MongoID          CfguType = "MongoId"
 	Number           CfguType = "Number"
 	OracleRegion     CfguType = "OracleRegion"
 	RegEx            CfguType = "RegEx"

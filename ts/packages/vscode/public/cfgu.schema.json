@@ -3,6 +3,7 @@
     "CfguType": {
       "title": "CfguType",
       "enum": [
+        "ARN",
         "AZRegion",
         "AlibabaRegion",
         "AwsRegion",
