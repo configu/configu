@@ -115,7 +115,7 @@ func anyInvalidDependencyNames(value ConfigSchemaContentsValue) bool {
 
 func validateCfguType(schema ConfigSchemaContentsValue, value string) bool {
 	switch schema.Type {
-	case ARN:
+	case Arn:
 		return isValidARN(value);
 	case Base64:
 		return isValidBase64(value)
@@ -143,7 +143,7 @@ func validateCfguType(schema ConfigSchemaContentsValue, value string) bool {
 		return isValidLatLong(value)
 	case Md5:
 		return isValidMd5(value)
-	case MongoId:
+	case MongoID:
 		return isValidMongoId(value)
 	case Number:
 		return isValidNumber(value)
