@@ -5,6 +5,7 @@ export type StoreType = LiteralUnion<
   | 'in-memory'
   | 'configu'
   | 'json-file'
+  | 'ini-file'
   | 'hashicorp-vault'
   | 'aws-parameter-store'
   | 'aws-secrets-manager'
@@ -26,6 +27,7 @@ export const STORE_LABEL: Record<StoreType, string> = {
   'in-memory': 'In Memory',
   configu: 'Configu',
   'json-file': 'Json File',
+  'ini-file': 'INI File',
   'hashicorp-vault': 'HashiCorp Vault',
   'aws-parameter-store': 'AWS Parameter Store',
   'aws-secrets-manager': 'AWS Secrets Manager',
@@ -46,6 +48,7 @@ export const STORE_WEBSITE: Record<StoreType, string> = {
   'in-memory': '',
   configu: 'https://configu.com/',
   'json-file': 'https://www.json.org/json-en.html',
+  'ini-file': 'https://en.wikipedia.org/wiki/INI_file',
   'hashicorp-vault': 'https://www.vaultproject.io/',
   'aws-parameter-store': 'https://aws.amazon.com/systems-manager/features/#Parameter_Store',
   'aws-secrets-manager': 'https://aws.amazon.com/secrets-manager/',
