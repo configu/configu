@@ -142,7 +142,10 @@ export class EvalCommand extends Command<EvalCommandReturn> {
         if (
           !mergedResult ||
           (mergedResult.result.origin === EvaluatedConfigOrigin.EmptyValue &&
-            current.result.origin !== EvaluatedConfigOrigin.EmptyValue)
+            current.result.origin !== EvaluatedConfigOrigin.EmptyValue) ||
+          (mergedResult.result.origin === EvaluatedConfigOrigin.SchemaDefault &&
+            current.result.origin !== EvaluatedConfigOrigin.EmptyValue &&
+            current.result.origin !== EvaluatedConfigOrigin.SchemaDefault)
         ) {
           return { ...merged, [key]: current };
         }
