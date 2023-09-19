@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { Command } from '../Command';
 import { Cfgu } from '../types';
-import { ERR, TMPL } from '../utils';
+import { ConfigError, TMPL } from '../utils';
 import { ConfigStore } from '../ConfigStore';
 import { ConfigSet } from '../ConfigSet';
 import { ConfigSchema } from '../ConfigSchema';
@@ -217,43 +217,33 @@ export class EvalCommand extends Command<EvalCommandReturn> {
     _(result)
       .values()
       .forEach((current) => {
-        const { key, cfgu } = current.context;
+        const { store, set, schema, key, cfgu } = current.context;
         const evaluatedValue = current.result.value;
 
-        if (evaluatedValue && !ConfigSchema.CFGU.TESTS.VAL_TYPE[cfgu.type]({ ...cfgu, value: evaluatedValue })) {
-          // todo: fix #164 in a common place.
-          // let suggestion = `value "${evaluatedValue}" must be a "${cfgu.type}"`;
-          // if (cfgu.type === 'RegEx') {
-          //   suggestion = `value "${evaluatedValue}" must match the pattern ${cfgu.pattern}`;
-          // }
-          throw new Error(
-            ERR(`invalid value type for key "${key}"`, {
-              location: [`EvalCommand`, 'run'],
-              suggestion: `value "${evaluatedValue}" must be of type "${cfgu.type}"`,
-            }),
-          );
-        }
+        const errorScope: [string, string][] = [
+          ['EvalCommand', `store:${store};set:${set};schema:${schema};key:${key}`],
+        ];
 
-        if (evaluatedValue && cfgu.options && !cfgu.options.some((option) => option === evaluatedValue)) {
-          throw new Error(
-            ERR(`invalid value for key '${key}'`, {
-              location: ['EvalCommand', 'run'],
-              suggestion: `value '${evaluatedValue} must be one of ${_.map(
-                cfgu.options,
-                (option) => `'${option}'`,
-              ).join(',')}`,
-            }),
-          );
-        }
+        if (evaluatedValue) {
+          try {
+            ConfigSchema.CFGU.VALIDATORS.valueOptions(cfgu, evaluatedValue);
+            ConfigSchema.CFGU.VALIDATORS.valueType(cfgu, evaluatedValue);
+          } catch (error) {
+            if (error instanceof ConfigError) {
+              error.appendScope(errorScope);
+            }
+            throw error;
+          }
 
-        if (cfgu.required && !evaluatedValue) {
-          throw new Error(ERR(`required key "${key}" is missing a value`, { location: [`EvalCommand`, 'run'] }));
-        }
-
-        if (evaluatedValue && cfgu.depends && cfgu.depends.some((depend) => !evaluatedConfigsDict[depend])) {
-          throw new Error(
-            ERR(`one or more depends of key "${key}" is missing a value`, { location: [`EvalCommand`, 'run'] }),
-          );
+          if (cfgu.depends && cfgu.depends.some((depend) => !evaluatedConfigsDict[depend])) {
+            throw new ConfigError(
+              'invalid config value',
+              `one or more depends of key "${key}" is missing a value`,
+              errorScope,
+            );
+          }
+        } else if (cfgu.required) {
+          throw new ConfigError('invalid config value', `required key "${key}" is missing a value`, errorScope);
         }
       });
   }
@@ -262,14 +252,13 @@ export class EvalCommand extends Command<EvalCommandReturn> {
     const { store, set, schema } = this.parameters;
 
     await store.init();
-    const schemaContents = await ConfigSchema.parse(schema);
 
-    let result = _.mapValues<typeof schemaContents, EvalCommandReturn['string']>(schemaContents, (cfgu, key) => {
+    let result = _.mapValues<typeof schema.contents, EvalCommandReturn['string']>(schema.contents, (cfgu, key) => {
       return {
         context: {
           store: store.type,
           set: set.path,
-          schema: schema.path,
+          schema: schema.name,
           key,
           cfgu,
         },

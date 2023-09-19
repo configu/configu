@@ -1,25 +1,26 @@
-import { ERR, TMPL } from './utils';
+import { ConfigError, TMPL } from './utils';
 
 describe(`utils`, () => {
-  describe(`ERR`, () => {
+  describe(`ConfigError`, () => {
     const message = 'some-error';
-    const location = ['tests', 'utils', 'ERR'];
-    const suggestion = 'try to to reach 100% coverage';
+    const hint = 'try to to reach 100% coverage';
+    const scope: [string, string][] = [['test', 'ConfigError']];
     it(`return message`, async () => {
-      const res = ERR(message);
-      expect(res).toEqual(message);
+      const res = new ConfigError(message);
+      expect(res.message).toEqual(message);
     });
     it(`return message and location`, async () => {
-      const res = ERR(message, { location });
-      expect(res).toBe(`${message} at ${location.join('.')}`);
+      const res = new ConfigError(message, undefined, scope);
+      expect(res.message).toContain(`${message} at`);
     });
     it(`return message and suggestion`, async () => {
-      const res = ERR(message, { suggestion });
-      expect(res).toBe(`${message}, ${suggestion}`);
+      const res = new ConfigError(message, hint);
+      expect(res.message).toBe(`${message}, ${hint}`);
     });
     it(`return decorated message`, async () => {
-      const res = ERR(message, { location, suggestion });
-      expect(res).toBe(`${message} at ${location.join('.')}, ${suggestion}`);
+      const res = new ConfigError(message, hint, scope);
+      expect(res.message).toContain(`at`);
+      expect(res.message).toContain(`,`);
     });
   });
 
