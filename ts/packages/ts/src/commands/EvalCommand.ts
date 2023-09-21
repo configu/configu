@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { Command } from '../Command';
 import { Cfgu } from '../types';
-import { ERR, TMPL } from '../utils';
+import { ERR, TMPL, isStringInCfguType } from '../utils';
 import { ConfigStore } from '../ConfigStore';
 import { ConfigSet } from '../ConfigSet';
 import { ConfigSchema } from '../ConfigSchema';
@@ -101,6 +101,11 @@ export class EvalCommand extends Command<EvalCommandReturn> {
       const { context } = current;
       const { cfgu } = context;
 
+      if (!isStringInCfguType(current.context.schema)) {
+        throw new Error(
+          `Type '${current.context.schema}' is not yet supported in this SDK.\nFor the time being, please utilize the String type.\nWe'd greatly appreciate it if you could open an issue regarding this at https://github.com/configu/configu/issues/new/choose so we can address it in future updates.`,
+        );
+      }
       if (cfgu.template) {
         return {
           ...current,

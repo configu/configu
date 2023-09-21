@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import Mustache from 'mustache';
+import type { CfguType } from './types';
 
 export const ERR = (
   message: string,
@@ -29,4 +30,47 @@ export const TMPL = {
     });
   },
   render: (template: string, context: any) => Mustache.render(template, context, {}, { escape: (value) => value }),
+};
+
+const cfguTypeSet = new Set<CfguType>([
+  'ARN',
+  'AWSRegion',
+  'AZRegion',
+  'AlibabaRegion',
+  'Base64',
+  'Boolean',
+  'Color',
+  'ConnectionString',
+  'Country',
+  'Currency',
+  'DateTime',
+  'DockerImage',
+  'Domain',
+  'Email',
+  'GCPRegion',
+  'Hex',
+  'IBMRegion',
+  'IPv4',
+  'IPv6',
+  'JSONSchema',
+  'Language',
+  'LatLong',
+  'Locale',
+  'MACAddress',
+  'MD5',
+  'MIMEType',
+  'MobilePhone',
+  'MongoId',
+  'Number',
+  'OracleRegion',
+  'RegEx',
+  'SHA',
+  'SemVer',
+  'String',
+  'URL',
+  'UUID',
+]);
+
+export const isStringInCfguType = (input: string): boolean => {
+  return cfguTypeSet.has(input as CfguType);
 };
