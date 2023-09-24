@@ -1,8 +1,10 @@
 import _ from 'lodash';
 import validator from 'validator';
+import Ajv, { JSONSchemaType } from 'ajv';
 import { IConfigSchema, ConfigSchemaType, Cfgu, CfguType, Convert } from './types';
 import { ERR, NAME, TMPL } from './utils';
 
+const ajv = new Ajv();
 type CfguPath = `${string}.cfgu.${ConfigSchemaType}`;
 
 export abstract class ConfigSchema implements IConfigSchema {
@@ -14,7 +16,7 @@ export abstract class ConfigSchema implements IConfigSchema {
   } = {
     NAME: 'cfgu',
     EXT: `.cfgu`,
-    PROPS: ['type', 'pattern', 'default', 'required', 'depends', 'template', 'description'],
+    PROPS: ['type', 'pattern', 'schema', 'default', 'required', 'depends', 'template', 'description'],
     TESTS: {
       VAL_TYPE: {
         Boolean: ({ value }) => validator.isBoolean(value, { loose: true }),
@@ -61,10 +63,13 @@ export abstract class ConfigSchema implements IConfigSchema {
           /^((?:[a-z0-9]([-a-z0-9]*[a-z0-9])?\.)+[a-z]{2,6}(?::\d{1,5})?\/)?[a-z0-9]+(?:[._\-\/:][a-z0-9]+)*$/gm.test(
             value,
           ),
+        ARN: ({ value }) =>
+          // eslint-disable-next-line no-useless-escape
+          /^arn:([^:\n]+):([^:\n]+):(?:[^:\n]*):(?:([^:\n]*)):([^:\/\n]+)(?:(:[^\n]+)|(\/[^:\n]+))?$/gm.test(value),
         MACAddress: ({ value }) => validator.isMACAddress(value),
         MIMEType: ({ value }) => validator.isMimeType(value),
         MongoId: ({ value }) => validator.isMongoId(value),
-        AwsRegion: ({ value }) =>
+        AWSRegion: ({ value }) =>
           new Set([
             'af-south-1',
             'ap-east-1',
@@ -268,6 +273,18 @@ export abstract class ConfigSchema implements IConfigSchema {
         Language: ({ value }) => validator.isISO6391(value),
         DateTime: ({ value }) =>
           validator.isDate(value) || validator.isTime(value) || !Number.isNaN(new Date(value).getTime()),
+        JSONSchema: ({ value, schema }) => {
+          if (!schema) {
+            return false;
+          }
+          const validate = ajv.compile(schema);
+          try {
+            const jsonValue = JSON.parse(value);
+            return validate(jsonValue); // validate.errors;
+          } catch (e) {
+            return validate(value);
+          }
+        },
       },
     },
   };
@@ -313,7 +330,7 @@ export abstract class ConfigSchema implements IConfigSchema {
     _(schemaContents)
       .entries()
       .forEach(([key, cfgu]) => {
-        const { type } = cfgu;
+        const { type, options } = cfgu;
 
         if (!NAME(key)) {
           throw new Error(
@@ -333,6 +350,59 @@ export abstract class ConfigSchema implements IConfigSchema {
           );
         }
 
+        if (type === 'JSONSchema' && !cfgu.schema) {
+          throw new Error(
+            ERR(`invalid type property`, {
+              location: [...scopeLocation, key, 'type'],
+              suggestion: `type "${type}" must come with a schema property`,
+            }),
+          );
+        }
+
+        if (options) {
+          if (!options.length) {
+            throw new Error(
+              ERR('invalid options property', {
+                location: [...scopeLocation, key, 'options'],
+                suggestion: "options mustn't be empty if set",
+              }),
+            );
+          }
+          if (cfgu.template) {
+            throw new Error(
+              ERR('invalid options property', {
+                location: [...scopeLocation, key, 'options'],
+                suggestion: "options mustn't set together with template properties",
+              }),
+            );
+          }
+          options.forEach((option, idx) => {
+            if (option === '') {
+              throw new Error(
+                ERR('Invalid options property', {
+                  location: [...scopeLocation, `${key}[${idx}]`],
+                  suggestion: `options mustn't contain an empty string`,
+                }),
+              );
+            }
+            if (option && !ConfigSchema.CFGU.TESTS.VAL_TYPE[type]?.({ ...cfgu, value: option })) {
+              throw new Error(
+                ERR('Invalid options property', {
+                  location: [...scopeLocation, `${key}[${idx}]`],
+                  suggestion: `${option} must be a "${type}"`,
+                }),
+              );
+            }
+          });
+        }
+        if (cfgu.default && options && !options.some((option) => option === cfgu.default)) {
+          throw new Error(
+            ERR('Invalid default property', {
+              location: [...scopeLocation, 'default'],
+              suggestion: `value ${cfgu.default} must be one of ${_.map(options, (option) => `'${option}'`).join(',')}`,
+            }),
+          );
+        }
         if (cfgu.default && (cfgu.required || cfgu.template)) {
           throw new Error(
             ERR(`invalid default property`, {
@@ -346,7 +416,7 @@ export abstract class ConfigSchema implements IConfigSchema {
           throw new Error(
             ERR(`invalid default property`, {
               location: [...scopeLocation, key, 'default'],
-              suggestion: `"${cfgu.default}" must be a "${type}"`,
+              suggestion: `value "${cfgu.default}" must be of type "${type}"`,
             }),
           );
         }

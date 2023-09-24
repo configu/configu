@@ -3,9 +3,10 @@
     "CfguType": {
       "title": "CfguType",
       "enum": [
+        "ARN",
+        "AWSRegion",
         "AZRegion",
         "AlibabaRegion",
-        "AwsRegion",
         "Base64",
         "Boolean",
         "Color",
@@ -21,6 +22,7 @@
         "IBMRegion",
         "IPv4",
         "IPv6",
+        "JSONSchema",
         "Language",
         "LatLong",
         "Locale",
@@ -53,6 +55,11 @@
           "type": "string",
           "title": "pattern"
         },
+        "schema": {
+          "type": "object",
+          "additionalProperties": {},
+          "title": "schema"
+        },
         "default": {
           "type": "string",
           "title": "default"
@@ -75,6 +82,13 @@
         "description": {
           "type": "string",
           "title": "description"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "options"
         }
       },
       "additionalProperties": false,
@@ -148,6 +162,11 @@
           "type": "string",
           "title": "pattern"
         },
+        "schema": {
+          "type": "object",
+          "additionalProperties": {},
+          "title": "schema"
+        },
         "default": {
           "type": "string",
           "title": "default"
@@ -170,6 +189,13 @@
         "description": {
           "type": "string",
           "title": "description"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "options"
         }
       },
       "additionalProperties": false,
