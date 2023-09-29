@@ -45,11 +45,24 @@ class HashicorpVaultConfigStore(KeyValueConfigStore):
             },
         )
 
-    def upsert(self, key: str, value: str):
+    def upsert(self, key: str, value):
+        # Ensure the key is a string
+        if not isinstance(key, str):
+            raise ValueError("Key must be a string")
+        
+        # Check if the value is a string, and if so, store it as an object
+        if isinstance(value, str):
+            value = {"data": value}
+        elif not isinstance(value, dict):
+            raise ValueError("Value must be a string or a dictionary")
+
         requests.post(
             f"{self.address}/v1/{self._format_key(key)}",
             headers={
                 "X-Vault-Token": self.token,
             },
-            json={"data": json.loads(value)},
+            json=value, # Use data instead of json parameter
         )
+
+
+
