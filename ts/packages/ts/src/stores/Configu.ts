@@ -1,7 +1,7 @@
-import axios, { Axios } from 'axios';
+import axios, { type Axios } from 'axios';
 import validator from 'validator';
 import { ConfigStore } from '../ConfigStore';
-import { ConfigStoreQuery, Config } from '../types';
+import { type ConfigStoreQuery, type Config } from '../types';
 
 export type ConfiguConfigStoreConfiguration = {
   credentials: { org: string; token: string };

@@ -1,8 +1,8 @@
 import _ from 'lodash';
 import validator from 'validator';
 import Ajv, { JSONSchemaType } from 'ajv';
-import { IConfigSchema, ConfigSchemaType, Cfgu, CfguType, Convert } from './types';
-import { ERR, NAME, TMPL } from './utils';
+import { type IConfigSchema, type ConfigSchemaType, type Cfgu, type CfguType, Convert } from './types';
+import { ERR, NAME, type TMPL } from './utils';
 
 const ajv = new Ajv();
 type CfguPath = `${string}.cfgu.${ConfigSchemaType}`;

@@ -1,4 +1,4 @@
-import { Cfgu } from './Cfgu';
+import { type Cfgu } from './Cfgu';
 
 export type ConfigSchemaType = "json";
 
