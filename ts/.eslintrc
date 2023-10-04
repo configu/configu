@@ -38,12 +38,13 @@
     "no-shadow": "off",
     "@typescript-eslint/no-shadow": ["error"],
     "spellcheck/spell-checker": ["warn", {
-      "skipWords": [
-        "configu",
-        "cfgu",
-        "upsert"
-      ]
-    }]
+        "skipWords": [
+          "configu",
+          "cfgu",
+          "upsert"
+        ]
+}],
+    "@typescript-eslint/consistent-type-imports": ["error", { "fixStyle": "inline-type-imports" }]
   },
   "overrides":[
     {
