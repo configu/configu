@@ -23,5 +23,9 @@
     "json": "^11.0.0",
     "lint-staged": "^14.0.1",
     "quicktype": "^23.0.75"
+  },
+  "dependencies": {
+    "@iarna/toml": "^2.2.5",
+    "xml2js": "^0.6.2"
   }
 }
