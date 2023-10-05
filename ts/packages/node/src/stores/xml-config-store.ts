@@ -1,34 +1,35 @@
-// xml-config-store.ts
-import { ConfigStore } from '../types';
+import { promises as fs } from 'fs';
 import * as xml2js from 'xml2js';
-import * as fs from 'fs';
 
-interface XMLConfigStoreOptions {
-  path: string;
-  encoding?: BufferEncoding;
-  xmlOptions?: xml2js.OptionsV2;
+class XMLConfigStore {
+  private readonly filePath: string;
+
+  constructor(filePath: string) {
+    this.filePath = filePath;
+  }
+
+  async readConfig(): Promise<any> {
+    try {
+      const data = await fs.readFile(this.filePath, 'utf-8');
+      const parser = new xml2js.Parser();
+      const parsedData = await parser.parseStringPromise(data);
+      return parsedData;
+    } catch (error) {
+      // Handle errors appropriately (e.g., file not found, invalid XML)
+      throw error;
+    }
+  }
+
+  async writeConfig(config: any): Promise<void> {
+    try {
+      const builder = new xml2js.Builder();
+      const xml = builder.buildObject(config);
+      await fs.writeFile(this.filePath, xml, 'utf-8');
+    } catch (error) {
+      // Handle errors appropriately (e.g., write permission denied)
+      throw error;
+    }
+  }
 }
 
-export default class XMLConfigStore implements ConfigStore {
-  private path: string;
-  private encoding: BufferEncoding;
-  private xmlOptions: xml2js.OptionsV2;
-
-  constructor(options: XMLConfigStoreOptions) {
-    this.path = options.path;
-    this.encoding = options.encoding || 'utf8';
-    this.xmlOptions = options.xmlOptions || {};
-  }
-
-  async read(): Promise<any> {
-    const xml = await fs.promises.readFile(this.path, this.encoding);
-    const result = await xml2js.parseStringPromise(xml, this.xmlOptions);
-    return result;
-  }
-
-  async write(data: any): Promise<void> {
-    const builder = new xml2js.Builder(this.xmlOptions);
-    const xml = builder.buildObject(data);
-    await fs.promises.writeFile(this.path, xml, this.encoding);
-  }
-}
+export default XMLConfigStore;
