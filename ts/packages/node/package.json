@@ -56,6 +56,7 @@
   },
   "devDependencies": {
     "@types/ini": "^1.3.31",
-    "@types/lodash": "^4.14.197"
+    "@types/lodash": "^4.14.197",
+    "csv-parser": "^3.0.0"
   }
 }
