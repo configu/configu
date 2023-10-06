@@ -153,11 +153,11 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
 
     return _(configFlag)
       .map((pair, idx) => {
-        const [key, value] = pair.split('=');
+        const [key, ...rest] = pair.split('=');
         if (!key) {
           throw new Error(`config key is missing at --config[${idx}]`);
         }
-        return { key, value: value ?? '' };
+        return { key, value: rest.join('=') ?? '' };
       })
       .keyBy('key')
       .mapValues('value')
