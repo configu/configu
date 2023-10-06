@@ -6,6 +6,7 @@ export { NoopConfigStore, InMemoryConfigStore, ConfiguConfigStore } from '@confi
 
 export * from './stores/JsonFile';
 export * from './stores/IniFile';
+export * from './stores/TOMLConfigStore';
 
 export * from './stores/AWSParameterStore';
 export * from './stores/AWSSecretsManager';
