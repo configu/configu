@@ -20,8 +20,10 @@ The documentation is divided into several sections:
 
 * [Introduction & Overview](https://configu.com/docs/)
 * [Concepts](https://configu.com/docs/terminology/)
+* [Configu Cloud](https://configu.com/docs/configs-explorer/)
 * [CLI](https://configu.com/docs/cli-overview/)
 * [SDK](https://configu.com/docs/sdk-overview/)
+* [IDE Plugin](https://configu.com/docs/vs-code/)
 * Recipes
 
 ### Contributing
