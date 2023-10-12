@@ -22,7 +22,7 @@ The documentation is divided into several sections:
 * [Concepts](https://configu.com/docs/terminology/)
 * [CLI](https://configu.com/docs/cli-overview/)
 * [SDK](https://configu.com/docs/sdk-overview/)
-* Recipes
+* [Recipes](https://configu.com/docs/webhook-slack/)
 
 ### Contributing
 
