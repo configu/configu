@@ -20,7 +20,7 @@ export * from './stores/Etcd';
 export * from './stores/SQLite';
 export * from './stores/MySQL';
 export * from './stores/MariaDB';
-export * from './stores/MongoDb';
+export * from './stores/MongoDB';
 export * from './stores/PostgreSQL';
 export * from './stores/CockroachDB';
 export * from './stores/MSSQL';
