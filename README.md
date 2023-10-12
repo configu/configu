@@ -2,8 +2,9 @@
 <p align="center">
   <a href="https://github.com/configu/configu" target="_blank" rel="noopener noreferrer">
     <img src="https://img.shields.io/badge/built_with-love-red" alt="built with love badge" />
- </a>
-  <a><img src="https://img.shields.io/discord/919659746003410944?logo=discord&logoColor=white&label=Discord&color=7289da&link=https%3A%2F%2Fdiscord.com%2Finvite%2FcjSBxnB9z8" />
+  </a>
+  <a href="https://discord.com/invite/cjSBxnB9z8">
+    <img src="https://img.shields.io/discord/919659746003410944?logo=discord&label=Discord&color=7289da" />
  </a>
   <a href="https://github.com/configu/configu" target="_blank" rel="noopener noreferrer">
     <img src="https://img.shields.io/badge/open-source-green?color=34d058" />
