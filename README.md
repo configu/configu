@@ -36,6 +36,12 @@ There are many ways to [contribute](CONTRIBUTING.md) to Configu.
 * [Contribute bugfixes and improvements](CONTRIBUTING.md).
 * [Contribute documentation](https://github.com/configu/docs).
 
+#### Running on Online Enviroment
+
+Instantly start contributing by making updates directly without cloning in the running Gitpod environment!
+
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/configu/configu)
+
 <!-- ### Roadmap
 
 For details on our planned features and future direction please refer to our [roadmap](link-to-public-gh-project). -->
