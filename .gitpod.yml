@@ -1,0 +1,41 @@
+# reference: https://www.gitpod.io/docs/references/gitpod-yml
+# image: https://www.gitpod.io/docs/configure/workspaces/workspace-image
+tasks:
+  - name: monorepo
+    init: |
+      nvm install
+      nvm use
+      npm install
+  - name: ts
+    init: |
+      cd ts
+      nvm install
+      nvm use
+      npm install
+    openMode: tab-after
+  - name: py
+    init: |
+      cd py
+      pyenv install
+      pyenv local 3.9.16
+      poetry env use $(pyenv which python)
+      poetry install
+    openMode: tab-after
+  - name: go
+    init: |
+      cd go
+      go install
+    openMode: tab-after
+ports:
+  # todo: uncomment when docs are migrated from configu.com/docs to this repo
+  # - name: Docs
+  #   port: 3000
+  #   onOpen: open-preview
+  - name: React Example
+    port: 8080-8100
+github:
+  prebuilds:
+    master: true
+    branches: false
+    pullRequests: false
+    pullRequestsFromForks: false
