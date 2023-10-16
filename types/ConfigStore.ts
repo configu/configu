@@ -1,4 +1,4 @@
-import { type Config } from './Config';
+import { Config } from './Config';
 
 /**
  * An interface of a storage, aka ConfigStore
