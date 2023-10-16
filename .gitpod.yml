@@ -1,28 +1,30 @@
 # reference: https://www.gitpod.io/docs/references/gitpod-yml
 # image: https://www.gitpod.io/docs/configure/workspaces/workspace-image
 tasks:
-  - name: monorepo
+  - name: repo
     init: |
       nvm install
-      nvm use
       npm install
+      gp sync-done repo
   - name: ts
     init: |
+      gp sync-await repo
       cd ts
-      nvm install
       nvm use
       npm install
     openMode: tab-after
   - name: py
     init: |
+      gp sync-await repo
       cd py
-      pyenv install
+      pyenv install --force
       pyenv local 3.9.16
       poetry env use $(pyenv which python)
       poetry install
     openMode: tab-after
   - name: go
     init: |
+      gp sync-await repo
       cd go
       go install
     openMode: tab-after
