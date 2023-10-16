@@ -12,6 +12,7 @@ tasks:
       cd ts
       nvm use
       npm install
+      npm run build
     openMode: tab-after
   - name: py
     init: |
@@ -21,6 +22,7 @@ tasks:
       pyenv local 3.9.16
       poetry env use $(pyenv which python)
       poetry install
+      poetry build
     openMode: tab-after
   - name: go
     init: |
