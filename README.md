@@ -1,15 +1,16 @@
 # Configu
-<p align="center">
-  <a href="https://github.com/configu/configu" target="_blank" rel="noopener noreferrer">
+<p>
+<!--   <a href="https://github.com/configu/configu" target="_blank" rel="noopener noreferrer">
     <img src="https://img.shields.io/badge/built_with-love-red" alt="built with love badge" />
-  </a>
+  </a> -->
   <a href="https://discord.com/invite/cjSBxnB9z8">
     <img src="https://img.shields.io/discord/919659746003410944?logo=discord&logoColor=white&label=Discord&color=7289da" />
  </a>
-  <a href="https://github.com/configu/configu" target="_blank" rel="noopener noreferrer">
+<!--   <a href="https://github.com/configu/configu" target="_blank" rel="noopener noreferrer">
     <img src="https://img.shields.io/badge/open-source-green?color=34d058" />
- </a>
+ </a> -->
 </p>
+
 <a href="https://configu.com" target="_blank">
   <img align="right" src="https://raw.githubusercontent.com/configu/configu/main/assets/icon.svg" height="150px" alt="configu icon">
 </a>
@@ -19,8 +20,6 @@
 It is built to provide a _common_, _flexible_, and _extensible_ process for _storing_, _mutating_, and _orchestrating_ **configuration data** across different environments and systems.
 
 [Learn how to use Configu in your project](https://configu.com/docs/get-started/).
-
-
 
 ### Documentation
 
