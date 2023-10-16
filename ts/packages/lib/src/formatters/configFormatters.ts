@@ -2,8 +2,8 @@ import _ from 'lodash';
 import { camelCase, snakeCase } from 'change-case';
 import { dump as ymlStringify } from 'js-yaml';
 import validator from 'validator';
-import { type ExportCommandReturn } from '@configu/ts';
-import { type ConfigFormat } from './ConfigFormat';
+import type { ExportCommandReturn } from '@configu/ts';
+import type { ConfigFormat } from './ConfigFormat';
 
 const hasWhitespace = (str: string) => {
   return /\s/.test(str);
