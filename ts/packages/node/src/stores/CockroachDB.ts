@@ -1,4 +1,4 @@
-import { CockroachConnectionOptions } from 'typeorm/driver/cockroachdb/CockroachConnectionOptions';
+import { type CockroachConnectionOptions } from 'typeorm/driver/cockroachdb/CockroachConnectionOptions';
 import { ORMConfigStore } from './ORM';
 
 export type CockroachDBConfigStoreConfiguration = Omit<CockroachConnectionOptions, 'type'>;

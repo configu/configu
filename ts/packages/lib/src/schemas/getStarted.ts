@@ -1,4 +1,4 @@
-import { Cfgu } from '@configu/ts';
+import { type Cfgu } from '@configu/ts';
 
 export const GET_STARTED: { [key: string]: Cfgu } = {
   GREETING: {
