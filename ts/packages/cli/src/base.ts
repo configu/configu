@@ -1,14 +1,14 @@
 import os from 'os';
 import fs from 'fs/promises';
 import path from 'path';
-import { Config, Command, Flags, Interfaces, Errors, ux } from '@oclif/core';
+import { type Config, Command, type Flags, type Interfaces, Errors, ux } from '@oclif/core';
 import _ from 'lodash';
 import { cosmiconfig } from 'cosmiconfig';
 import axios from 'axios';
 import chalk from 'chalk';
 import logSymbols from 'log-symbols';
 import ci from 'ci-info';
-import { EvalCommandReturn, ConfiguConfigStore, TMPL } from '@configu/ts';
+import { type EvalCommandReturn, type ConfiguConfigStore, TMPL } from '@configu/ts';
 import { constructStore } from './helpers';
 
 type BaseConfig = Config & {

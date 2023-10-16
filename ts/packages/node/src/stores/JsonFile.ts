@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs';
 import _ from 'lodash';
-import { ConfigStore, ConfigStoreQuery, Config, Convert } from '@configu/ts';
+import { ConfigStore, type ConfigStoreQuery, type Config, Convert } from '@configu/ts';
 
 export type JsonFileConfigStoreConfiguration = { path: string };
 

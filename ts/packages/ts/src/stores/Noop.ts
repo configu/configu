@@ -1,5 +1,5 @@
 import { ConfigStore } from '../ConfigStore';
-import { ConfigStoreQuery, Config } from '../types';
+import { type ConfigStoreQuery, type Config } from '../types';
 
 export class NoopConfigStore extends ConfigStore {
   constructor() {
