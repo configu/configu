@@ -1,5 +1,30 @@
 {
-  "image": "mcr.microsoft.com/devcontainers/universal:2",
-  "features": {
-  }
+  "name": "Configu Dev Container",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "args": {
+      "NODE_VERSION": "18.15.0",
+      "PYTHON_VERSION": "3.9.16",
+      "GO_VERSION": "1.21.3"
+    },
+    "context": ".."
+  },
+  "forwardPorts": [8080, 3000],
+  "postCreateCommand": [
+    "sh",
+    "-c",
+    "npm install && \
+     cd ts && npm install && npm run build && \
+     cd ../py && poetry env use $(pyenv which python) && poetry install && poetry build && \
+     cd ../go && go install"
+  ],
+  "customizations": {
+    "terminal.integrated.shell.linux": "/bin/bash"
+  },
+  // "extensions": [
+  //   "golang.go",
+  //   "ms-python.python",
+  //   "ms-vscode.typescript-tslint-plugin"
+  // ],
+  "remoteUser": "root"
 }
