@@ -1,0 +1,10 @@
+{
+  "stores": {
+    "sqlite": {
+      "type": "sqlite",
+      "configuration": {
+        "database": "./store.db"
+      }
+    }
+  }
+}

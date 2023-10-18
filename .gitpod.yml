@@ -1,16 +1,10 @@
 # reference: https://www.gitpod.io/docs/references/gitpod-yml
 # image: https://www.gitpod.io/docs/configure/workspaces/workspace-image
-image:
-  file: .devcontainer/Dockerfile
 tasks:
   - name: repo
-    # before: |
-    #   nvm install
     before: |
-      node -v
-      npm -v
-      poetry env info
-      go version
+      nvm install
+      curl https://cli.configu.com/install.sh | sh
     init: |
       npm install
       gp sync-done repo
@@ -18,7 +12,7 @@ tasks:
     before: |
       cd ts
       gp sync-await repo
-      # nvm use
+      nvm use
     init: |
       npm install
       npm run build
@@ -27,9 +21,9 @@ tasks:
     before: |
       cd py
       gp sync-await repo
-      # pyenv install --force
-      # pyenv local 3.9.16
-      # poetry env use $(pyenv which python)
+      pyenv install --force
+      pyenv local 3.9.16
+      poetry env use $(pyenv which python)
     init: |
       poetry install
       poetry build
