@@ -45,7 +45,8 @@ RUN git clone https://github.com/syndbg/goenv.git ~/.goenv && \
   echo 'eval "$(goenv init -)"' >> ~/.bashrc && \
   . ~/.bashrc && \
   goenv install $GO_VERSION && \
-  goenv global $GO_VERSION
+  goenv global $GO_VERSION && \
+  go install golang.org/x/tools/gopls@latest
 
 # Install configu CLI
 RUN curl https://cli.configu.com/install.sh | sh

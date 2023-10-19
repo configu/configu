@@ -19,7 +19,7 @@
       "label": "Examples"
     }
   },
-  "postCreateCommand": "./bootstrap.sh",
+  "postCreateCommand": "/bin/bash -x .devcontainer/bootstrap.sh",
   "customizations": {
     "terminal.integrated.shell.linux": "/bin/bash",
     "vscode": {
