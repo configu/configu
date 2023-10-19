@@ -13,11 +13,8 @@
   "postCreateCommand": [
     "sh",
     "-c",
-    "npm install && \
-     cd ts && npm install && npm run build && \
-     cd ../py && poetry env use $(pyenv which python) && poetry install && poetry build && \
-     cd ../go && go install"
-  ],
+    "npm install && cd ts && npm install && npm run build && cd ../py && poetry env use $(pyenv which python) && poetry install && poetry build && cd ../go && go install"
+],
   "customizations": {
     "terminal.integrated.shell.linux": "/bin/bash"
   },
