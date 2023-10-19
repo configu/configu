@@ -1,3 +1,4 @@
+// https://containers.dev/implementors/json_reference
 {
   "name": "Configu Dev Container",
   "build": {
@@ -10,18 +11,30 @@
     "context": ".."
   },
   "forwardPorts": [8080, 3000],
-  "postCreateCommand": [
-    "sh",
-    "-c",
-    "npm install && cd ts && npm install && npm run build && cd ../py && poetry env use $(pyenv which python) && poetry install && poetry build && cd ../go && go install"
-],
-  "customizations": {
-    "terminal.integrated.shell.linux": "/bin/bash"
+  "portsAttributes": {
+    "3000": {
+      "label": "Docs"
+    },
+    "8080": {
+      "label": "Examples"
+    }
   },
-  // "extensions": [
-  //   "golang.go",
-  //   "ms-python.python",
-  //   "ms-vscode.typescript-tslint-plugin"
-  // ],
+  "postCreateCommand": "./bootstrap.sh",
+  "customizations": {
+    "terminal.integrated.shell.linux": "/bin/bash",
+    "vscode": {
+      "extensions": [
+        "streetsidesoftware.code-spell-checker",
+        "wmaurer.change-case",
+        "ow.vscode-subword-navigation",
+        "yzhang.markdown-all-in-one",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "yoavbls.pretty-ts-errors",
+        "ms-python.python",
+        "golang.go"
+      ]
+    }
+  },
   "remoteUser": "root"
 }

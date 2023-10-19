@@ -47,6 +47,9 @@ RUN git clone https://github.com/syndbg/goenv.git ~/.goenv && \
   goenv install $GO_VERSION && \
   goenv global $GO_VERSION
 
+# Install configu CLI
+RUN curl https://cli.configu.com/install.sh | sh
+
 # Cleanup
 RUN apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
