@@ -36,7 +36,6 @@ export abstract class KeyValueConfigStore extends ConfigStore {
     }
     return jsonValue;
   }
-
   async get(queries: ConfigStoreQuery[]): Promise<Config[]> {
     const keys = _(queries)
       .map((q) => this.calcKey(q))
@@ -51,34 +50,37 @@ export abstract class KeyValueConfigStore extends ConfigStore {
         }
         return { key, value };
       } catch (error) {
-        return { key, value: '' };
+        throw new Error(`Failed to fetch key: ${key}`);
       }
     });
-    const kvArray = await Promise.all(kvPromises);
-    const kvDict = _(kvArray).keyBy('key').mapValues('value').value();
 
-    const storedConfigs = _(queries)
-      .map((q) => {
-        const { set, key } = q;
+    try {
+      const kvArray = await Promise.all(kvPromises);
+      const kvDict = _(kvArray).keyBy('key').mapValues('value').value();
 
-        const value = kvDict[this.calcKey(q)];
-        if (!set) {
-          return { ...q, value: value ?? '' };
-        }
+      const storedConfigs = _(queries)
+        .map((q) => {
+          const { set, key } = q;
+          const value = kvDict[this.calcKey(q)];
+          if (!set) {
+            return { ...q, value: value ?? '' };
+          }
 
-        const jsonValue = this.safeJsonParse(value);
-        return {
-          set,
-          key,
-          value: this.stringifyValue(_.get(jsonValue, key)) ?? '',
-        };
-      })
-      .filter('value')
-      .value();
+          const jsonValue = this.safeJsonParse(value);
+          return {
+            set,
+            key,
+            value: this.stringifyValue(_.get(jsonValue, key)) ?? '',
+          };
+        })
+        .filter('value')
+        .value();
 
-    return storedConfigs;
+      return storedConfigs;
+    } catch (error) {
+      throw new Error('Failed to process fetched values');
+    }
   }
-
   async set(configs: Config[]): Promise<void> {
     const kvDict: Record<string, string | Record<string, string>> = {};
     configs.forEach((config) => {
