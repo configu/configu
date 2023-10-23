@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import Mustache from 'mustache';
-import Ajv, { SchemaObject } from 'ajv';
+import Ajv, { type SchemaObject } from 'ajv';
 
 export class ConfigError extends Error {
   constructor(
