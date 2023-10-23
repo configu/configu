@@ -1,4 +1,4 @@
-import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionOptions';
+import { type SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionOptions';
 import { ORMConfigStore } from './ORM';
 
 export type SQLiteConfigStoreConfiguration = Omit<SqliteConnectionOptions, 'type'>;

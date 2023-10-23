@@ -1,9 +1,9 @@
 import _ from 'lodash';
 import { Command } from '../Command';
-import { Config } from '../types';
+import { type Config } from '../types';
 import { ConfigError } from '../utils';
-import { ConfigStore } from '../ConfigStore';
-import { ConfigSet } from '../ConfigSet';
+import { type ConfigStore } from '../ConfigStore';
+import { type ConfigSet } from '../ConfigSet';
 import { ConfigSchema } from '../ConfigSchema';
 
 export type UpsertCommandParameters = {

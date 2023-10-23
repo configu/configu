@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import validator from 'validator';
-import { IConfigSchema, Cfgu, CfguType, Convert } from './types';
+import { type IConfigSchema, type Cfgu, type CfguType, Convert } from './types';
 import { ConfigError, JSON_SCHEMA, NAME, REGEX, TMPL } from './utils';
 
 const CFGU_NAME = 'cfgu';

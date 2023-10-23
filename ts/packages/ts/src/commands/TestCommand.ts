@@ -1,5 +1,5 @@
 import { Command } from '../Command';
-import { ConfigStore } from '../ConfigStore';
+import { type ConfigStore } from '../ConfigStore';
 import { ConfigSet } from '../ConfigSet';
 import { ConfigSchema } from '../ConfigSchema';
 import { UpsertCommand } from './UpsertCommand';

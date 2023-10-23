@@ -70,6 +70,7 @@ const jsonToHelmValues: FormatterFunction = ({ json }) => {
 
 const configFormatters: Record<ConfigFormat, FormatterFunction> = {
   JSON: ({ json }) => JSON.stringify(json, null, 2),
+  CompactJSON: ({ json }) => JSON.stringify(json),
   YAML: ({ json }) => ymlStringify(json),
   Dotenv: jsonToDotenv,
   KubernetesConfigMap: jsonToKubernetesConfigMap,

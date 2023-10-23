@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import {
   ExportCommand as BaseExportCommand,
-  ExportCommandParameters as BaseExportCommandParameters,
+  type ExportCommandParameters as BaseExportCommandParameters,
 } from '@configu/ts';
 
 export type { ExportCommandReturn } from '@configu/ts';

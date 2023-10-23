@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { IConfigSet } from './types';
+import { type IConfigSet } from './types';
 import { ConfigError, NAME } from './utils';
 
 export class ConfigSet implements IConfigSet {
