@@ -229,10 +229,7 @@ export class EvalCommand extends Command<EvalCommandReturn> {
             ConfigSchema.CFGU.VALIDATORS.valueOptions(cfgu, evaluatedValue);
             ConfigSchema.CFGU.VALIDATORS.valueType(cfgu, evaluatedValue);
           } catch (error) {
-            if (error instanceof ConfigError) {
-              error.appendScope(errorScope);
-            }
-            throw error;
+            throw error?.appendScope?.(errorScope) ?? error;
           }
 
           if (cfgu.depends && cfgu.depends.some((depend) => !evaluatedConfigsDict[depend])) {

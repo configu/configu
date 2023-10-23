@@ -4,7 +4,9 @@ import {
   ExportCommandParameters as BaseExportCommandParameters,
 } from '@configu/ts';
 
-type ExportCommandParameters = BaseExportCommandParameters & {
+export type { ExportCommandReturn } from '@configu/ts';
+
+export type ExportCommandParameters = BaseExportCommandParameters & {
   env?: boolean;
   override?: boolean;
 };

@@ -4,37 +4,31 @@ import Ajv, { SchemaObject } from 'ajv';
 
 export class ConfigError extends Error {
   constructor(
-    public reason: string,
-    public hint: string = '', // code?: string,
-    public scope: [string, string][] = [],
+    protected readonly reason: string,
+    protected readonly hint: string = '', // code?: string,
+    protected readonly scope: [string, string][] = [],
   ) {
-    super();
-    this.setMessage();
-  }
+    super(reason);
 
-  protected setMessage() {
-    this.message = this.reason;
-    if (!_.isEmpty(this.scope)) {
-      this.message = `${this.message} at ${this.scope.map(([domain, name]) => `${domain}:${name}`).join('.')}`;
+    this.message = reason;
+    if (!_.isEmpty(scope)) {
+      this.message = `${this.message} at ${scope.map(([domain, name]) => `${domain}:${name}`).join('.')}`;
     }
-    if (this.hint) {
-      this.message = `${this.message}, ${this.hint}`;
+    if (hint) {
+      this.message = `${this.message}, ${hint}`;
     }
   }
 
   setReason(reason: string) {
-    this.reason = reason;
-    this.setMessage();
+    return new ConfigError(reason, this.hint, this.scope);
   }
 
   setHint(hint: string) {
-    this.hint = hint;
-    this.setMessage();
+    return new ConfigError(this.reason, hint, this.scope);
   }
 
   appendScope(scope: [string, string][]) {
-    this.scope = [...scope, ...this.scope];
-    this.setMessage();
+    return new ConfigError(this.reason, this.hint, [...scope, ...this.scope]);
   }
 }
 

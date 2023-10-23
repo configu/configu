@@ -4,7 +4,6 @@ import { IConfigSchema, Cfgu, CfguType, Convert } from './types';
 import { ConfigError, JSON_SCHEMA, NAME, REGEX, TMPL } from './utils';
 
 const CFGU_NAME = 'cfgu';
-const CFGU_EXT = `.${CFGU_NAME}`;
 const CFGU_PROP: (keyof Cfgu)[] = [
   'type',
   'pattern',
@@ -309,9 +308,6 @@ const cfguValueTypeValidator = (cfgu: Cfgu, value: string) => {
   }
 
   let hint = `value "${value}" must be of type "${type}"`;
-  // if (cfgu?.options) {
-  //   hint = `value "${value}" must be one of ${_.map(cfgu.options, (option) => `"${option}"`).join(',')}`;
-  // } else
   if (type === 'RegEx') {
     hint = `value "${value}" must match the pattern "${cfgu.pattern}"`;
   } else if (type === 'JSONSchema') {
@@ -344,17 +340,14 @@ const cfguStructureValidator = (cfgu: Cfgu) => {
       throw new ConfigError(reason, `options mustn't set together with template properties`);
     }
     cfgu.options.forEach((option, idx) => {
-      // todo: rethink on this restriction - what if the user sees empty string as a valid value?
+      // https://github.com/configu/configu/pull/255#discussion_r1332296098
       if (option === '') {
         throw new ConfigError(reason, `options mustn't contain an empty string`);
       }
       try {
         cfguValueTypeValidator(cfgu, option);
       } catch (error) {
-        if (error instanceof ConfigError) {
-          error.setReason(reason);
-        }
-        throw error;
+        throw error?.setReason?.(reason) ?? error;
       }
     });
   }
@@ -373,10 +366,7 @@ const cfguStructureValidator = (cfgu: Cfgu) => {
     try {
       cfguValueTypeValidator(cfgu, cfgu.default);
     } catch (error) {
-      if (error instanceof ConfigError) {
-        error.setReason(reason);
-      }
-      throw error;
+      throw error?.setReason?.(reason) ?? error;
     }
   }
 
@@ -412,7 +402,6 @@ const cfguStructureValidator = (cfgu: Cfgu) => {
 export class ConfigSchema implements IConfigSchema {
   static CFGU = {
     NAME: CFGU_NAME,
-    EXT: CFGU_EXT,
     PROPS: CFGU_PROP,
     VALIDATORS: {
       TYPE: CFGU_VALUE_TYPE_VALIDATORS,
@@ -420,21 +409,23 @@ export class ConfigSchema implements IConfigSchema {
       valueOptions: cfguValueOptionsValidator,
       structure: cfguStructureValidator,
     },
-    parse: Convert.toCfgu,
-    stringify: Convert.cfguToJson,
   };
-
-  // static TYPES = ['json', 'yaml', 'yml'];
-  static TYPES = ['json'];
-  static EXT = ConfigSchema.TYPES.map((type) => `${ConfigSchema.CFGU.EXT}.${type}`);
-
-  static parse = Convert.toConfigSchemaContents;
-  static stringify = Convert.configSchemaToJson;
 
   constructor(
     public readonly name: string,
     public readonly contents: { [key: string]: Cfgu },
   ) {
+    if (!this.name) {
+      throw new ConfigError('invalid config schema', `name mustn't be empty`);
+    }
+    if (!NAME(this.name)) {
+      throw new ConfigError('invalid config schema', `name "${this.name}" mustn't contain reserved words`);
+    }
+
+    if (!this.contents || _.isEmpty(this.contents)) {
+      throw new ConfigError('invalid config schema', `contents mustn't be empty`);
+    }
+
     _(this.contents)
       .entries()
       .forEach(([key, cfgu]) => {
@@ -450,47 +441,8 @@ export class ConfigSchema implements IConfigSchema {
         try {
           ConfigSchema.CFGU.VALIDATORS.structure(cfgu);
         } catch (error) {
-          if (error instanceof ConfigError) {
-            error.appendScope(errorScope);
-          }
-          throw error;
+          throw error?.appendScope?.(errorScope) ?? error;
         }
       });
-  }
-
-  static async fromFile(path: string, contents: string): Promise<ConfigSchema> {
-    const error = new ConfigError(
-      'invalid config schema path',
-      `path extension must be ${ConfigSchema.EXT.join('|')}`,
-      [['ConfigSchema', path]],
-    );
-
-    const splittedPath = path.split('.');
-
-    const fileExt = splittedPath.pop();
-    if (!fileExt || !ConfigSchema.TYPES.includes(fileExt)) {
-      throw error;
-    }
-
-    const cfguExt = splittedPath.pop();
-    if (cfguExt !== ConfigSchema.CFGU.NAME) {
-      throw error;
-    }
-
-    const schemaName = splittedPath.pop();
-    if (!schemaName) {
-      error.setHint(`name "${schemaName}" mustn't be empty`);
-      throw error;
-    }
-    if (!NAME(schemaName)) {
-      error.setHint(`name "${schemaName}" mustn't contain reserved words`);
-      throw error;
-    }
-
-    if (fileExt === 'json') {
-      const schemaContents = ConfigSchema.parse(contents);
-      return new ConfigSchema(schemaName, schemaContents);
-    }
-    throw error;
   }
 }

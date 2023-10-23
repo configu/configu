@@ -54,10 +54,7 @@ export class UpsertCommand extends Command<void> {
             ConfigSchema.CFGU.VALIDATORS.valueOptions(cfgu, value);
             ConfigSchema.CFGU.VALIDATORS.valueType(cfgu, value);
           } catch (error) {
-            if (error instanceof ConfigError) {
-              error.appendScope(errorScope);
-            }
-            throw error;
+            throw error?.appendScope?.(errorScope) ?? error;
           }
         }
 
