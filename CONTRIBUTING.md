@@ -44,7 +44,11 @@ It is powered by [node.js](https://nodejs.org/en/) and [npm](https://www.npmjs.c
 
 Instantly start experimenting and developing.
 
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/configu/configu)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/configu/configu)
+
+[Open in CodeSandbox →](https://codesandbox.io/p/github/configu/configu/main)
+
+<!-- [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/configu/configu) -->
 
 
 ### Local environment

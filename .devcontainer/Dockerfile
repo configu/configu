@@ -1,62 +1,58 @@
-# Use the latest Ubuntu base image
+# Set base image
 FROM ubuntu:latest
 
-# Avoid prompts with apt
-ENV DEBIAN_FRONTEND=noninteractive
+# Maintainer
+LABEL maintainer="dev@configu.com"
 
-# Update and install common tools
+# Set environment variables for non-interactive apt installs
+ENV DEBIAN_FRONTEND=non-interactive
+ENV HOME /root
+ENV PATH $HOME/.local/bin:$PATH
+
+# Arguments for versions
+ARG NODE_VERSION
+ARG PYTHON_VERSION
+ARG GO_VERSION
+
+# Validate ARGS
+RUN if [ -z "$NODE_VERSION" ]; then echo "NODE_VERSION argument is required" && exit 1; fi && \
+  if [ -z "$PYTHON_VERSION" ]; then echo "PYTHON_VERSION argument is required" && exit 1; fi && \
+  if [ -z "$GO_VERSION" ]; then echo "GO_VERSION argument is required" && exit 1; fi
+
+# Install basic dev tools
 RUN apt-get update && apt-get install -y \
-  curl \
-  git \
-  git-lfs \
-  build-essential \
-  libssl-dev \
-  zlib1g-dev \
-  libbz2-dev \
-  libreadline-dev \
-  libsqlite3-dev \
-  wget \
-  llvm \
-  libncurses5-dev \
-  xz-utils \
-  tk-dev \
-  libxml2-dev \
-  libxmlsec1-dev \
-  libffi-dev \
-  liblzma-dev \
-  sudo
+  git curl build-essential libssl-dev zlib1g-dev libbz2-dev \
+  libreadline-dev libsqlite3-dev wget llvm libncurses5-dev libncursesw5-dev \
+  xz-utils tk-dev libffi-dev liblzma-dev python3-openssl && \
+  rm -rf /var/lib/apt/lists/*
 
-# Copy version files
-COPY ["../.nvmrc", "../py/.python-version", "/"]
-
-# Install Node.js and npm using NVM
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash \
-  && . ~/.nvm/nvm.sh \
-  && nvm install \
-  && nvm alias default $(cat /.nvmrc) \
-  && nvm use default
+# Install nvm and then install Node.js and npm
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash && \
+  . $HOME/.nvm/nvm.sh && nvm install $NODE_VERSION
 
 # Install pyenv and Python
-RUN curl https://pyenv.run | bash \
-  && echo 'export PATH="$HOME/.pyenv/bin:$PATH"' >> ~/.bashrc \
-  && echo 'eval "$(pyenv init --path)"' >> ~/.bashrc \
-  && echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.bashrc \
-  && . ~/.bashrc \
-  && pyenv install \
-  && pyenv global $(cat .python-version)
+RUN curl https://pyenv.run | bash
+ENV PATH $HOME/.pyenv/shims:$HOME/.pyenv/bin:$PATH
+RUN pyenv install $PYTHON_VERSION && pyenv global $PYTHON_VERSION
 
-# Install Poetry for Python
-RUN curl -sSL https://install.python-poetry.org | bash \
-  && poetry env use $(pyenv which python)
+# Install poetry globally
+RUN curl -sSL https://install.python-poetry.org | python3 -
 
-# Install gvm and the latest Go version
-RUN apt-get install -y bison
-RUN bash < <(curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer) \
-  gvm install go1.21.3 && \
-  gvm use go1.21.3 --default
+# Install goenv and Go
+RUN git clone https://github.com/syndbg/goenv.git ~/.goenv && \
+  echo 'export GOENV_ROOT="$HOME/.goenv"' >> ~/.bashrc && \
+  echo 'export PATH="$GOENV_ROOT/bin:$PATH"' >> ~/.bashrc && \
+  echo 'eval "$(goenv init -)"' >> ~/.bashrc && \
+  . ~/.bashrc && \
+  goenv install $GO_VERSION && \
+  goenv global $GO_VERSION && \
+  go install golang.org/x/tools/gopls@latest
 
-# Clean up
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+# Install configu CLI
+RUN curl https://cli.configu.com/install.sh | sh
 
-# Set default shell to bash (vs sh)
-SHELL ["/bin/bash", "-c"]
+# Cleanup
+RUN apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Default command
+CMD ["/bin/bash"]

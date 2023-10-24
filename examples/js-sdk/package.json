@@ -1,7 +1,0 @@
-{
-  "author": "configu",
-  "dependencies": {
-    "@configu/node": "^0.14.0",
-    "dotenv": "^16.0.3"
-  }
-}
