@@ -49,7 +49,6 @@
   "dependencies": {
     "@configu/ts": "*",
     "axios": "^1.4.0",
-    "browser-fs-access": "^0.34.1",
     "localforage": "^1.10.0",
     "lodash": "^4.17.21"
   },
