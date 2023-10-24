@@ -48,12 +48,12 @@
   },
   "dependencies": {
     "@configu/ts": "*",
-    "axios": "^1.4.0",
+    "axios": "^1.5.1",
     "localforage": "^1.10.0",
     "lodash": "^4.17.21"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.197",
+    "@types/lodash": "^4.14.200",
     "esbuild-plugin-umd-wrapper": "^1.0.7"
   }
 }
