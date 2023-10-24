@@ -1,4 +1,4 @@
-import { CfguType, ConfigSchema } from '@configu/ts';
+import { type CfguType, ConfigSchema } from '@configu/ts';
 
 // * when adding a new type, update typeCheckOrder array
 export const TYPES_CHECK_ORDER: CfguType[] = [

@@ -1,5 +1,5 @@
-import { ConfigStore } from '@configu/ts';
-import { StoreType } from '@configu/lib';
+import { type ConfigStore } from '@configu/ts';
+import { type StoreType } from '@configu/lib';
 import {
   AWSParameterStoreConfigStore,
   AWSSecretsManagerConfigStore,

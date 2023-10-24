@@ -4,7 +4,7 @@ import { cwd } from 'process';
 import { Flags } from '@oclif/core';
 import _ from 'lodash';
 import { paramCase } from 'change-case';
-import { Cfgu } from '@configu/ts';
+import { type Cfgu } from '@configu/ts';
 import { extractConfigs, GET_STARTED, FOO } from '@configu/lib';
 import { ConfigSchema } from '@configu/node';
 import { BaseCommand } from '../base';

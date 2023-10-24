@@ -4,11 +4,11 @@ import {
   ConfigSet,
   InMemoryConfigSchema,
   UpsertCommand,
-  UpsertCommandParameters,
+  type UpsertCommandParameters,
   EvalCommand,
-  EvalCommandParameters,
+  type EvalCommandParameters,
   DeleteCommand,
-  EvalCommandReturn,
+  type EvalCommandReturn,
 } from '..';
 
 describe(`commands`, () => {
