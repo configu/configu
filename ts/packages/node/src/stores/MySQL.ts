@@ -1,4 +1,4 @@
-import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
+import { type MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
 import { ORMConfigStore } from './ORM';
 
 export type MySQLConfigStoreConfiguration = Omit<MysqlConnectionOptions, 'type'>;

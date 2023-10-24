@@ -1,5 +1,5 @@
-import { DefaultAzureCredential, DefaultAzureCredentialClientIdOptions } from '@azure/identity';
-import { SecretClient, SecretClientOptions } from '@azure/keyvault-secrets';
+import { DefaultAzureCredential, type DefaultAzureCredentialClientIdOptions } from '@azure/identity';
+import { SecretClient, type SecretClientOptions } from '@azure/keyvault-secrets';
 import { KeyValueConfigStore } from '@configu/ts';
 
 export type AzureKeyVaultConfigStoreConfiguration = {

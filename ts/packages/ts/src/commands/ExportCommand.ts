@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { Command } from '../Command';
-import { EvalCommandReturn } from './EvalCommand';
+import { type EvalCommandReturn } from './EvalCommand';
 
 export type ExportCommandReturn = {
   [key: string]: string;

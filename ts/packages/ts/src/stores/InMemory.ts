@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { ConfigStore } from '../ConfigStore';
-import { ConfigStoreQuery, Config } from '../types';
+import { type ConfigStoreQuery, type Config } from '../types';
 
 export class InMemoryConfigStore extends ConfigStore {
   private data: Config[] = [];
