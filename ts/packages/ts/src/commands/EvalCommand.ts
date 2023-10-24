@@ -1,8 +1,8 @@
 import _ from 'lodash';
 import { Command } from '../Command';
-import { Cfgu } from '../types';
+import { type Cfgu } from '../types';
 import { ERR, TMPL } from '../utils';
-import { ConfigStore } from '../ConfigStore';
+import { type ConfigStore } from '../ConfigStore';
 import { ConfigSet } from '../ConfigSet';
 import { ConfigSchema } from '../ConfigSchema';
 

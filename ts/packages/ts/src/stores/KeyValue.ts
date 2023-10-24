@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { ConfigStore } from '../ConfigStore';
-import { Config, ConfigStoreQuery } from '../types';
+import { type Config, type ConfigStoreQuery } from '../types';
 
 export abstract class KeyValueConfigStore extends ConfigStore {
   constructor(type: string) {

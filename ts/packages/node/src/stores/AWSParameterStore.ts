@@ -1,6 +1,6 @@
 import {
   SSMClient,
-  SSMClientConfig,
+  type SSMClientConfig,
   DeleteParameterCommand,
   GetParameterCommand,
   PutParameterCommand,

@@ -1,6 +1,6 @@
 import 'reflect-metadata';
-import { ConfigStore, ConfigStoreQuery, Config as IConfig } from '@configu/ts';
-import { Entity, Column, DataSource, DataSourceOptions, Index, PrimaryGeneratedColumn } from 'typeorm';
+import { ConfigStore, type ConfigStoreQuery, type Config as IConfig } from '@configu/ts';
+import { Entity, Column, DataSource, type DataSourceOptions, Index, PrimaryGeneratedColumn } from 'typeorm';
 import _ from 'lodash';
 
 @Entity()

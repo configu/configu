@@ -1,4 +1,4 @@
-import { Cfgu } from '@configu/ts';
+import { type Cfgu } from '@configu/ts';
 
 export const FOO: { [key: string]: Cfgu } = {
   FOO: { type: 'String', default: 'foo', description: 'string example variable' },
