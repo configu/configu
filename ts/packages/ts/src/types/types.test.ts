@@ -17,6 +17,22 @@ describe(`types`, () => {
     });
   });
 
+  describe(`Cfgu`, () => {
+    const errored = { type: 'Test' };
+    it(`throw from Convert.toCfgu`, async () => {
+      const res = () => {
+        Convert.toCfgu(JSON.stringify(errored));
+      };
+      expect(res).toThrow();
+    });
+    it(`throw from Convert.cfguToJson`, async () => {
+      const res = () => {
+        Convert.cfguToJson(errored as any);
+      };
+      expect(res).toThrow();
+    });
+  });
+
   describe(`ConfigStoreQuery`, () => {
     const errored = { key: 'TEST' };
     it(`throw from Convert.toConfigStoreQuery`, async () => {
