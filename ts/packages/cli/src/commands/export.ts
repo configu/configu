@@ -2,9 +2,9 @@ import { cwd } from 'process';
 import { spawnSync } from 'child_process';
 import { Flags, ux } from '@oclif/core';
 import _ from 'lodash';
-import { TMPL, EvalCommandReturn, EvaluatedConfigOrigin, ExportCommandReturn } from '@configu/ts';
+import { TMPL, type EvalCommandReturn, EvaluatedConfigOrigin, type ExportCommandReturn } from '@configu/ts';
 import { ExportCommand } from '@configu/node';
-import { CONFIG_FORMAT_TYPE, formatConfigs, ConfigFormat } from '@configu/lib';
+import { CONFIG_FORMAT_TYPE, formatConfigs, type ConfigFormat } from '@configu/lib';
 import { BaseCommand } from '../base';
 
 export const NO_CONFIGS_WARNING_TEXT = 'no configuration was fetched';

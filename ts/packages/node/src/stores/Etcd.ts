@@ -1,5 +1,5 @@
 import { KeyValueConfigStore } from '@configu/ts';
-import { Etcd3, IOptions } from 'etcd3';
+import { Etcd3, type IOptions } from 'etcd3';
 
 export type EtcdConfigStoreConfiguration = IOptions;
 

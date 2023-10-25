@@ -1,6 +1,6 @@
 import {
   SecretsManagerClient,
-  SecretsManagerClientConfig,
+  type SecretsManagerClientConfig,
   GetSecretValueCommand,
   UpdateSecretCommand,
   CreateSecretCommand,

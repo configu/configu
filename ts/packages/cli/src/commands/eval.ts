@@ -1,5 +1,5 @@
 import { Flags } from '@oclif/core';
-import { EvalCommandParameters } from '@configu/ts';
+import { type EvalCommandParameters } from '@configu/ts';
 import { NoopConfigStore, ConfigSet, ConfigSchema, EvalCommand } from '@configu/node';
 import { BaseCommand } from '../base';
 

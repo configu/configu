@@ -1,7 +1,7 @@
 import { promises as fs } from 'fs';
 import _ from 'lodash';
 import ini from 'ini';
-import { ConfigStore, ConfigStoreQuery, Config } from '@configu/ts';
+import { ConfigStore, type ConfigStoreQuery, type Config } from '@configu/ts';
 
 export type IniFileConfigStoreConfiguration = { path: string };
 

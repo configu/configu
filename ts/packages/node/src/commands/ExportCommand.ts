@@ -1,10 +1,12 @@
 import _ from 'lodash';
 import {
   ExportCommand as BaseExportCommand,
-  ExportCommandParameters as BaseExportCommandParameters,
+  type ExportCommandParameters as BaseExportCommandParameters,
 } from '@configu/ts';
 
-type ExportCommandParameters = BaseExportCommandParameters & {
+export type { ExportCommandReturn } from '@configu/ts';
+
+export type ExportCommandParameters = BaseExportCommandParameters & {
   env?: boolean;
   override?: boolean;
 };
