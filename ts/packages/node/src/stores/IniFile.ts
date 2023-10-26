@@ -1,18 +1,24 @@
-import { promises as fs } from 'fs';
+import { promises as fs, existsSync } from 'fs';
 import _ from 'lodash';
 import ini from 'ini';
-import { ConfigStore, type ConfigStoreQuery, type Config } from '@configu/ts';
+import { type Config } from '@configu/ts';
+import { FileConfigStore } from './FileConfigStore';
 
 export type IniFileConfigStoreConfiguration = { path: string };
 
-export class IniFileConfigStore extends ConfigStore {
-  private readonly path: string;
+export class IniFileConfigStore extends FileConfigStore {
   constructor({ path }: IniFileConfigStoreConfiguration) {
-    super('ini-file');
-    this.path = path;
+    super('ini-file', path);
   }
 
-  async read(): Promise<Config[]> {
+  async init() {
+    const fileExists = await existsSync(this.path);
+    if (!fileExists) {
+      await fs.writeFile(this.path, '');
+    }
+  }
+
+  async read() {
     const data = await fs.readFile(this.path, 'utf8');
     const iniObject = ini.parse(data);
 
@@ -34,7 +40,7 @@ export class IniFileConfigStore extends ConfigStore {
     });
   }
 
-  async write(nextConfigs: Config[]): Promise<void> {
+  async write(nextConfigs: Config[]) {
     const groupedConfigs = _(nextConfigs)
       .groupBy('set')
       .mapValues((setConfigs) => _.merge({}, ...setConfigs.map((config) => ({ [config.key]: config.value }))))
@@ -44,21 +50,5 @@ export class IniFileConfigStore extends ConfigStore {
 
     const data = ini.stringify(iniObject);
     await fs.writeFile(this.path, data);
-  }
-
-  async get(queries: ConfigStoreQuery[]): Promise<Config[]> {
-    const storedConfigs = await this.read();
-    return storedConfigs.filter((config) => queries.some(({ set, key }) => set === config.set && key === config.key));
-  }
-
-  async set(configs: Config[]): Promise<void> {
-    const storedConfigs = await this.read();
-
-    const nextConfigs = _([...configs, ...storedConfigs])
-      .uniqBy((config) => `${config.set}.${config.key}`)
-      .filter((config) => Boolean(config.value))
-      .value();
-
-    await this.write(nextConfigs);
   }
 }
