@@ -8,7 +8,7 @@ export abstract class FileConfigStore extends ConfigStore {
     this.path = path;
   }
 
-  // * All file stores should create the file in case it does not exist
+  // * All file config stores should create the file with the required "empty state" in case it does not exist
   abstract init(): Promise<void>;
 
   // * Reads all the configs from the file
