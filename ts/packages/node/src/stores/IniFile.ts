@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import ini from 'ini';
 import { type Config } from '@configu/ts';
-import { FileConfigStore } from './FileConfigStore';
+import { FileConfigStore } from './File';
 
 export type IniFileConfigStoreConfiguration = { path: string };
 

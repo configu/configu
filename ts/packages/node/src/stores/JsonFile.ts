@@ -1,5 +1,5 @@
 import { type Config, Convert } from '@configu/ts';
-import { FileConfigStore } from './FileConfigStore';
+import { FileConfigStore } from './File';
 
 export type JsonFileConfigStoreConfiguration = { path: string };
 
