@@ -11,8 +11,7 @@ export class IniFileConfigStore extends FileConfigStore {
     super('ini-file', path, initialFileState);
   }
 
-  async read() {
-    const fileContent = await this.readFileContent();
+  parseFileContent(fileContent: string) {
     const iniObject = ini.parse(fileContent);
 
     return Object.entries(iniObject).flatMap(([key, value]) => {
@@ -33,15 +32,13 @@ export class IniFileConfigStore extends FileConfigStore {
     });
   }
 
-  async write(nextConfigs: Config[]) {
+  stringifyConfigs(nextConfigs: Config[]) {
     const groupedConfigs = _(nextConfigs)
       .groupBy('set')
       .mapValues((setConfigs) => _.merge({}, ...setConfigs.map((config) => ({ [config.key]: config.value }))))
       .value();
     const rootConfigs = groupedConfigs[''];
     const iniObject = _.merge(rootConfigs, _.omit(groupedConfigs, ''));
-
-    const nextFileContent = ini.stringify(iniObject);
-    await this.writeFileContent(nextFileContent);
+    return ini.stringify(iniObject);
   }
 }

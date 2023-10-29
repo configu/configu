@@ -9,13 +9,11 @@ export class JsonFileConfigStore extends FileConfigStore {
     super('json-file', path, initialFileState);
   }
 
-  async read() {
-    const fileContent = await this.readFileContent();
+  parseFileContent(fileContent: string) {
     return Convert.toConfigStoreContents(fileContent);
   }
 
-  async write(nextConfigs: Config[]) {
-    const nextFileContent = Convert.configStoreContentsToJson(nextConfigs);
-    await this.writeFileContent(nextFileContent);
+  stringifyConfigs(nextConfigs: Config[]) {
+    return Convert.configStoreContentsToJson(nextConfigs);
   }
 }
