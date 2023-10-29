@@ -1,5 +1,5 @@
-import { DataSource, DataSourceOptions, EntityManager, PrimaryGeneratedColumn, Column } from 'typeorm';
-import { ConfigStoreQuery, Config as IConfig } from '@configu/ts';
+import { DataSource, type DataSourceOptions, type EntityManager, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { type ConfigStoreQuery, type Config as IConfig } from '@configu/ts';
 import { ORMConfigStore } from './ORM';
 
 export class MongoDBConfigEntity {
