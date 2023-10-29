@@ -1,15 +1,31 @@
+import { promises as fs, existsSync } from 'fs';
 import { type Config, ConfigStore, type ConfigStoreQuery } from '@configu/ts';
 import _ from 'lodash';
 
 export abstract class FileConfigStore extends ConfigStore {
   readonly path: string;
-  constructor(type: string, path: string) {
+  readonly initialFileState: string;
+  constructor(type: string, path: string, initialFileState: string) {
     super(type);
     this.path = path;
+    this.initialFileState = initialFileState;
   }
 
-  // * All file config stores should create the file with the required "empty state" in case it does not exist
-  abstract init(): Promise<void>;
+  protected async readFileContent(): Promise<string> {
+    return fs.readFile(this.path, 'utf8');
+  }
+
+  protected async writeFileContent(content: string): Promise<void> {
+    await fs.writeFile(this.path, content);
+  }
+
+  // * Creates the file with the required "empty state" in case it does not exist
+  async init() {
+    const fileExists = await existsSync(this.path);
+    if (!fileExists) {
+      await this.writeFileContent(this.initialFileState);
+    }
+  }
 
   // * Reads all the configs from the file
   protected abstract read(): Promise<Config[]>;

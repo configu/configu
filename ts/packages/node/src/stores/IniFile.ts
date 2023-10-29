@@ -1,4 +1,3 @@
-import { promises as fs, existsSync } from 'fs';
 import _ from 'lodash';
 import ini from 'ini';
 import { type Config } from '@configu/ts';
@@ -8,19 +7,13 @@ export type IniFileConfigStoreConfiguration = { path: string };
 
 export class IniFileConfigStore extends FileConfigStore {
   constructor({ path }: IniFileConfigStoreConfiguration) {
-    super('ini-file', path);
-  }
-
-  async init() {
-    const fileExists = await existsSync(this.path);
-    if (!fileExists) {
-      await fs.writeFile(this.path, '');
-    }
+    const initialFileState = '';
+    super('ini-file', path, initialFileState);
   }
 
   async read() {
-    const data = await fs.readFile(this.path, 'utf8');
-    const iniObject = ini.parse(data);
+    const fileContent = await this.readFileContent();
+    const iniObject = ini.parse(fileContent);
 
     return Object.entries(iniObject).flatMap(([key, value]) => {
       if (typeof value === 'string') {
@@ -48,7 +41,7 @@ export class IniFileConfigStore extends FileConfigStore {
     const rootConfigs = groupedConfigs[''];
     const iniObject = _.merge(rootConfigs, _.omit(groupedConfigs, ''));
 
-    const data = ini.stringify(iniObject);
-    await fs.writeFile(this.path, data);
+    const nextFileContent = ini.stringify(iniObject);
+    await this.writeFileContent(nextFileContent);
   }
 }
