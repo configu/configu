@@ -9,7 +9,7 @@ configu update
 npm install
 
 # Run the other commands in parallel
-(cd ts && npm install) &
+(cd ts && npm install && npm run build) &
 (cd py && poetry env use $(pyenv which python) && poetry install && poetry build) &
 (cd go && go install) &
 
