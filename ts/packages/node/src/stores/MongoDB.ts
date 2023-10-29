@@ -1,8 +1,8 @@
 import { DataSource, DataSourceOptions, EntityManager, PrimaryGeneratedColumn, Column } from 'typeorm';
-import { BaseMongoConfigStore } from './MongoOrm';
+import { ConfigStoreQuery, Config as IConfig } from '@configu/ts';
+import { ORMConfigStore } from './ORM';
 
 export class MongoDBConfigEntity {
-  // Define the MongoDBConfigEntity entity for storing configuration data in MongoDB
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -11,17 +11,19 @@ export class MongoDBConfigEntity {
 
   @Column()
   value: string;
+
+  set: string;
 }
 
-export class MongoDBConfigStore extends BaseMongoConfigStore {
-  private dataSource: DataSource;
+export class MongoDBConfigStore extends ORMConfigStore {
+  readonly dataSource: DataSource;
 
   constructor(configuration: DataSourceOptions) {
-    super();
+    super('mongodb', { ...configuration });
     this.dataSource = new DataSource(configuration);
   }
 
-  async get(key: string): Promise<string | undefined> {
+  async get(keys: ConfigStoreQuery[]): Promise<IConfig[]> {
     try {
       // Ensure the DataSource is initialized
       await this.dataSource.initialize();
@@ -30,20 +32,30 @@ export class MongoDBConfigStore extends BaseMongoConfigStore {
       const entityManager: EntityManager = this.dataSource.manager;
       const configRepository = entityManager.getRepository(MongoDBConfigEntity);
 
-      // Use the query builder to find the configuration entry by key
-      const configEntry = await configRepository
-        .createQueryBuilder('config')
-        .where('config.key = :key', { key })
-        .getOne();
+      const results: IConfig[] = [];
 
-      // Extract and return the value if found, or undefined if not found
-      return configEntry?.value;
+      await Promise.all(
+        keys.map(async (key) => {
+          // Use the query builder to find the configuration entry by key
+          const configEntry = await configRepository
+            .createQueryBuilder('config')
+            .where('config.key = :key', { key })
+            .getOne();
+
+          if (configEntry) {
+            // If a configuration entry with the key is found, add it to the results array
+            results.push({ key: configEntry.key, set: configEntry.set, value: configEntry.value });
+          }
+        }),
+      );
+
+      return results;
     } catch (error) {
-      throw new Error(`Failed to get configuration from MongoDB: ${error}`);
+      throw new Error(`Failed to get configurations from MongoDB: ${error}`);
     }
   }
 
-  async set(key: string, value: string): Promise<void> {
+  async set(configs: IConfig[]): Promise<void> {
     try {
       // Ensure the DataSource is initialized
       await this.dataSource.initialize();
@@ -52,27 +64,33 @@ export class MongoDBConfigStore extends BaseMongoConfigStore {
       const entityManager: EntityManager = this.dataSource.manager;
       const configRepository = entityManager.getRepository(MongoDBConfigEntity);
 
-      // Check if a configuration entry with the provided key exists
-      const existingConfig = await configRepository.findOne({
-        where: { key }, // Use the where method to specify the condition
-      });
+      await Promise.all(
+        configs.map(async (config) => {
+          const { key, value } = config;
 
-      if (existingConfig) {
-        // If an entry with the key exists, update its value
-        existingConfig.value = value;
-        await configRepository.save(existingConfig);
-      } else {
-        // If no entry with the key exists, create a new one
-        const newConfigEntry = configRepository.create({
-          key,
-          value,
-        });
-        await configRepository.save(newConfigEntry);
-      }
+          // Check if a configuration entry with the provided key exists
+          const existingConfig = await configRepository.findOne({
+            where: { key },
+          });
 
-      // Return success
+          if (existingConfig) {
+            // If an entry with the key exists, update its value
+            if (value) {
+              existingConfig.value = value;
+            }
+            await configRepository.save(existingConfig);
+          } else {
+            // If no entry with the key exists, create a new one
+            const newConfigEntry = configRepository.create({
+              key,
+              value,
+            });
+            await configRepository.save(newConfigEntry);
+          }
+        }),
+      );
     } catch (error) {
-      throw new Error(`Failed to set configuration in MongoDB: ${error}`);
+      throw new Error(`Failed to set configurations in MongoDB: ${error}`);
     }
   }
 }
