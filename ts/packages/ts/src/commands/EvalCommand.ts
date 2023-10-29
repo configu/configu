@@ -161,9 +161,8 @@ export class EvalCommand extends Command<EvalCommandReturn> {
       .reduce<EvalCommandReturn>((merged, current) => {
         const { key } = current.context;
         const mergedResult = merged[key];
-        const mergedIsEmpty = !mergedResult || mergedResult.result.origin === EvaluatedConfigOrigin.EmptyValue;
         const shouldOverrideMerged = this.shouldOverrideOrigin(current.result.origin, mergedResult?.result.origin);
-        if (mergedIsEmpty || shouldOverrideMerged) {
+        if (shouldOverrideMerged) {
           return { ...merged, [key]: current };
         }
         return merged;
