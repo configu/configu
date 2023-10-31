@@ -10,23 +10,17 @@
 //    config, err := UnmarshalConfig(bytes)
 //    bytes, err = config.Marshal()
 //
-//    configSchemaType, err := UnmarshalConfigSchemaType(bytes)
-//    bytes, err = configSchemaType.Marshal()
-//
-//    configSchema, err := UnmarshalConfigSchema(bytes)
-//    bytes, err = configSchema.Marshal()
-//
 //    configSchemaContentsValue, err := UnmarshalConfigSchemaContentsValue(bytes)
 //    bytes, err = configSchemaContentsValue.Marshal()
 //
 //    configSchemaContents, err := UnmarshalConfigSchemaContents(bytes)
 //    bytes, err = configSchemaContents.Marshal()
 //
+//    configSchema, err := UnmarshalConfigSchema(bytes)
+//    bytes, err = configSchema.Marshal()
+//
 //    configSet, err := UnmarshalConfigSet(bytes)
 //    bytes, err = configSet.Marshal()
-//
-//    configStore, err := UnmarshalConfigStore(bytes)
-//    bytes, err = configStore.Marshal()
 //
 //    configStoreQuery, err := UnmarshalConfigStoreQuery(bytes)
 //    bytes, err = configStoreQuery.Marshal()
@@ -36,6 +30,9 @@
 //
 //    configStoreContents, err := UnmarshalConfigStoreContents(bytes)
 //    bytes, err = configStoreContents.Marshal()
+//
+//    configStore, err := UnmarshalConfigStore(bytes)
+//    bytes, err = configStore.Marshal()
 
 package configu
 
@@ -71,26 +68,6 @@ func (r *Config) Marshal() ([]byte, error) {
 	return json.Marshal(r)
 }
 
-func UnmarshalConfigSchemaType(data []byte) (ConfigSchemaType, error) {
-	var r ConfigSchemaType
-	err := json.Unmarshal(data, &r)
-	return r, err
-}
-
-func (r *ConfigSchemaType) Marshal() ([]byte, error) {
-	return json.Marshal(r)
-}
-
-func UnmarshalConfigSchema(data []byte) (ConfigSchema, error) {
-	var r ConfigSchema
-	err := json.Unmarshal(data, &r)
-	return r, err
-}
-
-func (r *ConfigSchema) Marshal() ([]byte, error) {
-	return json.Marshal(r)
-}
-
 func UnmarshalConfigSchemaContentsValue(data []byte) (ConfigSchemaContentsValue, error) {
 	var r ConfigSchemaContentsValue
 	err := json.Unmarshal(data, &r)
@@ -113,6 +90,16 @@ func (r *ConfigSchemaContents) Marshal() ([]byte, error) {
 	return json.Marshal(r)
 }
 
+func UnmarshalConfigSchema(data []byte) (ConfigSchema, error) {
+	var r ConfigSchema
+	err := json.Unmarshal(data, &r)
+	return r, err
+}
+
+func (r *ConfigSchema) Marshal() ([]byte, error) {
+	return json.Marshal(r)
+}
+
 func UnmarshalConfigSet(data []byte) (ConfigSet, error) {
 	var r ConfigSet
 	err := json.Unmarshal(data, &r)
@@ -120,16 +107,6 @@ func UnmarshalConfigSet(data []byte) (ConfigSet, error) {
 }
 
 func (r *ConfigSet) Marshal() ([]byte, error) {
-	return json.Marshal(r)
-}
-
-func UnmarshalConfigStore(data []byte) (ConfigStore, error) {
-	var r ConfigStore
-	err := json.Unmarshal(data, &r)
-	return r, err
-}
-
-func (r *ConfigStore) Marshal() ([]byte, error) {
 	return json.Marshal(r)
 }
 
@@ -165,6 +142,16 @@ func (r *ConfigStoreContents) Marshal() ([]byte, error) {
 	return json.Marshal(r)
 }
 
+func UnmarshalConfigStore(data []byte) (ConfigStore, error) {
+	var r ConfigStore
+	err := json.Unmarshal(data, &r)
+	return r, err
+}
+
+func (r *ConfigStore) Marshal() ([]byte, error) {
+	return json.Marshal(r)
+}
+
 // A generic declaration of a Config, aka Cfgu that specifies information about its type and
 // other characteristics
 type Cfgu struct {
@@ -189,8 +176,8 @@ type Config struct {
 // An interface of a <file>.cfgu.json, aka ConfigSchema
 // that contains binding records between a unique Config.<key> and its Cfgu declaration
 type ConfigSchema struct {
-	Path string           `json:"path"`
-	Type ConfigSchemaType `json:"type"`
+	Contents map[string]ConfigSchemaContentsValue `json:"contents"`
+	Name     string                               `json:"name"`
 }
 
 type ConfigSchemaContentsValue struct {
@@ -212,12 +199,6 @@ type ConfigSet struct {
 	Path      string   `json:"path"`
 }
 
-// An interface of a storage, aka ConfigStore
-// that I/Os Config records (Config[])
-type ConfigStore struct {
-	Type string `json:"type"`
-}
-
 type ConfigStoreQuery struct {
 	Key string `json:"key"`
 	Set string `json:"set"`
@@ -227,6 +208,12 @@ type ConfigStoreContentsElement struct {
 	Key   string `json:"key"`
 	Set   string `json:"set"`
 	Value string `json:"value"`
+}
+
+// An interface of a storage, aka ConfigStore
+// that I/Os Config records (Config[])
+type ConfigStore struct {
+	Type string `json:"type"`
 }
 
 type CfguType string
@@ -268,10 +255,4 @@ const (
 	String           CfguType = "String"
 	URL              CfguType = "URL"
 	UUID             CfguType = "UUID"
-)
-
-type ConfigSchemaType string
-
-const (
-	JSON ConfigSchemaType = "json"
 )

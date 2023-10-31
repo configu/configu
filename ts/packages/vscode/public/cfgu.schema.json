@@ -121,35 +121,6 @@
         "value"
       ]
     },
-    "ConfigSchemaType": {
-      "type": "string",
-      "enum": [
-        "json"
-      ]
-    },
-    "ConfigSchema": {
-      "description": "An interface of a <file>.cfgu.json, aka ConfigSchema\nthat contains binding records between a unique Config.<key> and its Cfgu declaration",
-      "title": "ConfigSchema",
-      "type": "object",
-      "properties": {
-        "path": {
-          "type": "string",
-          "title": "path"
-        },
-        "type": {
-          "type": "string",
-          "enum": [
-            "json"
-          ],
-          "title": "type"
-        }
-      },
-      "additionalProperties": false,
-      "required": [
-        "path",
-        "type"
-      ]
-    },
     "ConfigSchemaContentsValue": {
       "title": "ConfigSchemaContentsValue",
       "type": "object",
@@ -209,6 +180,29 @@
         "$ref": "#/definitions/ConfigSchemaContentsValue"
       }
     },
+    "ConfigSchema": {
+      "description": "An interface of a <file>.cfgu.json, aka ConfigSchema\nthat contains binding records between a unique Config.<key> and its Cfgu declaration",
+      "title": "ConfigSchema",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "name"
+        },
+        "contents": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/ConfigSchemaContentsValue"
+          },
+          "title": "contents"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "contents",
+        "name"
+      ]
+    },
     "ConfigSet": {
       "description": "An interface of a path in an hierarchy, aka ConfigSet\nthat uniquely groups Config.<key> with their Config.<value>.",
       "title": "ConfigSet",
@@ -230,21 +224,6 @@
       "required": [
         "hierarchy",
         "path"
-      ]
-    },
-    "ConfigStore": {
-      "description": "An interface of a storage, aka ConfigStore\nthat I/Os Config records (Config[])",
-      "title": "ConfigStore",
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "title": "type"
-        }
-      },
-      "additionalProperties": false,
-      "required": [
-        "type"
       ]
     },
     "ConfigStoreQuery": {
@@ -295,6 +274,21 @@
       "items": {
         "$ref": "#/definitions/ConfigStoreContentsElement"
       }
+    },
+    "ConfigStore": {
+      "description": "An interface of a storage, aka ConfigStore\nthat I/Os Config records (Config[])",
+      "title": "ConfigStore",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "title": "type"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "type"
+      ]
     }
   },
   "$ref": "#/definitions/ConfigSchemaContents"
