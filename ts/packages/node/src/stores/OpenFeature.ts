@@ -14,15 +14,13 @@ export type OpenFeatureConfigStoreConfiguration = {
 
 export abstract class OpenFeatureConfigStore extends ConfigStore {
   protected readonly provider: Provider | Promise<Provider>;
-  private readonly context: EvaluationContext;
   private readonly client: Client;
 
   protected constructor(type: string, configuration: OpenFeatureConfigStoreConfiguration) {
     super(type);
     const { provider, context = {} } = configuration;
     this.provider = provider;
-    this.context = context;
-    this.client = OpenFeature.getClient();
+    this.client = OpenFeature.getClient(context);
   }
 
   async init(): Promise<void> {
@@ -33,20 +31,20 @@ export abstract class OpenFeatureConfigStore extends ConfigStore {
     let details: EvaluationDetails<any>;
     switch (valueType) {
       case 'bool':
-        details = await this.client.getBooleanDetails(key, false, { ...this.context, set });
+        details = await this.client.getBooleanDetails(key, false, { ...this.client.getContext(), set });
         if (details.errorCode === 'FLAG_NOT_FOUND') return '';
         if (details.errorCode === 'TYPE_MISMATCH') return this.getValue(key, set, 'number');
         return String(details.value);
       case 'number':
-        details = await this.client.getNumberDetails(key, 0, { ...this.context, set });
+        details = await this.client.getNumberDetails(key, 0, { ...this.client.getContext(), set });
         if (details.errorCode === 'TYPE_MISMATCH') return this.getValue(key, set, 'string');
         return String(details.value);
       case 'string':
-        details = await this.client.getStringDetails(key, '', { ...this.context, set });
+        details = await this.client.getStringDetails(key, '', { ...this.client.getContext(), set });
         if (details.errorCode === 'TYPE_MISMATCH') return this.getValue(key, set, 'object');
         return details.value;
       case 'object':
-        details = await this.client.getObjectDetails(key, {}, { ...this.context, set });
+        details = await this.client.getObjectDetails(key, {}, { ...this.client.getContext(), set });
         if (details.errorCode === 'TYPE_MISMATCH') return this.getValue(key, set, '');
         return JSON.stringify(details.value);
       default:

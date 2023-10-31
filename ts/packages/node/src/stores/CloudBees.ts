@@ -3,16 +3,16 @@ import { CloudbeesProvider } from 'cloudbees-openfeature-provider-node';
 import { type RoxSetupOptions } from 'rox-node';
 import { OpenFeatureConfigStore } from './OpenFeature';
 
-export type OpenFeatureCloudBeesConfigStoreConfiguration = {
+export type CloudBeesConfigStoreConfiguration = {
   appKey: string;
   providerOptions?: RoxSetupOptions;
   context?: EvaluationContext;
 };
 
-export class OpenFeatureCloudBeesConfigStore extends OpenFeatureConfigStore {
-  constructor(configuration: OpenFeatureCloudBeesConfigStoreConfiguration) {
+export class CloudBeesConfigStore extends OpenFeatureConfigStore {
+  constructor(configuration: CloudBeesConfigStoreConfiguration) {
     const { appKey, providerOptions, context } = configuration;
-    super('open-feature-cloud-bees', {
+    super('cloud-bees', {
       provider: CloudbeesProvider.build(appKey, {
         ...providerOptions,
         fetchIntervalInSec: 0,

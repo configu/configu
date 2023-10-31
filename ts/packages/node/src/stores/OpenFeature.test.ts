@@ -1,7 +1,6 @@
 import { InMemoryProvider, type EvaluationContext } from '@openfeature/server-sdk';
-import { ConfigSet, ConfigSchema, EvalCommand } from '@configu/ts';
+import { ConfigSet, ConfigSchema, EvalCommand, ExportCommand, type EvalCommandReturn } from '@configu/ts';
 import { OpenFeatureConfigStore } from './OpenFeature';
-import { ExportCommand } from '../commands/ExportCommand';
 
 class OpenFeatureTestConfigStore extends OpenFeatureConfigStore {
   constructor(context: EvaluationContext) {
@@ -64,13 +63,12 @@ describe('OpenFeatureConfigStore', () => {
       MyNumberFeatureFlag: { type: 'Number' },
       MyStringFeatureFlag: { type: 'String' },
     });
-    await store.init();
     const evalResult = await new EvalCommand({
       store,
       set,
       schema,
     }).run();
-    const exportResult = await new ExportCommand({ data: evalResult }).run();
+    const exportResult = await new ExportCommand({ data: evalResult as EvalCommandReturn }).run();
     const { MyBoolFeatureFlag, MyNumberFeatureFlag, MyStringFeatureFlag } = exportResult;
     expect(MyBoolFeatureFlag).toBe('true');
     expect(MyNumberFeatureFlag).toBe('1');
@@ -85,7 +83,6 @@ describe('OpenFeatureConfigStore', () => {
       MyNumberFeatureFlag: { type: 'Number' },
       MyStringFeatureFlag: { type: 'String' },
     });
-    await store.init();
     const evalResult = await new EvalCommand({
       store,
       set,

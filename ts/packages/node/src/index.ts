@@ -6,13 +6,12 @@ export * from './stores/IniFile';
 export * from './stores/AWSParameterStore';
 export * from './stores/AWSSecretsManager';
 export * from './stores/AzureKeyVault';
+export * from './stores/CloudBees';
 export * from './stores/GCPSecretManager';
 export * from './stores/HashiCorpVault';
 export * from './stores/Keyv';
 export * from './stores/KubernetesSecret';
 export * from './stores/LaunchDarkly';
-export * from './stores/OpenFeatureCloudBees';
-export * from './stores/OpenFeatureLaunchDarkly';
 
 export * from './stores/Etcd';
 export * from './stores/SQLite';
