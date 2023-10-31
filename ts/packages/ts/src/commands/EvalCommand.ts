@@ -27,7 +27,8 @@ export type EvalCommandParameters = {
   schema: ConfigSchema;
   configs?: { [key: string]: string };
   validate?: boolean;
-  previous?: EvalCommandReturn;
+  // * Allows merging the result of an eval command with the current eval result
+  pipe?: EvalCommandReturn;
 };
 
 export class EvalCommand extends Command<EvalCommandReturn> {
@@ -128,13 +129,13 @@ export class EvalCommand extends Command<EvalCommandReturn> {
   }
 
   private evalPrevious(result: EvalCommandReturn): EvalCommandReturn {
-    const { previous } = this.parameters;
+    const { pipe } = this.parameters;
 
-    if (!previous) {
+    if (!pipe) {
       return result;
     }
 
-    const mergedResults = _([previous, result])
+    const mergedResults = _([pipe, result])
       .flatMap((current) => _.values(current))
       .reduceRight<EvalCommandReturn>((merged, current) => {
         const { key } = current.context;
