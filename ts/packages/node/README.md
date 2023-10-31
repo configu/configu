@@ -4,7 +4,7 @@ Configu SDK for Node.js
 
 ## Install
 
-To install the this package, simply type add or install [@configu/node](https://www.npmjs.com/package/@configu/node) using your favorite package manager:
+To install the package, simply type add or install [@configu/node](https://www.npmjs.com/package/@configu/node) using your favorite package manager:
 
 ```bash
 npm install @configu/node

@@ -4,7 +4,7 @@ Configu SDK for the Browser
 
 ## Install
 
-To install the this package, simply type add or install [@configu/browser](https://www.npmjs.com/package/@configu/browser) using your favorite package manager:
+To install the package, simply type add or install [@configu/browser](https://www.npmjs.com/package/@configu/browser) using your favorite package manager:
 
 ```bash
 npm install @configu/browser

@@ -4,7 +4,7 @@ Configu SDK for Python
 
 ## Install
 
-To install the this package, simply type install [configu](https://pypi.org/project/configu/) using pip:
+To install the package, simply type install [configu](https://pypi.org/project/configu/) using pip:
 
 ```bash
 pip install configu

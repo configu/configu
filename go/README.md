@@ -4,7 +4,7 @@ Configu SDK for Go
 
 ## Install
 
-To install the this package, simply type install [configu](https://github.com/configu/configu) using `go get`:
+To install the package, simply type install [configu](https://github.com/configu/configu) using `go get`:
 
 ```bash
 go get github.com/configu/configu/go

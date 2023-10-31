@@ -7,7 +7,7 @@
   ```bash
   configu init --get-started
   ```
-- Setup a `ConfigStore` at the [.configu](.configu) file
+- Set up a `ConfigStore` at the [.configu](.configu) file
   - use `configu login` for `ConfiguConfigStore` 
 - Upsert `Config`s
   ```bash
