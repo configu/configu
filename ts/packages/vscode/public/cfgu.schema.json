@@ -89,6 +89,13 @@
             "type": "string"
           },
           "title": "options"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "aliases"
         }
       },
       "additionalProperties": false,
@@ -196,6 +203,13 @@
             "type": "string"
           },
           "title": "options"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "aliases"
         }
       },
       "additionalProperties": false,

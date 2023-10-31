@@ -152,6 +152,35 @@ export class EvalCommand extends Command<EvalCommandReturn> {
     return mergedResults;
   }
 
+  private evalAliases(result: EvalCommandReturn): EvalCommandReturn {
+    let ResultWithAliases: EvalCommandReturn = {};
+    _(result)
+      .values()
+      .forEach((current) => {
+        const { context } = current;
+        const { cfgu } = context;
+
+        if (cfgu.aliases) {
+          cfgu.aliases.forEach((alias) => {
+            const res = {
+              [alias]: {
+                context: {
+                  store: context.store,
+                  set: context.set,
+                  schema: context.schema,
+                  key: alias,
+                  cfgu: context.cfgu,
+                },
+                result: current.result,
+              },
+            };
+            ResultWithAliases = { ...ResultWithAliases, ...res };
+          });
+        }
+      });
+    return ResultWithAliases;
+  }
+
   private evalTemplates(result: EvalCommandReturn): EvalCommandReturn {
     const templateKeys = _(result)
       .pickBy((current) => current.result.origin === EvaluatedConfigOrigin.SchemaTemplate)
@@ -287,6 +316,10 @@ export class EvalCommand extends Command<EvalCommandReturn> {
     result = {
       ...result,
       ...this.evalTemplates(result),
+    };
+    result = {
+      ...result,
+      ...this.evalAliases(result),
     };
 
     this.validateResult(result);

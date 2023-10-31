@@ -22,6 +22,7 @@
  * other characteristics
  */
 export interface Cfgu {
+    aliases?:     string[];
     default?:     string;
     depends?:     string[];
     description?: string;
@@ -54,6 +55,7 @@ export interface ConfigSchema {
 }
 
 export interface ConfigSchemaContents {
+    aliases?:     string[];
     default?:     string;
     depends?:     string[];
     description?: string;
@@ -339,6 +341,7 @@ function r(name: string) {
 
 const typeMap: any = {
     "Cfgu": o([
+        { json: "aliases", js: "aliases", typ: u(undefined, a("")) },
         { json: "default", js: "default", typ: u(undefined, "") },
         { json: "depends", js: "depends", typ: u(undefined, a("")) },
         { json: "description", js: "description", typ: u(undefined, "") },
@@ -359,6 +362,7 @@ const typeMap: any = {
         { json: "name", js: "name", typ: "" },
     ], false),
     "ConfigSchemaContents": o([
+        { json: "aliases", js: "aliases", typ: u(undefined, a("")) },
         { json: "default", js: "default", typ: u(undefined, "") },
         { json: "depends", js: "depends", typ: u(undefined, a("")) },
         { json: "description", js: "description", typ: u(undefined, "") },

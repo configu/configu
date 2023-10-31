@@ -14,6 +14,8 @@ const CFGU_PROP: (keyof Cfgu)[] = [
   'depends',
   'template',
   'description',
+  'options',
+  'aliases',
 ];
 const CFGU_VALUE_TYPE_VALIDATORS: Record<CfguType, (parameters: Cfgu & { value: string }) => boolean> = {
   Boolean: ({ value }) => validator.isBoolean(value, { loose: true }),
@@ -316,7 +318,10 @@ const cfguValueTypeValidator = (cfgu: Cfgu, value: string) => {
 
   throw new ConfigError('invalid config value', hint);
 };
-const cfguStructureValidator = (cfgu: Cfgu) => {
+const AllAliases = new Set<string>();
+const cfguStructureValidator = (cfgu: Cfgu, content: { [key: string]: Cfgu }) => {
+  const AllKeys = _(content).keys().value();
+
   try {
     Convert.cfguToJson(cfgu);
   } catch (error) {
@@ -349,6 +354,30 @@ const cfguStructureValidator = (cfgu: Cfgu) => {
       } catch (error) {
         throw error?.setReason?.(reason) ?? error;
       }
+    });
+  }
+
+  if (cfgu.aliases) {
+    const reason = 'invalid aliases property';
+    if (_.isEmpty(cfgu.aliases)) {
+      throw new ConfigError(reason, `aliases mustn't be empty if set`);
+    }
+    cfgu.aliases.forEach((alias) => {
+      if (alias === '') {
+        throw new ConfigError(reason, `alias mustn't contain an empty string`);
+      }
+      if (!NAME(alias)) {
+        throw new ConfigError(reason, `alias mustn't contain reserved words "${alias}"`);
+      }
+
+      if (AllAliases.has(alias)) {
+        throw new ConfigError(reason, `${alias} alias must be unique it mustn't be same as other keys aliases`);
+      }
+
+      if (AllKeys.some((k) => k === alias)) {
+        throw new ConfigError(reason, `${alias} key must be unique it mustn't be same as keys `);
+      }
+      AllAliases.add(alias);
     });
   }
 
@@ -439,7 +468,7 @@ export class ConfigSchema implements IConfigSchema {
         }
 
         try {
-          ConfigSchema.CFGU.VALIDATORS.structure(cfgu);
+          ConfigSchema.CFGU.VALIDATORS.structure(cfgu, this.contents);
         } catch (error) {
           throw error?.appendScope?.(errorScope) ?? error;
         }

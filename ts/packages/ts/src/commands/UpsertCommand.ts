@@ -22,6 +22,8 @@ export class UpsertCommand extends Command<void> {
     const { store, set, schema, configs } = this.parameters;
 
     await store.init();
+    const allAliases = new Set<string>();
+    const allSchemaKeys = _(schema.contents).keys().value();
 
     const upsertConfigs = _(configs)
       .entries()
@@ -31,7 +33,17 @@ export class UpsertCommand extends Command<void> {
           ['parameters.configs', `key:${key};value:${value}`],
         ];
 
-        const cfgu = schema.contents[key];
+        let cfgu = schema.contents[key];
+        let aliasKey = '';
+        if (!cfgu) {
+          allSchemaKeys.forEach((k) => {
+            const a = schema.contents[k];
+            if (a && a.aliases && !aliasKey && a.aliases.some((alias) => alias === key)) {
+              aliasKey = k;
+              cfgu = a;
+            }
+          });
+        }
 
         if (!cfgu) {
           throw new ConfigError(
@@ -48,6 +60,25 @@ export class UpsertCommand extends Command<void> {
               `keys declared with template mustn't have a value`,
               errorScope,
             );
+          }
+
+          if (cfgu.aliases) {
+            if (allAliases.has(key)) {
+              throw new ConfigError(
+                'invalid config key',
+                `every key can be key of a cfgu or any of the aliases and should belong to different cfgu ${key}`,
+                errorScope,
+              );
+            } else {
+              if (aliasKey) {
+                allAliases.add(aliasKey);
+              } else {
+                allAliases.add(key);
+              }
+              cfgu.aliases.forEach((alias) => {
+                allAliases.add(alias);
+              });
+            }
           }
 
           try {

@@ -49,4 +49,5 @@ export interface Cfgu {
   template?: string;
   description?: string;
   options?: string[];
+  aliases?: string[];
 }
