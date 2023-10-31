@@ -11,6 +11,7 @@ export * from './stores/HashiCorpVault';
 export * from './stores/Keyv';
 export * from './stores/KubernetesSecret';
 export * from './stores/LaunchDarkly';
+export * from './stores/OpenFeatureCloudBees';
 export * from './stores/OpenFeatureLaunchDarkly';
 
 export * from './stores/Etcd';

@@ -7,13 +7,13 @@ import {
   type EvaluationDetails,
 } from '@openfeature/server-sdk';
 
-type OpenFeatureConfigStoreConfiguration = {
-  provider: Provider;
+export type OpenFeatureConfigStoreConfiguration = {
+  provider: Provider | Promise<Provider>;
   context?: EvaluationContext;
 };
 
 export abstract class OpenFeatureConfigStore extends ConfigStore {
-  private readonly provider: Provider;
+  protected readonly provider: Provider | Promise<Provider>;
   private readonly context: EvaluationContext;
   private readonly client: Client;
 
@@ -26,7 +26,7 @@ export abstract class OpenFeatureConfigStore extends ConfigStore {
   }
 
   async init(): Promise<void> {
-    await OpenFeature.setProviderAndWait(this.provider);
+    await OpenFeature.setProviderAndWait(await this.provider);
   }
 
   private async getValue(key: string, set: string, valueType: string = 'bool'): Promise<string> {
@@ -64,6 +64,6 @@ export abstract class OpenFeatureConfigStore extends ConfigStore {
   }
 
   set(configs: Config[]): Promise<void> {
-    throw new Error(`OpenFeatureConfigStore doesn't support upsert`); // ? ConfigError and copy
+    throw new Error(`OpenFeatureConfigStore doesn't support upsert`);
   }
 }
