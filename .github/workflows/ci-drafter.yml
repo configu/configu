@@ -15,45 +15,20 @@ jobs:
       contents: write
       pull-requests: read
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        package: [ts, py, go, lib, cli, vscode]
     steps:
-      - uses: release-drafter/release-drafter@v5
-        with:
-          config-name: configs/ts-release-drafter.yml
-          disable-autolabeler: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v4
 
-      - uses: release-drafter/release-drafter@v5
-        with:
-          config-name: configs/py-release-drafter.yml
-          disable-autolabeler: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Draft release config
+        run: |
+          cat .github/configs/release-drafter.yml >> .github/configs/${{ matrix.package }}-release-drafter.yml
 
-      - uses: release-drafter/release-drafter@v5
+      - name: Draft release ${{ matrix.package }}
+        uses: release-drafter/release-drafter@v5
         with:
-          config-name: configs/go-release-drafter.yml
-          disable-autolabeler: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - uses: release-drafter/release-drafter@v5
-        with:
-          config-name: configs/lib-release-drafter.yml
-          disable-autolabeler: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - uses: release-drafter/release-drafter@v5
-        with:
-          config-name: configs/cli-release-drafter.yml
-          disable-autolabeler: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - uses: release-drafter/release-drafter@v5
-        with:
-          config-name: configs/vscode-release-drafter.yml
+          config-name: configs/${{ matrix.package }}-release-drafter.yml
           disable-autolabeler: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

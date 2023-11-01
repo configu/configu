@@ -3,7 +3,7 @@ name: "CD: configu vscode extension artifact, marketplace"
 on:
   push:
     tags:
-      - vscode-*
+      - vscode/*
 
 env:
   PACKAGE_NAME: "vscode"
@@ -14,7 +14,7 @@ jobs:
     name: Build and deploy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: ./.github/actions/deploy-start-action
         id: deployment

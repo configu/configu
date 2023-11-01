@@ -6,8 +6,8 @@ export interface ConfigStoreContentsElement extends Config {};
 export type ConfigStoreContents = ConfigStoreContentsElement[];
 
 /**
- * An interface of a storage, aka ConfigStore
- * that I/Os Config records (Config[])
+ * A storage engine interface for `Config`s records.
+ * https://configu.com/docs/config-store/
  */
 export interface ConfigStore {
   type: string;

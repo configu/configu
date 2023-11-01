@@ -3,7 +3,7 @@ name: "CD: @configu/lib npm package"
 on:
   push:
     tags:
-      - lib-*
+      - lib/*
 
 env:
   PACKAGE_NAME: "@configu/lib"
@@ -16,7 +16,7 @@ jobs:
       contents: read
       id-token: write
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: ./.github/actions/deploy-start-action
         id: deployment
