@@ -23,11 +23,13 @@ export class UpsertCommand extends Command<void> {
   private validateConfigValue({
     key,
     value,
-    skipDeclarationAndTemplateValidation,
+    skipDeclarationValidation,
+    skipTemplateValidation,
   }: {
     key: string;
     value: string;
-    skipDeclarationAndTemplateValidation: boolean;
+    skipDeclarationValidation: boolean;
+    skipTemplateValidation: boolean;
   }) {
     const { store, set, schema } = this.parameters;
 
@@ -38,17 +40,12 @@ export class UpsertCommand extends Command<void> {
 
     const cfgu = schema.contents[key];
 
-    if (!skipDeclarationAndTemplateValidation) {
-      if (!cfgu) {
-        throw new ConfigError(
-          'invalid config key',
-          `key "${key}" must be declared on schema ${schema.name}`,
-          errorScope,
-        );
-      }
-      if (value !== undefined && cfgu?.template) {
-        throw new ConfigError('invalid config value', `keys declared with template mustn't have a value`, errorScope);
-      }
+    if (!skipDeclarationValidation && !cfgu) {
+      throw new ConfigError('invalid config key', `key "${key}" must be declared on schema ${schema.name}`, errorScope);
+    }
+
+    if (!skipTemplateValidation && value !== undefined && cfgu?.template) {
+      throw new ConfigError('invalid config value', `keys declared with template mustn't have a value`, errorScope);
     }
 
     if (value !== undefined && cfgu) {
@@ -80,7 +77,12 @@ export class UpsertCommand extends Command<void> {
         return !schemaCfgu.template;
       })
       .map(([key, value]) => {
-        this.validateConfigValue({ key, value: value.result.value, skipDeclarationAndTemplateValidation: true });
+        this.validateConfigValue({
+          key,
+          value: value.result.value,
+          skipDeclarationValidation: true,
+          skipTemplateValidation: true,
+        });
         return {
           set: set.path,
           key,
@@ -92,7 +94,7 @@ export class UpsertCommand extends Command<void> {
     const upsertConfigs = _(configs)
       .entries()
       .map<Config>(([key, value]) => {
-        this.validateConfigValue({ key, value, skipDeclarationAndTemplateValidation: false });
+        this.validateConfigValue({ key, value, skipDeclarationValidation: false, skipTemplateValidation: false });
         return {
           set: set.path,
           key,
@@ -101,8 +103,8 @@ export class UpsertCommand extends Command<void> {
       })
       .value();
 
-    const configsToUpsert = _.unionBy(upsertConfigs, pipeConfigs, 'key');
+    const mergedConfigsToUpsert = _.unionBy(upsertConfigs, pipeConfigs, 'key');
 
-    await store.set(configsToUpsert);
+    await store.set(mergedConfigsToUpsert);
   }
 }
