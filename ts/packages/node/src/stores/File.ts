@@ -2,22 +2,22 @@ import { promises as fs } from 'fs';
 import { type Config, ConfigStore, type ConfigStoreQuery } from '@configu/ts';
 import _ from 'lodash';
 
+export type FileConfigStoreConfiguration = { type: string; path: string; initialFileState: string };
+
 export abstract class FileConfigStore extends ConfigStore {
   readonly path: string;
   readonly initialFileState: string;
-  constructor(type: string, path: string, initialFileState: string) {
+  constructor({ type, path, initialFileState }: FileConfigStoreConfiguration) {
     super(type);
     this.path = path;
     this.initialFileState = initialFileState;
   }
 
-  // * Creates the file with the required "empty state" in case it does not exist
   async init() {
     try {
-      await fs.access(this.path); // * This will throw an error if the file doesn't exist
+      await fs.access(this.path);
     } catch (error) {
       if (error.code === 'ENOENT') {
-        // * File does not exist so we create it with the initial state
         await fs.writeFile(this.path, this.initialFileState);
       } else {
         throw error;
@@ -25,26 +25,21 @@ export abstract class FileConfigStore extends ConfigStore {
     }
   }
 
-  // * Parses the file content into configs
-  protected abstract parseFileContent(fileContent: string): Config[];
+  protected abstract parse(fileContent: string): Config[];
 
-  private async read(): Promise<Config[]> {
-    const fileContent = await fs.readFile(this.path, 'utf8');
-    const parsedFileContent = this.parseFileContent(fileContent);
-    return parsedFileContent;
+  private async read(): Promise<string> {
+    return fs.readFile(this.path, 'utf8');
   }
 
-  // * Stringifies the configs into the format the file store expects
-  protected abstract stringifyConfigs(nextConfigs: Config[]): string;
+  protected abstract stringify(nextConfigs: Config[]): string;
 
-  // * Writes the next state of the configs to the file
-  private async write(nextConfigs: Config[]): Promise<void> {
-    const nextFileContent = this.stringifyConfigs(nextConfigs);
-    await fs.writeFile(this.path, nextFileContent);
+  private async write(fileContents: string): Promise<void> {
+    await fs.writeFile(this.path, fileContents);
   }
 
   async get(queries: ConfigStoreQuery[]): Promise<Config[]> {
-    const storedConfigs = await this.read();
+    const fileContents = await this.read();
+    const storedConfigs = this.parse(fileContents);
 
     return storedConfigs.filter((config) => {
       return queries.some(({ set, key }) => {
@@ -54,13 +49,15 @@ export abstract class FileConfigStore extends ConfigStore {
   }
 
   async set(configs: Config[]): Promise<void> {
-    const storedConfigs = await this.read();
+    const fileContents = await this.read();
+    const storedConfigs = this.parse(fileContents);
 
     const nextConfigs = _([...configs, ...storedConfigs])
       .uniqBy((config) => `${config.set}.${config.key}`)
       .filter((config) => Boolean(config.value))
       .value();
+    const nextFileContents = this.stringify(nextConfigs);
 
-    await this.write(nextConfigs);
+    await this.write(nextFileContents);
   }
 }

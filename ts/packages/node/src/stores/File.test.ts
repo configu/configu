@@ -6,11 +6,9 @@ describe('IniFileConfigStore', () => {
   const testFilePath = path.join(__dirname, 'test.txt');
 
   beforeAll(async () => {
-    // * Ensure file does not exist and handle the case when it doesn't exist
     try {
       await fs.unlink(testFilePath);
     } catch (error) {
-      // * Handle the error if the file does not exist
       if (error.code !== 'ENOENT') {
         throw error;
       }
@@ -18,7 +16,6 @@ describe('IniFileConfigStore', () => {
   });
 
   afterAll(async () => {
-    // * Ensure file deleted after all tests
     await fs.unlink(testFilePath);
   });
 

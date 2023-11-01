@@ -8,10 +8,10 @@ export type IniFileConfigStoreConfiguration = { path: string };
 export class IniFileConfigStore extends FileConfigStore {
   constructor({ path }: IniFileConfigStoreConfiguration) {
     const initialFileState = '';
-    super('ini-file', path, initialFileState);
+    super({ type: 'ini-file', path, initialFileState });
   }
 
-  parseFileContent(fileContent: string) {
+  parse(fileContent: string) {
     const iniObject = ini.parse(fileContent);
 
     return Object.entries(iniObject).flatMap(([key, value]) => {
@@ -32,7 +32,7 @@ export class IniFileConfigStore extends FileConfigStore {
     });
   }
 
-  stringifyConfigs(nextConfigs: Config[]) {
+  stringify(nextConfigs: Config[]) {
     const groupedConfigs = _(nextConfigs)
       .groupBy('set')
       .mapValues((setConfigs) => _.merge({}, ...setConfigs.map((config) => ({ [config.key]: config.value }))))
