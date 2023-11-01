@@ -1,9 +1,13 @@
 include-paths:
   - "go/"
-name-template: "go-v$RESOLVED_VERSION"
-tag-template: "go-v$RESOLVED_VERSION"
-tag-prefix: "go-"
+name-template: "go/v$RESOLVED_VERSION"
+tag-template: "go/v$RESOLVED_VERSION"
+tag-prefix: "go/"
 # common configurations - https://github.com/release-drafter/release-drafter#configuration-options
+include-labels:
+  - "feat"
+  - "bug"
+  - "chore"
 exclude-labels:
   - "skip"
 category-template: "### $TITLE"
