@@ -39,12 +39,12 @@ export class UpsertCommand extends Command<void> {
           errorScope,
         );
       }
-      if (value && cfgu?.template) {
+      if (value !== undefined && cfgu?.template) {
         throw new ConfigError('invalid config value', `keys declared with template mustn't have a value`, errorScope);
       }
     }
 
-    if (value && cfgu) {
+    if (value !== undefined && cfgu) {
       try {
         ConfigSchema.CFGU.VALIDATORS.valueOptions(cfgu, value);
         ConfigSchema.CFGU.VALIDATORS.valueType(cfgu, value);
