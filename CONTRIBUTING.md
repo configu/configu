@@ -20,7 +20,7 @@ We use the issue tracker to keep track of bugs and improvements to Configu itsel
 
 **For support or usage questions like “how do I do X with Configu” and “my code doesn't work”, please search and ask on [Stack Overflow with a Configu tag](https://stackoverflow.com/questions/tagged/configu?sort=votes&pageSize=50) first.**
 
-We ask you to do this because StackOverflow has a much better job at keeping popular questions visible. Unfortunately good answers get lost and outdated on GitHub.
+We ask you to do this because StackOverflow has a much better job of keeping popular questions visible. Unfortunately good answers get lost and outdated on GitHub.
 
 Some questions take a long time to get an answer. **If your question gets closed, or you don't get a reply on Stack Overflow for longer than a few days,** we encourage you to post an issue linking to your question. We will close your issue but this will give people watching the repo an opportunity to see your question and reply to it on StackOverflow if they know the answer.
 
