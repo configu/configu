@@ -14,6 +14,7 @@ const CFGU_PROP: (keyof Cfgu)[] = [
   'depends',
   'template',
   'description',
+  'options',
 ];
 const CFGU_VALUE_TYPE_VALIDATORS: Record<CfguType, (parameters: Cfgu & { value: string }) => boolean> = {
   Boolean: ({ value }) => validator.isBoolean(value, { loose: true }),
