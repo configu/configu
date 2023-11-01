@@ -2,12 +2,12 @@ import { promises as fs } from 'fs';
 import { type Config, ConfigStore, type ConfigStoreQuery } from '@configu/ts';
 import _ from 'lodash';
 
-export type FileConfigStoreConfiguration = { type: string; path: string; initialFileState: string };
+export type FileConfigStoreConfiguration = { path: string; initialFileState: string };
 
 export abstract class FileConfigStore extends ConfigStore {
   readonly path: string;
   readonly initialFileState: string;
-  constructor({ type, path, initialFileState }: FileConfigStoreConfiguration) {
+  constructor(type: string, { path, initialFileState }: FileConfigStoreConfiguration) {
     super(type);
     this.path = path;
     this.initialFileState = initialFileState;

@@ -6,7 +6,7 @@ export type JsonFileConfigStoreConfiguration = { path: string };
 export class JsonFileConfigStore extends FileConfigStore {
   constructor({ path }: JsonFileConfigStoreConfiguration) {
     const initialFileState = Convert.configStoreContentsToJson([]);
-    super({ type: 'json-file', path, initialFileState });
+    super('json-file', { path, initialFileState });
   }
 
   parse(fileContent: string) {

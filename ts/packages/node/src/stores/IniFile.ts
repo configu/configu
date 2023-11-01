@@ -8,7 +8,7 @@ export type IniFileConfigStoreConfiguration = { path: string };
 export class IniFileConfigStore extends FileConfigStore {
   constructor({ path }: IniFileConfigStoreConfiguration) {
     const initialFileState = '';
-    super({ type: 'ini-file', path, initialFileState });
+    super('ini-file', { path, initialFileState });
   }
 
   parse(fileContent: string) {
