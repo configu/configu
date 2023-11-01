@@ -27,7 +27,6 @@ export type EvalCommandParameters = {
   schema: ConfigSchema;
   configs?: { [key: string]: string };
   validate?: boolean;
-  // * Allows merging the result of an eval command with the current eval result
   pipe?: EvalCommandReturn;
 };
 

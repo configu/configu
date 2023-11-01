@@ -12,7 +12,6 @@ export type UpsertCommandParameters = {
   set: ConfigSet;
   schema: ConfigSchema;
   configs?: { [key: string]: string };
-  // * Allows performing an upsert based on the result of an eval command
   pipe?: EvalCommandReturn;
 };
 
@@ -21,7 +20,15 @@ export class UpsertCommand extends Command<void> {
     super(parameters);
   }
 
-  private validateConfigValue({ key, value, isFromPipe }: { key: string; value: string; isFromPipe: boolean }) {
+  private validateConfigValue({
+    key,
+    value,
+    skipDeclarationAndTemplateValidation,
+  }: {
+    key: string;
+    value: string;
+    skipDeclarationAndTemplateValidation: boolean;
+  }) {
     const { store, set, schema } = this.parameters;
 
     const errorScope: [string, string][] = [
@@ -31,7 +38,7 @@ export class UpsertCommand extends Command<void> {
 
     const cfgu = schema.contents[key];
 
-    if (!isFromPipe) {
+    if (!skipDeclarationAndTemplateValidation) {
       if (!cfgu) {
         throw new ConfigError(
           'invalid config key',
@@ -67,15 +74,13 @@ export class UpsertCommand extends Command<void> {
       .entries()
       .filter(([key]) => {
         const schemaCfgu = schema.contents[key];
-        // * Filters keys from pipe that are not declared on the schema
         if (!schemaCfgu) {
           return false;
         }
-        // * Filters keys that are declared as a template in the provided schema
         return !schemaCfgu.template;
       })
       .map(([key, value]) => {
-        this.validateConfigValue({ key, value: value.result.value, isFromPipe: true });
+        this.validateConfigValue({ key, value: value.result.value, skipDeclarationAndTemplateValidation: true });
         return {
           set: set.path,
           key,
@@ -87,16 +92,17 @@ export class UpsertCommand extends Command<void> {
     const upsertConfigs = _(configs)
       .entries()
       .map<Config>(([key, value]) => {
-        this.validateConfigValue({ key, value, isFromPipe: false });
+        this.validateConfigValue({ key, value, skipDeclarationAndTemplateValidation: false });
         return {
           set: set.path,
           key,
           value,
         };
       })
-      .unionBy(pipeConfigs, 'key')
       .value();
 
-    await store.set(upsertConfigs);
+    const configsToUpsert = _.unionBy(upsertConfigs, pipeConfigs, 'key');
+
+    await store.set(configsToUpsert);
   }
 }
