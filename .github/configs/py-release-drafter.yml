@@ -1,9 +1,13 @@
 include-paths:
   - "py/"
-name-template: "py-v$RESOLVED_VERSION"
-tag-template: "py-v$RESOLVED_VERSION"
-tag-prefix: "py-"
+name-template: "py/v$RESOLVED_VERSION"
+tag-template: "py/v$RESOLVED_VERSION"
+tag-prefix: "py/"
 # common configurations - https://github.com/release-drafter/release-drafter#configuration-options
+include-labels:
+  - "feat"
+  - "bug"
+  - "chore"
 exclude-labels:
   - "skip"
 category-template: "### $TITLE"
