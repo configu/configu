@@ -10,8 +10,6 @@ export * from './stores/GCPSecretManager';
 export * from './stores/HashiCorpVault';
 export * from './stores/Keyv';
 export * from './stores/KubernetesSecret';
-export * from './stores/LaunchDarkly';
-export * from './stores/CloudBees';
 
 export * from './stores/Etcd';
 export * from './stores/SQLite';
@@ -20,6 +18,9 @@ export * from './stores/MariaDB';
 export * from './stores/PostgreSQL';
 export * from './stores/CockroachDB';
 export * from './stores/MSSQL';
+
+export * from './stores/CloudBees';
+export * from './stores/LaunchDarkly';
 
 export { ConfigSet } from '@configu/ts';
 export { ConfigSchema } from '@configu/ts';
