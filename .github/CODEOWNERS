@@ -1,0 +1,18 @@
+* @configu/dev
+
+*.md @configu/dev @configu/product
+examples/ @configu/dev
+assets/ @configu/product
+docs/ @configu/dev @configu/product
+
+.devcontainer/ @rannn505
+.github/ @rannn505
+.husky @rannn505
+.vscode @rannn505
+package.json @rannn505
+
+types/ @configu/dev
+
+ts/ @configu/dev
+py/ @jamesL92 @RonConfigu
+go/ @jamesL92

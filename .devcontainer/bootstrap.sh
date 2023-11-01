@@ -2,9 +2,6 @@
 
 echo "Bootstrapping Configu Repo ... 🚀"
 
-# Update configu cli
-configu update
-
 # Run npm install in the root directory
 npm install
 
@@ -15,5 +12,10 @@ npm install
 
 # Wait for all parallel tasks to complete
 wait
+
+# Update configu cli
+if [ -x "$(command -v configu)" ]; then
+  configu update
+fi
 
 echo "Successfully bootstrapped Configu Repo! 🎉"

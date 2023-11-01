@@ -1,1 +1,11 @@
 blank_issues_enabled: false
+contact_links:
+  - name: 🤔 Questions
+    url: https://stackoverflow.com/questions/tagged/configu?sort=votes&pageSize=50
+    about: Please ask and answer usage questions on Stack Overflow.
+  - name: 💬 Chat
+    url: https://discord.gg/cjSBxnB9z8
+    about: Alternatively, you can use the Configu Discord.
+  - name: 📃 Documentation Issue
+    url: https://github.com/configu/docs/issues
+    about: Please file documentation issues here.
