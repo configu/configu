@@ -3,7 +3,7 @@ name: "CD: configu pypi package"
 on:
   push:
     tags:
-      - py/*
+      - py/v*
 
 env:
   PACKAGE_NAME: "@configu/py"

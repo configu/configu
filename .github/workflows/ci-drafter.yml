@@ -19,13 +19,6 @@ jobs:
       matrix:
         package: [ts, py, go, lib, cli, vscode]
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Draft release config
-        run: |
-          cat .github/configs/release-drafter.yml >> .github/configs/${{ matrix.package }}-release-drafter.yml
-          cat .github/configs/${{ matrix.package }}-release-drafter.yml
-
       - name: Draft release ${{ matrix.package }}
         uses: release-drafter/release-drafter@v5
         with:

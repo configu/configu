@@ -3,7 +3,7 @@ name: "CD: @configu/{ts,node,browser} npm packages"
 on:
   push:
     tags:
-      - ts/*
+      - ts/v*
 
 env:
   PACKAGE_NAME: "@configu/{ts,node,browser}"

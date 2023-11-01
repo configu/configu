@@ -3,7 +3,7 @@ name: "CD: configu cli tarballs, docker image"
 on:
   push:
     tags:
-      - cli/*
+      - cli/v*
 
 env:
   PACKAGE_NAME: "@configu/cli"

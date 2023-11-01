@@ -3,7 +3,7 @@ name: "CD: configu vscode extension artifact, marketplace"
 on:
   push:
     tags:
-      - vscode/*
+      - vscode/v*
 
 env:
   PACKAGE_NAME: "vscode"

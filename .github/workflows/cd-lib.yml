@@ -3,7 +3,7 @@ name: "CD: @configu/lib npm package"
 on:
   push:
     tags:
-      - lib/*
+      - lib/v*
 
 env:
   PACKAGE_NAME: "@configu/lib"
