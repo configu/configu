@@ -62,6 +62,6 @@ export abstract class OpenFeatureConfigStore extends ConfigStore {
   }
 
   set(configs: Config[]): Promise<void> {
-    throw new Error(`OpenFeatureConfigStore doesn't support upsert`);
+    throw new Error(`${this.constructor.name} doesn't support the "set" method`);
   }
 }
