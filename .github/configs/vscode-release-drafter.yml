@@ -1,9 +1,13 @@
 include-paths:
   - "ts/packages/vscode/"
-name-template: "vscode-v$RESOLVED_VERSION"
-tag-template: "vscode-v$RESOLVED_VERSION"
-tag-prefix: "vscode-"
+name-template: "vscode/v$RESOLVED_VERSION"
+tag-template: "vscode/v$RESOLVED_VERSION"
+tag-prefix: "vscode/"
 # common configurations - https://github.com/release-drafter/release-drafter#configuration-options
+include-labels:
+  - "feat"
+  - "bug"
+  - "chore"
 exclude-labels:
   - "skip"
 category-template: "### $TITLE"
