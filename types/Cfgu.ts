@@ -37,7 +37,8 @@ export type CfguType =
   | "JSONSchema";
 
 /**
- * A generic declaration of a Config, aka Cfgu that specifies information about its type and other characteristics
+ * A generic declaration of a `Config`, using properties like type, description and constraints.
+ * https://configu.com/docs/cfgu/
  */
 export interface Cfgu {
   type: CfguType;

@@ -41,8 +41,8 @@ runs:
         tag=${ref_tag#refs/tags/}
         branch=${ref_branch#refs/heads/}
 
-        package=$(echo "$tag" | awk -F '[/-]v' '{print $1}')
-        version=$(echo "$tag" | awk -F '[/-]v' '{print $2}')
+        package=$(echo "$tag" | awk -F '/v' '{print $1}')
+        version=$(echo "$tag" | awk -F '/v' '{print $2}')
 
         ref_channel=$(echo "$version" | awk -F '-' '{print $2}')
         if [ "$branch" = "${{ github.event.repository.master_branch }}" ]; then
@@ -51,12 +51,8 @@ runs:
           channel=next
         else
           echo "couldn't resolve release channel based on the pushed tag"
-          echo "for go releases:"
           echo "use <package>/v<X.Y.Z>          for "latest" channel"
           echo "use <package>/v<X.Y.Z>-next.<I> for "next"   channel"
-          echo "for all other releases:"
-          echo "use <package>-v<X.Y.Z>          for "latest" channel"
-          echo "use <package>-v<X.Y.Z>-next.<I> for "next"   channel"
           exit 1
         fi
 
@@ -76,7 +72,7 @@ runs:
 
     - name: Post Slack build message
       id: slack
-      uses: slackapi/slack-github-action@v1.23.0
+      uses: slackapi/slack-github-action@v1.24.0
       with:
         payload: |
           {
