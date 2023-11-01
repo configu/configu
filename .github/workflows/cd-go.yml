@@ -3,7 +3,7 @@ name: "CD: configu go module"
 on:
   push:
     tags:
-      - go/*
+      - go/v*
 
 env:
   PACKAGE_NAME: "@configu/go"

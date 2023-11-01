@@ -1,10 +1,8 @@
 # @configu/go
 
-Configu SDK for Go
+Configu SDK for Go published to [GitHub](https://github.com/configu/configu/releases?q=go-&expanded=true).
 
 ## Install
-
-To install the this package, simply type install [configu](https://github.com/configu/configu) using `go get`:
 
 ```bash
 go get github.com/configu/configu/go
@@ -42,15 +40,15 @@ func main() {
 }
 ```
 
-## Reference
+<!-- todo: ## Reference
 
-[//]: # Link here once we have a reference page.
+[//]: # Link here once we have a reference page. -->
 
 ## Contributing
 
 ### Requirements
 
-1. Follow the [Development](https://github.com/configu/configu/blob/main/CONTRIBUTING.md#development) section from the `CONTRIBUTING.md`.
+Follow the [Development](https://github.com/configu/configu/blob/main/CONTRIBUTING.md#development) section from the `CONTRIBUTING.md`.
 
 ### Setup
 

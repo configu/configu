@@ -127,6 +127,28 @@ export class EvalCommand extends Command<EvalCommandReturn> {
     });
   }
 
+  private shouldOverrideOrigin(nextOrigin: EvaluatedConfigOrigin, previousOrigin?: EvaluatedConfigOrigin): boolean {
+    switch (previousOrigin) {
+      case undefined:
+        return true;
+      case EvaluatedConfigOrigin.EmptyValue:
+        return nextOrigin !== EvaluatedConfigOrigin.EmptyValue;
+      case EvaluatedConfigOrigin.SchemaDefault:
+        return [
+          EvaluatedConfigOrigin.SchemaDefault,
+          EvaluatedConfigOrigin.StoreSet,
+          EvaluatedConfigOrigin.ConfigsOverride,
+          EvaluatedConfigOrigin.SchemaTemplate,
+        ].includes(nextOrigin);
+      default:
+        return [
+          EvaluatedConfigOrigin.StoreSet,
+          EvaluatedConfigOrigin.ConfigsOverride,
+          EvaluatedConfigOrigin.SchemaTemplate,
+        ].includes(nextOrigin);
+    }
+  }
+
   private evalPrevious(result: EvalCommandReturn): EvalCommandReturn {
     const { previous } = this.parameters;
 
@@ -136,14 +158,11 @@ export class EvalCommand extends Command<EvalCommandReturn> {
 
     const mergedResults = _([previous, result])
       .flatMap((current) => _.values(current))
-      .reduceRight<EvalCommandReturn>((merged, current) => {
+      .reduce<EvalCommandReturn>((merged, current) => {
         const { key } = current.context;
         const mergedResult = merged[key];
-        if (
-          !mergedResult ||
-          (mergedResult.result.origin === EvaluatedConfigOrigin.EmptyValue &&
-            current.result.origin !== EvaluatedConfigOrigin.EmptyValue)
-        ) {
+        const shouldOverrideMerged = this.shouldOverrideOrigin(current.result.origin, mergedResult?.result.origin);
+        if (shouldOverrideMerged) {
           return { ...merged, [key]: current };
         }
         return merged;

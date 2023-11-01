@@ -3,7 +3,7 @@ name: "CD: configu cli tarballs, docker image"
 on:
   push:
     tags:
-      - cli-*
+      - cli/v*
 
 env:
   PACKAGE_NAME: "@configu/cli"
@@ -20,7 +20,7 @@ jobs:
     name: Build and deploy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: ./.github/actions/deploy-start-action
         id: deployment
