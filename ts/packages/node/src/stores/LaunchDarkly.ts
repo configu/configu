@@ -18,15 +18,16 @@ export class LaunchDarklyConfigStore extends OpenFeatureConfigStore {
       throw new Error(
         `The EvaluationContext must contain either a 'targetingKey' or a 'key' and the type must be a string.`,
       );
-    const ldOptionsWithStream = { ...ldOptions, stream: false };
+    // * stream is set to true by default
+    const ldOptionsWithoutStream = { ...ldOptions, stream: false };
     super('launch-darkly', {
-      provider: new LaunchDarklyProvider(sdkKey, ldOptionsWithStream),
+      provider: new LaunchDarklyProvider(sdkKey, ldOptionsWithoutStream),
       context,
     });
   }
 
   async get(queries: ConfigStoreQuery[]): Promise<Config[]> {
-    const configs = super.get(queries);
+    const configs = await super.get(queries);
     await OpenFeature.close();
     return configs;
   }
