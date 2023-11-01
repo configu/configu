@@ -13,8 +13,8 @@ class OpenFeatureTestConfigStore extends OpenFeatureConfigStore {
           },
           disabled: false,
           defaultVariant: 'on',
-          contextEvaluator: (context) => {
-            if (context.set === 'Development') {
+          contextEvaluator: (ctx) => {
+            if (ctx.set === 'Development') {
               return 'off';
             }
             return 'on';
@@ -27,8 +27,8 @@ class OpenFeatureTestConfigStore extends OpenFeatureConfigStore {
           },
           disabled: false,
           defaultVariant: 'on',
-          contextEvaluator: (context) => {
-            if (context.set === 'Development') {
+          contextEvaluator: (ctx) => {
+            if (ctx.set === 'Development') {
               return 'off';
             }
             return 'on';
@@ -41,8 +41,8 @@ class OpenFeatureTestConfigStore extends OpenFeatureConfigStore {
           },
           disabled: false,
           defaultVariant: 'on',
-          contextEvaluator: (context) => {
-            if (context.set === 'Development') {
+          contextEvaluator: (ctx) => {
+            if (ctx.set === 'Development') {
               return 'off';
             }
             return 'on';
