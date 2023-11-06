@@ -28,7 +28,7 @@ See [configu.com/docs/commands](https://configu.com/docs/cli-commands/)
 
 ### Requirements
 
-1. Follow the [Development](https://github.com/configu/configu/blob/main/CONTRIBUTING.md#development) section from the `CONTRIBUTING.md`.
+Follow the [Development](https://github.com/configu/configu/blob/main/CONTRIBUTING.md#development) section from the `CONTRIBUTING.md`.
 
 ### Setup
 

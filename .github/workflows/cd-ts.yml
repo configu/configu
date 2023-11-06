@@ -1,17 +1,16 @@
-name: "CD: @configu/{ts,node,browser} npm packages"
+name: "CD/@configu/ts"
 
 on:
   push:
     tags:
       - ts/v*
 
-env:
-  PACKAGE_NAME: "@configu/{ts,node,browser}"
-
 jobs:
-  build_and_deploy:
-    name: Build and deploy
+  cd-ts:
+    name: "CD/@configu/ts"
     runs-on: ubuntu-latest
+    env:
+      PACKAGE_NAME: "@configu/ts"
     permissions:
       contents: read
       id-token: write
@@ -36,8 +35,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-
-      # ----------
+      # ---
       - name: Bump package version
         run: |
           cd ${{ env.CWD }}
@@ -76,8 +74,7 @@ jobs:
           S3_BUCKET: "oss.configu.com"
           S3_FOLDER: "ts"
           CLOUDFRONT_DISTRIBUTION: "E7C5AL5O299SC"
-      # ----------
-
+      # ---
       - uses: ./.github/actions/deploy-end-action
         if: always()
         with:

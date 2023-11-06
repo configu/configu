@@ -1,4 +1,4 @@
-name: "CD: create-react-app example"
+name: "CD/@configu/examples/create-react-app"
 
 on:
   workflow_dispatch:
@@ -12,22 +12,20 @@ on:
     types:
       - create-react-app
 
-env:
-  ROOT_DIRECTORY: "examples/create-react-app"
-
 jobs:
-  build_and_deploy:
-    name: Build and deploy
+  cd-cra:
+    name: "CD/@configu/examples/create-react-app"
     runs-on: ubuntu-latest
+    env:
+      ROOT_DIRECTORY: "examples/create-react-app"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: ./.github/actions/ts-env-action
         with:
           install-dependencies: false
           dependencies-root: ${{ env.ROOT_DIRECTORY }}
-
-      # ----------
+      # ---
       - uses: configu/setup-cli-action@v1
 
       - name: Fetch configurations

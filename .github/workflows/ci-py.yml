@@ -1,4 +1,5 @@
-name: "CI: Python Tests"
+name: "CI/Python"
+
 on:
   pull_request:
     branches:
@@ -7,13 +8,15 @@ on:
       - "py/**"
 
 jobs:
-  ci:
-    name: Black, Flake8 and Tests
+  ci-python:
+    name: "CI/Python"
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/ts-env-action
 
       - uses: ./.github/actions/py-env-action
 

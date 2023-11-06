@@ -1,4 +1,4 @@
-name: "CI: repository healthcare routines"
+name: "CI/Healthcare Routines"
 
 on:
   pull_request:
@@ -6,8 +6,8 @@ on:
       - main
 
 jobs:
-  run_healthcare_routines_on_code_changes:
-    name: Run repository healthcare routines on code changes
+  ci-health:
+    name: "CI/Healthcare"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

@@ -1,0 +1,22 @@
+name: "CI/Issue"
+
+on:
+  issues:
+    types: [opened, reopened]
+
+jobs:
+  ci-issue:
+    name: "CI/Issue"
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/get-actor-action
+        id: actor
+
+      - name: Issue Labels
+        if: ${{ steps.actor.outputs.actor-permission == 'read' || steps.actor.outputs.actor-permission == 'none' }}
+        run: |
+          gh issue edit ${{ github.event.issue.number }} --add-label "triage" --add-label "community"
