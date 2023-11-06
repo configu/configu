@@ -1,4 +1,4 @@
-name: "CI: test"
+name: "CI/TypeScript"
 
 on:
   pull_request:
@@ -10,17 +10,24 @@ on:
       - "ts/packages/browser/**"
 
 jobs:
-  run_tests_on_code_changes:
-    name: Run tests on code changes
+  ci-typescript:
+    name: "CI/TypeScript"
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: ./.github/actions/ts-env-action
 
       - uses: ./.github/actions/ts-env-action
         with:
           dependencies-root: "ts"
+
+      - name: Run formatter
+        run: |
+          cd ${{ env.CWD }}
+          npm run format:check
 
       - name: Run linter
         run: |
