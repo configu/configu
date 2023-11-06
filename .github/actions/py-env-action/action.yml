@@ -1,4 +1,4 @@
-name: "Action: Python Environment Setup"
+name: "Python environment setup"
 description: ""
 inputs:
   python-version:

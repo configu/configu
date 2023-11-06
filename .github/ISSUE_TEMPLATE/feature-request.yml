@@ -1,0 +1,22 @@
+name: 🚀 Feature Request
+description: Suggest an idea
+labels: [feat]
+body:
+  - type: textarea
+    attributes:
+      label: Suggestion
+      description: A concise description of what you'd like to see added or changed.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Motivation
+      placeholder: Why do you want to see this feature added? What use cases does it support?
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Context
+      description: Links? References? Images? Environment? Versions? Anything that will give us more context about the issue you are encountering!
+    validations:
+      required: false
