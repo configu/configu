@@ -26,8 +26,8 @@ export type EvalCommandParameters = {
   set: ConfigSet;
   schema: ConfigSchema;
   configs?: { [key: string]: string };
-  validate?: boolean;
   pipe?: EvalCommandReturn;
+  validate?: boolean;
 };
 
 export class EvalCommand extends Command<EvalCommandReturn> {

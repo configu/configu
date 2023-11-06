@@ -5,7 +5,7 @@ import { ConfigError } from '../utils';
 import { type ConfigStore } from '../ConfigStore';
 import { type ConfigSet } from '../ConfigSet';
 import { ConfigSchema } from '../ConfigSchema';
-import { type EvalCommandReturn } from './EvalCommand';
+import { EvaluatedConfigOrigin, type EvalCommandReturn } from './EvalCommand';
 
 export type UpsertCommandParameters = {
   store: ConfigStore;
@@ -20,46 +20,8 @@ export class UpsertCommand extends Command<void> {
     super(parameters);
   }
 
-  private validateConfigValue({
-    key,
-    value,
-    skipDeclarationValidation,
-    skipTemplateValidation,
-  }: {
-    key: string;
-    value: string;
-    skipDeclarationValidation: boolean;
-    skipTemplateValidation: boolean;
-  }) {
-    const { store, set, schema } = this.parameters;
-
-    const errorScope: [string, string][] = [
-      ['UpsertCommand', `store:${store.type};set:${set.path};schema:${schema.name}`],
-      ['parameters.configs', `key:${key};value:${value}`],
-    ];
-
-    const cfgu = schema.contents[key];
-
-    if (!skipDeclarationValidation && !cfgu) {
-      throw new ConfigError('invalid config key', `key "${key}" must be declared on schema ${schema.name}`, errorScope);
-    }
-
-    if (!skipTemplateValidation && value !== undefined && cfgu?.template) {
-      throw new ConfigError('invalid config value', `keys declared with template mustn't have a value`, errorScope);
-    }
-
-    if (value !== undefined && cfgu) {
-      try {
-        ConfigSchema.CFGU.VALIDATORS.valueOptions(cfgu, value);
-        ConfigSchema.CFGU.VALIDATORS.valueType(cfgu, value);
-      } catch (error) {
-        throw error?.appendScope?.(errorScope) ?? error;
-      }
-    }
-  }
-
   async run() {
-    const { store, set, schema, configs, pipe } = this.parameters;
+    const { store, set, schema, configs = {}, pipe = {} } = this.parameters;
 
     if (_.isEmpty(configs) && _.isEmpty(pipe)) {
       return;
@@ -68,33 +30,53 @@ export class UpsertCommand extends Command<void> {
     await store.init();
 
     const pipeConfigs = _(pipe)
-      .entries()
-      .filter(([key]) => {
-        const schemaCfgu = schema.contents[key];
-        if (!schemaCfgu) {
-          return false;
-        }
-        return !schemaCfgu.template;
+      .pickBy((value, key) => {
+        const cfgu = schema.contents[key];
+        return (
+          cfgu &&
+          !cfgu.template &&
+          value.result.origin !== EvaluatedConfigOrigin.EmptyValue &&
+          value.result.origin !== EvaluatedConfigOrigin.SchemaDefault
+        );
       })
-      .map(([key, value]) => {
-        this.validateConfigValue({
-          key,
-          value: value.result.value,
-          skipDeclarationValidation: true,
-          skipTemplateValidation: true,
-        });
-        return {
-          set: set.path,
-          key,
-          value: value.result.value,
-        };
-      })
+      .mapValues((value, key) => value.result.value)
       .value();
 
-    const upsertConfigs = _(configs)
+    const upsertConfigs = _({ ...pipeConfigs, ...configs })
       .entries()
       .map<Config>(([key, value]) => {
-        this.validateConfigValue({ key, value, skipDeclarationValidation: false, skipTemplateValidation: false });
+        const errorScope: [string, string][] = [
+          ['UpsertCommand', `store:${store.type};set:${set.path};schema:${schema.name}`],
+          ['parameters.configs', `key:${key};value:${value}`],
+        ];
+
+        const cfgu = schema.contents[key];
+
+        if (!cfgu) {
+          throw new ConfigError(
+            'invalid config key',
+            `key "${key}" must be declared on schema ${schema.name}`,
+            errorScope,
+          );
+        }
+
+        if (value) {
+          if (cfgu.template) {
+            throw new ConfigError(
+              'invalid config value',
+              `keys declared with template mustn't have a value`,
+              errorScope,
+            );
+          }
+
+          try {
+            ConfigSchema.CFGU.VALIDATORS.valueOptions(cfgu, value);
+            ConfigSchema.CFGU.VALIDATORS.valueType(cfgu, value);
+          } catch (error) {
+            throw error?.appendScope?.(errorScope) ?? error;
+          }
+        }
+
         return {
           set: set.path,
           key,
@@ -103,8 +85,6 @@ export class UpsertCommand extends Command<void> {
       })
       .value();
 
-    const mergedConfigsToUpsert = _.unionBy(upsertConfigs, pipeConfigs, 'key');
-
-    await store.set(mergedConfigsToUpsert);
+    await store.set(upsertConfigs);
   }
 }
