@@ -29,3 +29,5 @@ runs:
 
         echo "username: $username"
         echo "permission: $permission"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
