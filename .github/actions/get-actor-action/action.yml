@@ -23,7 +23,6 @@ runs:
           /repos/configu/configu/collaborators/${{ github.actor }}/permission \
           --jq '.permission')
 
-
         echo "username=$username" >> $GITHUB_OUTPUT
         echo "permission=$permission" >> $GITHUB_OUTPUT
 
