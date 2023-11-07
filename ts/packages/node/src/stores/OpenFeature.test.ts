@@ -63,12 +63,14 @@ describe('OpenFeatureConfigStore', () => {
       MyNumberFeatureFlag: { type: 'Number' },
       MyStringFeatureFlag: { type: 'String' },
     });
+
     const evalResult = await new EvalCommand({
       store,
       set,
       schema,
     }).run();
-    const exportResult = await new ExportCommand({ data: evalResult as EvalCommandReturn }).run();
+    const exportResult = await new ExportCommand({ pipe: evalResult }).run();
+
     const { MyBoolFeatureFlag, MyNumberFeatureFlag, MyStringFeatureFlag } = exportResult;
     expect(MyBoolFeatureFlag).toBe('true');
     expect(MyNumberFeatureFlag).toBe('1');
@@ -83,12 +85,14 @@ describe('OpenFeatureConfigStore', () => {
       MyNumberFeatureFlag: { type: 'Number' },
       MyStringFeatureFlag: { type: 'String' },
     });
+
     const evalResult = await new EvalCommand({
       store,
       set,
       schema,
     }).run();
-    const exportResult = await new ExportCommand({ data: evalResult }).run();
+    const exportResult = await new ExportCommand({ pipe: evalResult }).run();
+
     const { MyBoolFeatureFlag, MyNumberFeatureFlag, MyStringFeatureFlag } = exportResult;
     expect(MyBoolFeatureFlag).toBe('false');
     expect(MyNumberFeatureFlag).toBe('0');
