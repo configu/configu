@@ -9,7 +9,7 @@ jobs:
     name: "CI/Issue"
     runs-on: ubuntu-latest
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     permissions:
       issues: write
     steps:
