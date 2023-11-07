@@ -1,5 +1,4 @@
 import { InMemoryProvider, type EvaluationContext } from '@openfeature/server-sdk';
-import { ConfigSet, ConfigSchema, EvalCommand, ExportCommand, type EvalCommandReturn } from '@configu/ts';
 import { OpenFeatureConfigStore } from './OpenFeature';
 
 class OpenFeatureTestConfigStore extends OpenFeatureConfigStore {
@@ -57,45 +56,37 @@ class OpenFeatureTestConfigStore extends OpenFeatureConfigStore {
 describe('OpenFeatureConfigStore', () => {
   test('Get on values without context', async () => {
     const store = new OpenFeatureTestConfigStore({});
-    const set = new ConfigSet('');
-    const schema = new ConfigSchema('featureFlagSchema', {
-      MyBoolFeatureFlag: { type: 'Boolean' },
-      MyNumberFeatureFlag: { type: 'Number' },
-      MyStringFeatureFlag: { type: 'String' },
-    });
-
-    const evalResult = await new EvalCommand({
-      store,
-      set,
-      schema,
-    }).run();
-    const exportResult = await new ExportCommand({ pipe: evalResult }).run();
-
-    const { MyBoolFeatureFlag, MyNumberFeatureFlag, MyStringFeatureFlag } = exportResult;
-    expect(MyBoolFeatureFlag).toBe('true');
-    expect(MyNumberFeatureFlag).toBe('1');
-    expect(MyStringFeatureFlag).toBe('on');
+    await store.init();
+    const configs = await store.get([
+      { set: '', key: 'MyBoolFeatureFlag' },
+      { set: '', key: 'MyNumberFeatureFlag' },
+      {
+        set: '',
+        key: 'MyStringFeatureFlag',
+      },
+    ]);
+    const configsMap: { [key: string]: any } = configs.reduce((acc, config) => ({ ...acc, [config.key]: config }), {});
+    const { MyBoolFeatureFlag, MyNumberFeatureFlag, MyStringFeatureFlag } = configsMap;
+    expect(MyBoolFeatureFlag.value).toBe('true');
+    expect(MyNumberFeatureFlag.value).toBe('1');
+    expect(MyStringFeatureFlag.value).toBe('on');
   });
 
   test('Get values from context', async () => {
     const store = new OpenFeatureTestConfigStore({});
-    const set = new ConfigSet('Development');
-    const schema = new ConfigSchema('featureFlagSchema', {
-      MyBoolFeatureFlag: { type: 'Boolean' },
-      MyNumberFeatureFlag: { type: 'Number' },
-      MyStringFeatureFlag: { type: 'String' },
-    });
-
-    const evalResult = await new EvalCommand({
-      store,
-      set,
-      schema,
-    }).run();
-    const exportResult = await new ExportCommand({ pipe: evalResult }).run();
-
-    const { MyBoolFeatureFlag, MyNumberFeatureFlag, MyStringFeatureFlag } = exportResult;
-    expect(MyBoolFeatureFlag).toBe('false');
-    expect(MyNumberFeatureFlag).toBe('0');
-    expect(MyStringFeatureFlag).toBe('off');
+    await store.init();
+    const configs = await store.get([
+      { set: 'Development', key: 'MyBoolFeatureFlag' },
+      { set: 'Development', key: 'MyNumberFeatureFlag' },
+      {
+        set: 'Development',
+        key: 'MyStringFeatureFlag',
+      },
+    ]);
+    const configsMap: { [key: string]: any } = configs.reduce((acc, config) => ({ ...acc, [config.key]: config }), {});
+    const { MyBoolFeatureFlag, MyNumberFeatureFlag, MyStringFeatureFlag } = configsMap;
+    expect(MyBoolFeatureFlag.value).toBe('false');
+    expect(MyNumberFeatureFlag.value).toBe('0');
+    expect(MyStringFeatureFlag.value).toBe('off');
   });
 });

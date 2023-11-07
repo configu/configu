@@ -15,7 +15,7 @@ export class CloudBeesConfigStore extends OpenFeatureConfigStore {
     super('cloud-bees', {
       provider: CloudbeesProvider.build(appKey, {
         ...providerOptions,
-        fetchIntervalInSec: 0,
+        fetchIntervalInSec: 0, // * force the client to close the connection after each request
       }),
       context,
     });

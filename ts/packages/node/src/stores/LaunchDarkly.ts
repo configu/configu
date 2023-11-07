@@ -18,7 +18,7 @@ export class LaunchDarklyConfigStore extends OpenFeatureConfigStore {
       throw new Error(
         `The EvaluationContext must contain either a 'targetingKey' or a 'key' and the type must be a string.`,
       );
-    // * stream is set to true by default
+    // * stream is set to true by default, but we want to close the connection after each request
     const ldOptionsWithoutStream = { ...ldOptions, stream: false };
     super('launch-darkly', {
       provider: new LaunchDarklyProvider(sdkKey, ldOptionsWithoutStream),
