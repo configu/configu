@@ -207,7 +207,7 @@ describe(`commands`, () => {
         const evalResult = await parameters.eval.reduce<Promise<EvalCommandReturn>>(
           async (promisedPrevious, current) => {
             const previous = await promisedPrevious;
-            return new EvalCommand({ ...current, previous }).run();
+            return new EvalCommand({ ...current, pipe: previous }).run();
           },
           undefined as any,
         );

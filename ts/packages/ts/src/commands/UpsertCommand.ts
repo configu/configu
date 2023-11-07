@@ -5,12 +5,14 @@ import { ConfigError } from '../utils';
 import { type ConfigStore } from '../ConfigStore';
 import { type ConfigSet } from '../ConfigSet';
 import { ConfigSchema } from '../ConfigSchema';
+import { EvaluatedConfigOrigin, type EvalCommandReturn } from './EvalCommand';
 
 export type UpsertCommandParameters = {
   store: ConfigStore;
   set: ConfigSet;
   schema: ConfigSchema;
-  configs: { [key: string]: string };
+  configs?: { [key: string]: string };
+  pipe?: EvalCommandReturn;
 };
 
 export class UpsertCommand extends Command<void> {
@@ -19,11 +21,28 @@ export class UpsertCommand extends Command<void> {
   }
 
   async run() {
-    const { store, set, schema, configs } = this.parameters;
+    const { store, set, schema, configs = {}, pipe = {} } = this.parameters;
+
+    if (_.isEmpty(configs) && _.isEmpty(pipe)) {
+      return;
+    }
 
     await store.init();
 
-    const upsertConfigs = _(configs)
+    const pipeConfigs = _(pipe)
+      .pickBy((value, key) => {
+        const cfgu = schema.contents[key];
+        return (
+          cfgu &&
+          !cfgu.template &&
+          value.result.origin !== EvaluatedConfigOrigin.EmptyValue &&
+          value.result.origin !== EvaluatedConfigOrigin.SchemaDefault
+        );
+      })
+      .mapValues((value, key) => value.result.value)
+      .value();
+
+    const upsertConfigs = _({ ...pipeConfigs, ...configs })
       .entries()
       .map<Config>(([key, value]) => {
         const errorScope: [string, string][] = [

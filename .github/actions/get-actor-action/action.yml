@@ -1,5 +1,9 @@
 name: "Get actor information"
 
+inputs:
+  github-token:
+    required: true
+
 outputs:
   actor-username:
     description: "Actor username"
@@ -23,9 +27,10 @@ runs:
           /repos/configu/configu/collaborators/${{ github.actor }}/permission \
           --jq '.permission')
 
-
         echo "username=$username" >> $GITHUB_OUTPUT
         echo "permission=$permission" >> $GITHUB_OUTPUT
 
         echo "username: $username"
         echo "permission: $permission"
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}

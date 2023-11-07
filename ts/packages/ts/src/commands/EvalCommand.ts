@@ -26,8 +26,8 @@ export type EvalCommandParameters = {
   set: ConfigSet;
   schema: ConfigSchema;
   configs?: { [key: string]: string };
+  pipe?: EvalCommandReturn;
   validate?: boolean;
-  previous?: EvalCommandReturn;
 };
 
 export class EvalCommand extends Command<EvalCommandReturn> {
@@ -150,13 +150,13 @@ export class EvalCommand extends Command<EvalCommandReturn> {
   }
 
   private evalPrevious(result: EvalCommandReturn): EvalCommandReturn {
-    const { previous } = this.parameters;
+    const { pipe } = this.parameters;
 
-    if (!previous) {
+    if (!pipe) {
       return result;
     }
 
-    const mergedResults = _([previous, result])
+    const mergedResults = _([pipe, result])
       .flatMap((current) => _.values(current))
       .reduce<EvalCommandReturn>((merged, current) => {
         const { key } = current.context;

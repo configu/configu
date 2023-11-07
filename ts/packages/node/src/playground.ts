@@ -27,6 +27,6 @@ import { EtcdConfigStore, ConfigSet, ConfigSchema, UpsertCommand, EvalCommand, E
     },
   }).run();
   const data = await new EvalCommand({ store, set, schema }).run();
-  const resp = await new ExportCommand({ data }).run();
+  const resp = await new ExportCommand({ pipe: data }).run();
   console.log(resp);
 })();

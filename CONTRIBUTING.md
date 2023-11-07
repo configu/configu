@@ -101,7 +101,7 @@ The [./go](https://github.com/configu/configu/tree/main/go) directory houses the
 
 <!-- #### **./java**
 
-The [./java](https://github.com/configu/configu/tree/main/java) directory will shortly contain the Java SDK. -->
+The [./java]() directory will shortly contain the Java SDK. -->
 
 ### Sending a Pull Request
 

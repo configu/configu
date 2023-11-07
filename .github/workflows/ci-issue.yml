@@ -8,6 +8,8 @@ jobs:
   ci-issue:
     name: "CI/Issue"
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     permissions:
       issues: write
     steps:
@@ -15,6 +17,8 @@ jobs:
 
       - uses: ./.github/actions/get-actor-action
         id: actor
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Issue Labels
         if: ${{ steps.actor.outputs.actor-permission == 'read' || steps.actor.outputs.actor-permission == 'none' }}

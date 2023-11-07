@@ -49,7 +49,7 @@ import {
     }).run();
 
     const configurationData = await new ExportCommand({
-      data,
+      pipe: data,
     }).run();
   } catch (error) {
     console.error(error);
