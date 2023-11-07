@@ -5,12 +5,15 @@
     "../../.eslintrc"
   ],
   "rules": {
-    "no-use-before-define":"warn",
+    "no-use-before-define": "warn",
     "node/no-missing-import": "off",
     "unicorn/no-negated-condition": "off",
     "unicorn/prefer-type-error": "off",
     "unicorn/prefer-node-protocol": "off",
     "unicorn/no-useless-undefined": "off"
   },
-  "ignorePatterns": ["bin", "build"]
+  "ignorePatterns": [
+    "bin",
+    "build"
+  ]
 }
