@@ -1,5 +1,9 @@
 name: "Get actor information"
 
+inputs:
+  github-token:
+    required: true
+
 outputs:
   actor-username:
     description: "Actor username"
@@ -29,5 +33,4 @@ runs:
         echo "username: $username"
         echo "permission: $permission"
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ inputs.github-token }}
