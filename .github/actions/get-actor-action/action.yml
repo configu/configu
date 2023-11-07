@@ -33,4 +33,4 @@ runs:
         echo "username: $username"
         echo "permission: $permission"
       env:
-        GH_TOKEN: ${{ inputs.github-token }}
+        GITHUB_TOKEN: ${{ inputs.github-token }}
