@@ -28,13 +28,24 @@ jobs:
           configuration-path: .github/configs/labeler.yml
           sync-labels: true
 
-      - uses: ./.github/actions/get-actor-action
+      - name: "Get actor information"
         id: actor
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          username=${{ github.actor }}
+          permission=$(gh api \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            /repos/configu/configu/collaborators/${{ github.actor }}/permission \
+            --jq '.permission')
+
+          echo "username=$username" >> $GITHUB_OUTPUT
+          echo "permission=$permission" >> $GITHUB_OUTPUT
+
+          echo "username: $username"
+          echo "permission: $permission"
 
       - name: PR Labels
-        if: ${{ steps.actor.outputs.actor-permission == 'read' || steps.actor.outputs.actor-permission == 'none' }}
+        if: ${{ steps.actor.outputs.permission == 'read' || steps.actor.outputs.permission == 'none' }}
         run: |
           gh pr edit ${{ github.event.pull_request.number }} --add-label "community"
 
