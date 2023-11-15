@@ -3,7 +3,7 @@ import _ from 'lodash';
 import {
   InMemoryConfigStore,
   ConfigSet,
-  InMemoryConfigSchema,
+  ConfigSchema,
   UpsertCommand,
   UpsertCommandParameters,
   EvalCommand,
@@ -17,33 +17,30 @@ describe(`playground`, () => {
 
   const set = new ConfigSet('test');
 
-  const schema = new InMemoryConfigSchema(
-    {
-      K11: {
-        type: 'JSONSchema',
-        schema: { type: 'string', maxLength: 5 },
-      },
-      K12: {
-        type: 'JSONSchema',
-        schema: { type: 'number', maximum: 5 },
-      },
-      K13: {
-        type: 'JSONSchema',
-        schema: {
-          type: 'object',
-          properties: {
-            foo: { type: 'integer' },
-            bar: { type: 'string' },
-          },
-          required: ['foo'],
-          additionalProperties: false,
-        },
-        // default: 'true',
-        // depends: ['K12'],
-      },
+  const schema = new ConfigSchema('test', {
+    K11: {
+      type: 'JSONSchema',
+      schema: { type: 'string', maxLength: 5 },
     },
-    's1',
-  );
+    K12: {
+      type: 'JSONSchema',
+      schema: { type: 'number', maximum: 5 },
+    },
+    K13: {
+      type: 'JSONSchema',
+      schema: {
+        type: 'object',
+        properties: {
+          foo: { type: 'integer' },
+          bar: { type: 'string' },
+        },
+        required: ['foo'],
+        additionalProperties: false,
+      },
+      // default: 'true',
+      // depends: ['K12'],
+    },
+  });
 
   it(`a`, async () => {
     await new UpsertCommand({

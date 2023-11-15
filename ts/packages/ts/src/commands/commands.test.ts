@@ -2,13 +2,13 @@ import _ from 'lodash';
 import {
   InMemoryConfigStore,
   ConfigSet,
-  InMemoryConfigSchema,
+  ConfigSchema,
   UpsertCommand,
-  UpsertCommandParameters,
+  type UpsertCommandParameters,
   EvalCommand,
-  EvalCommandParameters,
+  type EvalCommandParameters,
   DeleteCommand,
-  EvalCommandReturn,
+  type EvalCommandReturn,
 } from '..';
 
 describe(`commands`, () => {
@@ -19,56 +19,47 @@ describe(`commands`, () => {
   const set11 = new ConfigSet('test1/test11');
   const set2 = new ConfigSet('test2');
 
-  const schema1 = new InMemoryConfigSchema(
-    {
-      K11: {
-        type: 'Boolean',
-        default: 'true',
-        depends: ['K12'],
-      },
-      K12: {
-        type: 'Number',
-      },
-      K13: {
-        type: 'String',
-        required: true,
-      },
+  const schema1 = new ConfigSchema('s1', {
+    K11: {
+      type: 'Boolean',
+      default: 'true',
+      depends: ['K12'],
     },
-    's1',
-  );
-  const schema2 = new InMemoryConfigSchema(
-    {
-      K21: {
-        type: 'RegEx',
-        pattern: '^(foo|bar|baz)$',
-      },
-      K22: {
-        type: 'String',
-        template: '{{K21}}::{{K11}}:{{K12}}:{{K13}}',
-      },
+    K12: {
+      type: 'Number',
     },
-    's2',
-  );
-  const schema3 = new InMemoryConfigSchema(
-    {
-      K31: {
-        type: 'String',
-        description: "email's prefix",
-        template: '{{CONFIGU_SET.1}}-{{CONFIGU_SET.hierarchy.1}}',
-      },
-      K32: {
-        type: 'Domain',
-        description: "email's suffix",
-      },
-      K33: {
-        type: 'Email',
-        template: '{{CONFIGU_SET.last}}-{{K31}}@{{K32}}',
-        required: true,
-        depends: ['K31', 'K32'],
-      },
+    K13: {
+      type: 'String',
+      required: true,
     },
-    's3',
-  );
+  });
+  const schema2 = new ConfigSchema('s2', {
+    K21: {
+      type: 'RegEx',
+      pattern: '^(foo|bar|baz)$',
+    },
+    K22: {
+      type: 'String',
+      template: '{{K21}}::{{K11}}:{{K12}}:{{K13}}',
+    },
+  });
+  const schema3 = new ConfigSchema('s3', {
+    K31: {
+      type: 'String',
+      description: "email's prefix",
+      template: '{{CONFIGU_SET.1}}-{{CONFIGU_SET.hierarchy.1}}',
+    },
+    K32: {
+      type: 'Domain',
+      description: "email's suffix",
+    },
+    K33: {
+      type: 'Email',
+      template: '{{CONFIGU_SET.last}}-{{K31}}@{{K32}}',
+      required: true,
+      depends: ['K31', 'K32'],
+    },
+  });
 
   describe(`EvalCommand`, () => {
     test.each<{
@@ -216,7 +207,7 @@ describe(`commands`, () => {
         const evalResult = await parameters.eval.reduce<Promise<EvalCommandReturn>>(
           async (promisedPrevious, current) => {
             const previous = await promisedPrevious;
-            return new EvalCommand({ ...current, previous }).run();
+            return new EvalCommand({ ...current, pipe: previous }).run();
           },
           undefined as any,
         );

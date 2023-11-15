@@ -1,10 +1,8 @@
 # @configu/node
 
-Configu SDK for Node.js
+Configu SDK for Node.js published to [npm](https://www.npmjs.com/package/@configu/node).
 
 ## Install
-
-To install the this package, simply type add or install [@configu/node](https://www.npmjs.com/package/@configu/node) using your favorite package manager:
 
 ```bash
 npm install @configu/node
@@ -48,7 +46,7 @@ import {
     }).run();
 
     const configurationData = await new ExportCommand({
-      data,
+      pipe: data,
     }).run();
   } catch (error) {
     console.error(error);
@@ -60,13 +58,13 @@ import {
 
 ## Reference
 
-See [oss.configu.com/node](https://oss.configu.com/ts/modules/_configu_node.html)
+[oss.configu.com/node](https://oss.configu.com/ts/modules/_configu_node.html)
 
 ## Contributing
 
 ### Requirements
 
-1. Follow the [Development](https://github.com/configu/configu/blob/main/CONTRIBUTING.md#development) section from the `CONTRIBUTING.md`.
+Follow the [Development](https://github.com/configu/configu/blob/main/CONTRIBUTING.md#development) section from the `CONTRIBUTING.md`.
 
 ### Setup
 

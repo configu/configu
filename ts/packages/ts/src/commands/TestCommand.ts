@@ -1,14 +1,8 @@
 import { Command } from '../Command';
-import { ConfigStore } from '../ConfigStore';
+import { type ConfigStore } from '../ConfigStore';
 import { ConfigSet } from '../ConfigSet';
-import { InMemoryConfigSchema } from '../ConfigSchema';
+import { ConfigSchema } from '../ConfigSchema';
 import { UpsertCommand } from './UpsertCommand';
-
-const TestCommandSchema = new InMemoryConfigSchema({
-  CONFIGU_TEST: {
-    type: 'String',
-  },
-});
 
 export type TestCommandParameters = {
   store: ConfigStore;
@@ -23,11 +17,16 @@ export class TestCommand extends Command<void> {
   async run(): Promise<void> {
     const { store, clean } = this.parameters;
     const set = new ConfigSet();
+    const schema = new ConfigSchema('TestCommandConfigSchema', {
+      CONFIGU_TEST: {
+        type: 'String',
+      },
+    });
 
     await new UpsertCommand({
       store,
       set,
-      schema: TestCommandSchema,
+      schema,
       configs: {
         CONFIGU_TEST: Date.now().toString(),
       },
@@ -37,7 +36,7 @@ export class TestCommand extends Command<void> {
       await new UpsertCommand({
         store,
         set,
-        schema: TestCommandSchema,
+        schema,
         configs: {
           CONFIGU_TEST: '',
         },

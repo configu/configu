@@ -1,20 +1,19 @@
-name: "CD: configu vscode extension artifact, marketplace"
+name: "CD/@configu/vscode"
 
 on:
   push:
     tags:
-      - vscode-*
-
-env:
-  PACKAGE_NAME: "vscode"
-  PACKAGE_PATH: "packages/vscode"
+      - vscode/v*
 
 jobs:
-  build_and_deploy:
-    name: Build and deploy
+  cd-vscode:
+    name: "CD/@configu/vscode"
     runs-on: ubuntu-latest
+    env:
+      PACKAGE_NAME: "vscode"
+      PACKAGE_PATH: "packages/vscode"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: ./.github/actions/deploy-start-action
         id: deployment
@@ -27,8 +26,7 @@ jobs:
       - uses: ./.github/actions/ts-env-action
         with:
           dependencies-root: "ts"
-
-      # ----------
+      # ---
       - name: Bump package version
         run: |
           cd ${{ env.CWD }}
@@ -59,8 +57,7 @@ jobs:
       # Reference https://code.visualstudio.com/api/working-with-extensions/publishing-extension#publishing-extensions
       # - name: Publish to VSCode extension marketplace
       #   run: npm exec --workspace=${{ env.PACKAGE_NAME }} vsce publish -p ${{secrets.VSCE_PAT}}
-      # ----------
-
+      # ---
       - uses: ./.github/actions/deploy-end-action
         if: always()
         with:

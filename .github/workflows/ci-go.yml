@@ -1,4 +1,5 @@
-name: "CI: Go Tests"
+name: "CI/Go"
+
 on:
   pull_request:
     branches:
@@ -7,13 +8,15 @@ on:
       - "go/**"
 
 jobs:
-  ci:
-    name: Lint and Test
+  ci-go:
+    name: "CI/Go"
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/ts-env-action
 
       - uses: ./.github/actions/go-env-action
 

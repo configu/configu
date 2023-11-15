@@ -1,13 +1,13 @@
 import _ from 'lodash';
 import { Command } from '../Command';
-import { EvalCommandReturn } from './EvalCommand';
+import { type EvalCommandReturn } from './EvalCommand';
 
 export type ExportCommandReturn = {
   [key: string]: string;
 };
 
 export type ExportCommandParameters = {
-  data: EvalCommandReturn;
+  pipe: EvalCommandReturn;
 };
 
 export class ExportCommand extends Command<ExportCommandReturn> {
@@ -16,7 +16,7 @@ export class ExportCommand extends Command<ExportCommandReturn> {
   }
 
   async run() {
-    const { data } = this.parameters;
-    return _.mapValues(data, (current) => current.result.value);
+    const { pipe } = this.parameters;
+    return _.mapValues(pipe, (current) => current.result.value);
   }
 }

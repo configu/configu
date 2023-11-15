@@ -1,4 +1,4 @@
-name: "CI: repository healthcare routines"
+name: "CI/Healthcare Routines"
 
 on:
   pull_request:
@@ -6,14 +6,14 @@ on:
       - main
 
 jobs:
-  run_healthcare_routines_on_code_changes:
-    name: Run repository healthcare routines on code changes
+  ci-health:
+    name: "CI/Healthcare"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Link Checker # https://github.com/marketplace/actions/lychee-broken-link-checker
         uses: lycheeverse/lychee-action@v1.7.0
         with:
           fail: true
-          args: --verbose --no-progress --exclude-all-private --exclude 'stackoverflow.com' --exclude-path 'examples/create-react-app/public/index.html' .
+          args: --verbose --no-progress --exclude-all-private --exclude 'stackoverflow.com' --exclude-path 'examples' .

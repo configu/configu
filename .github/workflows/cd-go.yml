@@ -1,19 +1,18 @@
-name: "CD: configu go module"
+name: "CD/@configu/go"
 
 on:
   push:
     tags:
-      - go/*
-
-env:
-  PACKAGE_NAME: "@configu/go"
+      - go/v*
 
 jobs:
-  build_and_deploy:
-    name: Build and deploy
+  cd-go:
+    name: "CD/@configu/go"
     runs-on: ubuntu-latest
+    env:
+      PACKAGE_NAME: "@configu/go"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: ./.github/actions/deploy-start-action
         id: deployment
@@ -24,47 +23,13 @@ jobs:
       - uses: ./.github/actions/ts-env-action
 
       - uses: ./.github/actions/go-env-action
-
-      # - uses: aws-actions/configure-aws-credentials@v2
-      #   with:
-      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #     aws-region: ${{ secrets.AWS_REGION }}
-
-      # ----------
+      # ---
       # src: https://go.dev/doc/modules/publishing, https://pkg.go.dev/about#adding-a-package
       - name: Bump module version and Publish to golang proxy
         run: |
           cd ${{ env.CWD }}
           GOPROXY=proxy.golang.org go list -m github.com/configu/configu/go@v${{ steps.deployment.outputs.release-version }}
-
-      # - name: Build package docs
-      #   run: |
-      #     cd ${{ env.CWD }}
-      #     go install -v golang.org/x/tools/cmd/godoc@latest
-      # todo: try to find a static html generator with godoc for self hosting docs. for now, using official pkg.go.dev
-      #     $(go env GOPATH)/bin/godoc -http=:6060 &
-      #     for (( ; ; )); do
-      #       sleep 0.5
-      #       if [[ $(curl -so /dev/null -w '%{http_code}' "http://localhost:6060/pkg/") -eq 200 ]]; then
-      #         mkdir docs
-      #         cd docs
-      #         wget -r -np -N -E -p -k http://localhost:6060/pkg/github.com/configu/configu/go/
-      #         cd ..
-      #         break
-      #       fi
-      #     done
-
-      # - name: Publish docs
-      #   run: |
-      #     aws s3 sync ${{ env.CWD }}/docs s3://${{ env.S3_BUCKET }}/${{ env.S3_FOLDER }}
-      #     aws cloudfront create-invalidation --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION }} --paths "/${{ env.S3_FOLDER }}*"
-      #   env:
-      #     S3_BUCKET: "oss.configu.com"
-      #     S3_FOLDER: "go"
-      #     CLOUDFRONT_DISTRIBUTION: "E7C5AL5O299SC"
-      # ----------
-
+      # ---
       - uses: ./.github/actions/deploy-end-action
         if: always()
         with:

@@ -2,63 +2,65 @@
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
-$ProgressPreference = "SilentlyContinue"
 
-$tarballName = "configu-win32-x64.tar.gz"
-$downloadUrl = "https://cli.configu.com/channels/stable/$tarballName"
-$tarArgs = "xz"
-
-$installRoot = (Join-Path $env:ProgramFiles "configu")
-$configRoot = (Join-Path $env:LOCALAPPDATA "configu")
-$binRoot = (Join-Path $installRoot "bin")
-
-# If we have a previous install, delete it.
-if (Test-Path -Path $installRoot) {
-  Remove-Item -Recurse -Force $installRoot
-}
-if (Test-Path -Path $configRoot) {
-  Remove-Item -Recurse -Force $configRoot
+if ((Get-Command "tar" -ErrorAction SilentlyContinue) -eq $null) {
+  Write-Host "This installer requires the 'tar.exe' command be available on your PATH"
+  exit 1
 }
 
-Write-Host "Installing CLI from $downloadUrl"
+$OS = "win32"
+$ARCH = "x64"
+$TARBALL_NAME = "configu-$OS-$ARCH.tar.gz"
+$CONFIGU_VERSION = if ($env:CONFIGU_VERSION) { $env:CONFIGU_VERSION } else { "stable" }
 
-# Install 7-zip to allow wxtracting .tar.gz files
-# https://gist.github.com/SomeCallMeTom/6dd42be6b81fd0c898fa9554b227e4b4
-$dlurl = 'https://7-zip.org/' + (Invoke-WebRequest -UseBasicParsing -Uri 'https://7-zip.org/' | Select-Object -ExpandProperty Links | Where-Object {($_.outerHTML -match 'Download')-and ($_.href -like "a/*") -and ($_.href -like "*-x64.exe")} | Select-Object -First 1 | Select-Object -ExpandProperty href)
-$installerPath = Join-Path $env:TEMP (Split-Path $dlurl -Leaf)
-Invoke-WebRequest $dlurl -OutFile $installerPath
-Start-Process -FilePath $installerPath -Args "/S" -Verb RunAs -Wait
-Remove-Item $installerPath
+$INSTALL_PATH = (Join-Path $env:ProgramFiles "configu")
+$BIN_PATH = (Join-Path $INSTALL_PATH "bin")
+# https://github.com/oclif/oclif/blob/149ef6ef296cdebc49793679a95dddc72d2debfd/src/tarballs/bin.ts#L22
+$CLI_DATA_PATH = (Join-Path $env:LOCALAPPDATA "configu")
 
-# Downloads the win32 tarball
-$tempTarball = New-Item -Type File (Join-Path $env:TEMP $tarballName) -Force
-Invoke-WebRequest $downloadUrl -OutFile $tempTarball
+$STABLE_DOWNLOAD_URL = "https://cli.configu.com/channels/stable/$TARBALL_NAME"
+$VERSION_DOWNLOAD_URL = "https://cli.configu.com/versions/configu-$OS-$ARCH-tar-gz.json"
 
-# Expands .tar.gz file to .tar file
-. (Join-Path $env:ProgramFiles "7-Zip\7z.exe") x -aoa $tempTarball -o"$env:TEMP" > $null
-Remove-Item -Force $tempTarball
+if ($CONFIGU_VERSION -eq 'stable' -or $CONFIGU_VERSION -eq 'latest' -or $CONFIGU_VERSION -eq 'lts') {
+  $DOWNLOAD_URL = $STABLE_DOWNLOAD_URL
+} else {
+  $DOWNLOAD_URL = (Invoke-WebRequest $VERSION_DOWNLOAD_URL | ConvertFrom-Json | Select-Object -expand $CONFIGU_VERSION)
+}
 
-# Expands .tar file to configu dir
-$tempTarball = Join-Path $env:TEMP ([System.IO.Path]::GetFileNameWithoutExtension($tarballName))
-. (Join-Path $env:ProgramFiles "7-Zip\7z.exe") x -aoa $tempTarball -o"$env:ProgramFiles" > $null
-Remove-Item -Force $tempTarball
+# Delete old configu installation if exists
+if (Test-Path -Path $INSTALL_PATH) {
+  Remove-Item -Recurse -Force $INSTALL_PATH
+}
+if (Test-Path -Path $CLI_DATA_PATH) {
+  Remove-Item -Recurse -Force $CLI_DATA_PATH
+}
 
-# Attempt to add ourselves to the $PATH, but if we can't, don't fail the overall script.
+Write-Host "Installing Configu from $DOWNLOAD_URL"
+
+cd $env:ProgramFiles
+
+# Download the win32 tarball
+$TEMP_TARBALL = New-Item -Type File (Join-Path $env:TEMP $TARBALL_NAME) -Force
+Invoke-WebRequest $DOWNLOAD_URL -OutFile $TEMP_TARBALL
+
+# Expand .tar file to INSTALL_PATH
+tar -xzf $TEMP_TARBALL
+Remove-Item -Force $TEMP_TARBALL
+
+# Attempt to add configu to the PATH, but if we can't, don't fail the overall script.
 try {
-  if ($env:Path -notlike "*$binRoot*") {
-    [Environment]::SetEnvironmentVariable("Path", $env:Path + ";" + $binRoot, [System.EnvironmentVariableTarget]::Machine)
-    SETX /M PATH "$env:Path;$binRoot" > $null
-    $env:PATH = "$env:Path;$binRoot"
+  if ($env:Path -notlike "*$BIN_PATH*") {
+    [Environment]::SetEnvironmentVariable("Path", $env:Path + ";" + $BIN_PATH, [System.EnvironmentVariableTarget]::Machine)
+    SETX /M PATH "$env:Path;$BIN_PATH" > $null
+    $env:PATH = "$env:Path;$BIN_PATH"
   }
 } catch {
-  Write-Host "Ensure that $binRoot is on your `$PATH to use it."
+  Write-Host "Ensure that $BIN_PATH is on your `$PATH to use it"
 }
 
-try {
-  Write-Host "configu installed to $binRoot"
-  configu version
-} catch {
-} finally {
-  Start-Sleep -Seconds 3
-  exit 0
-}
+# Test the CLI
+Write-Host "Configu CLI installed to $BIN_PATH"
+configu version
+
+Start-Sleep -Seconds 3
+exit 0

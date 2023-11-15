@@ -1,8 +1,8 @@
-import { Cfgu, Config } from '@configu/ts';
+import { type Cfgu, type Config } from '@configu/ts';
 import Dotenv from 'dotenv';
 import _ from 'lodash';
 import { analyzeValueType } from './configAnalyzer';
-import { ConfigFormat, CONFIG_FORMAT_EXTENSION } from '../formatters';
+import { type ConfigFormat, CONFIG_FORMAT_EXTENSION } from '../formatters';
 
 type ConfigExtractorFormat = Extract<ConfigFormat, 'JSON' | 'Dotenv'>;
 
