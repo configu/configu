@@ -51,5 +51,8 @@
     "tsx": "^3.14.0",
     "typedoc": "^0.25.3",
     "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "@iarna/toml": "^2.2.5"
   }
 }

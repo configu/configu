@@ -1,5 +1,5 @@
 import path from 'path';
-import { Config } from '@configu/ts';
+import { type Config } from '@configu/ts';
 import { promises as fs } from 'fs';
 import { TomlFileConfigStore } from './TomlFile';
 
@@ -12,10 +12,19 @@ const expectedConfigs: Config[] = [
 let store: TomlFileConfigStore;
 let testTomlFilePath: string;
 
-beforeAll(() => {
+beforeAll(async () => {
   testTomlFilePath = path.join(__dirname, 'example.toml');
+  await fs.writeFile(
+    testTomlFilePath,
+    `
+  RootSetKey = 1
+  [SET1]
+    SET1SetKey = 2
+  [SET1.SET2]
+    SET1SET2Key = 3
+  `,
+  );
   store = new TomlFileConfigStore({ path: testTomlFilePath });
-  store.write(expectedConfigs);
 });
 
 afterAll(() => {
@@ -23,14 +32,13 @@ afterAll(() => {
 });
 
 test('should parse toml file', async () => {
-  const configs = await store.read();
+  const configs = await store.get(expectedConfigs);
   expect(configs).toEqual(expectedConfigs);
 });
 
 test('should write new file', async () => {
   expectedConfigs.push({ set: 'SET3', key: 'SET3Key', value: '4' });
-
   await store.set(expectedConfigs);
-  const readedConfigs = await store.read();
+  const readedConfigs = await store.get(expectedConfigs);
   expect(readedConfigs).toEqual(expectedConfigs);
 });
