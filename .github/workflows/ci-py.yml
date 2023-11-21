@@ -30,6 +30,11 @@ jobs:
           cd ${{ env.CWD }}
           poetry run flake8 configu
 
+      - name: Run mypy
+        run: |
+          cd ${{ env.CWD }}
+          poetry run mypy configu
+
       - name: Run Tests
         run: |
           cd ${{ env.CWD }}
