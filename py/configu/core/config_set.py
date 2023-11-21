@@ -1,3 +1,4 @@
+from typing import Optional
 from .generated import ConfigSet as IConfigSet
 from ..utils import error_message, is_valid_name
 
@@ -14,12 +15,12 @@ class ConfigSet(IConfigSet):
     ROOT = ""
     ROOT_LABEL = "/"
 
-    def __init__(self, path: str = None) -> None:
+    def __init__(self, path: Optional[str] = None) -> None:
         """
         Creates a new ConfigSet.
         :param: path of the ConfigSet in a hierarchical structure.
         """
-        error_location = [self.__class__.__name__, self.__init__.__name__]
+        error_location = [self.__class__.__name__, "__init__"]
         if path is None:
             path = ConfigSet.ROOT
         hierarchy = [ConfigSet.ROOT]

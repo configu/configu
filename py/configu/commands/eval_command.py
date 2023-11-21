@@ -68,9 +68,9 @@ class EvalCommand(Command[EvalCommandReturn]):
         store: ConfigStore,
         set: ConfigSet,
         schema: ConfigSchema,
-        configs: Dict[str, str] = None,
+        configs: Optional[Dict[str, str]] = None,
         validate: bool = True,
-        previous: EvalCommandReturn = None,
+        previous: Optional[EvalCommandReturn] = None,
     ) -> None:
         """
 
@@ -95,7 +95,7 @@ class EvalCommand(Command[EvalCommandReturn]):
     def _eval_from_configs_override(
         self, result: EvalCommandReturn
     ) -> EvalCommandReturn:
-        if not self.parameters.get("configs"):
+        if not self.parameters["configs"]:
             return {}
         for key, value in result.items():
             if key in self.parameters["configs"]:
@@ -261,6 +261,11 @@ class EvalCommand(Command[EvalCommandReturn]):
             for key in template_keys:
                 context = result[key]["context"]
                 template = context["cfgu"].template
+                if template is None:
+                    # This should never trigger, since we're dealing with keys with
+                    # an origin of SchemaTemplate. However, typechecking isn't smart
+                    # enough to realise this.
+                    continue
                 expressions = parse_template(template)
                 if any([True for exp in expressions if exp in template_keys]):
                     continue

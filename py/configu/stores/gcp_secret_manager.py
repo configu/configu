@@ -1,6 +1,5 @@
 from google.cloud.secretmanager import SecretManagerServiceClient
 from google.cloud.secretmanager_v1 import (
-    Secret,
     SecretPayload,
 )
 
@@ -34,13 +33,13 @@ class GCPSecretManagerConfigStore(KeyValueConfigStore):
 
     def upsert(self, key: str, value: str):
         formatted_key = self._format_key(key)
-        secret = Secret()
-        secret.replication.automatic = {}
         try:
             self._client.create_secret(
-                parent=f"projects/{self._project_id}",
-                secret_id=key,
-                secret=secret,
+                request={
+                    "parent": f"projects/{self._project_id}",
+                    "secret_id": key,
+                    "secret": {"replication": {"automatic": {}}},
+                }
             )
         except (Exception,):
             pass

@@ -44,10 +44,16 @@ kubernetes = "^26.1.0"
 flake8 = "^6.0.0" # configs at .flake8
 black = { extras = ["d"], version = "^23.1.0" }
 pdoc = "^13.1.0" # https://pdoc.dev/docs/pdoc.html
+mypy = "^1.7.0" # https://mypy.readthedocs.io/en/stable/
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.2.2"
 pytest-cov = "^4.0.0"
+
+
+[tool.poetry.group.types.dependencies]
+types-chevron = "^0.14.2.5"
+types-requests = "<2.31.0.7"
 
 # https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html#
 [tool.black]
@@ -66,6 +72,11 @@ filterwarnings = 'ignore::DeprecationWarning'
 testpaths = [
   "tests"
 ]
+
+# https://mypy.readthedocs.io/en/latest/config_file.html#using-a-pyproject-toml-file
+# https://mypy.readthedocs.io/en/latest/running_mypy.html#missing-library-stubs-or-py-typed-marker
+[tool.mypy]
+ignore_missing_imports = true
 
 [build-system]
 requires = ["poetry-core"]

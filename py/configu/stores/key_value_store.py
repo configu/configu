@@ -80,18 +80,20 @@ class KeyValueConfigStore(ConfigStore):
         return stored_configs
 
     def set(self, configs: List[Config]):
+        breakpoint()
         key_value_dict: Dict[str, Union[str, Dict[str, str]]] = {}
         for config in configs:
             key = self._calc_key(config)
             if not config.set:
                 key_value_dict[key] = config.value
                 continue
-
-            if key not in key_value_dict or not isinstance(key_value_dict[key], dict):
-                key_value_dict[key] = {}
+            dict_value: dict[str, str] = {}
+            key_value = key_value_dict.get(key, {})
+            if isinstance(key_value, dict):
+                dict_value = key_value
 
             key_value_dict[key] = {
-                **key_value_dict[key],
+                **dict_value,
                 config.key: config.value,
             }
 

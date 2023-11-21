@@ -1,7 +1,7 @@
 import json
 import re
 from pathlib import Path
-from typing import Callable, Dict
+from typing import Callable, Dict, Optional
 import pyvalidator
 
 from .generated import (
@@ -19,7 +19,7 @@ class ConfigSchemaDefinition:
     _arn_regex = r"^arn:([^:\n]+):([^:\n]+):(?:[^:\n]*):(?:([^:\n]*)):([^:\/\n]+)(?:(:[^\n]+)|(\/[^:\n]+))?$"  # noqa: E501
     NAME: str = "cfgu"
     EXT: str = ".cfgu"
-    VALIDATORS: Dict[str, Callable[[str], bool]] = {
+    VALIDATORS: Dict[str, Callable[[Optional[str]], bool]] = {
         "Boolean": pyvalidator.is_boolean,
         "Number": pyvalidator.is_number,
         "String": lambda value: isinstance(value, str),
@@ -38,7 +38,8 @@ class ConfigSchemaDefinition:
         "IPv6": lambda value: pyvalidator.is_ip(value, 6),
         "Domain": pyvalidator.is_fqdn,
         "URL": pyvalidator.is_url,
-        "ConnectionString": lambda value: re.fullmatch(
+        "ConnectionString": lambda value: value is not None
+        and re.fullmatch(
             ConfigSchemaDefinition._cs_regex,
             value,
             re.RegexFlag.M,
@@ -255,13 +256,15 @@ class ConfigSchemaDefinition:
             "af-dz",
             "af-ma",
         },
-        "DockerImage": lambda value: re.fullmatch(
+        "DockerImage": lambda value: value is not None
+        and re.fullmatch(
             ConfigSchemaDefinition._docker_regex,
             value,
             re.RegexFlag.M,
         )
         is not None,
-        "ARN": lambda value: re.fullmatch(
+        "ARN": lambda value: value is not None
+        and re.fullmatch(
             ConfigSchemaDefinition._arn_regex,
             value,
             re.RegexFlag.M,
@@ -290,7 +293,7 @@ class ConfigSchema(IConfigSchema):
         Creates a new ConfigSchema
         :param path: path to the schema file (.cfgu.json)
         """
-        error_location = [self.__class__.__name__, self.__init__.__name__]
+        error_location = [self.__class__.__name__, "__init__"]
         if re.match(rf".*({ConfigSchema.EXT})", path) is None:
             raise ValueError(
                 error_message(

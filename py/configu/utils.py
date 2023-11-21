@@ -9,9 +9,13 @@ def error_message(
     location: Optional[List[str]] = None,
     suggestion: Optional[str] = None,
 ) -> str:
-    location = f"at {' > '.join(location)}" if location else None
+    joined_location = f"at {' > '.join(location)}" if location else None
     return " ".join(
-        [detail for detail in [message, location, suggestion] if detail is not None]
+        [
+            detail
+            for detail in [message, joined_location, suggestion]
+            if detail is not None
+        ]
     )
 
 
