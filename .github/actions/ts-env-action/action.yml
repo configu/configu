@@ -4,7 +4,7 @@ inputs:
   node-version:
     description: "Node.js version"
     required: true
-    default: "18.x"
+    default: "20.x"
   npm-version:
     description: "npm version"
     required: true
@@ -49,5 +49,5 @@ runs:
       if: ${{ inputs.install-dependencies == 'true' }} # * there is a bug in gh-actions causing booleans to be strings in composite actions - see: https://github.com/actions/runner/issues/1483#issuecomment-1042393939
       run: |
         cd ${{ env.CWD }}
-        npm install
+        npm ci --include=dev
         npm list --depth 0
