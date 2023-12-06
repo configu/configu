@@ -18,8 +18,9 @@
 // match the expected interface, even if the JSON is valid.
 
 /**
- * A generic declaration of a Config, aka Cfgu that specifies information about its type and
- * other characteristics
+ * A generic declaration of a `Config`, using properties like type, description and
+ * constraints.
+ * https://configu.com/docs/cfgu/
  */
 export interface Cfgu {
     default?:     string;
@@ -36,7 +37,9 @@ export interface Cfgu {
 export type CfguType = "ARN" | "AWSRegion" | "AZRegion" | "AlibabaRegion" | "Base64" | "Boolean" | "Color" | "ConnectionString" | "Country" | "Currency" | "DateTime" | "DockerImage" | "Domain" | "Email" | "GCPRegion" | "Hex" | "IBMRegion" | "IPv4" | "IPv6" | "JSONSchema" | "Language" | "LatLong" | "Locale" | "MACAddress" | "MD5" | "MIMEType" | "MobilePhone" | "MongoId" | "Number" | "OracleRegion" | "RegEx" | "SHA" | "SemVer" | "String" | "URL" | "UUID";
 
 /**
- * A generic representation of a software configuration, aka Config
+ * A generic representation of `application configuration` using three properties: `key`,
+ * `value`, `set`.
+ * https://configu.com/docs/terminology/#config
  */
 export interface Config {
     key:   string;
@@ -45,8 +48,9 @@ export interface Config {
 }
 
 /**
- * An interface of a <file>.cfgu.json, aka ConfigSchema
- * that contains binding records between a unique Config.<key> and its Cfgu declaration
+ * A file containing binding records linking each unique `ConfigKey` to its corresponding
+ * `Cfgu` declaration.
+ * https://configu.com/docs/config-schema/
  */
 export interface ConfigSchema {
     contents: { [key: string]: ConfigSchemaContents };
@@ -66,8 +70,9 @@ export interface ConfigSchemaContents {
 }
 
 /**
- * An interface of a path in an hierarchy, aka ConfigSet
- * that uniquely groups Config.<key> with their Config.<value>.
+ * A unique, case-sensitive path within a tree-like data structure that groups `Config`s
+ * contextually.
+ * https://configu.com/docs/config-set/
  */
 export interface ConfigSet {
     hierarchy: string[];
@@ -86,8 +91,8 @@ export interface ConfigStoreContents {
 }
 
 /**
- * An interface of a storage, aka ConfigStore
- * that I/Os Config records (Config[])
+ * A storage engine interface for `Config`s records.
+ * https://configu.com/docs/config-store/
  */
 export interface ConfigStore {
     type: string;

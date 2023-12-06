@@ -28,6 +28,6 @@ export const analyzeValueType = (value: string): CfguType => {
     // * handle empty value case
     return 'String';
   }
-  const analyzedType = TYPES_CHECK_ORDER.find((type) => ConfigSchema.CFGU.TESTS.VAL_TYPE[type]({ type, value }));
+  const analyzedType = TYPES_CHECK_ORDER.find((type) => ConfigSchema.CFGU.VALIDATORS.TYPE[type]({ type, value }));
   return analyzedType ?? 'String';
 };

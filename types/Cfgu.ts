@@ -41,6 +41,7 @@ export type CfguType =
  * https://configu.com/docs/cfgu/
  */
 export interface Cfgu {
+  description?: string;
   type: CfguType;
   pattern?: string;
   schema?: { [key: string]: any };
@@ -48,6 +49,5 @@ export interface Cfgu {
   required?: boolean;
   depends?: string[];
   template?: string;
-  description?: string;
   options?: string[];
 }
