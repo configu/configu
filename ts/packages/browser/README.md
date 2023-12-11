@@ -25,12 +25,13 @@ import {
   EvalCommand,
   ExportCommand,
 } from '@configu/browser';
+import schemaContents from './get-started.cfgu.json';
 
 (async () => {
   try {
     const store = new LocalForageConfigStore({ name: 'config-db' });
     const set = new ConfigSet('test');
-    const schema = await ConfigSchema.init(); // pick get-started.cfgu.json
+    const schema = new ConfigSchema('get-started', schemaContents);
 
     await new UpsertCommand({
       store,

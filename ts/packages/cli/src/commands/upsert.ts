@@ -1,8 +1,9 @@
 import { Flags } from '@oclif/core';
 import _ from 'lodash';
-import { ConfigSet, ConfigSchema, UpsertCommand } from '@configu/node';
+import { ConfigSet, UpsertCommand } from '@configu/node';
 import { extractConfigs } from '@configu/lib';
 import { BaseCommand } from '../base';
+import { readFile } from '../helpers';
 
 export default class Upsert extends BaseCommand<typeof Upsert> {
   static description = `Create, update or delete \`Configs\` from a \`ConfigStore\``;
@@ -55,18 +56,25 @@ export default class Upsert extends BaseCommand<typeof Upsert> {
   };
 
   public async run(): Promise<void> {
-    const store = await this.getStoreInstanceByStoreFlag(this.flags.store);
+    const store = this.getStoreInstanceByStoreFlag(this.flags.store);
     const set = new ConfigSet(this.flags.set);
-    const schema = new ConfigSchema(this.flags.schema);
+    const schema = await this.getSchemaInstanceBySchemaFlag(this.flags.schema);
+    const pipe = await this.readPreviousEvalCommandReturn();
 
     let configs = this.reduceConfigFlag(this.flags.config);
     if (this.flags.import) {
-      const fileContent = await this.readFile(this.flags.import);
+      const fileContent = await readFile(this.flags.import);
       const extractedConfigs = extractConfigs({
         filePath: this.flags.import,
         fileContent,
       });
-      configs = _.mapValues(extractedConfigs, 'value');
+      configs = _(extractedConfigs)
+        .pickBy((value, key) => {
+          const cfgu = schema.contents[key];
+          return cfgu && !cfgu.template && value.value;
+        })
+        .mapValues((value, key) => value.value)
+        .value();
     }
 
     await new UpsertCommand({
@@ -74,6 +82,7 @@ export default class Upsert extends BaseCommand<typeof Upsert> {
       set,
       schema,
       configs,
+      pipe,
     }).run();
     this.print(`Configs upserted successfully`, { symbol: 'success' });
   }
