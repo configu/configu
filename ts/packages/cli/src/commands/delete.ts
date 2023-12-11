@@ -1,5 +1,5 @@
 import { Flags } from '@oclif/core';
-import { ConfigSet, ConfigSchema, DeleteCommand } from '@configu/node';
+import { ConfigSet, DeleteCommand } from '@configu/node';
 import { BaseCommand } from '../base';
 
 export default class Delete extends BaseCommand<typeof Delete> {
@@ -35,9 +35,9 @@ export default class Delete extends BaseCommand<typeof Delete> {
   };
 
   public async run(): Promise<void> {
-    const store = await this.getStoreInstanceByStoreFlag(this.flags.store);
+    const store = this.getStoreInstanceByStoreFlag(this.flags.store);
     const set = new ConfigSet(this.flags.set);
-    const schema = new ConfigSchema(this.flags.schema);
+    const schema = await this.getSchemaInstanceBySchemaFlag(this.flags.schema);
 
     await new DeleteCommand({
       store,

@@ -18,6 +18,7 @@
   "oclif": {
     "bin": "configu",
     "binAliases": [
+      "configu",
       "cfgu"
     ],
     "dirname": "configu",
@@ -67,13 +68,13 @@
     }
   },
   "engines": {
-    "node": ">=v16.0.0"
+    "node": ">=v20.0.0"
   },
   "exports": "./build/index.js",
   "types": "./build/index.d.ts",
   "bin": {
-    "configu": "./bin/run",
-    "cfgu": "./bin/run"
+    "configu": "./bin/run.js",
+    "cfgu": "./bin/run.js"
   },
   "files": [
     "/bin",
@@ -95,36 +96,37 @@
     "configu-cli"
   ],
   "dependencies": {
-    "@configu/lib": "^0.6.4",
-    "@configu/node": "^0.19.0",
-    "@configu/ts": "^0.18.1",
-    "@oclif/core": "^2.11.8",
-    "@oclif/plugin-autocomplete": "^2.3.6",
-    "@oclif/plugin-not-found": "^2.3.37",
-    "@oclif/plugin-update": "^3.1.32",
+    "@configu/lib": "^0.7.0",
+    "@configu/node": "^0.20.1",
+    "@configu/ts": "^0.20.1",
+    "@oclif/core": "^3.14.1",
+    "@oclif/plugin-autocomplete": "^3.0.3",
+    "@oclif/plugin-not-found": "^3.0.5",
+    "@oclif/plugin-update": "^4.1.4",
     "axios": "^1.6.2",
     "chalk": "4.1.2",
     "change-case": "4.1.2",
-    "ci-info": "^3.9.0",
-    "cosmiconfig": "^8.2.0",
-    "dotenv": "^16.3.1",
+    "ci-info": "^4.0.0",
+    "cosmiconfig": "^9.0.0",
     "fast-glob": "^3.3.2",
     "inquirer": "8.2.5",
+    "js-yaml": "^4.1.0",
     "lodash": "^4.17.21",
     "log-symbols": "4.1.0",
     "open": "8.4.2",
-    "openid-client": "^5.6.1"
+    "openid-client": "^5.6.1",
+    "parse-json": "5.2.0"
   },
   "devDependencies": {
-    "@oclif/test": "^2.4.6",
+    "@oclif/test": "^3.1.3",
     "@types/inquirer": "8.2.5",
+    "@types/js-yaml": "^4.0.9",
     "@types/lodash": "^4.14.202",
-    "aws-sdk": "^2.1511.0",
-    "eslint-config-oclif": "^4.0.0",
-    "eslint-config-oclif-typescript": "^1.0.3",
-    "eslint-plugin-unicorn": "^49.0.0",
-    "globby": "11.0.4",
-    "oclif": "^3.11.3",
+    "@types/parse-json": "^4.0.2",
+    "aws-sdk": "^2.1515.0",
+    "eslint-config-oclif": "^5.0.0",
+    "eslint-config-oclif-typescript": "^3.0.26",
+    "oclif": "^4.0.4",
     "tslib": "^2.6.2"
   }
 }
