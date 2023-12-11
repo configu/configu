@@ -2,7 +2,6 @@ import path from 'path';
 import { createInterface } from 'readline';
 import { createReadStream } from 'fs';
 import { once } from 'events';
-import { ConfigSchema } from '@configu/node';
 import { Flags } from '@oclif/core';
 import _ from 'lodash';
 import { TMPL } from '@configu/ts';
@@ -59,7 +58,7 @@ export default class Find extends BaseCommand<typeof Find> {
   };
 
   private async updateIgnoredFiles(projectPath: string) {
-    const ignoredFiles = new Set(['build', 'dist', 'node_modules', ...this.flags.exclude]);
+    const ignoredFiles = new Set(['build', 'dist', 'node_modules', ...(this.flags?.exclude ?? [])]);
     const gitIgnores = FastGlob.sync([path.join(projectPath, '.gitignore')], {
       dot: true,
       ignore: [...ignoredFiles].map((dirName) => path.join(projectPath, `/**/${dirName}`)),
@@ -94,12 +93,11 @@ export default class Find extends BaseCommand<typeof Find> {
     const showUnusedOnly = this.flags.unused;
     const showTemplateKeys = this.flags.templates;
     const ignoredFiles = await this.updateIgnoredFiles(findInDirectory);
-    const cfguPaths =
-      this.flags.include.length > 0
-        ? this.flags.include
-        : FastGlob.sync([path.join(findInDirectory, '/**/*.cfgu.json')], {
-            ignore: [...ignoredFiles].map((ignoreFile) => path.join(findInDirectory, `/**/${ignoreFile}`)),
-          });
+    const cfguPaths = !_.isEmpty(this.flags.include)
+      ? (this.flags.include as string[])
+      : FastGlob.sync([path.join(findInDirectory, '/**/*.cfgu.json')], {
+          ignore: [...ignoredFiles].map((ignoreFile) => path.join(findInDirectory, `/**/${ignoreFile}`)),
+        });
 
     if (cfguPaths.length === 0)
       throw new Error(
@@ -108,7 +106,8 @@ export default class Find extends BaseCommand<typeof Find> {
 
     const keysFromCfguPromises = cfguPaths.map(async (cfguFile) => {
       try {
-        const schemaContents = await ConfigSchema.parse(new ConfigSchema(cfguFile));
+        const schema = await this.getSchemaInstanceBySchemaFlag(cfguFile);
+        const schemaContents = schema.contents;
         if (!showTemplateKeys) {
           const schemaEntries = Object.entries(schemaContents);
           const ignoredKeys = new Set(

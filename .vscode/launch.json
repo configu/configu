@@ -6,12 +6,12 @@
       "type": "node",
       "request": "launch",
       "console": "integratedTerminal",
-      "program": "${workspaceRoot}/ts/packages/cli/bin/dev",
+      "program": "${workspaceRoot}/ts/packages/cli/bin/dev.js",
       "env": {
         // "VAULT_ADDR": "http://127.0.0.1:8200",
         // "VAULT_TOKEN": "root",
-        "CONFIGU_ORG": "playground",
-        "CONFIGU_TOKEN": ""
+        // "CONFIGU_ORG": "playground",
+        // "CONFIGU_TOKEN": ""
       },
       "args": [
         // "test",
@@ -19,14 +19,24 @@
         // "export",
         // "eval",
         // "delete",
-
-        "--store", "configu",
+        "run",
+        // "--script",
+        // "test",
+        // "--store",
+        // "json",
+        // "--set",
+        // "",
+        // "--schema",
+        // "${workspaceFolder}/ts/ts.cfgu.json"
       ],
       "outFiles": [
         "${workspaceFolder}/**/*.js",
         "!**/node_modules/**"
       ],
-      "skipFiles": ["<node_internals>/**", "node_modules/**"],
+      "skipFiles": [
+        "<node_internals>/**",
+        "node_modules/**"
+      ],
       "preLaunchTask": "build ts"
     },
     {
@@ -35,10 +45,20 @@
       "request": "launch",
       "cwd": "${workspaceRoot}/ts/packages/node",
       "runtimeExecutable": "node",
-      "runtimeArgs": ["--nolazy", "--inspect", "-r", "ts-node/register"],
-      "args": ["test/index.ts"],
+      "runtimeArgs": [
+        "--nolazy",
+        "--inspect",
+        "-r",
+        "ts-node/register"
+      ],
+      "args": [
+        "test/index.ts"
+      ],
       "internalConsoleOptions": "openOnSessionStart",
-      "skipFiles": ["<node_internals>/**", "node_modules/**"],
+      "skipFiles": [
+        "<node_internals>/**",
+        "node_modules/**"
+      ],
       "preLaunchTask": "build ts"
     },
     {
@@ -51,7 +71,9 @@
         "node_modules/.bin/jest",
         "--runInBand"
       ],
-      "args": ["ts/src/commands/commands.test.ts"],
+      "args": [
+        "ts/src/commands/commands.test.ts"
+      ],
       // "args": ["ts/src/types/types.test.ts"],
       "outputCapture": "std"
       // "internalConsoleOptions": "neverOpen",
