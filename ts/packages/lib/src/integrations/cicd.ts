@@ -6,7 +6,8 @@ export type CiCd =
   | 'BitbucketPipelines'
   | 'TeamCity'
   | 'Buddy'
-  | 'Jenkins';
+  | 'Jenkins'
+  | 'Codefresh';
 
 export const CI_CD_LABEL: Record<CiCd, string> = {
   GitHubActions: 'GitHub Actions',
@@ -17,6 +18,7 @@ export const CI_CD_LABEL: Record<CiCd, string> = {
   TeamCity: 'TeamCity',
   Buddy: 'Buddy',
   Jenkins: 'Jenkins',
+  Codefresh: 'Codefresh',
 };
 export const CI_CD_WEBSITE: Record<CiCd, string> = {
   GitHubActions: 'https://github.com/features/actions',
@@ -27,6 +29,7 @@ export const CI_CD_WEBSITE: Record<CiCd, string> = {
   TeamCity: 'https://www.jetbrains.com/teamcity/learn/',
   Buddy: 'https://buddy.works/docs',
   Jenkins: 'https://www.jenkins.io/',
+  Codefresh: 'https://codefresh.io/',
 };
 
 export const CI_CD_TYPE = Object.keys(CI_CD_LABEL) as CiCd[];
