@@ -29,7 +29,7 @@ export const CI_CD_WEBSITE: Record<CiCd, string> = {
   TeamCity: 'https://www.jetbrains.com/teamcity/learn/',
   Buddy: 'https://buddy.works/docs',
   Jenkins: 'https://www.jenkins.io/',
-  Codefresh: 'https://codefresh.io/docs/',
+  Codefresh: 'https://codefresh.io/',
 };
 
 export const CI_CD_TYPE = Object.keys(CI_CD_LABEL) as CiCd[];
