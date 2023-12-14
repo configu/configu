@@ -93,7 +93,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ${{ env.CWD }}/${{ env.PACKAGE_PATH }}
-          platforms: linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8
+          platforms: linux/amd64,linux/arm,linux/arm64
           tags: ${{ env.DOCKERHUB_REPOSITORY }}:${{ steps.deployment.outputs.release-version }},${{ env.DOCKERHUB_REPOSITORY }}:${{ steps.deployment.outputs.release-channel }}
           push: true
 
