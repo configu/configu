@@ -73,7 +73,7 @@ class UpsertCommand(Command):
             and value["result"]["origin"] != EvaluatedConfigOrigin.EmptyValue
             and value["result"]["origin"] != EvaluatedConfigOrigin.SchemaDefault
         }
-        upset_configs = []
+        upsert_configs = []
         for key, value in {**piped_configs, **configs}.items():
             error_scope = [
                 (
@@ -104,5 +104,5 @@ class UpsertCommand(Command):
                         raise e.append_scope(error_scope)
                     raise e
 
-            upset_configs.append(Config(set=set_.path, key=key, value=value))
-        store.set(upset_configs)
+            upsert_configs.append(Config(set=set_.path, key=key, value=value))
+        store.set(upsert_configs)
