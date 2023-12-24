@@ -1,6 +1,6 @@
 from enum import Enum
 from functools import reduce
-from typing import Dict, List, Optional, Tuple, TypedDict
+from typing import Dict, List, Optional, Tuple, TypedDict, Union
 
 from ..core import (
     Cfgu,
@@ -50,7 +50,7 @@ class EvalCommandParameters(TypedDict):
     schema: ConfigSchema
     configs: Optional[Dict[str, str]]
     validate: bool
-    previous: Optional[EvalCommandReturn]
+    pipe: Optional[EvalCommandReturn]
 
 
 class EvalCommand(Command[EvalCommandReturn]):
@@ -69,7 +69,7 @@ class EvalCommand(Command[EvalCommandReturn]):
         schema: ConfigSchema,
         configs: Dict[str, str] = None,
         validate: bool = True,
-        previous: EvalCommandReturn = None,
+        pipe: EvalCommandReturn = None,
     ) -> None:
         """
 
@@ -78,7 +78,7 @@ class EvalCommand(Command[EvalCommandReturn]):
         :param schema: `ConfigSchema` to validate the config being fetched
         :param configs: a dictionary of overrides to the fetched Config`s
         :param validate: run validation against schema, defaults to True
-        :param previous: the previous `EvalCommandReturn` in case of pipes
+        :param pipe: the previous `EvalCommandReturn` in case of pipes
         """
         super().__init__(
             EvalCommandParameters(
@@ -87,7 +87,7 @@ class EvalCommand(Command[EvalCommandReturn]):
                 schema=schema,
                 configs=configs,
                 validate=validate,
-                previous=previous,
+                pipe=pipe,
             )
         )
 
@@ -106,17 +106,19 @@ class EvalCommand(Command[EvalCommandReturn]):
 
     def _eval_from_store_set(self, result: EvalCommandReturn) -> EvalCommandReturn:
         store = self.parameters["store"]
-        set_ = self.parameters["set"]
+        config_set = self.parameters["set"]
         store_queries = [
             ConfigStoreQuery(key, store_set)
-            for store_set in set_.hierarchy
+            for store_set in config_set.hierarchy
             for key in result
         ]
         store_configs: Dict[str, Config] = {
             result.key: result
             for result in sorted(
                 store.get(store_queries),
-                key=lambda query_result: len(query_result.set.split(set_.SEPARATOR)),
+                key=lambda query_result: len(
+                    query_result.set.split(config_set.SEPARATOR)
+                ),
             )
         }
         for key, value in result.items():
@@ -151,70 +153,49 @@ class EvalCommand(Command[EvalCommandReturn]):
                 value["result"]["value"] = cfgu.default
         return result
 
-    def _validate_result(self, result: EvalCommandReturn):
-        if self.parameters.get("validate", True):
-            for key, value in result.items():
-                error_scope: List[Tuple[str, str]] = [
-                    (
-                        "EvalCommand",
-                        f"store:{value['context']['store']};set:{value['context']['set']};"  # noqa: E501
-                        f"schema:{value['context']['schema']};key:{key}",
-                    )
-                ]
-                cfgu = value["context"]["cfgu"]
-                evaluated_value = value["result"]["value"]
-                if evaluated_value:
-                    try:
-                        ConfigSchema.CFGU["VALIDATORS"]["valueOptions"](
-                            cfgu, evaluated_value
-                        )
-                        ConfigSchema.CFGU["VALIDATORS"]["valueType"](
-                            cfgu, evaluated_value
-                        )
-                    except (Exception,) as e:
-                        if isinstance(e, ConfigError):
-                            raise e.append_scope(error_scope)
-                        raise e
-                    if cfgu.depends is not None and any(
-                        [
-                            True
-                            for dep in cfgu.depends
-                            if dep not in result.keys()
-                            or not bool(result[dep]["result"]["value"])
-                        ]
-                    ):
-                        raise ConfigError(
-                            reason="invalid config value",
-                            hint=f"one or more depends of key '{key}' is missing a value",  # noqa: E501
-                            scope=error_scope,
-                        )
-                elif cfgu.required:
-                    raise ConfigError(
-                        reason="invalid config value",
-                        hint=f"required key '{key}' is missing a value",
-                        scope=error_scope,
-                    )
+    @staticmethod
+    def _should_override_origin(
+        next_origin: EvaluatedConfigOrigin,
+        previous_origin: Union[EvaluatedConfigOrigin, None],
+    ) -> bool:
+        if not previous_origin:
+            return True
+        if previous_origin == EvaluatedConfigOrigin.EmptyValue:
+            return next_origin != EvaluatedConfigOrigin.EmptyValue
+        if previous_origin == EvaluatedConfigOrigin.SchemaDefault:
+            return next_origin in [
+                EvaluatedConfigOrigin.SchemaDefault,
+                EvaluatedConfigOrigin.StoreSet,
+                EvaluatedConfigOrigin.ConfigsOverride,
+                EvaluatedConfigOrigin.SchemaTemplate,
+            ]
+        return next_origin in [
+            EvaluatedConfigOrigin.StoreSet,
+            EvaluatedConfigOrigin.ConfigsOverride,
+            EvaluatedConfigOrigin.SchemaTemplate,
+        ]
 
     def _eval_previous(self, result: EvalCommandReturn) -> EvalCommandReturn:
-        previous_result = self.parameters.get("previous")
-        if not previous_result:
+        pipe = self.parameters.get("pipe")
+        if not pipe:
             return {}
 
-        def reduce_prev(
+        def reduce_pipe(
             merged: EvalCommandReturn,
             current: Tuple[str, EvalCommandReturnValue],
         ):
             key, value = current
-            if key not in merged or (
-                merged[key]["result"]["origin"] == EvaluatedConfigOrigin.EmptyValue
-                and value["result"]["origin"] != EvaluatedConfigOrigin.EmptyValue
-            ):
+            should_override_merged = self._should_override_origin(
+                value["result"]["origin"],
+                merged.get(key, {}).get("result", {}).get("origin"),
+            )
+            if should_override_merged:
                 merged[key] = value
             return merged
 
         return reduce(
-            reduce_prev,
-            reversed(list(previous_result.items()) + list(result.items())),
+            reduce_pipe,
+            list(pipe.items()) + list(result.items()),
             {},
         )
 
@@ -264,6 +245,53 @@ class EvalCommand(Command[EvalCommandReturn]):
             should_render_templates = has_rendered_at_least_once
         return result
 
+    def _validate_result(self, result: EvalCommandReturn):
+        if self.parameters.get("validate", True):
+            for key, value in result.items():
+                error_scope: List[Tuple[str, str]] = [
+                    (
+                        "EvalCommand",
+                        f"store:{value['context']['store']};"
+                        f"set:{value['context']['set']};"
+                        f"schema:{value['context']['schema']};"
+                        f"key:{key}",
+                    )
+                ]
+                cfgu = value["context"]["cfgu"]
+                evaluated_value = value["result"]["value"]
+                if evaluated_value:
+                    try:
+                        ConfigSchema.CFGU["VALIDATORS"]["valueOptions"](
+                            cfgu, evaluated_value
+                        )
+                        ConfigSchema.CFGU["VALIDATORS"]["valueType"](
+                            cfgu, evaluated_value
+                        )
+                    except (Exception,) as e:
+                        if isinstance(e, ConfigError):
+                            raise e.append_scope(error_scope)
+                        raise e
+                    if cfgu.depends is not None and any(
+                        [
+                            True
+                            for dep in cfgu.depends
+                            if dep not in result.keys()
+                            or not bool(result[dep]["result"]["value"])
+                        ]
+                    ):
+                        raise ConfigError(
+                            reason="invalid config value",
+                            hint=f"one or more depends of key '{key}' "
+                            "is missing a value",
+                            scope=error_scope,
+                        )
+                elif cfgu.required:
+                    raise ConfigError(
+                        reason="invalid config value",
+                        hint=f"required key '{key}' is missing a value",
+                        scope=error_scope,
+                    )
+
     def run(self):
         """
         Runs the eval command.
@@ -275,14 +303,14 @@ class EvalCommand(Command[EvalCommandReturn]):
         :raises: AnyError If anything bad happens.
         """
         store = self.parameters["store"]
-        set_ = self.parameters["set"]
+        config_set = self.parameters["set"]
         schema = self.parameters["schema"]
         store.init()
         result: EvalCommandReturn = {
             key: {
                 "context": {
                     "store": store.type,
-                    "set": set_.path,
+                    "set": config_set.path,
                     "schema": schema.name,
                     "key": key,
                     "cfgu": cfgu,

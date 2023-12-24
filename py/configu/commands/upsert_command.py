@@ -1,6 +1,7 @@
 from typing import Dict, Optional, TypedDict
 
 from . import EvalCommandReturn
+from .eval_command import EvaluatedConfigOrigin
 from ..core import (
     Command,
     Config,
@@ -64,10 +65,16 @@ class UpsertCommand(Command):
         if not configs and not pipe:
             return
         store.init()
-        upset_configs = [
-            config for key, config in pipe.items() if schema.contents.get(key)
-        ]
-        for key, value in configs.items():
+        piped_configs = {
+            key: value["result"]["value"]
+            for key, value in pipe.items()
+            if schema.contents.get(key)
+            and not schema.contents[key].template
+            and value["result"]["origin"] != EvaluatedConfigOrigin.EmptyValue
+            and value["result"]["origin"] != EvaluatedConfigOrigin.SchemaDefault
+        }
+        upset_configs = []
+        for key, value in {**piped_configs, **configs}.items():
             error_scope = [
                 (
                     "UpsertCommand",

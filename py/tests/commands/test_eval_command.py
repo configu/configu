@@ -82,10 +82,12 @@ def test_previous_overrides_configs():
     ).run()
 
     result = EvalCommand(
-        store=store, set=config_set, schema=config_schema, previous=previous
+        store=store, set=config_set, schema=config_schema, pipe=previous
     ).run()
-    assert result["GREETING"]["result"]["value"] == "hello"
-    assert result["GREETING"]["result"]["origin"] == EvaluatedConfigOrigin.SchemaDefault
+    assert result["GREETING"]["result"]["value"] == "bonjour"
+    assert (
+        result["GREETING"]["result"]["origin"] == EvaluatedConfigOrigin.ConfigsOverride
+    )
 
 
 def test_latest_configs_override_previous():
@@ -104,7 +106,7 @@ def test_latest_configs_override_previous():
         store=store,
         set=config_set,
         schema=config_schema,
-        previous=previous,
+        pipe=previous,
         configs={"GREETING": "bonjour", "SUBJECT": "foo"},
     ).run()
     assert result["GREETING"]["result"]["value"] == "bonjour"
