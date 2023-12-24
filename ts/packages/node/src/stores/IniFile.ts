@@ -1,14 +1,14 @@
 import _ from 'lodash';
 import ini from 'ini';
-import {type Config} from '@configu/ts';
-import {FileConfigStore} from './File';
+import { type Config } from '@configu/ts';
+import { FileConfigStore } from './File';
 
 export type IniFileConfigStoreConfiguration = { path: string };
 
 export class IniFileConfigStore extends FileConfigStore {
-  constructor({path}: IniFileConfigStoreConfiguration) {
+  constructor({ path }: IniFileConfigStoreConfiguration) {
     const initialFileState = '';
-    super('ini-file', {path, initialFileState});
+    super('ini-file', { path, initialFileState });
   }
 
   parse(fileContent: string) {
@@ -16,7 +16,7 @@ export class IniFileConfigStore extends FileConfigStore {
 
     return Object.entries(iniObject).flatMap(([key, value]) => {
       if (typeof value === 'string') {
-        return [{set: '', key, value}];
+        return [{ set: '', key, value }];
       }
       if (_.isPlainObject(value)) {
         return _(Object.entries(value))
@@ -35,7 +35,7 @@ export class IniFileConfigStore extends FileConfigStore {
   stringify(nextConfigs: Config[]) {
     const groupedConfigs = _(nextConfigs)
       .groupBy('set')
-      .mapValues((setConfigs) => _.merge({}, ...setConfigs.map((config) => ({[config.key]: config.value}))))
+      .mapValues((setConfigs) => _.merge({}, ...setConfigs.map((config) => ({ [config.key]: config.value }))))
       .value();
     const rootConfigs = groupedConfigs[''];
     const iniObject = _.merge(rootConfigs, _.omit(groupedConfigs, ''));
