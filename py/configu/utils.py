@@ -1,20 +1,9 @@
 import json
 import re
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Tuple
 
 import chevron
 import jsonschema
-
-
-def error_message(
-    message: str,
-    location: Optional[List[str]] = None,
-    suggestion: Optional[str] = None,
-) -> str:
-    location = f"at {' > '.join(location)}" if location else None
-    return " ".join(
-        [detail for detail in [message, location, suggestion] if detail is not None]
-    )
 
 
 class ConfigError(Exception):
