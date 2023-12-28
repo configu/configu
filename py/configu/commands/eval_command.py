@@ -233,16 +233,16 @@ class EvalCommand(Command[EvalCommandReturn]):
             current: Tuple[str, EvalCommandReturnValue],
         ):
             key, value = current
-            if key not in merged or (
-                merged[key]["result"]["origin"] == EvaluatedConfigOrigin.EmptyValue
-                and value["result"]["origin"] != EvaluatedConfigOrigin.EmptyValue
+            if key not in merged or self._should_override_origin(
+                value["result"]["origin"],
+                merged[key]["result"]["origin"],
             ):
                 merged[key] = value
             return merged
 
         return reduce(
             reduce_prev,
-            reversed(list(previous_result.items()) + list(result.items())),
+            iter(list(previous_result.items()) + list(result.items())),
             {},
         )
 
@@ -291,6 +291,27 @@ class EvalCommand(Command[EvalCommandReturn]):
                 has_rendered_at_least_once = True
             should_render_templates = has_rendered_at_least_once
         return result
+
+    @staticmethod
+    def _should_override_origin(
+        next_origin: EvaluatedConfigOrigin, previous_origin: EvaluatedConfigOrigin
+    ) -> bool:
+        if previous_origin is None:
+            return True
+        if previous_origin == EvaluatedConfigOrigin.EmptyValue:
+            return next_origin != EvaluatedConfigOrigin.EmptyValue
+        if previous_origin == EvaluatedConfigOrigin.SchemaDefault:
+            return next_origin in (
+                EvaluatedConfigOrigin.SchemaDefault,
+                EvaluatedConfigOrigin.StoreSet,
+                EvaluatedConfigOrigin.ConfigsOverride,
+                EvaluatedConfigOrigin.SchemaTemplate,
+            )
+        return next_origin in (
+            EvaluatedConfigOrigin.StoreSet,
+            EvaluatedConfigOrigin.ConfigsOverride,
+            EvaluatedConfigOrigin.SchemaTemplate,
+        )
 
     def run(self):
         """

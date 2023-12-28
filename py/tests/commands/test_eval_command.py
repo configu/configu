@@ -55,7 +55,7 @@ def test_configs_override_store():
     assert result["GREETING"]["result"]["value"] == "bonjour"
     assert result["GREETING"]["result"]["origin"] == EvaluatedConfigOrigin.ConfigsOverride
 
-def test_previous_overrides_configs():
+def test_previous_does_not_override_configs():
   store = InMemoryConfigStore()
   config_set = ConfigSet("")
   config_schema = ConfigSchema("tests/staticfiles/config_schemas/valid/complex.cfgu.json")
@@ -65,15 +65,15 @@ def test_previous_overrides_configs():
       schema=config_schema,
       configs={"GREETING": "bonjour", "SUBJECT": "foo"},
   ).run()
-
   result = EvalCommand(
     store=store,
     set=config_set,
     schema=config_schema,
     previous=previous
-  ).run()
-  assert result["GREETING"]["result"]["value"] == "hello"
-  assert result["GREETING"]["result"]["origin"] == EvaluatedConfigOrigin.SchemaDefault
+  )
+  result = result.run()
+  assert result["GREETING"]["result"]["value"] == "bonjour"
+  assert result["GREETING"]["result"]["origin"] == EvaluatedConfigOrigin.ConfigsOverride
 
 def test_latest_configs_override_previous():
   store = InMemoryConfigStore()
