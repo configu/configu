@@ -155,9 +155,10 @@ class EvalCommand(Command[EvalCommandReturn]):
 
     @staticmethod
     def _should_override_origin(
-        next_origin: EvaluatedConfigOrigin, previous_origin: EvaluatedConfigOrigin
+        next_origin: EvaluatedConfigOrigin,
+        previous_origin: Optional[EvaluatedConfigOrigin],
     ) -> bool:
-        if previous_origin is None:
+        if not previous_origin:
             return True
         if previous_origin == EvaluatedConfigOrigin.EmptyValue:
             return next_origin != EvaluatedConfigOrigin.EmptyValue

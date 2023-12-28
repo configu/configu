@@ -16,6 +16,7 @@ def test_empty_value():
         set=config_set,
         schema=config_schema,
     ).run()
+
     assert result["GREETING"]["result"]["value"] == ""
     assert result["GREETING"]["result"]["origin"] == EvaluatedConfigOrigin.EmptyValue
 
@@ -31,6 +32,7 @@ def test_default_overrides_empty():
         schema=config_schema,
         configs={"SUBJECT": "foo"},
     ).run()
+
     assert result["GREETING"]["result"]["value"] == "hello"
     assert result["GREETING"]["result"]["origin"] == EvaluatedConfigOrigin.SchemaDefault
 
@@ -47,6 +49,7 @@ def test_store_overrides_default():
         schema=config_schema,
         configs={"SUBJECT": "foo"},
     ).run()
+
     assert result["GREETING"]["result"]["value"] == "hello"
     assert result["GREETING"]["result"]["origin"] == EvaluatedConfigOrigin.StoreSet
 
@@ -63,6 +66,7 @@ def test_configs_override_store():
         schema=config_schema,
         configs={"GREETING": "bonjour"},
     ).run()
+
     assert result["GREETING"]["result"]["value"] == "bonjour"
     assert (
         result["GREETING"]["result"]["origin"] == EvaluatedConfigOrigin.ConfigsOverride
@@ -82,8 +86,8 @@ def test_previous_does_not_override_configs():
     ).run()
     result = EvalCommand(
         store=store, set=config_set, schema=config_schema, pipe=previous
-    )
-    result = result.run()
+    ).run()
+
     assert result["GREETING"]["result"]["value"] == "bonjour"
     assert (
         result["GREETING"]["result"]["origin"] == EvaluatedConfigOrigin.ConfigsOverride
@@ -101,7 +105,6 @@ def test_latest_configs_override_previous():
         schema=config_schema,
         configs={"GREETING": "hello", "SUBJECT": "foo"},
     ).run()
-
     result = EvalCommand(
         store=store,
         set=config_set,
@@ -109,6 +112,7 @@ def test_latest_configs_override_previous():
         pipe=previous,
         configs={"GREETING": "bonjour", "SUBJECT": "foo"},
     ).run()
+
     assert result["GREETING"]["result"]["value"] == "bonjour"
     assert (
         result["GREETING"]["result"]["origin"] == EvaluatedConfigOrigin.ConfigsOverride
@@ -123,6 +127,7 @@ def test_resolves_templates():
     result = EvalCommand(
         store=store, set=config_set, schema=config_schema, configs={"SUBJECT": "foo"}
     ).run()
+
     assert result["MESSAGE"]["result"]["value"] == "hello, foo!"
     assert result["MESSAGE"]["result"]["origin"] == EvaluatedConfigOrigin.SchemaTemplate
 
@@ -133,6 +138,7 @@ def test_validates_values():
     config_set = ConfigSet("")
     config_schema = ConfigSchema(schema.name, schema.contents)
     store.set([Config("GREETING", "", "hello")])
+
     with pytest.raises(ConfigError):
         EvalCommand(
             store=store,
