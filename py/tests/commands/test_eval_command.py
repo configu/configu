@@ -69,7 +69,7 @@ def test_configs_override_store():
     )
 
 
-def test_previous_overrides_configs():
+def test_previous_does_not_override_configs():
     schema = DummyConfigSchema(DummySchemas.ValidComplex)
     store = InMemoryConfigStore()
     config_set = ConfigSet("")
@@ -80,10 +80,10 @@ def test_previous_overrides_configs():
         schema=config_schema,
         configs={"GREETING": "bonjour", "SUBJECT": "foo"},
     ).run()
-
     result = EvalCommand(
         store=store, set=config_set, schema=config_schema, pipe=previous
-    ).run()
+    )
+    result = result.run()
     assert result["GREETING"]["result"]["value"] == "bonjour"
     assert (
         result["GREETING"]["result"]["origin"] == EvaluatedConfigOrigin.ConfigsOverride

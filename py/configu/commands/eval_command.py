@@ -1,6 +1,6 @@
 from enum import Enum
+from typing import Dict, List, Optional, Tuple, TypedDict
 from functools import reduce
-from typing import Dict, List, Optional, Tuple, TypedDict, Union
 
 from ..core import (
     Cfgu,
@@ -155,25 +155,24 @@ class EvalCommand(Command[EvalCommandReturn]):
 
     @staticmethod
     def _should_override_origin(
-        next_origin: EvaluatedConfigOrigin,
-        previous_origin: Union[EvaluatedConfigOrigin, None],
+        next_origin: EvaluatedConfigOrigin, previous_origin: EvaluatedConfigOrigin
     ) -> bool:
-        if not previous_origin:
+        if previous_origin is None:
             return True
         if previous_origin == EvaluatedConfigOrigin.EmptyValue:
             return next_origin != EvaluatedConfigOrigin.EmptyValue
         if previous_origin == EvaluatedConfigOrigin.SchemaDefault:
-            return next_origin in [
+            return next_origin in (
                 EvaluatedConfigOrigin.SchemaDefault,
                 EvaluatedConfigOrigin.StoreSet,
                 EvaluatedConfigOrigin.ConfigsOverride,
                 EvaluatedConfigOrigin.SchemaTemplate,
-            ]
-        return next_origin in [
+            )
+        return next_origin in (
             EvaluatedConfigOrigin.StoreSet,
             EvaluatedConfigOrigin.ConfigsOverride,
             EvaluatedConfigOrigin.SchemaTemplate,
-        ]
+        )
 
     def _eval_previous(self, result: EvalCommandReturn) -> EvalCommandReturn:
         pipe = self.parameters.get("pipe")
@@ -185,17 +184,16 @@ class EvalCommand(Command[EvalCommandReturn]):
             current: Tuple[str, EvalCommandReturnValue],
         ):
             key, value = current
-            should_override_merged = self._should_override_origin(
+            if key not in merged or self._should_override_origin(
                 value["result"]["origin"],
-                merged.get(key, {}).get("result", {}).get("origin"),
-            )
-            if should_override_merged:
+                merged[key]["result"]["origin"],
+            ):
                 merged[key] = value
             return merged
 
         return reduce(
             reduce_pipe,
-            list(pipe.items()) + list(result.items()),
+            iter(list(pipe.items()) + list(result.items())),
             {},
         )
 
