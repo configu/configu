@@ -6,6 +6,7 @@ import { TMPL, type EvalCommandReturn, EvaluatedConfigOrigin, type ExportCommand
 import { ExportCommand } from '@configu/node';
 import { CONFIG_FORMAT_TYPE, formatConfigs, type ConfigFormat } from '@configu/lib';
 import { BaseCommand } from '../base';
+import { readFile } from '../helpers';
 
 export const NO_CONFIGS_WARNING_TEXT = 'no configuration was fetched';
 export const CONFIG_EXPORT_RUN_DEFAULT_ERROR_TEXT = 'could not export configurations';
@@ -115,7 +116,7 @@ export default class Export extends BaseCommand<typeof Export> {
 
   async exportConfigs(configs: ExportCommandReturn, label: string) {
     if (this.flags.template) {
-      const templateContent = await this.readFile(this.flags.template);
+      const templateContent = await readFile(this.flags.template);
       let templateContext: TemplateContext = configs;
       if (this.flags['template-input'] === 'array') {
         templateContext = _(configs)
@@ -156,24 +157,24 @@ export default class Export extends BaseCommand<typeof Export> {
   }
 
   public async run(): Promise<void> {
-    let previous = await this.readPreviousEvalCommandReturn();
+    let pipe = await this.readPreviousEvalCommandReturn();
 
-    if (_.isEmpty(previous)) {
+    if (_.isEmpty(pipe)) {
       this.warn(NO_CONFIGS_WARNING_TEXT);
       return;
     }
 
     if (!this.flags.empty) {
-      previous = _.omitBy(previous, ({ result: { origin } }) => origin === EvaluatedConfigOrigin.EmptyValue);
+      pipe = _.omitBy(pipe, ({ result: { origin } }) => origin === EvaluatedConfigOrigin.EmptyValue);
     }
 
     if (this.flags.explain) {
-      this.explainConfigs(previous);
+      this.explainConfigs(pipe);
       return;
     }
 
     const label = this.flags.label ?? `configs-${Date.now()}`;
-    const result = await new ExportCommand({ data: previous, env: false }).run();
+    const result = await new ExportCommand({ pipe, env: false }).run();
     await this.exportConfigs(result, label);
   }
 }

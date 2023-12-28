@@ -29,7 +29,7 @@ export default class Test extends BaseCommand<typeof Test> {
   };
 
   public async run(): Promise<void> {
-    const store = await this.getStoreInstanceByStoreFlag(this.flags.store);
+    const store = this.getStoreInstanceByStoreFlag(this.flags.store);
 
     try {
       await new TestCommand({ store, clean: this.flags.clean }).run();
