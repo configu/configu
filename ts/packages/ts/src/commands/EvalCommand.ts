@@ -26,6 +26,7 @@ export type EvalCommandParameters = {
   set: ConfigSet;
   schema: ConfigSchema;
   configs?: { [key: string]: string };
+  keys?: (key: string) => string;
   pipe?: EvalCommandReturn;
   validate?: boolean;
 };
@@ -264,6 +265,27 @@ export class EvalCommand extends Command<EvalCommandReturn> {
       });
   }
 
+  private mutateKeys(result: EvalCommandReturn): EvalCommandReturn {
+    const { keys } = this.parameters;
+
+    if (!keys) {
+      return result;
+    }
+    const existingKeys = _.keys(result);
+
+    return _.mapKeys(result, (current, key) => {
+      try {
+        const mutatedKey = keys(key);
+        if (!mutatedKey || typeof mutatedKey !== 'string' || existingKeys.includes(mutatedKey)) {
+          throw new Error('invalid config key');
+        }
+        return mutatedKey;
+      } catch (error) {
+        return key;
+      }
+    });
+  }
+
   async run() {
     const { store, set, schema } = this.parameters;
 
@@ -307,6 +329,7 @@ export class EvalCommand extends Command<EvalCommandReturn> {
       ...result,
       ...this.evalTemplates(result),
     };
+    result = this.mutateKeys(result);
 
     this.validateResult(result);
 
