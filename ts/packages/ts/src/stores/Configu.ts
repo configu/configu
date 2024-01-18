@@ -36,6 +36,12 @@ export class ConfiguConfigStore extends ConfigStore {
   }
 
   async set(configs: Config[]): Promise<void> {
-    await this.client.put('/config', { configs });
+    const response = await this.client.put('/config', { configs });
+    if (response.status === 202) {
+      const protectedSet = response.data.diff.pending[0].set;
+      throw new Error(
+        `The ConfigSet '${protectedSet}' is protected; your change will be reviewed by an admin. Please contact your admin to approve your request using the following link: ${response.data.queueUrl}?sp=${protectedSet}`,
+      );
+    }
   }
 }
