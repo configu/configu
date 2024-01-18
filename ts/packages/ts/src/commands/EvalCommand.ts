@@ -14,9 +14,11 @@ export enum EvaluatedConfigOrigin {
   EmptyValue = 'EMPTY_VALUE',
 }
 
+export type EvalCommandPipeMode = 'include' | 'forward';
+
 export type EvalCommandReturn = {
   [key: string]: {
-    context: { store: string; set: string; schema: string; key: string; cfgu: Cfgu };
+    context: { store: string; set: string; schema: string; key: string; cfgu: Cfgu; pipeMode: EvalCommandPipeMode };
     result: { origin: EvaluatedConfigOrigin; source: string; value: string };
   };
 };
@@ -28,6 +30,7 @@ export type EvalCommandParameters = {
   configs?: { [key: string]: string };
   pipe?: EvalCommandReturn;
   validate?: boolean;
+  pipeMode?: EvalCommandPipeMode;
 };
 
 export class EvalCommand extends Command<EvalCommandReturn> {
@@ -265,7 +268,7 @@ export class EvalCommand extends Command<EvalCommandReturn> {
   }
 
   async run() {
-    const { store, set, schema } = this.parameters;
+    const { store, set, schema, pipeMode = 'include' } = this.parameters;
 
     await store.init();
 
@@ -277,6 +280,7 @@ export class EvalCommand extends Command<EvalCommandReturn> {
           schema: schema.name,
           key,
           cfgu,
+          pipeMode,
         },
         result: {
           origin: EvaluatedConfigOrigin.EmptyValue,
