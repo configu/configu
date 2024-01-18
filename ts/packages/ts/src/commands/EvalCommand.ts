@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { Command } from '../Command';
 import { type Cfgu } from '../types';
-import { ConfigError, TMPL } from '../utils';
+import { ConfigError, TMPL, NAME } from '../utils';
 import { type ConfigStore } from '../ConfigStore';
 import { ConfigSet } from '../ConfigSet';
 import { ConfigSchema } from '../ConfigSchema';
@@ -271,12 +271,11 @@ export class EvalCommand extends Command<EvalCommandReturn> {
     if (!keys) {
       return result;
     }
-    const existingKeys = _.keys(result);
 
     return _.mapKeys(result, (current, key) => {
       try {
         const mutatedKey = keys(key);
-        if (!mutatedKey || typeof mutatedKey !== 'string' || existingKeys.includes(mutatedKey)) {
+        if (!NAME(mutatedKey)) {
           throw new Error('invalid config key');
         }
         return mutatedKey;
