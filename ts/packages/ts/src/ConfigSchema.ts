@@ -363,6 +363,9 @@ const cfguStructureValidator = (cfgu: Cfgu) => {
         `value "${cfgu.default}" must be one of ${_.map(cfgu.options, (option) => `'${option}'`).join(',')}`,
       );
     }
+    if (cfgu.lazy) {
+      throw new ConfigError(reason, `default mustn't set together with lazy property`);
+    }
     try {
       cfguValueTypeValidator(cfgu, cfgu.default);
     } catch (error) {
@@ -380,10 +383,14 @@ const cfguStructureValidator = (cfgu: Cfgu) => {
   }
 
   if (cfgu.template) {
+    const reason = 'invalid template property';
+    if (cfgu.lazy) {
+      throw new ConfigError(reason, `template mustn't set together with lazy property`);
+    }
     try {
       TMPL.parse(cfgu.template);
     } catch (error) {
-      throw new ConfigError('invalid template property', error.message);
+      throw new ConfigError(reason, error.message);
     }
     // todo: this is a "weak" validation and NAME() util collides with CONFIGU_SET.[prop]
     // const isInvalidTemplate =
