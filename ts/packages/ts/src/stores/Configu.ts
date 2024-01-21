@@ -40,7 +40,7 @@ export class ConfiguConfigStore extends ConfigStore {
     if (response.status === 202) {
       const protectedSet = response.data.diff.pending[0].set;
       throw new Error(
-        `The ConfigSet '${protectedSet}' is protected; your change will be reviewed by an admin. Please contact your admin to approve your request using the following link: ${response.data.queueUrl}?sp=${protectedSet}`,
+        `Your recent upsert to the ${protectedSet} ConfigSet is currently pending in its approval queue, as ${protectedSet} is a "protected set". To proceed with these changes, please review and approve them at ${response.data.queueUrl}?sp=${protectedSet}. If you lack the necessary permissions, reach out to an authorized org member.`,
       );
     }
   }
