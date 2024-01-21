@@ -50,8 +50,9 @@ def parse_template(template: str) -> List[str]:
     template_vars = []
     for tag_type, tag_key in chevron.tokenizer.tokenize(template):
         if tag_type not in ["variable", "literal"]:
-            # Why is this not a ConfigError?
-            raise Exception(f"template '{template}' mustn't contain unsupported tokens")
+            raise ConfigError(
+                reason=f"template '{template}' mustn't contain unsupported tokens"
+            )
         if tag_type == "variable":
             template_vars.append(tag_key)
     return template_vars
