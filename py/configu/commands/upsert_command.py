@@ -55,7 +55,7 @@ class UpsertCommand(Command):
     def run(self):
         """Validates the configs against the schema and upsert to the store
 
-        :raises ValueError: if any config is invalid for the schema
+        :raises ConfigError: if any config is invalid for the schema
         """
         store = self.parameters["store"]
         set_ = self.parameters["set"]

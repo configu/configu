@@ -299,7 +299,7 @@ class EvalCommand(Command[EvalCommandReturn]):
         The evaluated configs contains the command's
         results and metadata
 
-        :raises: AnyError If anything bad happens.
+        :raises: ConfigError If anything bad happens.
         """
         store = self.parameters["store"]
         config_set = self.parameters["set"]
