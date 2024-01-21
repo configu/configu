@@ -60,6 +60,10 @@ export class UpsertCommand extends Command<void> {
           );
         }
 
+        if (cfgu.lazy) {
+          throw new ConfigError('invalid config key', `key "${key}" is lazy and cannot be set directly`, errorScope);
+        }
+
         if (value) {
           if (cfgu.template) {
             throw new ConfigError(
