@@ -45,6 +45,12 @@ export class EvalCommand extends Command<EvalCommandReturn> {
       const hasConfigOverrideValue = Object.prototype.hasOwnProperty.call(this.parameters.configs, context.key);
 
       if (!hasConfigOverrideValue) {
+        const { required, lazy } = context.cfgu;
+        if (required && lazy) {
+          throw new ConfigError('invalid config value', `lazy key "${context.key}" is missing a value`, [
+            ['EvalCommand', `store:${context.store};set:${context.set};schema:${context.schema};key:${context.key}`],
+          ]);
+        }
         return current;
       }
 
@@ -291,7 +297,10 @@ export class EvalCommand extends Command<EvalCommandReturn> {
       ...(await this.evalFromStoreSet(
         _.pickBy(
           result,
-          (current) => current.result.origin === EvaluatedConfigOrigin.EmptyValue && !current.context.cfgu.template,
+          (current) =>
+            current.result.origin === EvaluatedConfigOrigin.EmptyValue &&
+            !current.context.cfgu.template &&
+            !current.context.cfgu.lazy,
         ),
       )),
     };
