@@ -92,8 +92,9 @@ class CfguType(Enum):
 
 @dataclass
 class Cfgu:
-    """A generic declaration of a Config, aka Cfgu that specifies information about its type and
-    other characteristics
+    """A generic declaration of a `Config`, using properties like type, description and
+    constraints.
+    https://configu.com/docs/cfgu/
     """
     type: CfguType
     default: Optional[str] = None
@@ -143,7 +144,10 @@ class Cfgu:
 
 @dataclass
 class Config:
-    """A generic representation of a software configuration, aka Config"""
+    """A generic representation of `application configuration` using three properties: `key`,
+    `value`, `set`.
+    https://configu.com/docs/terminology/#config
+    """
     key: str
     set: str
     value: str
@@ -161,32 +165,6 @@ class Config:
         result["key"] = from_str(self.key)
         result["set"] = from_str(self.set)
         result["value"] = from_str(self.value)
-        return result
-
-
-class ConfigSchemaType(Enum):
-    JSON = "json"
-
-
-@dataclass
-class ConfigSchema:
-    """An interface of a <file>.cfgu.json, aka ConfigSchema
-    that contains binding records between a unique Config.<key> and its Cfgu declaration
-    """
-    path: str
-    type: ConfigSchemaType
-
-    @staticmethod
-    def from_dict(obj: Any) -> 'ConfigSchema':
-        assert isinstance(obj, dict)
-        path = from_str(obj.get("path"))
-        type = ConfigSchemaType(obj.get("type"))
-        return ConfigSchema(path, type)
-
-    def to_dict(self) -> dict:
-        result: dict = {}
-        result["path"] = from_str(self.path)
-        result["type"] = to_enum(ConfigSchemaType, self.type)
         return result
 
 
@@ -239,9 +217,33 @@ class ConfigSchemaContentsValue:
 
 
 @dataclass
+class ConfigSchema:
+    """A file containing binding records linking each unique `ConfigKey` to its corresponding
+    `Cfgu` declaration.
+    https://configu.com/docs/config-schema/
+    """
+    contents: Dict[str, ConfigSchemaContentsValue]
+    name: str
+
+    @staticmethod
+    def from_dict(obj: Any) -> 'ConfigSchema':
+        assert isinstance(obj, dict)
+        contents = from_dict(ConfigSchemaContentsValue.from_dict, obj.get("contents"))
+        name = from_str(obj.get("name"))
+        return ConfigSchema(contents, name)
+
+    def to_dict(self) -> dict:
+        result: dict = {}
+        result["contents"] = from_dict(lambda x: to_class(ConfigSchemaContentsValue, x), self.contents)
+        result["name"] = from_str(self.name)
+        return result
+
+
+@dataclass
 class ConfigSet:
-    """An interface of a path in an hierarchy, aka ConfigSet
-    that uniquely groups Config.<key> with their Config.<value>.
+    """A unique, case-sensitive path within a tree-like data structure that groups `Config`s
+    contextually.
+    https://configu.com/docs/config-set/
     """
     hierarchy: List[str]
     path: str
@@ -257,25 +259,6 @@ class ConfigSet:
         result: dict = {}
         result["hierarchy"] = from_list(from_str, self.hierarchy)
         result["path"] = from_str(self.path)
-        return result
-
-
-@dataclass
-class ConfigStore:
-    """An interface of a storage, aka ConfigStore
-    that I/Os Config records (Config[])
-    """
-    type: str
-
-    @staticmethod
-    def from_dict(obj: Any) -> 'ConfigStore':
-        assert isinstance(obj, dict)
-        type = from_str(obj.get("type"))
-        return ConfigStore(type)
-
-    def to_dict(self) -> dict:
-        result: dict = {}
-        result["type"] = from_str(self.type)
         return result
 
 
@@ -320,6 +303,25 @@ class ConfigStoreContentsElement:
         return result
 
 
+@dataclass
+class ConfigStore:
+    """A storage engine interface for `Config`s records.
+    https://configu.com/docs/config-store/
+    """
+    type: str
+
+    @staticmethod
+    def from_dict(obj: Any) -> 'ConfigStore':
+        assert isinstance(obj, dict)
+        type = from_str(obj.get("type"))
+        return ConfigStore(type)
+
+    def to_dict(self) -> dict:
+        result: dict = {}
+        result["type"] = from_str(self.type)
+        return result
+
+
 def cfgu_type_from_dict(s: Any) -> CfguType:
     return CfguType(s)
 
@@ -344,22 +346,6 @@ def config_to_dict(x: Config) -> Any:
     return to_class(Config, x)
 
 
-def config_schema_type_from_dict(s: Any) -> ConfigSchemaType:
-    return ConfigSchemaType(s)
-
-
-def config_schema_type_to_dict(x: ConfigSchemaType) -> Any:
-    return to_enum(ConfigSchemaType, x)
-
-
-def config_schema_from_dict(s: Any) -> ConfigSchema:
-    return ConfigSchema.from_dict(s)
-
-
-def config_schema_to_dict(x: ConfigSchema) -> Any:
-    return to_class(ConfigSchema, x)
-
-
 def config_schema_contents_value_from_dict(s: Any) -> ConfigSchemaContentsValue:
     return ConfigSchemaContentsValue.from_dict(s)
 
@@ -376,20 +362,20 @@ def config_schema_contents_to_dict(x: Dict[str, ConfigSchemaContentsValue]) -> A
     return from_dict(lambda x: to_class(ConfigSchemaContentsValue, x), x)
 
 
+def config_schema_from_dict(s: Any) -> ConfigSchema:
+    return ConfigSchema.from_dict(s)
+
+
+def config_schema_to_dict(x: ConfigSchema) -> Any:
+    return to_class(ConfigSchema, x)
+
+
 def config_set_from_dict(s: Any) -> ConfigSet:
     return ConfigSet.from_dict(s)
 
 
 def config_set_to_dict(x: ConfigSet) -> Any:
     return to_class(ConfigSet, x)
-
-
-def config_store_from_dict(s: Any) -> ConfigStore:
-    return ConfigStore.from_dict(s)
-
-
-def config_store_to_dict(x: ConfigStore) -> Any:
-    return to_class(ConfigStore, x)
 
 
 def config_store_query_from_dict(s: Any) -> ConfigStoreQuery:
@@ -414,3 +400,11 @@ def config_store_contents_from_dict(s: Any) -> List[ConfigStoreContentsElement]:
 
 def config_store_contents_to_dict(x: List[ConfigStoreContentsElement]) -> Any:
     return from_list(lambda x: to_class(ConfigStoreContentsElement, x), x)
+
+
+def config_store_from_dict(s: Any) -> ConfigStore:
+    return ConfigStore.from_dict(s)
+
+
+def config_store_to_dict(x: ConfigStore) -> Any:
+    return to_class(ConfigStore, x)

@@ -1,10 +1,11 @@
-from configu import InMemoryConfigStore, ConfigStoreQuery, Config
+from configu import Config, ConfigStoreQuery, InMemoryConfigStore
+
 
 def test_values_roundtrips_correctly():
     store = InMemoryConfigStore()
     configs = [
-      Config("foo", "", "bar"),
-      Config("foo1", "", "baz"),
+        Config("foo", "", "bar"),
+        Config("foo1", "", "baz"),
     ]
     store.set(configs)
     queries = [
@@ -13,10 +14,11 @@ def test_values_roundtrips_correctly():
     ]
     assert store.get(queries) == configs
 
+
 def test_empty_values_removed_from_store():
     store = InMemoryConfigStore()
     configs = [
-      Config("foo", "", "bar"),
+        Config("foo", "", "bar"),
     ]
     store.set([Config("foo", "", "bar")])
     store.set([Config("foo", "", "")])

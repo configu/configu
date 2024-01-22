@@ -2,7 +2,6 @@ from .generated import (
     Cfgu,
     CfguType,
     Config,
-    ConfigSchemaType,
     ConfigStoreQuery,
 )
 from .command import Command
@@ -14,7 +13,6 @@ __all__ = [
     "Cfgu",
     "CfguType",
     "Config",
-    "ConfigSchemaType",
     "ConfigStoreQuery",
     "Command",
     "ConfigSchema",
