@@ -9,6 +9,7 @@ import {
   type EvalCommandParameters,
   DeleteCommand,
   type EvalCommandReturn,
+  ExportCommand,
 } from '..';
 
 describe(`commands`, () => {
@@ -220,6 +221,63 @@ describe(`commands`, () => {
         const deletePromises = parameters.upsert.map((p) => new DeleteCommand(p).run());
         await Promise.all(deletePromises);
       }
+    });
+    describe('PipeMode', () => {
+      test('run EvalCommand and pipe to another, all keys should exists in export', async () => {
+        const evalMyName = await new EvalCommand({
+          store: store1,
+          set: set1,
+          schema: new ConfigSchema('myName', {
+            MY_NAME: {
+              type: 'String',
+            },
+          }),
+          configs: {
+            MY_NAME: 'What?',
+          },
+        }).run();
+        const evalQuote = await new EvalCommand({
+          store: store1,
+          set: set1,
+          schema: new ConfigSchema('quote', {
+            QUOTE: {
+              type: 'String',
+              template: 'Hi! My name is {{MY_NAME}}, my name is Who?',
+            },
+          }),
+          pipe: evalMyName,
+        }).run();
+        const evaluatedConfigs = await new ExportCommand({ pipe: evalQuote }).run();
+        expect(evaluatedConfigs).toStrictEqual({ MY_NAME: 'What?', QUOTE: 'Hi! My name is What?, my name is Who?' });
+      });
+      test("run EvalCommand(pipeMode='forward') and pipe to another, only keys from the second should exists in export", async () => {
+        const evalMyName = await new EvalCommand({
+          store: store1,
+          set: set1,
+          schema: new ConfigSchema('myName', {
+            MY_NAME: {
+              type: 'String',
+            },
+          }),
+          configs: {
+            MY_NAME: 'What?',
+          },
+          pipeMode: 'forward',
+        }).run();
+        const evalQuote = await new EvalCommand({
+          store: store1,
+          set: set1,
+          schema: new ConfigSchema('quote', {
+            QUOTE: {
+              type: 'String',
+              template: 'Hi! My name is {{MY_NAME}}, my name is Who?',
+            },
+          }),
+          pipe: evalMyName,
+        }).run();
+        const evaluatedConfigs = await new ExportCommand({ pipe: evalQuote }).run();
+        expect(evaluatedConfigs).toStrictEqual({ QUOTE: 'Hi! My name is What?, my name is Who?' });
+      });
     });
   });
 });
