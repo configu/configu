@@ -17,9 +17,6 @@ export class ExportCommand extends Command<ExportCommandReturn> {
 
   async run() {
     const { pipe } = this.parameters;
-    return _(pipe)
-      .pickBy(({ context }) => context.pipeMode === 'include')
-      .mapValues(({ result }) => result.value)
-      .value();
+    return _.mapValues(pipe, (current) => current.result.value);
   }
 }

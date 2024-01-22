@@ -278,6 +278,49 @@ describe(`commands`, () => {
         const evaluatedConfigs = await new ExportCommand({ pipe: evalQuote }).run();
         expect(evaluatedConfigs).toStrictEqual({ QUOTE: 'Hi! My name is What?, my name is Who?' });
       });
+      test("run EvalCommand(pipeMode='forward') and pipe to another, and another only keys from the second should exists in export", async () => {
+        const evalMyName = await new EvalCommand({
+          store: store1,
+          set: set1,
+          schema: new ConfigSchema('myName', {
+            MY_NAME: {
+              type: 'String',
+            },
+          }),
+          configs: {
+            MY_NAME: 'What?',
+          },
+          pipeMode: 'forward',
+        }).run();
+        const evalQuote = await new EvalCommand({
+          store: store1,
+          set: set1,
+          schema: new ConfigSchema('quote', {
+            QUOTE: {
+              type: 'String',
+              template: 'Hi! My name is {{MY_NAME}}, my name is Who?',
+            },
+          }),
+          pipeMode: 'forward',
+          pipe: evalMyName,
+        }).run();
+        const lastEval = await new EvalCommand({
+          store: store1,
+          set: set1,
+          schema: new ConfigSchema('last', {
+            MY_QUOTE: {
+              type: 'String',
+              template: '{{QUOTE}} My Name is Chiky Chicky Slim Shady',
+            },
+          }),
+          pipeMode: 'forward',
+          pipe: evalQuote,
+        }).run();
+        const evaluatedConfigs = await new ExportCommand({ pipe: lastEval }).run();
+        expect(evaluatedConfigs).toStrictEqual({
+          MY_QUOTE: 'Hi! My name is , my name is Who? My Name is Chiky Chicky Slim Shady',
+        });
+      });
     });
   });
 });

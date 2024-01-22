@@ -227,6 +227,14 @@ export class EvalCommand extends Command<EvalCommandReturn> {
     return resultWithTemplates;
   }
 
+  private removeForwardsFromPipe(result: EvalCommandReturn): EvalCommandReturn {
+    const { pipe } = this.parameters;
+    if (!pipe) {
+      return result;
+    }
+    return _.omitBy(result, (current) => pipe[current.context.key] && current.context.pipeMode === 'forward');
+  }
+
   private validateResult(result: EvalCommandReturn): void {
     const { validate = true } = this.parameters;
 
@@ -311,6 +319,8 @@ export class EvalCommand extends Command<EvalCommandReturn> {
       ...result,
       ...this.evalTemplates(result),
     };
+
+    result = this.removeForwardsFromPipe(result);
 
     this.validateResult(result);
 
