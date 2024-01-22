@@ -289,6 +289,29 @@ describe(`commands`, () => {
       const exportedConfigs = await new ExportCommand({ pipe: evalResult, keys: (key) => ({ key }) }).run();
       expect(exportedConfigs).toStrictEqual({ KEY0: 'KEY0', KEY1: 'KEY1' });
     });
+    test('Export with bad keys mutation callback - returns number', async () => {
+      const evalResult = await new EvalCommand({
+        store: store1,
+        set: set1,
+        schema: new ConfigSchema('mutate', {
+          KEY0: {
+            type: 'String',
+          },
+          KEY1: {
+            type: 'String',
+          },
+        }),
+        configs: {
+          KEY0: 'KEY0',
+          KEY1: 'KEY1',
+        },
+      }).run();
+
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
+      const exportedConfigs = await new ExportCommand({ pipe: evalResult, keys: (key) => 5 }).run();
+      expect(exportedConfigs).toStrictEqual({ KEY0: 'KEY0', KEY1: 'KEY1' });
+    });
     test('Export with bad keys mutation callback - returns empty string', async () => {
       const evalResult = await new EvalCommand({
         store: store1,
