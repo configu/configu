@@ -9,9 +9,10 @@ export type ConfiguConfigStoreConfiguration = {
   source?: string;
 };
 
+const ConfiguConfigStoreApprovalQueueErrorName = 'ConfiguConfigStoreApprovalQueueError';
 class ConfiguConfigStoreApprovalQueueError extends Error {
   queueUrl: string;
-  readonly name: string = 'ConfiguConfigStoreApprovalQueueError';
+  readonly name: string = ConfiguConfigStoreApprovalQueueErrorName;
 
   constructor(message: string, queueUrl: string) {
     super(message);
@@ -21,7 +22,7 @@ class ConfiguConfigStoreApprovalQueueError extends Error {
 
 export class ConfiguConfigStore extends ConfigStore {
   private client: Axios;
-  static readonly ApprovalQueueError = ConfiguConfigStoreApprovalQueueError;
+  public static readonly approvalQueueErrorName = ConfiguConfigStoreApprovalQueueErrorName;
   constructor({ credentials, endpoint = `https://api.configu.com`, source = 'sdk' }: ConfiguConfigStoreConfiguration) {
     super('configu');
 
