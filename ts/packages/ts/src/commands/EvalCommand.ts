@@ -53,7 +53,10 @@ export class EvalCommand extends Command<EvalCommandReturn> {
 
       if (!hasConfigOverrideValue) {
         if (requiredLazyConfigKeys.includes(context.key)) {
-          throw new ConfigError('invalid config value', `key "${context.key}" is required and lazy`);
+          const errorScope: [string, string][] = [
+            ['EvalCommand', `store:${context.store};set:${context.set};schema:${context.schema};key:${context.key}`],
+          ];
+          throw new ConfigError('invalid config value', `key "${context.key}" is required and lazy`, errorScope);
         }
         return current;
       }
