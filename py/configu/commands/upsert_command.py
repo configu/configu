@@ -1,14 +1,15 @@
-from typing import Dict, TypedDict
+from typing import Dict, Optional, TypedDict
 
+from . import EvalCommandReturn
+from .eval_command import EvaluatedConfigOrigin
 from ..core import (
-    CfguType,
     Command,
     Config,
     ConfigSchema,
     ConfigSet,
     ConfigStore,
 )
-from ..utils import error_message
+from ..utils import ConfigError
 
 
 class UpsertCommandParameters(TypedDict):
@@ -16,6 +17,7 @@ class UpsertCommandParameters(TypedDict):
     set: ConfigSet
     schema: ConfigSchema
     configs: Dict[str, str]
+    pipe: Optional[EvalCommandReturn]
 
 
 class UpsertCommand(Command):
@@ -32,7 +34,8 @@ class UpsertCommand(Command):
         store: ConfigStore,
         set: ConfigSet,
         schema: ConfigSchema,
-        configs: Dict[str, str],
+        configs: Optional[Dict[str, str]] = None,
+        pipe: Optional[EvalCommandReturn] = None,
     ) -> None:
         """
         Creates a new UpsertCommand.
@@ -41,81 +44,65 @@ class UpsertCommand(Command):
         :param schema: `configu.core.ConfigSchema` to validate config being written
         :param configs: a dictionary of configs to upsert
         """
+        configs = configs or {}
+        pipe = pipe or {}
         super().__init__(
             UpsertCommandParameters(
-                store=store, set=set, schema=schema, configs=configs
+                store=store, set=set, schema=schema, configs=configs, pipe=pipe
             )
         )
 
     def run(self):
         """Validates the configs against the schema and upsert to the store
 
-        :raises ValueError: if any config is invalid for the schema
+        :raises ConfigError: if any config is invalid for the schema
         """
-        error_scope = ["UpsertCommand", "run"]
         store = self.parameters["store"]
         set_ = self.parameters["set"]
         schema = self.parameters["schema"]
         configs = self.parameters["configs"]
+        pipe = self.parameters["pipe"]
+        if not configs and not pipe:
+            return
         store.init()
-        schema_content = ConfigSchema.parse(schema)
-        upset_configs = []
-        for key, value in configs.items():
-            cfgu = schema_content.get(key)
-            if cfgu is None:
-                raise ValueError(
-                    error_message(
-                        f"invalid config key '{key}'",
-                        error_scope,
-                        f"key '{key}' must be declared on schema {schema.path}",
-                    )
-                )
-            if value and cfgu.template is not None:
-                raise ValueError(
-                    error_message(
-                        f"invalid assignment to config key '{key}'",
-                        error_scope,
-                        "keys declared with template mustn't have a value",
-                    )
-                )
-            try:
-                type_test = ConfigSchema.CFGU.VALIDATORS[cfgu.type.value]
-            except KeyError as e:
-                raise KeyError(
-                    error_message("invalid type property", error_scope + [key, "type"]),
-                    f"type '{cfgu.type.value}' is not yet supported in this SDK. "
-                    "For the time being, please utilize the String type. "
-                    "We'd greatly appreciate it if you could open an issue "
-                    "regarding this at "
-                    "https://github.com/configu/configu/issues/new/choose "
-                    "so we can address it in future updates.",
-                ) from e
-            test_values = (
+        piped_configs = {
+            key: value["result"]["value"]
+            for key, value in pipe.items()
+            if schema.contents.get(key)
+            and not schema.contents[key].template
+            and value["result"]["origin"] != EvaluatedConfigOrigin.EmptyValue
+            and value["result"]["origin"] != EvaluatedConfigOrigin.SchemaDefault
+        }
+        upsert_configs = []
+        for key, value in {**piped_configs, **configs}.items():
+            error_scope = [
                 (
-                    value,
-                    cfgu.pattern,
+                    "UpsertCommand",
+                    f"store:{store.type};set:{set_.path};schema:{schema.name}",
+                ),
+                ("parameters.configs", f"key:{key};value:{value}"),
+            ]
+            cfgu = schema.contents.get(key)
+            if cfgu is None:
+                raise ConfigError(
+                    reason="invalid config key",
+                    hint=f"key '{key}' must be declared on schema '{schema.name}'",
+                    scope=error_scope,
                 )
-                if cfgu.type == CfguType.REG_EX
-                else (value,)
-            )
-            if value and not type_test(*test_values):
-                of_type = cfgu.type.value
-                if cfgu.type == CfguType.REG_EX:
-                    of_type += f"({cfgu.pattern})"
-                raise ValueError(
-                    error_message(
-                        f"invalid config value '{value}' for key '{key}'",
-                        error_scope,
-                        f"value '{value}' must be of type '{of_type}'",
+            if value:
+                if cfgu.template is not None:
+                    raise ConfigError(
+                        reason="invalid config value",
+                        hint="keys declared with template mustn't have a value",
+                        scope=error_scope,
                     )
-                )
+                try:
+                    ConfigSchema.CFGU["VALIDATORS"]["valueOptions"](cfgu, value)
+                    ConfigSchema.CFGU["VALIDATORS"]["valueType"](cfgu, value)
+                except (Exception,) as e:
+                    if isinstance(e, ConfigError):
+                        raise e.append_scope(error_scope)
+                    raise e
 
-            if bool(value) and cfgu.options is not None and value not in cfgu.options:
-                raise ValueError(
-                    error_message(f"invalid value for key '{key}'", error_scope),
-                    f"value '{value}' must be one of "
-                    + ",".join([f"'{option}'" for option in cfgu.options]),
-                )
-
-            upset_configs.append(Config(set=set_.path, key=key, value=value))
-        store.set(upset_configs)
+            upsert_configs.append(Config(set=set_.path, key=key, value=value))
+        store.set(upsert_configs)
