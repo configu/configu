@@ -1,8 +1,9 @@
-<img src="https://raw.githubusercontent.com/configu/configu/main/assets/hacktoberfest-23-banner.svg" alt="Hacktoberfest 23 Banner" />
+<!-- <img src="https://raw.githubusercontent.com/configu/configu/main/assets/hacktoberfest-23-banner.svg" alt="Hacktoberfest 23 Banner" />
 
----
+--- -->
 
-<!-- # Configu -->
+# Configu
+
 <p>
   <a href="https://makeapullrequest.com" target="_blank">
     <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome" />
@@ -25,15 +26,18 @@ It is built to provide a _common_, _flexible_, and _extensible_ process for stor
 
 [Learn how to use Configu in your project](https://configu.com/docs/get-started/).
 
-### Features
+## Features
 
 Configu isn’t just a tool; it’s a dedicated companion on your software development journey. Its features are tailored to ensure that your configurations are not just managed but are an integral, secure, and optimized part of your software lifecycle. [Try Configu](https://configu.com/docs/get-started/) and transform the way you handle software configurations.
 
-🎯 **Simple**: Offers a unified API for all configuration tasks, whether dealing with files, databases, secret managers, or custom implementations. Enables end-to-end configuration automation throughout the software development lifecycle.
+### 🎯 **Simple**
+Offers a unified API for all configuration tasks, whether dealing with files, databases, secret managers, or custom implementations. Enables end-to-end configuration automation throughout the software development lifecycle.
 
-🚀 **Modern**: Expertly manages configuration data across multiple deployments, workflows, runtimes, and environments. Scales to accommodate infinite configuration contexts, maintaining seamless management and organization.
+#### 🚀 **Modern**
+Expertly manages configuration data across multiple deployments, workflows, runtimes, and environments. Scales to accommodate infinite configuration contexts, maintaining seamless management and organization.
 
-🔒 **Secure**: Equipped with a robust configuration type system and a comprehensive policy framework. Provides built-in safeguards against application misconfigurations, ensuring a secure environment for your configurations.
+##### 🔒 Secure
+Equipped with a robust configuration type system and a comprehensive policy framework. Provides built-in safeguards against application misconfigurations, ensuring a secure environment for your configurations.
 
 🌐 **Common**: Promotes a clear understanding and consistent management of configuration data. Facilitates collaboration and ensures configurations are accurate and up-to-date. Provides a declarative approach that integrates seamlessly with coding tasks, enabling "Learn Once, Write Anywhere" flexibility and automation across diverse environments and systems.
 
