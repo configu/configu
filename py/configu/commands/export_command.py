@@ -8,7 +8,7 @@ from ..core import (
 
 
 class ExportCommandParameters(TypedDict):
-    data: EvalCommandReturn
+    pipe: EvalCommandReturn
     env: bool
     override: bool
 
@@ -23,19 +23,19 @@ class ExportCommand(Command[ExportCommandReturn]):
 
     def __init__(
         self,
-        data: EvalCommandReturn,
+        pipe: EvalCommandReturn,
         *,
         env: bool = True,
         override: bool = True,
     ) -> None:
-        super().__init__(ExportCommandParameters(data=data, env=env, override=override))
+        super().__init__(ExportCommandParameters(pipe=pipe, env=env, override=override))
 
     def run(self) -> ExportCommandReturn:
-        data = self.parameters["data"]
         env = self.parameters.get("env", True)
         override = self.parameters.get("override", True)
+        pipe = self.parameters["pipe"]
         exported_configs: ExportCommandReturn = {
-            key: value["result"]["value"] for key, value in data.items()
+            key: value["result"]["value"] for key, value in pipe.items()
         }
         if env:
             for key, value in exported_configs.items():
