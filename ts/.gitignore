@@ -20,3 +20,6 @@ oclif.manifest.json
 .env.development.local
 .env.test.local
 .env.production.local
+
+# typedoc
+docs/
