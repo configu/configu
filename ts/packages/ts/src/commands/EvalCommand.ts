@@ -227,7 +227,7 @@ export class EvalCommand extends Command<EvalCommandReturn> {
     return resultWithTemplates;
   }
 
-  private removeForwardsFromPipe(result: EvalCommandReturn): EvalCommandReturn {
+  private removeForwards(result: EvalCommandReturn): EvalCommandReturn {
     const { pipe } = this.parameters;
     if (!pipe) {
       return result;
@@ -320,7 +320,7 @@ export class EvalCommand extends Command<EvalCommandReturn> {
       ...this.evalTemplates(result),
     };
 
-    result = this.removeForwardsFromPipe(result);
+    result = this.removeForwards(result);
 
     this.validateResult(result);
 
