@@ -321,6 +321,50 @@ describe(`commands`, () => {
           MY_QUOTE: 'Hi! My name is , my name is Who? My Name is Chiky Chicky Slim Shady',
         });
       });
+      test('check for the scenario where a 2nd eval overrides the same key from a forwarded eval and ensure that the key is still there', async () => {
+        const evalMyName = await new EvalCommand({
+          store: store1,
+          set: set1,
+          schema: new ConfigSchema('myName', {
+            MY_NAME: {
+              type: 'String',
+            },
+          }),
+          configs: {
+            MY_NAME: 'Larry',
+          },
+          pipeMode: 'forward',
+        }).run();
+        const evalMyNameAgain = await new EvalCommand({
+          store: store1,
+          set: set1,
+          schema: new ConfigSchema('myName', {
+            MY_NAME: {
+              type: 'String',
+            },
+          }),
+          configs: {
+            MY_NAME: 'What?',
+          },
+          pipeMode: 'forward',
+          pipe: evalMyName,
+        }).run();
+        const lastEval = await new EvalCommand({
+          store: store1,
+          set: set1,
+          schema: new ConfigSchema('last', {
+            MY_QUOTE: {
+              type: 'String',
+              template: 'Hi! My name is {{MY_NAME}}, my name is Who?',
+            },
+          }),
+          pipe: evalMyNameAgain,
+        }).run();
+        const evaluatedConfigs = await new ExportCommand({ pipe: lastEval }).run();
+        expect(evaluatedConfigs).toStrictEqual({
+          MY_QUOTE: 'Hi! My name is What?, my name is Who?',
+        });
+      });
     });
   });
 });

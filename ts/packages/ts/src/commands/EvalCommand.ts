@@ -232,6 +232,7 @@ export class EvalCommand extends Command<EvalCommandReturn> {
     if (!pipe) {
       return result;
     }
+    console.log(result);
     return _.omitBy(result, (current) => pipe[current.context.key] && current.context.pipeMode === 'forward');
   }
 
