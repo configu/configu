@@ -223,7 +223,7 @@ describe(`commands`, () => {
       }
     });
     describe('PipeMode', () => {
-      test('run EvalCommand and pipe to another, all keys should exists in export', async () => {
+      test('run EvalCommand and pipe to another, all keys should exist in export', async () => {
         const evalMyName = await new EvalCommand({
           store: store1,
           set: set1,
