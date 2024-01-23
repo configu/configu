@@ -244,7 +244,7 @@ describe(`commands`, () => {
       }
     });
     describe('Tests for lazy configs', () => {
-      test('run EvalCommand without configs but  `cfgu.lazy && cfgu.required = true`', async () => {
+      test('run EvalCommand without configs but `cfgu.lazy && cfgu.required = true`', async () => {
         expect.assertions(1);
         await expect(() =>
           new EvalCommand({
