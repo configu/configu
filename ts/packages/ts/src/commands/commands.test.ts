@@ -278,7 +278,7 @@ describe(`commands`, () => {
         const evaluatedConfigs = await new ExportCommand({ pipe: evalQuote }).run();
         expect(evaluatedConfigs).toStrictEqual({ QUOTE: 'Hi! My name is What?, my name is Who?' });
       });
-      test("run EvalCommand(pipeMode='forward') and pipe to another, and another only keys from the second should exists in export", async () => {
+      test("run EvalCommand(pipeMode='forward') and pipe to two other evals, only keys from the second should exist in export", async () => {
         const evalMyName = await new EvalCommand({
           store: store1,
           set: set1,
