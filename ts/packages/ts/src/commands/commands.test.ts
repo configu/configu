@@ -268,7 +268,6 @@ describe(`commands`, () => {
       expect(exportedConfigs).toStrictEqual({ MY_KEY0: 'KEY0', MY_KEY1: 'KEY1' });
     });
     test('Export with bad keys mutation callback - returns non-string', async () => {
-      expect.assertions(1);
       const evalResult = await new EvalCommand({
         store: store1,
         set: set1,
@@ -294,7 +293,6 @@ describe(`commands`, () => {
       ).rejects.toBeInstanceOf(ConfigError);
     });
     test('Export with bad keys mutation callback - returns number', async () => {
-      expect.assertions(1);
       const evalResult = await new EvalCommand({
         store: store1,
         set: set1,
@@ -320,7 +318,6 @@ describe(`commands`, () => {
       ).rejects.toBeInstanceOf(ConfigError);
     });
     test('Export with bad keys mutation callback - returns empty string', async () => {
-      expect.assertions(1);
       const evalResult = await new EvalCommand({
         store: store1,
         set: set1,
@@ -345,7 +342,6 @@ describe(`commands`, () => {
       ).rejects.toBeInstanceOf(ConfigError);
     });
     test('Export with bad keys mutation callback - returns !NAME()', async () => {
-      expect.assertions(1);
       const evalResult = await new EvalCommand({
         store: store1,
         set: set1,
@@ -370,7 +366,6 @@ describe(`commands`, () => {
       ).rejects.toBeInstanceOf(ConfigError);
     });
     test('Export with bad keys mutation callback - raise exception', async () => {
-      expect.assertions(1);
       const evalResult = await new EvalCommand({
         store: store1,
         set: set1,
