@@ -25,14 +25,18 @@ export class ExportCommand extends Command<ExportCommandReturn> {
     }
 
     return _.mapKeys(result, (current, key) => {
+      const errorScope: [string, string][] = [
+        ['ExportCommand', ''],
+        ['ConfigKey', key],
+      ];
       try {
         const mutatedKey = keys(key);
         if (!NAME(mutatedKey)) {
-          throw new ConfigError('invalid config key', `key "${mutatedKey}" mustn't contain reserved words`);
+          throw new Error(`key "${mutatedKey}" mustn't contain reserved words`);
         }
         return mutatedKey;
       } catch (error) {
-        return key;
+        throw new ConfigError('invalid config key', error.message, errorScope);
       }
     });
   }

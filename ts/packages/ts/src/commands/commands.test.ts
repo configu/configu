@@ -10,6 +10,7 @@ import {
   DeleteCommand,
   type EvalCommandReturn,
   ExportCommand,
+  ConfigError,
 } from '..';
 
 describe(`commands`, () => {
@@ -267,6 +268,7 @@ describe(`commands`, () => {
       expect(exportedConfigs).toStrictEqual({ MY_KEY0: 'KEY0', MY_KEY1: 'KEY1' });
     });
     test('Export with bad keys mutation callback - returns non-string', async () => {
+      expect.assertions(1);
       const evalResult = await new EvalCommand({
         store: store1,
         set: set1,
@@ -283,13 +285,17 @@ describe(`commands`, () => {
           KEY1: 'KEY1',
         },
       }).run();
-
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
-      const exportedConfigs = await new ExportCommand({ pipe: evalResult, keys: (key) => ({ key }) }).run();
-      expect(exportedConfigs).toStrictEqual({ KEY0: 'KEY0', KEY1: 'KEY1' });
+      await expect(
+        new ExportCommand({
+          pipe: evalResult,
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error
+          keys: (key) => ({ key }),
+        }).run(),
+      ).rejects.toBeInstanceOf(ConfigError);
     });
     test('Export with bad keys mutation callback - returns number', async () => {
+      expect.assertions(1);
       const evalResult = await new EvalCommand({
         store: store1,
         set: set1,
@@ -306,13 +312,17 @@ describe(`commands`, () => {
           KEY1: 'KEY1',
         },
       }).run();
-
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
-      const exportedConfigs = await new ExportCommand({ pipe: evalResult, keys: (key) => 5 }).run();
-      expect(exportedConfigs).toStrictEqual({ KEY0: 'KEY0', KEY1: 'KEY1' });
+      await expect(
+        new ExportCommand({
+          pipe: evalResult,
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error
+          keys: (key) => 5,
+        }).run(),
+      ).rejects.toBeInstanceOf(ConfigError);
     });
     test('Export with bad keys mutation callback - returns empty string', async () => {
+      expect.assertions(1);
       const evalResult = await new EvalCommand({
         store: store1,
         set: set1,
@@ -329,11 +339,15 @@ describe(`commands`, () => {
           KEY1: 'KEY1',
         },
       }).run();
-
-      const exportedConfigs = await new ExportCommand({ pipe: evalResult, keys: (key) => '' }).run();
-      expect(exportedConfigs).toStrictEqual({ KEY0: 'KEY0', KEY1: 'KEY1' });
+      await expect(
+        new ExportCommand({
+          pipe: evalResult,
+          keys: (key) => '',
+        }).run(),
+      ).rejects.toBeInstanceOf(ConfigError);
     });
     test('Export with bad keys mutation callback - returns !NAME()', async () => {
+      expect.assertions(1);
       const evalResult = await new EvalCommand({
         store: store1,
         set: set1,
@@ -350,11 +364,15 @@ describe(`commands`, () => {
           KEY1: 'KEY1',
         },
       }).run();
-
-      const exportedConfigs = await new ExportCommand({ pipe: evalResult, keys: (key) => `!${key}` }).run();
-      expect(exportedConfigs).toStrictEqual({ KEY0: 'KEY0', KEY1: 'KEY1' });
+      await expect(
+        new ExportCommand({
+          pipe: evalResult,
+          keys: (key) => `!${key}`,
+        }).run(),
+      ).rejects.toBeInstanceOf(ConfigError);
     });
     test('Export with bad keys mutation callback - raise exception', async () => {
+      expect.assertions(1);
       const evalResult = await new EvalCommand({
         store: store1,
         set: set1,
@@ -371,14 +389,14 @@ describe(`commands`, () => {
           KEY1: 'KEY1',
         },
       }).run();
-
-      const exportedConfigs = await new ExportCommand({
-        pipe: evalResult,
-        keys: (key) => {
-          throw new Error('bad key');
-        },
-      }).run();
-      expect(exportedConfigs).toStrictEqual({ KEY0: 'KEY0', KEY1: 'KEY1' });
+      await expect(
+        new ExportCommand({
+          pipe: evalResult,
+          keys: (key) => {
+            throw new Error('test');
+          },
+        }).run(),
+      ).rejects.toBeInstanceOf(Error);
     });
   });
 });
