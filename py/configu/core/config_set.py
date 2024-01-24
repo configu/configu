@@ -1,5 +1,5 @@
 from .generated import ConfigSet as IConfigSet
-from ..utils import error_message, is_valid_name
+from ..utils import ConfigError, is_valid_name
 
 
 class ConfigSet(IConfigSet):
@@ -19,32 +19,30 @@ class ConfigSet(IConfigSet):
         Creates a new ConfigSet.
         :param: path of the ConfigSet in a hierarchical structure.
         """
-        error_location = [self.__class__.__name__, self.__init__.__name__]
-        if path is None:
-            path = ConfigSet.ROOT
+        path = path or ConfigSet.ROOT
         hierarchy = [ConfigSet.ROOT]
-        if path.startswith(ConfigSet.ROOT_LABEL):
-            path = path[1:]
+        if path != ConfigSet.ROOT:
+            error_reason = "invalid config set path"
+            error_scope = [("ConfigSet", path)]
 
-        if path.endswith(ConfigSet.SEPARATOR):
-            raise ValueError(
-                error_message(
-                    f"invalid path {path}",
-                    error_location,
-                    f"path mustn't end with {ConfigSet.SEPARATOR} character",
+            if path.startswith(ConfigSet.ROOT_LABEL):
+                path = path[1:]
+
+            if path.endswith(ConfigSet.SEPARATOR):
+                raise ConfigError(
+                    reason=error_reason,
+                    hint=f"path mustn't end with {ConfigSet.SEPARATOR} character",
+                    scope=error_scope,
                 )
-            )
 
-        for i, step in enumerate(path.split(ConfigSet.SEPARATOR)):
-            if not is_valid_name(step):
-                raise ValueError(
-                    error_message(
-                        f"invalid path {path}",
-                        error_location,
-                        "path is not valid or using reserved name",
+            for i, step in enumerate(path.split(ConfigSet.SEPARATOR)):
+                if not is_valid_name(step):
+                    raise ConfigError(
+                        reason=error_reason,
+                        hint=f"path nodes mustn't contain reserved words '{step}'",
+                        scope=error_scope,
                     )
-                )
-            if step != ConfigSet.ROOT:
-                steps = [hierarchy[-1], step] if i > 0 else [step]
-                hierarchy.append(ConfigSet.SEPARATOR.join(steps))
+                if step != ConfigSet.ROOT:
+                    steps = [hierarchy[-1], step] if i > 0 else [step]
+                    hierarchy.append(ConfigSet.SEPARATOR.join(steps))
         super().__init__(hierarchy=hierarchy, path=path)

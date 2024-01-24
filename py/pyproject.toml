@@ -39,6 +39,7 @@ azure-keyvault-secrets = "^4.7.0"
 azure-identity = "^1.13.0"
 google-cloud-secret-manager = "^2.16.1"
 kubernetes = "^26.1.0"
+jsonschema = "^4.20.0"
 
 [tool.poetry.group.dev.dependencies]
 flake8 = "^6.0.0" # configs at .flake8
