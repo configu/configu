@@ -314,8 +314,7 @@ describe(`commands`, () => {
       await expect(
         new ExportCommand({
           pipe: evalResult,
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-expect-error
+          // @ts-expect-error - should throw ConfigError
           keys: (key) => 5,
         }).run(),
       ).rejects.toBeInstanceOf(ConfigError);
