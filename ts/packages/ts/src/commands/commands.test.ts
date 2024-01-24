@@ -331,7 +331,7 @@ describe(`commands`, () => {
             },
           }),
           configs: {
-            MY_NAME: 'Larry',
+            MY_NAME: 'Who?',
           },
           pipeMode: 'forward',
         }).run();
