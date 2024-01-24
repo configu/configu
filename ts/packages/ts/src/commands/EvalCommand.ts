@@ -36,14 +36,7 @@ export class EvalCommand extends Command<EvalCommandReturn> {
   }
 
   private evalFromConfigsOverride(result: EvalCommandReturn): EvalCommandReturn {
-    const requiredLazyConfigKeys = Object.values(result)
-      .filter((current) => current.context.cfgu.required && current.context.cfgu.lazy)
-      .map((current) => current.context.key);
-
     if (!this.parameters.configs) {
-      if (requiredLazyConfigKeys.length > 0) {
-        throw new ConfigError('invalid config value', `one or more lazy keys are missing a value`);
-      }
       return result;
     }
 
@@ -52,12 +45,6 @@ export class EvalCommand extends Command<EvalCommandReturn> {
       const hasConfigOverrideValue = Object.prototype.hasOwnProperty.call(this.parameters.configs, context.key);
 
       if (!hasConfigOverrideValue) {
-        if (requiredLazyConfigKeys.includes(context.key)) {
-          const errorScope: [string, string][] = [
-            ['EvalCommand', `store:${context.store};set:${context.set};schema:${context.schema};key:${context.key}`],
-          ];
-          throw new ConfigError('invalid config value', `key "${context.key}" is required and lazy`, errorScope);
-        }
         return current;
       }
 
