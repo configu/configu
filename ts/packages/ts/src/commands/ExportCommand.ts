@@ -28,7 +28,7 @@ export class ExportCommand extends Command<ExportCommandReturn> {
       try {
         const mutatedKey = keys(key);
         if (!NAME(mutatedKey)) {
-          throw new ConfigError('invalid config key', `${mutatedKey} must be a valid name`);
+          throw new ConfigError('invalid config key', `key "${mutatedKey}" mustn't contain reserved words`);
         }
         return mutatedKey;
       } catch (error) {
