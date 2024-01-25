@@ -36,10 +36,23 @@ export class EvalCommand extends Command<EvalCommandReturn> {
   }
 
   private evalFromConfigsOverride(result: EvalCommandReturn): EvalCommandReturn {
-    // TODO: if each.configs is lazy mark as override
     if (!this.parameters.configs) {
-      return result;
+      return _.mapValues(result, (current) => {
+        const { context } = current;
+        if (!context.cfgu.lazy) {
+          return current;
+        }
+        return {
+          ...current,
+          result: {
+            origin: EvaluatedConfigOrigin.ConfigsOverride,
+            source: `parameters.configs.${context.key}=''`,
+            value: '',
+          },
+        };
+      });
     }
+
     return _.mapValues(result, (current) => {
       const { context } = current;
       const hasConfigOverrideValue = Object.prototype.hasOwnProperty.call(this.parameters.configs, context.key);
@@ -158,6 +171,7 @@ export class EvalCommand extends Command<EvalCommandReturn> {
 
     const mergedResults = _([pipe, result])
       .flatMap((current) => _.values(current))
+      .value()
       .reduce<EvalCommandReturn>((merged, current) => {
         const { key } = current.context;
         const mergedResult = merged[key];
@@ -291,10 +305,7 @@ export class EvalCommand extends Command<EvalCommandReturn> {
       ...(await this.evalFromStoreSet(
         _.pickBy(
           result,
-          (current) =>
-            current.result.origin === EvaluatedConfigOrigin.EmptyValue &&
-            !current.context.cfgu.template &&
-            !current.context.cfgu.lazy,
+          (current) => current.result.origin === EvaluatedConfigOrigin.EmptyValue && !current.context.cfgu.template,
         ),
       )),
     };
