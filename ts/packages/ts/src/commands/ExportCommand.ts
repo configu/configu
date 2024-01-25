@@ -30,8 +30,8 @@ export class ExportCommand extends Command<ExportCommandReturn> {
         ['ConfigKey', key],
       ];
       try {
-        const mutatedKey = keys(key);
-        if (!mutatedKey || !NAME(mutatedKey)) {
+        const mutatedKey = String(keys(key));
+        if (!NAME(mutatedKey)) {
           throw new Error(`key "${mutatedKey}" mustn't contain reserved words`);
         }
         return mutatedKey;
