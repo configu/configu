@@ -44,6 +44,7 @@ export class ExportCommand extends Command<ExportCommandReturn> {
           errorScope,
         );
       }
+      return mutatedKey;
     });
   }
 
