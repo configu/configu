@@ -225,65 +225,38 @@ describe(`commands`, () => {
     });
   });
   describe(`ExportCommand`, () => {
+    const getEvalResult = async () => {
+      return new EvalCommand({
+        store: store1,
+        set: set1,
+        schema: new ConfigSchema('mutate', {
+          KEY0: {
+            type: 'String',
+          },
+          KEY1: {
+            type: 'String',
+          },
+        }),
+        configs: {
+          KEY0: 'KEY0',
+          KEY1: 'KEY1',
+        },
+      }).run();
+    };
     describe(`Keys Mutation Callback`, () => {
       test('Export without keys mutation callback', async () => {
-        const evalResult = await new EvalCommand({
-          store: store1,
-          set: set1,
-          schema: new ConfigSchema('mutate', {
-            KEY0: {
-              type: 'String',
-            },
-            KEY1: {
-              type: 'String',
-            },
-          }),
-          configs: {
-            KEY0: 'KEY0',
-            KEY1: 'KEY1',
-          },
-        }).run();
+        const evalResult = await getEvalResult();
         const exportedConfigs = await new ExportCommand({ pipe: evalResult }).run();
         expect(exportedConfigs).toStrictEqual({ KEY0: 'KEY0', KEY1: 'KEY1' });
       });
     });
     test('Export with keys mutation callback', async () => {
-      const evalResult = await new EvalCommand({
-        store: store1,
-        set: set1,
-        schema: new ConfigSchema('mutate', {
-          KEY0: {
-            type: 'String',
-          },
-          KEY1: {
-            type: 'String',
-          },
-        }),
-        configs: {
-          KEY0: 'KEY0',
-          KEY1: 'KEY1',
-        },
-      }).run();
+      const evalResult = await getEvalResult();
       const exportedConfigs = await new ExportCommand({ pipe: evalResult, keys: (key) => `MY_${key}` }).run();
       expect(exportedConfigs).toStrictEqual({ MY_KEY0: 'KEY0', MY_KEY1: 'KEY1' });
     });
     test('Export with bad keys mutation callback - returns non-string', async () => {
-      const evalResult = await new EvalCommand({
-        store: store1,
-        set: set1,
-        schema: new ConfigSchema('mutate', {
-          KEY0: {
-            type: 'String',
-          },
-          KEY1: {
-            type: 'String',
-          },
-        }),
-        configs: {
-          KEY0: 'KEY0',
-          KEY1: 'KEY1',
-        },
-      }).run();
+      const evalResult = await getEvalResult();
       await expect(
         new ExportCommand({
           pipe: evalResult,
@@ -293,22 +266,7 @@ describe(`commands`, () => {
       ).rejects.toBeInstanceOf(ConfigError);
     });
     test('Export with bad keys mutation callback - returns number', async () => {
-      const evalResult = await new EvalCommand({
-        store: store1,
-        set: set1,
-        schema: new ConfigSchema('mutate', {
-          KEY0: {
-            type: 'String',
-          },
-          KEY1: {
-            type: 'String',
-          },
-        }),
-        configs: {
-          KEY0: 'KEY0',
-          KEY1: 'KEY1',
-        },
-      }).run();
+      const evalResult = await getEvalResult();
       await expect(
         new ExportCommand({
           pipe: evalResult,
@@ -318,22 +276,7 @@ describe(`commands`, () => {
       ).rejects.toBeInstanceOf(ConfigError);
     });
     test('Export with bad keys mutation callback - returns empty string', async () => {
-      const evalResult = await new EvalCommand({
-        store: store1,
-        set: set1,
-        schema: new ConfigSchema('mutate', {
-          KEY0: {
-            type: 'String',
-          },
-          KEY1: {
-            type: 'String',
-          },
-        }),
-        configs: {
-          KEY0: 'KEY0',
-          KEY1: 'KEY1',
-        },
-      }).run();
+      const evalResult = await getEvalResult();
       await expect(
         new ExportCommand({
           pipe: evalResult,
@@ -342,22 +285,7 @@ describe(`commands`, () => {
       ).rejects.toBeInstanceOf(ConfigError);
     });
     test('Export with bad keys mutation callback - returns !NAME()', async () => {
-      const evalResult = await new EvalCommand({
-        store: store1,
-        set: set1,
-        schema: new ConfigSchema('mutate', {
-          KEY0: {
-            type: 'String',
-          },
-          KEY1: {
-            type: 'String',
-          },
-        }),
-        configs: {
-          KEY0: 'KEY0',
-          KEY1: 'KEY1',
-        },
-      }).run();
+      const evalResult = await getEvalResult();
       await expect(
         new ExportCommand({
           pipe: evalResult,
@@ -366,22 +294,7 @@ describe(`commands`, () => {
       ).rejects.toBeInstanceOf(ConfigError);
     });
     test('Export with bad keys mutation callback - raise exception', async () => {
-      const evalResult = await new EvalCommand({
-        store: store1,
-        set: set1,
-        schema: new ConfigSchema('mutate', {
-          KEY0: {
-            type: 'String',
-          },
-          KEY1: {
-            type: 'String',
-          },
-        }),
-        configs: {
-          KEY0: 'KEY0',
-          KEY1: 'KEY1',
-        },
-      }).run();
+      const evalResult = await getEvalResult();
       await expect(
         new ExportCommand({
           pipe: evalResult,

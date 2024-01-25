@@ -17,7 +17,7 @@ export class ExportCommand extends Command<ExportCommandReturn> {
     super(parameters);
   }
 
-  private mutateKeys(result: EvalCommandReturn): EvalCommandReturn {
+  private mutateKeys(result: { [key: string]: string }): { [key: string]: string } {
     const { keys } = this.parameters;
 
     if (!keys) {
@@ -31,7 +31,7 @@ export class ExportCommand extends Command<ExportCommandReturn> {
       ];
       try {
         const mutatedKey = keys(key);
-        if (!NAME(mutatedKey)) {
+        if (!mutatedKey || !NAME(mutatedKey)) {
           throw new Error(`key "${mutatedKey}" mustn't contain reserved words`);
         }
         return mutatedKey;
