@@ -43,6 +43,8 @@ export class ExportCommand extends Command<ExportCommandReturn> {
 
   async run() {
     const { pipe } = this.parameters;
-    return _.mapValues(this.mutateKeys(pipe), (current) => current.result.value);
+    const configDict = _.mapValues(pipe, (current) => current.result.value);
+    const keyMutatedConfigDict = this.mutateKeys(configDict);
+    return keyMutatedConfigDict;
   }
 }
