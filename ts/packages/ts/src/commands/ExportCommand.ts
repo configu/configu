@@ -29,14 +29,20 @@ export class ExportCommand extends Command<ExportCommandReturn> {
         ['ExportCommand', ''],
         ['ConfigKey', key],
       ];
+      let mutatedKey = '';
+      let isKeyValid = true;
       try {
-        const mutatedKey = String(keys(key));
-        if (!NAME(mutatedKey)) {
-          throw new Error(`key "${mutatedKey}" mustn't contain reserved words`);
-        }
-        return mutatedKey;
+        mutatedKey = String(keys(key));
       } catch (error) {
-        throw new ConfigError('invalid config key', error.message, errorScope);
+        isKeyValid = false;
+      }
+      isKeyValid = isKeyValid && NAME(mutatedKey);
+      if (!isKeyValid) {
+        throw new ConfigError(
+          `key "${mutatedKey}" mutation failed`,
+          'check mutation callback returns valid key',
+          errorScope,
+        );
       }
     });
   }
