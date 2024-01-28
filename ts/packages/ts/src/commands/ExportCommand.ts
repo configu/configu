@@ -29,20 +29,9 @@ export class ExportCommand extends Command<ExportCommandReturn> {
         ['ExportCommand', ''],
         ['ConfigKey', key],
       ];
-      let mutatedKey = '';
-      let isKeyValid = true;
-      try {
-        mutatedKey = String(keys(key));
-      } catch (error) {
-        isKeyValid = false;
-      }
-      isKeyValid = isKeyValid && NAME(mutatedKey);
-      if (!isKeyValid) {
-        throw new ConfigError(
-          `key "${mutatedKey}" mutation failed`,
-          'check mutation callback returns valid key',
-          errorScope,
-        );
+      const mutatedKey = String(keys(key));
+      if (!NAME(mutatedKey)) {
+        throw new ConfigError('invalid config key', `key "${key}" mustn't contain reserved words`, errorScope);
       }
       return mutatedKey;
     });

@@ -255,7 +255,7 @@ describe(`commands`, () => {
       const exportedConfigs = await new ExportCommand({ pipe: evalResult, keys: (key) => `MY_${key}` }).run();
       expect(exportedConfigs).toStrictEqual({ MY_KEY0: 'KEY0', MY_KEY1: 'KEY1' });
     });
-    test('Export with bad keys mutation callback - returns non-string', async () => {
+    test('Export with bad keys mutation callback that returns non-string', async () => {
       const evalResult = await getEvalResult();
       await expect(
         new ExportCommand({
@@ -265,13 +265,13 @@ describe(`commands`, () => {
         }).run(),
       ).rejects.toBeInstanceOf(ConfigError);
     });
-    test('Export with bad keys mutation callback - returns number', async () => {
+    test('Export with bad keys mutation callback that returns number', async () => {
       const evalResult = await getEvalResult();
       // @ts-expect-error - should throw ConfigError
       const exportedConfigs = await new ExportCommand({ pipe: evalResult, keys: (key) => 5 }).run();
       expect(exportedConfigs).toStrictEqual({ '5': 'KEY1' });
     });
-    test('Export with bad keys mutation callback - returns empty string', async () => {
+    test('Export with bad keys mutation callback that returns empty string', async () => {
       const evalResult = await getEvalResult();
       await expect(
         new ExportCommand({
@@ -280,7 +280,7 @@ describe(`commands`, () => {
         }).run(),
       ).rejects.toBeInstanceOf(ConfigError);
     });
-    test('Export with bad keys mutation callback - returns !NAME()', async () => {
+    test('Export with bad keys mutation callback that returns !NAME()', async () => {
       const evalResult = await getEvalResult();
       await expect(
         new ExportCommand({
@@ -289,7 +289,7 @@ describe(`commands`, () => {
         }).run(),
       ).rejects.toBeInstanceOf(ConfigError);
     });
-    test('Export with bad keys mutation callback - raise exception', async () => {
+    test('Export with bad keys mutation callback that raise exception', async () => {
       const evalResult = await getEvalResult();
       await expect(
         new ExportCommand({
