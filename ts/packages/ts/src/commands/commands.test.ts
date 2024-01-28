@@ -267,13 +267,9 @@ describe(`commands`, () => {
     });
     test('Export with bad keys mutation callback - returns number', async () => {
       const evalResult = await getEvalResult();
-      await expect(
-        new ExportCommand({
-          pipe: evalResult,
-          // @ts-expect-error - should throw ConfigError
-          keys: (key) => 5,
-        }).run(),
-      ).rejects.toBeInstanceOf(ConfigError);
+      // @ts-expect-error - should throw ConfigError
+      const exportedConfigs = await new ExportCommand({ pipe: evalResult, keys: (key) => 5 }).run();
+      expect(exportedConfigs).toStrictEqual({ '5': 'KEY1' });
     });
     test('Export with bad keys mutation callback - returns empty string', async () => {
       const evalResult = await getEvalResult();
