@@ -244,6 +244,21 @@ describe(`commands`, () => {
       }
     });
     describe('Tests for lazy configs', () => {
+      beforeAll(async () => {
+        await store1.init();
+        await new UpsertCommand({
+          store: store1,
+          set: set1,
+          schema: new ConfigSchema('lazy', {
+            K1: {
+              type: 'String',
+            },
+          }),
+          configs: {
+            K1: '2',
+          },
+        }).run();
+      });
       test('run EvalCommand WITHOUT configs overrides but one config is `cfgu.lazy && cfgu.required = true`', async () => {
         expect.assertions(1);
         await expect(() =>
@@ -330,7 +345,6 @@ describe(`commands`, () => {
         expect(result).toMatchObject({ K1: { result: { value: '1' } } });
       });
       test('run EvalCommand with override for lazy config when there is a value in the store and get the override value in the result', async () => {
-        await store1.set([{ set: set1.path, key: 'K1', value: '2' }]);
         const result = await new EvalCommand({
           store: store1,
           set: set1,
@@ -347,7 +361,6 @@ describe(`commands`, () => {
         expect(result).toMatchObject({ K1: { result: { value: '1' } } });
       });
       test("run EvalCommand without override for lazy config when there is a value in the store and don't get it back in the result", async () => {
-        await store1.set([{ set: set1.path, key: 'K1', value: '2' }]);
         const result = await new EvalCommand({
           store: store1,
           set: set1,

@@ -36,28 +36,12 @@ export class EvalCommand extends Command<EvalCommandReturn> {
   }
 
   private evalFromConfigsOverride(result: EvalCommandReturn): EvalCommandReturn {
-    if (!this.parameters.configs) {
-      return _.mapValues(result, (current) => {
-        const { context } = current;
-        if (!context.cfgu.lazy) {
-          return current;
-        }
-        return {
-          ...current,
-          result: {
-            origin: EvaluatedConfigOrigin.ConfigsOverride,
-            source: `parameters.configs.${context.key}=''`,
-            value: '',
-          },
-        };
-      });
-    }
-
     return _.mapValues(result, (current) => {
       const { context } = current;
-      const hasConfigOverrideValue = Object.prototype.hasOwnProperty.call(this.parameters.configs, context.key);
+      const hasConfigOverrideValue =
+        this.parameters.configs && Object.prototype.hasOwnProperty.call(this.parameters.configs, context.key);
 
-      if (!hasConfigOverrideValue) {
+      if (!hasConfigOverrideValue && !context.cfgu.lazy) {
         return current;
       }
 
@@ -171,7 +155,6 @@ export class EvalCommand extends Command<EvalCommandReturn> {
 
     const mergedResults = _([pipe, result])
       .flatMap((current) => _.values(current))
-      .value()
       .reduce<EvalCommandReturn>((merged, current) => {
         const { key } = current.context;
         const mergedResult = merged[key];
