@@ -16,7 +16,7 @@ class ConfiguConfigStoreApprovalQueueError extends Error {
 
   constructor(protectedSet: string, queueUrl: string) {
     super(
-      `Your recent upsert to the ${protectedSet} ConfigSet is currently pending in its approval queue, as ${protectedSet} is a "protected set". To proceed with these changes, please review and approve them at ${queueUrl}. If you lack the necessary permissions, reach out to an authorized org member.`,
+      `Your recent upsert to the ${protectedSet} ConfigSet is currently pending in its approval queue, as ${protectedSet} is a "protected set". To proceed with these changes, please review and approve them. If you lack the necessary permissions, reach out to an authorized org member. You can find the approval queue at ${queueUrl}.`,
     );
     this.queueUrl = queueUrl;
   }
@@ -53,7 +53,7 @@ export class ConfiguConfigStore extends ConfigStore {
     const response = await this.client.put('/config', { configs });
     if (response.status === 202) {
       const protectedSet = response.data.diff.pending[0].set;
-      const queueUrl = `${response.data.queueUrl}?sp=${protectedSet}`;
+      const queueUrl = `${response.data.queueUrl}?set=${protectedSet}`;
       throw new ConfiguConfigStoreApprovalQueueError(protectedSet, queueUrl);
     }
   }
