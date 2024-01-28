@@ -12,12 +12,12 @@ export type ConfiguConfigStoreConfiguration = {
 
 export class ConfiguConfigStore extends ConfigStore {
   private client: Axios;
-  private tag: string;
+  private tag?: string;
   constructor({
     credentials,
     endpoint = `https://api.configu.com`,
     source = 'sdk',
-    tag = 'latest',
+    tag,
   }: ConfiguConfigStoreConfiguration) {
     super('configu');
 
@@ -40,7 +40,7 @@ export class ConfiguConfigStore extends ConfigStore {
   }
 
   async get(queries: ConfigStoreQuery[]): Promise<Config[]> {
-    const { data } = await this.client.post(`/config?tag=${this.tag}`, { queries });
+    const { data } = await this.client.post(`/config${this.tag ? `?tag=${this.tag}` : ''}`, { queries });
     return data;
   }
 
