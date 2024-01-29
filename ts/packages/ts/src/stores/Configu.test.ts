@@ -33,5 +33,28 @@ describe(`ConfiguConfigStore`, () => {
       expect(typeof headers.common.Token).toBe('string');
       expect(typeof headers.common.Authorization).toBe('undefined');
     });
+    it(`sets the tag property if provided`, () => {
+      const store = new ConfiguConfigStore({
+        credentials: {
+          org: 'test',
+          token: 'test-token',
+        },
+        source: 'test',
+        tag: 'test-tag',
+      });
+
+      expect(store['tag']).toBe('test-tag');
+    });
+    it(`does not set the tag property if not provided`, () => {
+      const store = new ConfiguConfigStore({
+        credentials: {
+          org: 'test',
+          token: 'test-token',
+        },
+        source: 'test',
+      });
+
+      expect(store['tag']).toBeUndefined();
+    });
   });
 });
