@@ -11,6 +11,15 @@
       "configuration": {
         "database": "./store.db"
       }
+    },
+    "configu": {
+      "type": "configu",
+      "configuration": {
+        "credentials": {
+          "org": "<org-id>",
+          "token": "<token>"
+        }
+      }
     }
   }
 }
