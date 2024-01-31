@@ -36,15 +36,12 @@ export class EvalCommand extends Command<EvalCommandReturn> {
   }
 
   private evalFromConfigsOverride(result: EvalCommandReturn): EvalCommandReturn {
-    if (!this.parameters.configs) {
-      return result;
-    }
-
     return _.mapValues(result, (current) => {
       const { context } = current;
-      const hasConfigOverrideValue = Object.prototype.hasOwnProperty.call(this.parameters.configs, context.key);
+      const hasConfigOverrideValue =
+        this.parameters.configs && Object.prototype.hasOwnProperty.call(this.parameters.configs, context.key);
 
-      if (!hasConfigOverrideValue) {
+      if (!hasConfigOverrideValue && !context.cfgu.lazy) {
         return current;
       }
 

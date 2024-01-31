@@ -50,4 +50,5 @@ export interface Cfgu {
   depends?: string[];
   template?: string;
   options?: string[];
+  lazy?: boolean;
 }

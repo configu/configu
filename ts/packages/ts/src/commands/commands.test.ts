@@ -63,6 +63,27 @@ describe(`commands`, () => {
     },
   });
 
+  describe(`UpsertCommand`, () => {
+    describe('Tests for lazy configs', () => {
+      test('run UpsertCommand with lazy config', async () => {
+        await expect(() =>
+          new UpsertCommand({
+            store: store1,
+            set: set1,
+            schema: new ConfigSchema('lazy', {
+              K1: {
+                type: 'String',
+                lazy: true,
+              },
+            }),
+            configs: {
+              K1: '1',
+            },
+          }).run(),
+        ).rejects.toBeInstanceOf(ConfigError);
+      });
+    });
+  });
   describe(`EvalCommand`, () => {
     test.each<{
       name: string;
@@ -222,6 +243,137 @@ describe(`commands`, () => {
         const deletePromises = parameters.upsert.map((p) => new DeleteCommand(p).run());
         await Promise.all(deletePromises);
       }
+    });
+    describe('Tests for lazy configs', () => {
+      beforeAll(async () => {
+        await store1.init();
+        await new UpsertCommand({
+          store: store1,
+          set: set1,
+          schema: new ConfigSchema('lazy', {
+            K1: {
+              type: 'String',
+            },
+          }),
+          configs: {
+            K1: '2',
+          },
+        }).run();
+      });
+      test('run EvalCommand WITHOUT configs overrides but one config is `cfgu.lazy && cfgu.required = true`', async () => {
+        expect.assertions(1);
+        await expect(() =>
+          new EvalCommand({
+            store: store1,
+            set: set1,
+            schema: new ConfigSchema('lazy', {
+              K1: {
+                type: 'String',
+                lazy: true,
+                required: true,
+              },
+            }),
+          }).run(),
+        ).rejects.toBeInstanceOf(ConfigError);
+      });
+      test('run EvalCommand WITHOUT configs overrides but one config is `cfgu.lazy && cfgu.required = false`', async () => {
+        const result = await new EvalCommand({
+          store: store1,
+          set: set1,
+          schema: new ConfigSchema('lazy', {
+            K1: {
+              type: 'String',
+              lazy: true,
+            },
+          }),
+        }).run();
+        expect(result).toMatchObject({ K1: { result: { value: '' } } });
+      });
+      test('run EvalCommand WITH configs overrides but not for the one config is `cfgu.lazy && cfgu.required = true`', async () => {
+        expect.assertions(1);
+        await expect(() =>
+          new EvalCommand({
+            store: store1,
+            set: set1,
+            schema: new ConfigSchema('lazy', {
+              K1: {
+                type: 'String',
+                lazy: true,
+                required: true,
+              },
+              K2: {
+                type: 'String',
+              },
+            }),
+            configs: {
+              K2: '2',
+            },
+          }).run(),
+        ).rejects.toBeInstanceOf(ConfigError);
+      });
+      test('run EvalCommand WITH configs overrides for the one config is `cfgu.lazy && cfgu.required = false`', async () => {
+        const result = await new EvalCommand({
+          store: store1,
+          set: set1,
+          schema: new ConfigSchema('lazy', {
+            K1: {
+              type: 'String',
+              lazy: true,
+              required: false,
+            },
+          }),
+          configs: {
+            K1: '1',
+          },
+        }).run();
+        expect(result).toMatchObject({ K1: { result: { value: '1' } } });
+      });
+      test('run EvalCommand WITH configs overrides for the one config is `cfgu.lazy && cfgu.required = true`', async () => {
+        const result = await new EvalCommand({
+          store: store1,
+          set: set1,
+          schema: new ConfigSchema('lazy', {
+            K1: {
+              type: 'String',
+              lazy: true,
+              required: true,
+            },
+          }),
+          configs: {
+            K1: '1',
+          },
+        }).run();
+        expect(result).toMatchObject({ K1: { result: { value: '1' } } });
+      });
+      test('run EvalCommand with override for lazy config when there is a value in the store and get the override value in the result', async () => {
+        const result = await new EvalCommand({
+          store: store1,
+          set: set1,
+          schema: new ConfigSchema('lazy', {
+            K1: {
+              type: 'String',
+              lazy: true,
+            },
+          }),
+          configs: {
+            K1: '1',
+          },
+        }).run();
+        expect(result).toMatchObject({ K1: { result: { value: '1' } } });
+      });
+      test("run EvalCommand without override for lazy config when there is a value in the store and don't get it back in the result", async () => {
+        const result = await new EvalCommand({
+          store: store1,
+          set: set1,
+          schema: new ConfigSchema('lazy', {
+            K1: {
+              type: 'String',
+              lazy: true,
+            },
+          }),
+        }).run();
+        expect(result).toMatchObject({ K1: { result: { value: '' } } });
+      });
     });
   });
   describe(`ExportCommand`, () => {
