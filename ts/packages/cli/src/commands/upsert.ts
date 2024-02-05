@@ -1,6 +1,6 @@
 import { Flags } from '@oclif/core';
 import _ from 'lodash';
-import { ConfigSet, ConfiguConfigStore, UpsertCommand } from '@configu/node';
+import { ConfigSet, UpsertCommand } from '@configu/node';
 import { extractConfigs } from '@configu/lib';
 import { BaseCommand } from '../base';
 import { readFile } from '../helpers';
