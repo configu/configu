@@ -98,8 +98,8 @@
   ],
   "dependencies": {
     "@configu/lib": "^0.7.0",
-    "@configu/node": "^0.21.0",
-    "@configu/ts": "^0.21.0",
+    "@configu/node": "^0.21.1",
+    "@configu/ts": "^0.21.1",
     "@oclif/core": "^3.14.1",
     "@oclif/plugin-autocomplete": "^3.0.3",
     "@oclif/plugin-not-found": "^3.0.5",
