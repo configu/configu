@@ -9,22 +9,19 @@ export type ConfiguConfigStoreConfiguration = {
   source?: string;
 };
 
-const ConfiguConfigStoreApprovalQueueErrorName = 'ConfiguConfigStoreApprovalQueueError';
-class ConfiguConfigStoreApprovalQueueError extends Error {
+export class ConfiguConfigStoreApprovalQueueError extends Error {
   readonly queueUrl: string;
-  readonly name: string = ConfiguConfigStoreApprovalQueueErrorName;
-
   constructor(protectedSet: string, queueUrl: string) {
     super(
       `Your recent upsert to the ${protectedSet} ConfigSet is currently pending in its approval queue, as ${protectedSet} is a "protected set". To proceed with these changes, please review and approve them at ${queueUrl}. If you lack the necessary permissions, reach out to an authorized org member.`,
     );
     this.queueUrl = queueUrl;
+    this.name = 'ConfiguConfigStoreApprovalQueueError';
   }
 }
 
 export class ConfiguConfigStore extends ConfigStore {
   private client: Axios;
-  public static readonly approvalQueueErrorName = ConfiguConfigStoreApprovalQueueErrorName;
   constructor({ credentials, endpoint = `https://api.configu.com`, source = 'sdk' }: ConfiguConfigStoreConfiguration) {
     super('configu');
 
