@@ -2,3 +2,6 @@
 
 # build cache
 __pycache__
+
+# pdoc
+docs/

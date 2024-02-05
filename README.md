@@ -1,8 +1,9 @@
-<img src="https://raw.githubusercontent.com/configu/configu/main/assets/hacktoberfest-23-banner.svg" alt="Hacktoberfest 23 Banner" />
+<!-- <img src="https://raw.githubusercontent.com/configu/configu/main/assets/hacktoberfest-23-banner.svg" alt="Hacktoberfest 23 Banner" />
 
----
+--- -->
 
-<!-- # Configu -->
+# Configu
+
 <p>
   <a href="https://makeapullrequest.com" target="_blank">
     <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome" />
@@ -25,63 +26,98 @@ It is built to provide a _common_, _flexible_, and _extensible_ process for stor
 
 [Learn how to use Configu in your project](https://configu.com/docs/get-started/).
 
-### Features
+## Features
 
 Configu isn’t just a tool; it’s a dedicated companion on your software development journey. Its features are tailored to ensure that your configurations are not just managed but are an integral, secure, and optimized part of your software lifecycle. [Try Configu](https://configu.com/docs/get-started/) and transform the way you handle software configurations.
 
-🎯 **Simple**: Offers a unified API for all configuration tasks, whether dealing with files, databases, secret managers, or custom implementations. Enables end-to-end configuration automation throughout the software development lifecycle.
+#### 🎯 Simple
 
-🚀 **Modern**: Expertly manages configuration data across multiple deployments, workflows, runtimes, and environments. Scales to accommodate infinite configuration contexts, maintaining seamless management and organization.
+Offers a **unified API** for all configuration tasks, whether dealing with files, databases, secret managers, or custom implementations. Enables end-to-end configuration **automation** throughout the software development lifecycle.
 
-🔒 **Secure**: Equipped with a robust configuration type system and a comprehensive policy framework. Provides built-in safeguards against application misconfigurations, ensuring a secure environment for your configurations.
+#### 🚀 Modern
 
-🌐 **Common**: Promotes a clear understanding and consistent management of configuration data. Facilitates collaboration and ensures configurations are accurate and up-to-date. Provides a declarative approach that integrates seamlessly with coding tasks, enabling "Learn Once, Write Anywhere" flexibility and automation across diverse environments and systems.
+Expertly **manages** configuration data across multiple deployments, workflows, runtimes, and environments. **Scales** to accommodate infinite configuration contexts, maintaining seamless management and organization.
 
-🌟 **Flexible**: Adapts to any modern tech stack and use case. Allows to manage configurations across files, directories, codebases, and repositories. Accommodates configuration values over a context tree for inheritance and advanced overriding. Allows combining and piping commands to produce any necessary configuration artifact.
+#### 🔒 Secure
 
-🛠 **Extensible**: Supports custom configuration storage implementations, configuration formatters, and injectors. Continuously evolving and driven by community contributions.
+Equipped with a robust configuration **type system** and a comprehensive **policy framework**. Provides built-in **safeguards** against application misconfigurations, ensuring a secure environment for your configurations.
+
+#### 🌐 Common
+
+Promotes a clear understanding and consistent management of configuration data. Facilitates **collaboration** and ensures configurations are accurate and up-to-date. Provides a declarative approach that integrates seamlessly with coding tasks, enabling "Learn Once, Write Anywhere" flexibility and automation across diverse environments and systems.
+
+#### 🌟 Flexible
+
+Adapts to any **modern tech** stack and use case. Allows to manage configurations across files, directories, codebases, and repositories. Accommodates configuration values over a **context tree** for inheritance and advanced overriding. Allows combining and **piping commands** to produce any necessary **configuration artifact**.
+
+#### 🛠 Extensible
+
+Supports **custom** configuration **storage** implementations, configuration **formatters**, and **injectors**. Continuously evolving and driven by **community** contributions.
 
 Configu is more than just a tool; it’s a solution that evolves with you, enhancing the way you think and interact with software configurations.
 
-### Concepts
+## Concepts
 
-<img alt="Config" height="24" width="24" align="absmiddle" src="https://raw.githubusercontent.com/configu/configu/main/assets/concepts/Config.svg"> **Config**: A generic representation of `application configuration` using three properties: `key`, `value`, `set`. <a href="https://github.com/configu/configu/blob/main/types/Config.ts" target="_blank">types/Config</a>
+#### <img alt="Config" height="24" width="24" align="absmiddle" src="https://raw.githubusercontent.com/configu/configu/main/assets/concepts/Config.svg"> Config
 
-<img alt="Cfgu" height="24" width="24" align="absmiddle" src="https://raw.githubusercontent.com/configu/configu/main/assets/concepts/ConfigSchema.svg"> **Cfgu**: A generic declaration of a `Config`, using properties like type, description and constraints. <a href="https://github.com/configu/configu/blob/main/types/Cfgu.ts" target="_blank">types/Cfgu</a>
+A generic representation of `application configuration` using three properties: `key`, `value`, `set`. <a href="https://github.com/configu/configu/blob/main/types/Config.ts" target="_blank">types/Config</a>
 
-<img alt="ConfigStore" height="24" width="24" align="absmiddle" src="https://raw.githubusercontent.com/configu/configu/main/assets/concepts/ConfigStore.svg"> **ConfigStore**: A storage engine interface for `Config`s records. <a href="https://github.com/configu/configu/blob/main/types/ConfigStore.ts" target="_blank">types/ConfigStore</a>
+#### <img alt="Cfgu" height="24" width="24" align="absmiddle" src="https://raw.githubusercontent.com/configu/configu/main/assets/concepts/ConfigSchema.svg"> Cfgu
 
-<img alt="ConfigSet" height="24" width="24" align="absmiddle" src="https://raw.githubusercontent.com/configu/configu/main/assets/concepts/ConfigSet.svg"> **ConfigSet**: A unique path within a tree-like data structure that groups `Config`s contextually. <a href="https://github.com/configu/configu/blob/main/types/ConfigSet.ts" target="_blank">types/ConfigSet</a>
+A generic declaration of a `Config`, using properties like type, description and constraints. <a href="https://github.com/configu/configu/blob/main/types/Cfgu.ts" target="_blank">types/Cfgu</a>
 
-<img alt="ConfigSchema" height="24" width="24" align="absmiddle" src="https://raw.githubusercontent.com/configu/configu/main/assets/concepts/ConfigSchema.svg"> **ConfigSchema**: A file containing binding records linking each unique `ConfigKey` to its corresponding `Cfgu` declaration. <a href="https://github.com/configu/configu/blob/main/types/ConfigSchema.ts" target="_blank">types/ConfigSchema</a>
+#### <img alt="ConfigStore" height="24" width="24" align="absmiddle" src="https://raw.githubusercontent.com/configu/configu/main/assets/concepts/ConfigStore.svg"> ConfigStore
 
-⤴️ **Upsert Command**: Create, update or delete `Configs` from a `ConfigStore`. <a href="https://github.com/search?q=repo%3Aconfigu%2Fconfigu+Upsert+Command&type=code" target="_blank">Search Upsert Command</a>
+A storage engine interface for `Config`s records. <a href="https://github.com/configu/configu/blob/main/types/ConfigStore.ts" target="_blank">types/ConfigStore</a>
 
-⤵️ **Eval Command**: Fetch `Configs` from `ConfigStore` on demand. <a href="https://github.com/search?q=repo%3Aconfigu%2Fconfigu+Eval+Command&type=code" target="_blank">Search Eval Command</a>
+#### <img alt="ConfigSet" height="24" width="24" align="absmiddle" src="https://raw.githubusercontent.com/configu/configu/main/assets/concepts/ConfigSet.svg"> ConfigSet
 
-▶️ **Export Command**: Export `Configs` as configuration data in various modes. <a href="https://github.com/search?q=repo%3Aconfigu%2Fconfigu+Export+Command&type=code" target="_blank">Search Export Command</a>
+A unique path within a tree-like data structure that groups `Config`s contextually. <a href="https://github.com/configu/configu/blob/main/types/ConfigSet.ts" target="_blank">types/ConfigSet</a>
 
-### Architecture
+#### <img alt="ConfigSchema" height="24" width="24" align="absmiddle" src="https://raw.githubusercontent.com/configu/configu/main/assets/concepts/ConfigSchema.svg"> ConfigSchema
+
+A file containing binding records linking each unique `ConfigKey` to its corresponding `Cfgu` declaration. <a href="https://github.com/configu/configu/blob/main/types/ConfigSchema.ts" target="_blank">types/ConfigSchema</a>
+
+#### ⤴️ Upsert Command
+
+Create, update or delete `Configs` from a `ConfigStore`. <a href="https://github.com/search?q=repo%3Aconfigu%2Fconfigu+Upsert+Command&type=code" target="_blank">Search Upsert Command</a>
+
+#### ⤵️ Eval Command
+
+Fetch `Configs` from `ConfigStore` on demand. <a href="https://github.com/search?q=repo%3Aconfigu%2Fconfigu+Eval+Command&type=code" target="_blank">Search Eval Command</a>
+
+#### ▶️ Export Command
+
+Export `Configs` as configuration data in various modes. <a href="https://github.com/search?q=repo%3Aconfigu%2Fconfigu+Export+Command&type=code" target="_blank">Search Export Command</a>
+
+## Architecture
 
 Configu's architecture is designed to seamlessly integrate into the software development lifecycle. The flow diagram below illustrates this dynamic process:
 
 <img src="https://raw.githubusercontent.com/configu/configu/main/assets/flow-diagram.svg" alt="Configu Flow Diagram" />
 
+## Workflow
+
 The Configu workflow is an iterative process that boosts configuration management as a regular part of your development cycle:
 
-1. **Define ConfigSchema**: Regularly define and revise configuration instances form code sections using `ConfigSchema`.
+1. **Define ConfigSchema**<br/>
+Regularly define and revise configuration instances form code sections using `ConfigSchema`.
 
-2. **Synchronize with VCS**: Keep these `ConfigSchema` updated with your code in your Version Control System (VCS). This ensures configurations evolve with your application.
+2. **Synchronize with VCS**<br/>
+Keep these `ConfigSchema` updated with your code in your Version Control System (VCS). This ensures configurations evolve with your application.
 
-3. **Upsert Configurations**: Use `ConfigSchema` with a `ConfigSet` to `Upsert` (updates or inserts) `Config`s into a `ConfigStore`. Use the context tree. Any modified `Config` is validated against the `ConfigSchema`.
+3. **Upsert Configurations**<br/>
+Use `ConfigSchema` with a `ConfigSet` to `Upsert` (updates or inserts) `Config`s into a `ConfigStore`. Use the context tree. Any modified `Config` is validated against the `ConfigSchema`.
 
-4. **Evaluate Configurations**: From development to deployment, use `ConfigSchema` and `ConfigSet` to `Evaluate` `Configs` from a `ConfigStore`. Any fetched `Config` is validated against the `ConfigSchema`.
+4. **Evaluate Configurations**<br/>
+From development to deployment, use `ConfigSchema` and `ConfigSet` to `Evaluate` `Configs` from a `ConfigStore`. Any fetched `Config` is validated against the `ConfigSchema`.
 
-5. **Export Configurations for Use**: After evaluation, `Export` the `Configs` into formats needed for your application. This step adapts to various deployment environments and needs. Utilize the `CLI` for build and deploy time operations, and the `SDK`s for runtime operations.
+5. **Export Configurations for Use**<br/>
+After evaluation, `Export` the `Configs` into formats needed for your application. This step adapts to various deployment environments and needs. Utilize the `CLI` for build and deploy time operations, and the `SDK`s for runtime operations.
 
 Incorporating these steps into your regular development routines, Configu fosters a dynamic and integrated approach to configuration management. This ensures that configurations remain in sync with your application's evolution, bolstering the system's stability and reliability, as well as enhancing team efficiency and productivity.
 
-### Documentation
+## Documentation
 
 You can find the Configu documentation [on the website](https://configu.com/).
 The documentation is divided into several sections:
@@ -91,7 +127,7 @@ The documentation is divided into several sections:
 * [CLI](https://configu.com/docs/cli-overview/)
 * [SDK](https://configu.com/docs/sdk-overview/)
 
-### Contributing
+## Contributing
 
 There are many ways to [contribute](https://github.com/configu/configu/blob/main/CONTRIBUTING.md) to Configu.
 
@@ -107,7 +143,9 @@ There are many ways to [contribute](https://github.com/configu/configu/blob/main
 
 For details on our planned features and future direction please refer to our [roadmap](link-to-public-gh-project). -->
 
-### Structure
+## Structure
+
+This repository is a monorepo that contains the Configu user interface packages.
 
 <table>
   <thead>
@@ -382,7 +420,7 @@ For details on our planned features and future direction please refer to our [ro
   </tbody>
 </table>
 
-### Related
+## Related
 
 - [Configu Blog](https://configu.com/blog/)
 - [The Twelve-Factor App - Config](https://12factor.net/config)
@@ -392,7 +430,7 @@ For details on our planned features and future direction please refer to our [ro
 - [Webinar - Configuration-as-Code (CaC)](https://www.youtube.com/live/Z_Vz8v6e-U4?si=bDao_gIo1xiLDeQS&t=107)
 - [Post - Configuration-as-Code (CaC)](https://dev.to/rannn505/configuration-as-code-automating-application-configuration-45k6)
 
-### License
+## License
 
 Configu is [Apache-2.0 licensed](https://github.com/configu/configu/blob/main/LICENSE).
 Copyright (c) 2022-present, [Configu](https://configu.com/).
