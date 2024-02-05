@@ -12,7 +12,7 @@ export type ConfiguConfigStoreConfiguration = {
 
 export class ConfiguConfigStore extends ConfigStore {
   private client: Axios;
-  private tag?: string;
+  public tag?: string;
   constructor({
     credentials,
     endpoint = `https://api.configu.com`,
