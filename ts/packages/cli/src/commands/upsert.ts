@@ -88,9 +88,8 @@ export default class Upsert extends BaseCommand<typeof Upsert> {
       this.print(`Configs upserted successfully`, { symbol: 'success' });
     } catch (error) {
       if (error instanceof ConfiguConfigStoreApprovalQueueError) {
-        const queueUrl = error.queueUrl as string;
         // * print warning message with queue url highlighted with an underline
-        const warningMessage = error.message.replace(queueUrl, `\u001B[4m${queueUrl}\u001B[0m`);
+        const warningMessage = error.message.replace(error.queueUrl, `\u001B[4m${error.queueUrl}\u001B[0m`);
         this.print(warningMessage, { symbol: 'warning' });
       } else {
         throw error;
