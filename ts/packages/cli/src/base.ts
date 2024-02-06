@@ -96,6 +96,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
               token: process.env.CONFIGU_TOKEN,
             },
             endpoint: process.env.CONFIGU_ENDPOINT,
+            tag: process.env.CONFIGU_TAG,
           },
           storeConfiguration, // from .configu file
           { source: 'cli' },

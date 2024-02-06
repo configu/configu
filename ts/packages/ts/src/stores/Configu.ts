@@ -7,6 +7,7 @@ export type ConfiguConfigStoreConfiguration = {
   credentials: { org: string; token: string };
   endpoint?: string;
   source?: string;
+  tag?: string;
 };
 
 export class ConfiguConfigStoreApprovalQueueError extends Error {
@@ -22,7 +23,13 @@ export class ConfiguConfigStoreApprovalQueueError extends Error {
 
 export class ConfiguConfigStore extends ConfigStore {
   private client: Axios;
-  constructor({ credentials, endpoint = `https://api.configu.com`, source = 'sdk' }: ConfiguConfigStoreConfiguration) {
+  public tag?: string;
+  constructor({
+    credentials,
+    endpoint = `https://api.configu.com`,
+    source = 'sdk',
+    tag,
+  }: ConfiguConfigStoreConfiguration) {
     super('configu');
 
     this.client = axios.create({
@@ -39,10 +46,12 @@ export class ConfiguConfigStore extends ConfigStore {
     } else {
       this.client.defaults.headers.common.Token = credentials.token;
     }
+
+    this.tag = tag;
   }
 
   async get(queries: ConfigStoreQuery[]): Promise<Config[]> {
-    const { data } = await this.client.post('/config', { queries });
+    const { data } = await this.client.post(`/config${this.tag ? `?tag=${this.tag}` : ''}`, { queries });
     return data;
   }
 
