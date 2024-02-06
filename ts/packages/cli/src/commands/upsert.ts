@@ -1,6 +1,6 @@
 import { Flags } from '@oclif/core';
 import _ from 'lodash';
-import { ConfigSet, UpsertCommand } from '@configu/node';
+import { ConfigSet, ConfiguConfigStoreApprovalQueueError, UpsertCommand } from '@configu/node';
 import { extractConfigs } from '@configu/lib';
 import { BaseCommand } from '../base';
 import { readFile } from '../helpers';
@@ -77,13 +77,23 @@ export default class Upsert extends BaseCommand<typeof Upsert> {
         .value();
     }
 
-    await new UpsertCommand({
-      store,
-      set,
-      schema,
-      configs,
-      pipe,
-    }).run();
-    this.print(`Configs upserted successfully`, { symbol: 'success' });
+    try {
+      await new UpsertCommand({
+        store,
+        set,
+        schema,
+        configs,
+        pipe,
+      }).run();
+      this.print(`Configs upserted successfully`, { symbol: 'success' });
+    } catch (error) {
+      if (error instanceof ConfiguConfigStoreApprovalQueueError) {
+        // * print warning message with queue url highlighted with an underline
+        const warningMessage = error.message.replace(error.queueUrl, `\u001B[4m${error.queueUrl}\u001B[0m`);
+        this.print(warningMessage, { symbol: 'warning' });
+      } else {
+        throw error;
+      }
+    }
   }
 }
