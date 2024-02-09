@@ -1,4 +1,9 @@
-export { NoopConfigStore, InMemoryConfigStore, ConfiguConfigStore } from '@configu/ts';
+export {
+  NoopConfigStore,
+  InMemoryConfigStore,
+  ConfiguConfigStore,
+  ConfiguConfigStoreApprovalQueueError,
+} from '@configu/ts';
 
 export * from './stores/LocalForage';
 
