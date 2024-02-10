@@ -3,10 +3,10 @@ import { type Config } from '@configu/ts';
 import _ from 'lodash';
 import { FileConfigStore } from './File';
 
-export type XMLConfigStoreConfiguration = { path: string };
+export type XmlFileConfigStoreConfiguration = { path: string };
 
-export class XMLConfigStore extends FileConfigStore {
-  constructor({ path }: XMLConfigStoreConfiguration) {
+export class XmlFileConfigStore extends FileConfigStore {
+  constructor({ path }: XmlFileConfigStoreConfiguration) {
     const initialFileState = `
 <?xml version="1.0" encoding="UTF-8"?>
 <root/>
