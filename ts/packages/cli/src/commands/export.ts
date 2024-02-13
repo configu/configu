@@ -115,12 +115,6 @@ export default class Export extends BaseCommand<typeof Export> {
       description: `Spawns executable as child-process and pass exported \`Configs\` as environment variables`,
       exclusive: ['explain', 'format', 'template', 'source'],
     }),
-    prefix: Flags.string({
-      description: `Append a fixed string to the beginning of each Config Key in the export result`,
-    }),
-    suffix: Flags.string({
-      description: `Append a fixed string to the end of each Config Key in the export result`,
-    }),
     casing: Flags.string({
       description: `Transforms the casing of Config Keys in the export result to camelCase, PascalCase, Capital Case, snake_case, param-case, CONSTANT_CASE and others`,
       options: Object.keys(CASE_FUNCTION),
@@ -191,12 +185,6 @@ export default class Export extends BaseCommand<typeof Export> {
     this.printStdout(formattedConfigs);
   }
 
-  keysMutations() {
-    return this.flags.prefix || this.flags.suffix
-      ? (key: string) => `${this.flags.prefix ?? ''}${key}${this.flags.suffix ?? ''}`
-      : undefined;
-  }
-
   applyCasing(result: { [key: string]: string }) {
     const caseFunction = CASE_FUNCTION[this.flags.casing ?? ''];
     return caseFunction ? _.mapKeys(result, (value, key) => caseFunction(key)) : result;
@@ -220,8 +208,7 @@ export default class Export extends BaseCommand<typeof Export> {
     }
 
     const label = this.flags.label ?? `configs-${Date.now()}`;
-    const keys = this.keysMutations();
-    const result = await new ExportCommand({ pipe, env: false, keys }).run();
+    const result = await new ExportCommand({ pipe, env: false }).run();
     const caseFormattedResult = this.applyCasing(result);
     await this.exportConfigs(caseFormattedResult, label);
   }
