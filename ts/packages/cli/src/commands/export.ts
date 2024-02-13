@@ -199,10 +199,7 @@ export default class Export extends BaseCommand<typeof Export> {
 
   applyCasing(result: { [key: string]: string }) {
     const caseFunction = CASE_FUNCTION[this.flags.casing ?? ''];
-    if (caseFunction) {
-      return _.mapKeys(result, (value, key) => caseFunction(key));
-    }
-    return result;
+    return caseFunction ? _.mapKeys(result, (value, key) => caseFunction(key)) : result;
   }
 
   public async run(): Promise<void> {
@@ -225,7 +222,7 @@ export default class Export extends BaseCommand<typeof Export> {
     const label = this.flags.label ?? `configs-${Date.now()}`;
     const keys = this.keysMutations();
     const result = await new ExportCommand({ pipe, env: false, keys }).run();
-    const formattedResult = this.applyCasing(result);
-    await this.exportConfigs(formattedResult, label);
+    const caseFormattedResult = this.applyCasing(result);
+    await this.exportConfigs(caseFormattedResult, label);
   }
 }
