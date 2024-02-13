@@ -1,10 +1,21 @@
 import { cwd } from 'process';
 import { spawnSync } from 'child_process';
 import { Flags, ux } from '@oclif/core';
-import _ from 'lodash';
+import _, { kebabCase } from 'lodash';
 import { TMPL, type EvalCommandReturn, EvaluatedConfigOrigin, type ExportCommandReturn } from '@configu/ts';
 import { ExportCommand } from '@configu/node';
 import { CONFIG_FORMAT_TYPE, formatConfigs, type ConfigFormat } from '@configu/lib';
+import {
+  dotCase,
+  constantCase,
+  noCase,
+  pascalCase,
+  pathCase,
+  sentenceCase,
+  snakeCase,
+  capitalCase,
+  camelCase,
+} from 'change-case';
 import { BaseCommand } from '../base';
 import { readFile } from '../helpers';
 
@@ -12,6 +23,21 @@ export const NO_CONFIGS_WARNING_TEXT = 'no configuration was fetched';
 export const CONFIG_EXPORT_RUN_DEFAULT_ERROR_TEXT = 'could not export configurations';
 
 type TemplateContext = { [key: string]: string } | { key: string; value: string }[];
+
+const CASE_FUNCTION: { [casing: string]: (str: string) => string } = {
+  CamelCase: camelCase,
+  CapitalCase: capitalCase,
+  ConstantCase: constantCase,
+  DotCase: dotCase,
+  KebabCase: kebabCase,
+  NoCase: noCase,
+  PascalCase: pascalCase,
+  PascalSnakeCase: (str: string) => capitalCase(str).split(' ').join('_'),
+  PathCase: pathCase,
+  SentenceCase: sentenceCase,
+  SnakeCase: snakeCase,
+  TrainCase: (str: string) => capitalCase(str).split(' ').join('-'),
+};
 
 export default class Export extends BaseCommand<typeof Export> {
   static description = `Export \`Configs\` as configuration data in various modes`;
@@ -95,6 +121,10 @@ export default class Export extends BaseCommand<typeof Export> {
     suffix: Flags.string({
       description: `Append a fixed string to the end of each Config Key in the export result`,
     }),
+    casing: Flags.string({
+      description: `Transforms the casing of Config Keys in the export result to camelCase, PascalCase, Capital Case, snake_case, param-case, CONSTANT_CASE and others`,
+      options: Object.keys(CASE_FUNCTION),
+    }),
   };
 
   printStdout(finalConfigData: string) {
@@ -167,6 +197,14 @@ export default class Export extends BaseCommand<typeof Export> {
       : undefined;
   }
 
+  applyCasing(result: { [key: string]: string }) {
+    const caseFunction = CASE_FUNCTION[this.flags.casing ?? ''];
+    if (caseFunction) {
+      return _.mapKeys(result, (value, key) => caseFunction(key));
+    }
+    return result;
+  }
+
   public async run(): Promise<void> {
     let pipe = await this.readPreviousEvalCommandReturn();
 
@@ -187,6 +225,7 @@ export default class Export extends BaseCommand<typeof Export> {
     const label = this.flags.label ?? `configs-${Date.now()}`;
     const keys = this.keysMutations();
     const result = await new ExportCommand({ pipe, env: false, keys }).run();
-    await this.exportConfigs(result, label);
+    const formattedResult = this.applyCasing(result);
+    await this.exportConfigs(formattedResult, label);
   }
 }
