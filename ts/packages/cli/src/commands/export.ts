@@ -162,9 +162,15 @@ export default class Export extends BaseCommand<typeof Export> {
   }
 
   keysMutations() {
-    return this.flags.prefix || this.flags.suffix
-      ? (key: string) => `${this.flags.prefix ?? ''}${key}${this.flags.suffix ?? ''}`
-      : undefined;
+    if ([this.flags.prefix, this.flags.suffix].some((flag) => flag !== undefined)) {
+      return (key: string) => {
+        let mutatedKey = key;
+        if (this.flags.prefix) mutatedKey = `${this.flags.prefix}${mutatedKey}`;
+        if (this.flags.suffix) mutatedKey = `${mutatedKey}${this.flags.suffix}`;
+        return mutatedKey;
+      };
+    }
+    return undefined;
   }
 
   public async run(): Promise<void> {
