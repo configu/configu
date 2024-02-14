@@ -1,7 +1,7 @@
 import { cwd } from 'process';
 import { spawnSync } from 'child_process';
 import { Flags, ux } from '@oclif/core';
-import _, { kebabCase } from 'lodash';
+import _ from 'lodash';
 import { TMPL, type EvalCommandReturn, EvaluatedConfigOrigin, type ExportCommandReturn } from '@configu/ts';
 import { ExportCommand } from '@configu/node';
 import { CONFIG_FORMAT_TYPE, formatConfigs, type ConfigFormat } from '@configu/lib';
@@ -15,6 +15,7 @@ import {
   snakeCase,
   capitalCase,
   camelCase,
+  paramCase,
 } from 'change-case';
 import { BaseCommand } from '../base';
 import { readFile } from '../helpers';
@@ -24,19 +25,19 @@ export const CONFIG_EXPORT_RUN_DEFAULT_ERROR_TEXT = 'could not export configurat
 
 type TemplateContext = { [key: string]: string } | { key: string; value: string }[];
 
-const CASE_FUNCTION: { [casing: string]: (str: string) => string } = {
+const casingFormatters: Record<string, (string: string) => string> = {
   CamelCase: camelCase,
   CapitalCase: capitalCase,
   ConstantCase: constantCase,
   DotCase: dotCase,
-  KebabCase: kebabCase,
+  KebabCase: paramCase,
   NoCase: noCase,
   PascalCase: pascalCase,
-  PascalSnakeCase: (str: string) => capitalCase(str).split(' ').join('_'),
+  PascalSnakeCase: (string: string) => capitalCase(string).split(' ').join('_'),
   PathCase: pathCase,
   SentenceCase: sentenceCase,
   SnakeCase: snakeCase,
-  TrainCase: (str: string) => capitalCase(str).split(' ').join('-'),
+  TrainCase: (string: string) => capitalCase(string).split(' ').join('-'),
 };
 
 export default class Export extends BaseCommand<typeof Export> {
@@ -68,8 +69,8 @@ export default class Export extends BaseCommand<typeof Export> {
       command: `<%= config.bin %> eval ... | <%= config.bin %> <%= command.id %> --run 'node index.js'`,
     },
     {
-      description: `Pipe eval commands result to export command and apply a prefix / suffix to each Config Key in the export result`,
-      command: `<%= config.bin %> eval ... | configu export --prefix "MYAPP_" --suffix "_PROD"`,
+      description: `Pipe eval commands result to export command and apply casing to each Config Key in the export result`,
+      command: `<%= config.bin %> eval ... | configu export --casing "SnakeCase"`,
     },
   ];
 
@@ -117,7 +118,7 @@ export default class Export extends BaseCommand<typeof Export> {
     }),
     casing: Flags.string({
       description: `Transforms the casing of Config Keys in the export result to camelCase, PascalCase, Capital Case, snake_case, param-case, CONSTANT_CASE and others`,
-      options: Object.keys(CASE_FUNCTION),
+      options: Object.keys(casingFormatters),
     }),
   };
 
@@ -186,7 +187,7 @@ export default class Export extends BaseCommand<typeof Export> {
   }
 
   applyCasing(result: { [key: string]: string }) {
-    const caseFunction = CASE_FUNCTION[this.flags.casing ?? ''];
+    const caseFunction = casingFormatters[this.flags.casing ?? ''];
     return caseFunction ? _.mapKeys(result, (value, key) => caseFunction(key)) : result;
   }
 
