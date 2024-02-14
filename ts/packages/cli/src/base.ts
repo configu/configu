@@ -22,6 +22,7 @@ type BaseConfig = Config & {
     file?: string; // .configu file
     data: Partial<{
       stores: Record<string, { type: string; configuration: Record<string, any> }>;
+      schemas: Record<string, string>;
       scripts: Record<string, string>;
     }>;
   };
@@ -111,8 +112,8 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     if (!schemaFlag) {
       throw new Error('--schema flag is missing');
     }
-
-    const schemaBasename = getPathBasename(schemaFlag);
+    const schemaPath = this.config.cli.data.schemas?.[schemaFlag] ?? schemaFlag;
+    const schemaBasename = getPathBasename(schemaPath);
     const [schemaName, cfguExt, fileExt] = schemaBasename.split('.');
 
     if (!schemaName) {
@@ -128,23 +129,23 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       throw EXT_ERROR;
     }
 
-    const schemaContentsString = await readFile(schemaFlag);
+    const schemaContentsString = await readFile(schemaPath);
     if (fileExt === 'json') {
       try {
-        const schemaContents = loadJSON(schemaFlag, schemaContentsString);
+        const schemaContents = loadJSON(schemaPath, schemaContentsString);
         return new ConfigSchema(schemaName, schemaContents);
       } catch (error) {
-        error.message = `JSON Error in ${schemaFlag}:\n${error.message}`;
+        error.message = `JSON Error in ${schemaPath}:\n${error.message}`;
         throw error;
       }
     }
 
     if (fileExt === 'yaml' || fileExt === 'yml') {
       try {
-        const schemaContents = loadYAML(schemaFlag, schemaContentsString);
+        const schemaContents = loadYAML(schemaPath, schemaContentsString);
         return new ConfigSchema(schemaName, schemaContents);
       } catch (error) {
-        error.message = `YAML Error in ${schemaFlag}:\n${error.message}`;
+        error.message = `YAML Error in ${schemaPath}:\n${error.message}`;
         throw error;
       }
     }
