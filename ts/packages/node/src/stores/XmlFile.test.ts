@@ -9,14 +9,18 @@ describe('XmlFileConfigStore', () => {
     await fs.writeFile(
       testXmlFilePath,
       `
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.1" encoding="UTF-8"?>
 <root>
-      <set></set>
-      <key>rootkey</key>
-      <value>rootvalue</value>
-      <set>section</set>
-      <key>key</key>
-      <value>value</value>
+  <config>
+    <set>dev</set>
+    <key>GREETING</key>
+    <value>hey</value>
+  </config>
+  <config>
+    <set>prod</set>
+    <key>SUBJECT</key>
+    <value>world</value>
+  </config>
 </root>
       `,
     );
@@ -29,42 +33,43 @@ describe('XmlFileConfigStore', () => {
   test('should read configurations from XML file', async () => {
     const store = new XmlFileConfigStore({ path: testXmlFilePath });
     const configs = await store.get([
-      { set: '', key: 'rootkey' },
-      { set: 'section', key: 'key' },
+      { set: 'dev', key: 'GREETING' },
+      { set: 'prod', key: 'SUBJECT' },
     ]);
+
     expect(configs).toEqual([
-      { set: '', key: 'rootkey', value: 'rootvalue' },
-      { set: 'section', key: 'key', value: 'value' },
+      { set: 'dev', key: 'GREETING', value: 'hey' },
+      { set: 'prod', key: 'SUBJECT', value: 'world' },
     ]);
   });
 
   test('should write configurations to XML file', async () => {
     const store = new XmlFileConfigStore({ path: testXmlFilePath });
     const configsToWrite = [
-      { set: '', key: 'global_key', value: 'global_value' },
-      { set: 'section', key: 'section_key', value: 'section_value' },
+      { set: 'dev', key: 'GREETING', value: 'hey' },
+      { set: 'prod', key: 'SUBJECT', value: 'world' },
     ];
     await store.set(configsToWrite);
 
     // * Read the file again to verify the write operation
     const newConfigs = await store.get([
-      { set: '', key: 'global_key' },
-      { set: 'section', key: 'section_key' },
+      { set: 'dev', key: 'GREETING' },
+      { set: 'prod', key: 'SUBJECT' },
     ]);
     expect(newConfigs).toEqual(configsToWrite);
   });
 
   test('should query global configurations', async () => {
     const store = new XmlFileConfigStore({ path: testXmlFilePath });
-    const queries = [{ set: '', key: 'rootkey' }];
+    const queries = [{ set: 'dev', key: 'GREETING' }];
     const results = await store.get(queries);
-    expect(results).toEqual([{ set: '', key: 'rootkey', value: 'rootvalue' }]);
+    expect(results).toEqual([{ set: 'dev', key: 'GREETING', value: 'hey' }]);
   });
 
   test('should query configurations', async () => {
     const store = new XmlFileConfigStore({ path: testXmlFilePath });
-    const queries = [{ set: 'section', key: 'key' }];
+    const queries = [{ set: 'prod', key: 'SUBJECT' }];
     const results = await store.get(queries);
-    expect(results).toEqual([{ set: 'section', key: 'key', value: 'value' }]);
+    expect(results).toEqual([{ set: 'prod', key: 'SUBJECT', value: 'world' }]);
   });
 });

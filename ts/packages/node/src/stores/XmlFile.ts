@@ -8,7 +8,7 @@ export type XmlFileConfigStoreConfiguration = { path: string };
 export class XmlFileConfigStore extends FileConfigStore {
   constructor({ path }: XmlFileConfigStoreConfiguration) {
     const initialFileState = `
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.1" encoding="UTF-8"?>
 <root/>
     `;
     super('xml-file', { path, initialFileState });
@@ -21,22 +21,21 @@ export class XmlFileConfigStore extends FileConfigStore {
       if (error) {
         throw error;
       }
-      const sets = _.get(result, 'root.set', []);
-      const keys = _.get(result, 'root.key', []);
-      const values = _.get(result, 'root.value', []);
-      output = _.zipWith(sets, keys, values, (set: string, key: string, value: string) => ({
-        set,
-        key,
-        value,
-      }));
+      output = result.root.config;
     });
 
     return output;
   }
 
   stringify(nextConfigs: Config[]): string {
-    const builder = new xml2js.Builder();
-    const xmlObject = { root: nextConfigs }; // Assuming 'root' as the main element
+    const options = {
+      xmldec: {
+        version: '1.1',
+        encoding: 'UTF-8',
+      },
+    };
+    const builder = new xml2js.Builder(options);
+    const xmlObject = { root: { config: nextConfigs } };
     return builder.buildObject(xmlObject);
   }
 }
