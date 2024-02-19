@@ -39,7 +39,10 @@ export class ExportCommand extends Command<ExportCommandReturn> {
 
   async run() {
     const { pipe } = this.parameters;
-    const configDict = _.mapValues(pipe, (current) => current.result.value);
+    const configDict = _(pipe)
+      .pickBy((value, key) => !value.context.cfgu.hidden)
+      .mapValues((current) => current.result.value)
+      .value();
     const keyMutatedConfigDict = this.mutateKeys(configDict);
     return keyMutatedConfigDict;
   }
