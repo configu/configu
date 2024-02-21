@@ -377,18 +377,20 @@ describe(`commands`, () => {
     });
   });
   describe(`ExportCommand`, () => {
-    const getEvalResult = async () => {
+    const getEvalResult = async (schema?: ConfigSchema) => {
       return new EvalCommand({
         store: store1,
         set: set1,
-        schema: new ConfigSchema('mutate', {
-          KEY0: {
-            type: 'String',
-          },
-          KEY1: {
-            type: 'String',
-          },
-        }),
+        schema:
+          schema ||
+          new ConfigSchema('mutate', {
+            KEY0: {
+              type: 'String',
+            },
+            KEY1: {
+              type: 'String',
+            },
+          }),
         configs: {
           KEY0: 'KEY0',
           KEY1: 'KEY1',
@@ -451,6 +453,21 @@ describe(`commands`, () => {
           },
         }).run(),
       ).rejects.toBeInstanceOf(Error);
+    });
+    test('Export with hidden configs', async () => {
+      const evalResult = await getEvalResult(
+        new ConfigSchema('mutate', {
+          KEY0: {
+            type: 'String',
+          },
+          KEY1: {
+            type: 'String',
+            hidden: true,
+          },
+        }),
+      );
+      const exportedConfigs = await new ExportCommand({ pipe: evalResult }).run();
+      expect(exportedConfigs).toStrictEqual({ KEY0: 'KEY0' });
     });
   });
 });
