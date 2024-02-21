@@ -1,6 +1,5 @@
 import xml2js from 'xml2js';
 import { type Config } from '@configu/ts';
-import _ from 'lodash';
 import { FileConfigStore } from './File';
 
 export type XmlFileConfigStoreConfiguration = { path: string };
