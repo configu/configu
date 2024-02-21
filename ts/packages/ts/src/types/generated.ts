@@ -26,6 +26,7 @@ export interface Cfgu {
     default?:     string;
     depends?:     string[];
     description?: string;
+    hidden?:      boolean;
     lazy?:        boolean;
     options?:     string[];
     pattern?:     string;
@@ -62,6 +63,7 @@ export interface ConfigSchemaContents {
     default?:     string;
     depends?:     string[];
     description?: string;
+    hidden?:      boolean;
     lazy?:        boolean;
     options?:     string[];
     pattern?:     string;
@@ -349,6 +351,7 @@ const typeMap: any = {
         { json: "default", js: "default", typ: u(undefined, "") },
         { json: "depends", js: "depends", typ: u(undefined, a("")) },
         { json: "description", js: "description", typ: u(undefined, "") },
+        { json: "hidden", js: "hidden", typ: u(undefined, true) },
         { json: "lazy", js: "lazy", typ: u(undefined, true) },
         { json: "options", js: "options", typ: u(undefined, a("")) },
         { json: "pattern", js: "pattern", typ: u(undefined, "") },
@@ -370,6 +373,7 @@ const typeMap: any = {
         { json: "default", js: "default", typ: u(undefined, "") },
         { json: "depends", js: "depends", typ: u(undefined, a("")) },
         { json: "description", js: "description", typ: u(undefined, "") },
+        { json: "hidden", js: "hidden", typ: u(undefined, true) },
         { json: "lazy", js: "lazy", typ: u(undefined, true) },
         { json: "options", js: "options", typ: u(undefined, a("")) },
         { json: "pattern", js: "pattern", typ: u(undefined, "") },
