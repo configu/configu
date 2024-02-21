@@ -395,6 +395,14 @@ describe(`commands`, () => {
         },
       }).run();
     };
+    test('Export with filter', async () => {
+      const evalResult = await getEvalResult();
+      const exportedConfigs = await new ExportCommand({
+        pipe: evalResult,
+        filter: ({ context, result }) => result.value !== 'KEY0',
+      }).run();
+      expect(exportedConfigs).toStrictEqual({ KEY1: 'KEY1' });
+    });
     describe(`Keys Mutation Callback`, () => {
       test('Export without keys mutation callback', async () => {
         const evalResult = await getEvalResult();
