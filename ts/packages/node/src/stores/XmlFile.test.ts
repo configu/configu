@@ -43,8 +43,7 @@ describe('XmlFileConfigStore', () => {
     ]);
   });
 
-  test('should write configurations to XML file', async () => {
-    const store = new XmlFileConfigStore({ path: testXmlFilePath });
+  const writeConfigs = async (store: XmlFileConfigStore) => {
     const configsToWrite = [
       { set: 'dev', key: 'GREETING', value: 'hey' },
       { set: 'prod', key: 'SUBJECT', value: 'world' },
@@ -57,6 +56,27 @@ describe('XmlFileConfigStore', () => {
       { set: 'prod', key: 'SUBJECT' },
     ]);
     expect(newConfigs).toEqual(configsToWrite);
+  };
+
+  test('should write configurations to new XML file', async () => {
+    await fs.unlink(testXmlFilePath);
+    const store = new XmlFileConfigStore({ path: testXmlFilePath });
+    await store.init();
+    await writeConfigs(store);
+  });
+
+  test('should write configurations to an existing XML file', async () => {
+    const store = new XmlFileConfigStore({ path: testXmlFilePath });
+    await writeConfigs(store);
+  });
+
+  test('should query new XML file dev configurations', async () => {
+    await fs.unlink(testXmlFilePath);
+    const store = new XmlFileConfigStore({ path: testXmlFilePath });
+    await store.init();
+    const queries = [{ set: 'dev', key: 'GREETING' }];
+    const results = await store.get(queries);
+    expect(results).toEqual([]);
   });
 
   test('should query global configurations', async () => {

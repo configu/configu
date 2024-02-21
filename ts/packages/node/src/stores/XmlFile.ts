@@ -2,39 +2,33 @@ import xml2js from 'xml2js';
 import { type Config } from '@configu/ts';
 import { FileConfigStore } from './File';
 
-export type XmlFileConfigStoreConfiguration = { path: string };
+export type XmlFileConfigStoreConfiguration = { path: string; builderOptions?: xml2js.BuilderOptions };
 
 export class XmlFileConfigStore extends FileConfigStore {
-  constructor({ path }: XmlFileConfigStoreConfiguration) {
-    const initialFileState = `
-<?xml version="1.1" encoding="UTF-8"?>
-<root/>
-    `;
+  private builder: xml2js.Builder;
+  constructor({ path, builderOptions }: XmlFileConfigStoreConfiguration) {
+    const builder = new xml2js.Builder(builderOptions);
+    const initialFileState = builder.buildObject({ root: { config: [] } });
     super('xml-file', { path, initialFileState });
+    this.builder = builder;
   }
 
   parse(fileContent: string): Config[] {
     let output: Config[] = [];
-    const parser = new xml2js.Parser({ explicitArray: false });
-    parser.parseString(fileContent, function (error, result) {
+    const parser = new xml2js.Parser({ explicitArray: false, emptyTag: () => [] });
+    parser.parseString(fileContent, (error, result) => {
       if (error) {
         throw error;
       }
-      output = result.root.config;
+      output = result.root.config ?? result.root;
     });
 
     return output;
   }
 
   stringify(nextConfigs: Config[]): string {
-    const options = {
-      xmldec: {
-        version: '1.1',
-        encoding: 'UTF-8',
-      },
-    };
-    const builder = new xml2js.Builder(options);
+  stringify(nextConfigs: Config[]): string {
     const xmlObject = { root: { config: nextConfigs } };
-    return builder.buildObject(xmlObject);
+    return this.builder.buildObject(xmlObject);
   }
 }
