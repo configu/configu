@@ -27,7 +27,6 @@ export class XmlFileConfigStore extends FileConfigStore {
   }
 
   stringify(nextConfigs: Config[]): string {
-  stringify(nextConfigs: Config[]): string {
     const xmlObject = { root: { config: nextConfigs } };
     return this.builder.buildObject(xmlObject);
   }
