@@ -130,6 +130,38 @@ export default class Export extends BaseCommand<typeof Export> {
       description: `Transforms the casing of Config Keys in the export result to camelCase, PascalCase, Capital Case, snake_case, param-case, CONSTANT_CASE and others`,
       options: Object.keys(casingFormatters),
     }),
+    'pick-label': Flags.string({
+      description: `Pick a specific label from the previous eval command return to export`,
+      multiple: true,
+    }),
+    'omit-label': Flags.string({
+      description: `Omit a specific label from the previous eval command return to export`,
+      multiple: true,
+    }),
+    'pick-key': Flags.string({
+      description: `Pick a specific key from the previous eval command return to export`,
+      multiple: true,
+    }),
+    'omit-key': Flags.string({
+      description: `Omit a specific key from the previous eval command return to export`,
+      multiple: true,
+    }),
+    'pick-hidden': Flags.boolean({
+      description: `Explicitly include config keys marked as hidden. By default, hidden keys are omitted.`,
+      exclusive: ['omit-hidden'],
+    }),
+    'omit-hidden': Flags.boolean({
+      description: `Explicitly exclude config keys marked as hidden. By default, hidden keys are omitted.`,
+      exclusive: ['pick-hidden'],
+    }),
+    'pick-empty': Flags.boolean({
+      description: `Include config keys with empty values. By default, empty values are included.`,
+      exclusive: ['omit-empty'],
+    }),
+    'omit-empty': Flags.boolean({
+      description: `Exclude config keys with empty values. By default, empty values are included.`,
+      exclusive: ['pick-empty'],
+    }),
   };
 
   printStdout(finalConfigData: string) {
@@ -213,6 +245,33 @@ export default class Export extends BaseCommand<typeof Export> {
     return caseFunction ? _.mapKeys(result, (value, key) => caseFunction(key)) : result;
   }
 
+  filterFromFlags(): (({ context, result }: EvalCommandReturn['string']) => boolean) | undefined {
+    const filterFlags = _.filter(this.rawFlags, ({ flag }) => flag.startsWith('pick') || flag.startsWith('omit'));
+    if (filterFlags.length > 0) {
+      const hiddenFlags = _.remove(filterFlags, ({ flag }) => ['omit-hidden', 'pick-hidden'].includes(flag));
+      const emptyFlags = _.remove(filterFlags, ({ flag }) => ['omit-empty', 'pick-empty'].includes(flag));
+      const labelsAndKeysFlags = _.remove(filterFlags, ({ flag }) =>
+        ['omit-key', 'omit-label', 'pick-key', 'pick-label'].includes(flag),
+      );
+      return ({ context, result }: EvalCommandReturn['string']): boolean => {
+        const hiddenFilter = hiddenFlags.some((flagToken) => flagToken.flag === 'pick-hidden')
+          ? true
+          : !context.cfgu.hidden;
+        const emptyFilter = emptyFlags.some((flagToken) => flagToken.flag === 'omit-empty') ? !!result.value : true;
+        const labelsAndKeysFilter = labelsAndKeysFlags.every((flagToken) => {
+          const [flagAction, flagType]: string[] = flagToken.flag.split('-');
+          const flagTypeFilter =
+            flagType === 'label'
+              ? (context.cfgu.labels ?? []).includes(flagToken.input)
+              : context.key === flagToken.input;
+          return flagAction === 'pick' ? flagTypeFilter : !flagTypeFilter;
+        });
+        return hiddenFilter && emptyFilter && labelsAndKeysFilter;
+      };
+    }
+    return undefined;
+  }
+
   public async run(): Promise<void> {
     let pipe = await this.readPreviousEvalCommandReturn();
 
@@ -231,8 +290,9 @@ export default class Export extends BaseCommand<typeof Export> {
     }
 
     const label = this.flags.label ?? `configs-${Date.now()}`;
+    const filter = this.filterFromFlags();
     const keys = this.keysMutations();
-    const result = await new ExportCommand({ pipe, env: false, keys }).run();
+    const result = await new ExportCommand({ pipe, env: false, filter, keys }).run();
     const caseFormattedResult = this.applyCasing(result);
     await this.exportConfigs(caseFormattedResult, label);
   }
