@@ -41,6 +41,10 @@ export default class Export extends BaseCommand<typeof Export> {
       description: `Pipe eval commands result to export command to pass \`Configs\` as environment variables to a child-process`,
       command: `<%= config.bin %> eval ... | <%= config.bin %> <%= command.id %> --run 'node index.js'`,
     },
+    {
+      description: `Pipe eval commands result to export command and apply a prefix / suffix to each Config Key in the export result`,
+      command: `<%= config.bin %> eval ... | configu export --prefix "MYAPP_" --suffix "_PROD"`,
+    },
   ];
 
   static flags = {
@@ -49,13 +53,11 @@ export default class Export extends BaseCommand<typeof Export> {
       default: true,
       allowNo: true,
     }),
-
     explain: Flags.boolean({
       description: `Outputs metadata on the exported \`Configs\``,
       aliases: ['report'],
       exclusive: ['format', 'template', 'source', 'run'],
     }),
-
     format: Flags.string({
       description: `Format exported \`Configs\` to common configuration formats. Redirect the output to file, if needed`,
       options: CONFIG_FORMAT_TYPE,
@@ -69,7 +71,6 @@ export default class Export extends BaseCommand<typeof Export> {
       aliases: ['EOL'],
       dependsOn: ['format'],
     }),
-
     template: Flags.string({
       description: `Path to a file containing {{mustache}} templates to render (inject/substitute) the exported \`Configs\` into`,
       exclusive: ['explain', 'format', 'source', 'run'],
@@ -79,16 +80,20 @@ export default class Export extends BaseCommand<typeof Export> {
       options: ['object', 'array'],
       dependsOn: ['template'],
     }),
-
     // * (set -a; source <(configu export ... --source); set +a && the command)
     source: Flags.boolean({
       description: `Source exported \`Configs\` as environment variables to the current shell`,
       exclusive: ['explain', 'format', 'template', 'run'],
     }),
-
     run: Flags.string({
       description: `Spawns executable as child-process and pass exported \`Configs\` as environment variables`,
       exclusive: ['explain', 'format', 'template', 'source'],
+    }),
+    prefix: Flags.string({
+      description: `Append a fixed string to the beginning of each Config Key in the export result`,
+    }),
+    suffix: Flags.string({
+      description: `Append a fixed string to the end of each Config Key in the export result`,
     }),
   };
 
@@ -156,6 +161,18 @@ export default class Export extends BaseCommand<typeof Export> {
     this.printStdout(formattedConfigs);
   }
 
+  keysMutations() {
+    if ([this.flags.prefix, this.flags.suffix].some((flag) => flag !== undefined)) {
+      return (key: string) => {
+        let mutatedKey = key;
+        if (this.flags.prefix) mutatedKey = `${this.flags.prefix}${mutatedKey}`;
+        if (this.flags.suffix) mutatedKey = `${mutatedKey}${this.flags.suffix}`;
+        return mutatedKey;
+      };
+    }
+    return undefined;
+  }
+
   public async run(): Promise<void> {
     let pipe = await this.readPreviousEvalCommandReturn();
 
@@ -174,7 +191,8 @@ export default class Export extends BaseCommand<typeof Export> {
     }
 
     const label = this.flags.label ?? `configs-${Date.now()}`;
-    const result = await new ExportCommand({ pipe, env: false }).run();
+    const keys = this.keysMutations();
+    const result = await new ExportCommand({ pipe, env: false, keys }).run();
     await this.exportConfigs(result, label);
   }
 }
