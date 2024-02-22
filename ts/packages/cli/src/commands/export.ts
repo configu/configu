@@ -76,6 +76,22 @@ export default class Export extends BaseCommand<typeof Export> {
       description: `Pipe eval commands result to export command and apply casing to each Config Key in the export result`,
       command: `<%= config.bin %> eval ... | configu export --casing "SnakeCase"`,
     },
+    {
+      description: `Pipe eval commands result to export command and exclude specific labels`,
+      command: `<%= config.bin %> eval ... | configu export --omit-label 'deprecated' --omit-label 'temporary'`,
+    },
+    {
+      description: `Pipe eval commands result to export command and include only configs under specific labels`,
+      command: `<%= config.bin %> eval ... |  configu export --pick-label 'production' --pick-label 'secure'`,
+    },
+    {
+      description: `Pipe eval commands result to export command and exclude specific keys`,
+      command: `<%= config.bin %> eval ... | configu export --omit-key 'DEBUG_MODE' --omit-key 'TEST_ACCOUNT'`,
+    },
+    {
+      description: `Pipe eval commands result to export command. Include hidden configs and exclude configs with empty values`,
+      command: `<%= config.bin %> eval ... | configu export --pick-hidden  --omit-empty`,
+    },
   ];
 
   static flags = {
