@@ -39,10 +39,11 @@ export class ExportCommand extends Command<ExportCommandReturn> {
   }
 
   private filterPipe(pipe: EvalCommandReturn) {
-    if (!this.parameters.filter) {
-      return pipe;
+    const { filter } = this.parameters;
+    if (!filter) {
+      return _.pickBy(pipe, ({ context }) => !context.cfgu.hidden);
     }
-    return _.pickBy(pipe, this.parameters.filter);
+    return _.pickBy(pipe, filter);
   }
 
   private mapPipe(pipe: EvalCommandReturn) {
