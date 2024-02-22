@@ -10,6 +10,7 @@ export type ExportCommandReturn = {
 export type ExportCommandParameters = {
   pipe: EvalCommandReturn;
   keys?: (key: string) => string;
+  filter?: ({ context, result }: EvalCommandReturn['string']) => boolean;
 };
 
 export class ExportCommand extends Command<ExportCommandReturn> {
@@ -37,10 +38,22 @@ export class ExportCommand extends Command<ExportCommandReturn> {
     });
   }
 
+  private filterPipe(pipe: EvalCommandReturn) {
+    if (!this.parameters.filter) {
+      return pipe;
+    }
+    return _.pickBy(pipe, this.parameters.filter);
+  }
+
+  private mapPipe(pipe: EvalCommandReturn) {
+    return _.mapValues(pipe, (current) => current.result.value);
+  }
+
   async run() {
     const { pipe } = this.parameters;
-    const configDict = _.mapValues(pipe, (current) => current.result.value);
-    const keyMutatedConfigDict = this.mutateKeys(configDict);
-    return keyMutatedConfigDict;
+    const filteredPipe = this.filterPipe(pipe);
+    const mappedPipe = this.mapPipe(filteredPipe);
+    const keyMutatedMappedPipe = this.mutateKeys(mappedPipe);
+    return keyMutatedMappedPipe;
   }
 }
