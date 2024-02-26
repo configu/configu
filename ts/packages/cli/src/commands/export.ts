@@ -17,6 +17,7 @@ import {
   camelCase,
   paramCase,
 } from 'change-case';
+import { type FlagToken } from '@oclif/core/lib/interfaces/parser';
 import { BaseCommand } from '../base';
 import { readFile } from '../helpers';
 
@@ -269,20 +270,45 @@ export default class Export extends BaseCommand<typeof Export> {
       const labelsAndKeysFlags = _.remove(filterFlags, ({ flag }) =>
         ['omit-key', 'omit-label', 'pick-key', 'pick-label'].includes(flag),
       );
+      const labelsAndKeysRules = _.reduce<
+        FlagToken,
+        {
+          labels: { [label: string]: boolean };
+          keys: { [k: string]: boolean };
+        }
+      >(
+        labelsAndKeysFlags,
+        (rules, { flag, input }) => {
+          const [flagAction, flagType]: string[] = flag.split('-');
+          const flagRule =
+            flagType === 'label'
+              ? { labels: { ...rules.labels, [input]: flagAction === 'pick' } }
+              : { keys: { ...rules.keys, [input]: flagAction === 'pick' } };
+          return { ...rules, ...flagRule };
+        },
+        { labels: {}, keys: {} },
+      );
       return ({ context, result }: EvalCommandReturn['string']): boolean => {
         const hiddenFilter = hiddenFlags.some((flagToken) => flagToken.flag === 'pick-hidden')
           ? true
           : !context.cfgu.hidden;
         const emptyFilter = emptyFlags.some((flagToken) => flagToken.flag === 'omit-empty') ? !!result.value : true;
-        const labelsAndKeysFilter = labelsAndKeysFlags.every((flagToken) => {
-          const [flagAction, flagType]: string[] = flagToken.flag.split('-');
-          const flagTypeFilter =
-            flagType === 'label'
-              ? (context.cfgu.labels ?? []).includes(flagToken.input)
-              : context.key === flagToken.input;
-          return flagAction === 'pick' ? flagTypeFilter : !flagTypeFilter;
-        });
-        return hiddenFilter && emptyFilter && labelsAndKeysFilter;
+
+        const labelFilters =
+          Object.keys(labelsAndKeysRules.labels).length > 0
+            ? Object.entries(labelsAndKeysRules.labels).map(([label, rule]) => {
+                return rule && context.cfgu.labels ? context.cfgu.labels.includes(label) : false;
+              })
+            : [true];
+
+        const keysFilters =
+          Object.keys(labelsAndKeysRules.keys).length > 0
+            ? Object.entries(labelsAndKeysRules.keys).map(([key, rule]) => {
+                return rule ? context.key === key : context.key !== key;
+              })
+            : [true];
+
+        return hiddenFilter && emptyFilter && labelFilters.some(Boolean) && keysFilters.some(Boolean);
       };
     }
     return undefined;
