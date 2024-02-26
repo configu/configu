@@ -303,17 +303,19 @@ export default class Export extends BaseCommand<typeof Export> {
                     return false;
                   }
 
-                  return (context.cfgu.labels ?? []).length > 0 ? filter && !isConfigLabeled : true;
+                  return (context.cfgu.labels ?? []).length > 0 ? filter && !isConfigLabeled : isConfigLabeled;
                 },
                 false,
               )
             : true;
+
         const keyFilter =
           Object.keys(keysRules).length > 0
             ? _.reduce(
                 keysRules,
                 (filter, action, key) => {
-                  return action ? context.key === key : context.key !== key;
+                  const isConfigKey = context.key === key;
+                  return action ? filter || isConfigKey : !isConfigKey;
                 },
                 false,
               )
