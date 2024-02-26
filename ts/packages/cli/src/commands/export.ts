@@ -297,7 +297,10 @@ export default class Export extends BaseCommand<typeof Export> {
         const labelFilters =
           Object.keys(labelsAndKeysRules.labels).length > 0
             ? Object.entries(labelsAndKeysRules.labels).map(([label, rule]) => {
-                return rule && context.cfgu.labels ? context.cfgu.labels.includes(label) : false;
+                if (context.cfgu.labels && context.cfgu.labels.length > 0) {
+                  return rule ? context.cfgu.labels.includes(label) : !context.cfgu.labels.includes(label);
+                }
+                return false;
               })
             : [true];
 
