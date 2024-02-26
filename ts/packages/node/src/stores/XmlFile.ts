@@ -15,12 +15,12 @@ export class XmlFileConfigStore extends FileConfigStore {
 
   parse(fileContent: string): Config[] {
     let output: Config[] = [];
-    const parser = new xml2js.Parser({ explicitArray: false, emptyTag: () => [] });
+    const parser = new xml2js.Parser({ explicitArray: false });
     parser.parseString(fileContent, (error, result) => {
       if (error) {
         throw error;
       }
-      output = result.root.config ?? result.root;
+      output = result.root.config ?? [];
     });
 
     return output;
