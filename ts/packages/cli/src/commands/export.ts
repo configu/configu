@@ -303,7 +303,7 @@ export default class Export extends BaseCommand<typeof Export> {
                     return false;
                   }
 
-                  return (context.cfgu.labels ?? []).length > 0 ? filter && !isConfigLabeled : isConfigLabeled;
+                  return filter || !isConfigLabeled;
                 },
                 false,
               )
