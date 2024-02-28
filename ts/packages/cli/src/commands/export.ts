@@ -308,7 +308,6 @@ export default class Export extends BaseCommand<typeof Export> {
                 false,
               )
             : true;
-
         const keyFilter =
           Object.keys(keysRules).length > 0
             ? _.reduce(
