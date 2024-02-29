@@ -267,59 +267,90 @@ export default class Export extends BaseCommand<typeof Export> {
     if (filterFlags.length > 0) {
       const hiddenFlags = _.remove(filterFlags, ({ flag }) => ['omit-hidden', 'pick-hidden'].includes(flag));
       const emptyFlags = _.remove(filterFlags, ({ flag }) => ['omit-empty', 'pick-empty'].includes(flag));
-      const labelsFlags = _.remove(filterFlags, ({ flag }) => ['omit-label', 'pick-label'].includes(flag));
-      const keysFlags = _.remove(filterFlags, ({ flag }) => ['omit-key', 'pick-key'].includes(flag));
-      const labelsRules = _.reduce<FlagToken, { [label: string]: boolean }>(
-        labelsFlags,
-        (rules, { flag, input }) => {
-          const [flagAction]: string[] = flag.split('-');
-          return flagAction === 'pick' ? { ...rules, [input]: true } : { ...rules, [input]: false };
-        },
-        {},
+      const keysAndLabelsFlags = _.remove(filterFlags, ({ flag }) =>
+        ['omit-key', 'omit-label', 'pick-key', 'pick-label'].includes(flag),
       );
-      const keysRules = _.reduce<FlagToken, { [key: string]: boolean }>(
-        keysFlags,
-        (rules, { flag, input }) => {
-          const [flagAction]: string[] = flag.split('-');
-          return flagAction === 'pick' ? { ...rules, [input]: true } : { ...rules, [input]: false };
-        },
-        {},
-      );
+      // .map(({ flag, input }) => ({ flag, input }));
+      this.log(JSON.stringify(keysAndLabelsFlags));
+      // const labelsFlags = _.remove(filterFlags, ({ flag }) => ['omit-label', 'pick-label'].includes(flag));
+      // const keysFlags = _.remove(filterFlags, ({ flag }) => ['omit-key', 'pick-key'].includes(flag));
+      // const labelsRules = _.reduce<FlagToken, { [label: string]: boolean }>(
+      //   labelsFlags,
+      //   (rules, { flag, input }) => {
+      //     const [flagAction]: string[] = flag.split('-');
+      //     return flagAction === 'pick' ? { ...rules, [input]: true } : { ...rules, [input]: false };
+      //   },
+      //   {},
+      // );
+      // const keysRules = _.reduce<FlagToken, { [key: string]: boolean }>(
+      //   keysFlags,
+      //   (rules, { flag, input }) => {
+      //     const [flagAction]: string[] = flag.split('-');
+      //     return flagAction === 'pick' ? { ...rules, [input]: true } : { ...rules, [input]: false };
+      //   },
+      //   {},
+      // );
       return ({ context, result }: EvalCommandReturn['string']): boolean => {
         const hiddenFilter = hiddenFlags.some((flagToken) => flagToken.flag === 'pick-hidden')
           ? true
           : !context.cfgu.hidden;
         const emptyFilter = emptyFlags.some((flagToken) => flagToken.flag === 'omit-empty') ? !!result.value : true;
-        const labelFilter =
-          Object.keys(labelsRules).length > 0
-            ? _.reduce(
-                labelsRules,
-                (filter, action, label) => {
-                  const isConfigLabeled = (context.cfgu.labels ?? []).includes(label);
-                  if (action) {
-                    if ((context.cfgu.labels ?? []).length > 0) {
-                      return filter || isConfigLabeled;
+        const keysAndLabelsFilter =
+          Object.keys(keysAndLabelsFlags).length > 0
+            ? _.reduce<FlagToken, boolean | undefined>(
+                keysAndLabelsFlags,
+                (filter, action, index) => {
+                  const [flagAction, flagClass]: string[] = action.flag.split('-');
+                  const flagInput = action.input;
+                  if (flagClass === 'key') {
+                    const isConfigKey = context.key === flagInput;
+                    if (filter === undefined) {
+                      return flagAction === 'pick' ? isConfigKey : !isConfigKey;
                     }
-                    return false;
+                    return flagAction === 'pick' ? isConfigKey : filter && !isConfigKey;
                   }
-
-                  return filter || !isConfigLabeled;
+                  if (flagClass === 'label') {
+                    const isConfigLabeled = (context.cfgu.labels ?? []).includes(flagInput);
+                    if (filter === undefined) {
+                      return flagAction === 'pick' ? isConfigLabeled : !isConfigLabeled;
+                    }
+                    return flagAction === 'pick' ? isConfigLabeled : filter && !isConfigLabeled;
+                  }
+                  return !!filter;
                 },
-                false,
+                undefined,
               )
             : true;
-        const keyFilter =
-          Object.keys(keysRules).length > 0
-            ? _.reduce(
-                keysRules,
-                (filter, action, key) => {
-                  const isConfigKey = context.key === key;
-                  return action ? filter || isConfigKey : !isConfigKey;
-                },
-                false,
-              )
-            : true;
-        return hiddenFilter && emptyFilter && labelFilter && keyFilter;
+        // const labelFilter =
+        //   Object.keys(labelsRules).length > 0
+        //     ? _.reduce(
+        //         labelsRules,
+        //         (filter, action, label) => {
+        //           const isConfigLabeled = (context.cfgu.labels ?? []).includes(label);
+        //           if (action) {
+        //             if ((context.cfgu.labels ?? []).length > 0) {
+        //               return filter || isConfigLabeled;
+        //             }
+        //             return false;
+        //           }
+        //
+        //           return filter || !isConfigLabeled;
+        //         },
+        //         false,
+        //       )
+        //     : true;
+        // const keyFilter =
+        //   Object.keys(keysRules).length > 0
+        //     ? _.reduce(
+        //         keysRules,
+        //         (filter, action, key) => {
+        //           const isConfigKey = context.key === key;
+        //           return action ? filter || isConfigKey : !isConfigKey;
+        //         },
+        //         false,
+        //       )
+        //     : true;
+        return hiddenFilter && emptyFilter && !!keysAndLabelsFilter;
       };
     }
     return undefined;
