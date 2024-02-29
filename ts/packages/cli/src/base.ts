@@ -9,7 +9,6 @@ import chalk from 'chalk';
 import logSymbols from 'log-symbols';
 import ci from 'ci-info';
 import { type EvalCommandReturn, type ConfiguConfigStore, TMPL, ConfigSchema, ConfigError } from '@configu/ts';
-import { type ParsingToken, type FlagToken } from '@oclif/core/lib/interfaces/parser';
 import { constructStore, getPathBasename, readFile, readStdin, loadJSON, loadYAML } from './helpers';
 
 type BaseConfig = Config & {
@@ -23,7 +22,6 @@ type BaseConfig = Config & {
     file?: string; // .configu file
     data: Partial<{
       stores: Record<string, { type: string; configuration: Record<string, any> }>;
-      schemas: Record<string, string>;
       scripts: Record<string, string>;
     }>;
   };
@@ -38,7 +36,6 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
 
   protected flags!: Flags<T>;
   protected args!: Args<T>;
-  protected rawFlags!: FlagToken[];
 
   public config: BaseConfig;
 
@@ -114,8 +111,8 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     if (!schemaFlag) {
       throw new Error('--schema flag is missing');
     }
-    const schemaPath = this.config.cli.data.schemas?.[schemaFlag] ?? schemaFlag;
-    const schemaBasename = getPathBasename(schemaPath);
+
+    const schemaBasename = getPathBasename(schemaFlag);
     const [schemaName, cfguExt, fileExt] = schemaBasename.split('.');
 
     if (!schemaName) {
@@ -131,23 +128,23 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       throw EXT_ERROR;
     }
 
-    const schemaContentsString = await readFile(schemaPath);
+    const schemaContentsString = await readFile(schemaFlag);
     if (fileExt === 'json') {
       try {
-        const schemaContents = loadJSON(schemaPath, schemaContentsString);
+        const schemaContents = loadJSON(schemaFlag, schemaContentsString);
         return new ConfigSchema(schemaName, schemaContents);
       } catch (error) {
-        error.message = `JSON Error in ${schemaPath}:\n${error.message}`;
+        error.message = `JSON Error in ${schemaFlag}:\n${error.message}`;
         throw error;
       }
     }
 
     if (fileExt === 'yaml' || fileExt === 'yml') {
       try {
-        const schemaContents = loadYAML(schemaPath, schemaContentsString);
+        const schemaContents = loadYAML(schemaFlag, schemaContentsString);
         return new ConfigSchema(schemaName, schemaContents);
       } catch (error) {
-        error.message = `YAML Error in ${schemaPath}:\n${error.message}`;
+        error.message = `YAML Error in ${schemaFlag}:\n${error.message}`;
         throw error;
       }
     }
@@ -200,7 +197,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     this.config.UNICODE_NULL = '\u0000';
 
     await super.init();
-    const { args, flags, raw } = await this.parse({
+    const { args, flags } = await this.parse({
       flags: this.ctor.flags,
       baseFlags: (super.ctor as typeof BaseCommand).baseFlags,
       args: this.ctor.args,
@@ -208,7 +205,6 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     });
     this.flags = flags as Flags<T>;
     this.args = args as Args<T>;
-    this.rawFlags = raw as FlagToken[];
 
     try {
       await fs.mkdir(this.config.configDir, { recursive: true });
