@@ -45,15 +45,11 @@ export class ExportCommand extends Command<ExportCommandReturn> {
     return _.pickBy(pipe, this.parameters.filter);
   }
 
-  private mapPipe(pipe: EvalCommandReturn) {
-    return _.mapValues(pipe, (current) => current.result.value);
-  }
-
   async run() {
     const { pipe } = this.parameters;
     const filteredPipe = this.filterPipe(pipe);
-    const mappedPipe = this.mapPipe(filteredPipe);
-    const keyMutatedMappedPipe = this.mutateKeys(mappedPipe);
-    return keyMutatedMappedPipe;
+    const configDict = _.mapValues(filteredPipe, (current) => current.result.value);
+    const keyMutatedConfigDict = this.mutateKeys(configDict);
+    return keyMutatedConfigDict;
   }
 }
