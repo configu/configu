@@ -169,19 +169,19 @@ export default class Export extends BaseCommand<typeof Export> {
       multiple: true,
     }),
     'pick-hidden': Flags.boolean({
-      description: `Explicitly include config keys marked as hidden. By default, hidden keys are omitted.`,
+      description: `Explicitly include config keys marked as hidden. By default, hidden keys are omitted`,
       exclusive: ['omit-hidden'],
     }),
     'omit-hidden': Flags.boolean({
-      description: `Explicitly exclude config keys marked as hidden. By default, hidden keys are omitted.`,
+      description: `Explicitly exclude config keys marked as hidden. By default, hidden keys are omitted`,
       exclusive: ['pick-hidden'],
     }),
     'pick-empty': Flags.boolean({
-      description: `Include config keys with empty values. By default, empty values are included.`,
+      description: `Include config keys with empty values. By default, empty values are included`,
       exclusive: ['omit-empty'],
     }),
     'omit-empty': Flags.boolean({
-      description: `Exclude config keys with empty values. By default, empty values are included.`,
+      description: `Exclude config keys with empty values. By default, empty values are included`,
       exclusive: ['pick-empty'],
     }),
   };
@@ -269,46 +269,45 @@ export default class Export extends BaseCommand<typeof Export> {
 
   filterFromFlags(): (({ context, result }: EvalCommandReturn['string']) => boolean) | undefined {
     const filterFlags = _.pickBy(this.flags, (value, key) => Object.values(FilterFlag).includes(key as FilterFlag));
-    if (!_.isEmpty(filterFlags)) {
-      const pickFlags = _.pick(filterFlags, [FilterFlag.PickLabel, FilterFlag.PickKey]);
-      const omitFlags = _.pick(filterFlags, [FilterFlag.OmitLabel, FilterFlag.OmitKey]);
-      return ({ context, result }: EvalCommandReturn['string']): boolean => {
-        const hiddenFilter = this.flags[FilterFlag.PickHidden] ? true : !context.cfgu.hidden;
-        const emptyFilter = this.flags[FilterFlag.OmitEmpty]
-          ? result.origin !== EvaluatedConfigOrigin.EmptyValue
-          : true;
-        const pickFilter = _.isEmpty(pickFlags)
-          ? true
-          : _.reduce(
-              pickFlags,
-              (filter, value, key) => {
-                if (key === FilterFlag.PickKey) {
-                  return filter || (value as string[]).includes(context.key);
-                }
-                if (key === FilterFlag.PickLabel) {
-                  return filter || (value as string[]).some((label) => (context.cfgu.labels ?? []).includes(label));
-                }
-                return filter;
-              },
-              false,
-            );
-        const omitFilter = _.reduce(
-          omitFlags,
-          (filter, value, key) => {
-            if (key === FilterFlag.OmitKey) {
-              return filter && !(value as string[]).includes(context.key);
-            }
-            if (key === FilterFlag.OmitLabel) {
-              return filter && !(value as string[]).some((label) => (context.cfgu.labels ?? []).includes(label));
-            }
-            return filter;
-          },
-          true,
-        );
-        return hiddenFilter && emptyFilter && pickFilter && omitFilter;
-      };
+    if (_.isEmpty(filterFlags)) {
+      return undefined;
     }
-    return undefined;
+    const pickFlags = _.pick(filterFlags, [FilterFlag.PickLabel, FilterFlag.PickKey]);
+    const omitFlags = _.pick(filterFlags, [FilterFlag.OmitLabel, FilterFlag.OmitKey]);
+
+    return ({ context, result }: EvalCommandReturn['string']): boolean => {
+      const hiddenFilter = this.flags[FilterFlag.PickHidden] ? true : !context.cfgu.hidden;
+      const emptyFilter = this.flags[FilterFlag.OmitEmpty] ? result.origin !== EvaluatedConfigOrigin.EmptyValue : true;
+      const pickFilter = _.isEmpty(pickFlags)
+        ? true
+        : _.reduce(
+            pickFlags,
+            (filter, value, key) => {
+              if (key === FilterFlag.PickKey) {
+                return filter || (value as string[]).includes(context.key);
+              }
+              if (key === FilterFlag.PickLabel) {
+                return filter || (value as string[]).some((label) => (context.cfgu.labels ?? []).includes(label));
+              }
+              return filter;
+            },
+            false,
+          );
+      const omitFilter = _.reduce(
+        omitFlags,
+        (filter, value, key) => {
+          if (key === FilterFlag.OmitKey) {
+            return filter && !(value as string[]).includes(context.key);
+          }
+          if (key === FilterFlag.OmitLabel) {
+            return filter && !(value as string[]).some((label) => (context.cfgu.labels ?? []).includes(label));
+          }
+          return filter;
+        },
+        true,
+      );
+      return hiddenFilter && emptyFilter && pickFilter && omitFilter;
+    };
   }
 
   public async run(): Promise<void> {
