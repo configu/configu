@@ -2,7 +2,7 @@ import { cwd } from 'process';
 import { spawnSync } from 'child_process';
 import { Flags, ux } from '@oclif/core';
 import _ from 'lodash';
-import { TMPL, type EvalCommandReturn, type ExportCommandReturn } from '@configu/ts';
+import { TMPL, type EvalCommandReturn, type ExportCommandReturn, EvaluatedConfigOrigin } from '@configu/ts';
 import { ExportCommand } from '@configu/node';
 import { CONFIG_FORMAT_TYPE, formatConfigs, type ConfigFormat } from '@configu/lib';
 import {
@@ -274,7 +274,9 @@ export default class Export extends BaseCommand<typeof Export> {
       const omitFlags = _.pick(filterFlags, [FilterFlag.OmitLabel, FilterFlag.OmitKey]);
       return ({ context, result }: EvalCommandReturn['string']): boolean => {
         const hiddenFilter = this.flags[FilterFlag.PickHidden] ? true : !context.cfgu.hidden;
-        const emptyFilter = this.flags[FilterFlag.OmitEmpty] ? !!result.value : true;
+        const emptyFilter = this.flags[FilterFlag.OmitEmpty]
+          ? result.origin !== EvaluatedConfigOrigin.EmptyValue
+          : true;
         const pickFilter = _.isEmpty(pickFlags)
           ? true
           : _.reduce(
@@ -316,10 +318,6 @@ export default class Export extends BaseCommand<typeof Export> {
       this.warn(NO_CONFIGS_WARNING_TEXT);
       return;
     }
-
-    // if (!this.flags.empty) {
-    //   pipe = _.omitBy(pipe, ({ result: { origin } }) => origin === EvaluatedConfigOrigin.EmptyValue);
-    // }
 
     if (this.flags.explain) {
       this.explainConfigs(pipe);
