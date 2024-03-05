@@ -35,6 +35,10 @@ Example `.configu` file in JSON format:
       }
     }
   },
+  "schemas": {
+    "common": "path/to/common.cfgu.json",
+    "api": "path/to/api.cfgu.json"
+  },
   "scripts": {
     "script1": "configu command1 --option1 value1",
     "script2": "configu command2 --option2 value2 | configu command3"
@@ -58,6 +62,9 @@ stores:
     configuration:
       option3: value3
       option4: value4
+schemas:
+  common: 'path/to/common.cfgu.json'
+  api: 'path/to/api.cfgu.json'
 scripts:
   script1: 'configu command1 --option1 value1'
   script2: 'configu command2 --option2 value2 | configu command3'
@@ -85,6 +92,10 @@ module.exports = {
       },
     },
   },
+  schemas: {
+    common: "path/to/common.cfgu.json",
+    api: "path/to/api.cfgu.json"
+  },
   scripts: {
     script1: 'configu command1 --option1 value1',
     script2: 'configu command2 --option2 value2 | configu command3',
@@ -101,6 +112,14 @@ The `.configu` file allows you to save ConfigStore configurations as friendly na
 To define a custom store, add a new key-value pair to the `stores` section of the `.configu` file, where the key represents the friendly name, and the value is an object with the `type` and `configuration` properties. The `type` property represents the store type, and the `configuration` property contains the specific configuration options for the store.
 
 For detailed information about the available store options, please refer to the relevant store on the [`ConfigStore`](/config-store) page.
+
+### Schemas
+
+The `.configu` file allows you to save paths to `*.cfgu.json` schema files as friendly names, which can be later used as values for the `--schema` flag in all the commands.
+
+To define a custom schema, add a new key-value pair to the `schemas` section of the `.configu` file, where the key represents the friendly name, and the value is a string containing the relative or absolute path to the schema file.
+
+For detailed information about schema files, please refer to [`ConfigSchema`](/config-schema) page.
 
 ### Scripts
 

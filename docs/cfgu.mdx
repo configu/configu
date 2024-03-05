@@ -22,8 +22,14 @@ The `Cfgu` format represents a set of properties that define essential character
   - This property is optional.
 - **options**: Specifies a list of values that the configuration value must match.
   - This property is optional.
+- **labels**: Specifies a list of labels that can be used to categorize the configuration.
+  - This property is optional.
+  - Labels can be leveraged as filters in export operations, allowing for selective inclusion or exclusion of configurations based on specified them.
 - **schema**: Specifies a [JSON-schema](https://json-schema.org/specification) that the configuration value must match.
   - This property is optional and applicable when the type is set to JSONSchema.
+- **hidden**: Specifies that a configuration key should be hidden from the export results.
+  - This property is optional.
+  - Hidden keys will be excluded from export results but can still be utilized within the context for evaluations and other internal operations.
 - **lazy**: Specifies that a value for a given configuration key should only be set during the [eval command](../commands/#eval-and-export) execution.
   - This property is optional.
   - Existing store values are omitted during evaluations.
