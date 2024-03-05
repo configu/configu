@@ -272,40 +272,23 @@ export default class Export extends BaseCommand<typeof Export> {
     if (_.isEmpty(filterFlags)) {
       return undefined;
     }
-    const pickFlags = _.pick(filterFlags, [FilterFlag.PickLabel, FilterFlag.PickKey]);
-    const omitFlags = _.pick(filterFlags, [FilterFlag.OmitLabel, FilterFlag.OmitKey]);
+    const pickedKeys = (_.pick(filterFlags, [FilterFlag.PickKey])[FilterFlag.PickKey] as string[]) ?? [];
+    const pickedLabels = (_.pick(filterFlags, [FilterFlag.PickLabel])[FilterFlag.PickLabel] as string[]) ?? [];
+    const omittedKeys = (_.pick(filterFlags, [FilterFlag.OmitKey])[FilterFlag.OmitKey] as string[]) ?? [];
+    const omittedLabels = (_.pick(filterFlags, [FilterFlag.OmitLabel])[FilterFlag.OmitLabel] as string[]) ?? [];
 
     return ({ context, result }: EvalCommandReturn['string']): boolean => {
       const hiddenFilter = this.flags[FilterFlag.PickHidden] ? true : !context.cfgu.hidden;
       const emptyFilter = this.flags[FilterFlag.OmitEmpty] ? result.origin !== EvaluatedConfigOrigin.EmptyValue : true;
-      const pickFilter = _.isEmpty(pickFlags)
-        ? true
-        : _.reduce(
-            pickFlags,
-            (filter, value, key) => {
-              if (key === FilterFlag.PickKey) {
-                return filter || (value as string[]).includes(context.key);
-              }
-              if (key === FilterFlag.PickLabel) {
-                return filter || (value as string[]).some((label) => (context.cfgu.labels ?? []).includes(label));
-              }
-              return filter;
-            },
-            false,
-          );
-      const omitFilter = _.reduce(
-        omitFlags,
-        (filter, value, key) => {
-          if (key === FilterFlag.OmitKey) {
-            return filter && !(value as string[]).includes(context.key);
-          }
-          if (key === FilterFlag.OmitLabel) {
-            return filter && !(value as string[]).some((label) => (context.cfgu.labels ?? []).includes(label));
-          }
-          return filter;
-        },
-        true,
-      );
+
+      const isKeyPicked = pickedKeys.includes(context.key);
+      const isLabelPicked = _.intersection(pickedLabels, context.cfgu.labels ?? []).length > 0;
+      const pickFilter = _.isEmpty([...pickedKeys, ...pickedLabels]) || isKeyPicked || isLabelPicked;
+
+      const isKeyOmitted = omittedKeys.includes(context.key);
+      const isLabelOmitted = _.intersection(omittedLabels, context.cfgu.labels ?? []).length > 0;
+      const omitFilter = !isKeyOmitted && !isLabelOmitted;
+
       return hiddenFilter && emptyFilter && pickFilter && omitFilter;
     };
   }
