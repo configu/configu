@@ -242,6 +242,8 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       });
       const cliConfigData = JSON.parse(compiledCliConfigData);
       this.config.cli.data = cliConfigData;
+      this.log(this.config.configu.file);
+      this.log(`cli config: ${JSON.stringify(this.config.cli)}`);
     } catch (error) {
       throw new Error(`invalid configuration file ${error.message}`);
     }
