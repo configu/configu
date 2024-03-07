@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { Command } from '../Command';
 import { type Cfgu } from '../types';
-import { ConfigError, TMPL } from '../utils';
+import { ConfigError, TMPL, ConfigStoreError } from '../utils';
 import { type ConfigStore } from '../ConfigStore';
 import { ConfigSet } from '../ConfigSet';
 import { ConfigSchema } from '../ConfigSchema';
@@ -60,37 +60,42 @@ export class EvalCommand extends Command<EvalCommandReturn> {
   private async evalFromStoreSet(result: EvalCommandReturn): Promise<EvalCommandReturn> {
     const { store, set } = this.parameters;
 
-    const storeQueries = _(result)
-      .values()
-      .flatMap((current) => {
-        const { key } = current.context;
-        return set.hierarchy.map((node) => ({ set: node, key }));
-      })
-      .value();
-    const storeConfigsArray = await store.get(storeQueries);
-    const storeConfigsDict = _(storeConfigsArray)
-      .orderBy([(config) => set.hierarchy.indexOf(config.set)], ['desc'])
-      .uniqBy((config) => config.key)
-      .keyBy((config) => config.key)
-      .value();
+    try {
+      const storeQueries = _(result)
+        .values()
+        .flatMap((current) => {
+          const { key } = current.context;
+          return set.hierarchy.map((node) => ({ set: node, key }));
+        })
+        .value();
 
-    return _.mapValues(result, (current) => {
-      const { context } = current;
-      const storeConfig = storeConfigsDict[context.key];
+      const storeConfigsArray = await store.get(storeQueries);
+      const storeConfigsDict = _(storeConfigsArray)
+        .orderBy([(config) => set.hierarchy.indexOf(config.set)], ['desc'])
+        .uniqBy((config) => config.key)
+        .keyBy((config) => config.key)
+        .value();
 
-      if (!storeConfig) {
-        return current;
-      }
+      return _.mapValues(result, (current) => {
+        const { context } = current;
+        const storeConfig = storeConfigsDict[context.key];
 
-      return {
-        ...current,
-        result: {
-          origin: EvaluatedConfigOrigin.StoreSet,
-          source: `parameters.store=${context.store},parameters.set=${context.set}`,
-          value: storeConfig.value,
-        },
-      };
-    });
+        if (!storeConfig) {
+          return current;
+        }
+
+        return {
+          ...current,
+          result: {
+            origin: EvaluatedConfigOrigin.StoreSet,
+            source: `parameters.store=${context.store},parameters.set=${context.set}`,
+            value: storeConfig.value,
+          },
+        };
+      });
+    } catch (error) {
+      throw new ConfigStoreError('failed to get store configs', error.message, [['EvalCommand', 'evalFromStoreSet']]);
+    }
   }
 
   private evalFromSchema(result: EvalCommandReturn): EvalCommandReturn {
@@ -245,7 +250,11 @@ export class EvalCommand extends Command<EvalCommandReturn> {
             ConfigSchema.CFGU.VALIDATORS.valueOptions(cfgu, evaluatedValue);
             ConfigSchema.CFGU.VALIDATORS.valueType(cfgu, evaluatedValue);
           } catch (error) {
-            throw error?.appendScope?.(errorScope) ?? error;
+            let err = error?.appendScope?.(errorScope) ?? error;
+            if (current.result.origin === EvaluatedConfigOrigin.StoreSet) {
+              err = new ConfigStoreError('invalid config value', err.message, err?.scope ?? errorScope);
+            }
+            throw err;
           }
 
           if (cfgu.depends && cfgu.depends.some((depend) => !evaluatedConfigsDict[depend])) {
@@ -264,7 +273,11 @@ export class EvalCommand extends Command<EvalCommandReturn> {
   async run() {
     const { store, set, schema } = this.parameters;
 
-    await store.init();
+    try {
+      await store.init();
+    } catch (error) {
+      throw new ConfigStoreError('failed to init store', error.message, [['EvalCommand', 'store']]);
+    }
 
     let result = _.mapValues<typeof schema.contents, EvalCommandReturn['string']>(schema.contents, (cfgu, key) => {
       return {
