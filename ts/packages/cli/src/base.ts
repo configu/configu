@@ -21,7 +21,7 @@ type BaseConfig = Config & {
   cli: {
     file?: string; // .configu file
     data: Partial<{
-      stores: Record<string, { type: string; configuration: Record<string, any> }>;
+      stores: Record<string, { type: string; configuration: Record<string, any>; cache?: boolean | string }>;
       scripts: Record<string, string>;
     }>;
   };
@@ -73,6 +73,19 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     const mark = code !== 0 ? chalk.red(logSymbols.error) : chalk.green(logSymbols.success);
     const defaultText = code !== 0 ? 'failed' : 'succeed';
     ux.action.stop(` ${mark} ${chalk.dim(text ?? defaultText)}`);
+  }
+
+  getCacheStoreInstanceByStoreFlag(storeFlag?: string) {
+    if (!storeFlag) {
+      throw new Error('--store flag is missing');
+    }
+
+    const storeCache = this.config.cli.data.stores?.[storeFlag]?.cache;
+    if (!storeCache) {
+      return false;
+    }
+    const database = typeof storeCache === 'boolean' ? path.join(this.config.cacheDir, 'cache.db') : storeCache;
+    return constructStore('sqlite', { database, tableName: storeFlag });
   }
 
   getStoreInstanceByStoreFlag(storeFlag?: string) {

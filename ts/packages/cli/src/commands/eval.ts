@@ -1,6 +1,13 @@
 import { Flags } from '@oclif/core';
-import { type EvalCommandParameters } from '@configu/ts';
+import {
+  type EvalCommandParameters,
+  type EvalCommandReturn,
+  EvaluatedConfigOrigin,
+  type ConfigStore,
+  ConfigStoreError,
+} from '@configu/ts';
 import { NoopConfigStore, ConfigSet, EvalCommand } from '@configu/node';
+import _ from 'lodash';
 import { BaseCommand } from '../base';
 
 export default class Eval extends BaseCommand<typeof Eval> {
@@ -75,9 +82,33 @@ export default class Eval extends BaseCommand<typeof Eval> {
     };
   }
 
+  async updateCache(cacheStore: ConfigStore, evalCommandReturn: EvalCommandReturn) {
+    const cacheConfigs = _.map(
+      _.pickBy(evalCommandReturn, (value, key) => {
+        return value.result.origin === EvaluatedConfigOrigin.StoreSet;
+      }),
+      (value, key) => ({ key: value.context.key, value: value.result.value, set: value.context.set }),
+    );
+    await cacheStore.init();
+    await cacheStore.set(cacheConfigs);
+  }
+
   public async run(): Promise<void> {
+    const cache = this.getCacheStoreInstanceByStoreFlag(this.flags.store);
     const evalCommandParameters = await this.constructEvalCommandParameters();
-    const evalCommandReturn = await new EvalCommand(evalCommandParameters).run();
+    let evalCommandReturn;
+    try {
+      evalCommandReturn = await new EvalCommand(evalCommandParameters).run();
+      if (cache) {
+        await this.updateCache(cache, evalCommandReturn);
+      }
+    } catch (error) {
+      if (error instanceof ConfigStoreError && cache) {
+        evalCommandReturn = await new EvalCommand({ ...evalCommandParameters, store: cache }).run();
+      } else {
+        throw error;
+      }
+    }
 
     this.print(JSON.stringify(evalCommandReturn), { stdout: 'stdout' });
   }
