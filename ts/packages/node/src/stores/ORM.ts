@@ -84,6 +84,9 @@ export abstract class ORMConfigStore extends ConfigStore {
   }
 
   async init() {
+    if (this.dataSource.isInitialized) {
+      return;
+    }
     await this.dataSource.initialize();
   }
 
