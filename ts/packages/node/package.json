@@ -41,6 +41,7 @@
     "@azure/keyvault-secrets": "^4.7.0",
     "@configu/ts": "*",
     "@google-cloud/secret-manager": "^5.0.1",
+    "@iarna/toml": "^2.2.5",
     "@kubernetes/client-node": "^0.20.0",
     "@launchdarkly/node-server-sdk": "^9.0.1",
     "@launchdarkly/openfeature-node-server": "^0.5.1",
