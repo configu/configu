@@ -2,7 +2,7 @@ import { type SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnec
 import { ORMConfigStore } from './ORM';
 
 export type SQLiteConfigStoreConfiguration = Omit<SqliteConnectionOptions, 'type'> & {
-  tables?: string[];
+  tableName?: string;
 };
 
 export class SQLiteConfigStore extends ORMConfigStore {

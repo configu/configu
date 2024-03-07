@@ -1,32 +1,7 @@
 import 'reflect-metadata';
 import { ConfigStore, type ConfigStoreQuery, type Config as IConfig } from '@configu/ts';
-import {
-  Entity,
-  Column,
-  DataSource,
-  type DataSourceOptions,
-  Index,
-  PrimaryGeneratedColumn,
-  EntitySchema,
-} from 'typeorm';
+import { DataSource, type DataSourceOptions, EntitySchema } from 'typeorm';
 import _ from 'lodash';
-
-@Entity()
-@Index(['set', 'key'], { unique: true })
-class Config {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
-  @Index('set')
-  @Column('text')
-  set: string;
-
-  @Column('text')
-  key: string;
-
-  @Column('text')
-  value: string;
-}
 
 const createTable = (tableName: string) =>
   new EntitySchema<IConfig & { id: string }>({
@@ -49,7 +24,7 @@ const createTable = (tableName: string) =>
     },
     indices: [
       {
-        name: `${tableName}_IDX_SET_KEY`,
+        name: `${tableName.toUpperCase()}_IDX_SET_KEY`,
         unique: true,
         columns: ['set', 'key'],
       },
@@ -57,28 +32,20 @@ const createTable = (tableName: string) =>
   });
 
 type ORMConfigStoreOptions = DataSourceOptions & {
-  tables?: string[];
+  tableName?: string;
 };
 
 export abstract class ORMConfigStore extends ConfigStore {
   readonly dataSource: DataSource;
-  private readonly tables: Record<string, EntitySchema>;
-  private activeTable: EntitySchema;
+  private readonly table: EntitySchema;
 
-  constructor(type: string, { tables = [], ...dataSourceOptions }: ORMConfigStoreOptions) {
+  protected constructor(type: string, { tableName = 'config', ...dataSourceOptions }: ORMConfigStoreOptions) {
     super(type);
-    this.tables = _.reduce(
-      [...tables, 'config'],
-      (entities, tableName) => {
-        return { ...entities, [tableName]: createTable(tableName) };
-      },
-      {},
-    );
-    this.activeTable = this.tables.config as EntitySchema;
+    this.table = createTable(tableName);
     this.dataSource = new DataSource({
       // TODO: synchronize is not production safe - create a migration script to initialize tables
       synchronize: true,
-      entities: Object.values(this.tables),
+      entities: [this.table],
       ...dataSourceOptions,
     });
   }
@@ -90,19 +57,14 @@ export abstract class ORMConfigStore extends ConfigStore {
     await this.dataSource.initialize();
   }
 
-  useTable(tableName: string) {
-    this.activeTable = this.tables[tableName] ?? (this.tables.config as EntitySchema);
-    return this;
-  }
-
   private async delete(configs: IConfig[]): Promise<void> {
-    const configRepository = this.dataSource.getRepository(this.activeTable);
+    const configRepository = this.dataSource.getRepository(this.table);
     const preloadedConfigs = await Promise.all(configs.map((config) => configRepository.preload(config)));
     await configRepository.delete(_.map(preloadedConfigs, 'id'));
   }
 
   private async upsert(configs: IConfig[]): Promise<void> {
-    const configRepository = this.dataSource.getRepository(this.activeTable);
+    const configRepository = this.dataSource.getRepository(this.table);
 
     if (configs.length > 0) {
       await configRepository.upsert(configs, ['set', 'key']);
@@ -111,7 +73,7 @@ export abstract class ORMConfigStore extends ConfigStore {
   }
 
   async get(queries: ConfigStoreQuery[]): Promise<IConfig[]> {
-    const configRepository = this.dataSource.getRepository(this.activeTable);
+    const configRepository = this.dataSource.getRepository(this.table);
 
     const adjustedQuery = queries.map((entry) => ({
       set: entry.set,
