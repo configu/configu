@@ -92,6 +92,7 @@ export abstract class ORMConfigStore extends ConfigStore {
 
   useTable(tableName: string) {
     this.activeTable = this.tables[tableName] ?? (this.tables.config as EntitySchema);
+    return this;
   }
 
   private async delete(configs: IConfig[]): Promise<void> {
