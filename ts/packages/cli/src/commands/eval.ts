@@ -50,6 +50,10 @@ export default class Eval extends BaseCommand<typeof Eval> {
       multiple: true,
       char: 'c',
     }),
+    'force-cache': Flags.boolean({
+      description: `Force the use of cache store`,
+      default: false,
+    }),
   };
 
   async constructEvalCommandParameters(): Promise<EvalCommandParameters> {
@@ -97,16 +101,24 @@ export default class Eval extends BaseCommand<typeof Eval> {
     const cache = this.getCacheStoreInstanceByStoreFlag(this.flags.store);
     const evalCommandParameters = await this.constructEvalCommandParameters();
     let evalCommandReturn;
-    try {
+
+    if (!cache) {
       evalCommandReturn = await new EvalCommand(evalCommandParameters).run();
-      if (cache) {
-        await this.updateCache(cache, evalCommandReturn);
-      }
-    } catch (error) {
-      if (error instanceof ConfigStoreError && cache) {
+    }
+    if (cache) {
+      if (this.flags['force-cache']) {
         evalCommandReturn = await new EvalCommand({ ...evalCommandParameters, store: cache }).run();
       } else {
-        throw error;
+        try {
+          evalCommandReturn = await new EvalCommand(evalCommandParameters).run();
+          await this.updateCache(cache, evalCommandReturn);
+        } catch (error) {
+          if (error instanceof ConfigStoreError) {
+            evalCommandReturn = await new EvalCommand({ ...evalCommandParameters, store: cache }).run();
+          } else {
+            throw error;
+          }
+        }
       }
     }
 
