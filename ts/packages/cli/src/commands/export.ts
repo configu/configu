@@ -164,12 +164,11 @@ export default class Export extends BaseCommand<typeof Export> {
   keysMutations() {
     const haskeysMutations = [this.flags.prefix, this.flags.suffix].some((flag) => flag !== undefined);
     if (!haskeysMutations) {
-      return;
+      return undefined;
     }
-    
+
     return (key: string) => {
-      // handle prefix suffix mutations
-      return `${this.flags.prefix ?? ''}${mutatedKey}${this.flags.suffix ?? ''}`
+      return `${this.flags.prefix ?? ''}${key}${this.flags.suffix ?? ''}`;
     };
   }
 
