@@ -69,6 +69,10 @@ export default class Export extends BaseCommand<typeof Export> {
       command: `<%= config.bin %> eval ... | <%= config.bin %> <%= command.id %> --run 'node index.js'`,
     },
     {
+      description: `Pipe eval commands result to export command and apply a prefix / suffix to each Config Key in the export result`,
+      command: `<%= config.bin %> eval ... | configu export --prefix "MYAPP_" --suffix "_PROD"`,
+    },
+    {
       description: `Pipe eval commands result to export command and apply casing to each Config Key in the export result`,
       command: `<%= config.bin %> eval ... | configu export --casing "SnakeCase"`,
     },
@@ -115,6 +119,12 @@ export default class Export extends BaseCommand<typeof Export> {
     run: Flags.string({
       description: `Spawns executable as child-process and pass exported \`Configs\` as environment variables`,
       exclusive: ['explain', 'format', 'template', 'source'],
+    }),
+    prefix: Flags.string({
+      description: `Append a fixed string to the beginning of each Config Key in the export result`,
+    }),
+    suffix: Flags.string({
+      description: `Append a fixed string to the end of each Config Key in the export result`,
     }),
     casing: Flags.string({
       description: `Transforms the casing of Config Keys in the export result to camelCase, PascalCase, Capital Case, snake_case, param-case, CONSTANT_CASE and others`,
@@ -186,6 +196,17 @@ export default class Export extends BaseCommand<typeof Export> {
     this.printStdout(formattedConfigs);
   }
 
+  keysMutations() {
+    const haskeysMutations = [this.flags.prefix, this.flags.suffix].some((flag) => flag !== undefined);
+    if (!haskeysMutations) {
+      return undefined;
+    }
+
+    return (key: string) => {
+      return `${this.flags.prefix ?? ''}${key}${this.flags.suffix ?? ''}`;
+    };
+  }
+
   applyCasing(result: { [key: string]: string }) {
     const caseFunction = casingFormatters[this.flags.casing ?? ''];
     return caseFunction ? _.mapKeys(result, (value, key) => caseFunction(key)) : result;
@@ -209,7 +230,8 @@ export default class Export extends BaseCommand<typeof Export> {
     }
 
     const label = this.flags.label ?? `configs-${Date.now()}`;
-    const result = await new ExportCommand({ pipe, env: false }).run();
+    const keys = this.keysMutations();
+    const result = await new ExportCommand({ pipe, env: false, keys }).run();
     const caseFormattedResult = this.applyCasing(result);
     await this.exportConfigs(caseFormattedResult, label);
   }
