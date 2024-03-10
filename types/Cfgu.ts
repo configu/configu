@@ -52,4 +52,5 @@ export interface Cfgu {
   options?: string[];
   lazy?: boolean;
   labels?: string[];
+  hidden?: boolean;
 }
