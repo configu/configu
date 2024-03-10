@@ -1,35 +1,28 @@
 import 'reflect-metadata';
 import { ConfigStore, type ConfigStoreQuery, type Config as IConfig } from '@configu/ts';
-import { DataSource, type DataSourceOptions, EntitySchema } from 'typeorm';
+import { DataSource, type DataSourceOptions, Entity, Index, PrimaryGeneratedColumn, Column } from 'typeorm';
 import _ from 'lodash';
 
-const createTable = (tableName: string) =>
-  new EntitySchema<IConfig & { id: string }>({
-    name: tableName,
-    columns: {
-      id: {
-        type: 'uuid',
-        primary: true,
-        generated: 'uuid',
-      },
-      set: {
-        type: 'text',
-      },
-      key: {
-        type: 'text',
-      },
-      value: {
-        type: 'text',
-      },
-    },
-    indices: [
-      {
-        name: `${tableName.toUpperCase()}_IDX_SET_KEY`,
-        unique: true,
-        columns: ['set', 'key'],
-      },
-    ],
-  });
+const createEntity = (tableName: string) => {
+  @Entity({ name: tableName })
+  @Index(['set', 'key'], { unique: true })
+  class Config {
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
+
+    @Index(`${tableName}_set`)
+    @Column('text')
+    set: string;
+
+    @Column('text')
+    key: string;
+
+    @Column('text')
+    value: string;
+  }
+
+  return Config;
+};
 
 type ORMConfigStoreOptions = DataSourceOptions & {
   tableName?: string;
@@ -37,11 +30,11 @@ type ORMConfigStoreOptions = DataSourceOptions & {
 
 export abstract class ORMConfigStore extends ConfigStore {
   readonly dataSource: DataSource;
-  private readonly table: EntitySchema;
+  private readonly table: ReturnType<typeof createEntity>;
 
   protected constructor(type: string, { tableName = 'config', ...dataSourceOptions }: ORMConfigStoreOptions) {
     super(type);
-    this.table = createTable(tableName);
+    this.table = createEntity(tableName);
     this.dataSource = new DataSource({
       // TODO: synchronize is not production safe - create a migration script to initialize tables
       synchronize: true,
