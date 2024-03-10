@@ -162,15 +162,15 @@ export default class Export extends BaseCommand<typeof Export> {
   }
 
   keysMutations() {
-    if ([this.flags.prefix, this.flags.suffix].some((flag) => flag !== undefined)) {
-      return (key: string) => {
-        let mutatedKey = key;
-        if (this.flags.prefix) mutatedKey = `${this.flags.prefix}${mutatedKey}`;
-        if (this.flags.suffix) mutatedKey = `${mutatedKey}${this.flags.suffix}`;
-        return mutatedKey;
-      };
+    const haskeysMutations = [this.flags.prefix, this.flags.suffix].some((flag) => flag !== undefined);
+    if (!haskeysMutations) {
+      return;
     }
-    return undefined;
+    
+    return (key: string) => {
+      // handle prefix suffix mutations
+      return `${this.flags.prefix ?? ''}${mutatedKey}${this.flags.suffix ?? ''}`
+    };
   }
 
   public async run(): Promise<void> {
