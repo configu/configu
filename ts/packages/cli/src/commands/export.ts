@@ -5,6 +5,18 @@ import _ from 'lodash';
 import { TMPL, type EvalCommandReturn, EvaluatedConfigOrigin, type ExportCommandReturn } from '@configu/ts';
 import { ExportCommand } from '@configu/node';
 import { CONFIG_FORMAT_TYPE, formatConfigs, type ConfigFormat } from '@configu/lib';
+import {
+  dotCase,
+  constantCase,
+  noCase,
+  pascalCase,
+  pathCase,
+  sentenceCase,
+  snakeCase,
+  capitalCase,
+  camelCase,
+  paramCase,
+} from 'change-case';
 import { BaseCommand } from '../base';
 import { readFile } from '../helpers';
 
@@ -12,6 +24,21 @@ export const NO_CONFIGS_WARNING_TEXT = 'no configuration was fetched';
 export const CONFIG_EXPORT_RUN_DEFAULT_ERROR_TEXT = 'could not export configurations';
 
 type TemplateContext = { [key: string]: string } | { key: string; value: string }[];
+
+const casingFormatters: Record<string, (string: string) => string> = {
+  CamelCase: camelCase,
+  CapitalCase: capitalCase,
+  ConstantCase: constantCase,
+  DotCase: dotCase,
+  KebabCase: paramCase,
+  NoCase: noCase,
+  PascalCase: pascalCase,
+  PascalSnakeCase: (string: string) => capitalCase(string).split(' ').join('_'),
+  PathCase: pathCase,
+  SentenceCase: sentenceCase,
+  SnakeCase: snakeCase,
+  TrainCase: (string: string) => capitalCase(string).split(' ').join('-'),
+};
 
 export default class Export extends BaseCommand<typeof Export> {
   static description = `Export \`Configs\` as configuration data in various modes`;
@@ -41,6 +68,14 @@ export default class Export extends BaseCommand<typeof Export> {
       description: `Pipe eval commands result to export command to pass \`Configs\` as environment variables to a child-process`,
       command: `<%= config.bin %> eval ... | <%= config.bin %> <%= command.id %> --run 'node index.js'`,
     },
+    {
+      description: `Pipe eval commands result to export command and apply a prefix / suffix to each Config Key in the export result`,
+      command: `<%= config.bin %> eval ... | configu export --prefix "MYAPP_" --suffix "_PROD"`,
+    },
+    {
+      description: `Pipe eval commands result to export command and apply casing to each Config Key in the export result`,
+      command: `<%= config.bin %> eval ... | configu export --casing "SnakeCase"`,
+    },
   ];
 
   static flags = {
@@ -49,13 +84,11 @@ export default class Export extends BaseCommand<typeof Export> {
       default: true,
       allowNo: true,
     }),
-
     explain: Flags.boolean({
       description: `Outputs metadata on the exported \`Configs\``,
       aliases: ['report'],
       exclusive: ['format', 'template', 'source', 'run'],
     }),
-
     format: Flags.string({
       description: `Format exported \`Configs\` to common configuration formats. Redirect the output to file, if needed`,
       options: CONFIG_FORMAT_TYPE,
@@ -69,7 +102,6 @@ export default class Export extends BaseCommand<typeof Export> {
       aliases: ['EOL'],
       dependsOn: ['format'],
     }),
-
     template: Flags.string({
       description: `Path to a file containing {{mustache}} templates to render (inject/substitute) the exported \`Configs\` into`,
       exclusive: ['explain', 'format', 'source', 'run'],
@@ -79,16 +111,24 @@ export default class Export extends BaseCommand<typeof Export> {
       options: ['object', 'array'],
       dependsOn: ['template'],
     }),
-
     // * (set -a; source <(configu export ... --source); set +a && the command)
     source: Flags.boolean({
       description: `Source exported \`Configs\` as environment variables to the current shell`,
       exclusive: ['explain', 'format', 'template', 'run'],
     }),
-
     run: Flags.string({
       description: `Spawns executable as child-process and pass exported \`Configs\` as environment variables`,
       exclusive: ['explain', 'format', 'template', 'source'],
+    }),
+    prefix: Flags.string({
+      description: `Append a fixed string to the beginning of each Config Key in the export result`,
+    }),
+    suffix: Flags.string({
+      description: `Append a fixed string to the end of each Config Key in the export result`,
+    }),
+    casing: Flags.string({
+      description: `Transforms the casing of Config Keys in the export result to camelCase, PascalCase, Capital Case, snake_case, param-case, CONSTANT_CASE and others`,
+      options: Object.keys(casingFormatters),
     }),
   };
 
@@ -156,6 +196,26 @@ export default class Export extends BaseCommand<typeof Export> {
     this.printStdout(formattedConfigs);
   }
 
+  keysMutations() {
+    const haskeysMutations = [this.flags.prefix, this.flags.suffix, this.flags.casing].some(
+      (flag) => flag !== undefined,
+    );
+    if (!haskeysMutations) {
+      return undefined;
+    }
+
+    return (key: string) => {
+      const caseFunction = casingFormatters[this.flags.casing ?? ''];
+      const keyWithPrefixSuffix = `${this.flags.prefix ?? ''}${key}${this.flags.suffix ?? ''}`;
+      return caseFunction ? caseFunction(keyWithPrefixSuffix) : keyWithPrefixSuffix;
+    };
+  }
+
+  applyCasing(result: { [key: string]: string }) {
+    const caseFunction = casingFormatters[this.flags.casing ?? ''];
+    return caseFunction ? _.mapKeys(result, (value, key) => caseFunction(key)) : result;
+  }
+
   public async run(): Promise<void> {
     let pipe = await this.readPreviousEvalCommandReturn();
 
@@ -174,7 +234,8 @@ export default class Export extends BaseCommand<typeof Export> {
     }
 
     const label = this.flags.label ?? `configs-${Date.now()}`;
-    const result = await new ExportCommand({ pipe, env: false }).run();
+    const keys = this.keysMutations();
+    const result = await new ExportCommand({ pipe, env: false, keys }).run();
     await this.exportConfigs(result, label);
   }
 }
