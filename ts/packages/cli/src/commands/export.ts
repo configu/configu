@@ -251,20 +251,18 @@ export default class Export extends BaseCommand<typeof Export> {
   }
 
   keysMutations() {
-    if ([this.flags.prefix, this.flags.suffix].some((flag) => flag !== undefined)) {
-      return (key: string) => {
-        let mutatedKey = key;
-        if (this.flags.prefix) mutatedKey = `${this.flags.prefix}${mutatedKey}`;
-        if (this.flags.suffix) mutatedKey = `${mutatedKey}${this.flags.suffix}`;
-        return mutatedKey;
-      };
+    const haskeysMutations = [this.flags.prefix, this.flags.suffix, this.flags.casing].some(
+      (flag) => flag !== undefined,
+    );
+    if (!haskeysMutations) {
+      return undefined;
     }
-    return undefined;
-  }
 
-  applyCasing(result: { [key: string]: string }) {
-    const caseFunction = casingFormatters[this.flags.casing ?? ''];
-    return caseFunction ? _.mapKeys(result, (value, key) => caseFunction(key)) : result;
+    return (key: string) => {
+      const caseFunction = casingFormatters[this.flags.casing ?? ''];
+      const keyWithPrefixSuffix = `${this.flags.prefix ?? ''}${key}${this.flags.suffix ?? ''}`;
+      return caseFunction ? caseFunction(keyWithPrefixSuffix) : keyWithPrefixSuffix;
+    };
   }
 
   filterFromFlags(): (({ context, result }: EvalCommandReturn['string']) => boolean) | undefined {
@@ -310,7 +308,6 @@ export default class Export extends BaseCommand<typeof Export> {
     const filter = this.filterFromFlags();
     const keys = this.keysMutations();
     const result = await new ExportCommand({ pipe, env: false, filter, keys }).run();
-    const caseFormattedResult = this.applyCasing(result);
-    await this.exportConfigs(caseFormattedResult, label);
+    await this.exportConfigs(result, label);
   }
 }

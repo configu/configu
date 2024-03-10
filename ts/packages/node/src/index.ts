@@ -7,6 +7,8 @@ export {
 
 export * from './stores/JsonFile';
 export * from './stores/IniFile';
+export * from './stores/TomlFile';
+export * from './stores/XmlFile';
 
 export * from './stores/AWSParameterStore';
 export * from './stores/AWSSecretsManager';
