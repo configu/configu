@@ -2,7 +2,7 @@ import { cwd } from 'process';
 import { spawnSync } from 'child_process';
 import { Flags, ux } from '@oclif/core';
 import _ from 'lodash';
-import { TMPL, type EvalCommandReturn, EvaluatedConfigOrigin, type ExportCommandReturn } from '@configu/ts';
+import { TMPL, type EvalCommandReturn, type ExportCommandReturn, EvaluatedConfigOrigin } from '@configu/ts';
 import { ExportCommand } from '@configu/node';
 import { CONFIG_FORMAT_TYPE, formatConfigs, type ConfigFormat } from '@configu/lib';
 import {
@@ -24,6 +24,17 @@ export const NO_CONFIGS_WARNING_TEXT = 'no configuration was fetched';
 export const CONFIG_EXPORT_RUN_DEFAULT_ERROR_TEXT = 'could not export configurations';
 
 type TemplateContext = { [key: string]: string } | { key: string; value: string }[];
+
+enum FilterFlag {
+  OmitEmpty = 'omit-empty',
+  OmitHidden = 'omit-hidden',
+  OmitKey = 'omit-key',
+  OmitLabel = 'omit-label',
+  PickEmpty = 'pick-empty',
+  PickHidden = 'pick-hidden',
+  PickKey = 'pick-key',
+  PickLabel = 'pick-label',
+}
 
 const casingFormatters: Record<string, (string: string) => string> = {
   CamelCase: camelCase,
@@ -76,14 +87,25 @@ export default class Export extends BaseCommand<typeof Export> {
       description: `Pipe eval commands result to export command and apply casing to each Config Key in the export result`,
       command: `<%= config.bin %> eval ... | configu export --casing "SnakeCase"`,
     },
+    {
+      description: `Pipe eval commands result to export command and exclude specific labels`,
+      command: `<%= config.bin %> eval ... | configu export --omit-label 'deprecated' --omit-label 'temporary'`,
+    },
+    {
+      description: `Pipe eval commands result to export command and include only configs under specific labels`,
+      command: `<%= config.bin %> eval ... |  configu export --pick-label 'production' --pick-label 'secure'`,
+    },
+    {
+      description: `Pipe eval commands result to export command and exclude specific keys`,
+      command: `<%= config.bin %> eval ... | configu export --omit-key 'DEBUG_MODE' --omit-key 'TEST_ACCOUNT'`,
+    },
+    {
+      description: `Pipe eval commands result to export command. Include hidden configs and exclude configs with empty values`,
+      command: `<%= config.bin %> eval ... | configu export --pick-hidden  --omit-empty`,
+    },
   ];
 
   static flags = {
-    empty: Flags.boolean({
-      description: `Omits all empty (non-value) from the exported \`Configs\``,
-      default: true,
-      allowNo: true,
-    }),
     explain: Flags.boolean({
       description: `Outputs metadata on the exported \`Configs\``,
       aliases: ['report'],
@@ -129,6 +151,38 @@ export default class Export extends BaseCommand<typeof Export> {
     casing: Flags.string({
       description: `Transforms the casing of Config Keys in the export result to camelCase, PascalCase, Capital Case, snake_case, param-case, CONSTANT_CASE and others`,
       options: Object.keys(casingFormatters),
+    }),
+    'pick-label': Flags.string({
+      description: `Pick a specific label from the previous eval command return to export`,
+      multiple: true,
+    }),
+    'omit-label': Flags.string({
+      description: `Omit a specific label from the previous eval command return to export`,
+      multiple: true,
+    }),
+    'pick-key': Flags.string({
+      description: `Pick a specific key from the previous eval command return to export`,
+      multiple: true,
+    }),
+    'omit-key': Flags.string({
+      description: `Omit a specific key from the previous eval command return to export`,
+      multiple: true,
+    }),
+    'pick-hidden': Flags.boolean({
+      description: `Explicitly include config keys marked as hidden. By default, hidden keys are omitted`,
+      exclusive: ['omit-hidden'],
+    }),
+    'omit-hidden': Flags.boolean({
+      description: `Explicitly exclude config keys marked as hidden. By default, hidden keys are omitted`,
+      exclusive: ['pick-hidden'],
+    }),
+    'pick-empty': Flags.boolean({
+      description: `Include config keys with empty values. By default, empty values are included`,
+      exclusive: ['omit-empty'],
+    }),
+    'omit-empty': Flags.boolean({
+      description: `Exclude config keys with empty values. By default, empty values are included`,
+      exclusive: ['pick-empty'],
     }),
   };
 
@@ -211,21 +265,38 @@ export default class Export extends BaseCommand<typeof Export> {
     };
   }
 
-  applyCasing(result: { [key: string]: string }) {
-    const caseFunction = casingFormatters[this.flags.casing ?? ''];
-    return caseFunction ? _.mapKeys(result, (value, key) => caseFunction(key)) : result;
+  filterFromFlags(): (({ context, result }: EvalCommandReturn['string']) => boolean) | undefined {
+    const filterFlags = _.pickBy(this.flags, (value, key) => Object.values(FilterFlag).includes(key as FilterFlag));
+    if (_.isEmpty(filterFlags)) {
+      return undefined;
+    }
+    const pickedKeys = (_.pick(filterFlags, [FilterFlag.PickKey])[FilterFlag.PickKey] as string[]) ?? [];
+    const pickedLabels = (_.pick(filterFlags, [FilterFlag.PickLabel])[FilterFlag.PickLabel] as string[]) ?? [];
+    const omittedKeys = (_.pick(filterFlags, [FilterFlag.OmitKey])[FilterFlag.OmitKey] as string[]) ?? [];
+    const omittedLabels = (_.pick(filterFlags, [FilterFlag.OmitLabel])[FilterFlag.OmitLabel] as string[]) ?? [];
+
+    return ({ context, result }: EvalCommandReturn['string']): boolean => {
+      const hiddenFilter = this.flags[FilterFlag.PickHidden] ? true : !context.cfgu.hidden;
+      const emptyFilter = this.flags[FilterFlag.OmitEmpty] ? result.origin !== EvaluatedConfigOrigin.EmptyValue : true;
+
+      const isKeyPicked = pickedKeys.includes(context.key);
+      const isLabelPicked = _.intersection(pickedLabels, context.cfgu.labels ?? []).length > 0;
+      const pickFilter = _.isEmpty([...pickedKeys, ...pickedLabels]) || isKeyPicked || isLabelPicked;
+
+      const isKeyOmitted = omittedKeys.includes(context.key);
+      const isLabelOmitted = _.intersection(omittedLabels, context.cfgu.labels ?? []).length > 0;
+      const omitFilter = !isKeyOmitted && !isLabelOmitted;
+
+      return hiddenFilter && emptyFilter && pickFilter && omitFilter;
+    };
   }
 
   public async run(): Promise<void> {
-    let pipe = await this.readPreviousEvalCommandReturn();
+    const pipe = await this.readPreviousEvalCommandReturn();
 
     if (_.isEmpty(pipe)) {
       this.warn(NO_CONFIGS_WARNING_TEXT);
       return;
-    }
-
-    if (!this.flags.empty) {
-      pipe = _.omitBy(pipe, ({ result: { origin } }) => origin === EvaluatedConfigOrigin.EmptyValue);
     }
 
     if (this.flags.explain) {
@@ -234,8 +305,9 @@ export default class Export extends BaseCommand<typeof Export> {
     }
 
     const label = this.flags.label ?? `configs-${Date.now()}`;
+    const filter = this.filterFromFlags();
     const keys = this.keysMutations();
-    const result = await new ExportCommand({ pipe, env: false, keys }).run();
+    const result = await new ExportCommand({ pipe, env: false, filter, keys }).run();
     await this.exportConfigs(result, label);
   }
 }
