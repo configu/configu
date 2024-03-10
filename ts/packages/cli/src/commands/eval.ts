@@ -102,24 +102,22 @@ export default class Eval extends BaseCommand<typeof Eval> {
     const evalCommandParameters = await this.constructEvalCommandParameters();
     let evalCommandReturn;
 
-    if (!cache) {
-      evalCommandReturn = await new EvalCommand(evalCommandParameters).run();
-    }
-    if (cache) {
-      if (this.flags['force-cache']) {
-        evalCommandReturn = await new EvalCommand({ ...evalCommandParameters, store: cache }).run();
-      } else {
-        try {
-          evalCommandReturn = await new EvalCommand(evalCommandParameters).run();
-          await this.updateCache(cache, evalCommandReturn);
-        } catch (error) {
-          if (error instanceof ConfigStoreError) {
-            evalCommandReturn = await new EvalCommand({ ...evalCommandParameters, store: cache }).run();
-          } else {
-            throw error;
-          }
+    if (cache && !this.flags['force-cache']) {
+      try {
+        evalCommandReturn = await new EvalCommand(evalCommandParameters).run();
+        await this.updateCache(cache, evalCommandReturn);
+      } catch (error) {
+        if (error instanceof ConfigStoreError) {
+          evalCommandReturn = await new EvalCommand({ ...evalCommandParameters, store: cache }).run();
+        } else {
+          throw error;
         }
       }
+    } else {
+      evalCommandReturn = await new EvalCommand({
+        ...evalCommandParameters,
+        store: this.flags['force-cache'] && cache ? cache : evalCommandParameters.store,
+      }).run();
     }
 
     this.print(JSON.stringify(evalCommandReturn), { stdout: 'stdout' });
