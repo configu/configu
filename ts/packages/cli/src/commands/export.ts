@@ -197,13 +197,17 @@ export default class Export extends BaseCommand<typeof Export> {
   }
 
   keysMutations() {
-    const haskeysMutations = [this.flags.prefix, this.flags.suffix].some((flag) => flag !== undefined);
+    const haskeysMutations = [this.flags.prefix, this.flags.suffix, this.flags.casing].some(
+      (flag) => flag !== undefined,
+    );
     if (!haskeysMutations) {
       return undefined;
     }
 
     return (key: string) => {
-      return `${this.flags.prefix ?? ''}${key}${this.flags.suffix ?? ''}`;
+      const caseFunction = casingFormatters[this.flags.casing ?? ''];
+      const keyWithPrefixSuffix = `${this.flags.prefix ?? ''}${key}${this.flags.suffix ?? ''}`;
+      return caseFunction ? caseFunction(keyWithPrefixSuffix) : keyWithPrefixSuffix;
     };
   }
 
@@ -232,7 +236,6 @@ export default class Export extends BaseCommand<typeof Export> {
     const label = this.flags.label ?? `configs-${Date.now()}`;
     const keys = this.keysMutations();
     const result = await new ExportCommand({ pipe, env: false, keys }).run();
-    const caseFormattedResult = this.applyCasing(result);
-    await this.exportConfigs(caseFormattedResult, label);
+    await this.exportConfigs(result, label);
   }
 }
