@@ -21,7 +21,8 @@ type BaseConfig = Config & {
   cli: {
     file?: string; // .configu file
     data: Partial<{
-      stores: Record<string, { type: string; configuration: Record<string, any>; cache?: boolean | string }>;
+      stores: Record<string, { type: string; configuration: Record<string, any>; cache?: boolean }>;
+      cache?: string;
       schemas: Record<string, string>;
       scripts: Record<string, string>;
     }>;
@@ -85,7 +86,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     if (!storeCache) {
       return false;
     }
-    const database = typeof storeCache === 'boolean' ? path.join(this.config.cacheDir, 'cache.db') : storeCache;
+    const database = this.config.cli.data.stores?.cache ?? path.join(this.config.cacheDir, 'cache.db');
     return constructStore('sqlite', { database, tableName: storeFlag });
   }
 
