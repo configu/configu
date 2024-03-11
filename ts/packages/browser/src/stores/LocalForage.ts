@@ -16,12 +16,27 @@ export class LocalForageConfigStore extends KeyValueConfigStore {
     if (typeof data === 'string') {
       return data ?? '';
     }
-    return JSON.stringify(data) ?? '';
+    return data === null ? '' : JSON.stringify(data) ?? '';
   }
 
   // * https://localforage.github.io/localForage/#data-api-setitem
   async upsert(key: string, value: string): Promise<void> {
-    await this.client.setItem(key, value);
+    let parsedValue;
+    try {
+      parsedValue = JSON.parse(value, (__, jsonValue) => {
+        if (typeof jsonValue === 'string') {
+          try {
+            return JSON.parse(jsonValue);
+          } catch (e) {
+            return jsonValue;
+          }
+        }
+        return jsonValue;
+      });
+    } catch {
+      parsedValue = value;
+    }
+    await this.client.setItem(key, parsedValue);
   }
 
   // * https://localforage.github.io/localForage/#data-api-removeitem
