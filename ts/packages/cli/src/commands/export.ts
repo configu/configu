@@ -2,7 +2,14 @@ import { cwd } from 'process';
 import { spawnSync } from 'child_process';
 import { Flags, ux } from '@oclif/core';
 import _ from 'lodash';
-import { TMPL, type EvalCommandReturn, type ExportCommandReturn, EvaluatedConfigOrigin } from '@configu/ts';
+import {
+  TMPL,
+  type EvalCommandReturn,
+  type ExportCommandReturn,
+  EvaluatedConfigOrigin,
+  NAME,
+  ConfigError,
+} from '@configu/ts';
 import { ExportCommand } from '@configu/node';
 import { CONFIG_FORMAT_TYPE, formatConfigs, type ConfigFormat } from '@configu/lib';
 import {
@@ -37,17 +44,18 @@ enum FilterFlag {
 }
 
 const casingFormatters: Record<string, (string: string) => string> = {
-  CamelCase: camelCase,
-  CapitalCase: capitalCase,
-  ConstantCase: constantCase,
-  DotCase: dotCase,
-  KebabCase: paramCase,
-  NoCase: noCase,
-  PascalCase: pascalCase,
+  // Using split.join instead of because eslint doesn't allow replace(regex) and replaceAll isn't supported
+  CamelCase: (string: string) => camelCase(string).split(' ').join(''),
+  CapitalCase: (string: string) => capitalCase(string).split(' ').join(''),
+  ConstantCase: (string: string) => constantCase(string).split(' ').join(''),
+  DotCase: (string: string) => dotCase(string).split(' ').join(''),
+  KebabCase: (string: string) => paramCase(string).split(' ').join(''),
+  NoCase: (string: string) => noCase(string).split(' ').join(''),
+  PascalCase: (string: string) => pascalCase(string).split(' ').join(''),
   PascalSnakeCase: (string: string) => capitalCase(string).split(' ').join('_'),
-  PathCase: pathCase,
-  SentenceCase: sentenceCase,
-  SnakeCase: snakeCase,
+  PathCase: (string: string) => pathCase(string).split(' ').join(''),
+  SentenceCase: (string: string) => sentenceCase(string).split(' ').join(''),
+  SnakeCase: (string: string) => snakeCase(string).split(' ').join(''),
   TrainCase: (string: string) => capitalCase(string).split(' ').join('-'),
 };
 
@@ -291,6 +299,21 @@ export default class Export extends BaseCommand<typeof Export> {
     };
   }
 
+  private mutateKeys(result: any, keys: any) {
+    return _.mapKeys(result, (current, key) => {
+      const errorScope: [string, string][] = [
+        ['ExportCommand', ''],
+        ['ConfigKey', key],
+      ];
+      const mutatedKey = String(keys(key));
+      this.log(mutatedKey);
+      // if (!NAME(mutatedKey)) {
+      //   throw new ConfigError('invalid config key', `key3 "${mutatedKey}" mustn't contain reserved words`, errorScope);
+      // }
+      return mutatedKey;
+    });
+  }
+
   public async run(): Promise<void> {
     const pipe = await this.readPreviousEvalCommandReturn();
 
@@ -307,6 +330,7 @@ export default class Export extends BaseCommand<typeof Export> {
     const label = this.flags.label ?? `configs-${Date.now()}`;
     const filter = this.filterFromFlags();
     const keys = this.keysMutations();
+    this.mutateKeys(pipe, keys);
     const result = await new ExportCommand({ pipe, env: false, filter, keys }).run();
     await this.exportConfigs(result, label);
   }
