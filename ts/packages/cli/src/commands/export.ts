@@ -37,7 +37,7 @@ enum FilterFlag {
 }
 
 const casingFormatters: Record<string, (string: string) => string> = {
-  // Using split.join instead of because eslint doesn't allow replace(regex) and replaceAll isn't supported
+  // Using split.join because eslint doesn't allow replace(regex) and replaceAll isn't supported
   CamelCase: (string: string) => camelCase(string).split(' ').join(''),
   CapitalCase: (string: string) => capitalCase(string).split(' ').join(''),
   ConstantCase: (string: string) => constantCase(string).split(' ').join(''),
