@@ -11,13 +11,10 @@ export class CsvFileConfigStore extends FileConfigStore {
   }
 
   parse(fileContent: string): Config[] {
-    const csvRows = parse(fileContent);
-    const configs = csvRows.slice(1).map(([set, key, value]: [string, string, string]) => ({ set, key, value }));
-    return configs;
+    return parse(fileContent, { columns: true });
   }
 
   stringify(nextConfigs: Config[]): string {
-    const csvRows = [['set', 'key', 'value'], ...nextConfigs.map(({ set, key, value }) => [set, key, value])];
-    return stringify(csvRows);
+    return stringify(nextConfigs, { header: true });
   }
 }
