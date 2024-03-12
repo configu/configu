@@ -11,7 +11,7 @@ export class CsvFileConfigStore extends FileConfigStore {
   }
 
   parse(fileContent: string): Config[] {
-    return parse(fileContent, { columns: true });
+    return parse(fileContent, { columns: true, skip_empty_lines: true, trim: true });
   }
 
   stringify(nextConfigs: Config[]): string {
