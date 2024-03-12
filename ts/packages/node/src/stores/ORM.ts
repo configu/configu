@@ -30,15 +30,15 @@ type ORMConfigStoreOptions = DataSourceOptions & {
 
 export abstract class ORMConfigStore extends ConfigStore {
   readonly dataSource: DataSource;
-  private readonly table: ReturnType<typeof createEntity>;
+  private readonly configEntity: ReturnType<typeof createEntity>;
 
   protected constructor(type: string, { tableName = 'config', ...dataSourceOptions }: ORMConfigStoreOptions) {
     super(type);
-    this.table = createEntity(tableName);
+    this.configEntity = createEntity(tableName);
     this.dataSource = new DataSource({
       // TODO: synchronize is not production safe - create a migration script to initialize tables
       synchronize: true,
-      entities: [this.table],
+      entities: [this.configEntity],
       ...dataSourceOptions,
     });
   }
@@ -51,22 +51,21 @@ export abstract class ORMConfigStore extends ConfigStore {
   }
 
   private async delete(configs: IConfig[]): Promise<void> {
-    const configRepository = this.dataSource.getRepository(this.table);
+    const configRepository = this.dataSource.getRepository(this.configEntity);
     const preloadedConfigs = await Promise.all(configs.map((config) => configRepository.preload(config)));
     await configRepository.delete(_.map(preloadedConfigs, 'id'));
   }
 
   private async upsert(configs: IConfig[]): Promise<void> {
-    const configRepository = this.dataSource.getRepository(this.table);
+    const configRepository = this.dataSource.getRepository(this.configEntity);
 
     if (configs.length > 0) {
       await configRepository.upsert(configs, ['set', 'key']);
     }
-    // await this.dataSource.destroy();
   }
 
   async get(queries: ConfigStoreQuery[]): Promise<IConfig[]> {
-    const configRepository = this.dataSource.getRepository(this.table);
+    const configRepository = this.dataSource.getRepository(this.configEntity);
 
     const adjustedQuery = queries.map((entry) => ({
       set: entry.set,
