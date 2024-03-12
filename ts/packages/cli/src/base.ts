@@ -84,9 +84,9 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
 
     const storeCache = this.config.cli.data.stores?.[storeFlag]?.cache;
     if (!storeCache) {
-      return false;
+      return undefined;
     }
-    const database = this.config.cli.data.stores?.cache ?? path.join(this.config.cacheDir, 'cache.db');
+    const database = this.config.cli.data.cache ?? path.join(this.config.cacheDir, 'cache.db');
     return constructStore('sqlite', { database, tableName: storeFlag });
   }
 
