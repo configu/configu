@@ -33,7 +33,6 @@ const jsonToTfvars: FormatterFunction = ({ json }) => {
       const formattedValue = typeof value === 'object' && value !== null ? JSON.stringify(value) : `"${value}"`;
       return `${snakeCase(key)} = ${formattedValue}`;
     })
-
     .join('\n');
 };
 
