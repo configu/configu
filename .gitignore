@@ -22,6 +22,3 @@ coverage
 # dependencies
 node_modules
 .npm
-
-# docs
-docs

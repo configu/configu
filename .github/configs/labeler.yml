@@ -1,0 +1,32 @@
+"@configu/core":
+  - "package.json"
+  - "types/**"
+
+"@configu/cicd":
+  - ".github/**"
+
+"@configu/docs":
+  - "docs/**"
+
+"@configu/examples":
+  - "examples/**"
+
+"@configu/ts":
+  - "ts/packages/ts/**"
+  - "ts/packages/node/**"
+  - "ts/packages/browser/**"
+
+"@configu/py":
+  - "py/**"
+
+"@configu/go":
+  - "go/**"
+
+"@configu/lib":
+  - "ts/packages/lib/**"
+
+"@configu/cli":
+  - "ts/packages/cli/**"
+
+"@configu/vscode":
+  - "ts/packages/vscode/**"

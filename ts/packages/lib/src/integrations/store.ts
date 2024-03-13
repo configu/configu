@@ -1,4 +1,4 @@
-import { LiteralUnion } from 'type-fest';
+import { type LiteralUnion } from 'type-fest';
 
 export type StoreType = LiteralUnion<
   | 'noop'
@@ -9,7 +9,6 @@ export type StoreType = LiteralUnion<
   | 'hashicorp-vault'
   | 'aws-parameter-store'
   | 'aws-secrets-manager'
-  | 'launch-darkly'
   | 'azure-key-vault'
   | 'gcp-secret-manager'
   | 'kubernetes-secret'
@@ -18,7 +17,9 @@ export type StoreType = LiteralUnion<
   | 'mariadb'
   | 'postgres'
   | 'cockroachdb'
-  | 'mssql',
+  | 'mssql'
+  | 'launch-darkly'
+  | 'cloud-bees',
   string
 >;
 
@@ -31,7 +32,6 @@ export const STORE_LABEL: Record<StoreType, string> = {
   'hashicorp-vault': 'HashiCorp Vault',
   'aws-parameter-store': 'AWS Parameter Store',
   'aws-secrets-manager': 'AWS Secrets Manager',
-  'launch-darkly': 'LaunchDarkly',
   'azure-key-vault': 'Azure Key Vault',
   'gcp-secret-manager': 'GCP Secret Manager',
   'kubernetes-secret': 'Kubernetes Secret',
@@ -41,6 +41,8 @@ export const STORE_LABEL: Record<StoreType, string> = {
   postgres: 'PostgreSQL',
   cockroachdb: 'CockroachDB',
   mssql: 'Microsoft SQL Server',
+  'launch-darkly': 'LaunchDarkly',
+  'cloud-bees': 'CloudBees',
 };
 
 export const STORE_WEBSITE: Record<StoreType, string> = {
@@ -52,7 +54,6 @@ export const STORE_WEBSITE: Record<StoreType, string> = {
   'hashicorp-vault': 'https://www.vaultproject.io/',
   'aws-parameter-store': 'https://aws.amazon.com/systems-manager/features/#Parameter_Store',
   'aws-secrets-manager': 'https://aws.amazon.com/secrets-manager/',
-  'launch-darkly': 'https://launchdarkly.com/',
   'azure-key-vault': 'https://azure.microsoft.com/en-us/services/key-vault/',
   'gcp-secret-manager': 'https://cloud.google.com/secret-manager/',
   'kubernetes-secret': 'https://kubernetes.io/docs/concepts/configuration/secret/',
@@ -62,6 +63,8 @@ export const STORE_WEBSITE: Record<StoreType, string> = {
   postgres: 'https://www.postgresql.org/',
   cockroachdb: 'https://www.cockroachlabs.com/',
   mssql: 'https://www.microsoft.com/en-gb/sql-server',
+  'launch-darkly': 'https://launchdarkly.com/',
+  'cloud-bees': 'https://www.cloudbees.com/products/cloudbees-feature-management/',
 };
 
 export const STORE_TYPE = Object.keys(STORE_LABEL) as StoreType[];

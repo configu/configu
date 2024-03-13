@@ -4,24 +4,30 @@
   "description": "configu oss monorepo powered by node.js and npm",
   "author": "Configu",
   "devEngines": {
-    "node": ">=18.15.0",
-    "npm": ">=9.0.0",
-    "git": "*"
+    "git": "*",
+    "configu": ">=0.12.0",
+    "node": ">=20.10.0",
+    "npm": ">=10.0.0",
+    "pyenv": "*",
+    "poetry": "*",
+    "python": ">=3.9.0",
+    "goenv": "*",
+    "go": ">=1.17.0"
   },
   "scripts": {
     "prepare": "(is-ci || husky install) && conc \"npm:prepare:*\"",
     "types": "quicktype --src-lang typescript --src ./types/*.ts",
     "prepare:ts": "npm run types -- --lang typescript --out ts/packages/ts/src/types/generated.ts --prefer-unions",
-    "prepare:vscode": "npm run types -- --lang schema --out ts/packages/vscode/public/cfgu.schema.json && json -I -f ts/packages/vscode/public/cfgu.schema.json -e 'this.$ref=\"#/definitions/ConfigSchemaContents\"' -e 'this.$schema=undefined'",
-    "prepare:py": "npm run types -- --lang python --python-version 3.7 --nice-property-names --out py/configu/core/generated.py",
-    "prepare:go": "npm run types -- --lang go --package configu --out go/generated.go"
+    "stale:prepare:vscode": "npm run types -- --lang schema --out ts/packages/vscode/public/cfgu.schema.json && json -I -f ts/packages/vscode/public/cfgu.schema.json -e 'this.$ref=\"#/definitions/ConfigSchemaContents\"' -e 'this.$schema=undefined'",
+    "stale:prepare:py": "npm run types -- --lang python --python-version 3.7 --nice-property-names --out py/configu/core/generated.py",
+    "stale:prepare:go": "npm run types -- --lang go --package configu --out go/generated.go"
   },
   "devDependencies": {
-    "concurrently": "^8.2.1",
+    "concurrently": "^8.2.2",
     "husky": "^8.0.3",
     "is-ci": "^3.0.1",
     "json": "^11.0.0",
-    "lint-staged": "^14.0.1",
-    "quicktype": "^23.0.75"
+    "lint-staged": "^15.2.0",
+    "quicktype": "^23.0.80"
   }
 }

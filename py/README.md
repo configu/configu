@@ -1,10 +1,8 @@
 # @configu/py
 
-Configu SDK for Python
+Configu SDK for Python published to [PyPI](https://pypi.org/project/configu/).
 
 ## Install
-
-To install the this package, simply type install [configu](https://pypi.org/project/configu/) using pip:
 
 ```bash
 pip install configu
@@ -45,15 +43,15 @@ print(configuration_data)
 
 ## Reference
 
-See [oss.configu.com/py](https://oss.configu.com/py/configu.html)
+[oss.configu.com/py](https://oss.configu.com/py/configu.html)
 
 ## Contributing
 
 ### Requirements
 
-1. Follow the [Development](https://github.com/configu/configu/blob/main/CONTRIBUTING.md#development) section from the `CONTRIBUTING.md`.
-2. Install [pyenv](https://github.com/pyenv/pyenv) | [Homebrew](https://formulae.brew.sh/formula/pyenv)
-3. Install [poetry](https://python-poetry.org/) | [Homebrew](https://formulae.brew.sh/formula/poetry)
+- Follow the [Development](https://github.com/configu/configu/blob/main/CONTRIBUTING.md#development) section from the `CONTRIBUTING.md`.
+- Install [pyenv](https://github.com/pyenv/pyenv) | [Homebrew](https://formulae.brew.sh/formula/pyenv)
+- Install [poetry](https://python-poetry.org/) | [Homebrew](https://formulae.brew.sh/formula/poetry)
 
 ### Setup
 

@@ -1,0 +1,25 @@
+{
+  "stores": {
+    "json": {
+      "type": "json-file",
+      "configuration": {
+        "path": "./store.json"
+      }
+    },
+    "sqlite": {
+      "type": "sqlite",
+      "configuration": {
+        "database": "./store.db"
+      }
+    },
+    "configu": {
+      "type": "configu",
+      "configuration": {
+        "credentials": {
+          "org": "<org-id>",
+          "token": "<token>"
+        }
+      }
+    }
+  }
+}

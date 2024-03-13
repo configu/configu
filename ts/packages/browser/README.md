@@ -1,18 +1,14 @@
 # @configu/browser
 
-Configu SDK for the Browser
+Configu SDK for the Browser published to [npm](https://www.npmjs.com/package/@configu/browser).
 
 ## Install
-
-To install the this package, simply type add or install [@configu/browser](https://www.npmjs.com/package/@configu/browser) using your favorite package manager:
 
 ```bash
 npm install @configu/browser
 yarn add @configu/browser
 pnpm add @configu/browser
 ```
-
-Or include it in your main html as a script tag:
 
 ```html
 <script src="https://unpkg.com/@configu/browser/dist/configu.min.js" charset="utf-8"></script>
@@ -29,12 +25,13 @@ import {
   EvalCommand,
   ExportCommand,
 } from '@configu/browser';
+import schemaContents from './get-started.cfgu.json';
 
 (async () => {
   try {
     const store = new LocalForageConfigStore({ name: 'config-db' });
     const set = new ConfigSet('test');
-    const schema = await ConfigSchema.init(); // pick get-started.cfgu.json
+    const schema = new ConfigSchema('get-started', schemaContents);
 
     await new UpsertCommand({
       store,
@@ -53,7 +50,7 @@ import {
     }).run();
 
     const configurationData = await new ExportCommand({
-      data,
+      pipe: data,
     }).run();
   } catch (error) {
     console.error(error);
@@ -65,13 +62,13 @@ import {
 
 ## Reference
 
-See [oss.configu.com/browser](https://oss.configu.com/ts/modules/_configu_browser.html)
+[oss.configu.com/browser](https://oss.configu.com/ts/modules/_configu_browser.html)
 
 ## Contributing
 
 ### Requirements
 
-1. Follow the [Development](https://github.com/configu/configu/blob/main/CONTRIBUTING.md#development) section from the `CONTRIBUTING.md`.
+Follow the [Development](https://github.com/configu/configu/blob/main/CONTRIBUTING.md#development) section from the `CONTRIBUTING.md`.
 
 ### Setup
 

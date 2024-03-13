@@ -1,4 +1,4 @@
-import { IConfigStore, ConfigStoreQuery, Config } from './types';
+import { type IConfigStore, type ConfigStoreQuery, type Config } from './types';
 
 export abstract class ConfigStore implements IConfigStore {
   constructor(public readonly type: string) {}

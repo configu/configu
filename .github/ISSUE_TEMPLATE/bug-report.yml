@@ -1,0 +1,33 @@
+name: 🐛 Bug Report
+description: File a report to help us improve
+labels: [bug]
+body:
+  - type: textarea
+    attributes:
+      label: Current Behavior
+      description: A concise description of what you're experiencing.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Expected Behavior
+      description: A concise description of what you expected to happen.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: To Reproduce
+      description: List of steps, sample code, failing test or link to a project that reproduces the behavior.
+      placeholder: |
+        1. In this environment...
+        2. With this config...
+        3. Run '...'
+        4. See error...
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Context
+      description: Links? References? Images? Environment? Versions? Anything that will give us more context about the issue you are encountering!
+    validations:
+      required: false

@@ -5,12 +5,21 @@
     "../../.eslintrc"
   ],
   "rules": {
-    "no-use-before-define":"warn",
+    "no-use-before-define": "warn",
     "node/no-missing-import": "off",
     "unicorn/no-negated-condition": "off",
     "unicorn/prefer-type-error": "off",
     "unicorn/prefer-node-protocol": "off",
-    "unicorn/no-useless-undefined": "off"
+    "unicorn/no-useless-undefined": "off",
+    "perfectionist/sort-imports": "off",
+    "perfectionist/sort-object-types": "off",
+    "perfectionist/sort-named-imports": "off",
+    "perfectionist/sort-classes": "off",
+    "perfectionist/sort-union-types": "off",
+    "perfectionist/sort-objects": "off",
   },
-  "ignorePatterns": ["bin", "build"]
+  "ignorePatterns": [
+    "bin",
+    "build"
+  ]
 }

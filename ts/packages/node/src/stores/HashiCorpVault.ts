@@ -1,4 +1,4 @@
-import axios, { Axios } from 'axios';
+import axios, { type Axios } from 'axios';
 import { KeyValueConfigStore } from '@configu/ts';
 
 export type HashiCorpVaultConfigStoreConfiguration = { address?: string; token?: string; engine: string };

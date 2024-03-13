@@ -2,10 +2,14 @@ include-paths:
   - "ts/packages/ts/"
   - "ts/packages/node/"
   - "ts/packages/browser/"
-name-template: "ts-v$RESOLVED_VERSION"
-tag-template: "ts-v$RESOLVED_VERSION"
-tag-prefix: "ts-"
+name-template: "ts/v$RESOLVED_VERSION"
+tag-template: "ts/v$RESOLVED_VERSION"
+tag-prefix: "ts/"
 # common configurations - https://github.com/release-drafter/release-drafter#configuration-options
+include-labels:
+  - "feat"
+  - "bug"
+  - "chore"
 exclude-labels:
   - "skip"
 category-template: "### $TITLE"

@@ -1,19 +1,18 @@
-name: "CD: configu pypi package"
+name: "CD/@configu/py"
 
 on:
   push:
     tags:
-      - py-*
-
-env:
-  PACKAGE_NAME: "@configu/py"
+      - py/v*
 
 jobs:
-  build_and_deploy:
-    name: Build and deploy
+  cd-py:
+    name: "CD/@configu/py"
     runs-on: ubuntu-latest
+    env:
+      PACKAGE_NAME: "@configu/py"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: ./.github/actions/deploy-start-action
         id: deployment
@@ -30,8 +29,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-
-      # ----------
+      # ---
       - name: Bump package version
         run: |
           cd ${{ env.CWD }}
@@ -61,8 +59,7 @@ jobs:
           S3_BUCKET: "oss.configu.com"
           S3_FOLDER: "py"
           CLOUDFRONT_DISTRIBUTION: "E7C5AL5O299SC"
-      # ----------
-
+      # ---
       - uses: ./.github/actions/deploy-end-action
         if: always()
         with:

@@ -1,7 +1,7 @@
 module.exports = {
   'packages/**/*.{js,ts}?(x)': (filenames) => [
     'npm run build',
-    `eslint --cache --ext js,ts --ignore-path ../.gitignore ${filenames.join(' ')}`, // also runs prettier --check
-    // `prettier --check --ignore-path ../.gitignore ${filenames.join(' ')}`,
+    `npx eslint ${filenames.join(' ')} --ext js,ts --cache --ignore-path ../.gitignore`,
+    `npx prettier ${filenames.join(' ')} --check --ignore-path ../.gitignore --ignore-path .prettierignore`,
   ],
 };

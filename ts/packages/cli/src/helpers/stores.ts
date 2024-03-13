@@ -1,5 +1,5 @@
-import { ConfigStore } from '@configu/ts';
-import { StoreType } from '@configu/lib';
+import { type ConfigStore } from '@configu/ts';
+import { type StoreType } from '@configu/lib';
 import {
   AWSParameterStoreConfigStore,
   AWSSecretsManagerConfigStore,
@@ -12,13 +12,14 @@ import {
   InMemoryConfigStore,
   JsonFileConfigStore,
   KubernetesSecretConfigStore,
-  LaunchDarklyConfigStore,
   MariaDBConfigStore,
   MSSQLConfigStore,
   MySQLConfigStore,
   NoopConfigStore,
   PostgreSQLConfigStore,
   SQLiteConfigStore,
+  LaunchDarklyConfigStore,
+  CloudBeesConfigStore,
 } from '@configu/node';
 
 // todo: change "any" here!
@@ -32,7 +33,6 @@ const TYPE_TO_STORE_CTOR: Record<StoreType, ConfigStoreCtor> = {
   'hashicorp-vault': HashiCorpVaultConfigStore,
   'aws-parameter-store': AWSParameterStoreConfigStore,
   'aws-secrets-manager': AWSSecretsManagerConfigStore,
-  'launch-darkly': LaunchDarklyConfigStore,
   'azure-key-vault': AzureKeyVaultConfigStore,
   'gcp-secret-manager': GCPSecretManagerConfigStore,
   'kubernetes-secret': KubernetesSecretConfigStore,
@@ -42,6 +42,8 @@ const TYPE_TO_STORE_CTOR: Record<StoreType, ConfigStoreCtor> = {
   postgres: PostgreSQLConfigStore,
   cockroachdb: CockroachDBConfigStore,
   mssql: MSSQLConfigStore,
+  'launch-darkly': LaunchDarklyConfigStore,
+  'cloud-bees': CloudBeesConfigStore,
 };
 
 export const constructStore = (type: string, configuration: any): ConfigStore => {

@@ -1,4 +1,4 @@
-import { EtcdConfigStore, ConfigSet, InMemoryConfigSchema, UpsertCommand, EvalCommand, ExportCommand } from '.';
+import { EtcdConfigStore, ConfigSet, ConfigSchema, UpsertCommand, EvalCommand, ExportCommand } from '.';
 
 (async () => {
   const store = new EtcdConfigStore({
@@ -8,17 +8,14 @@ import { EtcdConfigStore, ConfigSet, InMemoryConfigSchema, UpsertCommand, EvalCo
 
   const set = new ConfigSet('test');
 
-  const schema = new InMemoryConfigSchema(
-    {
-      K11: {
-        type: 'Number',
-      },
-      K12: {
-        type: 'String',
-      },
+  const schema = new ConfigSchema('test', {
+    K11: {
+      type: 'Number',
     },
-    's1',
-  );
+    K12: {
+      type: 'String',
+    },
+  });
 
   await new UpsertCommand({
     store,
@@ -30,6 +27,6 @@ import { EtcdConfigStore, ConfigSet, InMemoryConfigSchema, UpsertCommand, EvalCo
     },
   }).run();
   const data = await new EvalCommand({ store, set, schema }).run();
-  const resp = await new ExportCommand({ data }).run();
+  const resp = await new ExportCommand({ pipe: data }).run();
   console.log(resp);
 })();

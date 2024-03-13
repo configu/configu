@@ -1,0 +1,36 @@
+name: "Get actor information"
+
+inputs:
+  github-token:
+    required: true
+
+outputs:
+  actor-username:
+    description: "Actor username"
+    value: ${{ steps.actor-info.outputs.username }}
+  actor-permission:
+    description: "Actor permission"
+    value: ${{ steps.actor-info.outputs.permission }}
+
+runs:
+  using: "composite"
+  steps:
+    # todo: enenche code with actions/github-script@v6 instead of bash
+    - name: Extract actor information
+      id: actor-info
+      shell: bash
+      run: |
+        username=${{ github.actor }}
+        permission=$(gh api \
+          -H "Accept: application/vnd.github+json" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          /repos/configu/configu/collaborators/${{ github.actor }}/permission \
+          --jq '.permission')
+
+        echo "username=$username" >> $GITHUB_OUTPUT
+        echo "permission=$permission" >> $GITHUB_OUTPUT
+
+        echo "username: $username"
+        echo "permission: $permission"
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}

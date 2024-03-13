@@ -1,31 +1,34 @@
 // To parse this data:
 //
-//   import { Convert, CfguType, Cfgu, Config, ConfigSchemaType, ConfigSchema, ConfigSchemaContentsValue, ConfigSet, ConfigStore, ConfigStoreQuery, ConfigStoreContentsElement } from "./file";
+//   import { Convert, CfguType, Cfgu, Config, ConfigSchemaContentsValue, ConfigSchema, ConfigSet, ConfigStoreQuery, ConfigStoreContentsElement, ConfigStore } from "./file";
 //
 //   const cfguType = Convert.toCfguType(json);
 //   const cfgu = Convert.toCfgu(json);
 //   const config = Convert.toConfig(json);
-//   const configSchemaType = Convert.toConfigSchemaType(json);
-//   const configSchema = Convert.toConfigSchema(json);
 //   const configSchemaContentsValue = Convert.toConfigSchemaContentsValue(json);
 //   const configSchemaContents = Convert.toConfigSchemaContents(json);
+//   const configSchema = Convert.toConfigSchema(json);
 //   const configSet = Convert.toConfigSet(json);
-//   const configStore = Convert.toConfigStore(json);
 //   const configStoreQuery = Convert.toConfigStoreQuery(json);
 //   const configStoreContentsElement = Convert.toConfigStoreContentsElement(json);
 //   const configStoreContents = Convert.toConfigStoreContents(json);
+//   const configStore = Convert.toConfigStore(json);
 //
 // These functions will throw an error if the JSON doesn't
 // match the expected interface, even if the JSON is valid.
 
 /**
- * A generic declaration of a Config, aka Cfgu that specifies information about its type and
- * other characteristics
+ * A generic declaration of a `Config`, using properties like type, description and
+ * constraints.
+ * https://configu.com/docs/cfgu/
  */
 export interface Cfgu {
     default?:     string;
     depends?:     string[];
     description?: string;
+    hidden?:      boolean;
+    labels?:      string[];
+    lazy?:        boolean;
     options?:     string[];
     pattern?:     string;
     required?:    boolean;
@@ -37,7 +40,9 @@ export interface Cfgu {
 export type CfguType = "ARN" | "AWSRegion" | "AZRegion" | "AlibabaRegion" | "Base64" | "Boolean" | "Color" | "ConnectionString" | "Country" | "Currency" | "DateTime" | "DockerImage" | "Domain" | "Email" | "GCPRegion" | "Hex" | "IBMRegion" | "IPv4" | "IPv6" | "JSONSchema" | "Language" | "LatLong" | "Locale" | "MACAddress" | "MD5" | "MIMEType" | "MobilePhone" | "MongoId" | "Number" | "OracleRegion" | "RegEx" | "SHA" | "SemVer" | "String" | "URL" | "UUID";
 
 /**
- * A generic representation of a software configuration, aka Config
+ * A generic representation of `application configuration` using three properties: `key`,
+ * `value`, `set`.
+ * https://configu.com/docs/terminology/#config
  */
 export interface Config {
     key:   string;
@@ -46,20 +51,22 @@ export interface Config {
 }
 
 /**
- * An interface of a <file>.cfgu.json, aka ConfigSchema
- * that contains binding records between a unique Config.<key> and its Cfgu declaration
+ * A file containing binding records linking each unique `ConfigKey` to its corresponding
+ * `Cfgu` declaration.
+ * https://configu.com/docs/config-schema/
  */
 export interface ConfigSchema {
-    path: string;
-    type: ConfigSchemaType;
+    contents: { [key: string]: ConfigSchemaContents };
+    name:     string;
 }
-
-export type ConfigSchemaType = "json";
 
 export interface ConfigSchemaContents {
     default?:     string;
     depends?:     string[];
     description?: string;
+    hidden?:      boolean;
+    labels?:      string[];
+    lazy?:        boolean;
     options?:     string[];
     pattern?:     string;
     required?:    boolean;
@@ -69,20 +76,13 @@ export interface ConfigSchemaContents {
 }
 
 /**
- * An interface of a path in an hierarchy, aka ConfigSet
- * that uniquely groups Config.<key> with their Config.<value>.
+ * A unique, case-sensitive path within a tree-like data structure that groups `Config`s
+ * contextually.
+ * https://configu.com/docs/config-set/
  */
 export interface ConfigSet {
     hierarchy: string[];
     path:      string;
-}
-
-/**
- * An interface of a storage, aka ConfigStore
- * that I/Os Config records (Config[])
- */
-export interface ConfigStore {
-    type: string;
 }
 
 export interface ConfigStoreQuery {
@@ -94,6 +94,14 @@ export interface ConfigStoreContents {
     key:   string;
     set:   string;
     value: string;
+}
+
+/**
+ * A storage engine interface for `Config`s records.
+ * https://configu.com/docs/config-store/
+ */
+export interface ConfigStore {
+    type: string;
 }
 
 // Converts JSON strings to/from your types
@@ -123,22 +131,6 @@ export class Convert {
         return JSON.stringify(uncast(value, r("Config")), null, 2);
     }
 
-    public static toConfigSchemaType(json: string): ConfigSchemaType {
-        return cast(JSON.parse(json), r("ConfigSchemaType"));
-    }
-
-    public static configSchemaTypeToJson(value: ConfigSchemaType): string {
-        return JSON.stringify(uncast(value, r("ConfigSchemaType")), null, 2);
-    }
-
-    public static toConfigSchema(json: string): ConfigSchema {
-        return cast(JSON.parse(json), r("ConfigSchema"));
-    }
-
-    public static configSchemaToJson(value: ConfigSchema): string {
-        return JSON.stringify(uncast(value, r("ConfigSchema")), null, 2);
-    }
-
     public static toConfigSchemaContentsValue(json: string): ConfigSchemaContents {
         return cast(JSON.parse(json), r("ConfigSchemaContents"));
     }
@@ -155,20 +147,20 @@ export class Convert {
         return JSON.stringify(uncast(value, m(r("ConfigSchemaContents"))), null, 2);
     }
 
+    public static toConfigSchema(json: string): ConfigSchema {
+        return cast(JSON.parse(json), r("ConfigSchema"));
+    }
+
+    public static configSchemaToJson(value: ConfigSchema): string {
+        return JSON.stringify(uncast(value, r("ConfigSchema")), null, 2);
+    }
+
     public static toConfigSet(json: string): ConfigSet {
         return cast(JSON.parse(json), r("ConfigSet"));
     }
 
     public static configSetToJson(value: ConfigSet): string {
         return JSON.stringify(uncast(value, r("ConfigSet")), null, 2);
-    }
-
-    public static toConfigStore(json: string): ConfigStore {
-        return cast(JSON.parse(json), r("ConfigStore"));
-    }
-
-    public static configStoreToJson(value: ConfigStore): string {
-        return JSON.stringify(uncast(value, r("ConfigStore")), null, 2);
     }
 
     public static toConfigStoreQuery(json: string): ConfigStoreQuery {
@@ -193,6 +185,14 @@ export class Convert {
 
     public static configStoreContentsToJson(value: ConfigStoreContents[]): string {
         return JSON.stringify(uncast(value, a(r("ConfigStoreContents"))), null, 2);
+    }
+
+    public static toConfigStore(json: string): ConfigStore {
+        return cast(JSON.parse(json), r("ConfigStore"));
+    }
+
+    public static configStoreToJson(value: ConfigStore): string {
+        return JSON.stringify(uncast(value, r("ConfigStore")), null, 2);
     }
 }
 
@@ -353,6 +353,9 @@ const typeMap: any = {
         { json: "default", js: "default", typ: u(undefined, "") },
         { json: "depends", js: "depends", typ: u(undefined, a("")) },
         { json: "description", js: "description", typ: u(undefined, "") },
+        { json: "hidden", js: "hidden", typ: u(undefined, true) },
+        { json: "labels", js: "labels", typ: u(undefined, a("")) },
+        { json: "lazy", js: "lazy", typ: u(undefined, true) },
         { json: "options", js: "options", typ: u(undefined, a("")) },
         { json: "pattern", js: "pattern", typ: u(undefined, "") },
         { json: "required", js: "required", typ: u(undefined, true) },
@@ -366,13 +369,16 @@ const typeMap: any = {
         { json: "value", js: "value", typ: "" },
     ], false),
     "ConfigSchema": o([
-        { json: "path", js: "path", typ: "" },
-        { json: "type", js: "type", typ: r("ConfigSchemaType") },
+        { json: "contents", js: "contents", typ: m(r("ConfigSchemaContents")) },
+        { json: "name", js: "name", typ: "" },
     ], false),
     "ConfigSchemaContents": o([
         { json: "default", js: "default", typ: u(undefined, "") },
         { json: "depends", js: "depends", typ: u(undefined, a("")) },
         { json: "description", js: "description", typ: u(undefined, "") },
+        { json: "hidden", js: "hidden", typ: u(undefined, true) },
+        { json: "labels", js: "labels", typ: u(undefined, a("")) },
+        { json: "lazy", js: "lazy", typ: u(undefined, true) },
         { json: "options", js: "options", typ: u(undefined, a("")) },
         { json: "pattern", js: "pattern", typ: u(undefined, "") },
         { json: "required", js: "required", typ: u(undefined, true) },
@@ -384,9 +390,6 @@ const typeMap: any = {
         { json: "hierarchy", js: "hierarchy", typ: a("") },
         { json: "path", js: "path", typ: "" },
     ], false),
-    "ConfigStore": o([
-        { json: "type", js: "type", typ: "" },
-    ], false),
     "ConfigStoreQuery": o([
         { json: "key", js: "key", typ: "" },
         { json: "set", js: "set", typ: "" },
@@ -395,6 +398,9 @@ const typeMap: any = {
         { json: "key", js: "key", typ: "" },
         { json: "set", js: "set", typ: "" },
         { json: "value", js: "value", typ: "" },
+    ], false),
+    "ConfigStore": o([
+        { json: "type", js: "type", typ: "" },
     ], false),
     "CfguType": [
         "AWSRegion",
@@ -433,8 +439,5 @@ const typeMap: any = {
         "String",
         "URL",
         "UUID",
-    ],
-    "ConfigSchemaType": [
-        "json",
     ],
 };

@@ -1,26 +1,25 @@
-name: "CD: configu cli tarballs, docker image"
+name: "CD/@configu/cli"
 
 on:
   push:
     tags:
-      - cli-*
-
-env:
-  PACKAGE_NAME: "@configu/cli"
-  PACKAGE_PATH: "packages/cli"
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }} # required by aws, oclif
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }} # required by aws, oclif
-  AWS_REGION: ${{ secrets.AWS_REGION }} # required by aws, oclif
-  S3_BUCKET: "cli.configu.com"
-  CLOUDFRONT_DISTRIBUTION: "E1I302A2MRSW0O"
-  DOCKERHUB_REPOSITORY: "configu/cli"
+      - cli/v*
 
 jobs:
-  build_and_deploy:
-    name: Build and deploy
+  cd-cli:
+    name: "CD/@configu/cli"
     runs-on: ubuntu-latest
+    env:
+      PACKAGE_NAME: "@configu/cli"
+      PACKAGE_PATH: "packages/cli"
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }} # required by aws, oclif
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }} # required by aws, oclif
+      AWS_REGION: ${{ secrets.AWS_REGION }} # required by aws, oclif
+      S3_BUCKET: "cli.configu.com"
+      CLOUDFRONT_DISTRIBUTION: "E1I302A2MRSW0O"
+      DOCKERHUB_REPOSITORY: "configu/cli"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: ./.github/actions/deploy-start-action
         id: deployment
@@ -39,8 +38,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-
-      # ----------
+      # ---
       - name: Bump package version
         run: |
           cd ${{ env.CWD }}
@@ -82,20 +80,20 @@ jobs:
           files: |
             ${{ env.CWD }}/${{ env.PACKAGE_PATH }}/dist/*
 
-      - uses: docker/setup-qemu-action@v2
+      - uses: docker/setup-qemu-action@v3
 
-      - uses: docker/setup-buildx-action@v2
+      - uses: docker/setup-buildx-action@v3
 
-      - uses: docker/login-action@v2
+      - uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build docker image and push to Docker Hub
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           context: ${{ env.CWD }}/${{ env.PACKAGE_PATH }}
-          platforms: linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8
+          platforms: linux/amd64,linux/arm64
           tags: ${{ env.DOCKERHUB_REPOSITORY }}:${{ steps.deployment.outputs.release-version }},${{ env.DOCKERHUB_REPOSITORY }}:${{ steps.deployment.outputs.release-channel }}
           push: true
 
@@ -110,8 +108,7 @@ jobs:
           S3_BUCKET: "oss.configu.com"
           S3_FOLDER: "cli"
           CLOUDFRONT_DISTRIBUTION: "E7C5AL5O299SC"
-      # ----------
-
+      # ---
       - uses: ./.github/actions/deploy-end-action
         if: always()
         with:

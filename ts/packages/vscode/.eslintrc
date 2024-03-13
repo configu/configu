@@ -6,5 +6,7 @@
     "no-console": "off",
     "import/no-extraneous-dependencies": "off"
   },
-  "ignorePatterns": ["build"]
+  "ignorePatterns": [
+    "build"
+  ]
 }

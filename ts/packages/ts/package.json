@@ -32,14 +32,14 @@
   },
   "dependencies": {
     "ajv": "^8.12.0",
-    "axios": "^1.5.0",
+    "axios": "^1.6.2",
     "lodash": "^4.17.21",
     "mustache": "^4.2.0",
     "validator": "^13.11.0"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.198",
-    "@types/mustache": "^4.2.2",
-    "@types/validator": "^13.11.1"
+    "@types/lodash": "^4.14.202",
+    "@types/mustache": "^4.2.5",
+    "@types/validator": "^13.11.7"
   }
 }

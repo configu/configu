@@ -2,13 +2,15 @@ import _ from 'lodash';
 import {
   InMemoryConfigStore,
   ConfigSet,
-  InMemoryConfigSchema,
+  ConfigSchema,
   UpsertCommand,
-  UpsertCommandParameters,
+  type UpsertCommandParameters,
   EvalCommand,
-  EvalCommandParameters,
+  type EvalCommandParameters,
   DeleteCommand,
-  EvalCommandReturn,
+  type EvalCommandReturn,
+  ExportCommand,
+  ConfigError,
 } from '..';
 
 describe(`commands`, () => {
@@ -19,57 +21,69 @@ describe(`commands`, () => {
   const set11 = new ConfigSet('test1/test11');
   const set2 = new ConfigSet('test2');
 
-  const schema1 = new InMemoryConfigSchema(
-    {
-      K11: {
-        type: 'Boolean',
-        default: 'true',
-        depends: ['K12'],
-      },
-      K12: {
-        type: 'Number',
-      },
-      K13: {
-        type: 'String',
-        required: true,
-      },
+  const schema1 = new ConfigSchema('s1', {
+    K11: {
+      type: 'Boolean',
+      default: 'true',
+      depends: ['K12'],
     },
-    's1',
-  );
-  const schema2 = new InMemoryConfigSchema(
-    {
-      K21: {
-        type: 'RegEx',
-        pattern: '^(foo|bar|baz)$',
-      },
-      K22: {
-        type: 'String',
-        template: '{{K21}}::{{K11}}:{{K12}}:{{K13}}',
-      },
+    K12: {
+      type: 'Number',
     },
-    's2',
-  );
-  const schema3 = new InMemoryConfigSchema(
-    {
-      K31: {
-        type: 'String',
-        description: "email's prefix",
-        template: '{{CONFIGU_SET.1}}-{{CONFIGU_SET.hierarchy.1}}',
-      },
-      K32: {
-        type: 'Domain',
-        description: "email's suffix",
-      },
-      K33: {
-        type: 'Email',
-        template: '{{CONFIGU_SET.last}}-{{K31}}@{{K32}}',
-        required: true,
-        depends: ['K31', 'K32'],
-      },
+    K13: {
+      type: 'String',
+      required: true,
     },
-    's3',
-  );
+  });
+  const schema2 = new ConfigSchema('s2', {
+    K21: {
+      type: 'RegEx',
+      pattern: '^(foo|bar|baz)$',
+    },
+    K22: {
+      type: 'String',
+      template: '{{K21}}::{{K11}}:{{K12}}:{{K13}}',
+    },
+  });
+  const schema3 = new ConfigSchema('s3', {
+    K31: {
+      type: 'String',
+      description: "email's prefix",
+      template: '{{CONFIGU_SET.1}}-{{CONFIGU_SET.hierarchy.1}}',
+    },
+    K32: {
+      type: 'Domain',
+      description: "email's suffix",
+    },
+    K33: {
+      type: 'Email',
+      template: '{{CONFIGU_SET.last}}-{{K31}}@{{K32}}',
+      required: true,
+      depends: ['K31', 'K32'],
+    },
+  });
 
+  describe(`UpsertCommand`, () => {
+    describe('Tests for lazy configs', () => {
+      test('run UpsertCommand with lazy config', async () => {
+        await expect(() =>
+          new UpsertCommand({
+            store: store1,
+            set: set1,
+            schema: new ConfigSchema('lazy', {
+              K1: {
+                type: 'String',
+                lazy: true,
+              },
+            }),
+            configs: {
+              K1: '1',
+            },
+          }).run(),
+        ).rejects.toBeInstanceOf(ConfigError);
+      });
+    });
+  });
   describe(`EvalCommand`, () => {
     test.each<{
       name: string;
@@ -216,7 +230,7 @@ describe(`commands`, () => {
         const evalResult = await parameters.eval.reduce<Promise<EvalCommandReturn>>(
           async (promisedPrevious, current) => {
             const previous = await promisedPrevious;
-            return new EvalCommand({ ...current, previous }).run();
+            return new EvalCommand({ ...current, pipe: previous }).run();
           },
           undefined as any,
         );
@@ -229,6 +243,239 @@ describe(`commands`, () => {
         const deletePromises = parameters.upsert.map((p) => new DeleteCommand(p).run());
         await Promise.all(deletePromises);
       }
+    });
+    describe('Tests for lazy configs', () => {
+      beforeAll(async () => {
+        await store1.init();
+        await new UpsertCommand({
+          store: store1,
+          set: set1,
+          schema: new ConfigSchema('lazy', {
+            K1: {
+              type: 'String',
+            },
+          }),
+          configs: {
+            K1: '2',
+          },
+        }).run();
+      });
+      test('run EvalCommand WITHOUT configs overrides but one config is `cfgu.lazy && cfgu.required = true`', async () => {
+        expect.assertions(1);
+        await expect(() =>
+          new EvalCommand({
+            store: store1,
+            set: set1,
+            schema: new ConfigSchema('lazy', {
+              K1: {
+                type: 'String',
+                lazy: true,
+                required: true,
+              },
+            }),
+          }).run(),
+        ).rejects.toBeInstanceOf(ConfigError);
+      });
+      test('run EvalCommand WITHOUT configs overrides but one config is `cfgu.lazy && cfgu.required = false`', async () => {
+        const result = await new EvalCommand({
+          store: store1,
+          set: set1,
+          schema: new ConfigSchema('lazy', {
+            K1: {
+              type: 'String',
+              lazy: true,
+            },
+          }),
+        }).run();
+        expect(result).toMatchObject({ K1: { result: { value: '' } } });
+      });
+      test('run EvalCommand WITH configs overrides but not for the one config is `cfgu.lazy && cfgu.required = true`', async () => {
+        expect.assertions(1);
+        await expect(() =>
+          new EvalCommand({
+            store: store1,
+            set: set1,
+            schema: new ConfigSchema('lazy', {
+              K1: {
+                type: 'String',
+                lazy: true,
+                required: true,
+              },
+              K2: {
+                type: 'String',
+              },
+            }),
+            configs: {
+              K2: '2',
+            },
+          }).run(),
+        ).rejects.toBeInstanceOf(ConfigError);
+      });
+      test('run EvalCommand WITH configs overrides for the one config is `cfgu.lazy && cfgu.required = false`', async () => {
+        const result = await new EvalCommand({
+          store: store1,
+          set: set1,
+          schema: new ConfigSchema('lazy', {
+            K1: {
+              type: 'String',
+              lazy: true,
+              required: false,
+            },
+          }),
+          configs: {
+            K1: '1',
+          },
+        }).run();
+        expect(result).toMatchObject({ K1: { result: { value: '1' } } });
+      });
+      test('run EvalCommand WITH configs overrides for the one config is `cfgu.lazy && cfgu.required = true`', async () => {
+        const result = await new EvalCommand({
+          store: store1,
+          set: set1,
+          schema: new ConfigSchema('lazy', {
+            K1: {
+              type: 'String',
+              lazy: true,
+              required: true,
+            },
+          }),
+          configs: {
+            K1: '1',
+          },
+        }).run();
+        expect(result).toMatchObject({ K1: { result: { value: '1' } } });
+      });
+      test('run EvalCommand with override for lazy config when there is a value in the store and get the override value in the result', async () => {
+        const result = await new EvalCommand({
+          store: store1,
+          set: set1,
+          schema: new ConfigSchema('lazy', {
+            K1: {
+              type: 'String',
+              lazy: true,
+            },
+          }),
+          configs: {
+            K1: '1',
+          },
+        }).run();
+        expect(result).toMatchObject({ K1: { result: { value: '1' } } });
+      });
+      test("run EvalCommand without override for lazy config when there is a value in the store and don't get it back in the result", async () => {
+        const result = await new EvalCommand({
+          store: store1,
+          set: set1,
+          schema: new ConfigSchema('lazy', {
+            K1: {
+              type: 'String',
+              lazy: true,
+            },
+          }),
+        }).run();
+        expect(result).toMatchObject({ K1: { result: { value: '' } } });
+      });
+    });
+  });
+  describe(`ExportCommand`, () => {
+    const getEvalResult = async (schema?: ConfigSchema) => {
+      return new EvalCommand({
+        store: store1,
+        set: set1,
+        schema:
+          schema ||
+          new ConfigSchema('mutate', {
+            KEY0: {
+              type: 'String',
+            },
+            KEY1: {
+              type: 'String',
+            },
+          }),
+        configs: {
+          KEY0: 'KEY0',
+          KEY1: 'KEY1',
+        },
+      }).run();
+    };
+    test('Export with filter', async () => {
+      const evalResult = await getEvalResult();
+      const exportedConfigs = await new ExportCommand({
+        pipe: evalResult,
+        filter: ({ context, result }) => result.value !== 'KEY0',
+      }).run();
+      expect(exportedConfigs).toStrictEqual({ KEY1: 'KEY1' });
+    });
+    test('Export with hidden configs', async () => {
+      const evalResult = await getEvalResult(
+        new ConfigSchema('mutate', {
+          KEY0: {
+            type: 'String',
+          },
+          KEY1: {
+            type: 'String',
+            hidden: true,
+          },
+        }),
+      );
+      const exportedConfigs = await new ExportCommand({ pipe: evalResult }).run();
+      expect(exportedConfigs).toStrictEqual({ KEY0: 'KEY0' });
+    });
+    describe(`Keys Mutation Callback`, () => {
+      test('Export without keys mutation callback', async () => {
+        const evalResult = await getEvalResult();
+        const exportedConfigs = await new ExportCommand({ pipe: evalResult }).run();
+        expect(exportedConfigs).toStrictEqual({ KEY0: 'KEY0', KEY1: 'KEY1' });
+      });
+    });
+    test('Export with keys mutation callback', async () => {
+      const evalResult = await getEvalResult();
+      const exportedConfigs = await new ExportCommand({ pipe: evalResult, keys: (key) => `MY_${key}` }).run();
+      expect(exportedConfigs).toStrictEqual({ MY_KEY0: 'KEY0', MY_KEY1: 'KEY1' });
+    });
+    test('Export with bad keys mutation callback that returns non-string', async () => {
+      const evalResult = await getEvalResult();
+      await expect(
+        new ExportCommand({
+          pipe: evalResult,
+          // @ts-expect-error - should throw ConfigError
+          keys: (key) => ({ key }),
+        }).run(),
+      ).rejects.toBeInstanceOf(ConfigError);
+    });
+    test('Export with bad keys mutation callback that returns number', async () => {
+      const evalResult = await getEvalResult();
+      // @ts-expect-error - should throw ConfigError
+      const exportedConfigs = await new ExportCommand({ pipe: evalResult, keys: (key) => 5 }).run();
+      expect(exportedConfigs).toStrictEqual({ '5': 'KEY1' });
+    });
+    test('Export with bad keys mutation callback that returns empty string', async () => {
+      const evalResult = await getEvalResult();
+      await expect(
+        new ExportCommand({
+          pipe: evalResult,
+          keys: (key) => '',
+        }).run(),
+      ).rejects.toBeInstanceOf(ConfigError);
+    });
+    test('Export with bad keys mutation callback that returns !NAME()', async () => {
+      const evalResult = await getEvalResult();
+      await expect(
+        new ExportCommand({
+          pipe: evalResult,
+          keys: (key) => `!${key}`,
+        }).run(),
+      ).rejects.toBeInstanceOf(ConfigError);
+    });
+    test('Export with bad keys mutation callback that raise exception', async () => {
+      const evalResult = await getEvalResult();
+      await expect(
+        new ExportCommand({
+          pipe: evalResult,
+          keys: (key) => {
+            throw new Error('test');
+          },
+        }).run(),
+      ).rejects.toBeInstanceOf(Error);
     });
   });
 });

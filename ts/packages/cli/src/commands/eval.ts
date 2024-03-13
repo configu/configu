@@ -1,6 +1,6 @@
 import { Flags } from '@oclif/core';
-import { EvalCommandParameters } from '@configu/ts';
-import { NoopConfigStore, ConfigSet, ConfigSchema, EvalCommand } from '@configu/node';
+import { type EvalCommandParameters } from '@configu/ts';
+import { NoopConfigStore, ConfigSet, EvalCommand } from '@configu/node';
 import { BaseCommand } from '../base';
 
 export default class Eval extends BaseCommand<typeof Eval> {
@@ -46,33 +46,32 @@ export default class Eval extends BaseCommand<typeof Eval> {
   };
 
   async constructEvalCommandParameters(): Promise<EvalCommandParameters> {
-    const { store, set, schema, config } = this.flags;
-
     // * just for safety
-    if (typeof schema !== 'string') {
+    if (typeof this.flags.schema !== 'string') {
       throw new Error(`--schema flag is missing`);
     }
 
-    const configs = this.reduceConfigFlag(config);
-    const previous = await this.readPreviousEvalCommandReturn();
+    const schema = await this.getSchemaInstanceBySchemaFlag(this.flags.schema);
+    const configs = this.reduceConfigFlag(this.flags.config);
+    const pipe = await this.readPreviousEvalCommandReturn();
 
-    if (typeof store === 'string' && (typeof set === 'string' || set === undefined)) {
-      const storeInstance = this.getStoreInstanceByStoreFlag(store);
+    if (typeof this.flags.store === 'string' && (typeof this.flags.set === 'string' || this.flags.set === undefined)) {
+      const store = this.getStoreInstanceByStoreFlag(this.flags.store);
       return {
-        store: storeInstance,
-        set: new ConfigSet(set),
-        schema: new ConfigSchema(schema),
+        store,
+        set: new ConfigSet(this.flags.set),
+        schema,
         configs,
-        previous,
+        pipe,
       };
     }
 
     return {
       store: new NoopConfigStore(),
       set: new ConfigSet(),
-      schema: new ConfigSchema(schema),
+      schema,
       configs,
-      previous,
+      pipe,
     };
   }
 

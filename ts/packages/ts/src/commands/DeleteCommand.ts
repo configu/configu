@@ -1,10 +1,9 @@
 import _ from 'lodash';
 import { Command } from '../Command';
-import { Config } from '../types';
-import { ERR } from '../utils';
-import { ConfigStore } from '../ConfigStore';
-import { ConfigSet } from '../ConfigSet';
-import { ConfigSchema } from '../ConfigSchema';
+import { type Config } from '../types';
+import { type ConfigStore } from '../ConfigStore';
+import { type ConfigSet } from '../ConfigSet';
+import { type ConfigSchema } from '../ConfigSchema';
 
 export type DeleteCommandParameters = {
   store: ConfigStore;
@@ -18,13 +17,11 @@ export class DeleteCommand extends Command<void> {
   }
 
   async run() {
-    const scopeLocation = [`DeleteCommand`, 'run'];
     const { store, set, schema } = this.parameters;
 
     await store.init();
 
-    const schemaContents = await ConfigSchema.parse(schema);
-    const storeQueries = _(schemaContents)
+    const storeQueries = _(schema.contents)
       .keys()
       .map((key) => ({ set: set.path, key }))
       .value();
