@@ -48,6 +48,7 @@
     "@openfeature/server-sdk": "^1.7.4",
     "axios": "^1.6.2",
     "cloudbees-openfeature-provider-node": "^1.0.0",
+    "csv": "^6.3.8",
     "etcd3": "^1.1.2",
     "ini": "^4.1.1",
     "keyv": "^4.5.4",
