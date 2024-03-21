@@ -1,0 +1,127 @@
+{
+    "name": "Configu",
+    "logo": {
+      "light": "/logo/light.png",
+      "dark": "/logo/dark.png"
+    },
+    "favicon": "/favicon.png",
+    "colors": {
+      "primary": "#0066F5",
+      "light": "#418EFA",
+      "dark": "#0066F5"
+    },
+    "topbarCtaButton": {
+      "type": "github",
+      "url": "https://github.com/configu/configu/"
+    },
+    "topbarLinks": [
+      {
+        "name": "Log In",
+        "url": "https://configu.us.auth0.com/u/login?state=hKFo2SBYcTZEdkZrLTFHQllFMVBLdUZJVVZXb3NYUVpxajcyVqFur3VuaXZlcnNhbC1sb2dpbqN0aWTZIGdseURtVHE0T0d4bXRTVlVaUmxJamFQRDUwZ3I2RzNko2NpZNkgaDkwR0lreTRFWk9SMmZlREIzUjdrdFRGbzF4bzdzdWo"
+      }
+    ],
+    "anchors": [
+      {
+        "name": "Product",
+        "icon": "gifts",
+        "url": "https://configu.com/product/"
+      },
+      {
+        "name": "Privacy Policy",
+        "icon": "lock",
+        "url": "https://configu.com/privacy-policy/"
+      },
+      {
+        "name": "Blog",
+        "icon": "newspaper",
+        "url": "https://configu.com/blog/"
+      }
+    ],
+    "navigation": [
+      {
+        "group": "Overview",
+        "pages": [
+            "overview/get-started",
+            "overview/architecture",
+            "overview/cac",
+            "overview/configu-orch",
+            "overview/configu-cloud",
+            "overview/faq"          
+        ]
+      },
+      {
+        "group": "Concepts",
+        "pages": [
+            "concepts/terminology",
+            "concepts/configstore",
+            "concepts/configset",
+            "concepts/configschema",
+            "concepts/cfgu",
+            "concepts/commands"
+        ]
+      },
+      {
+        "group": "Configu Cloud",
+        "pages": [
+            "configu-cloud/config-explorer",
+            "configu-cloud/config-editor",
+            "configu-cloud/config-history",
+            "configu-cloud/config-compare",
+            "configu-cloud/approval-queue",
+            "configu-cloud/activity-logs",
+            "configu-cloud/webhooks",
+            "configu-cloud/integrations",
+            "configu-cloud/authorization",
+            "configu-cloud/members",
+            "configu-cloud/tokens",
+            "configu-cloud/settings"
+        ]
+      },
+      {
+        "group": "CLI",
+        "pages": [
+            "CLI/cli-overview",
+            "CLI/cli-setup",
+            "CLI/cli-command-ref",
+            "CLI/cli-config-file"
+        ]
+      },
+
+      {
+        "group": "SDK",
+        "pages": [
+            "SDK/sdk-overview",
+            "SDK/sdk-nodejs",
+            "SDK/sdk-python",
+            "SDK/sdk-browser"
+        ]
+      },
+      {
+        "group": "IDE Plugins",
+        "pages": [
+            "IDE-plugins/vscode-ext",
+            "IDE-plugins/intellij-ext"
+        ]
+      },
+      {
+        "group": "Recipes",
+        "pages": [
+            "recipes/create-slack",
+            "recipes/create-discord",
+            "recipes/trigger-github",
+            "recipes/hashicorp-vault"
+        ]
+      },
+      {
+        "group": "",
+        "pages": [
+          "contributing"
+        ]
+      }
+    ],
+    "footerSocials":
+      {
+          "twitter": "https://twitter.com/WeAreConfigu",
+          "linkedin": "https://www.linkedin.com/company/configu/"
+      }
+  }
