@@ -1,0 +1,170 @@
+---
+slug: config-store
+title: ConfigStore
+---
+
+A `ConfigStore` is a storage system for `Configs` in Configu, serving as a mechanism for storing, retrieving, and managing configuration data. It can be any system or service capable of storing data, including text files, databases, secret managers, and the `Configu ConfigStore`. ConfigStores play a crucial role in the configuration management process, enabling the seamless retrieval and management of configuration values at deployments or runtime.
+
+You can choose the most suitable `ConfigStore` based on your specific needs and workflow. Each `ConfigStore` has its own type and can be referenced as instances of their respective class implementation when using Configu's SDK. When using Configu's CLI, `ConfigStores` are referenced using their type, which can also be declared as friendly names in the [`.configu` file](/cli-config).
+
+Configu's interfaces support a wide range of `ConfigStores`. In case you don't find a `ConfigStore` that meets your requirements, Configu allows you to easily create your own by implementing a simple abstract class with `get` and `set` methods. This flexibility empowers you to extend Configu and tailor it to your specific configuration management needs.
+
+## Available Stores
+
+
+<Info>You can choose the appropriate `ConfigStore` based on your specific use case, and refer to the corresponding documentation and configuration links for further details on usage and implementation.</Info>
+
+
+#### Configu `configu`
+
+-   Type: `configu`
+-   Class: `ConfiguConfigStore`
+-   Interfaces: CLI | Node.js | Browser | Python
+-   Documentation: [https://configu.com/docs/](https://configu.com/docs/)
+-   Configuration: [https://configu.com/docs/](https://configu.com/docs/)
+
+#### In Memory `memory`
+
+-   Type: `in-memory`
+-   Class: `InMemoryConfigStore`
+-   Interfaces: CLI | Node.js | Browser | Python
+-   Documentation: [https://configu.com/docs/](https://configu.com/docs/)
+-   Configuration: [https://configu.com/docs/](https://configu.com/docs/)
+
+#### Json File `file`
+
+-   Type: `json-file`
+-   Class: `JsonFileConfigStore`
+-   Interfaces: CLI | Node.js | Python
+-   Documentation: [https://configu.com/docs/](https://configu.com/docs/)
+-   Configuration: [https://configu.com/docs/](https://configu.com/docs/)
+
+#### Ini File `file`
+
+-   Type: `ini-file`
+-   Class: `IniFileConfigStore`
+-   Interfaces: Node.js
+-   Documentation: [https://configu.com/docs/](https://configu.com/docs/)
+-   Configuration: [https://configu.com/docs/](https://configu.com/docs/)
+
+#### Launch Darkly `feature flag`
+
+-   Type: `launch-darkly`
+-   Class: `LaunchDarklyConfigStore`
+-   Interfaces: CLI | Node.js
+-   Documentation: [https://apidocs.launchdarkly.com/tag/Feature-flags](https://apidocs.launchdarkly.com/tag/Feature-flags)
+-   Configuration: [https://github.com/launchdarkly-labs/ldc](https://github.com/launchdarkly-labs/ldc)
+
+#### HashiCorp Vault `secret manager`
+
+-   Type: `hashicorp-vault`
+-   Class: `HashiCorpVaultConfigStore`
+-   Interfaces: CLI | Node.js | Python
+-   Documentation: [https://developer.hashicorp.com/vault/docs](https://developer.hashicorp.com/vault/docs)
+-   Configuration: [https://developer.hashicorp.com/vault/docs/configuration](https://developer.hashicorp.com/vault/docs/configuration)
+
+#### AWS Secrets Manager `secret manager`
+
+-   Type: `aws-secrets-manager`
+-   Class: `AWSSecretsManagerConfigStore`
+-   Interfaces: CLI | Node.js | Python
+-   Documentation: [https://docs.aws.amazon.com/secretsmanager/](https://docs.aws.amazon.com/secretsmanager/)
+-   Configuration: [https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-secrets-manager/interfaces/secretsmanagerclientconfig.html](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-secrets-manager/interfaces/secretsmanagerclientconfig.html)
+
+#### Azure Key Vault `secret manager`
+
+-   Type: `azure-key-vault`
+-   Class: `AzureKeyVaultConfigStore`
+-   Interfaces: CLI | Node.js | Python
+-   Documentation: [https://learn.microsoft.com/en-us/azure/key-vault/](https://learn.microsoft.com/en-us/azure/key-vault/)
+-   Configuration: [https://learn.microsoft.com/en-us/javascript/api/@azure/keyvault-secrets/secretclient](https://learn.microsoft.com/en-us/javascript/api/@azure/keyvault-secrets/secretclient)
+
+#### GCP Secret Manager `secret manager`
+
+-   Type: `gcp-secret-manager`
+-   Class: `GCPSecretManagerConfigStore`
+-   Interfaces: CLI | Node.js | Python
+-   Documentation: [https://cloud.google.com/secret-manager/docs](https://cloud.google.com/secret-manager/docs)
+-   Configuration: [https://cloud.google.com/secret-manager/docs/reference/libraries#client-libraries-install-nodejs](https://cloud.google.com/secret-manager/docs/reference/libraries#client-libraries-install-nodejs)
+
+#### Kubernetes Secret `secret manager`
+
+-   Type: `kubernetes-secret`
+-   Class: `KubernetesSecretConfigStore`
+-   Interfaces: CLI | Node.js | Python
+-   Documentation: [https://kubernetes.io/docs/concepts/configuration/secret/](https://kubernetes.io/docs/concepts/configuration/secret/)
+-   Configuration: [https://github.com/kubernetes-client/javascript](https://github.com/kubernetes-client/javascript)
+
+#### AWS Parameter Store `key value`
+
+-   Type: `aws-parameter-store`
+-   Class: `AWSParameterStoreConfigStore`
+-   Interfaces: CLI | Node.js
+-   Documentation: [https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/client/ssm/](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/client/ssm/)
+-   Configuration: [https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/Package/-aws-sdk-client-ssm/Interface/SSMClientConfig/](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/Package/-aws-sdk-client-ssm/Interface/SSMClientConfig/)
+
+#### Keyv `key value`
+
+-   Type: `keyv`
+-   Class: `KeyvConfigStore`
+-   Interfaces: CLI | Node.js
+-   Documentation: [https://github.com/jaredwray/keyv](https://github.com/jaredwray/keyv)
+-   Configuration: [https://github.com/jaredwray/keyv](https://github.com/jaredwray/keyv)
+
+#### SQLite `database`
+
+-   Type: `sqlite`
+-   Class: `SQLiteConfigStore`
+-   Interfaces: CLI | Node.js
+-   Documentation: [https://www.sqlite.org/docs.html](https://www.sqlite.org/docs.html)
+-   Configuration: [https://typeorm.io/data-source-options#sqlite-data-source-options](https://typeorm.io/data-source-options#sqlite-data-source-options)
+
+#### MySQL `database`
+
+-   Type: `mysql`
+-   Class: `MySQLConfigStore`
+-   Interfaces: CLI | Node.js
+-   Documentation: [https://dev.mysql.com/doc/](https://dev.mysql.com/doc/)
+-   Configuration: [https://typeorm.io/data-source-options#mysql--mariadb-data-source-options](https://typeorm.io/data-source-options#mysql--mariadb-data-source-options)
+
+#### MariaDB `database`
+
+-   Type: `mariadb`
+-   Class: `MariaDBConfigStore`
+-   Interfaces: CLI | Node.js
+-   Documentation: [https://dev.mysql.com/doc/](https://dev.mysql.com/doc/)
+-   Configuration: [https://typeorm.io/data-source-options#mysql--mariadb-data-source-options](https://typeorm.io/data-source-options#mysql--mariadb-data-source-options)
+
+#### PostgreSQL `database`
+
+-   Type: `postgres`
+-   Class: `PostgreSQLConfigStore`
+-   Interfaces: CLI | Node.js
+-   Documentation: [https://www.postgresql.org/docs/](https://www.postgresql.org/docs/)
+-   Configuration: [https://typeorm.io/data-source-options#postgres--cockroachdb-data-source-options](https://typeorm.io/data-source-options#postgres--cockroachdb-data-source-options)
+
+#### CockroachDB `database`
+
+-   Type: `cockroachdb`
+-   Class: `CockroachDBConfigStore`
+-   Interfaces: CLI | Node.js
+-   Documentation: [https://www.cockroachlabs.com/docs/](https://www.cockroachlabs.com/docs/)
+-   Configuration: [https://typeorm.io/data-source-options#postgres--cockroachdb-data-source-options](https://typeorm.io/data-source-options#postgres--cockroachdb-data-source-options)
+
+#### Microsoft SQL Server `database`
+
+-   Type: `mssql`
+-   Class: `MicrosoftSQLServerConfigStore`
+-   Interfaces: CLI | Node.js
+-   Documentation: [https://learn.microsoft.com/en-us/sql/sql-server/](https://learn.microsoft.com/en-us/sql/sql-server/)
+-   Configuration: [https://typeorm.io/data-source-options#mssql-data-source-options](https://typeorm.io/data-source-options#mssql-data-source-options)
+
+#### LocalForage `browser`
+
+-   Type: `localforage`
+-   Class: `LocalForageConfigStore`
+-   Interfaces: Browser
+-   Documentation: [https://localforage.github.io/localForage/](https://localforage.github.io/localForage/)
+-   Configuration: [https://localforage.github.io/localForage/#settings-api-config](https://localforage.github.io/localForage/#settings-api-config)
+
+<Tip> If you have a specific requirement that is not met by the available `ConfigStores`, please don't hesitate to reach out to us or consider contributing your own implementation to enhance the Configu ecosystem.</Tip>
