@@ -37,17 +37,18 @@ enum FilterFlag {
 }
 
 const casingFormatters: Record<string, (string: string) => string> = {
-  CamelCase: camelCase,
-  CapitalCase: capitalCase,
-  ConstantCase: constantCase,
-  DotCase: dotCase,
-  KebabCase: paramCase,
-  NoCase: noCase,
-  PascalCase: pascalCase,
+  // Using split.join because eslint doesn't allow replace(regex) and replaceAll isn't supported
+  CamelCase: (string: string) => camelCase(string).split(' ').join(''),
+  CapitalCase: (string: string) => capitalCase(string).split(' ').join(''),
+  ConstantCase: (string: string) => constantCase(string).split(' ').join(''),
+  DotCase: (string: string) => dotCase(string).split(' ').join(''),
+  KebabCase: (string: string) => paramCase(string).split(' ').join(''),
+  NoCase: (string: string) => noCase(string).split(' ').join(''),
+  PascalCase: (string: string) => pascalCase(string).split(' ').join(''),
   PascalSnakeCase: (string: string) => capitalCase(string).split(' ').join('_'),
-  PathCase: pathCase,
-  SentenceCase: sentenceCase,
-  SnakeCase: snakeCase,
+  PathCase: (string: string) => pathCase(string).split(' ').join(''),
+  SentenceCase: (string: string) => sentenceCase(string).split(' ').join(''),
+  SnakeCase: (string: string) => snakeCase(string).split(' ').join(''),
   TrainCase: (string: string) => capitalCase(string).split(' ').join('-'),
 };
 
