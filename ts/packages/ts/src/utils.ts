@@ -32,6 +32,8 @@ export class ConfigError extends Error {
   }
 }
 
+export class ConfigStoreError extends ConfigError {}
+
 export const REGEX = (pattern: string | RegExp, string: string) => RegExp(pattern).test(string);
 
 const NAMING_PATTERN = /^[A-Za-z0-9_-]+$/;
