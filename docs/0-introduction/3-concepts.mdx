@@ -1,0 +1,143 @@
+---
+title: "Concepts"
+description: "Gain a solid understanding of the foundational elements that drive Configu's configuration management system. This page provides a short overview of key concepts to help you navigate and utilize Configu effectively."
+icon: "book-sparkles"
+---
+
+## Software Configuration
+
+Software or application configuration includes all elements that differ across deployments, such as resource handles, external service credentials, and deployment-specific values. It's a crucial piece of the software puzzle, dictating an application's behavior.
+
+<a href="https://12factor.net/config" target="_blank">The Twelve-Factor App</a>
+
+## Configuration Abstraction
+
+Configuration tends to grow larger in size and complexity over time, making it increasingly difficult to understand and maintain. Configu addresses this by:
+
+- Separating the configuration's structure from its data.
+- Orchestrating configuration data from any source via a unified API.
+- Computing configuration data, instead of manually enumerating it.
+
+## Configuration-as-Code (CaC)
+
+Configuration-as-Code (CaC) transforms `software configurations` into code for consistent, reproducible environments. This approach allows configurations to be written, stored, and versioned alongside the application's code in Git-like version control systems, streamlining deployments and fostering team collaboration.
+
+[CaC Article](https://dev.to/rannn505/configuration-as-code-automating-application-configuration-45k6) | [CaC Webinar](https://www.youtube.com/live/Z_Vz8v6e-U4?si=bDao_gIo1xiLDeQS&t=107)
+
+## Configu Concepts
+
+### Config
+
+<img alt="Config" height="32" width="32" align="right" noZoom src="/images/config/Config.svg"/>
+
+A generic representation of `software configuration` using three properties: `key`, `value`, `set`. It is the core data model that powers Configu's configuration management.
+
+<a href="https://github.com/configu/configu/blob/main/types/Config.ts" target="_blank">types/Config</a>
+
+### Cfgu
+
+<img alt="Cfgu" height="32" width="32" align="right" noZoom src="/images/config/Cfgu.svg" />
+
+A generic declaration of a `Config`, characterized by properties like type, description, and constraints, providing a schema for configuration data.
+
+<a href="https://github.com/configu/configu/blob/main/types/Cfgu.ts" target="_blank">types/Cfgu</a>
+
+### ConfigStore
+
+<img alt="ConfigStore" height="32" width="32" align="right" noZoom src="/images/config/ConfigStore.svg" />
+
+A storage engine interface for `Config` records, acting as a repository for configuration data.
+
+<a href="https://github.com/configu/configu/blob/main/types/ConfigStore.ts" target="_blank">types/ConfigStore</a>
+
+### ConfigSet
+
+<img alt="ConfigSet" height="32" width="32" align="right" noZoom src="/images/config/ConfigSet.svg" />
+
+A unique path within a hierarchical data structure that groups `Config`s contextually, organizing configurations data logically.
+
+<a href="https://github.com/configu/configu/blob/main/types/ConfigSet.ts" target="_blank">types/ConfigSet</a>
+
+### ConfigKey
+
+<img alt="ConfigKey" height="32" width="32" align="right" noZoom src="/images/config/ConfigKey.svg" />
+
+A reference to a specific configuration declaration as it appears within the codebase, linking code to its configuration.
+
+### ConfigValue
+
+An assignment to a `ConfigKey` in a `ConfigSet`, specifying the actual configuration value for a given context.
+
+### ConfigSchema
+
+<img alt="ConfigSchema" height="32" width="32" align="right" noZoom src="/images/config/ConfigSchema.svg" />
+
+A file containing binding records that link each unique `ConfigKey` to its corresponding `Cfgu` declaration, ensuring configurations are defined and applied correctly.
+
+<a href="https://github.com/configu/configu/blob/main/types/ConfigSchema.ts" target="_blank">types/ConfigSchema</a>
+
+### Upsert Command
+
+<img alt="UpsertCommand" height="32" width="32" align="right" noZoom src="/images/config/UpsertCommand.svg" />
+
+Create, update or delete `Configs` from a `ConfigStore`.
+
+<a href="https://github.com/search?q=repo%3Aconfigu%2Fconfigu+Upsert+Command&type=code" target="_blank">Search Upsert Command</a>
+
+### Eval Command
+
+<img alt="EvalCommand" height="32" width="32" align="right" noZoom src="/images/config/EvalCommand.svg" />
+
+Fetch `Configs` from `ConfigStore` on demand.
+
+<a href="https://github.com/search?q=repo%3Aconfigu%2Fconfigu+Eval+Command&type=code" target="_blank">Search Eval Command</a>
+
+### Export Command
+
+<img alt="ExportCommand" height="32" width="32" align="right" noZoom src="/images/config/ExportCommand.svg" />
+
+Export `Configs` as configuration data in various formats and modes.
+
+<a href="https://github.com/search?q=repo%3Aconfigu%2Fconfigu+Export+Command&type=code" target="_blank">Search Export Command</a>
+
+## Common Configuration Concepts
+
+### Environment variable
+
+A variable whose value is set outside the program (dynamic-named value), typically through the operating system or a configuration file, to influence the program's operation without altering its code.
+
+### Secret
+
+A piece of sensitive data that should be kept confidential, such as passwords, API keys, and certificates. Secrets are typically stored in a secure location and accessed programmatically.
+
+### Sercert Manager
+
+A tool that securely stores and manages sensitive data. It provides an interface to store, retrieve, and rotate secrets, ensuring secure access to sensitive information. Examples include: <a href="https://www.vaultproject.io/" target="_blank">HashiCorp Vault</a>, <a href="https://aws.amazon.com/secrets-manager/" target="_blank">AWS Secrets Manager</a>, <a href="https://azure.microsoft.com/en-us/services/key-vault/" target="_blank">Azure Key Vault</a>, <a href="https://cloud.google.com/secret-manager" target="_blank">Google Secret Manager</a>, etc.
+
+
+### Configuration deployment
+
+The process of deploying configuration data to a target environment. This process involves exporting configuration data from a source, transforming it into a suitable artifact, and injecting it into the target environment or service, such as shell environments, Docker containers, Kubernetes clusters, AWS Lambda functions, ECS containers, Vercel deployments, Netlify setups, and more.
+
+<Tip>Check out our [guides](guides/) section for examples of configuration deployments.</Tip>
+
+### Configuration file
+
+> In computing, configuration files are files used to configure the parameters and initial settings for some computer programs. They are used for user applications, server processes and operating system settings.
+
+<a href="https://en.wikipedia.org/wiki/Configuration_file" target="_blank">
+  Wikipedia - Configuration file
+</a>
+
+### Configuration formats
+
+Standard formats for configuration files include <a href="https://www.w3.org/XML/" target="_blank">XML</a>, <a href="https://www.json.org/" target="_blank">JSON</a>, <a href="https://yaml.org/" target="_blank">YAML</a>, <a href="https://toml.io/" target="_blank">TOML</a>, <a href="https://en.wikipedia.org/wiki/INI_file" target="_blank">INI</a>, <a href="https://github.com/motdotla/dotenv" target="_blank">Dotenv</a>, <a href="https://github.com/hashicorp/hcl" target="_blank">HCL</a>, <a href="https://kubernetes.io/docs/concepts/configuration/configmap/" target="_blank">Kubernetes ConfigMap</a>, <a href="https://www.terraform.io/docs/configuration/variables.html" target="_blank">Terraform Variables (Tfvars)</a>, and <a href="https://helm.sh/docs/chart_template_guide/values_files/" target="_blank">Helm Values</a>, each catering to specific use cases and environments. There are numerous other formats available as well.
+
+### Configuration template
+
+A file containing placeholders like `{{CONFIG_KEY}}`, `<CONFIG_KEY>`, `${CONFIG_KEY}`, etc., which are replaced with actual values during rendering with a template engine. Templates enable dynamic configuration generation based on context.
+
+
+### Configuration template engine
+
+A software that replaces placeholders in configuration templates with actual values. Examples include: <a href="https://jinja.palletsprojects.com/" target="_blank">Jinja2</a>, <a href="https://mustache.github.io/" target="_blank">Mustache</a>, <a href="https://handlebarsjs.com/" target="_blank">Handlebars</a>, <a href="https://pkg.go.dev/text/template" target="_blank">Go Templates</a>, etc.

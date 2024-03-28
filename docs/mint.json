@@ -56,9 +56,9 @@
       "url": "guides/"
     },
     {
-      "name": "Videos",
-      "icon": "circle-play",
-      "url": "https://www.youtube.com/@configu294"
+      "name": "Blog",
+      "icon": "blog",
+      "url": "https://configu.com/blog"
     },
     {
       "name": "Contributing",
@@ -80,9 +80,11 @@
     {
       "group": "Introduction",
       "pages": [
-        "introduction/overview",
-        "introduction/use-cases",
-        "introduction/concepts"
+        "0-introduction/0-overview",
+        "0-introduction/1-usecases",
+        "0-introduction/2-comparison",
+        "0-introduction/3-concepts",
+        "0-introduction/4-workflow"
       ]
     }
   ]
