@@ -1,0 +1,136 @@
+---
+credit:
+  - https://pkl-lang.org/main/current/index.html
+  - https://docs.novu.co/getting-started/introduction#what-does-novu-do
+title: "Concepts"
+description: "Gain a solid understanding of the foundational elements that drive Configu's configuration management system. This page provides a short overview of key concepts to help you navigate and utilize Configu effectively."
+icon: "book-sparkles"
+---
+
+## Software configuration
+
+> An app's config is everything that is likely to vary between deploys (staging, production, developer environments, etc).
+
+<a href="https://12factor.net/config" target="_blank">The Twelve-Factor App</a>
+
+## Configuration Abstraction
+
+Configuration tends to grow larger and more complex over time, making it increasingly difficult to understand and maintain. Configu can reduce the size and complexity of configuration by
+
+- separating configuration structure from configuration data
+- orchstrating configuration data from any source with a unfied api
+- computing instead of enumerating configuration data
+
+### Configuration-as-Code (CaC)
+
+## Configu Concepts
+
+### Config
+
+<img alt="Config" height="32" width="32" align="right" noZoom src="/images/config/Config.svg"/>
+
+A generic representation of `software configuration` using three properties: `key`, `value`, `set`. It is the core data model that Configu uses to store and fetch configuration data.
+
+<a href="https://github.com/configu/configu/blob/main/types/Config.ts" target="_blank">types/Config</a>
+
+### Cfgu
+
+<img alt="Cfgu" height="32" width="32" align="right" noZoom src="/images/config/Cfgu.svg" />
+
+A generic declaration of a `Config`, using properties like type, description and constraints.
+
+<a href="https://github.com/configu/configu/blob/main/types/Cfgu.ts" target="_blank">types/Cfgu</a>
+
+### ConfigStore
+
+<img alt="ConfigStore" height="32" width="32" align="right" noZoom src="/images/config/ConfigStore.svg" />
+
+A storage engine interface for `Config`s records.
+
+<a href="https://github.com/configu/configu/blob/main/types/ConfigStore.ts" target="_blank">types/ConfigStore</a>
+
+### ConfigSet
+
+<img alt="ConfigSet" height="32" width="32" align="right" noZoom src="/images/config/ConfigSet.svg" />
+
+A unique path within an hierarchical data structure that groups `Config`s contextually.
+
+<a href="https://github.com/configu/configu/blob/main/types/ConfigSet.ts" target="_blank">types/ConfigSet</a>
+
+### ConfigKey
+
+<img alt="ConfigKey" height="32" width="32" align="right" noZoom src="/images/config/ConfigKey.svg" />
+
+A refrance to a configuration declaration as it appears in the codebase.
+
+### ConfigValue
+
+An assignemnt to a `ConfigKey` in a `ConfigSet`.
+
+### ConfigSchema
+
+<img alt="ConfigSchema" height="32" width="32" align="right" noZoom src="/images/config/ConfigSchema.svg" />
+
+A file containing binding records linking each unique `ConfigKey` to validators, contraints, and descriptors for assignemnt of a `ConfigValue` to it.
+
+<a href="https://github.com/configu/configu/blob/main/types/ConfigSchema.ts" target="_blank">types/ConfigSchema</a>
+
+### Upsert Command
+
+<img alt="UpsertCommand" height="32" width="32" align="right" noZoom src="/images/config/UpsertCommand.svg" />
+
+Create, update or delete `Configs` from a `ConfigStore`.
+
+<a href="https://github.com/search?q=repo%3Aconfigu%2Fconfigu+Upsert+Command&type=code" target="_blank">Search Upsert Command</a>
+
+### Eval Command
+
+<img alt="EvalCommand" height="32" width="32" align="right" noZoom src="/images/config/EvalCommand.svg" />
+
+Fetch `Configs` from `ConfigStore` on demand.
+
+<a href="https://github.com/search?q=repo%3Aconfigu%2Fconfigu+Eval+Command&type=code" target="_blank">Search Eval Command</a>
+
+### Export Command
+
+<img alt="ExportCommand" height="32" width="32" align="right" noZoom src="/images/config/ExportCommand.svg" />
+
+Export `Configs` as configuration data in various modes.
+
+<a href="https://github.com/search?q=repo%3Aconfigu%2Fconfigu+Export+Command&type=code" target="_blank">Search Export Command</a>
+
+### Common Configuration Concepts
+
+### Environment variable
+
+### Secret
+
+API keys, DB credentials, passwords, certificates, or any other sensitive data.
+
+#### Configuration deployment
+
+the process of exporting configuration data using Configu to generate a configuration file artifact or inject configurations into a runtime environment. This process enables the seamless transfer of configuration settings across various platforms and services, such as your shell, Docker, Kubernetes (K8s), AWS Lambda, AWS ECS, Vercel, Netlify, and more.
+
+<Tip>Check out our [guides](guides/) section for examples of configuration deployments.</Tip>
+
+### Configuration file
+
+In computing, configuration files are files used to configure the parameters and initial settings for some computer programs. They are used for user applications, server processes and operating system settings.
+
+<a href="https://en.wikipedia.org/wiki/Configuration_file" target="_blank">
+  Wikipedia - Configuration file
+</a>
+
+### Configuration formats
+
+XML, JSON, YAML, TOML, INI, Dotenv, HCL, K8s ConfigMap, Tfvars, Helm Values etc..
+
+### Configuration template
+
+A text that contains template syntax delimiters like `{{}}`, `<>`, `${}`, etc. This text can be rendered as a configuration file using a template engine.
+
+### Configuration template engine
+
+<a href="https://mustache.github.io/" target="_blank">
+  Open mustache docs
+</a>
