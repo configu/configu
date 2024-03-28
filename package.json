@@ -15,7 +15,7 @@
     "go": ">=1.17.0"
   },
   "scripts": {
-    "prepare": "(is-ci || husky install) && conc \"npm:prepare:*\"",
+    "prepare": "(is-ci || husky) && conc \"npm:prepare:*\"",
     "types": "quicktype --src-lang typescript --src ./types/*.ts",
     "prepare:ts": "npm run types -- --lang typescript --out ts/packages/ts/src/types/generated.ts --prefer-unions",
     "stale:prepare:vscode": "npm run types -- --lang schema --out ts/packages/vscode/public/cfgu.schema.json && json -I -f ts/packages/vscode/public/cfgu.schema.json -e 'this.$ref=\"#/definitions/ConfigSchemaContents\"' -e 'this.$schema=undefined'",
@@ -24,10 +24,11 @@
   },
   "devDependencies": {
     "concurrently": "^8.2.2",
-    "husky": "^8.0.3",
+    "husky": "^9.0.11",
     "is-ci": "^3.0.1",
     "json": "^11.0.0",
-    "lint-staged": "^15.2.0",
-    "quicktype": "^23.0.80"
+    "lint-staged": "^15.2.2",
+    "mintlify": "4.0.133",
+    "quicktype": "^23.0.107"
   }
 }

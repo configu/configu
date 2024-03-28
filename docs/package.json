@@ -1,0 +1,30 @@
+{
+  "name": "@configu/docs",
+  "version": "0.0.0",
+  "license": "Apache-2.0",
+  "description": "configu documentation portal",
+  "author": "Configu",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/configu/configu",
+    "directory": "docs"
+  },
+  "bugs": {
+    "url": "https://github.com/configu/configu/issues",
+    "email": "support@configu.com"
+  },
+  "homepage": "https://configu.com",
+  "keywords": [
+    "docs",
+    "configu"
+  ],
+  "scripts": {
+    "dev": "npx mintlify dev",
+    "start": "npm run dev"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "mintlify": "^4.0.135",
+    "prettier": "^3.2.5"
+  }
+}
