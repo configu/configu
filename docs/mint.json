@@ -80,11 +80,11 @@
     {
       "group": "Introduction",
       "pages": [
-        "0-introduction/0-overview",
-        "0-introduction/1-usecases",
-        "0-introduction/2-comparison",
-        "0-introduction/3-concepts",
-        "0-introduction/4-workflow"
+        "introduction/overview",
+        "introduction/usecases",
+        "introduction/comparison",
+        "introduction/concepts",
+        "introduction/workflow"
       ]
     }
   ]
