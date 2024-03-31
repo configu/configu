@@ -1,0 +1,74 @@
+<CodeGroup>
+
+```yaml GitHub Action
+# source: https://github.com/configu/setup-cli-action
+steps:
+  - uses: configu/setup-cli-action@v1
+  - run: configu [COMMAND]
+```
+
+```yaml GitLab CI/CD
+# source: https://gitlab.com/configu1/setup-cli-gitlab-ci
+include:
+  - remote: 'https://gitlab.com/configu1/setup-cli-gitlab-ci/-/raw/main/configu.gitlab-ci.yml'
+use-configu-job:
+  stage: deploy
+  extends: .configu/setup-cli
+  script:
+    - configu [COMMAND]
+```
+
+```yaml Jenkins
+# Add "Execute Shell" build step
+curl https://cli.configu.com/install.sh | sh
+configu [COMMAND]
+```
+
+```yaml Circle CI
+# source: https://github.com/configu/setup-cli-orb
+version: 2.1
+orbs:
+  configu: configu/setup-cli-orb@X.Y.Z
+jobs:
+  use-configu:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - configu/setup
+      - configu [COMMAND]
+workflows:
+  deploy:
+    jobs:
+      - use-configu
+```
+
+```yaml Azure DevOps Pipelines
+steps:
+  - script: |
+      (curl https://cli.configu.com/install.sh || wget -qO- https://cli.configu.com/install.sh) | sudo sh
+    displayName: Install Configu CLI
+  - script: configu [COMMAND]
+    displayName: Use Configu CLI
+```
+
+```yaml Bitbucket
+image: atlassian/default-image:3
+  pipelines:
+    default:
+      - step:
+          script:
+            - curl https://cli.configu.com/install.sh | sh
+            - configu [COMMAND]
+```
+
+```yaml TeamCity
+# Add "Command Line" build step
+curl https://cli.configu.com/install.sh | sh
+configu [COMMAND]
+```
+
+```yaml Buddy
+# see: https://configu.com/docs/buddy
+```
+
+</CodeGroup>

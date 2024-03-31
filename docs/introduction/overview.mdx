@@ -1,7 +1,7 @@
 ---
-credit:
-  - https://pkl-lang.org/main/current/index.html
-  - https://docs.novu.co/getting-started/introduction
+# credit:
+#   - https://pkl-lang.org/main/current/index.html
+#   - https://docs.novu.co/getting-started/introduction
 title: "Overview"
 # title: "Your very long page title you want to shorten"
 # sidebarTitle: "Overview"
@@ -14,34 +14,37 @@ icon: "street-view"
     {/* Get started in minutes */}
 
     <CardGroup cols={3}>
-      <Card title="Hello, World!" icon="hand-wave" href="/quickstarts/hello-world">
-        Embed a real-time notification center component in your React application.
+      <Card title="Hello, World!" icon="hand-wave" href="/guides/hello-world">
+        Kickstart your journey with Configu and discover how to seamlessly manage application configurations in just a few steps.
       </Card>
-      <Card title="Integrate Configu" icon="laptop-code" href="/quickstarts/integrate-configu">
-        Embed a real-time notification center component in your Vue application.
+      <Card title="Integrate Configu" icon="laptop-code" href="/guides/integrate-configu">
+        Step-by-step guide for engineers to incorporate Configu into small-scale applications, enhancing configuration management from the get-go.
       </Card>
-      <Card title="CI/CD" icon="infinity" href="/quickstarts/ci-cd">
-        Embed a real-time notification center component in your Angular application.
+      <Card title="CI/CD" icon="infinity" href="/guides/ci-cd">
+        Advanced integration strategies for deploying Configu in your CI/CD pipelines, tailored for experienced engineers aiming to optimize deployment workflows.
       </Card>
     </CardGroup>
   </Accordion>
 
   <Accordion title="Interfaces">
     <CardGroup cols={2}>
-      <Card title="Configu CLI" icon="terminal" href="/quickstarts/cli">
-        Embed a real-time notification center component in your React application.
+      <Card title=".cfgu" icon="brackets-curly" href="/interfaces/.cfgu">
+        Learn how the .cfgu file format structures and organizes your application's configuration schema for clear, effective management.
       </Card>
-      <Card title="Configu Proxy" icon="server" href="/quickstarts/proxy">
-        Embed a real-time notification center component in your React application.
+      <Card title=".configu" icon="brackets-curly" href="/interfaces/.configu">
+        Discover how to utilize the .configu file for configuring Configu's interfaces 🤭, ensuring seamless integration and operation within your projects.
       </Card>
-      <Card title="IDE Extensions" icon="code" href="/quickstarts/ide-extensions">
-        Embed a real-time notification center component in your React application.
+      <Card title="Configu CLI" icon="terminal" href="/interfaces/cli">
+        Master the Configu Command Line Interface (CLI) for streamlined configuration management and deployment directly from your terminal.
       </Card>
-      <Card title="Internal SDKs" icon="layer-group" href="/quickstarts/internal-sdks">
-        Embed a real-time notification center component in your React application.
+      <Card title="Configu Proxy" icon="server" href="/interfaces/proxy">
+        Employ the Configu Proxy for real-time configuration tasks, enabling dynamic updates and management of application configuration.
       </Card>
-      <Card title=".cfgu $schema" icon="brackets-curly" href="/quickstarts/cfgu-schema">
-        Embed a real-time notification center component in your React application.
+      <Card title="IDE Extensions" icon="code" href="/interfaces/ide">
+        Enhance your IDE experience with Configu Extensions, offering features like auto-completion from configs in your code, linting to prevent errors, and schema validation to ensure integrity.
+      </Card>
+      <Card title="Internal SDKs" icon="layer-group" href="/interfaces/sdk">
+        Dive deep into Configu's core with our TS-based SDKs, designed for extensive integration, customization, and contribution to the Configu project.
       </Card>
     </CardGroup>
   </Accordion>
@@ -53,9 +56,10 @@ icon: "street-view"
   <img align="right" noZoom src="/images/icon/icon.svg" width="128" alt="Configu Icon"/>
 </a>
 
-Configu[^origin] is a <Tooltip tip={`🎯 Simple—Offers a **unified API** for all configuration tasks, whether dealing with files, databases, secret managers, or custom implementations. Enables end-to-end configuration **automation** throughout the software development lifecycle.`}>simple</Tooltip>, <Tooltip tip={`🚀 Modern—Expertly **manages** configuration data across multiple deployments, workflows, runtimes, and environments. **Scales** to accommodate infinite configuration contexts, maintaining seamless management and organization.`}>modern</Tooltip>, and <Tooltip tip={`🔒 Secure—Equipped with a robust configuration **type system** and a comprehensive **policy framework**. Provides built-in **safeguards** against application misconfigurations, ensuring a secure environment for your configurations.`}>secure</Tooltip> standard for managing and collaborating on **software configuration data**. It is built to provide a <Tooltip tip={`🌐 Common—Promotes a clear understanding and consistent management of configuration data. Facilitates **collaboration** and ensures configurations are accurate and up-to-date. Provides a declarative approach that integrates seamlessly with coding tasks, enabling "Learn Once, Write Anywhere" flexibility and automation across diverse environments and systems.`}>common</Tooltip>, <Tooltip tip={`🌟 Flexible—Adapts to any **modern tech** stack and use case. Allows to manage configurations across files, directories, codebases, and repositories. Accommodates configuration values over a **context tree** for inheritance and advanced overriding. Allows combining and **piping commands** to produce any necessary **configuration artifact**.`}>flexible</Tooltip>, and <Tooltip tip={`🛠 Extensible—Supports **custom** configuration **storage** implementations, configuration **formatters**, and **injectors**. Continuously evolving and driven by **community** contributions.`}>extensible</Tooltip> process for storing, mutating, and orchestrating configuration data across any system or environment.
+{/* Configu[^origin] */}
+Configu is a <Tooltip tip={`🎯 Simple—Offers a **unified API** for all configuration tasks, whether dealing with files, databases, secret managers, or custom implementations. Enables end-to-end configuration **automation** throughout the software development lifecycle.`}>simple</Tooltip>, <Tooltip tip={`🚀 Modern—Expertly **manages** configuration data across multiple deployments, workflows, runtimes, and environments. **Scales** to accommodate infinite configuration contexts, maintaining seamless management and organization.`}>modern</Tooltip>, and <Tooltip tip={`🔒 Secure—Equipped with a robust configuration **type system** and a comprehensive **policy framework**. Provides built-in **safeguards** against application misconfigurations, ensuring a secure environment for your configurations.`}>secure</Tooltip> standard for managing and collaborating on **software configuration data**. It is built to provide a <Tooltip tip={`🌐 Common—Promotes a clear understanding and consistent management of configuration data. Facilitates **collaboration** and ensures configurations are accurate and up-to-date. Provides a declarative approach that integrates seamlessly with coding tasks, enabling "Learn Once, Write Anywhere" flexibility and automation across diverse environments and systems.`}>common</Tooltip>, <Tooltip tip={`🌟 Flexible—Adapts to any **modern tech** stack and use case. Allows to manage configurations across files, directories, codebases, and repositories. Accommodates configuration values over a **context tree** for inheritance and advanced overriding. Allows combining and **piping commands** to produce any necessary **configuration artifact**.`}>flexible</Tooltip>, and <Tooltip tip={`🛠 Extensible—Supports **custom** configuration **storage** implementations, configuration **formatters**, and **injectors**. Continuously evolving and driven by **community** contributions.`}>extensible</Tooltip> process for storing, mutating, and orchestrating configuration data across any system or environment.
 
-Configu[^origin] is designed to be **easy to integrate** into existing systems and workflows, and to be adaptable to the diverse needs of teams and projects. It can be used from the command line, integrated in a build pipeline, or embedded in a program. Configu **scales** from small to large, simple to complex, ad-hoc to repetitive configuration tasks. It establishes a **powerful abstraction layer** over configuration data, enabling engineering teams to perform **secure and error-free configuration operations** throughout the software development lifecycle.
+Configu is designed to be **easy to integrate** into existing systems and workflows, and to be adaptable to the diverse needs of teams and projects. It can be used from the command line, integrated in a build pipeline, or embedded in a program. Configu **scales** from small to large, simple to complex, ad-hoc to repetitive configuration tasks. It establishes a **powerful abstraction layer** over configuration data, enabling engineering teams to perform **secure and error-free configuration operations** throughout the software development lifecycle.
 
 [^origin]: software **configu**~~ration~~ data
 

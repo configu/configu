@@ -1,0 +1,19 @@
+---
+title: Overview
+---
+
+import TBD from '/snippets/tbd.mdx';
+
+<TBD />
+
+The Configu Proxy Interface is designed as a multi-channel, stateless server solution, adept at managing configurations from a ConfigStore across various channels. Here are its key features and current development status:
+
+- **Multi-Channel Support**: It offers comprehensive protocol support, including HTTP, GRPC, GraphQL, WebSocket (WS), and Server-Sent Events (SSE), ensuring versatile connectivity options for diverse application needs.
+- **Simplified Configuration**: Utilizes a `.configu` file for straightforward server configuration, streamlining its setup and integration process.
+- **OpenAPI Specification**: Accompanied by an OpenAPI spec, the interface enables the auto-generation of SDKs for a wide range of programming languages, facilitating easy access and manipulation of configurations by developers.
+- **Runtime Application Configuration**: Its primary use case centers on facilitating application configuration management at runtime, providing dynamic, on-the-fly configuration adjustments without necessitating restarts or redeployments.
+- **Current Development Phase**: The interface is under active development, as detailed in [GitHub issue #375](https://github.com/configu/configu/issues/375). This phase aims to refine its capabilities and ensure seamless operational excellence.
+- **Evolution of SDK Support**: With the introduction of the Configu Proxy Interface, there's a strategic shift away from native Python and Go SDKs. The project now focuses on maintaining TypeScript SDKs (for Node.js and browser environments) as the core internal code, aligning with the streamlined approach of using the proxy interface for broader application support.
+
+This development marks a significant step forward in the evolution of Configu, aiming to offer a more unified, efficient, and scalable approach to configuration management across various programming environments and runtime scenarios.
+
