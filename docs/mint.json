@@ -119,6 +119,23 @@
       ]
     },
     {
+      "group": "Configu Platform",
+      "pages": [
+        "platform/config-explorer",
+        "platform/config-editor",
+        "platform/config-history",
+        "platform/config-compare",
+        "platform/approval-queue",
+        "platform/activity-logs",
+        "platform/webhooks",
+        "platform/integrations",
+        "platform/authorization",
+        "platform/members",
+        "platform/tokens",
+        "platform/settings"
+      ]
+    },
+    {
       "group": "Guides",
       "pages": ["guides/hello-world", "guides/hashicorp-vault"]
     }
