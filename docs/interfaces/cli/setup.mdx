@@ -1,0 +1,162 @@
+---
+title: Setup
+---
+
+import CliInstallSnippet from '/snippets/cli-install.mdx'
+import CliInstallCiCdSnippet from '/snippets/cli-install-ci-cd.mdx'
+
+## Install with script
+
+To install Configu CLI globally, you can use the following command:
+
+<CliInstallSnippet />
+
+This will download and run the installation script, which will check for dependencies, download the latest version of the Configu CLI binary, and install it on your system. The CLI will be installed on your system's $PATH, allowing you to use it from anywhere in your terminal.
+
+<Warning>
+Please note that you may need to grant the script the necessary permissions to add the CLI to the $PATH. You can review the [contents of the script](https://cli.configu.com/install.sh) before running it to ensure that it is safe to execute.
+</Warning>
+
+<Tip>
+If you want to install the CLI in a stanalone mode (without granting it permissions to add it to $PATH), you can replace the url in the command with `https://cli.configu.com/install-standalone.sh`.
+It is important to note that currently the `install-standalone.sh` script is only available for Unix-based operating systems, such as Linux and macOS.
+</Tip>
+
+## Install on CI/CD
+
+To make Configu CLI available via a CI/CD pipeline, you can use the pre-made, dedicated installation steps which are based on the installation script and designed to be be easily integrated into your pipeline configuration.
+
+<CliInstallCiCdSnippet />
+
+<Note>
+
+After you've used the step, subsequent steps in the same job can run arbitrary Configu CLI commands. All of Configu commands work exactly like they do on your local command line.
+
+</Note>
+
+## Install with Docker
+
+You can also choose to run the CLI as an isolated Docker container instead.
+
+```shell
+docker run --rm configu/cli [COMMAND]
+```
+
+## Manual install with TAR
+
+Alternatively, you can manually download the Configu CLI binary from the [releases page](https://github.com/configu/configu/releases?q=cli-&expanded=true) and place it in a location that is included in your `$PATH`. This is useful if you want to install a specific version of the CLI, or if you prefer to manually manage your dependencies.
+
+You can also use this table to find the unversioned URLs for the TAR file (.tar.gz) for your operating system. When we release a new version of Configu CLI, we also update these URLs so they point to the most up-to-date version.
+
+<div className="table-wrapper">
+
+  <table>
+    {
+    <thead>
+      <tr>
+        <th>Operating System</th>
+        <th>Tar Files</th>
+        <th>Manifest</th>
+      </tr>
+    </thead>
+    }
+    <tbody>
+      <tr>
+        <td>
+          <strong>Linux</strong>
+        </td>
+        <td>
+          - <a href="https://cli.configu.com/channels/stable/configu-linux-arm.tar.gz" target="_blank">configu-linux-arm.tar.gz</a>
+          - <a href="https://cli.configu.com/channels/stable/configu-linux-x64.tar.gz" target="_blank">configu-linux-x64.tar.gz</a>
+        </td>
+        <td>
+          - <a href="https://cli.configu.com/channels/stable/configu-linux-arm-buildmanifest" target="_blank">configu-linux-arm-buildmanifest</a>
+          - <a href="https://cli.configu.com/channels/stable/configu-linux-x64-buildmanifest" target="_blank">configu-linux-x64-buildmanifest</a>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <strong>MacOS</strong>
+        </td>
+        <td>
+          - <a href="https://cli.configu.com/channels/stable/configu-darwin-arm64.tar.gz" target="_blank">configu-darwin-arm64.tar.gz</a>
+          - <a href="https://cli.configu.com/channels/stable/configu-darwin-x64.tar.gz" target="_blank">configu-darwin-x64.tar.gz</a>
+        </td>
+        <td>
+          - <a href="https://cli.configu.com/channels/stable/configu-darwin-arm64-buildmanifest" target="_blank">configu-darwin-arm64-buildmanifest</a>
+          - <a href="https://cli.configu.com/channels/stable/configu-darwin-x64-buildmanifest" target="_blank">configu-darwin-x64-buildmanifest</a>
+        </td>
+      </tr>
+
+      <tr>
+        <td>
+          <strong>Windows</strong>
+        </td>
+        <td>
+          - <a href="https://cli.configu.com/channels/stable/configu-win32-x64.tar.gz" target="_blank">configu-win32-x64.tar.gz</a>
+        </td>
+        <td>
+          - <a href="https://cli.configu.com/channels/stable/configu-win32-x64-buildmanifest" target="_blank">configu-win32-x64-buildmanifest</a>
+        </td>
+      </tr>
+    </tbody>
+
+  </table>
+
+</div>
+
+To extract the TAR file using tar, you can use the following command:
+
+```shell
+tar xz ./configu-<os>-<arm>.tar.gz
+```
+
+This will extract the contents of the TAR file into the current directory.
+You can also extract TAR files using other tools such as 7-Zip or WinZip. Simply right-click on the TAR file and select the option to extract the contents. Alternatively, you can use the GUI tools provided by your operating system to extract TAR files.
+
+To use the Configu CLI from the `bin` directory, you can run it directly from there:
+
+```shell
+./configu/bin/configu [COMMAND]
+```
+
+To update your `$PATH` permanently so that it can be run from any directory, add the appropriate entry to your shell's configuration file. For example, if you use the Bash shell, add this line to your ~/.bashrc or ~/.bash_profile file:
+
+```shell
+PATH=<path-to-upacked-directory>/bin:$PATH
+```
+
+## Verify Installation
+
+Once installed, you can use the Configu CLI by simply running `configu` in your terminal.
+
+```shell
+configu
+```
+
+If you see the help message of the Configu CLI including the current version of the installation, then your installation was successful.
+
+<Note>
+
+The CLI has a built-in help system that you can use to learn about the available commands and options. You can access the help system by running `configu --help` or configu \[COMMAND\] --help`.
+
+</Note>
+
+## Update the CLI
+
+To update the Configu CLI, you can run the following command:
+
+```shell
+configu update
+```
+
+If you encounter any errors, you can try re-installing the CLI by running the [installation process](/cli-setup/#install-with-script) again.
+
+## Install Autocomplete
+
+To display autocomplete installation instructions, you can run the following command:
+
+```shell
+configu autocomplete
+```
