@@ -1,0 +1,225 @@
+---
+title: Configu Commands
+sidebarTitle: Commands
+---
+
+Configu provides a set of commands that allow you to interact with your configuration data, perform operations, and manage the configuration lifecycle. These commands are available in all of Configu's interfaces, including the command-line interface (CLI), and the SDKs. Each command serves a specific purpose and operates on different inputs and outputs. Here are the main commands in Configu:
+
+## Upsert
+
+The `Upsert` command is used to create, update or delete `Configs` from a `ConfigStore`
+
+#### Input
+
+- A single ConfigStore
+- A single ConfigSet
+- A snigle ConfigSchema
+- key=value pairs to upsert
+- EvalCommandReturn from previous Eval command
+
+#### Output
+
+- None
+
+#### Flow
+
+- Iterate through each EvalCommandReturn from the input:
+  - Filter out keys that are not declared in the ConfigSchema.
+  - Filter out keys that are declared as templates in the ConfigSchema.
+  - Validate the value against the matching Cfgu properties in the ConfigSchema (e.g. type, pattern, etc.).
+  - Construct a Config object using the input ConfigSet path, ConfigSchema uid, key, and value.
+- Iterate through each key=value pair from the input:
+  - Validate that the key has been declared in the ConfigSchema.
+  - Validate the value against the matching Cfgu properties in the ConfigSchema (e.g. type, pattern, etc.).
+  - Construct a Config object using the input ConfigSet path, ConfigSchema uid, key, and value.
+- Merge both of the previous results. If there are duplicates key=value pairs take precedence.
+- Call the ConfigStore's set method with the constructed Config objects.
+  - If a Config with the same set, schema, and key does not already exist in the ConfigStore, it will be created.
+  - If a Config with the same set, schema, and key already exists in the ConfigStore, it will be updated with the new value.
+  - If the value is an empty string, the Config will be deleted from the ConfigStore.
+
+#### Usage
+
+```shell
+configu upsert \
+  --store 'configu' --set 'production' --schema './service.cfgu.json' \
+  --config "API_TOKEN=123abc" --config "AWS_REGION=us-east-1" --config "DELETE_ME="
+```
+
+```js
+import path from 'path';
+import { ConfiguConfigStore, ConfigSet, ConfigSchema, UpsertCommand } from '@configu/node';
+import schemaContents from './service.cfgu.json';
+
+(async () => {
+  try {
+    const store = new ConfiguConfigStore({
+      credentials: {
+        org: process.env.CONFIGU_ORG,
+        token: process.env.CONFIGU_TOKEN,
+      },
+    });
+    const set = new ConfigSet('production');
+    const schema = new ConfigSchema('service', schemaContents);
+
+    await new UpsertCommand({
+      store,
+      set,
+      schema,
+      configs: [
+        { key: 'API_TOKEN', value: '123abc' },
+        { key: 'AWS_REGION', value: 'us-east-1' },
+        { key: 'DELETE_ME', value: '' },
+      ],
+    }).run();
+  } catch (error) {
+    console.error(error);
+  }
+})();
+```
+
+Upsert configs from a previous Eval command:
+
+```js
+import path from 'path';
+import { ConfiguConfigStore, ConfigSet, ConfigSchema, UpsertCommand } from '@configu/node';
+import schemaContents from './service.cfgu.json';
+
+(async () => {
+  try {
+    const store = new ConfiguConfigStore({
+      credentials: {
+        org: process.env.CONFIGU_ORG,
+        token: process.env.CONFIGU_TOKEN,
+      },
+    });
+    const set = new ConfigSet('production');
+    const schema = new ConfigSchema('service', schemaContents);
+
+    const data = await new EvalCommand({
+      store,
+      set,
+      schema,
+    }).run();
+
+    const hcvStore = new HashiCorpVaultConfigStore();
+
+    await new UpsertCommand({
+      store: hcvStore,
+      set,
+      schema,
+      pipe: data,
+    }).run();
+  } catch (error) {
+    console.error(error);
+  }
+})();
+```
+
+## Eval & Export
+
+The `Eval` command is used to fetch and validate `Configs` from `ConfigStore` on demand.
+
+The `Export` command is used to produce and inject configuration data from the `EvalCommandReturn`.
+
+#### Input
+
+- A single ConfigStore
+- A single ConfigSet
+- A snigle ConfigSchema
+- key=value pairs to override fetched Configs
+- previous EvalCommandReturn
+
+#### Output
+
+- An object of the evaluated configs
+
+```ts
+type EvalCommandReturn = {
+  [key: string]: {
+    context: { store: string; set: string; schema: string; key: string; cfgu: Cfgu };
+    result: { origin: EvaluatedConfigOrigin; source: string; value: string };
+  };
+};
+```
+
+#### Flow
+
+- Iterate through each key from the current schema:
+  - If key has a value from the override key=value pairs, take it and skip.
+  - Iterate up in the set hierarchy from the input:
+    - Construct a ConfigStoreQuery object using the current hierarchy and current key.
+- Call the ConfigStore's get method with the constructed ConfigStoreQuery objects.
+- Determine final result considering the default property from the corresponding Cfgu.
+- Merge previous and current results. If there are duplicates current take precedence.
+- Evaluate all template Configs final value.
+- Validate the final values against their corresponding Cfgu properties in the ConfigSchema (e.g. type, required, depends, etc.).
+- Return the final `EvalCommandReturn`.
+
+#### Usage
+
+
+<Info>The Export command in the CLI is built on top of the Export command and provides [additional functionality](/cli-commands/#configu-export). It is named after the well-known Bash shell command ([export](https://www.geeksforgeeks.org/export-command-in-linux-with-examples/)) that allows environment variables to be shared with child processes.</Info>
+
+
+<Tip>The Export command in the SDK supports an optional `keys` parameter that allows you to mutate the configuration keys according to your requirements by providing a callback.</Tip>
+
+
+```bash
+configu eval \
+  --store 'configu' --set 'production' --schema './service.cfgu.json' --config "AWS_REGION=us-east-1" \
+| configu eval \
+  --store 'aws-secrets-manager' --set 'production' --schema './secrets.cfgu.json' \
+| configu export --explain
+```
+
+```js
+import path from 'path';
+import {
+  ConfiguConfigStore,
+  HashiCorpVaultConfigStore,
+  ConfigSet,
+  ConfigSchema,
+  EvalCommand,
+  ExportCommand,
+} from '@configu/node';
+import serviceSchemaContents from './service.cfgu.json';
+import secretsSchemaContents from './secrets.cfgu.json';
+
+(async () => {
+  try {
+    const configuStore = new ConfiguConfigStore({
+      credentials: {
+        org: process.env.CONFIGU_ORG,
+        token: process.env.CONFIGU_TOKEN,
+      },
+    });
+    const hcvStore = new HashiCorpVaultConfigStore();
+
+    const set = new ConfigSet('production');
+
+    const serviceSchema = new ConfigSchema('service', serviceSchemaContents);
+    const secretsSchema = new ConfigSchema('secrets', secretsSchemaContents);
+
+    const previous = await new EvalCommand({
+      store: configuStore,
+      set,
+      schema: serviceSchema,
+    }).run();
+
+    const data = await new EvalCommand({
+      store: hcvStore,
+      set,
+      schema: secretsSchema,
+      pipe: previous,
+    }).run();
+
+    const configurationData = await new ExportCommand({
+      pipe: data,
+      keys: (key) => key.toUpperCase(),
+    }).run();
+  } catch (error) {
+    console.error(error);
+  }
+})();
+```

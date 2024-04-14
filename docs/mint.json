@@ -1,0 +1,143 @@
+{
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "Configu",
+  "logo": {
+    "light": "/images/logo/black.svg",
+    "dark": "/images/logo/white.svg"
+  },
+  "favicon": "/images/favicon/favicon.png",
+  "colors": {
+    "primary": "#0066F5",
+    "light": "#0066F5",
+    "dark": "#0066F5",
+    "background": {
+      "light": "#FFFFFF",
+      "dark": "#0B0B0E"
+    }
+  },
+  "topbarLinks": [
+    {
+      "name": "Platform",
+      "url": "https://app.configu.com"
+    }
+  ],
+  "topbarCtaButton": {
+    "type": "github",
+    "url": "https://github.com/configu/configu"
+  },
+  "integrations": {
+    "intercom": "vvrasn0f"
+  },
+  "analytics": {
+    "ga4": {
+      "measurementId": "G-BZJXN32RK1"
+    },
+    "mixpanel": {
+      "projectToken": "5b677e00c1c15ef4cb1a0dd45311c2e7"
+    }
+  },
+  "feedback": {
+    "thumbsRating": true,
+    "suggestEdit": true,
+    "raiseIssue": true
+  },
+  "footerSocials": {
+    "website": "https://configu.com",
+    "github": "https://github.com/configu",
+    "discord": "https://discord.gg/cjSBxnB9z8",
+    "twitter": "https://twitter.com/WeAreConfigu",
+    "linkedin": "https://www.linkedin.com/company/configu",
+    "youtube": "https://www.youtube.com/@configu294"
+  },
+  "anchors": [
+    {
+      "name": "Guides",
+      "icon": "bolt",
+      "url": "guides/"
+    },
+    {
+      "name": "Blog",
+      "icon": "blog",
+      "url": "https://configu.com/blog"
+    },
+    {
+      "name": "Contributing",
+      "icon": "handshake",
+      "url": "https://github.com/configu/configu/blob/main/CONTRIBUTING.md#contributing"
+    },
+    {
+      "name": "Change Log",
+      "icon": "rss",
+      "url": "https://github.com/configu/configu/releases"
+    },
+    {
+      "name": "Chat",
+      "icon": "discord",
+      "url": "https://discord.gg/cjSBxnB9z8"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Introduction",
+      "pages": [
+        "introduction/overview",
+        "introduction/usecases",
+        "introduction/comparison",
+        "introduction/concepts",
+        "introduction/workflow"
+      ]
+    },
+    {
+      "group": "Interfaces",
+      "pages": [
+        "interfaces/.cfgu",
+        "interfaces/.configu",
+        {
+          "group": "Configu CLI",
+          "pages": [
+            "interfaces/cli/overview",
+            "interfaces/cli/setup",
+            "interfaces/cli/command-ref"
+          ]
+        },
+        {
+          "group": "Configu Proxy",
+          "pages": ["interfaces/proxy/overview"]
+        },
+        {
+          "group": "IDE Extensions",
+          "pages": ["interfaces/ide/vscode", "interfaces/ide/intellij"]
+        },
+        {
+          "group": "Internal SDKs",
+          "pages": [
+            "interfaces/sdk/overview",
+            "interfaces/sdk/nodejs",
+            "interfaces/sdk/browser"
+          ]
+        }
+      ]
+    },
+    {
+      "group": "Configu Platform",
+      "pages": [
+        "platform/config-explorer",
+        "platform/config-editor",
+        "platform/config-history",
+        "platform/config-compare",
+        "platform/approval-queue",
+        "platform/audit-logs",
+        "platform/webhooks",
+        "platform/integrations",
+        "platform/authorization",
+        "platform/members",
+        "platform/tokens",
+        "platform/settings"
+      ]
+    },
+    {
+      "group": "Guides",
+      "pages": ["guides/hello-world", "guides/hashicorp-vault"]
+    }
+  ]
+}
