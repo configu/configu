@@ -10,7 +10,7 @@ const createEntity = (tableName: string) => {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Index(`${tableName}_set`)
+    @Index()
     @Column('text')
     set: string;
 
