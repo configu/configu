@@ -28,13 +28,13 @@ export type ORMConfigStoreSharedConfiguration = {
   tableName?: string;
 };
 
-type ORMConfigStoreOptions = DataSourceOptions & ORMConfigStoreSharedConfiguration;
+type ORMConfigStoreConfiguration = DataSourceOptions & ORMConfigStoreSharedConfiguration;
 
 export abstract class ORMConfigStore extends ConfigStore {
   readonly dataSource: DataSource;
   private readonly configEntity: ReturnType<typeof createEntity>;
 
-  protected constructor(type: string, { tableName = 'config', ...dataSourceOptions }: ORMConfigStoreOptions) {
+  protected constructor(type: string, { tableName = 'config', ...dataSourceOptions }: ORMConfigStoreConfiguration) {
     super(type);
     this.configEntity = createEntity(tableName);
     this.dataSource = new DataSource({
