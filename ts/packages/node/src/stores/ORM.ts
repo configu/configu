@@ -24,9 +24,11 @@ const createEntity = (tableName: string) => {
   return Config;
 };
 
-type ORMConfigStoreOptions = DataSourceOptions & {
+export type ORMConfigStoreSharedConfiguration = {
   tableName?: string;
 };
+
+type ORMConfigStoreOptions = DataSourceOptions & ORMConfigStoreSharedConfiguration;
 
 export abstract class ORMConfigStore extends ConfigStore {
   readonly dataSource: DataSource;
