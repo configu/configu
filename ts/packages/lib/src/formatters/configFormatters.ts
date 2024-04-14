@@ -29,7 +29,16 @@ const jsonToDotenv: FormatterFunction = ({ json, wrap }) => {
 
 const jsonToTfvars: FormatterFunction = ({ json }) => {
   return Object.entries(json)
-    .map(([key, value]) => `${snakeCase(key)} = "${value}"`)
+    .map(([key, value]) => {
+      let formattedValue: string;
+      try {
+        JSON.parse(value);
+        formattedValue = value;
+      } catch (err) {
+        formattedValue = `"${value}"`;
+      }
+      return `${snakeCase(key)} = ${formattedValue}`;
+    })
     .join('\n');
 };
 
