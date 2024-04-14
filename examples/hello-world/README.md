@@ -11,13 +11,13 @@
   - use `configu login` for `ConfiguConfigStore` 
 - Upsert `Config`s
   ```bash
-  configu upsert --store "<STORE>" --set "dev" --schema "get-started.cfgu.json" --config "GREETING=hey" --config "SUBJECT=<VALUE>"
-  configu upsert --store "configu" --set "prod" --schema "get-started.cfgu.json" -c "SUBJECT=<VALUE>"
-  configu upsert --store "configu" --set "prod/region" --schema "get-started.cfgu.json" -c "GREETING=welcome"
+  configu upsert --store "<STORE>" --set "dev" --schema "start.cfgu.json" --config "GREETING=hey" --config "SUBJECT=<VALUE>"
+  configu upsert --store "<STORE>" --set "prod" --schema "start.cfgu.json" -c "SUBJECT=<VALUE>"
+  configu upsert --store "<STORE>" --set "prod/region" --schema "start.cfgu.json" -c "GREETING=welcome"
   ```
-- Export
+- Eval & Export
   ```bash
-  configu export --store "configu" --set "dev" --schema "get-started.cfgu.json" --run "<EXECUTABLE>"
+  configu export --store "configu" --set "dev" --schema "start.cfgu.json" --run "<EXECUTABLE>"
 
-  set -a; source <(configu export --store "configu" --set "dev" --schema "get-started.cfgu.json" --source); set +a && <EXECUTABLE>
+  set -a; source <(configu export --store "configu" --set "dev" --schema "start.cfgu.json" --source); set +a && <EXECUTABLE>
   ```
