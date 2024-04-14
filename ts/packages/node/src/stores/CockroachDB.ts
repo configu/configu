@@ -1,7 +1,9 @@
 import { type CockroachConnectionOptions } from 'typeorm/driver/cockroachdb/CockroachConnectionOptions';
 import { ORMConfigStore } from './ORM';
 
-export type CockroachDBConfigStoreConfiguration = Omit<CockroachConnectionOptions, 'type'>;
+export type CockroachDBConfigStoreConfiguration = Omit<CockroachConnectionOptions, 'type'> & {
+  tableName?: string;
+};
 
 export class CockroachDBConfigStore extends ORMConfigStore {
   constructor(configuration: Omit<CockroachConnectionOptions, 'type'>) {

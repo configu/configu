@@ -1,7 +1,9 @@
 import { type PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import { ORMConfigStore } from './ORM';
 
-export type PostgreSQLConfigStoreConfiguration = Omit<PostgresConnectionOptions, 'type'>;
+export type PostgreSQLConfigStoreConfiguration = Omit<PostgresConnectionOptions, 'type'> & {
+  tableName?: string;
+};
 
 export class PostgreSQLConfigStore extends ORMConfigStore {
   constructor(configuration: Omit<PostgresConnectionOptions, 'type'>) {
