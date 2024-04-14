@@ -1,0 +1,322 @@
+---
+title: "Concepts"
+description: "Gain a solid understanding of the foundational elements that drive Configu's configuration management system. This page provides a short overview of key concepts to help you navigate and utilize Configu effectively."
+icon: "book-sparkles"
+---
+
+import CommandInput from '/snippets/command-input.mdx';
+
+## Software Configuration
+
+Software or application configuration includes all elements that differ across deployments, such as resource handles, external service credentials, and deployment-specific values. It's a crucial piece of the software puzzle, dictating an application's behavior.
+
+<a href="https://12factor.net/config" target="_blank">The Twelve-Factor App</a>
+
+## Configuration Abstraction
+
+Configuration tends to grow larger in size and complexity over time, making it increasingly difficult to understand and maintain. Configu addresses this by:
+
+- Separating the configuration's structure from its data.
+- Orchestrating configuration data from any source via a unified API.
+- Computing configuration data, instead of manually enumerating it.
+
+## Configuration-as-Code (CaC)
+
+Configuration-as-Code (CaC) transforms `software configurations` into code for consistent, reproducible environments. This approach allows configurations to be written, stored, and versioned alongside the application's code in Git-like version control systems, streamlining deployments and fostering team collaboration.
+
+[CaC Article](https://dev.to/rannn505/configuration-as-code-automating-application-configuration-45k6) | [CaC Webinar](https://www.youtube.com/live/Z_Vz8v6e-U4?si=bDao_gIo1xiLDeQS&t=107)
+
+## Configu Concepts
+
+<Tip>
+  For a comprehensive understanding of the concepts introduced below, we encourage you to expand the 'Read more on this concept' section. This will provide you with detailed explanations and insights, enhancing your grasp of Configu's core functionalities and design principles.
+</Tip>
+
+### Config
+
+<img alt="Config" height="32" width="32" align="right" noZoom src="/images/config/Config.svg"/>
+
+A generic representation of `software configuration` using three properties: `key`, `value`, `set`. It is the core data model that powers Configu's configuration management.
+
+<a href="https://github.com/configu/configu/blob/main/types/Config.ts" target="_blank">types/Config</a>
+
+### Cfgu
+
+<img alt="Cfgu" height="32" width="32" align="right" noZoom src="/images/config/Cfgu.svg" />
+
+A generic declaration of a `Config`, characterized by properties like type, description, and constraints, providing a schema for configuration data.
+
+<a href="https://github.com/configu/configu/blob/main/types/Cfgu.ts" target="_blank">types/Cfgu</a> | <a href="" target="_blank">.cfgu $schema</a>
+
+### ConfigStore
+
+<img alt="ConfigStore" height="32" width="32" align="right" noZoom src="/images/config/ConfigStore.svg" />
+
+A storage engine interface for `Config` records, acting as a repository for configuration data.
+
+<a href="https://github.com/configu/configu/blob/main/types/ConfigStore.ts" target="_blank">types/ConfigStore</a> | [Stores Collection](/stores)
+
+<Accordion title="Read more on ConfigStore">
+A `ConfigStore` is a storage system for `Configs` in Configu, serving as a mechanism for storing, retrieving, and managing configuration data. It can be any system or service capable of storing data, including text files, databases, secret managers, and the `Configu Platform`. `ConfigStores` play a crucial role in the configuration management process, enabling the seamless retrieval and management of configuration values at deployments or runtime.
+
+You can choose the most suitable `ConfigStore` based on your specific needs and workflow. Each `ConfigStore` has its own type and can be referenced as instances of their respective class implementation when using Configu's SDK. When using Configu's CLI, `ConfigStores` are referenced using their type, which can also be declared as friendly names in the [.configu file](/cli-config).
+
+Configu's interfaces [support a wide range of `ConfigStores`](/stores). In case you don't find a `ConfigStore` that meets your requirements, Configu allows you to easily create your own by implementing a simple abstract class with `get` and `set` methods. This flexibility empowers you to extend Configu and tailor it to your specific configuration management needs.
+</Accordion>
+
+### ConfigSet
+
+<img alt="ConfigSet" height="32" width="32" align="right" noZoom src="/images/config/ConfigSet.svg" />
+
+A unique path within a hierarchical data structure that groups `Config`s contextually, organizing configurations data logically.
+
+<a href="https://github.com/configu/configu/blob/main/types/ConfigSet.ts" target="_blank">types/ConfigSet</a><br /><br />
+
+<Accordion title="Read more on ConfigSet">
+A `ConfigSet` in Configu is a mechanism for **organizing and grouping configurations in a hierarchical structure**. It serves as a path within the configuration tree, enabling you to **associate specific configuration values with different contexts**, such as environments, tenants, or any other use case you require.
+
+At the top of the ConfigSet hierarchy is the **root set**, represented by an empty string `""` or an alias of `/`. The root set acts as the parent for all other sets and provides the foundation for the configuration tree. It's important to note that the set path always starts with the root set and does not end with a "/".
+
+Each stored `Config` is associated with a "set" property, which links it to a particular path in the ConfigSet hierarchy. When evaluating a configuration, Configu searches for the corresponding value by traversing the hierarchy from the supplied path's last node up to the root set. This mechanism allows for seamless **inheritance and overriding** of configuration values, making it effortless to customize software behavior for different environments or use cases.
+
+<Info>
+ConfigSets can represent any context that requires distinct configuration values. For example, you can utilize ConfigSets to group configurations based on regions, deployment stages, or specific feature sets. This flexibility empowers you to structure your configuration hierarchy in a way that best fits your application's needs.
+</Info>
+
+## Examples
+
+Let's explore an example of a ConfigSet hierarchy:
+
+```text
+''
+├── 'development'
+│   └── AWS_REGION=us-east-2
+└── 'production'
+    ├── AWS_REGION=us-east-1
+    └── 'eu-customer'
+        └── AWS_REGION=eu-west-1
+```
+
+In this example, the `root set` is represented by an empty string, following the convention in Configu. The root set acts as the default parent for all other sets and can be used to define global configuration values that apply to the entire configuration hierarchy.
+
+The `development` set, a child of the root set, defines a single configuration value for the AWS_REGION key. When evaluating the configuration data in the development environment, Configu retrieves the `us-east-2` value for the `AWS_REGION` configuration key.
+
+Similarly, the `production` set, also a child of the root set, specifies a different value for the AWS_REGION key. Additionally, it has a child set called `eu-customer`, which further defines another value for the same configuration key. This hierarchy means Configu will fetch the appropriate values for the `AWS_REGION` configuration key based on the set path, whether in the `production` or `production/eu-customer` environments.
+
+Let's consider another example:
+
+```text
+''
+├── 'staging'
+│   ├── API_URL=https://api-staging.example.com
+│   └── 'feature-flags'
+│       ├── FEATURE_A_ENABLED=true
+│       └── FEATURE_B_ENABLED=false
+└── 'production'
+    └── API_URL=https://api.example.com
+```
+
+In this example, the `root set` represents the top-level of the hierarchy.
+
+The `staging` set, a child of the root set, contains configurations specific to the staging environment. It defines an `API_URL` for the staging API endpoint. Additionally, it has a child set called `feature-flags`, which encompasses specific feature flags and their corresponding values.
+
+The `production` set, another child of the root set, includes a configuration for the API URL, representing the production API endpoint.
+
+</Accordion>
+
+### ConfigKey
+
+<img alt="ConfigKey" height="32" width="32" align="right" noZoom src="/images/config/ConfigKey.svg" />
+
+A reference to a specific configuration declaration as it appears within the codebase, linking code to its configuration.
+
+<Accordion title="Read more on ConfigKey">
+A `ConfigKey` is the name given to a specific configuration as it appears in the code. It is used to identify and reference a specific configuration, and can be used to access the value of the configuration in the code.
+
+Here are some examples of how a configuration named "CONFIG" might be used as an `environment variable` in various programming languages:
+
+<CodeGroup>
+
+```javascript Node.js
+process.env.CONFIG
+```
+
+```python Python
+os.environ['CONFIG']
+```
+
+```C++ C++
+std::getenv("CONFIG")
+```
+
+```Go Go
+os.Getenv("CONFIG")
+```
+
+```Rust Rust
+env::var("CONFIG")
+```
+
+```C# C#
+Environment.GetEnvironmentVariable("CONFIG")
+```
+
+```Java Java
+System.getenv("CONFIG")
+```
+
+```Ruby Ruby
+ENV['CONFIG']
+```
+
+```Scala Scala
+sys.env.get("CONFIG").value
+```
+
+```bash Bash
+$CONFIG
+```
+
+```powershell Powershell
+$env:CONFIG
+```
+
+</CodeGroup>
+</Accordion>
+
+### ConfigValue
+
+An assignment to a `ConfigKey` in a `ConfigSet`, specifying the actual configuration value for a given context.
+
+### ConfigSchema
+
+<img alt="ConfigSchema" height="32" width="32" align="right" noZoom src="/images/config/ConfigSchema.svg" />
+
+A file containing binding records that link each unique `ConfigKey` to its corresponding `Cfgu` declaration, ensuring configurations are defined and applied correctly.
+
+<a href="https://github.com/configu/configu/blob/main/types/ConfigSchema.ts" target="_blank">types/ConfigSchema</a><br /><br />
+
+<Accordion title="Read more on ConfigSchema">
+A `ConfigSchema` in Configu is a file with a `.cfgu.[json|yaml|yml]` extension. It is a human-readable format for declaring configurations and their characteristics. It is designed to be stored in your source control alongside the code that uses these configurations, and can be treated as code as it shouldn't contain sensitive data.
+
+The `ConfigSchema` format provides a structured way to tie a `ConfigKey` as it appears in the code to its `Cfgu` properties, such as the type of data it represents (e.g., String, Number, Boolean), whether it is required or optional, and any constraints that should be applied to its value. These bindings help to ensure that configuration data is properly validated and applied, and can help to prevent misconfigurations and errors from reaching production.
+
+`.cfgu` files essentially set the boundaries of different domains in the code relative to the configuration they use. Developers are free to organize and structure their `.cfgu` files in a way that makes sense for their specific needs and workflow. There is no limit on the number of `.cfgu` files that can be created, and they can be spread across different codebases, subfolders in the same project, and different repositories.
+
+By using `.cfgu` files, you can benefit from a clear and structured way to define and manage your configuration data, improving the efficiency and reliability of your software development and deployment processes, and facilitating collaboration among team members.
+
+## Example
+
+Here is an example of a `ConfigSchema` file:
+
+<CodeGroup>
+
+```yaml example.cfgu.yaml
+API_KEY:
+  type: "String"
+  required: true
+  description: "API key for a 3rd party service"
+```
+
+```json example.cfgu.json
+{
+  "API_KEY": {
+    "type": "String",
+    "required": true,
+    "description": "API key for a 3rd party service"
+  }
+}
+```
+
+</CodeGroup>
+
+
+In this example, the `ConfigSchema` binds a configuration called "API_KEY" with a type of "String". The configuration is marked as required and has a short description.
+</Accordion>
+
+### UpsertCommand
+
+<img alt="UpsertCommand" height="32" width="32" align="right" noZoom src="/images/config/UpsertCommand.svg" />
+
+Create, update or delete `Configs` from a `ConfigStore`.
+
+<a href="https://github.com/search?q=repo%3Aconfigu%2Fconfigu+Upsert+Command&type=code" target="_blank">Search UpsertCommand</a><br /><br />
+
+<Accordion title="Read more on UpsertCommand">
+
+<CommandInput command="Upsert" />
+
+</Accordion>
+
+
+### EvalCommand
+
+<img alt="EvalCommand" height="32" width="32" align="right" noZoom src="/images/config/EvalCommand.svg" />
+
+Fetch `Configs` from `ConfigStore` on demand.
+
+<a href="https://github.com/search?q=repo%3Aconfigu%2Fconfigu+Eval+Command&type=code" target="_blank">Search EvalCommand</a><br /><br />
+
+<Accordion title="Read more on EvalCommand">
+
+<CommandInput command="Eval" />
+
+</Accordion>
+
+### ExportCommand
+
+<img alt="ExportCommand" height="32" width="32" align="right" noZoom src="/images/config/ExportCommand.svg" />
+
+Export `Configs` as configuration data in various formats and modes.
+
+<a href="https://github.com/search?q=repo%3Aconfigu%2Fconfigu+Export+Command&type=code" target="_blank">Search ExportCommand</a><br /><br />
+
+<Accordion title="Read more on ExportCommand">
+
+<CommandInput command="Export" />
+
+</Accordion>
+
+## Common Configuration Concepts
+
+### Environment variable
+
+A variable whose value is set outside the program (dynamic-named value), typically through the operating system or a configuration file, to influence the program's operation without altering its code.
+
+### Secret
+
+A piece of sensitive data that should be kept confidential, such as passwords, API keys, and certificates. Secrets are typically stored in a secure location and accessed programmatically.
+
+### Sercert Manager
+
+A tool that securely stores and manages sensitive data. It provides an interface to store, retrieve, and rotate secrets, ensuring secure access to sensitive information. Examples include: <a href="https://www.vaultproject.io/" target="_blank">HashiCorp Vault</a>, <a href="https://aws.amazon.com/secrets-manager/" target="_blank">AWS Secrets Manager</a>, <a href="https://azure.microsoft.com/en-us/services/key-vault/" target="_blank">Azure Key Vault</a>, <a href="https://cloud.google.com/secret-manager" target="_blank">Google Secret Manager</a>, etc.
+
+
+### Configuration deployment
+
+The process of deploying configuration data to a target environment. This process involves exporting configuration data from a source, transforming it into a suitable artifact, and injecting it into the target environment or service, such as shell environments, Docker containers, Kubernetes clusters, AWS Lambda functions, ECS containers, Vercel deployments, Netlify setups, and more.
+
+<Tip>
+  Check out our [guides](guides/) section for examples of configuration deployments.
+</Tip>
+
+### Configuration file
+
+> In computing, configuration files are files used to configure the parameters and initial settings for some computer programs. They are used for user applications, server processes and operating system settings.
+
+<a href="https://en.wikipedia.org/wiki/Configuration_file" target="_blank">
+  Wikipedia - Configuration file
+</a>
+
+### Configuration formats
+
+Standard formats for configuration files include <a href="https://www.w3.org/XML/" target="_blank">XML</a>, <a href="https://www.json.org/" target="_blank">JSON</a>, <a href="https://yaml.org/" target="_blank">YAML</a>, <a href="https://toml.io/" target="_blank">TOML</a>, <a href="https://en.wikipedia.org/wiki/INI_file" target="_blank">INI</a>, <a href="https://github.com/motdotla/dotenv" target="_blank">Dotenv</a>, <a href="https://github.com/hashicorp/hcl" target="_blank">HCL</a>, <a href="https://kubernetes.io/docs/concepts/configuration/configmap/" target="_blank">Kubernetes ConfigMap</a>, <a href="https://www.terraform.io/docs/configuration/variables.html" target="_blank">Terraform Variables (Tfvars)</a>, and <a href="https://helm.sh/docs/chart_template_guide/values_files/" target="_blank">Helm Values</a>, each catering to specific use cases and environments. There are numerous other formats available as well.
+
+### Configuration template
+
+A file containing placeholders like `{{CONFIG_KEY}}`, `<CONFIG_KEY>`, `${CONFIG_KEY}`, etc., which are replaced with actual values during rendering with a template engine. Templates enable dynamic configuration generation based on context.
+
+
+### Configuration template engine
+
+A software that replaces placeholders in configuration templates with actual values. Examples include: <a href="https://jinja.palletsprojects.com/" target="_blank">Jinja2</a>, <a href="https://mustache.github.io/" target="_blank">Mustache</a>, <a href="https://handlebarsjs.com/" target="_blank">Handlebars</a>, <a href="https://pkg.go.dev/text/template" target="_blank">Go Templates</a>, etc.

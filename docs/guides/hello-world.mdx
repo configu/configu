@@ -1,0 +1,71 @@
+---
+title: Hello World
+description: "Learn how to quickly get started with `Configu`. We'll use the `Configu CLI` and the `Configu ConfigStore` (Configu Platform) to declare, initialize, and export a simple set of configuration data."
+---
+
+import CliInstallSnippet from '/snippets/cli-install.mdx'
+
+### 1. Install Configu CLI
+
+<CliInstallSnippet />
+
+### 2. Declare your first ConfigSchema
+
+```shell
+configu init --hello-world
+```
+
+### 3. Connect to Configu ConfigStore
+
+```shell
+configu login
+```
+
+<Info>
+The [Configu `ConfigStore`](https://app.configu.com/) is a convenient way to get started with Configu, especially for users who are new to the tool. It is a configuration management platform that is easy to use and requires minimal setup, with a free starter plan option.
+
+To get started with [Configu Platofrm](https://app.configu.com/), you'll need to [register and create a new organization](https://app.configu.com/).
+</Info>
+
+
+<Tip>
+It's important to note that [Configu Platform](https://app.configu.com/) is just one of many options for storing and managing configuration data with Configu. If you have specific requirements or preferences, you may wish to explore other [ConfigStore options](/config-store/#available-stores), such as using a database, a secret manager, a feature flag system or your own custom implementation.
+</Tip>
+
+### 4. Upsert Configs to ConfigSet
+
+```shell
+configu upsert \
+  --store 'configu' --set 'development' --schema './start.cfgu.json' \
+  --config "GREETING=hey" --config "SUBJECT=<YOUR_NAME>" \
+&& configu upsert \
+  --store 'configu' --set 'development/qa' --schema './start.cfgu.json' \
+  -c "GREETING=hola"
+&& configu upsert \
+  --store 'configu' --set 'production' --schema './start.cfgu.json' \
+  -c "GREETING=welcome"
+```
+
+### 5. Export the configuration data
+
+```shell
+configu eval \
+  --store 'configu' --set 'development/qa' --schema './get-started.cfgu.json' \
+| configu export \
+  --format "Dotenv" \
+> ".env"
+```
+
+As a result, you will get a `.env` file with the configurations declared in the "get-started" ConfigSchema and their values from the "test" ConfigSet.
+
+```.env
+GREETING=welcome
+SUBJECT=<YOUR_NAME>
+MESSAGE=welcome, <YOUR_NAME>!
+```
+
+That's it! You now have a simple set of configuration data stored in the [Configu Cloud](https://app.configu.com/), ready to be used in your application.
+
+<Tip>
+To learn more about Configu and how to use it, you can continue to explore the documentation and join the Configu [Discord channel](https://discord.com/invite/cjSBxnB9z8), where you can ask questions and get help from the Configu team and other community members.
+</Tip>

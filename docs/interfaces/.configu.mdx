@@ -1,0 +1,120 @@
+---
+title: Configu Interface Configuration File
+sidebarTitle: .configu
+description: "The `.configu` file is an optional configuration file used by the `Configu CLI` to customize its behavior. The file should be named `.configu` regardless of the format used: JSON or YAML."
+---
+
+import TBD from '/snippets/tbd.mdx';
+
+## File Location
+
+The CLI recursively searches for the `.configu` file starting from the current working directory and continuing up to the user's home directory. Once the CLI finds a `.configu` file, it stops searching.
+
+## File Formats
+
+The `.configu` file can be written in one of the following formats: JSON or YAML. Below, you'll find examples of each format using the provided type information.
+
+### JSON
+
+Example `.configu` file in JSON format:
+
+```json
+{
+  "stores": {
+    "store1": {
+      "type": "storeType1",
+      "configuration": {
+        "option1": "value1",
+        "option2": "value2"
+      }
+    },
+    "store2": {
+      "type": "storeType2",
+      "configuration": {
+        "option3": "value3",
+        "option4": "value4"
+      }
+    }
+  },
+  "scripts": {
+    "script1": "configu command1 --option1 value1",
+    "script2": "configu command2 --option2 value2 | configu command3"
+  }
+}
+```
+
+### YAML
+
+Example `.configu` file in YAML format:
+
+```yaml
+stores:
+  store1:
+    type: storeType1
+    configuration:
+      option1: value1
+      option2: value2
+  store2:
+    type: storeType2
+    configuration:
+      option3: value3
+      option4: value4
+scripts:
+  script1: 'configu command1 --option1 value1'
+  script2: 'configu command2 --option2 value2 | configu command3'
+```
+
+## Options
+
+### Stores
+
+The `.configu` file allows you to save ConfigStore configurations as friendly names, which can be later used as values for the `--store` flag in all the commands.
+
+To define a custom store, add a new key-value pair to the `stores` section of the `.configu` file, where the key represents the friendly name, and the value is an object with the `type` and `configuration` properties. The `type` property represents the store type, and the `configuration` property contains the specific configuration options for the store.
+
+For detailed information about the available store options, please refer to the relevant store on the [`ConfigStore`](/config-store) page.
+
+### Schemas
+
+<TBD />
+
+### Scripts
+
+The `.configu` file allows you to save `Configu CLI` snippets as friendly names, which can be later used as values for the `--script` flag in the `configu run --script <label>` command.
+
+To define a custom script, add a new key-value pair to the `scripts` section of the `.configu` file, where the key represents the friendly name, and the value is the script content. The script content should consist of `Configu CLI` commands or a pipe of commands.
+
+<Info>
+The `.configu` configuration file provides a way to customize the behavior of the Configu CLI. It can be written in JSON, YAML, or JavaScript object format, using the `.configu` file name. By defining custom stores and scripts in this file, you can easily reference them in CLI commands, making it more convenient to manage and collaborate on software configurations.
+
+Remember that the `.configu` file is optional, and if present, it will be automatically discovered by the CLI during its recursive search process.
+</Info>
+
+## Environment Variables
+
+The `.configu` file allows you to use environment variables in the store configuration options and scripts. To use an environment variable, you can utilize [mustache templating](https://mustache.github.io/) as such:
+
+```javascript
+module.exports = {
+  stores: {
+    store1: {
+      type: 'storeType1',
+      configuration: {
+        option1: 'value1',
+        password: '{{PASSWORD}}',
+      },
+    },
+  },
+};
+```
+
+You can then pass the environment variable to the CLI using any method of setting environment variables to replace the mustache template with the environment variable value. Here is an example of passing an environment variable to the CLI by using an operating system specific prefix:
+
+<CodeTabs labels={['Unix/Linux/MacOS','Windows']}>
+```bash
+PASSWORD=password configu eval --store store1 --schema <value> [--set <value>] [-c <value>]
+```
+```bash
+set PASSWORD=password && configu eval --store store1 --schema <value> [--set <value>] [-c <value>]
+```
+</CodeTabs>
