@@ -1,0 +1,87 @@
+---
+title: Configu Configuration-as-Code Format
+sidebarTitle: .cfgu
+description: "The `Cfgu` format represents a set of properties that define essential characteristics of a software configuration in Configu. These properties provide important metadata and constraints for a configuration key. When these properties are attached to a configuration key in a `ConfigSchema` and utilized through any Configu interface (CLI/SDK), they enable important and repeated validation of configuration values, often implemented in the code."
+---
+
+import TBD from '/snippets/tbd.mdx'
+
+<TBD />
+
+## Properties
+
+- **type**: Specifies the data type that the configuration represents.
+  - This property is required.
+- **pattern**: Allows you to define a regular expression that the configuration value must match.
+  - This property is optional and applicable when the type is set to Regex.
+- **default**: Provides a default value for the configuration if it is not explicitly provided.
+  - This property is optional.
+- **required**: Determines whether the configuration is required for the application to function correctly.
+  - When set to true, the configuration must be provided. This property is optional.
+- **depends**: Specifies a list of other configurations that the current configuration depends on.
+  - This property is optional.
+- **template**: Allows you to define Mustache templates that can be used to construct a templated value from other configuration values.
+  - This property is optional and applicable when the type is set to String.
+- **description**: Provides a description of the configuration's role in the code.
+  - This property is optional.
+- **options**: Specifies a list of values that the configuration value must match.
+  - This property is optional.
+- **schema**: Specifies a [JSON-schema](https://json-schema.org/specification) that the configuration value must match.
+  - This property is optional and applicable when the type is set to JSONSchema.
+- **lazy**: Specifies that a value for a given configuration key should only be set during the [eval command](../commands/#eval-and-export) execution.
+  - This property is optional.
+  - Existing store values are omitted during evaluations.
+  - Lazy configs cannot be [upserted](../commands/#upsert).
+
+### Available Types
+
+<Info>These types cover a wide range of data formats commonly used in configuration settings. You can choose the appropriate type for each configuration value based on your application's requirements.</Info>
+
+Configu supports the following types for configuration values:
+
+- **Boolean**: Represents a binary value of true or false. Example: `true`
+  {/* - **Binary**: Represents a binary value of 1 or 0. Example: `1` */}
+- **Number**: Represents numeric data. Example: `123456`, `1.2`, `-3`
+- **String**: Represents textual data. Example: `"Hello, World!"`
+- **RegEx**: Represents a configuration value that must match a specific regular expression pattern.
+  - Also requires `pattern` property to be specified. Example: `foo|bar`
+- **UUID**: Represents a universally unique identifier. Example: A UUID Value
+- **SemVer**: Represents a semantic version number. Example: `1.2.3-4`
+- **IPv4**: Represents an IPv4 address. Example: `127.0.0.1`
+- **IPv6**: Represents an IPv6 address. Example: `2600:4040:b5c4:1100:216:3eff:feda:953b`
+- **MACAddress**: Represents a MAC Address. Example: `4g:54:53:2f:f6:28`
+- **Domain**: Represents a domain name. Example: `example.com`
+- **URL**: Represents a URL. Example: `https://www.example.com`
+- **MIMEType**: Represents a MIME type. Example: `application/octet-stream`
+- **ConnectionString**: Represents a connection string. Example: `Server=example.com;Database=myDB;User Id=myUser;Password=myPass;`
+- **DockerImage**: Represents a docker image tag name. Example: `debian:stable-20230814-slim`
+- **Hex**: Represents a value encoded in hexadecimal format. Example: A Hex Encoded Value
+- **Base64**: Represents a value encoded in Base64 format. Example: A Base64 Encoded Value
+- **MD5**: Represents a value hashed using MD5. Example: A MD5 Hashed Value
+- **SHA**: Represents a value hashed using SHA. Example: A SHA Hashed Value
+- **Color**: Represents a color value using hexadecimal notation, rgb/a notation or hsl notation. Example: `#ffffff`, `rgb(255, 255, 255)`, `hsl(0, 0%, 100%)`
+- **Email**: Represents an email address. Example: `foo@example.com`
+- **MobilePhone**: Represents a phone number. Example: `+1 000 000 0000`
+- **Locale**: Represents a specific language and region combination. Example: `EN-GB`
+- **LatLong**: Represents latitude and longitude coordinates. Example: `41 24.2028, 2 10.4418`
+- **Country**: Represents a country code. Example: `GB`
+- **Language**: Represents a language code. Example: `en`, `he`
+- **Currency**: Represents a currency code. Example: `USD`
+- **AWSRegion**: Represents an AWS region. Example: `eu-west-1`, `us-west-2`
+- **AZRegion**: Represents an Azure region. Example: `brazilsouth`, `australiaeast`
+- **GCPRegion**: Represents a GCP region. Example: `asia-south1`, `asia-southeast2`
+- **OracleRegion**: Represents a Oracle Cloud region. Example: `us-ashburn-1`
+- **IBMRegion**: Represents a IBM Cloud region. Example: `us-south`, `sa-santiago`
+- **AlibabaRegion**: Represents a Alibaba Cloud region. Example: `cn-hangzhou`
+- **MongoId**: Represents a MongoDB identifier. Example: `64ef397579c9984350addd44`
+- **DateTime**: Represents a date/timestamp/hour. Example: `2023-08-30`, `12:30`, `1661846400000`
+- **ARN**: Represents a Amazon Resource Names (ARNs). Example: `arn:partition:service:region:account-id:resource-id`
+- **JSONschema**: Represents JSON data that must conform to a JSON schema. Example: `{"key":value}`
+  - Also requires `schema` property to be specified. Example: `{"type": "object", "properties": {"GREETING": {"type": "string"}, "SUBJECT": {"type": "string"}}, "required": ["GREETING", "SUBJECT"]}`
+
+
+<Tip>
+Configu is designed to be extensible, allowing you to add custom types as needed. If you require a type that is not currently supported, we encourage you to let us know or consider contributing it yourself. With Configu's flexibility, you can tailor the configuration system to suit your specific requirements.
+
+Feel free to explore the available types and utilize them to define your configuration values accurately.
+</Tip>

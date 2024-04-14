@@ -1,0 +1,88 @@
+---
+# credit:
+#   - https://pkl-lang.org/main/current/index.html
+#   - https://docs.novu.co/getting-started/introduction
+title: "Overview"
+# title: "Your very long page title you want to shorten"
+# sidebarTitle: "Overview"
+description: "Configu is an **open-source, end-to-end ConfigOps infrastructure** that empowers engineering teams to seamlessly manage and collaborate on **software configuration data**—such as environment variables, secrets, and feature flags—across any system or environment. ⚙️✨"
+icon: "street-view"
+---
+
+<AccordionGroup>
+  <Accordion title="Quickstart">
+    {/* Get started in minutes */}
+
+    <CardGroup cols={3}>
+      <Card title="Hello, World!" icon="hand-wave" href="/guides/hello-world">
+        Kickstart your journey with Configu and discover how to seamlessly manage application configurations in just a few steps.
+      </Card>
+      <Card title="Integrate Configu" icon="laptop-code" href="/guides/integrate-configu">
+        Step-by-step guide for engineers to incorporate Configu into small-scale applications, enhancing configuration management from the get-go.
+      </Card>
+      <Card title="CI/CD" icon="infinity" href="/guides/ci-cd">
+        Advanced integration strategies for deploying Configu in your CI/CD pipelines, tailored for experienced engineers aiming to optimize deployment workflows.
+      </Card>
+    </CardGroup>
+  </Accordion>
+
+  <Accordion title="Interfaces">
+    <CardGroup cols={2}>
+      <Card title=".cfgu" icon="brackets-curly" href="/interfaces/.cfgu">
+        Learn how the .cfgu file format structures and organizes your application's configuration schema for clear, effective management.
+      </Card>
+      <Card title=".configu" icon="brackets-curly" href="/interfaces/.configu">
+        Discover how to utilize the .configu file for configuring Configu's interfaces 🤭, ensuring seamless integration and operation within your projects.
+      </Card>
+      <Card title="Configu CLI" icon="terminal" href="/interfaces/cli">
+        Master the Configu Command Line Interface (CLI) for streamlined configuration management and deployment directly from your terminal.
+      </Card>
+      <Card title="Configu Proxy" icon="server" href="/interfaces/proxy">
+        Employ the Configu Proxy for real-time configuration tasks, enabling dynamic updates and management of application configuration.
+      </Card>
+      <Card title="IDE Extensions" icon="code" href="/interfaces/ide">
+        Enhance your IDE experience with Configu Extensions, offering features like auto-completion from configs in your code, linting to prevent errors, and schema validation to ensure integrity.
+      </Card>
+      <Card title="Internal SDKs" icon="layer-group" href="/interfaces/sdk">
+        Dive deep into Configu's core with our TS-based SDKs, designed for extensive integration, customization, and contribution to the Configu project.
+      </Card>
+    </CardGroup>
+  </Accordion>
+</AccordionGroup>
+
+## Configu
+
+<a href="https://configu.com" target="_blank">
+  <img align="right" noZoom src="/images/icon/icon.svg" width="128" alt="Configu Icon"/>
+</a>
+
+{/* Configu[^origin] */}
+Configu is a <Tooltip tip={`🎯 Simple—Offers a **unified API** for all configuration tasks, whether dealing with files, databases, secret managers, or custom implementations. Enables end-to-end configuration **automation** throughout the software development lifecycle.`}>simple</Tooltip>, <Tooltip tip={`🚀 Modern—Expertly **manages** configuration data across multiple deployments, workflows, runtimes, and environments. **Scales** to accommodate infinite configuration contexts, maintaining seamless management and organization.`}>modern</Tooltip>, and <Tooltip tip={`🔒 Secure—Equipped with a robust configuration **type system** and a comprehensive **policy framework**. Provides built-in **safeguards** against application misconfigurations, ensuring a secure environment for your configurations.`}>secure</Tooltip> standard for managing and collaborating on **software configuration data**. It is built to provide a <Tooltip tip={`🌐 Common—Promotes a clear understanding and consistent management of configuration data. Facilitates **collaboration** and ensures configurations are accurate and up-to-date. Provides a declarative approach that integrates seamlessly with coding tasks, enabling "Learn Once, Write Anywhere" flexibility and automation across diverse environments and systems.`}>common</Tooltip>, <Tooltip tip={`🌟 Flexible—Adapts to any **modern tech** stack and use case. Allows to manage configurations across files, directories, codebases, and repositories. Accommodates configuration values over a **context tree** for inheritance and advanced overriding. Allows combining and **piping commands** to produce any necessary **configuration artifact**.`}>flexible</Tooltip>, and <Tooltip tip={`🛠 Extensible—Supports **custom** configuration **storage** implementations, configuration **formatters**, and **injectors**. Continuously evolving and driven by **community** contributions.`}>extensible</Tooltip> process for storing, mutating, and orchestrating configuration data across any system or environment.
+
+Configu is designed to be **easy to integrate** into existing systems and workflows, and to be adaptable to the diverse needs of teams and projects. It can be used from the command line, integrated in a build pipeline, or embedded in a program. Configu **scales** from small to large, simple to complex, ad-hoc to repetitive configuration tasks. It establishes a **powerful abstraction layer** over configuration data, enabling engineering teams to perform **secure and error-free configuration operations** throughout the software development lifecycle.
+
+[^origin]: software **configu**~~ration~~ data
+
+## Background
+
+![background-banner](/images/banner/software-code-configurations-1.svg)
+
+During the software development lifecycle, **developers commonly extract** certain configuration items or metadata **from the code** to manage them separately, typically in **configuration files** or similar **plain text formats**. This separately managed content is called **software/application configuration**, and is an important aspect of software development, enabling developers to **customize application behavior** to suit various tech stacks and deployment environments. It includes elements such as environment variables, secrets, feature flags, and other **code-related variables** critical for **configuring application behavior**.
+
+## Motivation
+
+![motivation-banner](/images/banner/software-code-configurations-2.svg)
+
+Software configurations refer to the data that **determines how a software application or system behaves**. As codebases continuously expand and become more branched and complex, it may require more configuration data to **customize its behavior** and ensure that it functions correctly.
+
+In modern, distributed, and microservices-based systems, configuration data is often scattered across multiple stores, making it **challenging for teams to work together** and ensure that their applications are properly configured. Incorrect or outdated configuration data can cause bugs and errors that can result in **significant downtime and lost revenue**.
+
+We developed Configu with the conviction that **effective configuration management** is fundamental to the **stability and reliability** of applications, and crucial for upholding the **efficiency and productivity** of engineering teams. Ensuring teams possess a **clear understanding of the configuration data** in use, and establishing **robust processes** to keep it **accurate and up to date**, are essential components of this belief.
+
+## Philosophy
+
+As developers, we believe in the power of open-source software and are committed to developing Configu openly on [github.com/configu](https://github.com/configu). We are always eager to collaborate with other developers and DevOps engineers, and are happy to assist with anything related to Configu or configurations in general.
+
+If you would like to contribute code to Configu or provide feedback, we welcome you to join our [Discord channel](https://discord.com/invite/cjSBxnB9z8) or reach out via email at <a href="mailto:support@configu.com">support@configu.com</a>. We believe that by working together and inviting others to be part of the project, we can create a strong and supportive community around Configu and help it continue to grow and evolve.
+
+{/* By providing a standard, consistent, and extensible way to define, validate, and apply configuration data, we can help teams work more efficiently and avoid mismanagement and errors that can arise from using raw text or other ad-hoc approaches to configuration management. */}
