@@ -1,9 +1,7 @@
 import { type MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
-import { ORMConfigStore } from './ORM';
+import { ORMConfigStore, type ORMConfigStoreSharedConfiguration } from './ORM';
 
-export type MySQLConfigStoreConfiguration = Omit<MysqlConnectionOptions, 'type'> & {
-  tableName?: string;
-};
+export type MySQLConfigStoreConfiguration = Omit<MysqlConnectionOptions, 'type'> & ORMConfigStoreSharedConfiguration;
 
 export class MySQLConfigStore extends ORMConfigStore {
   constructor(configuration: Omit<MysqlConnectionOptions, 'type'>) {
