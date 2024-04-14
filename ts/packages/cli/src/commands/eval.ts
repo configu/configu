@@ -5,6 +5,8 @@ import {
   EvaluatedConfigOrigin,
   type ConfigStore,
   ConfigStoreError,
+  type ConfigSchema,
+  UpsertCommand,
 } from '@configu/ts';
 import { NoopConfigStore, ConfigSet, EvalCommand } from '@configu/node';
 import _ from 'lodash';
@@ -86,29 +88,32 @@ export default class Eval extends BaseCommand<typeof Eval> {
     };
   }
 
-  async updateCache(cacheStore: ConfigStore, evalCommandReturn: EvalCommandReturn) {
-    const cacheConfigs = _.map(
-      _.pickBy(evalCommandReturn, (value, key) => {
-        return value.result.origin === EvaluatedConfigOrigin.StoreSet;
-      }),
-      (value, key) => ({ key: value.context.key, value: value.result.value, set: value.context.set }),
+  async updateCache(
+    cacheStore: ConfigStore,
+    set: ConfigSet,
+    schema: ConfigSchema,
+    evalCommandReturn: EvalCommandReturn,
+  ) {
+    const configs = _.mapValues(
+      _.pickBy(evalCommandReturn, (entry) => entry.result.origin === EvaluatedConfigOrigin.StoreSet),
+      (entry) => entry.result.value,
     );
-    await cacheStore.init();
-    await cacheStore.set(cacheConfigs);
+    await new UpsertCommand({ store: cacheStore, set, schema, configs }).run();
   }
 
   public async run(): Promise<void> {
-    const cache = this.getCacheStoreInstanceByStoreFlag(this.flags.store);
+    const cacheStore = this.getCacheStoreInstanceByStoreFlag(this.flags.store);
     const evalCommandParameters = await this.constructEvalCommandParameters();
     let evalCommandReturn;
 
-    if (cache && !this.flags['force-cache']) {
+    if (cacheStore && !this.flags['force-cache']) {
       try {
         evalCommandReturn = await new EvalCommand(evalCommandParameters).run();
-        await this.updateCache(cache, evalCommandReturn);
+        const { schema, set } = evalCommandParameters;
+        await this.updateCache(cacheStore, set, schema, evalCommandReturn);
       } catch (error) {
         if (error instanceof ConfigStoreError) {
-          evalCommandReturn = await new EvalCommand({ ...evalCommandParameters, store: cache }).run();
+          evalCommandReturn = await new EvalCommand({ ...evalCommandParameters, store: cacheStore }).run();
         } else {
           throw error;
         }
@@ -116,7 +121,7 @@ export default class Eval extends BaseCommand<typeof Eval> {
     } else {
       evalCommandReturn = await new EvalCommand({
         ...evalCommandParameters,
-        store: this.flags['force-cache'] && cache ? cache : evalCommandParameters.store,
+        store: this.flags['force-cache'] && cacheStore ? cacheStore : evalCommandParameters.store,
       }).run();
     }
 
