@@ -250,11 +250,7 @@ export class EvalCommand extends Command<EvalCommandReturn> {
             ConfigSchema.CFGU.VALIDATORS.valueOptions(cfgu, evaluatedValue);
             ConfigSchema.CFGU.VALIDATORS.valueType(cfgu, evaluatedValue);
           } catch (error) {
-            let err = error?.appendScope?.(errorScope) ?? error;
-            if (current.result.origin === EvaluatedConfigOrigin.StoreSet) {
-              err = new ConfigStoreError('invalid config value', err.message, err?.scope ?? errorScope);
-            }
-            throw err;
+            throw error?.appendScope?.(errorScope) ?? error;
           }
 
           if (cfgu.depends && cfgu.depends.some((depend) => !evaluatedConfigsDict[depend])) {
