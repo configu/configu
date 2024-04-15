@@ -22,7 +22,8 @@ export type StoreType = LiteralUnion<
   | 'cockroachdb'
   | 'mssql'
   | 'launch-darkly'
-  | 'cloud-bees',
+  | 'cloud-bees'
+  | 'etcd',
   string
 >;
 
@@ -49,6 +50,7 @@ export const STORE_LABEL: Record<StoreType, string> = {
   mssql: 'Microsoft SQL Server',
   'launch-darkly': 'LaunchDarkly',
   'cloud-bees': 'CloudBees',
+  etcd: 'etcd',
 };
 
 export const STORE_WEBSITE: Record<StoreType, string> = {
@@ -74,6 +76,7 @@ export const STORE_WEBSITE: Record<StoreType, string> = {
   mssql: 'https://www.microsoft.com/en-gb/sql-server',
   'launch-darkly': 'https://launchdarkly.com/',
   'cloud-bees': 'https://www.cloudbees.com/products/cloudbees-feature-management/',
+  etcd: 'https://etcd.io/',
 };
 
 export const STORE_TYPE = Object.keys(STORE_LABEL) as StoreType[];
