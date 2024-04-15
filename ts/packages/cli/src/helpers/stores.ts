@@ -23,7 +23,7 @@ import {
   CsvFileConfigStore,
   TomlFileConfigStore,
   XmlFileConfigStore,
-} from '@configu/node'; // todo: change "any" here!
+} from '@configu/node';
 
 // todo: change "any" here!
 type ConfigStoreCtor = new (configuration: any) => ConfigStore;
