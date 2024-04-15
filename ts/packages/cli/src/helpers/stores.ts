@@ -23,6 +23,7 @@ import {
   CsvFileConfigStore,
   TomlFileConfigStore,
   XmlFileConfigStore,
+  EtcdConfigStore,
 } from '@configu/node';
 
 // todo: change "any" here!
@@ -50,6 +51,7 @@ const TYPE_TO_STORE_CTOR: Record<StoreType, ConfigStoreCtor> = {
   mssql: MSSQLConfigStore,
   'launch-darkly': LaunchDarklyConfigStore,
   'cloud-bees': CloudBeesConfigStore,
+  etcd: EtcdConfigStore,
 };
 
 export const constructStore = (type: string, configuration: any): ConfigStore => {
