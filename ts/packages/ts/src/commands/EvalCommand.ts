@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { Command } from '../Command';
 import { type Cfgu } from '../types';
-import { ConfigError, TMPL } from '../utils';
+import { ConfigError, TMPL, ConfigStoreError } from '../utils';
 import { type ConfigStore } from '../ConfigStore';
 import { ConfigSet } from '../ConfigSet';
 import { ConfigSchema } from '../ConfigSchema';
@@ -67,7 +67,12 @@ export class EvalCommand extends Command<EvalCommandReturn> {
         return set.hierarchy.map((node) => ({ set: node, key }));
       })
       .value();
-    const storeConfigsArray = await store.get(storeQueries);
+    let storeConfigsArray;
+    try {
+      storeConfigsArray = await store.get(storeQueries);
+    } catch (error) {
+      throw new ConfigStoreError('failed to get store configs', error.message, [['EvalCommand', 'evalFromStoreSet']]);
+    }
     const storeConfigsDict = _(storeConfigsArray)
       .orderBy([(config) => set.hierarchy.indexOf(config.set)], ['desc'])
       .uniqBy((config) => config.key)
@@ -264,7 +269,11 @@ export class EvalCommand extends Command<EvalCommandReturn> {
   async run() {
     const { store, set, schema } = this.parameters;
 
-    await store.init();
+    try {
+      await store.init();
+    } catch (error) {
+      throw new ConfigStoreError('failed to init store', error.message, [['EvalCommand', 'store']]);
+    }
 
     let result = _.mapValues<typeof schema.contents, EvalCommandReturn['string']>(schema.contents, (cfgu, key) => {
       return {
