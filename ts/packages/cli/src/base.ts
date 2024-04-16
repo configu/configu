@@ -81,7 +81,6 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     if (!storeFlag) {
       return undefined;
     }
-
     const storeCache = this.config.cli.data.stores?.[storeFlag]?.cache;
     if (!storeCache) {
       return undefined;
