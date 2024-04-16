@@ -79,7 +79,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
 
   getCacheStoreInstanceByStoreFlag(storeFlag?: string) {
     if (!storeFlag) {
-      throw new Error('--store flag is missing');
+      return undefined;
     }
 
     const storeCache = this.config.cli.data.stores?.[storeFlag]?.cache;
