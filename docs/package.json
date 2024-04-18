@@ -24,7 +24,10 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "mintlify": "^4.0.135",
-    "prettier": "^3.2.5"
+    "change-case": "^5.4.4",
+    "lodash": "^4.17.21",
+    "mintlify": "^4.0.146",
+    "prettier": "^3.2.5",
+    "zx": "8.0.1"
   }
 }
