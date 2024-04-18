@@ -1,9 +1,19 @@
 ---
-title: CLI Command Reference
+title: Command Reference
 sidebarTitle: Reference
+description: A reference guide for all Configu CLI commands.
 ---
 
-This section contains reference documentation for working with the Configu CLI. For a step-by-step introduction, you can get started with [this guide](/get-started).
+import { Related } from '/snippets/callouts.mdx'
+
+<Related name="Hello, World!" href="/guides/hello-world" />
+
+## Commands
+
+<Tip>
+  Use `configu -h` or to get a list of all available commands.
+  Use `configu [COMMAND] -h` to get help for a specific command.
+</Tip>
 
 * [`configu autocomplete [SHELL]`](#configu-autocomplete-shell)
 * [`configu delete`](#configu-delete)
@@ -83,10 +93,11 @@ Fetch `Configs` from `ConfigStore` on demand based on `ConfigSet` and `ConfigSch
 
 ```bash
 USAGE
-  $ configu eval --schema <value> [--store <value>] [--set <value>] [-c <value>]
+  $ configu eval --schema <value> [--store <value>] [--set <value>] [-c <value>] [--force-cache]
 
 FLAGS
   -c, --config=<value>...  'key=value' pairs to override fetched `Configs`
+      --force-cache        Force the use of cache store
       --schema=<value>     (required) `ConfigSchema` (config-keys declaration) path/to/[schema].cfgu.json file to
                            operate the eval against. The keys declared in the `ConfigSchema` will be fetched and
                            evaluated from the to the `ConfigStore`. In case of key duplication from multiple
@@ -124,20 +135,36 @@ Export `Configs` as configuration data in various modes
 
 ```bash
 USAGE
-  $ configu export [--empty] [--explain | --format
+  $ configu export [--explain | --format
     JSON|CompactJSON|YAML|Dotenv|KubernetesConfigMap|HelmValues|TerraformTfvars|TOML | --template <value> | --source |
-    --run <value>] [--label <value>] [--eol ] [--template-input object|array ]
+    --run <value>] [--label <value>] [--eol ] [--template-input object|array ] [--prefix <value>] [--suffix <value>]
+    [--casing CamelCase|CapitalCase|ConstantCase|DotCase|KebabCase|NoCase|PascalCase|PascalSnakeCase|PathCase|SentenceCa
+    se|SnakeCase|TrainCase] [--pick-label <value>] [--omit-label <value>] [--pick-key <value>] [--omit-key <value>]
+    [--pick-hidden | --omit-hidden] [--pick-empty | --omit-empty]
 
 FLAGS
-  --[no-]empty               Omits all empty (non-value) from the exported `Configs`
+  --casing=<option>          Transforms the casing of Config Keys in the export result to camelCase, PascalCase, Capital
+                             Case, snake_case, param-case, CONSTANT_CASE and others
+                             <options: CamelCase|CapitalCase|ConstantCase|DotCase|KebabCase|NoCase|PascalCase|PascalSnak
+                             eCase|PathCase|SentenceCase|SnakeCase|TrainCase>
   --eol                      Adds EOL (\n on POSIX \r\n on Windows) to the end of the stdout
   --explain                  Outputs metadata on the exported `Configs`
   --format=<option>          Format exported `Configs` to common configuration formats. Redirect the output to file, if
                              needed
                              <options: JSON|CompactJSON|YAML|Dotenv|KubernetesConfigMap|HelmValues|TerraformTfvars|TOML>
   --label=<value>            Metadata required in some formats like Kubernetes ConfigMap
+  --omit-empty               Exclude config keys with empty values. By default, empty values are included
+  --omit-hidden              Explicitly exclude config keys marked as hidden. By default, hidden keys are omitted
+  --omit-key=<value>...      Omit a specific key from the previous eval command return to export
+  --omit-label=<value>...    Omit a specific label from the previous eval command return to export
+  --pick-empty               Include config keys with empty values. By default, empty values are included
+  --pick-hidden              Explicitly include config keys marked as hidden. By default, hidden keys are omitted
+  --pick-key=<value>...      Pick a specific key from the previous eval command return to export
+  --pick-label=<value>...    Pick a specific label from the previous eval command return to export
+  --prefix=<value>           Append a fixed string to the beginning of each Config Key in the export result
   --run=<value>              Spawns executable as child-process and pass exported `Configs` as environment variables
   --source                   Source exported `Configs` as environment variables to the current shell
+  --suffix=<value>           Append a fixed string to the end of each Config Key in the export result
   --template=<value>         Path to a file containing {{mustache}} templates to render (inject/substitute) the exported
                              `Configs` into
   --template-input=<option>  Inject `Configs` to template as object or array of `{key: string, value: string}[]`
@@ -170,6 +197,30 @@ EXAMPLES
   Pipe eval commands result to export command to pass `Configs` as environment variables to a child-process
 
     $ configu eval ... | configu export --run 'node index.js'
+
+  Pipe eval commands result to export command and apply a prefix / suffix to each Config Key in the export result
+
+    $ configu eval ... | configu export --prefix "MYAPP_" --suffix "_PROD"
+
+  Pipe eval commands result to export command and apply casing to each Config Key in the export result
+
+    $ configu eval ... | configu export --casing "SnakeCase"
+
+  Pipe eval commands result to export command and exclude specific labels
+
+    $ configu eval ... | configu export --omit-label 'deprecated' --omit-label 'temporary'
+
+  Pipe eval commands result to export command and include only configs under specific labels
+
+    $ configu eval ... |  configu export --pick-label 'production' --pick-label 'secure'
+
+  Pipe eval commands result to export command and exclude specific keys
+
+    $ configu eval ... | configu export --omit-key 'DEBUG_MODE' --omit-key 'TEST_ACCOUNT'
+
+  Pipe eval commands result to export command. Include hidden configs and exclude configs with empty values
+
+    $ configu eval ... | configu export --pick-hidden  --omit-empty
 ```
 
 ## configu find
@@ -399,3 +450,4 @@ EXAMPLES
     $ configu upsert --store 'hashicorp-vault' --set 'prod' --schema './config/schema.cfgu.json' --config \
       'secretKey=secretValue'
 ```
+

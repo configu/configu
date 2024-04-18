@@ -1,6 +1,26 @@
 #!/usr/bin/env npx zx
 
-import { PAGE_EXT, ROOT_PATH, DOCS_ROOT_PATH, MINT_PATH, _, confirm } from './utils.mjs';
+import 'zx/globals';
+import _ from 'lodash';
+
+export const PAGE_EXT = '.mdx';
+
+export const ROOT_PATH = path.join(__dirname, '..');
+export const DOCS_ROOT_PATH = __dirname;
+export const MINT_PATH = path.join(DOCS_ROOT_PATH, 'mint.json');
+
+export const confirm = async (q) => {
+  const answer = await question(`${q} y(es)/n(o) `); // Y(all)/N(none)/q(uit)
+  if (answer.toLowerCase() === 'yes' || answer.toLowerCase() === 'y') {
+    return true;
+  } else if (answer.toLowerCase() === 'no' || answer.toLowerCase() === 'n') {
+    return false;
+  } else {
+    // Recurse to re-ask the same question if input is invalid
+    console.log("Invalid input");
+    return confirm(q);
+  }
+}
 
 // Write the integrations index.json data to the snippets/index.mdx file as a variable
 const INTEGRATIONS_INDEX_PATH = path.join(DOCS_ROOT_PATH, 'integrations', 'index.json');
@@ -48,6 +68,7 @@ INTEGRATIONS_NAV.pages = ["integrations/overview", ...integrationsNavArray];
 
 await fs.writeJson(path.join(DOCS_ROOT_PATH, 'mint.json'), MINT_CONTENT, { spaces: 2});
 
+// Process README files to create the MDX files for the docs
 const prepareReadme = async ({ source, target, title = 'Overview' }) => {
   const sourcePath = path.join(ROOT_PATH, source);
   const targetPath = path.join(DOCS_ROOT_PATH, target);
@@ -57,27 +78,75 @@ const prepareReadme = async ({ source, target, title = 'Overview' }) => {
   // Remove the @configu title
   content = content.replace(/# @configu.*\n\n/, '');
   // Extract the first paragraph as the page description and remove it also from the content
-  const description = content.match(/.*\n/)[0];
+  const description = content.match(/.*\n/)[0].replace('\n', '');
   content = content.replace(/.*\n/, '');
   // Remove any HTML comments
   content = content.replace(/<!--.*\n/, '');
 
   content = `---
 title: ${title}
-description: ${description}
+description: "${description}"
 ---
+${content}
+`;
+
+  await fs.writeFile(targetPath, content, { flag: 'w' });
+};
+
+// Process `oclif readme` output file to create the MDX file for the docs
+const prepareCliRef = async ({ source, target }) => {
+  const resp = await fetch(source);
+  let content = await resp.text();
+  const targetPath = path.join(DOCS_ROOT_PATH, target);
+
+  content = content.replace('<!-- commands -->\n', '');
+  content = content.replace('<!-- commandsstop -->\n', '');
+
+  content = content.replace(/## `(.*)`/g, '## $1');
+
+  content = content.replace(/\nUSAGE/g, 'bash\nUSAGE');
+  content = content.replace(/\n_.*_\n/g, '');
+
+  content = `---
+title: Command Reference
+sidebarTitle: Reference
+description: A reference guide for all Configu CLI commands.
+---
+
+import { Related } from '/snippets/callouts.mdx'
+
+<Related name="Hello, World!" href="/guides/hello-world" />
+
+## Commands
+
+<Tip>
+  Use \`configu -h\` or to get a list of all available commands.
+  Use \`configu [COMMAND] -h\` to get help for a specific command.
+</Tip>
 
 ${content}
 `;
 
-  // await fs.writeFile(targetPath, content, { flag: 'w' });
-  console.log(content);
+  await fs.writeFile(targetPath, content, { flag: 'w' });
 };
-
 
 await prepareReadme({
   source: 'ts/packages/cli/README.md',
   target: 'interfaces/cli/overview.mdx',
+});
+await prepareCliRef({
+  source: 'https://oss.configu.com/cli/manifest.md',
+  target: 'interfaces/cli/command-ref.mdx',
+});
+await prepareReadme({
+  source: 'ts/packages/node/README.md',
+  target: 'interfaces/sdk/nodejs.mdx',
+  title: 'Node.js SDK',
+});
+await prepareReadme({
+  source: 'ts/packages/browser/README.md',
+  target: 'interfaces/sdk/browser.mdx',
+  title: 'Browser SDK',
 });
 
 // Check the navigation structure for missing pages
