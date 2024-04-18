@@ -185,3 +185,6 @@ import { Construction } from '/snippets/callouts.mdx'
 <Construction />`);
   }
 }
+
+// Check for broken links in the docs
+await $`npx mintlify broken-links`.pipe(process.stdout);

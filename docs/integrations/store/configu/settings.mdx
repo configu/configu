@@ -18,13 +18,13 @@ Here you can find your organization information, including org and owner.
 
 ## Protected Sets
 
-For stricter access control, owners can define protected sets via the Settings page. Any mutation of protected sets within the organization will trigger change requests that are [queued for approval by an admin](../approval-queue).
+For stricter access control, owners can define protected sets via the Settings page. Any mutation of protected sets within the organization will trigger change requests that are [queued for approval by an admin](/integrations/store/configu/approval-queue).
 
 <Frame>![image](/images-old/settings/settings-general-protected-sets.png)</Frame>
 
 <Tip>Config sets that do not yet exist can also be protected.</Tip>
 
-Mutations of protected sets create a `Upsert Config Request` [audit](/platform/audit-log) entry.
+Mutations of protected sets create a `Upsert Config Request` [audit](/integrations/store/configu/audit-logs) entry.
 
 <Frame>![image](/images-old/settings/settings-general-upsert-config-request-audit.png)</Frame>
 
@@ -46,7 +46,7 @@ The following will be visible only to the organization owner.
 
 <Frame>![image](/images-old/settings/settings-general-danger-zone-owner.png)</Frame>
 
-- **Transfer Ownership** - Gives another member the owner role which has permissions for all organization resources. The previous owner is assigned the [default role](../authorization#default-role).
+- **Transfer Ownership** - Gives another member the owner role which has permissions for all organization resources. The previous owner is assigned the [default role](/integrations/store/configu/authorization#default-role).
 - **Delete this organization** - Permanently deletes the organization and its resources.
 
 The following will be visible all other organization members.

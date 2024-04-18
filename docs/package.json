@@ -19,6 +19,7 @@
     "configu"
   ],
   "scripts": {
+    "prepare": "./prepare.mjs",
     "dev": "npx mintlify dev",
     "start": "npm run dev"
   },

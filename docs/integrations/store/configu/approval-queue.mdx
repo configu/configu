@@ -2,7 +2,7 @@
 title: Approval Queue
 ---
 
-The Configs Request tab displays all the [protected sets](/platform/settings#protected-sets) and indicates any pending change requests made by members of the organization.
+The Configs Request tab displays all the [protected sets](/integrations/store/configu/settings#protected-sets) and indicates any pending change requests made by members of the organization.
 
 <Frame>![image](/images-old/approval-queue/approval-queue-list.png)</Frame>
 
@@ -23,6 +23,6 @@ At any point after the first request, the reviewer may click `aggregated diff` t
 
 Clicking `upsert` will be resolve change requests according to the reviewer's selection and all configs of approved changes are upserted simultaneously. At any later point, the reviewer may return to the approval queue to resolve remaining requests.
 
-Upserts resulting from approval of change request create `Upsert Config` [audits](/platform/audit-log). These audits reflect details regarding the original upsert request made by the user who triggered the request along with details regarding the user who approved the request.
+Upserts resulting from approval of change request create `Upsert Config` [audits](/integrations/store/configu/audit-logs). These audits reflect details regarding the original upsert request made by the user who triggered the request along with details regarding the user who approved the request.
 
 <Frame>![image](/images-old/approval-queue/approval-queue-upsert-config-audit.png)</Frame>

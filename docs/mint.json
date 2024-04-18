@@ -53,7 +53,7 @@
     {
       "name": "Guides",
       "icon": "bolt",
-      "url": "guides/"
+      "url": "guides"
     },
     {
       "name": "Blog",
@@ -90,6 +90,7 @@
     {
       "group": "Interfaces",
       "pages": [
+        "interfaces/overview",
         "interfaces/.cfgu",
         "interfaces/.configu",
         {
@@ -274,7 +275,17 @@
       "group": "Guides",
       "pages": [
         "guides/hello-world",
-        "guides/hashicorp-vault"
+        "guides/integrate-configu",
+        "guides/ci-cd",
+        "guides/hashicorp-vault",
+        {
+          "group": "Configu Platform",
+          "pages": [
+            "guides/platform/discord-webhook",
+            "guides/platform/slack-webhook",
+            "guides/platform/github-actions-webhook"
+          ]
+        }
       ]
     }
   ]

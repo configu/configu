@@ -2,7 +2,7 @@
 title: Configs History
 ---
 
-Configu has a robust [logging](/platform/audit-logs) and versioning system.
+Configu has a robust [logging](/integrations/store/configu/audit-logs) and versioning system.
 Similar to how source controls like git work, every action is recorded, viewable and can be reverted if necessary.
 
 The history log is available for three entities:
@@ -26,7 +26,7 @@ Once a tag is created, you can compare it with the current state of your organiz
 #### Create a tag
 
 In order to create a tag you'll first need to create a token with the `Admin` role.
-See [Tokens](/platform/tokens/#assign-roles-to-a-token) for more information about creating tokens and assigning them roles.
+See [Tokens](/integrations/store/configu/tokens#assign-roles-to-a-token) for more information about creating tokens and assigning them roles.
 
 Once your token is ready, you can create a tag with the following request to our API:
 
@@ -42,7 +42,7 @@ curl --request POST \
 ```
 
 <Info>  Tag can be any alphanumeric string. optionally with the following characters: `. _ / -`</Info>
-<Tip>  Your organization ID can be found under [organization settings](/platform/settings)</Tip>
+<Tip>  Your organization ID can be found under [organization settings](/integrations/store/configu/settings)</Tip>
 
 Upon success (status 200), your tag will be ready for use.
 You can now view it in the history log and revert to it if necessary by opening the action menu and clicking **Show diff**.
@@ -100,7 +100,7 @@ import schemaContents from './start.cfgu.json';
 })();
 ```
 
-To evaluate using the CLI, make sure to set the `CONFIGU_TAG` environment variable to the tag name you wish to use or provide the `tag` parameter directly [via a `.configu` file](../cli-config).
+To evaluate using the CLI, make sure to set the `CONFIGU_TAG` environment variable to the tag name you wish to use or provide the `tag` parameter directly [via a `.configu` file](/interfaces/.configu).
 
 <Warning>
 - Attempting to evaluate a tag that does not exist will result in an error.
@@ -109,7 +109,7 @@ To evaluate using the CLI, make sure to set the `CONFIGU_TAG` environment variab
 </Warning>
 
 <Info>
-- Evaluations with a tag will be marked with the tag in the [audit log](/platform/audit-log).
+- Evaluations with a tag will be marked with the tag in the [audit log](/integrations/store/configu/audit-logs).
 - Evaluations with a tag will trigger webhooks with the tag name in the payload as `tag`.
 </Info>
 
