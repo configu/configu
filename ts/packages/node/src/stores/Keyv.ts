@@ -2,6 +2,7 @@
 import { KeyValueConfigStore } from '@configu/ts';
 import type Keyv from 'keyv';
 
+// TODO: rework KeyvConfigStoreConfiguration for CLI support and then add KeyvConfigStore to `@configu/lib` & `@configu/cli`. Adapters are missing (https://www.npmjs.com/package/keyv#official-storage-adapters). Consider this strategy for reworking KeyvConfigStoreConfiguration: https://github.com/configu/configu/pull/167#discussion_r1268823038.
 export type KeyvConfigStoreConfiguration = { keyvInstance: Keyv };
 
 /**

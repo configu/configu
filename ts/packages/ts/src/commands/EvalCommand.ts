@@ -68,6 +68,12 @@ export class EvalCommand extends Command<EvalCommandReturn> {
       })
       .value();
     const storeConfigsArray = await store.get(storeQueries);
+    // TODO: Separate ConfigStoreError and ConfigStoreAuthError once defined
+    // try {
+    //   storeConfigsArray = await store.get(storeQueries);
+    // } catch (error) {
+    //   throw new ConfigStoreError('failed to get store configs', error.message, [['EvalCommand', 'evalFromStoreSet']]);
+    // }
     const storeConfigsDict = _(storeConfigsArray)
       .orderBy([(config) => set.hierarchy.indexOf(config.set)], ['desc'])
       .uniqBy((config) => config.key)
@@ -265,6 +271,12 @@ export class EvalCommand extends Command<EvalCommandReturn> {
     const { store, set, schema } = this.parameters;
 
     await store.init();
+    // TODO: Separate ConfigStoreError and ConfigStoreAuthError once defined
+    // try {
+    //   await store.init();
+    // } catch (error) {
+    //   throw new ConfigStoreError('failed to init store', error.message, [['EvalCommand', 'store']]);
+    // }
 
     let result = _.mapValues<typeof schema.contents, EvalCommandReturn['string']>(schema.contents, (cfgu, key) => {
       return {
