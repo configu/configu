@@ -1,10 +1,14 @@
-<!-- <img src="https://raw.githubusercontent.com/configu/configu/main/assets/hacktoberfest-23-banner.svg" alt="Hacktoberfest 23 Banner" />
-
---- -->
-
-# Configu
-
-<p>
+<!-- <img src="https://raw.githubusercontent.com/configu/configu/main/assets/hacktoberfest-23-banner.svg" alt="Hacktoberfest 23 Banner" /> -->
+<br/>
+<p align="center">
+  <a target="_blank" href="https://configu.com">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/configu/configu/main/docs/images/logo/white.svg">
+      <img alt="Configu Logo" src="https://raw.githubusercontent.com/configu/configu/main/docs/images/logo/black.svg" width="280"/>
+    </picture>
+  </a>
+</p>
+<p align="center">
   <a href="https://makeapullrequest.com" target="_blank">
     <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome" />
   </a>
@@ -15,135 +19,78 @@
     <img src="https://img.shields.io/discord/919659746003410944?logo=discord&logoColor=white&label=Chat&color=7289da" alt="Chat Discord" />
  </a>
 </p>
+<p align="center">
+  <!-- docs/introduction/overview/description -->
+  **Open-source, end-to-end ConfigOps infrastructure** that empowers engineering teams to seamlessly manage and collaborate on **software configuration data**—such as environment variables, secrets, and feature flags—across any system or environment. ⚙️✨
+</p>
+<p align="center">
+  <a target="_blank" href="https://docs.configu.com/guides/hello-world"><strong>Get started 👋</strong></a> ・ <a target="_blank" href="https://docs.configu.com/guides/hello-world"><strong>Explore docs 📚</strong></a> ・ <a target="_blank" href="https://docs.configu.com/guides/hello-world"><strong>Join chat 💬</strong></a>
+</p>
+
+## ⭐️ Configu?
+<!-- docs/introduction/overview#Configu -->
 
 <a href="https://configu.com" target="_blank">
-  <img align="right" src="https://raw.githubusercontent.com/configu/configu/main/assets/icon.svg" height="150px" alt="Configu Icon">
+  <img align="right" src="https://raw.githubusercontent.com/configu/configu/main/docs/images/icon/icon.svg" width="128" alt="Configu Icon">
 </a>
 
-**Configu** is a _simple_, _modern_, and _secure_ standard for managing and collaborating **software configurations ⚙️**.
+Configu[^origin] is a [^simple], [^modern], and [^secure] standard for managing and collaborating on **software configuration data**. It is built to provide a [^common], [^flexible], and [^extensible] process for storing, mutating, and orchestrating configuration data across any system or environment.
 
-It is built to provide a _common_, _flexible_, and _extensible_ process for storing, mutating, and orchestrating **configuration data** across different environments and systems.
+Configu is designed to be **easy to integrate** into existing systems and workflows, and to be adaptable to the diverse needs of teams and projects. It can be used from the command line, integrated in a build pipeline, or embedded in a program. Configu **scales** from small to large, simple to complex, ad-hoc to repetitive configuration tasks. It establishes a **powerful abstraction layer** over configuration data, enabling engineering teams to perform **secure and error-free configuration operations** throughout the software development lifecycle.
 
-[Learn how to use Configu in your project](https://configu.com/docs/get-started/).
+<a href="https://configu.com" target="_blank">
+  <img src="https://raw.githubusercontent.com/configu/configu/main/docs/images/banner/software-code-configurations-1.svg" alt="Configu Icon">
+</a>
 
-## Features
+[^origin]: software **configu**~~ration~~ data.
+[^simple]: 🎯 Simple—Offers a **unified API** for all configuration tasks, whether dealing with files, databases, secret managers, or custom implementations. Enables end-to-end configuration **automation** throughout the software development lifecycle.
+[^modern]: 🚀 Modern—Expertly **manages** configuration data across multiple deployments, workflows, runtimes, and environments. **Scales** to accommodate infinite configuration contexts, maintaining seamless management and organization.
+[^secure]: 🛡️ Secure—Equipped with a robust configuration **type system** and a comprehensive **policy framework**. Provides built-in **safeguards** against application misconfigurations, ensuring a secure environment for your configurations.
+[^common]: 🌐 Common—Promotes a clear understanding and consistent management of configuration data. Facilitates **collaboration** and ensures configurations are accurate and up-to-date. Provides a declarative approach that integrates seamlessly with coding tasks, enabling "Learn Once, Write Anywhere" flexibility and automation across diverse environments and systems.
+[^flexible]: 🧬 Flexible—Adapts to any **modern tech** stack and use case. Allows to manage configurations across files, directories, codebases, and repositories. Accommodates configuration values over a **context tree** for inheritance and advanced overriding. Allows combining and **piping commands** to produce any necessary **configuration artifact**.
+[^extensible]: 🛠 Extensible—Supports **custom** configuration **storage** implementations, configuration **formatters**, and **injectors**. Continuously evolving and driven by **community** contributions.
 
-Configu isn’t just a tool; it’s a dedicated companion on your software development journey. Its features are tailored to ensure that your configurations are not just managed but are an integral, secure, and optimized part of your software lifecycle. [Try Configu](https://configu.com/docs/get-started/) and transform the way you handle software configurations.
+## 📚 Documentation
 
-#### 🎯 Simple
-
-Offers a **unified API** for all configuration tasks, whether dealing with files, databases, secret managers, or custom implementations. Enables end-to-end configuration **automation** throughout the software development lifecycle.
-
-#### 🚀 Modern
-
-Expertly **manages** configuration data across multiple deployments, workflows, runtimes, and environments. **Scales** to accommodate infinite configuration contexts, maintaining seamless management and organization.
-
-#### 🔒 Secure
-
-Equipped with a robust configuration **type system** and a comprehensive **policy framework**. Provides built-in **safeguards** against application misconfigurations, ensuring a secure environment for your configurations.
-
-#### 🌐 Common
-
-Promotes a clear understanding and consistent management of configuration data. Facilitates **collaboration** and ensures configurations are accurate and up-to-date. Provides a declarative approach that integrates seamlessly with coding tasks, enabling "Learn Once, Write Anywhere" flexibility and automation across diverse environments and systems.
-
-#### 🌟 Flexible
-
-Adapts to any **modern tech** stack and use case. Allows to manage configurations across files, directories, codebases, and repositories. Accommodates configuration values over a **context tree** for inheritance and advanced overriding. Allows combining and **piping commands** to produce any necessary **configuration artifact**.
-
-#### 🛠 Extensible
-
-Supports **custom** configuration **storage** implementations, configuration **formatters**, and **injectors**. Continuously evolving and driven by **community** contributions.
-
-Configu is more than just a tool; it’s a solution that evolves with you, enhancing the way you think and interact with software configurations.
-
-## Concepts
-
-#### <img alt="Config" height="24" width="24" align="absmiddle" src="https://raw.githubusercontent.com/configu/configu/main/assets/concepts/Config.svg"> Config
-
-A generic representation of `application configuration` using three properties: `key`, `value`, `set`. <a href="https://github.com/configu/configu/blob/main/types/Config.ts" target="_blank">types/Config</a>
-
-#### <img alt="Cfgu" height="24" width="24" align="absmiddle" src="https://raw.githubusercontent.com/configu/configu/main/assets/concepts/ConfigSchema.svg"> Cfgu
-
-A generic declaration of a `Config`, using properties like type, description and constraints. <a href="https://github.com/configu/configu/blob/main/types/Cfgu.ts" target="_blank">types/Cfgu</a>
-
-#### <img alt="ConfigStore" height="24" width="24" align="absmiddle" src="https://raw.githubusercontent.com/configu/configu/main/assets/concepts/ConfigStore.svg"> ConfigStore
-
-A storage engine interface for `Config`s records. <a href="https://github.com/configu/configu/blob/main/types/ConfigStore.ts" target="_blank">types/ConfigStore</a>
-
-#### <img alt="ConfigSet" height="24" width="24" align="absmiddle" src="https://raw.githubusercontent.com/configu/configu/main/assets/concepts/ConfigSet.svg"> ConfigSet
-
-A unique path within a tree-like data structure that groups `Config`s contextually. <a href="https://github.com/configu/configu/blob/main/types/ConfigSet.ts" target="_blank">types/ConfigSet</a>
-
-#### <img alt="ConfigSchema" height="24" width="24" align="absmiddle" src="https://raw.githubusercontent.com/configu/configu/main/assets/concepts/ConfigSchema.svg"> ConfigSchema
-
-A file containing binding records linking each unique `ConfigKey` to its corresponding `Cfgu` declaration. <a href="https://github.com/configu/configu/blob/main/types/ConfigSchema.ts" target="_blank">types/ConfigSchema</a>
-
-#### ⤴️ Upsert Command
-
-Create, update or delete `Configs` from a `ConfigStore`. <a href="https://github.com/search?q=repo%3Aconfigu%2Fconfigu+Upsert+Command&type=code" target="_blank">Search Upsert Command</a>
-
-#### ⤵️ Eval Command
-
-Fetch `Configs` from `ConfigStore` on demand. <a href="https://github.com/search?q=repo%3Aconfigu%2Fconfigu+Eval+Command&type=code" target="_blank">Search Eval Command</a>
-
-#### ▶️ Export Command
-
-Export `Configs` as configuration data in various modes. <a href="https://github.com/search?q=repo%3Aconfigu%2Fconfigu+Export+Command&type=code" target="_blank">Search Export Command</a>
-
-## Architecture
-
-Configu's architecture is designed to seamlessly integrate into the software development lifecycle. The flow diagram below illustrates this dynamic process:
-
-<img src="https://raw.githubusercontent.com/configu/configu/main/assets/flow-diagram.svg" alt="Configu Flow Diagram" />
-
-## Workflow
-
-The Configu workflow is an iterative process that boosts configuration management as a regular part of your development cycle:
-
-1. **Define ConfigSchema**<br/>
-Regularly define and revise configuration instances form code sections using `ConfigSchema`.
-
-2. **Synchronize with VCS**<br/>
-Keep these `ConfigSchema` updated with your code in your Version Control System (VCS). This ensures configurations evolve with your application.
-
-3. **Upsert Configurations**<br/>
-Use `ConfigSchema` with a `ConfigSet` to `Upsert` (updates or inserts) `Config`s into a `ConfigStore`. Use the context tree. Any modified `Config` is validated against the `ConfigSchema`.
-
-4. **Evaluate Configurations**<br/>
-From development to deployment, use `ConfigSchema` and `ConfigSet` to `Evaluate` `Configs` from a `ConfigStore`. Any fetched `Config` is validated against the `ConfigSchema`.
-
-5. **Export Configurations for Use**<br/>
-After evaluation, `Export` the `Configs` into formats needed for your application. This step adapts to various deployment environments and needs. Utilize the `CLI` for build and deploy time operations, and the `SDK`s for runtime operations.
-
-Incorporating these steps into your regular development routines, Configu fosters a dynamic and integrated approach to configuration management. This ensures that configurations remain in sync with your application's evolution, bolstering the system's stability and reliability, as well as enhancing team efficiency and productivity.
-
-## Documentation
-
+<!-- React/README#documentation -->
 You can find the Configu documentation [on the website](https://configu.com/).
+
+> If you are new to Configu, we recommend getting started from the ["Hello, World!"](https://docs.configu.com/guides/hello-world) guide.
+
 The documentation is divided into several sections:
 
-* [Introduction & Overview](https://configu.com/docs/)
-* [Concepts](https://configu.com/docs/terminology/)
-* [CLI](https://configu.com/docs/cli-overview/)
-* [SDK](https://configu.com/docs/sdk-overview/)
+- [Introduction](https://docs.configu.com/introduction)
+- [Interfaces](https://docs.configu.com/interfaces)
+- [Integrations](https://docs.configu.com/integrations)
+- [Guides](https://docs.configu.com/guides)
 
-## Contributing
+> You can improve it by sending pull requests to the current repository.
 
-There are many ways to [contribute](https://github.com/configu/configu/blob/main/CONTRIBUTING.md) to Configu.
+## 💙 Contributing
 
-* Try Configu and [share your feedback](https://github.com/configu/configu/issues/265) with us.
-* [Submit bugs](https://github.com/configu/configu/issues) and help us verify fixes as they are checked in.
-* Review the [source code changes](https://github.com/configu/configu/pulls).
-* Engage with other Configu users and developers on [StackOverflow](https://stackoverflow.com/questions/tagged/configu).
-* Help each other in the [Discord community](https://discord.com/invite/cjSBxnB9z8).
-* [Contribute bugfixes and improvements](https://github.com/configu/configu/blob/main/CONTRIBUTING.md).
-* [Contribute documentation](https://github.com/configu/docs).
+Whether it's big or small, we appriciate and love any contributions 💙 Check out our [CONTRIBUTING guide](https://github.com/configu/configu/blob/main/CONTRIBUTING.md) to see how to get started.
 
-<!-- ### Roadmap
+> Special thanks 🙏 to all contributors. Thanks a lot for spending your time helping Configu grow. Keep rocking 💪.
+
+Not sure where to start? You can:
+
+- [Book a free pairing session](mailto:support@configu.com?subject=Pairing%20session&body=I'd%20like%20to%20do%20a%20pairing%20session%20...) with one of our teammates.
+- Engage with other Configu users and developers on [Discord](https://discord.com/invite/cjSBxnB9z8).
+- Try Configu and [share your feedback](https://github.com/configu/configu/issues/265) with us.
+- [Submit bugs](https://github.com/configu/configu/issues) and help us verify fixes as they are checked in.
+- Review the [source code changes](https://github.com/configu/configu/pulls).
+- [Contribute bugfixes and improvements](https://github.com/configu/configu/blob/main/CONTRIBUTING.md).
+- [Contribute documentation](https://github.com/configu/docs).
+
+> Instantly start experimenting and developing. <br/>
+> [Open in GitHub Codespaces »](https://codespaces.new/configu/configu) <br/>
+> [Open in CodeSandbox »](https://codesandbox.io/p/github/configu/configu/main).
+
+<!-- ## 🗺️ Roadmap
 
 For details on our planned features and future direction please refer to our [roadmap](link-to-public-gh-project). -->
 
-## Structure
+<!-- ## 🏠 Structure
 
 This repository is a monorepo that contains the Configu user interface packages.
 
@@ -157,272 +104,12 @@ This repository is a monorepo that contains the Configu user interface packages.
       <th>Build</th>
     </tr>
   </thead>
-  <tbody>
-    <tr>
-      <td>
-        <img alt="Bash" height="24" width="24" align="absmiddle" src="https://cdn.svgporn.com/logos/bash-icon.svg">
-        <strong>Configu CLI</strong>
-      </td>
-      <td>
-        <a href="https://cli.configu.com/channels/stable/configu-linux-x64-buildmanifest"> 
-          <img alt="cli version" src="https://img.shields.io/badge/dynamic/json?color=%230066F5&label=%40configu%2Fcli&prefix=v&logo=windowsterminal&query=version&url=https%3A%2F%2Fcli.configu.com%2Fchannels%2Fstable%2Fconfigu-linux-x64-buildmanifest">
-        </a>
-      </td>
-      <td>
-        <a href="https://configu.com/docs/cli-setup/" target="_blank">Instructions</a>
-      </td>
-      <td>
-        <a href="ts/packages/cli" target="_blank">ts/packages/cli</a>
-      </td>
-      <td>
-        <img alt="GitHub Workflow Status" align="absmiddle" src="https://img.shields.io/github/actions/workflow/status/configu/configu/cd-cli.yml?label=CD&logo=githubactions&logoColor=white">
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <img alt="Node.js" height="24" width="24" align="absmiddle" src="https://cdn.svgporn.com/logos/nodejs-icon.svg">
-        <strong>Node.js SDK</strong>
-      </td>
-      <td>
-        <a href="https://www.npmjs.com/package/@configu/node" target="_blank"> 
-          <img alt="npm" align="absmiddle" src="https://img.shields.io/npm/v/@configu/node?color=%230066F5&label=%40configu%2Fnode&logo=npm">
-        </a>
-      </td>
-      <td>
-        <a href="ts/packages/node/README.md#install" target="_blank">Instructions</a>
-      </td>
-      <td>
-        <a href="ts/packages/node" target="_blank">ts/packages/node</a>
-      </td>
-      <td>
-        <img alt="GitHub Workflow Status" align="absmiddle" src="https://img.shields.io/github/actions/workflow/status/configu/configu/cd-ts.yml?label=CD&logo=githubactions&logoColor=white">
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <img alt="Internet Explorer" height="24" width="24" align="absmiddle" src="https://cdn.svgporn.com/logos/internetexplorer.svg">
-        <strong>Browser SDK</strong>
-      </td>
-      <td>
-        <a href="https://www.npmjs.com/package/@configu/browser" target="_blank"> 
-          <img alt="npm" align="absmiddle" src="https://img.shields.io/npm/v/@configu/browser?color=%230066F5&label=%40configu%2Fbrowser&logo=npm">
-        </a>
-      </td>
-      <td>
-        <a href="ts/packages/browser/README.md#install" target="_blank">Instructions</a>
-      </td>
-      <td>
-        <a href="ts/packages/browser" target="_blank">ts/packages/browser</a>
-      </td>
-      <td>
-        <img alt="GitHub Workflow Status" align="absmiddle" src="https://img.shields.io/github/actions/workflow/status/configu/configu/cd-ts.yml?label=CD&logo=githubactions&logoColor=white">
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <img alt="Python" height="24" width="24" align="absmiddle" src="https://cdn.svgporn.com/logos/python.svg">
-        <strong>Python SDK</strong>
-      </td>
-      <td>
-        <a href="https://pypi.org/project/configu/" target="_blank"> 
-          <img alt="pypi" align="absmiddle" src="https://img.shields.io/pypi/v/configu?color=%230066F5&label=%40configu%2Fpy&logo=pypi">
-        </a>
-      </td>
-      <td>
-        <a href="py/README.md#install" target="_blank">Instructions</a>
-      </td>
-      <td>
-        <a href="py" target="_blank">py</a>
-      </td>
-      <td>
-        <img alt="GitHub Workflow Status" align="absmiddle" src="https://img.shields.io/github/actions/workflow/status/configu/configu/cd-py.yml?label=CD&logo=githubactions&logoColor=white">
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <img alt="Java" height="24" width="24" align="absmiddle" src="https://cdn.svgporn.com/logos/java.svg">
-        <strong>Java SDK</strong>
-      </td>
-      <td>
-        <img alt="coming-soon label" align="absmiddle" src="https://img.shields.io/badge/coming-soon-yellow">
-      </td>
-      <td>
-        <!-- <a href="https://configu.com/docs/java-sdk-setup/" target="_blank">Instructions</a> -->
-      </td>
-      <td>
-        <!-- <a href="java" target="_blank">java</a> -->
-      </td>
-      <td>
-        <!-- <img alt="GitHub Workflow Status" align="absmiddle" src="https://img.shields.io/github/actions/workflow/status/configu/configu/cd-java.yml?label=CD&logo=githubactions&logoColor=white"> -->
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <img alt=".NET" height="24" width="24" align="absmiddle" src="https://cdn.svgporn.com/logos/dotnet.svg">
-        <strong>.NET SDK</strong>
-      </td>
-      <td>
-        <img alt="coming-soon label" align="absmiddle" src="https://img.shields.io/badge/coming-soon-yellow">
-      </td>
-      <td>
-      </td>
-      <td>
-      </td>
-      <td>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <img alt="C++" height="24" width="24" align="absmiddle" src="https://cdn.svgporn.com/logos/c-plusplus.svg">
-        <strong>C++ SDK</strong>
-      </td>
-      <td>
-        <img alt="help-wanted label" align="absmiddle" src="https://img.shields.io/badge/help-wanted-pink">
-      </td>
-      <td>
-      </td>
-      <td>
-      </td>
-      <td>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <img alt="PHP" height="24" width="24" align="absmiddle" src="https://cdn.svgporn.com/logos/php.svg">
-        <strong>PHP SDK</strong>
-      </td>
-      <td>
-        <img alt="help-wanted label" align="absmiddle" src="https://img.shields.io/badge/help-wanted-pink">
-      </td>
-      <td>
-      </td>
-      <td>
-      </td>
-      <td>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <img alt="Go" height="24" width="24" align="absmiddle" src="https://cdn.svgporn.com/logos/go.svg">
-        <strong>Go SDK</strong>
-      </td>
-      <td>
-        <a href="https://pkg.go.dev/github.com/configu/configu/go" target="_blank"> 
-          <img alt="go" align="absmiddle" src="https://img.shields.io/github/v/tag/configu/configu?filter=go-&color=%230066F5&label=%40configu%2Fgo&logo=github">
-        </a>
-      </td>
-      <td>
-        <a href="go/README.md#install" target="_blank">Instructions</a>
-      </td>
-      <td>
-        <a href="go" target="_blank">go</a>
-      </td>
-      <td>
-        <img alt="GitHub Workflow Status" align="absmiddle" src="https://img.shields.io/github/actions/workflow/status/configu/configu/cd-go.yml?label=CD&logo=githubactions&logoColor=white">
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <img alt="Rust" height="24" width="24" align="absmiddle" src="https://cdn.svgporn.com/logos/rust.svg">
-        <strong>Rust SDK</strong>
-      </td>
-      <td>
-        <img alt="help-wanted label" align="absmiddle" src="https://img.shields.io/badge/help-wanted-pink">
-      </td>
-      <td>
-      </td>
-      <td>
-      </td>
-      <td>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <img alt="Ruby" height="24" width="24" align="absmiddle" src="https://cdn.svgporn.com/logos/ruby.svg">
-        <strong>Ruby SDK</strong>
-      </td>
-      <td>
-        <img alt="help-wanted label" align="absmiddle" src="https://img.shields.io/badge/help-wanted-pink">
-      </td>
-      <td>
-      </td>
-      <td>
-      </td>
-      <td>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <img alt="Visual Studio Code" height="24" width="24" align="absmiddle" src="https://cdn.svgporn.com/logos/visual-studio-code.svg">
-        <strong>VSCode Extension</strong>
-      </td>
-      <td>
-        <img alt="coming-soon label" align="absmiddle" src="https://img.shields.io/badge/coming-soon-yellow">
-        <!-- <a href="https://github.com/configu/configu/releases?q=vscode&expanded=true" target="_blank"> 
-          <img alt="npm (scoped)" align="absmiddle" src="https://img.shields.io/npm/v/@configu/browser?color=%230066F5&label=%40configu%2Fbrowser&logo=github">
-        </a> -->
-      </td>
-      <td>
-        <!-- <a href="https://configu.com/docs/vscode-ext-setup/" target="_blank">Instructions</a> -->
-      </td>
-      <td>
-        <a href="ts/packages/vscode" target="_blank">ts/packages/vscode</a>
-      </td>
-      <td>
-        <img alt="GitHub Workflow Status" align="absmiddle" src="https://img.shields.io/github/actions/workflow/status/configu/configu/cd-vscode.yml?label=CD&logo=githubactions&logoColor=white">
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <img alt="IntelliJ IDEA" height="24" width="24" align="absmiddle" src="https://cdn.svgporn.com/logos/intellij-idea.svg">
-        <strong>IntelliJ Plugin</strong>
-      </td>
-      <td>
-        <img alt="help-wanted label" align="absmiddle" src="https://img.shields.io/badge/help-wanted-pink">
-      </td>
-      <td>
-      </td>
-      <td>
-      </td>
-      <td>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <img alt="Kubernetes" height="24" width="24" align="absmiddle" src="https://cdn.svgporn.com/logos/kubernetes.svg">
-        <strong>Kubernetes Operators</strong>
-      </td>
-      <td>
-        <img alt="help-wanted label" align="absmiddle" src="https://img.shields.io/badge/help-wanted-pink">
-      </td>
-      <td>
-      </td>
-      <td>
-      </td>
-      <td>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <img alt="Terraform" height="24" width="24" align="absmiddle" src="https://cdn.svgporn.com/logos/terraform-icon.svg">
-        <strong>Terraform Provider</strong>
-      </td>
-      <td>
-        <img alt="help-wanted label" align="absmiddle" src="https://img.shields.io/badge/help-wanted-pink">
-      </td>
-      <td>
-      </td>
-      <td>
-      </td>
-      <td>
-      </td>
-    </tr>
-  </tbody>
-</table>
+  <tbody> -->
 
-## Related
+## 🔗 Links
 
-- [Configu Blog](https://configu.com/blog/)
+- [Configu Website](https://configu.com)
+- [Configu Blog](https://configu.com/blog)
 - [The Twelve-Factor App - Config](https://12factor.net/config)
 - [Wikipedia - Configuration file](https://en.wikipedia.org/wiki/Configuration_file)
 - [StackOverflow - [configuration]](https://stackoverflow.com/questions/tagged/configuration)
@@ -430,7 +117,7 @@ This repository is a monorepo that contains the Configu user interface packages.
 - [Webinar - Configuration-as-Code (CaC)](https://www.youtube.com/live/Z_Vz8v6e-U4?si=bDao_gIo1xiLDeQS&t=107)
 - [Post - Configuration-as-Code (CaC)](https://dev.to/rannn505/configuration-as-code-automating-application-configuration-45k6)
 
-## License
+## 🪪 License
 
 Configu is [Apache-2.0 licensed](https://github.com/configu/configu/blob/main/LICENSE).
-Copyright (c) 2022-present, [Configu](https://configu.com/).
+Copyright (c) 2022-present, [Configu](https://configu.com).
