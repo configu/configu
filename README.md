@@ -49,7 +49,6 @@ Configu is designed to be **easy to integrate** into existing systems and workfl
   <dd>This is one definition of the second term. </dd>
   <dd>This is another definition of the second term.</dd>
 </dl> -->
-This is a <sub>subscript</sub> text
 
 <!-- [^origin]: software **configu**~~ration~~ data. -->
 
@@ -60,6 +59,7 @@ This is a <sub>subscript</sub> text
 🌐 Common—Promotes a clear understanding and consistent management of configuration data. Facilitates **collaboration** and ensures configurations are accurate and up-to-date. Provides a declarative approach that integrates seamlessly with coding tasks, enabling "Learn Once, Write Anywhere" flexibility and automation across diverse environments and systems.<br/>
 🧩 Flexible—Adapts to any **modern tech** stack and use case. Allows to manage configurations across files, directories, codebases, and repositories. Accommodates configuration values over a **context tree** for inheritance and advanced overriding. Allows combining and **piping commands** to produce any necessary **configuration artifact**.<br/>
 🛠 Extensible—Supports **custom** configuration **storage** implementations, configuration **formatters**, and **injectors**. Continuously evolving and driven by **community** contributions.
+</sub>
 
 ## 📚 Documentation
 
