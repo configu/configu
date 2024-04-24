@@ -52,14 +52,14 @@ Configu is designed to be **easy to integrate** into existing systems and workfl
 
 <!-- [^origin]: software **configu**~~ration~~ data. -->
 
-<sub>
+<sup>
 🎯 Simple—Offers a **unified API** for all configuration tasks, whether dealing with files, databases, secret managers, or custom implementations. Enables end-to-end configuration **automation** throughout the software development lifecycle.<br/>
 🚀 Modern—Expertly **manages** configuration data across multiple deployments, workflows, runtimes, and environments. **Scales** to accommodate infinite configuration contexts, maintaining seamless management and organization.<br/>
 🛡️ Secure—Equipped with a robust configuration **type system** and a comprehensive **policy framework**. Provides built-in **safeguards** against application misconfigurations, ensuring a secure environment for your configurations.<br/>
 🌐 Common—Promotes a clear understanding and consistent management of configuration data. Facilitates **collaboration** and ensures configurations are accurate and up-to-date. Provides a declarative approach that integrates seamlessly with coding tasks, enabling "Learn Once, Write Anywhere" flexibility and automation across diverse environments and systems.<br/>
 🧩 Flexible—Adapts to any **modern tech** stack and use case. Allows to manage configurations across files, directories, codebases, and repositories. Accommodates configuration values over a **context tree** for inheritance and advanced overriding. Allows combining and **piping commands** to produce any necessary **configuration artifact**.<br/>
 🛠 Extensible—Supports **custom** configuration **storage** implementations, configuration **formatters**, and **injectors**. Continuously evolving and driven by **community** contributions.
-</sub>
+</sup>
 
 ## 📚 Documentation
 
