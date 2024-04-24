@@ -25,7 +25,7 @@
     },
     "links": {
       "website": "https://configu.com",
-      "auth": "https://configu.org/auth"
+      "auth": ""
     }
   },
 
@@ -722,7 +722,7 @@
     },
     "links": {
       "website": "https://reactnative.dev",
-      "env": "https://reactnative.dev/docs/environment-variables"
+      "env": ""
     }
   },
   "flutter": {
@@ -735,7 +735,7 @@
     },
     "links": {
       "website": "https://flutter.dev",
-      "env": "https://flutter.dev/docs/co"
+      "env": ""
     }
   },
 

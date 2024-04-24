@@ -115,7 +115,7 @@ description: A reference guide for all Configu CLI commands.
 
 import { Related } from '/snippets/callouts.mdx'
 
-<Related name="Hello, World!" href="/guides/hello-world" />
+<Related name="Hello, World!" link="/guides/hello-world" />
 
 ## Commands
 
