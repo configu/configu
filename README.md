@@ -73,7 +73,8 @@ Every contribution makes a difference and we value your involvement:
 
 Massive thanks 🙏 to all our [contributors](https://github.com/configu/configu/graphs/contributors) for your time and efforts in making Configu better. Keep rocking 💪!
 
-> [!NOTE] Eager to code? Kickstart your Configu development now:
+> [!NOTE]
+> Eager to code? Kickstart your Configu development now:
 > - [Open in GitHub Codespaces »](https://codespaces.new/configu/configu)
 > - [Open in CodeSandbox »](https://codesandbox.io/p/github/configu/configu/main).
 
