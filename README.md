@@ -62,21 +62,20 @@ Explore Configu with our easy-to-follow documentation:
 
 ## 💙 Contributing
 
-Every contribution makes a difference and we value your involvement:
+Every contribution matters! Here’s how you can jump in and make an impact:
 
 - **[Start Here](https://github.com/configu/configu/blob/main/CONTRIBUTING.md)**: Find your way around our processes.
 - **[Pair Up](mailto:support@configu.com?subject=Pairing%20session&body=I'd%20like%20to%20do%20a%20pairing%20session%20...)**: Schedule a free, hands-on session with our team.
 - **[Engage on Discord](https://discord.com/invite/cjSBxnB9z8)**: Join our community discussion.
 - **[Provide Feedback](https://github.com/configu/configu/issues/265)**: Share your insights and suggestions.
 - **[Report & Fix Bugs](https://github.com/configu/configu/issues)**: Help us enhance Configu.
-- **[Improve Code and Docs](https://github.com/configu/configu/pulls)**: Contribute to our codebase or documentation.
+- **[Improve Code & Docs](https://github.com/configu/configu/pulls)**: Contribute features and documentation.
 
 Massive thanks 🙏 to all our [contributors](https://github.com/configu/configu/graphs/contributors) for your time and efforts in making Configu better. Keep rocking 💪!
 
 > [!NOTE]
-> Eager to code? Kickstart your Configu development now:
-> - [Open in GitHub Codespaces »](https://codespaces.new/configu/configu)
-> - [Open in CodeSandbox »](https://codesandbox.io/p/github/configu/configu/main).
+> Eager to code? Kickstart your Configu development now:<br/>
+> [GitHub Codespaces »](https://codespaces.new/configu/configu) ・ [CodeSandbox »](https://codesandbox.io/p/github/configu/configu/main)
 
 <!-- ## 🗺️ Roadmap
 
