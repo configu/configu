@@ -42,6 +42,13 @@ Configu is designed to be **easy to integrate** into existing systems and workfl
   <img src="https://raw.githubusercontent.com/configu/configu/main/docs/images/banner/software-code-configurations-1.svg" alt="Configu Icon">
 </a>
 
+First Term
+: This is the definition of the first term.
+
+Second Term
+: This is one definition of the second term.
+: This is another definition of the second term.
+
 [^origin]: software **configu**~~ration~~ data.
 [^simple]: 🎯 Simple—Offers a **unified API** for all configuration tasks, whether dealing with files, databases, secret managers, or custom implementations. Enables end-to-end configuration **automation** throughout the software development lifecycle.
 [^modern]: 🚀 Modern—Expertly **manages** configuration data across multiple deployments, workflows, runtimes, and environments. **Scales** to accommodate infinite configuration contexts, maintaining seamless management and organization.
@@ -62,9 +69,8 @@ Dive into Configu with our straightforward documentation portal:
   - [Guides](https://docs.configu.com/guides) - Step-by-step tutorials for various use cases.
 - **Get Involved**: Got ideas for improvement? [Open a pull request](https://github.com/configu/configu/pulls) or let us know what you think!
 
-All set? [Start exploring the docs](https://docs.configu.com/).
-
-Sure, let's further refine the opening sentence to express genuine appreciation for contributions and enhance the headers for each bullet point to make them more compelling and clear:
+> [!TIP]
+> All set? [Start exploring the docs](https://docs.configu.com/).
 
 ## 💙 Contributing
 
@@ -75,11 +81,11 @@ Every contribution matters—we deeply value your involvement! Here’s how you 
 - **Engage on Discord**: Come [chat with us](https://discord.com/invite/cjSBxnB9z8)! It's where Configu users and developers hang out and share insights.
 - **Provide Feedback**: Noticed something quirky or have ideas? [Share your thoughts](https://github.com/configu/configu/issues/265) and help us improve.
 - **Report & Fix Bugs**: Encounter a bug? [Report it](https://github.com/configu/configu/issues), or assist us in resolving issues as they arise.
-- **Review & Contribute**: Take a look at [upcoming changes](https://github.com/configu/configu/pulls) and suggest improvements, or help us enhance our [documentation](https://github.com/configu/configu/docs).
 - **Code and Docs**: Dive into the code! Review [proposed changes](https://github.com/configu/configu/pulls), or help improve the [documentation](https://github.com/configu/configu/docs).
 
 Massive thanks 🙏 to all our [contributors](https://github.com/configu/configu/graphs/contributors) for your time and efforts in making Configu better. Keep rocking 💪!
 
+> [!TIP]
 > Eager to code? Kickstart your Configu development now:
 > - [Open in GitHub Codespaces »](https://codespaces.new/configu/configu)
 > - [Open in CodeSandbox »](https://codesandbox.io/p/github/configu/configu/main).
@@ -112,8 +118,8 @@ This repository is a monorepo that contains the Configu user interface packages.
 - [Wikipedia - Configuration file](https://en.wikipedia.org/wiki/Configuration_file)
 - [StackOverflow - [configuration]](https://stackoverflow.com/questions/tagged/configuration)
 - [DEV Community ‍- #configuration](https://dev.to/t/configuration/top/infinity)
-- [Webinar - Configuration-as-Code (CaC)](https://www.youtube.com/live/Z_Vz8v6e-U4?si=bDao_gIo1xiLDeQS&t=107)
-- [Post - Configuration-as-Code (CaC)](https://dev.to/rannn505/configuration-as-code-automating-application-configuration-45k6)
+- [Webinar - Configuration-as-Code](https://www.youtube.com/live/Z_Vz8v6e-U4?si=bDao_gIo1xiLDeQS&t=107)
+- [Post - Configuration-as-Code](https://dev.to/rannn505/configuration-as-code-automating-application-configuration-45k6)
 
 ## 🪪 License
 
