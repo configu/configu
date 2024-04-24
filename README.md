@@ -38,46 +38,42 @@
 
 **Configu** is designed to be **easy to integrate** into existing systems and workflows, and to be adaptable to the diverse needs of teams and projects. It can be used from the command line, integrated in a build pipeline, or embedded in a program. Configu **scales** from small to large, simple to complex, ad-hoc to repetitive configuration tasks. It establishes a **powerful abstraction layer** over configuration data, enabling engineering teams to perform **secure and error-free configuration operations** throughout the software development lifecycle.
 
+[^origin]: software **configu**~~ration~~ data.
+[^simple]: **🎯 Simple**: Offers a **unified API** for all configuration tasks, whether dealing with files, databases, secret managers, or custom implementations. Enables end-to-end configuration **automation** throughout the software development lifecycle.
+[^modern]: **🚀 Modern**: Expertly **manages** configuration data across multiple deployments, workflows, runtimes, and environments. **Scales** to accommodate infinite configuration contexts, maintaining seamless management and organization.
+[^secure]: **🛡️ Secure**: Equipped with a robust configuration **type system** and a comprehensive **policy framework**. Provides built-in **safeguards** against application misconfigurations, ensuring a secure environment for your configurations.
+[^common]: **🌐 Common**: Promotes a clear understanding and consistent management of configuration data. Facilitates **collaboration** and ensures configurations are accurate and up-to-date. Provides a declarative approach that integrates seamlessly with coding tasks, enabling "Learn Once, Write Anywhere" flexibility and automation across diverse environments and systems.
+[^flexible]: **🧩 Flexible**: Adapts to any **modern tech** stack and use case. Allows to manage configurations across files, directories, codebases, and repositories. Accommodates configuration values over a **context tree** for inheritance and advanced overriding. Allows combining and **piping commands** to produce any necessary **configuration artifact**.
+[^extensible]: **🛠 Extensible**: Supports **custom** configuration **storage** implementations, configuration **formatters**, and **injectors**. Continuously evolving and driven by **community** contributions.
+
 <a href="https://configu.com" target="_blank">
   <img src="https://raw.githubusercontent.com/configu/configu/main/docs/images/banner/software-code-configurations-1.svg" alt="Configu Icon">
 </a>
 
-[^origin]: software **configu**~~ration~~ data.
-[^simple]: 🎯 Simple—Offers a **unified API** for all configuration tasks, whether dealing with files, databases, secret managers, or custom implementations. Enables end-to-end configuration **automation** throughout the software development lifecycle.
-[^modern]: 🚀 Modern—Expertly **manages** configuration data across multiple deployments, workflows, runtimes, and environments. **Scales** to accommodate infinite configuration contexts, maintaining seamless management and organization.
-[^secure]: 🛡️ Secure—Equipped with a robust configuration **type system** and a comprehensive **policy framework**. Provides built-in **safeguards** against application misconfigurations, ensuring a secure environment for your configurations.
-[^common]: 🌐 Common—Promotes a clear understanding and consistent management of configuration data. Facilitates **collaboration** and ensures configurations are accurate and up-to-date. Provides a declarative approach that integrates seamlessly with coding tasks, enabling "Learn Once, Write Anywhere" flexibility and automation across diverse environments and systems.
-[^flexible]: 🧩 Flexible—Adapts to any **modern tech** stack and use case. Allows to manage configurations across files, directories, codebases, and repositories. Accommodates configuration values over a **context tree** for inheritance and advanced overriding. Allows combining and **piping commands** to produce any necessary **configuration artifact**.
-[^extensible]: 🛠 Extensible—Supports **custom** configuration **storage** implementations, configuration **formatters**, and **injectors**. Continuously evolving and driven by **community** contributions.
-
 ## 📚 Documentation
 
-Dive into Configu with our straightforward documentation portal:
+Explore Configu with our easy-to-follow documentation:
 
-- **Start Here**: New to Configu? Check out the [Hello, World! guide](https://docs.configu.com/guides/hello-world) to get rolling.
-- **Explore More**:
-  - [Introduction](https://docs.configu.com/introduction) - What’s Configu? Why use it?
-  - [Interfaces](https://docs.configu.com/interfaces) - Your toolkit within Configu.
-  - [Integrations](https://docs.configu.com/integrations) - Connect Configu with your workflow.
-  - [Guides](https://docs.configu.com/guides) - Step-by-step tutorials for various use cases.
-- **Get Involved**: Got ideas for improvement? [Open a pull request](https://github.com/configu/configu/pulls) or let us know what you think!
-
-> All set? [Start exploring the docs](https://docs.configu.com/).
+- **[Start Here](https://docs.configu.com/guides/hello-world)**: A quick guide for newcomers.
+- **[Introduction](https://docs.configu.com/introduction)**: What’s Configu? Why use it?
+- **[Interfaces](https://docs.configu.com/interfaces)**: Your toolkit within Configu.
+- **[Integrations](https://docs.configu.com/integrations)**: Connect Configu with your workflows.
+- **[Guides](https://docs.configu.com/guides)**: Step-by-step tutorials for various use cases.
 
 ## 💙 Contributing
 
-Every contribution matters—we deeply value your involvement! Here’s how you can jump in and make an impact:
+Every contribution makes a difference and we value your involvement:
 
-- **Start Here**: Dive into our [contributing guidelines](https://github.com/configu/configu/blob/main/CONTRIBUTING.md) to find your way around our processes.
-- **Pair Up**: [Schedule a free pairing session](mailto:support@configu.com?subject=Pairing%20session&body=I'd%20like%20to%20do%20a%20pairing%20session%20...) with our team to get hands-on together.
-- **Engage on Discord**: Come [chat with us](https://discord.com/invite/cjSBxnB9z8)! It's where Configu users and developers hang out and share insights.
-- **Provide Feedback**: Noticed something quirky or have ideas? [Share your thoughts](https://github.com/configu/configu/issues/265) and help us improve.
-- **Report & Fix Bugs**: Encounter a bug? [Report it](https://github.com/configu/configu/issues), or assist us in resolving issues as they arise.
-- **Code and Docs**: Dive into the code! Review [proposed changes](https://github.com/configu/configu/pulls), or help improve the [documentation](https://github.com/configu/configu/docs).
+- **[Start Here](https://github.com/configu/configu/blob/main/CONTRIBUTING.md)**: Find your way around our processes.
+- **[Pair Up](mailto:support@configu.com?subject=Pairing%20session&body=I'd%20like%20to%20do%20a%20pairing%20session%20...)**: Schedule a free, hands-on session with our team.
+- **[Engage on Discord](https://discord.com/invite/cjSBxnB9z8)**: Join our community discussion.
+- **[Provide Feedback](https://github.com/configu/configu/issues/265)**: Share your insights and suggestions.
+- **[Report & Fix Bugs](https://github.com/configu/configu/issues)**: Help us enhance Configu.
+- **[Improve Code and Docs](https://github.com/configu/configu/pulls)**: Contribute to our codebase or documentation.
 
 Massive thanks 🙏 to all our [contributors](https://github.com/configu/configu/graphs/contributors) for your time and efforts in making Configu better. Keep rocking 💪!
 
-> Eager to code? Kickstart your Configu development now:
+> [!NOTE] Eager to code? Kickstart your Configu development now:
 > - [Open in GitHub Codespaces »](https://codespaces.new/configu/configu)
 > - [Open in CodeSandbox »](https://codesandbox.io/p/github/configu/configu/main).
 
@@ -114,6 +110,5 @@ This repository is a monorepo that contains the Configu user interface packages.
 
 ## 🪪 License
 
-Configu is [Apache-2.0 licensed](https://github.com/configu/configu/blob/main/LICENSE).
-Copyright (c) 2022-present, [Configu](https://configu.com). Proudly created by [contributors](https://github.com/configu/configu/graphs/contributors) around the 🌍.
+Configu is [Apache-2.0 licensed](https://github.com/configu/configu/blob/main/LICENSE). Copyright (c) 2022-present, [Configu](https://configu.com). Proudly created by [contributors](https://github.com/configu/configu/graphs/contributors) around the globe 🌍.
 <br/>
