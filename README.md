@@ -99,7 +99,6 @@ This repository is a monorepo that contains the Configu user interface packages.
 
 ## 🔗 Links
 
-- [Configu Website](https://configu.com)
 - [Configu Blog](https://configu.com/blog)
 - [The Twelve-Factor App - Config](https://12factor.net/config)
 - [Wikipedia - Configuration file](https://en.wikipedia.org/wiki/Configuration_file)
