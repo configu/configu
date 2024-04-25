@@ -1,25 +1,93 @@
 ---
 title: Configu Interface Configuration File
 sidebarTitle: .configu
-description: "The `.configu` file is an optional configuration file used by the `Configu CLI` to customize its behavior. The file should be named `.configu` regardless of the format used: JSON or YAML."
+description: "The `.configu` file is an optional configuration file used by the various Configu interfaces to customize its behavior. The file should be named `.configu` regardless of the format used: JSON or YAML."
 ---
 
-import TBD from '/snippets/tbd.mdx';
+## Location
 
-## File Location
+Configu interfaces recursively searches for the `.configu` file starting from the current working directory and continuing up to the user's home directory. Once it finds a `.configu` file, it uses it solosly and stops searching.
 
-The CLI recursively searches for the `.configu` file starting from the current working directory and continuing up to the user's home directory. Once the CLI finds a `.configu` file, it stops searching.
+## Format
 
-## File Formats
+The `.configu` file can be written in one of the following formats: `YAML` or `JSON`. The file should be named `.configu` regardless of the format used.
 
-The `.configu` file can be written in one of the following formats: JSON or YAML. Below, you'll find examples of each format using the provided type information.
+## $schema
 
-### JSON
+include the `$schema` property at the beginning of the file to specify the `Cfgu` version to communicate to other readers and tooling which specification version is intended.
+Also most modern editors will use this property to provide intellisense and validation for the `Cfgu` file.
 
-Example `.configu` file in JSON format:
+<CodeGroup>
 
-```json
+```yaml YAML
+$schema: https://json-schema.org/draft/2020-12/schema-configu
+```
+
+```json JSON
 {
+  "$schema": "https://json-schema.org/draft/2020-12/schema-configu",
+}
+```
+
+</CodeGroup>
+
+## Properties
+
+### stores
+
+The `.configu` file allows you to save `ConfigStore` configurations as friendly names, which can be later used as values for the `--store` flag in all the commands.
+
+To define a `ConfigStore`, add a new key-value pair to the `stores` section of the `.configu` file, where the key represents the friendly name, and the value is an object with the `type` and `configuration` properties. The `type` property represents the store type, and the `configuration` property contains the specific configuration options for the store.
+
+For detailed information about the available store options, please refer to the relevant store on the [intergrations section](/integrations/overview#configstore).
+
+### schemas
+
+The `.configu` file allows you to save `ConfigSchema` paths as friendly names, which can be later used as values for the `--schema` flag in all the commands.
+
+To define a custom script, add a new key-value pair to the `schemas` section of the `.configu` file, where the key represents the friendly name, and the value is the schema absoulte or relative path.
+
+### scripts
+
+The `.configu` file allows you to save `Configu CLI` snippets as friendly names, which can be later used as values for the `--script` flag in the `configu run --script <label>` command.
+
+To define a custom script, add a new key-value pair to the `scripts` section of the `.configu` file, where the key represents the friendly name, and the value is the script content. The script content should consist of `Configu CLI` commands or a pipe of commands.
+
+<Tip>
+The `.configu` configuration file provides a way to customize the behavior of the Configu CLI. By defining custom stores and scripts in this file, you can easily reference them in CLI commands, making it more convenient to manage and collaborate on software configurations.
+
+Remember that the `.configu` file is optional, and if present, it will be automatically discovered by the CLI during its recursive search process.
+</Tip>
+
+
+## Example
+
+<CodeGroup>
+
+```yaml YAML
+$schema: https://json-schema.org/draft/2020-12/schema
+stores:
+  store1:
+    type: storeType1
+    configuration:
+      option1: value1
+      option2: value2
+  store2:
+    type: storeType2
+    configuration:
+      option3: value3
+      option4: value4
+schemas:
+  schema1: ../path/to/schema1.json
+  schema2: /path/to/schema2.json
+scripts:
+  script1: 'configu command1 --option1 value1'
+  script2: 'configu command2 --option2 value2 | configu command3'
+```
+
+```json JSON
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "stores": {
     "store1": {
       "type": "storeType1",
@@ -36,6 +104,10 @@ Example `.configu` file in JSON format:
       }
     }
   },
+  "schemas": {
+    "schema1": "../path/to/schema1.json",
+    "schema2": "/path/to/schema2.json"
+  },
   "scripts": {
     "script1": "configu command1 --option1 value1",
     "script2": "configu command2 --option2 value2 | configu command3"
@@ -43,78 +115,32 @@ Example `.configu` file in JSON format:
 }
 ```
 
-### YAML
-
-Example `.configu` file in YAML format:
-
-```yaml
-stores:
-  store1:
-    type: storeType1
-    configuration:
-      option1: value1
-      option2: value2
-  store2:
-    type: storeType2
-    configuration:
-      option3: value3
-      option4: value4
-scripts:
-  script1: 'configu command1 --option1 value1'
-  script2: 'configu command2 --option2 value2 | configu command3'
-```
-
-## Options
-
-### Stores
-
-The `.configu` file allows you to save ConfigStore configurations as friendly names, which can be later used as values for the `--store` flag in all the commands.
-
-To define a custom store, add a new key-value pair to the `stores` section of the `.configu` file, where the key represents the friendly name, and the value is an object with the `type` and `configuration` properties. The `type` property represents the store type, and the `configuration` property contains the specific configuration options for the store.
-
-For detailed information about the available store options, please refer to the relevant store on the [`ConfigStore`](/config-store) page.
-
-### Schemas
-
-<TBD />
-
-### Scripts
-
-The `.configu` file allows you to save `Configu CLI` snippets as friendly names, which can be later used as values for the `--script` flag in the `configu run --script <label>` command.
-
-To define a custom script, add a new key-value pair to the `scripts` section of the `.configu` file, where the key represents the friendly name, and the value is the script content. The script content should consist of `Configu CLI` commands or a pipe of commands.
-
-<Info>
-The `.configu` configuration file provides a way to customize the behavior of the Configu CLI. It can be written in JSON, YAML, or JavaScript object format, using the `.configu` file name. By defining custom stores and scripts in this file, you can easily reference them in CLI commands, making it more convenient to manage and collaborate on software configurations.
-
-Remember that the `.configu` file is optional, and if present, it will be automatically discovered by the CLI during its recursive search process.
-</Info>
+</CodeGroup>
 
 ## Environment Variables
 
-The `.configu` file allows you to use environment variables in the store configuration options and scripts. To use an environment variable, you can utilize [mustache templating](https://mustache.github.io/) as such:
+The `.configu` file allows you to use environment variables in its different sections. this is come handy for `store configuration options` or `scripts` when you want to avoid expicit write of sensative authentication credentials etc. and you want to inject them from the outside and before runing configu. To use an environment variable, you can utilize [mustache templating](https://mustache.github.io/) as such:
 
-```javascript
-module.exports = {
-  stores: {
-    store1: {
-      type: 'storeType1',
-      configuration: {
-        option1: 'value1',
-        password: '{{PASSWORD}}',
-      },
-    },
-  },
-};
+```yaml
+$schema: https://json-schema.org/draft/2020-12/schema
+stores:
+  store1:
+    type: 'storeType1',
+    configuration:
+      option1: 'value1',
+      password: '{{PASSWORD}}',
 ```
 
 You can then pass the environment variable to the CLI using any method of setting environment variables to replace the mustache template with the environment variable value. Here is an example of passing an environment variable to the CLI by using an operating system specific prefix:
 
-<CodeTabs labels={['Unix/Linux/MacOS','Windows']}>
-```bash
-PASSWORD=password configu eval --store store1 --schema <value> [--set <value>] [-c <value>]
+<CodeGroup>
+
+```bash Linux/MacOS
+PASSWORD=password configu eval --store store1 --set <value> --schema <value> [-c <value>]
 ```
-```bash
-set PASSWORD=password && configu eval --store store1 --schema <value> [--set <value>] [-c <value>]
+
+```bash Windows
+set PASSWORD=password && configu eval --store store1 --set <value> --schema <value> [-c <value>]
 ```
-</CodeTabs>
+
+</CodeGroup>
