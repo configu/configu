@@ -1,0 +1,9 @@
+export const IntegrationCard = ({ data: { label, icon, docs, description = ''} }) => (
+  <Card
+    title={label}
+    icon={<img alt={`${label} Icon`} noZoom src={icon} />}
+    href={`/${docs}`}
+  >
+    {description}
+  </Card>
+);

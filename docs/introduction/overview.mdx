@@ -1,16 +1,11 @@
 ---
-# credit:
-#   - https://pkl-lang.org/main/current/index.html
-#   - https://docs.novu.co/getting-started/introduction
 title: "Overview"
-# title: "Your very long page title you want to shorten"
-# sidebarTitle: "Overview"
 description: "Configu is an **open-source, end-to-end ConfigOps infrastructure** that empowers engineering teams to seamlessly manage and collaborate on **software configuration data**—such as environment variables, secrets, and feature flags—across any system or environment. ⚙️✨"
 icon: "street-view"
 ---
 
 <AccordionGroup>
-  <Accordion title="Quickstart">
+  <Accordion title="Quickstart" defaultOpen>
     {/* Get started in minutes */}
 
     <CardGroup cols={3}>
@@ -86,3 +81,42 @@ As developers, we believe in the power of open-source software and are committed
 If you would like to contribute code to Configu or provide feedback, we welcome you to join our [Discord channel](https://discord.com/invite/cjSBxnB9z8) or reach out via email at <a href="mailto:support@configu.com">support@configu.com</a>. We believe that by working together and inviting others to be part of the project, we can create a strong and supportive community around Configu and help it continue to grow and evolve.
 
 {/* By providing a standard, consistent, and extensible way to define, validate, and apply configuration data, we can help teams work more efficiently and avoid mismanagement and errors that can arise from using raw text or other ad-hoc approaches to configuration management. */}
+
+## FAQs
+
+If you can't find the answer you are looking for here, please join our [Discord community](https://discord.com/invite/cjSBxnB9z8) and ask whatever you like.
+
+<AccordionGroup>
+  <Accordion title="What is the difference between secret managers, feature flag solutions and Configu?">
+    While both secrets and feature flags are implementations of application configurations, secret managers, feature flag solutions and Configu are quite different.
+
+    Application configurations are fragmented. They are saved as raw text that is spread across multiple stores, databases, files, and third parties tools. This fragmentation happened partly because each sub-category of application configurations has its own dedicated storage that specializes in that sub-category. Secret managers, for example, securely store and manage sensitive information such as passwords. Feature flag solutions manage feature releases and enable dynamic experiments.
+
+    In contrast, Configu does not focus on a specific sub-category but rather on the workflow itself and can manage and fetch the configs from all other stores, using the same commands.
+    Configu automates the configuration workflow from code to runtime across all environments and lets you manage configurations through one interface that rules them all.
+
+    This makes Configu's approach more robust and reliable, allowing it to prevent misconfigurations and duplications and provide visibility, a test framework, security, and compliance standardization.
+  </Accordion>
+
+  <Accordion title="Can I use other products to store my configurations with Configu (e.g. Git repository, ASM, Hashicorp Vault)?">
+    Of course! [Configu Orchestrator](/interfaces/overview) is open-source software and supports many different [storage options](/integrations/overview#configstore) including ASM, Hashicorp Vault and even files in a git repository.
+    You can also create your own store for your benefit and others.
+
+    For example, explore our [Managing HashiCorp Vault using Configu](/guides/hashicorp-vault) tutorial.
+  </Accordion>
+
+  <Accordion title="Can I fetch configurations with Configu if I'm offline?">
+    Yes. you have three ways to fetch configs offline:
+
+    - Fetch the default values directly from the `.cfgu` schema
+    ```shell
+      configu eval --schema 'my-schema.cfgu.yaml'
+    ```
+    - Use the last fetch. Configu saves the latest fetched configuration in a local cache.
+    - Use a self-hosted store. If you use Configu for orchestrating local files, or a local database, or run Configu's self-hosted version you can do everything offline.
+  </Accordion>
+
+  <Accordion title="Is there a free version of Configu?">
+    Definitely! The [Configu Orchestrator](/interfaces/overview) is free, open-source software. The [Configu Platform](/integrations/store/configu/overview) offers a free Community plan.
+  </Accordion>
+</AccordionGroup>

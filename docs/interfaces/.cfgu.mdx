@@ -1,87 +1,330 @@
 ---
 title: Configu Configuration-as-Code Format
 sidebarTitle: .cfgu
-description: "The `Cfgu` format represents a set of properties that define essential characteristics of a software configuration in Configu. These properties provide important metadata and constraints for a configuration key. When these properties are attached to a configuration key in a `ConfigSchema` and utilized through any Configu interface (CLI/SDK), they enable important and repeated validation of configuration values, often implemented in the code."
+description: "The `Cfgu` format defines the characteristics of a software configuration in Configu, providing metadata and constraints for `ConfigValues`. When attached to a `ConfigKey` in a `ConfigSchema`, it enables validation of `ConfigValues`, facilitating their implementation in the code."
 ---
 
-import TBD from '/snippets/tbd.mdx'
+import { CfguExt } from '/snippets/variables.mdx'
 
-<TBD />
+## Location
+
+`.cfgu` files essentially set the boundaries of different domains in the code relative to the configuration they use. Developers are free to organize and structure their `.cfgu` files in a way that makes sense for their specific needs and workflow. There is no limit on the number of `.cfgu` files that can be created, and they can be spread across different codebases, subfolders in the same project, and different repositories.
+
+## Format
+
+The `.cfgu` file can be written in one of the following formats: `YAML` or `JSON`. The name suffix of this file should be <CfguExt /> according of the format used.
+
+## $schema
+
+include the `$schema` property at the beginning of the file to specify the `Cfgu` version to communicate to other readers and tooling which specification version is intended.
+Also most modern editors will use this property to provide intellisense and validation for the `Cfgu` file.
+
+<CodeGroup>
+
+```yaml example.cfgu.yaml
+$schema: https://json-schema.org/draft/2020-12/schema-cfgu
+```
+
+```json example.cfgu.json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema-cfgu",
+}
+```
+
+</CodeGroup>
 
 ## Properties
 
-- **type**: Specifies the data type that the configuration represents.
-  - This property is required.
-- **pattern**: Allows you to define a regular expression that the configuration value must match.
-  - This property is optional and applicable when the type is set to Regex.
-- **default**: Provides a default value for the configuration if it is not explicitly provided.
-  - This property is optional.
-- **required**: Determines whether the configuration is required for the application to function correctly.
-  - When set to true, the configuration must be provided. This property is optional.
-- **depends**: Specifies a list of other configurations that the current configuration depends on.
-  - This property is optional.
-- **template**: Allows you to define Mustache templates that can be used to construct a templated value from other configuration values.
-  - This property is optional and applicable when the type is set to String.
-- **description**: Provides a description of the configuration's role in the code.
-  - This property is optional.
-- **options**: Specifies a list of values that the configuration value must match.
-  - This property is optional.
-- **schema**: Specifies a [JSON-schema](https://json-schema.org/specification) that the configuration value must match.
-  - This property is optional and applicable when the type is set to JSONSchema.
-- **lazy**: Specifies that a value for a given configuration key should only be set during the [eval command](../commands/#eval-and-export) execution.
-  - This property is optional.
-  - Existing store values are omitted during evaluations.
-  - Lazy configs cannot be [upserted](../commands/#upsert).
+<ResponseField name="description" type="String|Markdown">
+  Describe a `ConfigKey`'s purpose within the application.
+</ResponseField>
 
-### Available Types
+<ResponseField name="type" type="CfguType" required>
+  Define the data type of a `ConfigValue`.
+  - If the type is `RegEx`, a `pattern` property must be provided.
+  - If the type is `JSONSchema`, a `schema` property must be provided.
 
-<Info>These types cover a wide range of data formats commonly used in configuration settings. You can choose the appropriate type for each configuration value based on your application's requirements.</Info>
+  <Accordion title="CfguType">
+    Configu supports a variety of types to accommodate different data formats.
 
-Configu supports the following types for configuration values:
+    <Info>These types cover a wide range of data formats commonly used in configuration settings. You should choose the appropriate type for each configuration value based on your application's requirements. Explore the available types and utilize them to define your configuration values accurately.</Info>
 
-- **Boolean**: Represents a binary value of true or false. Example: `true`
-  {/* - **Binary**: Represents a binary value of 1 or 0. Example: `1` */}
-- **Number**: Represents numeric data. Example: `123456`, `1.2`, `-3`
-- **String**: Represents textual data. Example: `"Hello, World!"`
-- **RegEx**: Represents a configuration value that must match a specific regular expression pattern.
-  - Also requires `pattern` property to be specified. Example: `foo|bar`
-- **UUID**: Represents a universally unique identifier. Example: A UUID Value
-- **SemVer**: Represents a semantic version number. Example: `1.2.3-4`
-- **IPv4**: Represents an IPv4 address. Example: `127.0.0.1`
-- **IPv6**: Represents an IPv6 address. Example: `2600:4040:b5c4:1100:216:3eff:feda:953b`
-- **MACAddress**: Represents a MAC Address. Example: `4g:54:53:2f:f6:28`
-- **Domain**: Represents a domain name. Example: `example.com`
-- **URL**: Represents a URL. Example: `https://www.example.com`
-- **MIMEType**: Represents a MIME type. Example: `application/octet-stream`
-- **ConnectionString**: Represents a connection string. Example: `Server=example.com;Database=myDB;User Id=myUser;Password=myPass;`
-- **DockerImage**: Represents a docker image tag name. Example: `debian:stable-20230814-slim`
-- **Hex**: Represents a value encoded in hexadecimal format. Example: A Hex Encoded Value
-- **Base64**: Represents a value encoded in Base64 format. Example: A Base64 Encoded Value
-- **MD5**: Represents a value hashed using MD5. Example: A MD5 Hashed Value
-- **SHA**: Represents a value hashed using SHA. Example: A SHA Hashed Value
-- **Color**: Represents a color value using hexadecimal notation, rgb/a notation or hsl notation. Example: `#ffffff`, `rgb(255, 255, 255)`, `hsl(0, 0%, 100%)`
-- **Email**: Represents an email address. Example: `foo@example.com`
-- **MobilePhone**: Represents a phone number. Example: `+1 000 000 0000`
-- **Locale**: Represents a specific language and region combination. Example: `EN-GB`
-- **LatLong**: Represents latitude and longitude coordinates. Example: `41 24.2028, 2 10.4418`
-- **Country**: Represents a country code. Example: `GB`
-- **Language**: Represents a language code. Example: `en`, `he`
-- **Currency**: Represents a currency code. Example: `USD`
-- **AWSRegion**: Represents an AWS region. Example: `eu-west-1`, `us-west-2`
-- **AZRegion**: Represents an Azure region. Example: `brazilsouth`, `australiaeast`
-- **GCPRegion**: Represents a GCP region. Example: `asia-south1`, `asia-southeast2`
-- **OracleRegion**: Represents a Oracle Cloud region. Example: `us-ashburn-1`
-- **IBMRegion**: Represents a IBM Cloud region. Example: `us-south`, `sa-santiago`
-- **AlibabaRegion**: Represents a Alibaba Cloud region. Example: `cn-hangzhou`
-- **MongoId**: Represents a MongoDB identifier. Example: `64ef397579c9984350addd44`
-- **DateTime**: Represents a date/timestamp/hour. Example: `2023-08-30`, `12:30`, `1661846400000`
-- **ARN**: Represents a Amazon Resource Names (ARNs). Example: `arn:partition:service:region:account-id:resource-id`
-- **JSONschema**: Represents JSON data that must conform to a JSON schema. Example: `{"key":value}`
-  - Also requires `schema` property to be specified. Example: `{"type": "object", "properties": {"GREETING": {"type": "string"}, "SUBJECT": {"type": "string"}}, "required": ["GREETING", "SUBJECT"]}`
+    <ResponseField name="Boolean" type="true | false">
+    check if the string is a boolean.
+    </ResponseField>
+
+    <ResponseField name="Number" type="123 | 1.2 | -3">
+    check if the string contains only numbers.
+    </ResponseField>
+
+    <ResponseField name="String" type="'Hello, World!'">
+    Any string of characters.
+    </ResponseField>
+
+    <ResponseField name="RegEx" type="/abc/">
+    check if the string match a regular expression.
+    </ResponseField>
+
+    <ResponseField name="JSONSchema" type='{ "type": "string" }'>
+    A JSON schema.
+    </ResponseField>
+
+    <ResponseField name="IPv4" type="192.0.2.0">
+    check if the string is an IP (version 4).
+    </ResponseField>
+
+    <ResponseField name="IPv6" type="2001:0db8:85a3:0000:0000:8a2e:0370:7334">
+    check if the string is an IP (version 6).
+    </ResponseField>
+
+    <ResponseField name="FQDN" type="domain.com">
+    check if the string is a fully qualified domain name.
+    </ResponseField>
+
+    <ResponseField name="URL" type="http://foo.com">
+    check if the string is a URL.
+    </ResponseField>
 
 
-<Tip>
-Configu is designed to be extensible, allowing you to add custom types as needed. If you require a type that is not currently supported, we encourage you to let us know or consider contributing it yourself. With Configu's flexibility, you can tailor the configuration system to suit your specific requirements.
 
-Feel free to explore the available types and utilize them to define your configuration values accurately.
-</Tip>
+    <ResponseField name="Hex" type="deadBEEF">
+    A hexadecimal number.
+    </ResponseField>
+
+    <ResponseField name="Base64" type="Zm9vYmFy">
+    check if the string is base64 encoded.
+    </ResponseField>
+
+
+    <ResponseField name="MD5" type="d41d8cd98f00b204e9800998ecf8427e">
+    check if the string is a hash of MD5 algorithm.
+    </ResponseField>
+
+    <ResponseField name="SHA" type="5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8">
+    check if the string is a hash of SHA algorithm (1, 256, 384, 512).
+    </ResponseField>
+
+
+    <ResponseField name="Color" type="#FF0000">
+    A color in hexadecimal format.
+    </ResponseField>
+
+
+    <ResponseField name="Email" type="foo@bar.com">
+    An email address.
+    </ResponseField>
+
+    <ResponseField name="MobilePhone" type="19876543210">
+    A mobile phone number.
+    </ResponseField>
+
+    <ResponseField name="Locale" type="en-US">
+    A locale.
+    </ResponseField>
+
+    <ResponseField name="Language" type="en">
+    A language code.
+    </ResponseField>
+
+    <ResponseField name="LatLong" type="(-17.738223, 85.605469)">
+    A latitude-longitude pair.
+    </ResponseField>
+
+    <ResponseField name="Country" type="US">
+    A country code.
+    </ResponseField>
+
+    <ResponseField name="Currency" type="USD">
+    A currency code.
+    </ResponseField>
+
+
+    <ResponseField name="DateTime" type="'2000-01-01T00:00:00Z'">
+    A date-time string in ISO 8601 format.
+    </ResponseField>
+
+
+    <ResponseField name="UUID" type="A987FBC9-4BED-3078-CF07-9141BA07C9F3">
+    check if the string is a UUID (version 1, 2, 3, 4 or 5).
+    </ResponseField>
+
+    <ResponseField name="SemVer" type="1.0.0">
+    check if the string is a Semantic Versioning Specification (SemVer).
+    </ResponseField>
+
+    <ResponseField name="DockerImage" type="nginx:latest">
+    A Docker image.
+    </ResponseField>
+
+    <ResponseField name="MACAddress" type="3D:F2:C9:A6:B3:4F">
+    A MAC address.
+    </ResponseField>
+
+    <ResponseField name="MIMEType" type="application/json">
+    A MIME type.
+    </ResponseField>
+
+    <ResponseField name="MongoId" type="'507f1f77bcf86cd799439011'">
+    A MongoDB ObjectId.
+    </ResponseField>
+
+    <ResponseField name="AWSRegion" type="us-west-2">
+    An AWS region.
+    </ResponseField>
+
+    <ResponseField name="AZRegion" type="westus">
+    An Azure region.
+    </ResponseField>
+
+    <ResponseField name="GCPRegion" type="us-central1">
+    A Google Cloud Platform region.
+    </ResponseField>
+
+    <ResponseField name="OracleRegion" type="us-ashburn-1">
+    An Oracle Cloud region.
+    </ResponseField>
+
+    <ResponseField name="IBMRegion" type="us-south">
+    An IBM Cloud region.
+    </ResponseField>
+
+    <ResponseField name="AlibabaRegion" type="cn-hangzhou">
+    An Alibaba Cloud region.
+    </ResponseField>
+
+    <ResponseField name="ARN" type="arn:aws:cloudformation:us-east-1:123456789012:stack/my-stack-name/1c2fa620-982a-11e3-aff7-50e2416294e0">
+    An Amazon Resource Name (ARN).
+    </ResponseField>
+
+    <Info>Most of the validators are based on the [validator.js](https://github.com/validatorjs/validator.js?tab=readme-ov-file#validators) library. You can refer to the library's documentation for more information on the supported validators.</Info>
+
+    <Tip>Configu is designed to be extensible, allowing you to add custom types as needed. If you require a type that is not currently supported, we encourage you to let us know or consider contributing it yourself. With Configu's flexibility, you can tailor the configuration system to suit your specific requirements.</Tip>
+  </Accordion>
+</ResponseField>
+
+<ResponseField name="pattern" type="String">
+  Define a regular expression a `ConigValue` must match.
+  - This property must be provided if the `type` is `RegEx`.
+</ResponseField>
+
+<ResponseField name="schema" type="JSON Schema">
+  Specify a JSON schema a `ConigValue` must conform to.
+  - This property must be provided if the `type` is `JSONSchema`.
+</ResponseField>
+
+<ResponseField name="options" type="String[]">
+  Specify a list of allowable `ConigValues` for a `ConfigKey`.
+  - This property cannot be set together with `template`.
+  - This property cannot be an empty array or contain empty strings.
+  - Each option must be unique and according to the `type` of the `ConfigKey`.
+</ResponseField>
+
+<ResponseField name="default" type="String">
+  Set a default `ConfigValue` for a `ConfigKey` if not explicitly provided.
+  - This property cannot be set together with `required` or `template` or `lazy` properties.
+  - If `options` is set, the default value must be one of the options.
+</ResponseField>
+
+<ResponseField name="required" type="Boolean">
+  Indicate whether a `ConfigKey` is essential for the application's functionality. When set to `true`, a `ConfigValue` must be found on `EvalCommand`.
+  - This property cannot be set together with `default`.
+</ResponseField>
+
+<ResponseField name="depends" type="String[]">
+  List other `ConfigKeys` this configuration depends on.
+  - This property cannot be an empty array or contain reserved words.
+</ResponseField>
+
+<ResponseField name="template" type="String">
+  Define a template for constructing a `ConfigValue` from other `Configs`.
+  - This property cannot be set together with `default` or `lazy`.
+</ResponseField>
+
+<ResponseField name="lazy" type="Boolean">
+  Indicate that a `ConfigValue` is set only during `EvalCommand` execution, excluding it from `UpsertCommand` assignments.
+  - This property cannot be set together with `default` or `template`.
+</ResponseField>
+
+<ResponseField name="hidden" type="Boolean">
+  Indicate that this `ConfigKey` will be omitted from `ExportCommand` results.
+</ResponseField>
+
+<ResponseField name="labels" type="String[]">
+  List labels to categorize `ConfigKeys` for easier filtering on `ExportCommand`.
+</ResponseField>
+
+## Example
+
+<CodeGroup>
+
+```yaml example.cfgu.yaml
+$schema: https://json-schema.org/draft/2020-12/schema-cfgu
+NODE_ENV:
+  description: Defines the environment in which the application runs
+  type: String
+  options:
+    - development
+    - production
+    - test
+  default: development
+LOG_LEVEL:
+  description: Defines the level of logs to be recorded
+  type: String
+  options:
+    - error
+    - warn
+    - info
+    - verbose
+    - debug
+    - silly
+  default: info
+SERVICE_ENDPOINT:
+  description: Defines the endpoint for the service
+  type: URL
+  required: true
+AWS_REGION:
+  description: Defines the AWS region for the service
+  type: AWSRegion
+  default: us-east-1
+```
+
+```json example.cfgu.json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema-cfgu",
+  "NODE_ENV": {
+    "description": "Defines the environment in which the application runs",
+    "type": "String",
+    "options": [
+      "development",
+      "production",
+      "test"
+    ],
+    "default": "development",
+  },
+  "LOG_LEVEL": {
+    "description": "Defines the level of logs to be recorded",
+    "type": "String",
+    "options": [
+      "error",
+      "warn",
+      "info",
+      "verbose",
+      "debug",
+      "silly"
+    ],
+    "default": "info"
+  },
+  "SERVICE_ENDPOINT": {
+    "description": "Defines the endpoint for the service",
+    "type": "URL",
+    "required": true
+  },
+  "AWS_REGION": {
+    "description": "Defines the AWS region for the service",
+    "type": "AWSRegion",
+    "default": "us-east-1"
+  }
+}
+```
+
+</CodeGroup>
