@@ -16,4 +16,4 @@ jobs:
         uses: lycheeverse/lychee-action@v1.7.0
         with:
           fail: true
-          args: --verbose --no-progress --exclude-all-private --exclude 'stackoverflow.com' --exclude-path 'examples' .
+          args: --verbose --no-progress --exclude-all-private --exclude 'stackoverflow.com' --exclude 'support.discord.com' --exclude-path 'examples' --exclude-path 'docs/snippets/callouts.mdx' .

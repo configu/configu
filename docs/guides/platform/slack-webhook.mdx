@@ -1,0 +1,28 @@
+---
+title: Create a Slack Webhook
+description: Learn how to send Activity Log events to a Slack channel.
+---
+## Prerequisites
+- Access permissions to create an Incoming WebHook for your Slack workspace.
+- Configu Cloud organization with admin permissions
+
+## Create a Slack Incoming WebHook
+For this integration to work, you'll need a Slack [Incoming WebHook](https://api.slack.com/messaging/webhooks).
+Browse to that URL and follow the steps.
+
+Get your target payload URL which looks something like this: `https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX`.
+The standard way is by enabling incoming webhooks on a custom app you installed on your Slack workspace and creating a webhook as such:
+
+<Frame>![image](/images-old/webhooks/slack-webhook-payload-uri.png)</Frame>
+
+## Create a Configu Webhook
+1. Browse to the Webhooks page (/integrations/webhooks) in your Confgu Cloud organization.
+2. Create a new webhook using the Slack Payload URL you obtained in the previous step.
+3. Customize your payload to include a `text` property with some message, and then click Create.
+    [Explore the Full Webhooks documentation](/integrations/store/configu/webhooks).
+
+<Frame>![image](/images-old/webhooks/slack-customize-your-payload.png)</Frame>
+
+Example result:
+
+<Frame>![image](/images-old/webhooks/slack-result-of-triggering.png)</Frame>

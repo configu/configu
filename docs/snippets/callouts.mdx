@@ -1,0 +1,17 @@
+export const Construction = () => (
+  <Warning>
+    This section is <b>under construction</b> and will be ready soon. Thanks for your patience! 🚧
+  </Warning>
+);
+
+export const Important = () => (
+  <Tip>
+    <b>Important read:</b> This section is crucial for maximizing your Configu experience. Don't skip it! 🌟
+  </Tip>
+);
+
+export const Related = ({ name, link }) => (
+  <Tip>
+    We recommend reading the <a href={link} target="_blank"><b>{name}</b></a> section first for a better foundation.
+  </Tip>
+);
