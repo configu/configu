@@ -20,6 +20,10 @@ import {
   SQLiteConfigStore,
   LaunchDarklyConfigStore,
   CloudBeesConfigStore,
+  CsvFileConfigStore,
+  TomlFileConfigStore,
+  XmlFileConfigStore,
+  EtcdConfigStore,
 } from '@configu/node';
 
 // todo: change "any" here!
@@ -30,6 +34,9 @@ const TYPE_TO_STORE_CTOR: Record<StoreType, ConfigStoreCtor> = {
   configu: ConfiguConfigStore,
   'json-file': JsonFileConfigStore,
   'ini-file': IniFileConfigStore,
+  'csv-file': CsvFileConfigStore,
+  'toml-file': TomlFileConfigStore,
+  'xml-file': XmlFileConfigStore,
   'hashicorp-vault': HashiCorpVaultConfigStore,
   'aws-parameter-store': AWSParameterStoreConfigStore,
   'aws-secrets-manager': AWSSecretsManagerConfigStore,
@@ -44,6 +51,7 @@ const TYPE_TO_STORE_CTOR: Record<StoreType, ConfigStoreCtor> = {
   mssql: MSSQLConfigStore,
   'launch-darkly': LaunchDarklyConfigStore,
   'cloud-bees': CloudBeesConfigStore,
+  etcd: EtcdConfigStore,
 };
 
 export const constructStore = (type: string, configuration: any): ConfigStore => {

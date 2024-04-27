@@ -1,6 +1,15 @@
 import { Flags } from '@oclif/core';
-import { type EvalCommandParameters } from '@configu/ts';
+import {
+  type EvalCommandParameters,
+  type EvalCommandReturn,
+  EvaluatedConfigOrigin,
+  type ConfigStore,
+  ConfigStoreError,
+  type ConfigSchema,
+  UpsertCommand,
+} from '@configu/ts';
 import { NoopConfigStore, ConfigSet, EvalCommand } from '@configu/node';
+import _ from 'lodash';
 import { BaseCommand } from '../base';
 
 export default class Eval extends BaseCommand<typeof Eval> {
@@ -43,6 +52,10 @@ export default class Eval extends BaseCommand<typeof Eval> {
       multiple: true,
       char: 'c',
     }),
+    'force-cache': Flags.boolean({
+      description: `Force the use of cache store`,
+      default: false,
+    }),
   };
 
   async constructEvalCommandParameters(): Promise<EvalCommandParameters> {
@@ -75,9 +88,42 @@ export default class Eval extends BaseCommand<typeof Eval> {
     };
   }
 
+  async updateCache(
+    cacheStore: ConfigStore,
+    set: ConfigSet,
+    schema: ConfigSchema,
+    evalCommandReturn: EvalCommandReturn,
+  ) {
+    const configs = _.mapValues(
+      _.pickBy(evalCommandReturn, (entry) => entry.result.origin === EvaluatedConfigOrigin.StoreSet),
+      (entry) => entry.result.value,
+    );
+    await new UpsertCommand({ store: cacheStore, set, schema, configs }).run();
+  }
+
   public async run(): Promise<void> {
+    const cacheStore = this.getCacheStoreInstanceByStoreFlag(this.flags.store);
     const evalCommandParameters = await this.constructEvalCommandParameters();
-    const evalCommandReturn = await new EvalCommand(evalCommandParameters).run();
+    let evalCommandReturn;
+
+    if (cacheStore && !this.flags['force-cache']) {
+      try {
+        evalCommandReturn = await new EvalCommand(evalCommandParameters).run();
+        const { schema, set } = evalCommandParameters;
+        await this.updateCache(cacheStore, set, schema, evalCommandReturn);
+      } catch (error) {
+        if (error instanceof ConfigStoreError) {
+          evalCommandReturn = await new EvalCommand({ ...evalCommandParameters, store: cacheStore }).run();
+        } else {
+          throw error;
+        }
+      }
+    } else {
+      evalCommandReturn = await new EvalCommand({
+        ...evalCommandParameters,
+        store: this.flags['force-cache'] && cacheStore ? cacheStore : evalCommandParameters.store,
+      }).run();
+    }
 
     this.print(JSON.stringify(evalCommandReturn), { stdout: 'stdout' });
   }

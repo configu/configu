@@ -28,7 +28,6 @@
     "is-ci": "^3.0.1",
     "json": "^11.0.0",
     "lint-staged": "^15.2.2",
-    "mintlify": "4.0.133",
-    "quicktype": "^23.0.107"
+    "quicktype": "^23.0.146"
   }
 }

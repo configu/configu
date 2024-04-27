@@ -44,16 +44,16 @@
   "footerSocials": {
     "website": "https://configu.com",
     "github": "https://github.com/configu",
-    "discord": "https://discord.gg/cjSBxnB9z8",
     "twitter": "https://twitter.com/WeAreConfigu",
     "linkedin": "https://www.linkedin.com/company/configu",
-    "youtube": "https://www.youtube.com/@configu294"
+    "youtube": "https://www.youtube.com/@configu294",
+    "discord": "https://discord.gg/cjSBxnB9z8"
   },
   "anchors": [
     {
       "name": "Guides",
       "icon": "bolt",
-      "url": "guides/"
+      "url": "guides"
     },
     {
       "name": "Blog",
@@ -90,6 +90,7 @@
     {
       "group": "Interfaces",
       "pages": [
+        "interfaces/overview",
         "interfaces/.cfgu",
         "interfaces/.configu",
         {
@@ -102,11 +103,16 @@
         },
         {
           "group": "Configu Proxy",
-          "pages": ["interfaces/proxy/overview"]
+          "pages": [
+            "interfaces/proxy/overview"
+          ]
         },
         {
           "group": "IDE Extensions",
-          "pages": ["interfaces/ide/vscode", "interfaces/ide/intellij"]
+          "pages": [
+            "interfaces/ide/vscode",
+            "interfaces/ide/intellij"
+          ]
         },
         {
           "group": "Internal SDKs",
@@ -119,25 +125,168 @@
       ]
     },
     {
-      "group": "Configu Platform",
+      "group": "Integrations",
       "pages": [
-        "platform/config-explorer",
-        "platform/config-editor",
-        "platform/config-history",
-        "platform/config-compare",
-        "platform/approval-queue",
-        "platform/audit-logs",
-        "platform/webhooks",
-        "platform/integrations",
-        "platform/authorization",
-        "platform/members",
-        "platform/tokens",
-        "platform/settings"
+        "integrations/overview",
+        {
+          "group": "ConfigStore",
+          "pages": [
+            {
+              "group": "Configu",
+              "pages": [
+                "integrations/store/configu/overview",
+                "integrations/store/configu/config-explorer",
+                "integrations/store/configu/config-editor",
+                "integrations/store/configu/config-history",
+                "integrations/store/configu/config-compare",
+                "integrations/store/configu/approval-queue",
+                "integrations/store/configu/audit-logs",
+                "integrations/store/configu/webhooks",
+                "integrations/store/configu/integrations",
+                "integrations/store/configu/authorization",
+                "integrations/store/configu/members",
+                "integrations/store/configu/tokens",
+                "integrations/store/configu/settings"
+              ]
+            },
+            {
+              "group": "File",
+              "pages": [
+                "integrations/store/file/json-file",
+                "integrations/store/file/csv-file",
+                "integrations/store/file/xml-file",
+                "integrations/store/file/ini-file",
+                "integrations/store/file/toml-file"
+              ]
+            },
+            {
+              "group": "Database",
+              "pages": [
+                "integrations/store/db/sqlite",
+                "integrations/store/db/mysql",
+                "integrations/store/db/mariadb",
+                "integrations/store/db/postgresql",
+                "integrations/store/db/cockroachdb",
+                "integrations/store/db/mssql"
+              ]
+            },
+            {
+              "group": "Secret",
+              "pages": [
+                "integrations/store/secret/hashicorp-vault",
+                "integrations/store/secret/aws-secrets-manager",
+                "integrations/store/secret/azure-key-vault",
+                "integrations/store/secret/gcp-secret-manager",
+                "integrations/store/secret/kubernetes-secret"
+              ]
+            },
+            {
+              "group": "Feature Flag",
+              "pages": [
+                "integrations/store/ff/launchdarkly",
+                "integrations/store/ff/cloudbees-feature-management",
+                "integrations/store/ff/split"
+              ]
+            },
+            {
+              "group": "Other",
+              "pages": [
+                "integrations/store/other/in-memory",
+                "integrations/store/other/aws-parameter-store",
+                "integrations/store/other/localforage"
+              ]
+            }
+          ]
+        },
+        {
+          "group": "Container",
+          "pages": [
+            "integrations/container/docker",
+            "integrations/container/docker-compose",
+            "integrations/container/kubernetes",
+            "integrations/container/aws-ecs"
+          ]
+        },
+        {
+          "group": "CI/CD",
+          "pages": [
+            "integrations/cicd/jenkins",
+            "integrations/cicd/github-actions",
+            "integrations/cicd/circleci",
+            "integrations/cicd/gitlab-cicd"
+          ]
+        },
+        {
+          "group": "Infrastructure-as-Code",
+          "pages": [
+            "integrations/iac/terraform",
+            "integrations/iac/helm",
+            "integrations/iac/aws-cdk",
+            "integrations/iac/pulumi"
+          ]
+        },
+        {
+          "group": "Framework",
+          "pages": [
+            {
+              "group": "Web",
+              "pages": [
+                "integrations/framework/web/vite",
+                "integrations/framework/web/nextjs",
+                "integrations/framework/web/remix",
+                "integrations/framework/web/gatsby",
+                "integrations/framework/web/astro",
+                "integrations/framework/web/nuxt",
+                "integrations/framework/web/sveltekit"
+              ]
+            },
+            {
+              "group": "Backend",
+              "pages": [
+                "integrations/framework/backend/express",
+                "integrations/framework/backend/nestjs",
+                "integrations/framework/backend/fastify",
+                "integrations/framework/backend/fastapi",
+                "integrations/framework/backend/django",
+                "integrations/framework/backend/flask",
+                "integrations/framework/backend/laravel",
+                "integrations/framework/backend/symfony",
+                "integrations/framework/backend/rails",
+                "integrations/framework/backend/spring",
+                "integrations/framework/backend/aspnet",
+                "integrations/framework/backend/wordpress",
+                "integrations/framework/backend/strapi"
+              ]
+            },
+            {
+              "group": "App",
+              "pages": [
+                "integrations/framework/app/expo",
+                "integrations/framework/app/react-native",
+                "integrations/framework/app/flutter",
+                "integrations/framework/app/electron"
+              ]
+            }
+          ]
+        }
       ]
     },
     {
       "group": "Guides",
-      "pages": ["guides/hello-world", "guides/hashicorp-vault"]
+      "pages": [
+        "guides/hello-world",
+        "guides/integrate-configu",
+        "guides/ci-cd",
+        "guides/hashicorp-vault",
+        {
+          "group": "Configu Platform",
+          "pages": [
+            "guides/platform/discord-webhook",
+            "guides/platform/slack-webhook",
+            "guides/platform/github-actions-webhook"
+          ]
+        }
+      ]
     }
   ]
 }

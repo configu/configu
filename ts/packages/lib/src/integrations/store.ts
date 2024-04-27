@@ -5,7 +5,10 @@ export type StoreType = LiteralUnion<
   | 'in-memory'
   | 'configu'
   | 'json-file'
+  | 'csv-file'
   | 'ini-file'
+  | 'toml-file'
+  | 'xml-file'
   | 'hashicorp-vault'
   | 'aws-parameter-store'
   | 'aws-secrets-manager'
@@ -19,7 +22,8 @@ export type StoreType = LiteralUnion<
   | 'cockroachdb'
   | 'mssql'
   | 'launch-darkly'
-  | 'cloud-bees',
+  | 'cloud-bees'
+  | 'etcd',
   string
 >;
 
@@ -28,7 +32,10 @@ export const STORE_LABEL: Record<StoreType, string> = {
   'in-memory': 'In Memory',
   configu: 'Configu',
   'json-file': 'Json File',
+  'csv-file': 'CSV File',
   'ini-file': 'INI File',
+  'toml-file': 'TOML File',
+  'xml-file': 'XML File',
   'hashicorp-vault': 'HashiCorp Vault',
   'aws-parameter-store': 'AWS Parameter Store',
   'aws-secrets-manager': 'AWS Secrets Manager',
@@ -43,6 +50,7 @@ export const STORE_LABEL: Record<StoreType, string> = {
   mssql: 'Microsoft SQL Server',
   'launch-darkly': 'LaunchDarkly',
   'cloud-bees': 'CloudBees',
+  etcd: 'etcd',
 };
 
 export const STORE_WEBSITE: Record<StoreType, string> = {
@@ -50,7 +58,10 @@ export const STORE_WEBSITE: Record<StoreType, string> = {
   'in-memory': '',
   configu: 'https://configu.com/',
   'json-file': 'https://www.json.org/json-en.html',
+  'csv-file': 'https://en.wikipedia.org/wiki/Comma-separated_values',
   'ini-file': 'https://en.wikipedia.org/wiki/INI_file',
+  'toml-file': 'https://toml.io',
+  'xml-file': 'https://www.w3.org/XML',
   'hashicorp-vault': 'https://www.vaultproject.io/',
   'aws-parameter-store': 'https://aws.amazon.com/systems-manager/features/#Parameter_Store',
   'aws-secrets-manager': 'https://aws.amazon.com/secrets-manager/',
@@ -65,6 +76,7 @@ export const STORE_WEBSITE: Record<StoreType, string> = {
   mssql: 'https://www.microsoft.com/en-gb/sql-server',
   'launch-darkly': 'https://launchdarkly.com/',
   'cloud-bees': 'https://www.cloudbees.com/products/cloudbees-feature-management/',
+  etcd: 'https://etcd.io/',
 };
 
 export const STORE_TYPE = Object.keys(STORE_LABEL) as StoreType[];
