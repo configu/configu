@@ -45,12 +45,12 @@ export interface Cfgu {
   type: CfguType;
   pattern?: string;
   schema?: { [key: string]: any };
+  options?: string[];
   default?: string;
   required?: boolean;
   depends?: string[];
   template?: string;
-  options?: string[];
   lazy?: boolean;
-  labels?: string[];
   hidden?: boolean;
+  labels?: string[];
 }
