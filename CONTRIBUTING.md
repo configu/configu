@@ -91,17 +91,6 @@ The [./ts](https://github.com/configu/configu/tree/main/ts) directory houses a s
 - [./ts/packages/cli](https://github.com/configu/configu/tree/main/ts/packages/cli): Configu CLI, which is built using [oclif](https://oclif.io/) and the Node.js SDK
 - [./ts/packages/vscode](https://github.com/configu/configu/tree/main/ts/packages/vscode): a VSCode extension for working with Configu
 
-#### **./py**
-
-The [./py](https://github.com/configu/configu/tree/main/py) directory houses the Python SDK that is powered by [Poetry](https://python-poetry.org/).
-
-#### **./go**
-
-The [./go](https://github.com/configu/configu/tree/main/go) directory houses the Go SDK.
-
-<!-- #### **./java**
-
-The [./java]() directory will shortly contain the Java SDK. -->
 
 ### Sending a Pull Request
 
