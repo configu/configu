@@ -61,6 +61,7 @@
       ],
       "preLaunchTask": "build ts"
     },
+    // https://tsx.is/vscode
     {
       "name": "run ts tests",
       "type": "node",

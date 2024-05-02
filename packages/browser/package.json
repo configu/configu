@@ -1,0 +1,55 @@
+{
+  "name": "@configu/browser",
+  "version": "0.0.0",
+  "license": "Apache-2.0",
+  "description": "Configu Browser JavaScript SDK",
+  "author": "Configu",
+  "browserslist": [
+    "defaults and supports es6-module"
+  ],
+  "main": "./build/index.cjs",
+  "module": "./build/index.mjs",
+  "types": "./build/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./build/index.cjs",
+      "import": "./build/index.mjs",
+      "types": "./build/index.d.ts"
+    }
+  },
+  "files": [
+    "/build",
+    "/dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/configu/configu",
+    "directory": "ts/packages/browser"
+  },
+  "bugs": {
+    "url": "https://github.com/configu/configu/issues",
+    "email": "dev@configu.com"
+  },
+  "homepage": "https://configu.com",
+  "keywords": [
+    "cfgu",
+    "configu",
+    "configu-sdk",
+    "configu-browser-sdk"
+  ],
+  "scripts": {
+    "build:clean": "shx rm -rf build dist tsconfig.tsbuildinfo",
+    "build:tsc": "tsc --build --verbose",
+    "build:esbuild": "node bundle.js",
+    "build": "npm run build:clean && npm run build:tsc && npm run build:esbuild"
+  },
+  "dependencies": {
+    "@configu/ts": "workspace:*",
+    "axios": "^1.6.2",
+    "localforage": "^1.10.0",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "esbuild-plugin-umd-wrapper": "^2.0.0"
+  }
+}

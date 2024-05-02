@@ -22,3 +22,23 @@ coverage
 # dependencies
 node_modules
 .npm
+/.pnp
+.pnp.js
+
+# linter
+.eslintcache
+
+# build cache
+*.tsbuildinfo
+
+# oclif
+oclif.manifest.json
+
+# local env files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# # typedoc
+# docs/
