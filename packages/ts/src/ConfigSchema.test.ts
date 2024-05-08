@@ -1,14 +1,16 @@
+import { describe, test } from 'node:test';
+import assert from 'node:assert/strict';
 import { ConfigSchema } from './ConfigSchema';
 import { ConfigError } from './utils';
 
 describe(`ConfigSchema`, () => {
   describe('cfguStructureValidator', () => {
     test('Empty SchemaContents', () => {
-      expect(() => new ConfigSchema('empty', {})).toThrow(ConfigError);
+      assert.throws(() => new ConfigSchema('empty', {}), ConfigError);
     });
     describe('Tests for lazy configs', () => {
       test('parse ConfigSchema with `lazy=true` and `default=any`', () => {
-        expect(
+        assert.throws(
           () =>
             new ConfigSchema('lazy', {
               K1: {
@@ -17,10 +19,11 @@ describe(`ConfigSchema`, () => {
                 default: '1',
               },
             }),
-        ).toThrow(ConfigError);
+          ConfigError
+        );
       });
       test('parse ConfigSchema with `lazy=true` and `template=any`', () => {
-        expect(
+        assert.throws(
           () =>
             new ConfigSchema('lazy', {
               T1: {
@@ -33,7 +36,8 @@ describe(`ConfigSchema`, () => {
                 template: '{{ T1 }}',
               },
             }),
-        ).toThrow(ConfigError);
+          ConfigError
+        );
       });
     });
   });

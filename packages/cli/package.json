@@ -85,7 +85,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/configu/configu",
-    "directory": "ts/packages/cli"
+    "directory": "packages/cli"
   },
   "bugs": {
     "url": "https://github.com/configu/configu/issues",

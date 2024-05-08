@@ -1,5 +1,5 @@
 include-paths:
-  - "ts/packages/lib/"
+  - "packages/lib/"
 name-template: "lib/v$RESOLVED_VERSION"
 tag-template: "lib/v$RESOLVED_VERSION"
 tag-prefix: "lib/"

@@ -1,7 +1,7 @@
 include-paths:
-  - "ts/packages/ts/"
-  - "ts/packages/node/"
-  - "ts/packages/browser/"
+  - "packages/ts/"
+  - "packages/node/"
+  - "packages/browser/"
 name-template: "ts/v$RESOLVED_VERSION"
 tag-template: "ts/v$RESOLVED_VERSION"
 tag-prefix: "ts/"

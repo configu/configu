@@ -6,7 +6,7 @@
       "type": "node",
       "request": "launch",
       "console": "integratedTerminal",
-      "program": "${workspaceRoot}/ts/packages/cli/bin/dev.js",
+      "program": "${workspaceRoot}/packages/cli/bin/dev.js",
       "env": {
         // "VAULT_ADDR": "http://127.0.0.1:8200",
         // "VAULT_TOKEN": "root",
@@ -43,7 +43,7 @@
       "name": "play node sdk",
       "type": "node",
       "request": "launch",
-      "cwd": "${workspaceRoot}/ts/packages/node",
+      "cwd": "${workspaceRoot}/packages/node",
       "runtimeExecutable": "node",
       "runtimeArgs": [
         "--nolazy",

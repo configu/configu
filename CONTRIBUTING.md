@@ -83,13 +83,13 @@ The [documentation repository](https://github.com/configu/docs) holds the offici
 
 The [./ts](https://github.com/configu/configu/tree/main/ts) directory houses a sub-monorepo that includes the following packages:
 
-- [./ts/packages/ts](https://github.com/configu/configu/tree/main/ts/packages/ts): Shared code for both the Node.js and browser SDKs
-  - [./ts/packages/ts/src/stores](https://github.com/configu/configu/tree/main/ts/packages/ts/src/stores): [ConfigStores](https://configu.com/docs/config-store/) supported for all TS based packages
-  - [./ts/packages/ts/src/commands](https://github.com/configu/configu/tree/main/ts/packages/ts/src/commands): [Commands](https://configu.com/docs/commands/) supported for all TS based packages
-- [./ts/packages/node](https://github.com/configu/configu/tree/main/ts/packages/node): The Node.js SDK
-- [./ts/packages/browser](https://github.com/configu/configu/tree/main/ts/packages/browser): The browser SDK
-- [./ts/packages/cli](https://github.com/configu/configu/tree/main/ts/packages/cli): Configu CLI, which is built using [oclif](https://oclif.io/) and the Node.js SDK
-- [./ts/packages/vscode](https://github.com/configu/configu/tree/main/ts/packages/vscode): a VSCode extension for working with Configu
+- [./packages/ts](https://github.com/configu/configu/tree/main/packages/ts): Shared code for both the Node.js and browser SDKs
+  - [./packages/ts/src/stores](https://github.com/configu/configu/tree/main/packages/ts/src/stores): [ConfigStores](https://configu.com/docs/config-store/) supported for all TS based packages
+  - [./packages/ts/src/commands](https://github.com/configu/configu/tree/main/packages/ts/src/commands): [Commands](https://configu.com/docs/commands/) supported for all TS based packages
+- [./packages/node](https://github.com/configu/configu/tree/main/packages/node): The Node.js SDK
+- [./packages/browser](https://github.com/configu/configu/tree/main/packages/browser): The browser SDK
+- [./packages/cli](https://github.com/configu/configu/tree/main/packages/cli): Configu CLI, which is built using [oclif](https://oclif.io/) and the Node.js SDK
+- [./packages/vscode](https://github.com/configu/configu/tree/main/packages/vscode): a VSCode extension for working with Configu
 
 
 ### Sending a Pull Request

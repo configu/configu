@@ -4,7 +4,7 @@
 
 ## Install
 
-The [CLI code is open-source](https://github.com/configu/configu/tree/main/ts/packages/cli), and the [installation process](https://configu.com/docs/cli-setup/) is quick and easy, with lightweight binaries available for all major operating systems, Docker, and CI/CD platforms.
+The [CLI code is open-source](https://github.com/configu/configu/tree/main/packages/cli), and the [installation process](https://configu.com/docs/cli-setup/) is quick and easy, with lightweight binaries available for all major operating systems, Docker, and CI/CD platforms.
 
 ## Usage
 

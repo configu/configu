@@ -1,11 +1,15 @@
+import { describe, test } from 'node:test';
+import assert from 'node:assert/strict';
 import { ConfigSet } from './ConfigSet';
 
-describe(`ConfigSet`, () => {
+describe.only(`ConfigSet`, () => {
   describe(`constructor`, () => {
-    it(`treats ROOT_LABEL as ROOT`, async () => {
+    test(`treats ROOT_LABEL as ROOT`, async () => {
       const set = new ConfigSet(ConfigSet.ROOT_LABEL);
-      expect(set.path).toBe(ConfigSet.ROOT);
-      expect(set.hierarchy).toEqual([ConfigSet.ROOT]);
+      assert.strictEqual(set.path, ConfigSet.ROOT);
+      assert.deepStrictEqual(set.hierarchy, [ConfigSet.ROOT]);
+      // expect(set.path).toBe(ConfigSet.ROOT);
+      // expect(set.hierarchy).toEqual([ConfigSet.ROOT]);
     });
   });
 });

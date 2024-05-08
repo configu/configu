@@ -1,5 +1,5 @@
 include-paths:
-  - "ts/packages/cli/"
+  - "packages/cli/"
 name-template: "cli/v$RESOLVED_VERSION"
 tag-template: "cli/v$RESOLVED_VERSION"
 tag-prefix: "cli/"

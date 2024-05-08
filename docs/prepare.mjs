@@ -1,4 +1,4 @@
-#!/usr/bin/env npx zx
+#!/usr/bin/env pnpm zx
 
 import 'zx/globals';
 import _ from 'lodash';
@@ -131,7 +131,7 @@ ${content}
 };
 
 await prepareReadme({
-  source: 'ts/packages/cli/README.md',
+  source: 'packages/cli/README.md',
   target: 'interfaces/cli/overview.mdx',
 });
 await prepareCliRef({
@@ -139,12 +139,12 @@ await prepareCliRef({
   target: 'interfaces/cli/command-ref.mdx',
 });
 await prepareReadme({
-  source: 'ts/packages/node/README.md',
+  source: 'packages/node/README.md',
   target: 'interfaces/sdk/nodejs.mdx',
   title: 'Node.js SDK',
 });
 await prepareReadme({
-  source: 'ts/packages/browser/README.md',
+  source: 'packages/browser/README.md',
   target: 'interfaces/sdk/browser.mdx',
   title: 'Browser SDK',
 });
@@ -187,4 +187,4 @@ import { Construction } from '/snippets/callouts.mdx'
 }
 
 // Check for broken links in the docs
-await $`npx mintlify broken-links`.pipe(process.stdout);
+await $`pnpm mintlify broken-links`.pipe(process.stdout);

@@ -1,16 +1,16 @@
-name: "CD/@configu/lib"
+name: CD/@configu/lib
 
 on:
   push:
     tags:
-      - lib/v*
+      - 'lib/v*'
 
 jobs:
   cd-lig:
-    name: "CD/@configu/lib"
+    name: CD/@configu/lib
     runs-on: ubuntu-latest
     env:
-      PACKAGE_NAME: "@configu/lib"
+      PACKAGE_NAME: '@configu/lib'
     permissions:
       contents: read
       id-token: write
@@ -25,11 +25,7 @@ jobs:
 
       - uses: ./.github/actions/ts-env-action
 
-      - uses: ./.github/actions/ts-env-action
-        with:
-          dependencies-root: "ts"
-
-      - uses: aws-actions/configure-aws-credentials@v2
+      - uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -37,19 +33,16 @@ jobs:
       # ---
       - name: Bump package version
         run: |
-          cd ${{ env.CWD }}
           npm --no-git-tag-version version ${{ steps.deployment.outputs.release-version }} \
             --workspace=${{ env.PACKAGE_NAME }}
 
       - name: Build package code
         run: |
-          cd ${{ env.CWD }}
           npm run build \
             --workspace=${{ env.PACKAGE_NAME }}
 
       - name: Publish to npm
         run: |
-          cd ${{ env.CWD }}
           npm publish --access public --provenance --tag ${{ steps.deployment.outputs.release-channel }} \
             --workspace=${{ env.PACKAGE_NAME }}
         env:
@@ -58,7 +51,6 @@ jobs:
       - name: Build package docs
         if: ${{ steps.deployment.outputs.release-channel == 'latest' }}
         run: |
-          cd ${{ env.CWD }}
           npm run build:docs
 
       - name: Publish docs
@@ -67,9 +59,9 @@ jobs:
           aws s3 sync ${{ env.CWD }}/docs s3://${{ env.S3_BUCKET }}/${{ env.S3_FOLDER }}
           aws cloudfront create-invalidation --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION }} --paths "/${{ env.S3_FOLDER }}*"
         env:
-          S3_BUCKET: "oss.configu.com"
-          S3_FOLDER: "ts"
-          CLOUDFRONT_DISTRIBUTION: "E7C5AL5O299SC"
+          S3_BUCKET: 'oss.configu.com'
+          S3_FOLDER: 'ts'
+          CLOUDFRONT_DISTRIBUTION: 'E7C5AL5O299SC'
       # ---
       - uses: ./.github/actions/deploy-end-action
         if: always()
