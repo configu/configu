@@ -12,12 +12,12 @@ import { CfguExt } from '/snippets/variables.mdx'
 
 ## Format
 
-The `.cfgu` file can be written in one of the following formats: `YAML` or `JSON`. The name suffix of this file should be <CfguExt /> according of the format used.
+The `.cfgu` file can be written in one of the following formats: `YAML` or `JSON`. The name suffix of this file should be <CfguExt /> according to the format used.
 
 ## $schema
 
-include the `$schema` property at the beginning of the file to specify the `Cfgu` version to communicate to other readers and tooling which specification version is intended.
-Also most modern editors will use this property to provide intellisense and validation for the `Cfgu` file.
+Include the `$schema` property at the beginning of the file to specify the `Cfgu` version to communicate to other readers and tooling which specification version is intended.
+Also, most modern editors will use this property to provide IntelliSense and validation for the `Cfgu` file.
 
 <CodeGroup>
 
@@ -50,11 +50,11 @@ $schema: https://json-schema.org/draft/2020-12/schema-cfgu
     <Info>These types cover a wide range of data formats commonly used in configuration settings. You should choose the appropriate type for each configuration value based on your application's requirements. Explore the available types and utilize them to define your configuration values accurately.</Info>
 
     <ResponseField name="Boolean" type="true | false">
-    check if the string is a boolean.
+    Check if the string is a boolean.
     </ResponseField>
 
     <ResponseField name="Number" type="123 | 1.2 | -3">
-    check if the string contains only numbers.
+    Check if the string contains only numbers.
     </ResponseField>
 
     <ResponseField name="String" type="'Hello, World!'">
@@ -62,7 +62,7 @@ $schema: https://json-schema.org/draft/2020-12/schema-cfgu
     </ResponseField>
 
     <ResponseField name="RegEx" type="/abc/">
-    check if the string match a regular expression.
+    Check if the string matches a regular expression.
     </ResponseField>
 
     <ResponseField name="JSONSchema" type='{ "type": "string" }'>
@@ -70,19 +70,19 @@ $schema: https://json-schema.org/draft/2020-12/schema-cfgu
     </ResponseField>
 
     <ResponseField name="IPv4" type="192.0.2.0">
-    check if the string is an IP (version 4).
+    Check if the string is an IP (version 4).
     </ResponseField>
 
     <ResponseField name="IPv6" type="2001:0db8:85a3:0000:0000:8a2e:0370:7334">
-    check if the string is an IP (version 6).
+    Check if the string is an IP (version 6).
     </ResponseField>
 
     <ResponseField name="FQDN" type="domain.com">
-    check if the string is a fully qualified domain name.
+    Check if the string is a fully qualified domain name.
     </ResponseField>
 
     <ResponseField name="URL" type="http://foo.com">
-    check if the string is a URL.
+    Check if the string is a URL.
     </ResponseField>
 
 
@@ -92,16 +92,16 @@ $schema: https://json-schema.org/draft/2020-12/schema-cfgu
     </ResponseField>
 
     <ResponseField name="Base64" type="Zm9vYmFy">
-    check if the string is base64 encoded.
+    Check if the string is base64 encoded.
     </ResponseField>
 
 
     <ResponseField name="MD5" type="d41d8cd98f00b204e9800998ecf8427e">
-    check if the string is a hash of MD5 algorithm.
+    Check if the string is a hash of MD5 algorithm.
     </ResponseField>
 
     <ResponseField name="SHA" type="5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8">
-    check if the string is a hash of SHA algorithm (1, 256, 384, 512).
+    Check if the string is a hash of SHA algorithm (1, 256, 384, 512).
     </ResponseField>
 
 
@@ -145,11 +145,11 @@ $schema: https://json-schema.org/draft/2020-12/schema-cfgu
 
 
     <ResponseField name="UUID" type="A987FBC9-4BED-3078-CF07-9141BA07C9F3">
-    check if the string is a UUID (version 1, 2, 3, 4 or 5).
+    Check if the string is a UUID (version 1, 2, 3, 4 or 5).
     </ResponseField>
 
     <ResponseField name="SemVer" type="1.0.0">
-    check if the string is a Semantic Versioning Specification (SemVer).
+    Check if the string is a Semantic Versioning Specification (SemVer).
     </ResponseField>
 
     <ResponseField name="DockerImage" type="nginx:latest">
