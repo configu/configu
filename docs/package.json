@@ -22,12 +22,11 @@
   ],
   "scripts": {
     "prepare": "./prepare.mjs",
-    "dev": "pnpm mintlify dev",
+    "dev": "mintlify dev",
     "start": "pnpm dev"
   },
-  "dependencies": {},
   "devDependencies": {
     "lodash": "^4.17.21",
-    "mintlify": "^4.0.152"
+    "mintlify": "^4.0.157"
   }
 }

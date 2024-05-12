@@ -11,6 +11,7 @@ import { isDev } from '../helpers';
 const CONFIGU_API_URL = process.env.CONFIGU_API_URL ?? (isDev ? 'http://localhost:8080' : 'https://api.configu.com');
 const CONFIGU_APP_URL = process.env.CONFIGU_APP_URL ?? (isDev ? 'http://localhost:3000' : 'https://app.configu.com');
 const AUTH0_DOMAIN = 'configu.us.auth0.com';
+/* cspell:disable-next-line */
 const AUTH0_CLIENT_ID = 'qxv0WQpwqApo4BNEYMMb4rfn1Xam9A4D';
 const AUTH0_API_IDENTIFIER = 'https://api.configu.com';
 const SETUP_ERROR_MESSAGE = `Initial setup in not completed. Go to ${CONFIGU_APP_URL} activate your user and create your first organization`;

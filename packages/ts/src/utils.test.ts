@@ -1,3 +1,5 @@
+import { describe, test } from 'node:test';
+import assert from 'node:assert/strict';
 import { ConfigError, TMPL } from './utils';
 
 describe(`utils`, () => {
@@ -5,63 +7,54 @@ describe(`utils`, () => {
     const message = 'some-error';
     const hint = 'try to to reach 100% coverage';
     const scope: [string, string][] = [['test', 'ConfigError']];
-    it(`return message`, async () => {
+    test(`return message`, () => {
       const res = new ConfigError(message);
-      expect(res.message).toEqual(message);
+      assert.strictEqual(res.message, message);
     });
-    it(`return message and location`, async () => {
+    test(`return message and location`, () => {
       const res = new ConfigError(message, undefined, scope);
-      expect(res.message).toContain(`${message} at`);
+      assert(res.message.includes(`${message} at`));
     });
-    it(`return message and suggestion`, async () => {
+    test(`return message and suggestion`, () => {
       const res = new ConfigError(message, hint);
-      expect(res.message).toBe(`${message}, ${hint}`);
+      assert.strictEqual(res.message, `${message}, ${hint}`);
     });
-    it(`return decorated message`, async () => {
+    test(`return decorated message`, () => {
       const res = new ConfigError(message, hint, scope);
-      expect(res.message).toContain(`at`);
-      expect(res.message).toContain(`,`);
+      assert(res.message.includes(`at`));
+      assert(res.message.includes(`,`));
     });
   });
 
   describe(`TMPL`, () => {
     const template = '{{ test }} TMPL';
     describe(`parse`, () => {
-      it(`throw from Mustache.parse`, async () => {
-        const res = () => {
+      test(`throw from Mustache.parse`, () => {
+        assert.throws(() => {
           TMPL.parse('{{ test }');
-        };
-        expect(res).toThrow();
+        });
       });
-      it(`throw invalid template`, async () => {
-        const res = () => {
+      test(`throw invalid template`, () => {
+        assert.throws(() => {
           TMPL.parse('{{# test }}');
-        };
-        expect(res).toThrow();
+        });
       });
-      it(`return parsed template`, async () => {
+      test(`return parsed template`, () => {
         const res = TMPL.parse(template);
-        expect(res).toHaveLength(2);
-        expect(res).toContainEqual(
-          expect.objectContaining({
-            type: 'name',
-          }),
-        );
-        expect(res).toContainEqual(
-          expect.objectContaining({
-            type: 'text',
-          }),
-        );
+        assert.strictEqual(res.length, 2);
+        assert(res.some((node) => node.type === 'name'));
+        assert(res.some((node) => node.type === 'text'));
       });
     });
+
     describe(`render`, () => {
-      it(`return rendered template`, async () => {
+      test(`return rendered template`, () => {
         const res = TMPL.render(template, { test: 'render' });
-        expect(res).toBe('render TMPL');
+        assert.strictEqual(res, 'render TMPL');
       });
-      it(`return partially rendered - missing name node in context`, async () => {
+      test(`return partially rendered - missing name node in context`, () => {
         const res = TMPL.render(template, { notTest: 'render' });
-        expect(res).toBe(' TMPL');
+        assert.strictEqual(res, ' TMPL');
       });
     });
   });

@@ -4,41 +4,44 @@
 .DS_Store
 *.pem
 
-# output
-build
-dist
-out
-tmp
-
-# testing
-coverage
-*.lcov
-
 # debug
 *.log
 *-debug.log
 *-error.log
 
+# local env files
+.env*
+
 # dependencies
 node_modules
-.npm
-/.pnp
+.pnp
 .pnp.js
+.npm
 
-# linter
-.eslintcache
+# output
+build
+dist
+out
+.next
+tmp
 
 # build cache
 *.tsbuildinfo
 
+# testing
+coverage
+*.lcov
+*.info
+
+# turbo
+.turbo
+
+# linter
+.eslintcache
+
 # oclif
 oclif.manifest.json
 
-# local env files
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
 
 # # typedoc
 # docs/

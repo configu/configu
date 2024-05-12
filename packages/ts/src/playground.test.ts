@@ -1,5 +1,5 @@
-/* eslint-disable jest/expect-expect */
-import test from 'node:test';
+import { describe, test } from 'node:test';
+import assert from 'node:assert/strict';
 import _ from 'lodash';
 import {
   InMemoryConfigStore,
@@ -12,7 +12,6 @@ import {
   EvalCommandReturn,
   DeleteCommand,
 } from '.';
-
 
 describe(`playground`, () => {
   const store = new InMemoryConfigStore();
@@ -44,7 +43,7 @@ describe(`playground`, () => {
     },
   });
 
-  it(`a`, async () => {
+  test(`a`, async () => {
     await new UpsertCommand({
       store,
       set,

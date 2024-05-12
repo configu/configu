@@ -11,10 +11,8 @@
     "plugin:import/typescript",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
+    "plugin:@cspell/recommended",
     "plugin:prettier/recommended"
-  ],
-  "plugins": [
-    "spellcheck"
   ],
   "rules": {
     "@typescript-eslint/explicit-module-boundary-types": "off",
@@ -48,20 +46,10 @@
     "max-classes-per-file": "off",
     "no-shadow": "off",
     "@typescript-eslint/no-shadow": "error",
-    "spellcheck/spell-checker": [
+    "@cspell/spellchecker": [
       "warn",
       {
-        "skipWords": [
-          "configu",
-          "cfgu",
-          "upsert"
-        ]
-      }
-    ],
-    "@typescript-eslint/consistent-type-imports": [
-      "error",
-      {
-        "fixStyle": "inline-type-imports"
+        "configFile": "./cspell.json"
       }
     ]
   },

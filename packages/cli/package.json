@@ -11,8 +11,8 @@
     "build:docker": "docker build --progress plain -t configu/cli -f ./Dockerfile .",
     "build:manifest": "shx mv -f README.md README.tmp.md && shx mv -f manifest.tmpl.md README.md && oclif manifest && oclif readme --no-aliases && shx mv -f README.md manifest.md && shx mv -f README.tmp.md README.md",
     "build:oclif": "oclif pack tarballs --parallel",
-    "prebuild:oclif": "conc \"npm:clean:*\" && shx cp ../../package-lock.json ./package-lock.json && npm run build:tsc && npm run build:manifest",
-    "postbuild:oclif": "npm run clean:cache",
+    "prebuild:oclif": "pnpm \"/^clean:.*/\" && shx cp ../../package-lock.json ./package-lock.json && npm run build:tsc && npm run build:manifest",
+    "postbuild:oclif": "pnpm clean:cache",
     "test": "echo NO TESTS"
   },
   "oclif": {
@@ -122,13 +122,13 @@
   },
   "devDependencies": {
     "@oclif/prettier-config": "^0.2.1",
-    "@oclif/test": "^3.1.3",
+    "@oclif/test": "^3.2.13",
     "@types/inquirer": "8.2.5",
     "@types/js-yaml": "^4.0.9",
     "@types/parse-json": "^4.0.2",
-    "aws-sdk": "^2.1516.0",
-    "eslint-config-oclif": "^5.0.0",
-    "eslint-config-oclif-typescript": "^3.0.26",
+    "aws-sdk": "^2.1616.0",
+    "eslint-config-oclif": "^5.2.0",
+    "eslint-config-oclif-typescript": "^3.1.7",
     "oclif": "^4.0.4",
     "tslib": "^2.6.2"
   }

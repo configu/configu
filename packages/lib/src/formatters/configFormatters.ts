@@ -73,8 +73,8 @@ const jsonToKubernetesConfigMap: FormatterFunction = ({ json, label }) => {
 
 // * Helm values naming convention is camel case (https://helm.sh/docs/chart_best_practices/values/)
 const jsonToHelmValues: FormatterFunction = ({ json }) => {
-  const cameledKeys = _.mapKeys(json, (v, k) => camelCase(k));
-  return ymlStringify(cameledKeys);
+  const camelCaseKeys = _.mapKeys(json, (v, k) => camelCase(k));
+  return ymlStringify(camelCaseKeys);
 };
 
 const configFormatters: Record<ConfigFormat, FormatterFunction> = {

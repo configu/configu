@@ -1,14 +1,16 @@
+import { describe, test, before } from 'node:test';
+import assert from 'node:assert/strict';
 import _ from 'lodash';
 import {
   InMemoryConfigStore,
   ConfigSet,
   ConfigSchema,
   UpsertCommand,
-  type UpsertCommandParameters,
+  UpsertCommandParameters,
   EvalCommand,
-  type EvalCommandParameters,
+  EvalCommandParameters,
   DeleteCommand,
-  type EvalCommandReturn,
+  EvalCommandReturn,
   ExportCommand,
   ConfigError,
 } from '..';
@@ -66,30 +68,33 @@ describe(`commands`, () => {
   describe(`UpsertCommand`, () => {
     describe('Tests for lazy configs', () => {
       test('run UpsertCommand with lazy config', async () => {
-        await expect(() =>
-          new UpsertCommand({
-            store: store1,
-            set: set1,
-            schema: new ConfigSchema('lazy', {
-              K1: {
-                type: 'String',
-                lazy: true,
+        await assert.rejects(
+          () =>
+            new UpsertCommand({
+              store: store1,
+              set: set1,
+              schema: new ConfigSchema('lazy', {
+                K1: {
+                  type: 'String',
+                  lazy: true,
+                },
+              }),
+              configs: {
+                K1: '1',
               },
-            }),
-            configs: {
-              K1: '1',
-            },
-          }).run(),
-        ).rejects.toBeInstanceOf(ConfigError);
+            }).run(),
+          (error) => error instanceof ConfigError,
+        );
       });
     });
   });
-  describe(`EvalCommand`, () => {
-    test.each<{
+
+  describe(`EvalCommand`, async () => {
+    const cases: {
       name: string;
       parameters: { upsert: UpsertCommandParameters[]; eval: EvalCommandParameters[] };
       expected: { [key: string]: string } | string;
-    }>([
+    }[] = [
       {
         name: '[ store1 ⋅ set1 ⋅ schema1 ]',
         parameters: {
@@ -222,30 +227,36 @@ describe(`commands`, () => {
         },
         expected: { K31: 'test-test', K32: 'configu.com', K33: 'test-test-test@configu.com' },
       },
-    ])('$name', async ({ parameters, expected }) => {
-      try {
-        const upsertPromises = parameters.upsert.map((p) => new UpsertCommand(p).run());
-        await Promise.all(upsertPromises);
+    ];
 
-        const evalResult = await parameters.eval.reduce<Promise<EvalCommandReturn>>(
-          async (promisedPrevious, current) => {
-            const previous = await promisedPrevious;
-            return new EvalCommand({ ...current, pipe: previous }).run();
-          },
-          undefined as any,
-        );
-        const evaluatedConfigs = _.mapValues(evalResult, (current) => current.result.value);
-        expect(evaluatedConfigs).toStrictEqual(expected);
-      } catch (error) {
-        // eslint-disable-next-line jest/no-conditional-expect
-        expect(error.message).toContain(expected);
-      } finally {
-        const deletePromises = parameters.upsert.map((p) => new DeleteCommand(p).run());
-        await Promise.all(deletePromises);
-      }
-    });
+    await Promise.allSettled(
+      cases.map(({ name, parameters, expected }) =>
+        test.test(name, async () => {
+          try {
+            const upsertPromises = parameters.upsert.map((p) => new UpsertCommand(p).run());
+            await Promise.all(upsertPromises);
+
+            const evalResult = await parameters.eval.reduce<Promise<EvalCommandReturn>>(
+              async (promisedPrevious, current) => {
+                const previous = await promisedPrevious;
+                return new EvalCommand({ ...current, pipe: previous }).run();
+              },
+              undefined as any,
+            );
+            const evaluatedConfigs = _.mapValues(evalResult, (current) => current.result.value);
+            assert.deepStrictEqual(evaluatedConfigs, expected);
+          } catch (error) {
+            assert(error.message.includes(expected));
+          } finally {
+            const deletePromises = parameters.upsert.map((p) => new DeleteCommand(p).run());
+            await Promise.all(deletePromises);
+          }
+        }),
+      ),
+    );
+
     describe('Tests for lazy configs', () => {
-      beforeAll(async () => {
+      before(async () => {
         await store1.init();
         await new UpsertCommand({
           store: store1,
@@ -260,21 +271,23 @@ describe(`commands`, () => {
           },
         }).run();
       });
+
       test('run EvalCommand WITHOUT configs overrides but one config is `cfgu.lazy && cfgu.required = true`', async () => {
-        expect.assertions(1);
-        await expect(() =>
-          new EvalCommand({
-            store: store1,
-            set: set1,
-            schema: new ConfigSchema('lazy', {
-              K1: {
-                type: 'String',
-                lazy: true,
-                required: true,
-              },
-            }),
-          }).run(),
-        ).rejects.toBeInstanceOf(ConfigError);
+        assert.rejects(
+          () =>
+            new EvalCommand({
+              store: store1,
+              set: set1,
+              schema: new ConfigSchema('lazy', {
+                K1: {
+                  type: 'String',
+                  lazy: true,
+                  required: true,
+                },
+              }),
+            }).run(),
+          (error) => error instanceof ConfigError,
+        );
       });
       test('run EvalCommand WITHOUT configs overrides but one config is `cfgu.lazy && cfgu.required = false`', async () => {
         const result = await new EvalCommand({
@@ -287,29 +300,30 @@ describe(`commands`, () => {
             },
           }),
         }).run();
-        expect(result).toMatchObject({ K1: { result: { value: '' } } });
+        assert.deepEqual(result.K1?.result?.value, '');
       });
       test('run EvalCommand WITH configs overrides but not for the one config is `cfgu.lazy && cfgu.required = true`', async () => {
-        expect.assertions(1);
-        await expect(() =>
-          new EvalCommand({
-            store: store1,
-            set: set1,
-            schema: new ConfigSchema('lazy', {
-              K1: {
-                type: 'String',
-                lazy: true,
-                required: true,
+        assert.rejects(
+          () =>
+            new EvalCommand({
+              store: store1,
+              set: set1,
+              schema: new ConfigSchema('lazy', {
+                K1: {
+                  type: 'String',
+                  lazy: true,
+                  required: true,
+                },
+                K2: {
+                  type: 'String',
+                },
+              }),
+              configs: {
+                K2: '2',
               },
-              K2: {
-                type: 'String',
-              },
-            }),
-            configs: {
-              K2: '2',
-            },
-          }).run(),
-        ).rejects.toBeInstanceOf(ConfigError);
+            }).run(),
+          (error) => error instanceof ConfigError,
+        );
       });
       test('run EvalCommand WITH configs overrides for the one config is `cfgu.lazy && cfgu.required = false`', async () => {
         const result = await new EvalCommand({
@@ -326,7 +340,7 @@ describe(`commands`, () => {
             K1: '1',
           },
         }).run();
-        expect(result).toMatchObject({ K1: { result: { value: '1' } } });
+        assert.deepEqual(result.K1?.result?.value, '1');
       });
       test('run EvalCommand WITH configs overrides for the one config is `cfgu.lazy && cfgu.required = true`', async () => {
         const result = await new EvalCommand({
@@ -343,7 +357,7 @@ describe(`commands`, () => {
             K1: '1',
           },
         }).run();
-        expect(result).toMatchObject({ K1: { result: { value: '1' } } });
+        assert.deepEqual(result.K1?.result?.value, '1');
       });
       test('run EvalCommand with override for lazy config when there is a value in the store and get the override value in the result', async () => {
         const result = await new EvalCommand({
@@ -359,7 +373,7 @@ describe(`commands`, () => {
             K1: '1',
           },
         }).run();
-        expect(result).toMatchObject({ K1: { result: { value: '1' } } });
+        assert.deepEqual(result.K1?.result?.value, '1');
       });
       test("run EvalCommand without override for lazy config when there is a value in the store and don't get it back in the result", async () => {
         const result = await new EvalCommand({
@@ -372,7 +386,7 @@ describe(`commands`, () => {
             },
           }),
         }).run();
-        expect(result).toMatchObject({ K1: { result: { value: '' } } });
+        assert.deepEqual(result.K1?.result?.value, '');
       });
     });
   });
@@ -403,7 +417,7 @@ describe(`commands`, () => {
         pipe: evalResult,
         filter: ({ context, result }) => result.value !== 'KEY0',
       }).run();
-      expect(exportedConfigs).toStrictEqual({ KEY1: 'KEY1' });
+      assert.deepStrictEqual(exportedConfigs, { KEY1: 'KEY1' });
     });
     test('Export with hidden configs', async () => {
       const evalResult = await getEvalResult(
@@ -418,64 +432,72 @@ describe(`commands`, () => {
         }),
       );
       const exportedConfigs = await new ExportCommand({ pipe: evalResult }).run();
-      expect(exportedConfigs).toStrictEqual({ KEY0: 'KEY0' });
+      assert.deepStrictEqual(exportedConfigs, { KEY0: 'KEY0' });
     });
     describe(`Keys Mutation Callback`, () => {
       test('Export without keys mutation callback', async () => {
         const evalResult = await getEvalResult();
         const exportedConfigs = await new ExportCommand({ pipe: evalResult }).run();
-        expect(exportedConfigs).toStrictEqual({ KEY0: 'KEY0', KEY1: 'KEY1' });
+        assert.deepStrictEqual(exportedConfigs, { KEY0: 'KEY0', KEY1: 'KEY1' });
       });
     });
     test('Export with keys mutation callback', async () => {
       const evalResult = await getEvalResult();
       const exportedConfigs = await new ExportCommand({ pipe: evalResult, keys: (key) => `MY_${key}` }).run();
-      expect(exportedConfigs).toStrictEqual({ MY_KEY0: 'KEY0', MY_KEY1: 'KEY1' });
+      assert.deepStrictEqual(exportedConfigs, { MY_KEY0: 'KEY0', MY_KEY1: 'KEY1' });
     });
     test('Export with bad keys mutation callback that returns non-string', async () => {
       const evalResult = await getEvalResult();
-      await expect(
-        new ExportCommand({
-          pipe: evalResult,
-          // @ts-expect-error - should throw ConfigError
-          keys: (key) => ({ key }),
-        }).run(),
-      ).rejects.toBeInstanceOf(ConfigError);
+      await assert.rejects(
+        () =>
+          new ExportCommand({
+            pipe: evalResult,
+            // @ts-expect-error - should throw ConfigError
+            keys: (key) => ({ key }),
+          }).run(),
+        (error) => error instanceof ConfigError,
+      );
     });
     test('Export with bad keys mutation callback that returns number', async () => {
       const evalResult = await getEvalResult();
       // @ts-expect-error - should throw ConfigError
       const exportedConfigs = await new ExportCommand({ pipe: evalResult, keys: (key) => 5 }).run();
-      expect(exportedConfigs).toStrictEqual({ '5': 'KEY1' });
+      assert.deepStrictEqual(exportedConfigs, { '5': 'KEY1' });
     });
     test('Export with bad keys mutation callback that returns empty string', async () => {
       const evalResult = await getEvalResult();
-      await expect(
-        new ExportCommand({
-          pipe: evalResult,
-          keys: (key) => '',
-        }).run(),
-      ).rejects.toBeInstanceOf(ConfigError);
+      await assert.rejects(
+        () =>
+          new ExportCommand({
+            pipe: evalResult,
+            keys: (key) => '',
+          }).run(),
+        (error) => error instanceof ConfigError,
+      );
     });
     test('Export with bad keys mutation callback that returns !NAME()', async () => {
       const evalResult = await getEvalResult();
-      await expect(
-        new ExportCommand({
-          pipe: evalResult,
-          keys: (key) => `!${key}`,
-        }).run(),
-      ).rejects.toBeInstanceOf(ConfigError);
+      await assert.rejects(
+        () =>
+          new ExportCommand({
+            pipe: evalResult,
+            keys: (key) => `!${key}`,
+          }).run(),
+        (error) => error instanceof ConfigError,
+      );
     });
     test('Export with bad keys mutation callback that raise exception', async () => {
       const evalResult = await getEvalResult();
-      await expect(
-        new ExportCommand({
-          pipe: evalResult,
-          keys: (key) => {
-            throw new Error('test');
-          },
-        }).run(),
-      ).rejects.toBeInstanceOf(Error);
+      await assert.rejects(
+        () =>
+          new ExportCommand({
+            pipe: evalResult,
+            keys: (key) => {
+              throw new Error('test');
+            },
+          }).run(),
+        (error) => error instanceof Error,
+      );
     });
   });
 });

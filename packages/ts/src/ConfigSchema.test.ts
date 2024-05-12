@@ -19,7 +19,7 @@ describe(`ConfigSchema`, () => {
                 default: '1',
               },
             }),
-          ConfigError
+          ConfigError,
         );
       });
       test('parse ConfigSchema with `lazy=true` and `template=any`', () => {
@@ -36,7 +36,7 @@ describe(`ConfigSchema`, () => {
                 template: '{{ T1 }}',
               },
             }),
-          ConfigError
+          ConfigError,
         );
       });
     });

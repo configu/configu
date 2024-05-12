@@ -1,9 +1,11 @@
+import { describe, it as test } from 'node:test';
+import assert from 'node:assert/strict';
 import _ from 'lodash';
 import { ConfiguConfigStore } from '..';
 
 describe(`ConfiguConfigStore`, () => {
   describe(`constructor`, () => {
-    it(`sets client header Authorization`, () => {
+    test(`sets client header Authorization`, () => {
       const store = new ConfiguConfigStore({
         credentials: {
           org: 'test',
@@ -14,13 +16,14 @@ describe(`ConfiguConfigStore`, () => {
       });
 
       const { headers } = store['client'].defaults;
-      expect((headers as any).Org).toBe('test');
-      expect((headers as any).Source).toBe('test');
-      expect(typeof headers.common.Token).toBe('undefined');
-      expect(typeof headers.common.Authorization).toBe('string');
-      expect(String(headers.common.Authorization).startsWith('Bearer')).toBe(true);
+      assert.strictEqual((headers as any).Org, 'test');
+      assert.strictEqual((headers as any).Source, 'test');
+      assert.strictEqual(typeof headers.common.Token, 'undefined');
+      assert.strictEqual(typeof headers.common.Authorization, 'string');
+      assert.strictEqual(String(headers.common.Authorization).startsWith('Bearer'), true);
     });
-    it(`sets client header Token`, () => {
+
+    test(`sets client header Token`, () => {
       const store = new ConfiguConfigStore({
         credentials: {
           org: 'test',
@@ -30,10 +33,11 @@ describe(`ConfiguConfigStore`, () => {
       });
 
       const { headers } = store['client'].defaults;
-      expect(typeof headers.common.Token).toBe('string');
-      expect(typeof headers.common.Authorization).toBe('undefined');
+      assert.strictEqual(typeof headers.common.Token, 'string');
+      assert.strictEqual(typeof headers.common.Authorization, 'undefined');
     });
-    it(`sets the tag property if provided`, () => {
+
+    test(`sets the tag property if provided`, () => {
       const store = new ConfiguConfigStore({
         credentials: {
           org: 'test',
@@ -43,9 +47,10 @@ describe(`ConfiguConfigStore`, () => {
         tag: 'test-tag',
       });
 
-      expect(store['tag']).toBe('test-tag');
+      assert.strictEqual(store['tag'], 'test-tag');
     });
-    it(`does not set the tag property if not provided`, () => {
+
+    test(`does not set the tag property if not provided`, () => {
       const store = new ConfiguConfigStore({
         credentials: {
           org: 'test',
@@ -54,7 +59,7 @@ describe(`ConfiguConfigStore`, () => {
         source: 'test',
       });
 
-      expect(store['tag']).toBeUndefined();
+      assert.strictEqual(store['tag'], undefined);
     });
   });
 });

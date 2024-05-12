@@ -6,12 +6,12 @@
       "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**"]
     },
-    "lint": {
-      "dependsOn": ["^lint"]
+    "lint": {},
+    "//#format": {
+      "dependsOn": [],
+      "outputs": ["dist/**/*"],
+      "inputs": ["version.txt"]
     },
-    "dev": {
-      "cache": false,
-      "persistent": true
-    }
+    "test": {}
   }
 }

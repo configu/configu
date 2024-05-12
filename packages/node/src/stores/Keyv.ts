@@ -1,4 +1,4 @@
-/* eslint-disable spellcheck/spell-checker */
+/* cspell:disable */
 import { KeyValueConfigStore } from '@configu/ts';
 import type Keyv from 'keyv';
 
