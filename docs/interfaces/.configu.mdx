@@ -33,11 +33,25 @@ $schema: https://json-schema.org/draft/2020-12/schema-configu
 
 ## Properties
 
+### cache
+
+The `.configu` file allows you to define the cache file path for the Configu CLI. The cache is used to store the results of the `configu eval` command to provide failsafe and faster access to the results.
+
+To define the cache configuration, add a new key-value pair to the `.configu` file, where the key is `cache`, and the value is path to the cache file.
+
+By default, the cache file is stored in the os cache directory as follows:
+
+- macOS: ~/Library/Caches/configu/config.sqlite
+- Unix: ~/.cache/configu/config.sqlite
+- Windows: %LOCALAPPDATA%\configu\config.sqlite
+
 ### stores
 
 The `.configu` file allows you to save `ConfigStore` configurations as friendly names, which can be later used as values for the `--store` flag in all the commands.
 
 To define a `ConfigStore`, add a new key-value pair to the `stores` section of the `.configu` file, where the key represents the friendly name, and the value is an object with the `type` and `configuration` properties. The `type` property represents the store type, and the `configuration` property contains the specific configuration options for the store.
+
+Additionally, you can activate the caching for a specific store by adding the `cache` property to the store configuration object and set it to `true`.
 
 For detailed information about the available store options, please refer to the relevant store on the [intergrations section](/integrations/overview#configstore).
 
@@ -68,6 +82,7 @@ Remember that the `.configu` file is optional, and if present, it will be automa
 $schema: https://json-schema.org/draft/2020-12/schema
 stores:
   store1:
+    cache: true
     type: storeType1
     configuration:
       option1: value1
@@ -90,6 +105,7 @@ scripts:
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "stores": {
     "store1": {
+      "cache": true,
       "type": "storeType1",
       "configuration": {
         "option1": "value1",
