@@ -1,0 +1,22 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "composite": true,
+
+    "baseUrl": ".",
+    "paths": {
+      "@ui/*": ["./src/*"]
+    },
+    "jsx": "react", // or "react-jsx" for React 17+
+    "allowJs": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "target": "es6",
+    "module": "commonjs",
+    "strict": true
+  },
+  "references": [{ "path": "../ts" }],
+  "include": ["src"],
+  "exclude": ["node_modules"]
+}
