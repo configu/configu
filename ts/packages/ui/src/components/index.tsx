@@ -1,6 +1,7 @@
 export * from './Button';
 export * from './Card';
 export * from './Checkbox';
+export * from './Icons';
 export * from './Input';
 export * from './LayoutSwitch';
 export * from './Message';
