@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as SelectPrimitive from '@radix-ui/react-select';
 import { cn } from '../lib/utils';
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from './Icons';
+import { Text } from './Typography';
 
 const Select = SelectPrimitive.Root;
 
@@ -9,29 +10,38 @@ const SelectGroup = SelectPrimitive.Group;
 
 const SelectValue = SelectPrimitive.Value;
 
-// TODO: use text/regular/13px for the text
-const SelectTrigger = React.forwardRef<
-  React.ElementRef<typeof SelectPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
->(({ className, children, ...props }, ref) => (
-  <SelectPrimitive.Trigger
-    ref={ref}
-    className={cn(
-      'flex h-10 w-full items-center justify-between rounded-3xl border px-4 py-2 text-sm text-gray-400 border-gray-200 hover:border-gray-400 focus:outline-none [&>span]:line-clamp-1',
-      'data-[state=open]:text-blue-400 data-[state=open]:border-blue-400',
-      'dark:text-gray-300 dark:border-gray-300 dark:bg-gray-900 dark:hover:border-white',
-      'dark:data-[state=open]:text-blue-300 dark:data-[state=open]:border-blue-300',
-      'disabled:cursor-not-allowed disabled:opacity-50 disabled:border-gray-200 disabled:dark:border-gray-300',
-      className,
-    )}
-    {...props}
-  >
-    {children}
-    <SelectPrimitive.Icon asChild>
-      <ChevronDownIcon />
-    </SelectPrimitive.Icon>
-  </SelectPrimitive.Trigger>
-));
+export interface SelectTriggerProps extends React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> {
+  label?: string;
+}
+
+const SelectTrigger = React.forwardRef<React.ElementRef<typeof SelectPrimitive.Trigger>, SelectTriggerProps>(
+  ({ className, children, label, ...props }, ref) => (
+    <div>
+      {label && (
+        <div className="pb-1.5">
+          <Text variant={'bold13'}>{label}</Text>
+        </div>
+      )}
+      <SelectPrimitive.Trigger
+        ref={ref}
+        className={cn(
+          'flex h-10 w-full items-center justify-between rounded-3xl border px-4 py-2 text-gray-400 border-gray-200 hover:border-gray-400 focus:outline-none [&>span]:line-clamp-1',
+          'data-[state=open]:text-blue-400 data-[state=open]:border-blue-400',
+          'dark:text-gray-300 dark:border-gray-300 dark:bg-gray-900 dark:hover:border-white',
+          'dark:data-[state=open]:text-blue-300 dark:data-[state=open]:border-blue-300',
+          'disabled:cursor-not-allowed disabled:opacity-50 disabled:border-gray-200 disabled:dark:border-gray-300',
+          className,
+        )}
+        {...props}
+      >
+        <Text variant="regular13">{children}</Text>
+        <SelectPrimitive.Icon asChild>
+          <ChevronDownIcon />
+        </SelectPrimitive.Icon>
+      </SelectPrimitive.Trigger>
+    </div>
+  ),
+);
 SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
 
 const SelectScrollUpButton = React.forwardRef<
@@ -94,14 +104,6 @@ const SelectContent = React.forwardRef<
 ));
 SelectContent.displayName = SelectPrimitive.Content.displayName;
 
-const SelectLabel = React.forwardRef<
-  React.ElementRef<typeof SelectPrimitive.Label>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Label>
->(({ className, ...props }, ref) => (
-  <SelectPrimitive.Label ref={ref} className={cn('py-1.5 pl-8 pr-2 text-sm font-semibold', className)} {...props} />
-));
-SelectLabel.displayName = SelectPrimitive.Label.displayName;
-
 const SelectItem = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item>
@@ -139,7 +141,6 @@ export {
   SelectValue,
   SelectTrigger,
   SelectContent,
-  SelectLabel,
   SelectItem,
   SelectSeparator,
   SelectScrollUpButton,
