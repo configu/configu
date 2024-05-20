@@ -36,7 +36,7 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
-  icon?: React.ReactNode;
+  icon?: React.ReactElement<SVGElement>;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(

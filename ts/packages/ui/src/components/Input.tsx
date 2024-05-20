@@ -2,7 +2,7 @@ import * as React from 'react';
 import { cn } from '../lib/utils';
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  icon?: React.ReactNode;
+  icon?: React.ReactElement<SVGElement>;
 }
 
 // TODO: add disabled state once we have a design for it
