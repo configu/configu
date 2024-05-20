@@ -2,10 +2,11 @@ import React from 'react';
 
 const DEFAULT_WIDTH = 16;
 const DEFAULT_HEIGHT = 16;
+const DEFAULT_VIEWBOX = `0 0 ${DEFAULT_WIDTH} ${DEFAULT_HEIGHT}`;
 
 export const CheckIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={DEFAULT_WIDTH} height={DEFAULT_HEIGHT} {...props}>
+    <svg width={DEFAULT_WIDTH} height={DEFAULT_HEIGHT} viewBox={DEFAULT_VIEWBOX} {...props}>
       <g fill={'none'}>
         <path
           fillRule={'evenodd'}
@@ -20,7 +21,7 @@ export const CheckIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const ChevronDownIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={DEFAULT_WIDTH} height={DEFAULT_HEIGHT} {...props}>
+    <svg width={DEFAULT_WIDTH} height={DEFAULT_HEIGHT} viewBox={DEFAULT_VIEWBOX} {...props}>
       <g fill={'none'}>
         <path
           fillRule={'evenodd'}
@@ -35,7 +36,7 @@ export const ChevronDownIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const ChevronLeftIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={DEFAULT_WIDTH} height={DEFAULT_HEIGHT} {...props}>
+    <svg width={DEFAULT_WIDTH} height={DEFAULT_HEIGHT} viewBox={DEFAULT_VIEWBOX} {...props}>
       <g fill={'none'}>
         <path
           fillRule={'evenodd'}
@@ -50,7 +51,7 @@ export const ChevronLeftIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const ChevronRightIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={DEFAULT_WIDTH} height={DEFAULT_HEIGHT} {...props}>
+    <svg width={DEFAULT_WIDTH} height={DEFAULT_HEIGHT} viewBox={DEFAULT_VIEWBOX} {...props}>
       <g fill={'none'}>
         <path
           fillRule={'evenodd'}
@@ -65,7 +66,7 @@ export const ChevronRightIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const ChevronUpIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={DEFAULT_WIDTH} height={DEFAULT_HEIGHT} {...props}>
+    <svg width={DEFAULT_WIDTH} height={DEFAULT_HEIGHT} viewBox={DEFAULT_VIEWBOX} {...props}>
       <g fill={'none'}>
         <path
           fillRule={'evenodd'}
