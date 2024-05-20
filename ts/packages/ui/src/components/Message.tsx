@@ -27,6 +27,7 @@ const Message = React.forwardRef<
 ));
 Message.displayName = 'Message';
 
+// TODO: decide if we need this
 const MessageTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLHeadingElement>>(
   ({ className, ...props }, ref) => (
     <h5 ref={ref} className={cn('mb-1 font-medium leading-none tracking-tight', className)} {...props} />

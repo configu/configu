@@ -37,6 +37,7 @@ export interface ButtonProps
   asChild?: boolean;
 }
 
+// TODO: use text/bold/13px for the text
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : 'button';

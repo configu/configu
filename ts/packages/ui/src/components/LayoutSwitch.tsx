@@ -13,6 +13,7 @@ const LayoutSwitchList = React.forwardRef<
 ));
 LayoutSwitchList.displayName = 'LayoutSwitchList';
 
+// TODO: use text/bold/15px for the text
 const LayoutSwitchTrigger = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
