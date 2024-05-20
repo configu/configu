@@ -28,6 +28,28 @@ const Switch = React.forwardRef<
     />
   </SwitchPrimitives.Root>
 ));
-Switch.displayName = SwitchPrimitives.Root.displayName;
 
-export { Switch };
+const DarkModeSwitch = React.forwardRef<
+  React.ElementRef<typeof SwitchPrimitives.Root>,
+  React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root>
+>(({ className, ...props }, ref) => (
+  <SwitchPrimitives.Root
+    className={cn(
+      'peer inline-flex h-10 w-16 cursor-pointer items-center rounded-full border border-gray-200 data-[state=unchecked]:bg-white data-[state=checked]:bg-gray-900 data-[state=checked]:border-gray-600',
+      className,
+    )}
+    {...props}
+    ref={ref}
+  >
+    <SwitchPrimitives.Thumb
+      className={cn(
+        'pointer-events-none block h-[38px] w-[38px] rounded-full bg-yellow border border-yellow-600 transition-transform',
+        'data-[state=unchecked]:translate-x-0',
+        'data-[state=checked]:translate-x-6 data-[state=checked]:bg-blue-800 data-[state=checked]:border-blue-200',
+      )}
+    />
+  </SwitchPrimitives.Root>
+));
+DarkModeSwitch.displayName = 'DarkModeSwitch';
+
+export { Switch, DarkModeSwitch };
