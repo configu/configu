@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as SwitchPrimitives from '@radix-ui/react-switch';
 import { cn } from '../lib/utils';
+import { DarkModeIcon, LightModeIcon } from './Icons';
 
 const Switch = React.forwardRef<
   React.ElementRef<typeof SwitchPrimitives.Root>,
@@ -29,27 +30,48 @@ const Switch = React.forwardRef<
   </SwitchPrimitives.Root>
 ));
 
+const DARK_MODE_SWITCH_THUMB_ICON_SIZE = 28;
+
 const DarkModeSwitch = React.forwardRef<
   React.ElementRef<typeof SwitchPrimitives.Root>,
   React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root>
->(({ className, ...props }, ref) => (
-  <SwitchPrimitives.Root
-    className={cn(
-      'peer inline-flex h-10 w-16 cursor-pointer items-center rounded-full border border-gray-200 data-[state=unchecked]:bg-white data-[state=checked]:bg-gray-900 data-[state=checked]:border-gray-600',
-      className,
-    )}
-    {...props}
-    ref={ref}
-  >
-    <SwitchPrimitives.Thumb
+>(({ className, ...props }, ref) => {
+  const [isChecked, setIsChecked] = React.useState(false);
+
+  const handleCheckedChange = (checked: boolean) => {
+    setIsChecked(checked);
+  };
+
+  return (
+    <SwitchPrimitives.Root
       className={cn(
-        'pointer-events-none block h-[38px] w-[38px] rounded-full bg-yellow border border-yellow-600 transition-transform',
-        'data-[state=unchecked]:translate-x-0',
-        'data-[state=checked]:translate-x-6 data-[state=checked]:bg-blue-800 data-[state=checked]:border-blue-200',
+        'peer inline-flex h-10 w-16 cursor-pointer items-center rounded-full border border-gray-200 data-[state=unchecked]:bg-white data-[state=checked]:bg-gray-900 data-[state=checked]:border-gray-600',
+        className,
       )}
-    />
-  </SwitchPrimitives.Root>
-));
+      {...props}
+      ref={ref}
+      onCheckedChange={(checked: boolean) => {
+        handleCheckedChange(checked);
+        props.onCheckedChange?.(checked);
+      }}
+    >
+      <SwitchPrimitives.Thumb
+        className={cn(
+          'pointer-events-none block h-[38px] w-[38px] rounded-full bg-yellow border border-yellow-600 transition-transform flex items-center justify-center',
+          'data-[state=unchecked]:translate-x-0',
+          'data-[state=checked]:translate-x-6 data-[state=checked]:bg-blue-800 data-[state=checked]:border-blue-200',
+          'data-[state=unchecked]:text-[#7A5C09] data-[state=checked]:text-[#FFF5B8]',
+        )}
+      >
+        {isChecked ? (
+          <DarkModeIcon width={DARK_MODE_SWITCH_THUMB_ICON_SIZE} height={DARK_MODE_SWITCH_THUMB_ICON_SIZE} />
+        ) : (
+          <LightModeIcon width={DARK_MODE_SWITCH_THUMB_ICON_SIZE} height={DARK_MODE_SWITCH_THUMB_ICON_SIZE} />
+        )}
+      </SwitchPrimitives.Thumb>
+    </SwitchPrimitives.Root>
+  );
+});
 DarkModeSwitch.displayName = 'DarkModeSwitch';
 
 export { Switch, DarkModeSwitch };
