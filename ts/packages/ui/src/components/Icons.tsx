@@ -32,6 +32,37 @@ export const ChevronDownIcon = (props: React.SVGProps<SVGSVGElement>) => {
     </svg>
   );
 };
+
+export const ChevronLeftIcon = (props: React.SVGProps<SVGSVGElement>) => {
+  return (
+    <svg width={DEFAULT_WIDTH} height={DEFAULT_HEIGHT} {...props}>
+      <g fill={'none'}>
+        <path
+          fillRule={'evenodd'}
+          clipRule={'evenodd'}
+          fill={'currentColor'}
+          d="M10.5304 3.46946C10.8233 3.76235 10.8233 4.23722 10.5304 4.53012L7.06075 7.99979L10.5304 11.4695C10.8233 11.7624 10.8233 12.2372 10.5304 12.5301C10.2375 12.823 9.76265 12.823 9.46976 12.5301L5.46976 8.53012C5.17687 8.23722 5.17687 7.76235 5.46976 7.46946L9.46976 3.46946C9.76265 3.17656 10.2375 3.17656 10.5304 3.46946Z"
+        />
+      </g>
+    </svg>
+  );
+};
+
+export const ChevronRightIcon = (props: React.SVGProps<SVGSVGElement>) => {
+  return (
+    <svg width={DEFAULT_WIDTH} height={DEFAULT_HEIGHT} {...props}>
+      <g fill={'none'}>
+        <path
+          fillRule={'evenodd'}
+          clipRule={'evenodd'}
+          fill={'currentColor'}
+          d="M5.46976 3.46946C5.76265 3.17656 6.23753 3.17656 6.53042 3.46946L10.5304 7.46946C10.8233 7.76235 10.8233 8.23722 10.5304 8.53012L6.53042 12.5301C6.23753 12.823 5.76265 12.823 5.46976 12.5301C5.17687 12.2372 5.17687 11.7624 5.46976 11.4695L8.93943 7.99979L5.46976 4.53012C5.17687 4.23722 5.17687 3.76235 5.46976 3.46946Z"
+        />
+      </g>
+    </svg>
+  );
+};
+
 export const ChevronUpIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg width={DEFAULT_WIDTH} height={DEFAULT_HEIGHT} {...props}>
