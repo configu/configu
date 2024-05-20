@@ -45,11 +45,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <div className={props.disabled ? 'cursor-not-allowed' : ''}>
         <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props}>
-          <div className="inline-flex">
+          <div className="inline-flex items-center">
             {icon && <div className="mr-1">{icon}</div>}
-            <div>
-              <Text variant={'bold13'}>{props.children}</Text>
-            </div>
+            <Text variant={'bold13'}>{props.children}</Text>
           </div>
         </Comp>
       </div>

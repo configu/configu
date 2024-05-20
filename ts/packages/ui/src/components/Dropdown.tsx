@@ -12,10 +12,11 @@ const SelectValue = SelectPrimitive.Value;
 
 export interface SelectTriggerProps extends React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> {
   label?: string;
+  icon?: React.ReactElement<SVGElement>;
 }
 
 const SelectTrigger = React.forwardRef<React.ElementRef<typeof SelectPrimitive.Trigger>, SelectTriggerProps>(
-  ({ className, children, label, ...props }, ref) => (
+  ({ className, children, label, icon, ...props }, ref) => (
     <div>
       {label && (
         <div className="pb-1.5">
@@ -34,7 +35,10 @@ const SelectTrigger = React.forwardRef<React.ElementRef<typeof SelectPrimitive.T
         )}
         {...props}
       >
-        <Text variant="regular13">{children}</Text>
+        <div className="inline-flex items-center">
+          {icon && <div className="mr-2">{icon}</div>}
+          <Text variant="regular13">{children}</Text>
+        </div>
         <SelectPrimitive.Icon asChild>
           <ChevronDownIcon />
         </SelectPrimitive.Icon>
