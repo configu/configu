@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../lib/utils';
+import { Text } from './Typography';
 
 const messageVariants = cva(
   'relative w-full rounded-xl border p-2.5 [&>svg~*]:pl-[26px] [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-2.5 [&>svg]:top-2.5',
@@ -34,8 +35,10 @@ const MessageTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes
 MessageTitle.displayName = 'MessageTitle';
 
 const MessageDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
-  ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn('text-sm [&_p]:leading-relaxed', className)} {...props} />
+  (props, ref) => (
+    <Text variant={'regular13'} ref={ref} {...props}>
+      {props.children}
+    </Text>
   ),
 );
 MessageDescription.displayName = 'MessageDescription';
