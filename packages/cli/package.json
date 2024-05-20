@@ -5,14 +5,10 @@
   "description": "Configu CLI",
   "author": "@configu/dev",
   "scripts": {
-    "clean:build": "shx rm -rf build dist",
-    "clean:cache": "shx rm -rf package-lock.json tsconfig.tsbuildinfo tmp",
-    "build:tsc": "tsc --build",
+    "clean": "rm -rf tsconfig.tsbuildinfo build dist tmp",
+    "build": "tsc --build",
+    "build:tar": "pnpm clean && pnpm build && ./pack.mjs",
     "build:docker": "docker build --progress plain -t configu/cli -f ./Dockerfile .",
-    "build:manifest": "shx mv -f README.md README.tmp.md && shx mv -f manifest.tmpl.md README.md && oclif manifest && oclif readme --no-aliases && shx mv -f README.md manifest.md && shx mv -f README.tmp.md README.md",
-    "build:oclif": "oclif pack tarballs --parallel",
-    "prebuild:oclif": "pnpm \"/^clean:.*/\" && shx cp ../../package-lock.json ./package-lock.json && npm run build:tsc && npm run build:manifest",
-    "postbuild:oclif": "pnpm clean:cache",
     "test": "echo NO TESTS"
   },
   "oclif": {

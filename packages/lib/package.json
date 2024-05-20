@@ -26,7 +26,8 @@
     "configu-lib"
   ],
   "scripts": {
-    "build": "tsc --build --verbose"
+    "clean": "rm -rf tsconfig.tsbuildinfo build",
+    "build": "tsc --build"
   },
   "dependencies": {
     "@configu/ts": "^0.20.1",

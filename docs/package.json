@@ -27,6 +27,6 @@
   },
   "devDependencies": {
     "lodash": "^4.17.21",
-    "mintlify": "^4.0.157"
+    "mintlify": "^4.0.159"
   }
 }

@@ -7,13 +7,13 @@
   "browserslist": [
     "defaults and supports es6-module"
   ],
-  "main": "./build/index.cjs",
-  "module": "./build/index.mjs",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
   "types": "./build/index.d.ts",
   "exports": {
     ".": {
-      "require": "./build/index.cjs",
-      "import": "./build/index.mjs",
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.mjs",
       "types": "./build/index.d.ts"
     }
   },
@@ -38,10 +38,9 @@
     "configu-browser-sdk"
   ],
   "scripts": {
-    "build:clean": "shx rm -rf build dist tsconfig.tsbuildinfo",
-    "build:tsc": "tsc --build --verbose",
-    "build:esbuild": "node bundle.js",
-    "build": "npm run build:clean && npm run build:tsc && npm run build:esbuild"
+    "clean": "rm -rf tsconfig.tsbuildinfo build dist",
+    "build": "tsc --build",
+    "build:bundle": "pnpm clean && pnpm build && ./bundle.mjs"
   },
   "dependencies": {
     "@configu/ts": "workspace:*",

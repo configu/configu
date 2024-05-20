@@ -1,0 +1,8 @@
+{
+  "packages/**/*.ts": ["pnpm build --force"],
+  "*.{js,mjs,ts}": [
+    "pnpm prettier --ignore-path .gitignore --write",
+    "pnpm eslint --ignore-path .gitignore --cache --fix"
+  ],
+  "*.{md,mdx,json}": ["pnpm prettier --ignore-path .gitignore --write"]
+}

@@ -29,7 +29,8 @@
     "configu-node-sdk"
   ],
   "scripts": {
-    "build": "tsc --build --verbose"
+    "clean": "rm -rf tsconfig.tsbuildinfo build",
+    "build": "tsc --build"
   },
   "dependencies": {
     "@aws-sdk/client-secrets-manager": "^3.465.0",

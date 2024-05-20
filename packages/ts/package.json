@@ -26,7 +26,8 @@
     "configu-typescript"
   ],
   "scripts": {
-    "build": "tsc --build --verbose"
+    "clean": "rm -rf tsconfig.tsbuildinfo build",
+    "build": "tsc --build"
   },
   "dependencies": {
     "ajv": "^8.13.0",
