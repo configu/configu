@@ -12,6 +12,8 @@ const Switch = React.forwardRef<
       'data-[state=checked]:border-blue data-[state=checked]:bg-blue',
       'dark:data-[state=unchecked]:bg-gray-700 dark:data-[state=unchecked]:border-gray-700',
       'disabled:cursor-not-allowed disabled:data-[state=unchecked]:bg-gray-200 disabled:border-gray-200',
+      'disabled:data-[state=checked]:bg-blue-300 disabled:data-[state=checked]:border-blue-300',
+      'dark:disabled:data-[state=checked]:bg-blue-700 dark:disabled:data-[state=checked]:border-blue-700',
       className,
     )}
     {...props}
@@ -21,6 +23,7 @@ const Switch = React.forwardRef<
       className={cn(
         'pointer-events-none block h-[18px] w-[18px] rounded-full bg-white transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0.5',
         'data-[disabled]:bg-gray-100 dark:data-[disabled]:bg-gray-300',
+        'data-[disabled]:data-[state=checked]:bg-blue-100 dark:data-[disabled]:data-[state=checked]:bg-blue-300',
       )}
     />
   </SwitchPrimitives.Root>
