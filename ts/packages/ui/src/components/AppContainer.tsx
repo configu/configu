@@ -3,7 +3,7 @@ import { cn } from '../lib/utils';
 
 const AppContainer = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn('h-screen w-screen flex flex-col bg-blue dark:bg-blue-700', className)} {...props}>
+    <div ref={ref} className={cn('bg-blue flex h-screen w-screen flex-col dark:bg-blue-700', className)} {...props}>
       {props.children}
     </div>
   ),
@@ -12,7 +12,7 @@ AppContainer.displayName = 'AppContainer';
 
 const Header = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn('flex-1 mt-3 mx-[13px] rounded-4xl bg-white dark:bg-black', className)} {...props}>
+    <div ref={ref} className={cn('rounded-4xl mx-[13px] mt-3 flex-1 bg-white dark:bg-black', className)} {...props}>
       {props.children}
     </div>
   ),

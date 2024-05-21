@@ -10,15 +10,15 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(({ className, type,
   return (
     <div
       className={cn(
-        'relative w-full group text-gray-400 focus-within:text-gray-800 dark:focus-within:text-white',
+        'group relative w-full text-gray-400 focus-within:text-gray-800 dark:focus-within:text-white',
         props.disabled ? 'opacity-50' : '',
       )}
     >
-      {icon && <div className="absolute left-4 top-1/2 transform -translate-y-1/2 pointer-events-none">{icon}</div>}
+      {icon && <div className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 transform">{icon}</div>}
       <input
         type={type}
         className={cn(
-          'flex h-10 w-full rounded-3xl px-4 py-2 text-[13px] font-medium focus-visible:outline-none border focus:placeholder-gray-800 dark:focus:placeholder-white border-gray-200 dark:border-gray-300 dark:bg-gray-900 hover:border-gray-400 dark:group-hover:border-white focus:border-gray-800 dark:focus:border-white disabled:cursor-not-allowed disabled:group-hover:border-gray-200 dark:disabled:group-hover:border-gray-300',
+          'flex h-10 w-full rounded-3xl border border-gray-200 px-4 py-2 text-[13px] font-medium hover:border-gray-400 focus:border-gray-800 focus:placeholder-gray-800 focus-visible:outline-none disabled:cursor-not-allowed disabled:group-hover:border-gray-200 dark:border-gray-300 dark:bg-gray-900 dark:focus:border-white dark:focus:placeholder-white dark:group-hover:border-white dark:disabled:group-hover:border-gray-300',
           icon ? 'pl-10' : '',
           className,
         )}
