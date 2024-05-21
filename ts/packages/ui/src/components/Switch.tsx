@@ -36,7 +36,7 @@ const DarkModeSwitch = React.forwardRef<
   React.ElementRef<typeof SwitchPrimitives.Root>,
   React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root>
 >(({ className, ...props }, ref) => {
-  const [isChecked, setIsChecked] = React.useState(false);
+  const [isChecked, setIsChecked] = React.useState(props.defaultChecked ?? false);
 
   const handleCheckedChange = (checked: boolean) => {
     setIsChecked(checked);
