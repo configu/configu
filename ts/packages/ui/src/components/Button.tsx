@@ -16,7 +16,7 @@ const buttonVariants = cva(
         ghost:
           'text-blue hover:text-blue-700 active:bg-blue-100 disabled:text-blue-200 dark:text-blue-300 dark:hover:text-blue-400 dark:active:bg-blue-900 dark:disabled:text-blue-300 dark:disabled:text-blue-600',
         danger:
-          'bg-red text-primary-foreground hover:bg-red-600 active:bg-red-700 disabled:bg-red-200 dark:text-white dark:disabled:bg-red-900 dark:disabled:text-gray-300',
+          'bg-red text-white hover:bg-red-600 active:bg-red-700 disabled:bg-red-200 dark:text-white dark:disabled:bg-red-900 dark:disabled:text-gray-300',
       },
       size: {
         sm: 'h-6 w-6 has-[p]:px-5',
