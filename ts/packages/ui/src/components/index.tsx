@@ -1,6 +1,7 @@
 export * from './AppContainer';
 export * from './Button';
 export * from './Checkbox';
+export * from './CodeSnippet';
 export * from './Dropdown';
 export * from './Icons';
 export * from './Input';
