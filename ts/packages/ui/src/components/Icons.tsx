@@ -711,7 +711,7 @@ export const TagIcon = (props: React.SVGProps<SVGSVGElement>) => {
     <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
       <path
         d="M5.66602 5.66602H5.67268M14.7273 9.94065L9.94732 14.7207C9.82349 14.8446 9.67644 14.943 9.51457 15.0101C9.35271 15.0772 9.1792 15.1117 9.00398 15.1117C8.82876 15.1117 8.65526 15.0772 8.4934 15.0101C8.33153 14.943 8.18448 14.8446 8.06065 14.7207L2.33398 9.00065V2.33398H9.00065L14.7273 8.06065C14.9757 8.31047 15.115 8.6484 15.115 9.00065C15.115 9.3529 14.9757 9.69083 14.7273 9.94065Z"
-        stroke="black"
+        stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
