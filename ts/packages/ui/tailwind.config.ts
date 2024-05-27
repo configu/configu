@@ -3,9 +3,7 @@ import tailwindcssAnimate from 'tailwindcss-animate';
 
 const config = {
   darkMode: ['class'],
-  // TODO: what do we do with this?
-  // TODO: make components work!
-  content: ['./pages/**/*.{ts,tsx}', './src/**/*.{ts,tsx}', '../../src/components/**/*.{ts,tsx}'],
+  content: [],
   prefix: '',
   theme: {
     container: {
