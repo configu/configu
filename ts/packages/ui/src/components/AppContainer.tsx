@@ -16,7 +16,11 @@ AppContainer.displayName = 'AppContainer';
 
 const Header = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn('rounded-4xl mx-[13px] mt-3 flex-1 bg-white dark:bg-black', className)} {...props}>
+    <div
+      ref={ref}
+      className={cn('rounded-4xl mx-[13px] mt-3 flex-1 overflow-hidden bg-white dark:bg-black', className)}
+      {...props}
+    >
       {props.children}
     </div>
   ),
@@ -25,7 +29,7 @@ Header.displayName = 'Header';
 
 const Footer = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn('h-[74px]', className)} {...props}>
+    <div ref={ref} className={cn('h-[74px] overflow-hidden', className)} {...props}>
       {props.children}
     </div>
   ),
