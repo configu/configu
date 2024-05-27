@@ -3,7 +3,11 @@ import { cn } from '../lib/utils';
 
 const AppContainer = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn('bg-blue flex h-screen w-screen flex-col dark:bg-blue-700', className)} {...props}>
+    <div
+      ref={ref}
+      className={cn('bg-blue flex h-screen w-screen flex-col overflow-hidden dark:bg-blue-700', className)}
+      {...props}
+    >
       {props.children}
     </div>
   ),
