@@ -76,7 +76,7 @@ const README_FILE = `${TypeDocConfig.entryFileName}${TypeDocConfig.fileExtension
 const REF_FILE = `globals${TypeDocConfig.fileExtension}`;
 
 // Process README files to create the MDX files for the docs
-const prepareREADME = async ({ source, target, title }) => {
+const prepareREADME = async ({ source, target, title = 'Overview' }) => {
   const sourcePath = path.join(ROOT_PATH, source);
   const targetPath = path.join(ROOT_PATH, target);
 
@@ -95,7 +95,7 @@ const prepareREADME = async ({ source, target, title }) => {
   contents = contents.replace(/\.mdx/g, '');
 
   contents = `---
-title: ${title}
+title: "${title}"
 description: "${description}"
 ---
 ${contents}
@@ -162,9 +162,9 @@ await sleep(1000);
 
 let contents = await fs.readFile(REF_PATH, { encoding: 'utf8' });
 contents = `---
-title: Command Reference
-sidebarTitle: Reference
-description: A reference guide for all Configu CLI commands.
+title: "Command Reference"
+sidebarTitle: "Reference"
+description: "A reference guide for all Configu CLI commands."
 ---
 
 import { Related } from '/snippets/callouts.mdx'

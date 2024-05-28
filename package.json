@@ -12,7 +12,7 @@
   },
   "packageManager": "pnpm@9.1.3",
   "scripts": {
-    "prepare": "pnpm \"/^prepare:.*/\" && pnpm prepare:art",
+    "prepare": "pnpm build && pnpm \"/^prepare:.*/\" && pnpm prepare:art",
     "prepare:hooks": "husky",
     "prepare:deps": "syncpack list-mismatches",
     "prepare:build": "pnpm build",
