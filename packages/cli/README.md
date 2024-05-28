@@ -4,13 +4,13 @@
 
 ## Install
 
-The [CLI code is open-source](https://github.com/configu/configu/tree/main/packages/cli), and the [installation process](https://configu.com/docs/cli-setup/) is quick and easy, with lightweight binaries available for all major operating systems, Docker, and CI/CD platforms.
+The [CLI code is open-source](https://github.com/configu/configu/tree/main/packages/cli), and the [installation process](https://docs.configu.com/interfaces/cli/setup) is quick and easy, with lightweight binaries available for all major operating systems, Docker, and CI/CD platforms.
 
 ## Usage
 
-For a step-by-step introduction, you can get started with [this guide](https://configu.com/docs/get-started).
+For a step-by-step introduction, you can get started with [this guide](https://docs.configu.com/guides/hello-world).
 
-For more examples explore the [examples directory](https://github.com/configu/configu/tree/main/examples/).
+For more examples explore the [examples directory](https://github.com/configu/configu/tree/main/examples).
 
 ## Synopsis
 
@@ -22,7 +22,7 @@ Use `configu <command> --help` for information on a specific command. The synops
 
 ## Reference
 
-See [configu.com/docs/commands](https://configu.com/docs/cli-commands/)
+See [interfaces/cli/ref](https://docs.configu.com/interfaces/cli/ref).
 
 ## Contributing
 
@@ -35,11 +35,7 @@ Follow the [Development](https://github.com/configu/configu/blob/main/CONTRIBUTI
 Run these commands in order:
 
 ```bash
-cd ts
-```
-
-```bash
-npm install
+pnpm install
 ```
 
 ### Contribute

@@ -5,9 +5,10 @@
   "description": "Configu CLI",
   "author": "@configu/dev",
   "scripts": {
-    "clean": "rm -rf tsconfig.tsbuildinfo build dist tmp",
+    "clean": "shx rm -rf tsconfig.tsbuildinfo build dist tmp",
     "build": "tsc --build",
-    "build:tar": "pnpm clean && pnpm build && ./pack.mjs",
+    "build:ref": "./ref.mjs",
+    "build:tar": "./pack.mjs",
     "build:docker": "docker build --progress plain -t configu/cli -f ./Dockerfile .",
     "test": "echo NO TESTS"
   },

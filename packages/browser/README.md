@@ -25,21 +25,21 @@ import {
   EvalCommand,
   ExportCommand,
 } from '@configu/browser';
-import schemaContents from './get-started.cfgu.json';
+import schemaContents from './start.cfgu.json';
 
 (async () => {
   try {
     const store = new LocalForageConfigStore({ name: 'config-db' });
     const set = new ConfigSet('test');
-    const schema = new ConfigSchema('get-started', schemaContents);
+    const schema = new ConfigSchema('start', schemaContents);
 
     await new UpsertCommand({
       store,
       set,
       schema,
       configs: {
-        'GREETING': 'hey',
-        'SUBJECT': 'configu browser sdk'
+        GREETING: 'hey',
+        SUBJECT: 'configu browser sdk',
       },
     }).run();
 
@@ -62,7 +62,7 @@ import schemaContents from './get-started.cfgu.json';
 
 ## Reference
 
-[oss.configu.com/browser](https://oss.configu.com/ts/modules/_configu_browser.html)
+See [interfaces/sdk/browser/globals](https://docs.configu.com/interfaces/sdk/browser/globals).
 
 ## Contributing
 
@@ -75,11 +75,7 @@ Follow the [Development](https://github.com/configu/configu/blob/main/CONTRIBUTI
 Run these commands in order:
 
 ```bash
-cd ts
-```
-
-```bash
-npm install
+pnpm install
 ```
 
 ### Contribute

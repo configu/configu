@@ -10,7 +10,7 @@
     "node": ">=20",
     "pnpm": ">=9"
   },
-  "packageManager": "pnpm@9.0.6",
+  "packageManager": "pnpm@9.1.3",
   "scripts": {
     "prepare": "pnpm \"/^prepare:.*/\" && pnpm prepare:art",
     "prepare:hooks": "husky",
@@ -26,7 +26,6 @@
     "lint:check": "pnpm lint --quiet",
     "lint:fix": "pnpm lint --fix",
     "build": "tsc --build --verbose tsconfig.build.json",
-    "build:docs": "typedoc",
     "test": "tsx --test \"packages\"",
     "test:cov": "tsx --test --experimental-test-coverage --test-reporter=spec --test-reporter=lcov --test-reporter-destination=stdout --test-reporter-destination=lcov.info \"packages\"",
     "test:watch": "tsx --test --watch \"packages\"",
@@ -52,7 +51,6 @@
     "ts-node": "^10.9.2",
     "tslib": "^2.6.2",
     "tsx": "^4.10.5",
-    "typedoc": "^0.25.13",
     "typescript": "^5.4.5",
     "turbo": "1.13.3",
     "zx": "8.1.0"

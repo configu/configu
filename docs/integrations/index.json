@@ -1,5 +1,6 @@
 {
   "configu": {
+    "enabled": true,
     "label": "Configu Platform",
     "icon": "https://raw.githubusercontent.com/configu/configu/main/docs/images/icon/icon.svg",
     "docs": "integrations/store/configu/overview",

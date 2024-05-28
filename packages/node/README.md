@@ -15,29 +15,22 @@ pnpm add @configu/node
 **With import / require:**
 
 ```js
-import {
-  JsonFileConfigStore,
-  ConfigSet,
-  ConfigSchema,
-  UpsertCommand,
-  EvalCommand,
-  ExportCommand,
-} from '@configu/node';
-import schemaContents from './get-started.cfgu.json';
+import { JsonFileConfigStore, ConfigSet, ConfigSchema, UpsertCommand, EvalCommand, ExportCommand } from '@configu/node';
+import schemaContents from './start.cfgu.json';
 
 (async () => {
   try {
     const store = new JsonFileConfigStore({ path: 'config-db.json' });
     const set = new ConfigSet('test');
-    const schema = new ConfigSchema('get-started', schemaContents);
+    const schema = new ConfigSchema('start', schemaContents);
 
     await new UpsertCommand({
       store,
       set,
       schema,
       configs: {
-        'GREETING': 'hey',
-        'SUBJECT': 'configu node.js sdk'
+        GREETING: 'hey',
+        SUBJECT: 'configu node.js sdk',
       },
     }).run();
 
@@ -75,10 +68,10 @@ import {
     const store = new JsonFileConfigStore({ path: 'config-db.json' });
     const set = new ConfigSet('test');
 
-    const schemaContentsString = await fs.readFile(path.join(__dirname, 'get-started.cfgu.json'));
+    const schemaContentsString = await fs.readFile(path.join(__dirname, 'start.cfgu.json'));
     const schemaContents = JSON.parse(schemaContentsString);
-    const schema = new ConfigSchema('get-started', schemaContents);
-    
+    const schema = new ConfigSchema('start', schemaContents);
+
     ...
   } catch (error) {
     console.error(error);
@@ -90,7 +83,7 @@ import {
 
 ## Reference
 
-[oss.configu.com/node](https://oss.configu.com/ts/modules/_configu_node.html)
+See [interfaces/sdk/node/globals](https://docs.configu.com/interfaces/sdk/node/globals).
 
 ## Contributing
 
@@ -103,11 +96,7 @@ Follow the [Development](https://github.com/configu/configu/blob/main/CONTRIBUTI
 Run these commands in order:
 
 ```bash
-cd ts
-```
-
-```bash
-npm install
+pnpm install
 ```
 
 ### Contribute

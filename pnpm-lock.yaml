@@ -68,9 +68,6 @@ importers:
       turbo:
         specifier: 1.13.3
         version: 1.13.3
-      typedoc:
-        specifier: ^0.25.13
-        version: 0.25.13(typescript@5.4.5)
       typescript:
         specifier: ^5.4.5
         version: 5.4.5
@@ -86,6 +83,15 @@ importers:
       mintlify:
         specifier: ^4.0.159
         version: 4.0.159(encoding@0.1.13)(openapi-types@12.1.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      typedoc:
+        specifier: ^0.25.13
+        version: 0.25.13(typescript@5.4.5)
+      typedoc-plugin-frontmatter:
+        specifier: ^1.0.0
+        version: 1.0.0(typedoc-plugin-markdown@4.0.2(typedoc@0.25.13(typescript@5.4.5)))
+      typedoc-plugin-markdown:
+        specifier: ^4.0.2
+        version: 4.0.2(typedoc@0.25.13(typescript@5.4.5))
 
   packages/browser:
     dependencies:
@@ -6052,6 +6058,16 @@ packages:
   typed-array-length@1.0.6:
     resolution: {integrity: sha512-/OxDN6OtAk5KBpGb28T+HZc2M+ADtvRxXrKKbUwtsLgdoxgX13hyy7ek6bFRl5+aBs2yZzB0c4CnQfAtVypW/g==}
     engines: {node: '>= 0.4'}
+
+  typedoc-plugin-frontmatter@1.0.0:
+    resolution: {integrity: sha512-Mqn96+RjUjPUz/42H8MOp/8eOKjE5MVIgZRFDGmSI2YuggnMZSfh5MMpvd6ykjNTpq7gV5D2iwjqLt8nYRg9rg==}
+    peerDependencies:
+      typedoc-plugin-markdown: '>=4.0.0'
+
+  typedoc-plugin-markdown@4.0.2:
+    resolution: {integrity: sha512-4MV3M+0lsmIaXuDBzeqLYemZqwTQDWQow+o8zdT9hC7KFu06GaFo2uUEbkjE6pgZA9hnkOTtzRVd0R9YJWcH8A==}
+    peerDependencies:
+      typedoc: 0.25.x
 
   typedoc@0.25.13:
     resolution: {integrity: sha512-pQqiwiJ+Z4pigfOnnysObszLiU3mVLWAExSPf+Mu06G/qsc3wzbuM56SZQvONhHLncLUhYzOVkjFFpFfL5AzhQ==}
@@ -14231,6 +14247,15 @@ snapshots:
       has-proto: 1.0.3
       is-typed-array: 1.1.13
       possible-typed-array-names: 1.0.0
+
+  typedoc-plugin-frontmatter@1.0.0(typedoc-plugin-markdown@4.0.2(typedoc@0.25.13(typescript@5.4.5))):
+    dependencies:
+      typedoc-plugin-markdown: 4.0.2(typedoc@0.25.13(typescript@5.4.5))
+      yaml: 2.4.2
+
+  typedoc-plugin-markdown@4.0.2(typedoc@0.25.13(typescript@5.4.5)):
+    dependencies:
+      typedoc: 0.25.13(typescript@5.4.5)
 
   typedoc@0.25.13(typescript@5.4.5):
     dependencies:
