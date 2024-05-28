@@ -33,15 +33,8 @@ coverage
 *.lcov
 *.info
 
-# turbo
-.turbo
-
 # linter
 .eslintcache
 
 # oclif
 oclif.manifest.json
-
-
-# # typedoc
-# docs/

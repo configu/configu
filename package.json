@@ -1,7 +1,7 @@
 {
   "name": "@configu/configu",
   "license": "Apache-2.0",
-  "description": "Configu OSS monorepo powered by TypeScript, Node.js, pnpm and Turbo",
+  "description": "Configu OSS monorepo powered by TypeScript, Node.js and pnpm",
   "author": "@configu/dev",
   "homepage": "https://configu.com",
   "engines": {
@@ -52,7 +52,6 @@
     "tslib": "^2.6.2",
     "tsx": "^4.10.5",
     "typescript": "^5.4.5",
-    "turbo": "1.13.3",
     "zx": "8.1.0"
   }
 }
