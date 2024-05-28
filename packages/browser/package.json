@@ -40,7 +40,7 @@
   "scripts": {
     "clean": "shx rm -rf tsconfig.tsbuildinfo build dist",
     "build": "tsc --build",
-    "build:bundle": "pnpm clean && pnpm build && ./bundle.mjs"
+    "build:bundle": "pnpm clean && pnpm build && zx bundle.mjs"
   },
   "dependencies": {
     "@configu/ts": "workspace:*",

@@ -1,7 +1,5 @@
-#!/usr/bin/env pnpm zx
-/* eslint-disable n/no-extraneous-import */
-/* eslint-disable n/shebang */
 /* eslint-disable no-undef */
+/* eslint-disable n/no-extraneous-import */
 /* eslint-disable import/no-extraneous-dependencies */
 
 import 'zx/globals';

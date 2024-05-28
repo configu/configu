@@ -1,4 +1,3 @@
-#!/usr/bin/env pnpm zx
 /* eslint-disable import/no-extraneous-dependencies */
 
 import esbuild from 'esbuild';

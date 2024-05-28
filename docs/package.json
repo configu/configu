@@ -21,7 +21,7 @@
     "configu-documentation"
   ],
   "scripts": {
-    "prepare": "./prepare.mjs",
+    "prepare": "zx prepare.mjs",
     "dev": "mintlify dev",
     "start": "pnpm dev"
   },

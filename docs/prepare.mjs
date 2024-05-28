@@ -1,6 +1,5 @@
-#!/usr/bin/env pnpm zx
-/* eslint-disable no-undef */
 /* eslint-disable no-param-reassign */
+/* eslint-disable no-undef */
 /* eslint-disable import/no-extraneous-dependencies */
 
 import 'zx/globals';
@@ -167,7 +166,7 @@ sidebarTitle: "Reference"
 description: "A reference guide for all Configu CLI commands."
 ---
 
-import { Related } from '/snippets/callouts.mdx'
+import { Related } from '/snippets/callouts.mdx';
 
 <Related name="Hello, World!" link="/guides/hello-world" />
 
@@ -187,3 +186,5 @@ await fs.writeJson(path.join(DOCS_ROOT_PATH, 'mint.json'), MINT_CONTENT, { space
 
 // Check for broken links in the docs
 await $`pnpm mintlify broken-links`.pipe(process.stdout);
+
+// await $`pnpm prettier --ignore-path .gitignore --write .`.pipe(process.stdout);
