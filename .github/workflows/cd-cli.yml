@@ -37,22 +37,22 @@ jobs:
       # ---
       - name: Bump package version
         run: |
-          npm --no-git-tag-version version ${{ steps.deployment.outputs.release-version }} \
-            --workspace=${{ env.PACKAGE_NAME }}
+          pnpm --filter ${{ env.PACKAGE_NAME }} exec \
+            npm --no-git-tag-version version ${{ steps.deployment.outputs.release-version }}
 
       - name: Build package code and produce tarballs
         run: |
-          npm run build:oclif \
-            --workspace=${{ env.PACKAGE_NAME }}
+          pnpm --filter ${{ env.PACKAGE_NAME }} \
+            build:tar
 
       # https://github.com/oclif/oclif
       # https://github.com/oclif/oclif/blob/61cb7664ce38f1b7827ff652f063c3be7adeb1af/src/tarballs/config.ts
       - name: Publish tarballs to storage
         run: |
-          cd ${{ env.PACKAGE_PATH }}
-          npx oclif upload tarballs
+          cd ${{ env.PACKAGE_PATH }}/tmp
+          pnpm oclif upload tarballs
           if [ "${{ steps.deployment.outputs.release-channel }}" = "latest" ]; then channel="stable"; else channel="${{ steps.deployment.outputs.release-channel }}"; fi
-          npx oclif promote \
+          pnpm oclif promote \
             --channel $channel \
             --version ${{ steps.deployment.outputs.release-version }} \
             --sha ${{ steps.deployment.outputs.release-sha }} \
@@ -72,7 +72,7 @@ jobs:
         if: ${{startsWith(github.ref, 'refs/tags/') }}
         with:
           files: |
-            ${{ env.PACKAGE_PATH }}/dist/*
+            ${{ env.PACKAGE_PATH }}/tmp/dist/*
 
       - uses: docker/setup-qemu-action@v3
 
@@ -90,18 +90,6 @@ jobs:
           platforms: linux/amd64,linux/arm64
           tags: ${{ env.DOCKERHUB_REPOSITORY }}:${{ steps.deployment.outputs.release-version }},${{ env.DOCKERHUB_REPOSITORY }}:${{ steps.deployment.outputs.release-channel }}
           push: true
-
-      - name: Publish manifest
-        if: ${{ steps.deployment.outputs.release-channel == 'latest' }}
-        run: |
-          cd ${{ env.PACKAGE_PATH }}
-          aws s3 cp ./oclif.manifest.json s3://${{ env.S3_BUCKET }}/${{ env.S3_FOLDER }}/manifest.json
-          aws s3 cp ./manifest.md s3://${{ env.S3_BUCKET }}/${{ env.S3_FOLDER }}/manifest.md
-          aws cloudfront create-invalidation --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION }} --paths "/${{ env.S3_FOLDER }}*"
-        env:
-          S3_BUCKET: 'oss.configu.com'
-          S3_FOLDER: 'cli'
-          CLOUDFRONT_DISTRIBUTION: 'E7C5AL5O299SC'
       # ---
       - uses: ./.github/actions/deploy-end-action
         if: always()

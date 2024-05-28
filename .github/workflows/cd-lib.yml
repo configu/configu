@@ -33,35 +33,21 @@ jobs:
       # ---
       - name: Bump package version
         run: |
-          npm --no-git-tag-version version ${{ steps.deployment.outputs.release-version }} \
-            --workspace=${{ env.PACKAGE_NAME }}
+          pnpm --filter ${{ env.PACKAGE_NAME }} exec \
+            npm --no-git-tag-version version ${{ steps.deployment.outputs.release-version }}
 
       - name: Build package code
         run: |
-          npm run build \
-            --workspace=${{ env.PACKAGE_NAME }}
+          pnpm --filter ${{ env.PACKAGE_NAME }} run \
+            build
 
       - name: Publish to npm
         run: |
-          npm publish --access public --provenance --tag ${{ steps.deployment.outputs.release-channel }} \
-            --workspace=${{ env.PACKAGE_NAME }}
+          pnpm --filter ${{ env.PACKAGE_NAME }} \
+            --access public --provenance --tag ${{ steps.deployment.outputs.release-channel }} \
+            publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Build package docs
-        if: ${{ steps.deployment.outputs.release-channel == 'latest' }}
-        run: |
-          npm run build:docs
-
-      - name: Publish docs
-        if: ${{ steps.deployment.outputs.release-channel == 'latest' }}
-        run: |
-          aws s3 sync ${{ env.CWD }}/docs s3://${{ env.S3_BUCKET }}/${{ env.S3_FOLDER }}
-          aws cloudfront create-invalidation --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION }} --paths "/${{ env.S3_FOLDER }}*"
-        env:
-          S3_BUCKET: 'oss.configu.com'
-          S3_FOLDER: 'ts'
-          CLOUDFRONT_DISTRIBUTION: 'E7C5AL5O299SC'
       # ---
       - uses: ./.github/actions/deploy-end-action
         if: always()

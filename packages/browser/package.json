@@ -38,7 +38,7 @@
     "configu-browser-sdk"
   ],
   "scripts": {
-    "clean": "rm -rf tsconfig.tsbuildinfo build dist",
+    "clean": "shx rm -rf tsconfig.tsbuildinfo build dist",
     "build": "tsc --build",
     "build:bundle": "pnpm clean && pnpm build && ./bundle.mjs"
   },

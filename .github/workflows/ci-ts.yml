@@ -22,15 +22,15 @@ jobs:
 
       - name: Run formatter
         run: |
-          npm run format:check
+          pnpm run format:check
 
       - name: Run linter
         run: |
-          npm run lint:check
+          pnpm run lint:check
 
       - name: Run tests & Generate coverage report
         run: |
-          npm run test:cov
+          pnpm run test:cov
 
       # - name: Upload coverage to Codecov
       #   uses: codecov/codecov-action@v2

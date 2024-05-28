@@ -29,7 +29,7 @@
     "configu-node-sdk"
   ],
   "scripts": {
-    "clean": "rm -rf tsconfig.tsbuildinfo build",
+    "clean": "shx rm -rf tsconfig.tsbuildinfo build",
     "build": "tsc --build"
   },
   "dependencies": {
