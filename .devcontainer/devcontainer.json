@@ -2,13 +2,13 @@
 // README at: https://github.com/devcontainers/templates/tree/main/src/typescript-node
 {
   "name": "Configu Dev Container",
-  "image": "mcr.microsoft.com/devcontainers/typescript-node:1-20-bookworm",
-  "features": {
-    "ghcr.io/devcontainers-contrib/features/pnpm:2": {}
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
   },
   "waitFor": "onCreateCommand",
-  "postCreateCommand": "node --version && pnpm --version",
   "updateContentCommand": "pnpm install",
+  "postCreateCommand": "node --version && pnpm --version",
   "customizations": {
     "vscode": {
       "extensions": [
