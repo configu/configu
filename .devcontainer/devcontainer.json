@@ -2,7 +2,10 @@
 // README at: https://github.com/devcontainers/templates/tree/main/src/typescript-node
 {
   "name": "Configu Dev Container",
-  "image": "mcr.microsoft.com/devcontainers/typescript-node:0-18",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:1-20-bookworm",
+  "features": {
+    "ghcr.io/devcontainers-contrib/features/pnpm:2": {}
+  },
   "waitFor": "onCreateCommand",
   "postCreateCommand": "node --version && pnpm --version",
   "updateContentCommand": "pnpm install",
