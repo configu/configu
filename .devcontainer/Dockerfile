@@ -2,8 +2,10 @@ FROM mcr.microsoft.com/devcontainers/typescript-node
 
 COPY [".nvmrc", "package.json", "pnpm-lock.yaml", "./"]
 
+RUN su node -c "cat .nvmrc"
+
 # Install Node.js version specified in .nvmrc
-RUN su node -c "source /usr/local/share/nvm/nvm.sh && nvm install"
+RUN su node -c "source /usr/local/share/nvm/nvm.sh && nvm install 20.12.2"
 
 # Install pnpm
 ENV PNPM_HOME="/pnpm"
