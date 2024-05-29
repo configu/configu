@@ -1,11 +1,12 @@
-FROM mcr.microsoft.com/devcontainers/typescript-node
+FROM node
 
 LABEL maintainer="dev@configu.com"
 
 COPY [".nvmrc", "package.json", "pnpm-lock.yaml", "./"]
 
-# Install Node.js version specified in .nvmrc
-RUN su node -c "source /usr/local/share/nvm/nvm.sh && nvm install"
+# Install nvm and then install Node.js version specified in .nvmrc
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash && \
+  nvm install
 
 # Install pnpm
 ENV PNPM_HOME="/pnpm"
@@ -16,3 +17,6 @@ RUN su node -c "pnpm fetch"
 
 # Install configu CLI
 RUN su node -c "curl https://cli.configu.com/install.sh | sh"
+
+# Default command
+CMD ["/bin/bash"]
