@@ -1,43 +1,27 @@
-// https://containers.dev/implementors/json_reference
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/typescript-node
 {
   "name": "Configu Dev Container",
-  "build": {
-    "dockerfile": "Dockerfile",
-    "args": {
-      "NODE_VERSION": "20.10.0",
-      "PYTHON_VERSION": "3.9.16",
-      "GO_VERSION": "1.21.3"
-    },
-    "context": ".."
-  },
-  "forwardPorts": [
-    8080,
-    3000
-  ],
-  "portsAttributes": {
-    "3000": {
-      "label": "Docs"
-    },
-    "8080": {
-      "label": "Examples"
-    }
-  },
-  "postCreateCommand": "/bin/bash -x .devcontainer/bootstrap.sh",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:0-18",
+  "waitFor": "onCreateCommand",
+  "postCreateCommand": "node --version && pnpm --version",
+  "updateContentCommand": "pnpm install",
   "customizations": {
-    "terminal.integrated.shell.linux": "/bin/bash",
     "vscode": {
       "extensions": [
         "streetsidesoftware.code-spell-checker",
-        "wmaurer.change-case",
-        "ow.vscode-subword-navigation",
-        "yzhang.markdown-all-in-one",
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
+        "yzhang.markdown-all-in-one",
         "yoavbls.pretty-ts-errors",
-        "ms-python.python",
-        "golang.go"
+        "ms-vscode-remote.remote-containers"
       ]
     }
   },
-  "remoteUser": "root"
+  "portsAttributes": {
+    "3000": {
+      "label": "Docs"
+    }
+  },
+  "forwardPorts": [3000]
 }
