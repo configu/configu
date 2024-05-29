@@ -26,5 +26,6 @@
       "label": "Docs"
     }
   },
-  "forwardPorts": [3000]
+  "forwardPorts": [3000],
+  "remoteUser": "node"
 }
