@@ -77,13 +77,12 @@ A unique path within a hierarchical data structure that groups `Config`s context
 [types/ConfigSet](https://github.com/configu/configu/blob/main/types/ConfigSet.ts)
 
 <Accordion title="Learn more about ConfigSet">
-  A `ConfigSet` in Configu is a mechanism for **organizing and grouping configurations in a hierarchical structure**. It serves as a path within the configuration tree, enabling you to **associate specific configuration values with different contexts**, such as environments, tenants, or any other use case you require.
+A `ConfigSet` in Configu is a mechanism for **organizing and grouping configurations in a hierarchical structure**. It serves as a path within the configuration tree, enabling you to **associate specific configuration values with different contexts**, such as environments, tenants, or any other use case you require.
 
 At the top of the ConfigSet hierarchy is the **root set**, represented by an empty string `""` or an alias of `/`. The root set acts as the parent for all other sets and provides the foundation for the configuration tree. It's important to note that the set path always starts with the root set and does not end with a "/".
 
 Each stored `Config` is associated with a "set" property, which links it to a particular path in the ConfigSet hierarchy. When evaluating a configuration, Configu searches for the corresponding value by traversing the hierarchy from the supplied path's last node up to the root set. This mechanism allows for seamless **inheritance and overriding** of configuration values, making it effortless to customize software behavior for different environments or use cases.
 
-{' '}
 <Info>
   ConfigSets can represent any context that requires distinct configuration values. For example, you can utilize
   ConfigSets to group configurations based on regions, deployment stages, or specific feature sets. This flexibility
@@ -136,11 +135,11 @@ The `production` set, another child of the root set, includes a configuration fo
 A reference to a specific configuration declaration as it appears within the codebase, linking code to its configuration.
 
 <Accordion title="Learn more about ConfigKey">
-  A `ConfigKey` is the name given to a specific configuration as it appears in the code. It is used to identify and reference a specific configuration, and can be used to access the value of the configuration in the code.
+A `ConfigKey` is the name given to a specific configuration as it appears in the code. It is used to identify and reference a specific configuration, and can be used to access the value of the configuration in the code.
 
 Here are some examples of how a configuration named "CONFIG" might be used as an `environment variable` in various programming languages:
 
-  <CodeGroup>
+<CodeGroup>
 
 ```javascript Node.js
 process.env.CONFIG;
@@ -186,7 +185,7 @@ $CONFIG
 $env:CONFIG
 ```
 
-  </CodeGroup>
+</CodeGroup>
 </Accordion>
 
 ### ConfigValue
@@ -202,7 +201,7 @@ A file containing binding records that link each unique `ConfigKey` to its corre
 [types/ConfigSchema](https://github.com/configu/configu/blob/main/types/ConfigSchema.ts)
 
 <Accordion title="Learn more about ConfigSchema">
-  A `ConfigSchema` in Configu is a file with a <CfguExt /> extension. It is a human-readable format for declaring configurations and their characteristics. It is designed to be stored in your source control alongside the code that uses these configurations, and can be treated as code as it shouldn't contain sensitive data.
+A `ConfigSchema` in Configu is a file with a <CfguExt /> extension. It is a human-readable format for declaring configurations and their characteristics. It is designed to be stored in your source control alongside the code that uses these configurations, and can be treated as code as it shouldn't contain sensitive data.
 
 The `ConfigSchema` format provides a structured way to tie a `ConfigKey` as it appears in the code to its `Cfgu` properties, such as the type of data it represents (e.g., String, Number, Boolean), whether it is required or optional, and any constraints that should be applied to its value. These bindings help to ensure that configuration data is properly validated and applied, and can help to prevent misconfigurations and errors from reaching production.
 
@@ -212,7 +211,7 @@ By using `.cfgu` files, you can benefit from a clear and structured way to defin
 
 Here is an example of a `ConfigSchema` file:
 
-  <CodeGroup>
+<CodeGroup>
 
 ```yaml example.cfgu.yaml
 API_KEY:
@@ -231,7 +230,7 @@ API_KEY:
 }
 ```
 
-  </CodeGroup>
+</CodeGroup>
 
 In this example, the `ConfigSchema` binds a configuration called "API_KEY" with a type of "String". The configuration is marked as required and has a short description.
 
