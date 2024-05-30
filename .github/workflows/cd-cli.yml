@@ -54,7 +54,7 @@ jobs:
             --root tmp
           if [ "${{ steps.deployment.outputs.release-channel }}" = "latest" ]; then channel="stable"; else channel="${{ steps.deployment.outputs.release-channel }}"; fi
           pnpm oclif promote \
-            --root tmp
+            --root tmp \
             --channel $channel \
             --version ${{ steps.deployment.outputs.release-version }} \
             --sha ${{ steps.deployment.outputs.release-sha }} \
