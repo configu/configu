@@ -173,7 +173,7 @@ import { Related } from '/snippets/callouts.mdx';
 ## Commands
 
 <Tip>
-  Use \`configu -h\` or to get a list of all available commands.
+  Use \`configu -h\` or to get a list of all available commands.<br/>
   Use \`configu [COMMAND] -h\` to get help for a specific command.
 </Tip>
 
@@ -186,4 +186,4 @@ await fs.writeJson(path.join(DOCS_ROOT_PATH, 'mint.json'), MINT_CONTENT, { space
 
 // Check for broken links in the docs
 await $`pnpm mintlify broken-links`.pipe(process.stdout);
-// await $`pnpm prettier --ignore-path .gitignore --write .`.pipe(process.stdout);
+await $`pnpm prettier --ignore-path .gitignore --write .`.pipe(process.stdout);

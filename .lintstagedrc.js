@@ -4,5 +4,5 @@ module.exports = {
     `pnpm prettier ${filenames.join(' ')} --ignore-path .gitignore --write`,
     `pnpm eslint ${filenames.join(' ')} --ignore-path .gitignore --cache --fix`,
   ],
-  '*.{md,json,yaml}': (filenames) => `pnpm prettier ${filenames.join(' ')} --ignore-path .gitignore --write`,
+  '*.{md,mdx,json,yml}': (filenames) => `pnpm prettier ${filenames.join(' ')} --ignore-path .gitignore --write`,
 };

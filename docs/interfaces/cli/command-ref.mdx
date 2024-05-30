@@ -4,28 +4,28 @@ sidebarTitle: Reference
 description: A reference guide for all Configu CLI commands.
 ---
 
-import { Related } from '/snippets/callouts.mdx'
+import { Related } from '/snippets/callouts.mdx';
 
 <Related name="Hello, World!" link="/guides/hello-world" />
 
 ## Commands
 
 <Tip>
-  Use `configu -h` or to get a list of all available commands.
-  Use `configu [COMMAND] -h` to get help for a specific command.
+  Use `configu -h` or to get a list of all available commands. Use `configu [COMMAND] -h` to get help for a specific
+  command.
 </Tip>
 
-* [`configu autocomplete [SHELL]`](#configu-autocomplete-shell)
-* [`configu delete`](#configu-delete)
-* [`configu eval`](#configu-eval)
-* [`configu export`](#configu-export)
-* [`configu find`](#configu-find)
-* [`configu init`](#configu-init)
-* [`configu login`](#configu-login)
-* [`configu run`](#configu-run)
-* [`configu test`](#configu-test)
-* [`configu update [CHANNEL]`](#configu-update-channel)
-* [`configu upsert`](#configu-upsert)
+- [`configu autocomplete [SHELL]`](#configu-autocomplete-shell)
+- [`configu delete`](#configu-delete)
+- [`configu eval`](#configu-eval)
+- [`configu export`](#configu-export)
+- [`configu find`](#configu-find)
+- [`configu init`](#configu-init)
+- [`configu login`](#configu-login)
+- [`configu run`](#configu-run)
+- [`configu test`](#configu-test)
+- [`configu update [CHANNEL]`](#configu-update-channel)
+- [`configu upsert`](#configu-upsert)
 
 ## configu autocomplete [SHELL]
 
@@ -450,4 +450,3 @@ EXAMPLES
     $ configu upsert --store 'hashicorp-vault' --set 'prod' --schema './config/schema.cfgu.json' --config \
       'secretKey=secretValue'
 ```
-
