@@ -48,6 +48,7 @@ jobs:
 
       - name: Publish to npm
         run: |
+          git diff
           pnpm --filter ${{ env.PACKAGE_NAME }} --filter @configu/node --filter @configu/browser publish \
             --access public --provenance --tag ${{ steps.deployment.outputs.release-channel }}
         env:
