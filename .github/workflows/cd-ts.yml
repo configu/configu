@@ -48,9 +48,8 @@ jobs:
 
       - name: Publish to npm
         run: |
-          pnpm --filter ${{ env.PACKAGE_NAME }} --filter @configu/node --filter @configu/browser \
-            --access public --provenance --tag ${{ steps.deployment.outputs.release-channel }} \
-            publish
+          pnpm --filter ${{ env.PACKAGE_NAME }} --filter @configu/node --filter @configu/browser publish \
+            --access public --provenance --tag ${{ steps.deployment.outputs.release-channel }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       # ---
