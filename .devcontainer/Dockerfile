@@ -20,7 +20,7 @@ RUN mkdir -p /usr/local/nvm
 RUN curl --silent -o- https://raw.githubusercontent.com/nvm-sh/nvm/${NVM_VERSION}/install.sh | bash
 RUN source $NVM_DIR/nvm.sh \
   && nvm install \
-  && nvm alias default current \
+  && nvm alias default $(cat .nvmrc) \
   && nvm ls \
   && node -v
 
