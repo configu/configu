@@ -42,7 +42,7 @@ jobs:
 
       - name: Build package code and produce tarballs
         run: |
-          pnpm --filter ${{ env.PACKAGE_NAME }} \
+          pnpm --filter ${{ env.PACKAGE_NAME }} run \
             build:tar
 
       # https://github.com/oclif/oclif

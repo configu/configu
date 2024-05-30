@@ -38,13 +38,10 @@ jobs:
           pnpm --filter ${{ env.PACKAGE_NAME }} --filter @configu/node --filter @configu/browser exec \
             npm --no-git-tag-version version ${{ steps.deployment.outputs.release-version }}
 
-          # npm pkg set dependencies.@configu/ts=${{ steps.deployment.outputs.release-version }} \
-          #   --workspace=@configu/node --workspace=@configu/browser
-          # npm install
-
       - name: Build package code
         run: |
           pnpm run build
+          pnpm --filter @configu/browser run build:bundle
 
       - name: Publish to npm
         run: |
