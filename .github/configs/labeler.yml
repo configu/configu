@@ -1,25 +1,25 @@
-"@configu/repo":
-  - "*" # Add 'repo' label to any root file changes
+'@configu/repo':
+  - '*' # Add 'repo' label to any root file changes
 
-"@configu/cicd":
-  - ".github/**"
+'@configu/cicd':
+  - '.github/**'
 
-"@configu/docs":
-  - "docs/**"
+'@configu/docs':
+  - 'docs/**'
 
-"@configu/examples":
-  - "examples/**"
+'@configu/examples':
+  - 'examples/**'
 
-"@configu/ts":
-  - "packages/ts/**"
-  - "packages/node/**"
-  - "packages/browser/**"
+'@configu/ts':
+  - 'packages/ts/**'
+  - 'packages/node/**'
+  - 'packages/browser/**'
 
-"@configu/lib":
-  - "packages/lib/**"
+'@configu/lib':
+  - 'packages/lib/**'
 
-"@configu/cli":
-  - "packages/cli/**"
+'@configu/cli':
+  - 'packages/cli/**'
 
-"@configu/vscode":
-  - "packages/vscode/**"
+'@configu/vscode':
+  - 'packages/vscode/**'

@@ -7,7 +7,7 @@
 - Export to `terraform.tfvars`
   ```bash
   configu eval --store 'configu' --set 'examples/terraform' --schema './terraform-variables.cfgu.json' | configu export --format 'TerraformTfvars' > terraform.tfvars
-  ``` 
+  ```
 - Run terraform commands
   ```bash
   terraform init

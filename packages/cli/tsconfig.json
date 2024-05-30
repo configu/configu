@@ -4,7 +4,7 @@
     "rootDir": "src",
     "outDir": "build",
     "declaration": true,
-    "importHelpers": true,
+    "importHelpers": true
   },
   "references": [
     {
@@ -15,9 +15,7 @@
     },
     {
       "path": "../node"
-    },
+    }
   ],
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }

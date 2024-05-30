@@ -19,7 +19,7 @@
         // "export",
         // "eval",
         // "delete",
-        "run",
+        // "run"
         // "--script",
         // "test",
         // "--store",
@@ -29,37 +29,8 @@
         // "--schema",
         // "${workspaceFolder}/ts/ts.cfgu.json"
       ],
-      "outFiles": [
-        "${workspaceFolder}/**/*.js",
-        "!**/node_modules/**"
-      ],
-      "skipFiles": [
-        "<node_internals>/**",
-        "node_modules/**"
-      ],
-      "preLaunchTask": "build ts"
-    },
-    {
-      "name": "play node sdk",
-      "type": "node",
-      "request": "launch",
-      "cwd": "${workspaceRoot}/packages/node",
-      "runtimeExecutable": "node",
-      "runtimeArgs": [
-        "--nolazy",
-        "--inspect",
-        "-r",
-        "ts-node/register"
-      ],
-      "args": [
-        "test/index.ts"
-      ],
-      "internalConsoleOptions": "openOnSessionStart",
-      "skipFiles": [
-        "<node_internals>/**",
-        "node_modules/**"
-      ],
-      "preLaunchTask": "build ts"
+      "outFiles": ["${workspaceFolder}/**/*.js", "!**/node_modules/**"],
+      "skipFiles": ["<node_internals>/**", "node_modules/**"]
     },
     // https://tsx.is/vscode
     {
@@ -67,17 +38,11 @@
       "type": "node",
       "request": "launch",
       "cwd": "${workspaceRoot}/ts",
-      "runtimeArgs": [
-        "--inspect",
-        "node_modules/.bin/jest",
-        "--runInBand"
-      ],
-      "args": [
-        "ts/src/commands/commands.test.ts"
-      ],
+      "runtimeArgs": ["--inspect", "node_modules/.bin/jest", "--runInBand"],
+      "args": ["ts/src/commands/commands.test.ts"],
       // "args": ["ts/src/types/types.test.ts"],
       "outputCapture": "std"
       // "internalConsoleOptions": "neverOpen",
-    },
+    }
   ]
 }

@@ -5,14 +5,12 @@
     "outDir": "build",
     "composite": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
+    "emitDecoratorMetadata": true
   },
   "references": [
     {
       "path": "../ts"
-    },
+    }
   ],
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }

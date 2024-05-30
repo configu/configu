@@ -50,7 +50,6 @@ Instantly start experimenting and developing.
 
 <!-- [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/configu/configu) -->
 
-
 ### Local environment
 
 - Install git
@@ -91,7 +90,6 @@ The [./ts](https://github.com/configu/configu/tree/main/ts) directory houses a s
 - [./packages/cli](https://github.com/configu/configu/tree/main/packages/cli): Configu CLI, which is built using [oclif](https://oclif.io/) and the Node.js SDK
 - [./packages/vscode](https://github.com/configu/configu/tree/main/packages/vscode): a VSCode extension for working with Configu
 
-
 ### Sending a Pull Request
 
 For non-trivial changes, please open an issue with a proposal for a new feature or refactoring before starting on the work. We don't want you to waste your efforts on a pull request that we won't want to accept.
@@ -112,7 +110,7 @@ After you have submitted your pull request, we'll try to get back to you as soon
 
 ## Resources
 
-> Working on your first Pull Request? You can learn how from this *free* series, [How to Contribute to an Open Source Project on GitHub](https://egghead.io/courses/how-to-contribute-to-an-open-source-project-on-github).
+> Working on your first Pull Request? You can learn how from this _free_ series, [How to Contribute to an Open Source Project on GitHub](https://egghead.io/courses/how-to-contribute-to-an-open-source-project-on-github).
 
 - [Open Source Guides](https://opensource.guide/how-to-contribute/)
 - [GitHub Help](https://help.github.com)

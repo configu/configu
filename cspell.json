@@ -14,7 +14,7 @@
     "ConfigSchema",
     "Upsert",
     "Eval",
-    "Export",
+    "Export"
   ],
-  "flagWords": [],
+  "flagWords": []
 }

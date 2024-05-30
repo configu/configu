@@ -15,7 +15,7 @@
     },
     {
       "path": "packages/cli"
-    },
+    }
     // { "path": "packages/vscode" },
   ]
 }

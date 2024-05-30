@@ -11,7 +11,7 @@ import ci from 'ci-info';
 import { type EvalCommandReturn, type ConfiguConfigStore, TMPL, ConfigSchema, ConfigError } from '@configu/ts';
 import { constructStore, getPathBasename, readFile, readStdin, loadJSON, loadYAML } from './helpers';
 
-type BaseConfig = Config & {
+type BaseConfig = {
   ci: typeof ci;
   UNICODE_NULL: '\u0000';
   configu: {
@@ -27,7 +27,7 @@ type BaseConfig = Config & {
       scripts: Record<string, string>;
     }>;
   };
-};
+} & Config;
 
 export type Flags<T extends typeof Command> = Interfaces.InferredFlags<(typeof BaseCommand)['baseFlags'] & T['flags']>;
 export type Args<T extends typeof Command> = Interfaces.InferredArgs<T['args']>;
@@ -261,7 +261,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     }
   }
 
-  protected async catch(error: Error & { exitCode?: number }): Promise<any> {
+  protected async catch(error: { exitCode?: number } & Error): Promise<any> {
     // * on any error inject a 'NULL' unicode character so if next command in the pipeline try to read stdin it will fail
     this.print(this.config.UNICODE_NULL, { symbol: 'error', stdout: 'stdout' });
 
