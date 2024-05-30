@@ -49,10 +49,12 @@ jobs:
       # https://github.com/oclif/oclif/blob/61cb7664ce38f1b7827ff652f063c3be7adeb1af/src/tarballs/config.ts
       - name: Publish tarballs to storage
         run: |
-          cd ${{ env.PACKAGE_PATH }}/tmp
-          pnpm oclif upload tarballs
+          cd ${{ env.PACKAGE_PATH }}
+          pnpm oclif upload tarballs \
+            --root tmp
           if [ "${{ steps.deployment.outputs.release-channel }}" = "latest" ]; then channel="stable"; else channel="${{ steps.deployment.outputs.release-channel }}"; fi
           pnpm oclif promote \
+            --root tmp
             --channel $channel \
             --version ${{ steps.deployment.outputs.release-version }} \
             --sha ${{ steps.deployment.outputs.release-sha }} \
