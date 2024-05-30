@@ -43,8 +43,9 @@ jobs:
 
       - name: Publish to npm
         run: |
+          git diff
           pnpm --filter ${{ env.PACKAGE_NAME }} publish \
-            --access public --provenance --tag ${{ steps.deployment.outputs.release-channel }}
+            --access public --provenance --no-git-checks --tag ${{ steps.deployment.outputs.release-channel }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       # ---
