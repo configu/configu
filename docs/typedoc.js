@@ -4,7 +4,6 @@ module.exports = {
   entryPoints: ['../packages/ts', '../packages/node', '../packages/browser', '../packages/lib'],
   entryPointStrategy: 'packages',
   out: 'interfaces/sdk',
-  gitRevision: 'main',
 
   name: 'Internal SDKs',
   cname: 'docs.configu.com',

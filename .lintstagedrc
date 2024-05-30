@@ -4,5 +4,5 @@
     "pnpm prettier --ignore-path .gitignore --write",
     "pnpm eslint --ignore-path .gitignore --cache --fix"
   ],
-  "*.{md,mdx,json}": ["pnpm prettier --ignore-path .gitignore --write"]
+  "*.{md,json,yaml}": ["pnpm prettier --ignore-path .gitignore --write"]
 }

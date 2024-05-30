@@ -94,8 +94,8 @@ const prepareREADME = async ({ source, target, title = 'Overview' }) => {
   contents = contents.replace(/\.mdx/g, '');
 
   contents = `---
-title: "${title}"
-description: "${description}"
+title: '${title}'
+description: '${description}'
 ---
 ${contents}
 `;
@@ -161,9 +161,9 @@ await sleep(1000);
 
 let contents = await fs.readFile(REF_PATH, { encoding: 'utf8' });
 contents = `---
-title: "Command Reference"
-sidebarTitle: "Reference"
-description: "A reference guide for all Configu CLI commands."
+title: 'Command Reference'
+sidebarTitle: 'Reference'
+description: 'A reference guide for all Configu CLI commands.'
 ---
 
 import { Related } from '/snippets/callouts.mdx';
@@ -186,5 +186,4 @@ await fs.writeJson(path.join(DOCS_ROOT_PATH, 'mint.json'), MINT_CONTENT, { space
 
 // Check for broken links in the docs
 await $`pnpm mintlify broken-links`.pipe(process.stdout);
-
 // await $`pnpm prettier --ignore-path .gitignore --write .`.pipe(process.stdout);
