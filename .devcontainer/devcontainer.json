@@ -8,7 +8,7 @@
   },
   "waitFor": "onCreateCommand",
   "updateContentCommand": "pnpm install",
-  "postCreateCommand": "node --version && pnpm --version",
+  "postCreateCommand": "node -v && pnpm -v && configu -v",
   "customizations": {
     "vscode": {
       "extensions": [
