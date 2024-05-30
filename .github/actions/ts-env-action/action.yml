@@ -19,7 +19,7 @@ runs:
       uses: actions/setup-node@v4
       with:
         node-version-file: '.node-version'
-        cache: 'pnpm'
+        cache: 'pnpm' # todo: currently cache is not working properly, try https://github.com/pnpm/action-setup#use-cache-to-reduce-installation-time
         registry-url: 'https://registry.npmjs.org'
         scope: '@configu'
 
