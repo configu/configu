@@ -1,0 +1,110 @@
+---
+title: '@configu/browser Reference'
+---
+
+## Classes
+
+### LocalForageConfigStore
+
+A storage engine interface for `Config`s records.
+https://configu.com/docs/config-store/
+
+#### Extends
+
+- [`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore)
+
+#### Constructors
+
+##### new LocalForageConfigStore()
+
+> **new LocalForageConfigStore**(`configuration`): [`LocalForageConfigStore`](/interfaces/sdk/browser/globals#localforageconfigstore)
+
+###### Parameters
+
+• **configuration**: `LocalForageOptions`
+
+###### Returns
+
+[`LocalForageConfigStore`](/interfaces/sdk/browser/globals#localforageconfigstore)
+
+###### Overrides
+
+[`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore).[`constructor`](/interfaces/sdk/ts/globals#constructors-13)
+
+###### Source
+
+[stores/LocalForage.ts:8](https://github.com/configu/configu/blob/main/packages/browser/src/stores/LocalForage.ts#L8)
+
+#### Methods
+
+##### delete()
+
+> **delete**(`key`): `Promise`\<`void`\>
+
+###### Parameters
+
+• **key**: `string`
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Overrides
+
+[`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore).[`delete`](/interfaces/sdk/ts/globals#delete)
+
+###### Source
+
+[stores/LocalForage.ts:43](https://github.com/configu/configu/blob/main/packages/browser/src/stores/LocalForage.ts#L43)
+
+##### getByKey()
+
+> **getByKey**(`key`): `Promise`\<`string`\>
+
+###### Parameters
+
+• **key**: `string`
+
+###### Returns
+
+`Promise`\<`string`\>
+
+###### Overrides
+
+[`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore).[`getByKey`](/interfaces/sdk/ts/globals#getbykey)
+
+###### Source
+
+[stores/LocalForage.ts:14](https://github.com/configu/configu/blob/main/packages/browser/src/stores/LocalForage.ts#L14)
+
+##### upsert()
+
+> **upsert**(`key`, `value`): `Promise`\<`void`\>
+
+###### Parameters
+
+• **key**: `string`
+
+• **value**: `string`
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Overrides
+
+[`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore).[`upsert`](/interfaces/sdk/ts/globals#upsert)
+
+###### Source
+
+[stores/LocalForage.ts:23](https://github.com/configu/configu/blob/main/packages/browser/src/stores/LocalForage.ts#L23)
+
+## Type Aliases
+
+### LocalForageConfigStoreConfiguration
+
+> **LocalForageConfigStoreConfiguration**: `LocalForageOptions`
+
+#### Source
+
+[stores/LocalForage.ts:4](https://github.com/configu/configu/blob/main/packages/browser/src/stores/LocalForage.ts#L4)

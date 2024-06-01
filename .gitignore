@@ -4,21 +4,40 @@
 .DS_Store
 *.pem
 
-# output
-build
-dist
-out
-tmp
-
-# testing
-coverage
-*.lcov
-
 # debug
 *.log
 *-debug.log
 *-error.log
 
+# local env files
+.env*
+
 # dependencies
 node_modules
+.pnp
+.pnp.js
 .npm
+
+# output
+build
+dist
+out
+.next
+tmp
+
+# build cache
+*.tsbuildinfo
+
+# testing
+coverage
+*.lcov
+*.info
+
+# linter
+.eslintcache
+
+# oclif
+oclif.manifest.json
+
+# pnpm v8-compile-cache dependency
+v8-compile-cache*/

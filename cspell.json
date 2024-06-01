@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
+  "version": "0.2",
+  "language": "en",
+  "useGitignore": true,
+  "words": [
+    "Configu",
+    "Config",
+    "Cfgu",
+    "ConfigStore",
+    "ConfigSet",
+    "ConfigKey",
+    "ConfigValue",
+    "ConfigSchema",
+    "Upsert",
+    "Eval",
+    "Export"
+  ],
+  "flagWords": []
+}

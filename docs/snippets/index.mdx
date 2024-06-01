@@ -1,921 +1,742 @@
 export const integrations = {
-  "configu": {
-    "label": "Configu Platform",
-    "icon": "https://raw.githubusercontent.com/configu/configu/main/docs/images/icon/icon.svg",
-    "docs": "integrations/store/configu/overview",
-    "pages": [
-      "integrations/store/configu/config-explorer",
-      "integrations/store/configu/config-editor",
-      "integrations/store/configu/config-history",
-      "integrations/store/configu/config-compare",
-      "integrations/store/configu/approval-queue",
-      "integrations/store/configu/audit-logs",
-      "integrations/store/configu/webhooks",
-      "integrations/store/configu/integrations",
-      "integrations/store/configu/authorization",
-      "integrations/store/configu/members",
-      "integrations/store/configu/tokens",
-      "integrations/store/configu/settings"
+  configu: {
+    enabled: true,
+    label: 'Configu Platform',
+    icon: 'https://raw.githubusercontent.com/configu/configu/main/docs/images/icon/icon.svg',
+    docs: 'integrations/store/configu/overview',
+    pages: [
+      'integrations/store/configu/config-explorer',
+      'integrations/store/configu/config-editor',
+      'integrations/store/configu/config-history',
+      'integrations/store/configu/config-compare',
+      'integrations/store/configu/approval-queue',
+      'integrations/store/configu/audit-logs',
+      'integrations/store/configu/webhooks',
+      'integrations/store/configu/integrations',
+      'integrations/store/configu/authorization',
+      'integrations/store/configu/members',
+      'integrations/store/configu/tokens',
+      'integrations/store/configu/settings',
     ],
-    "group": [
-      "ConfigStore",
-      "Configu"
-    ],
-    "store": {
-      "base": "Configu",
-      "type": "configu",
-      "code": "/ts/packages/ts/src/stores/Configu.ts"
+    group: ['ConfigStore', 'Configu'],
+    store: {
+      base: 'Configu',
+      type: 'configu',
+      code: '/packages/ts/src/stores/Configu.ts',
     },
-    "links": {
-      "website": "https://configu.com",
-      "auth": ""
-    }
-  },
-  "json-file": {
-    "label": "JSON File",
-    "icon": "https://api.iconify.design/logos:json.svg?width=24&height=24",
-    "docs": "integrations/store/file/json-file",
-    "group": [
-      "ConfigStore",
-      "File"
-    ],
-    "store": {
-      "base": "File",
-      "type": "json-file",
-      "code": "/ts/packages/node/src/stores/JsonFile.ts"
+    links: {
+      website: 'https://configu.com',
+      auth: '',
     },
-    "links": {
-      "website": "https://www.json.org/json-en.html"
-    }
   },
-  "csv-file": {
-    "label": "CSV File",
-    "icon": "https://api.iconify.design/gala:file-csv.svg?width=24&height=24",
-    "docs": "integrations/store/file/csv-file",
-    "group": [
-      "ConfigStore",
-      "File"
-    ],
-    "store": {
-      "base": "File",
-      "type": "csv-file",
-      "code": "/ts/packages/node/src/stores/CsvFile.ts"
+  'json-file': {
+    label: 'JSON File',
+    icon: 'https://api.iconify.design/logos:json.svg?width=24&height=24',
+    docs: 'integrations/store/file/json-file',
+    group: ['ConfigStore', 'File'],
+    store: {
+      base: 'File',
+      type: 'json-file',
+      code: '/packages/node/src/stores/JsonFile.ts',
     },
-    "links": {
-      "website": "https://en.wikipedia.org/wiki/Comma-separated_values"
-    }
-  },
-  "xml-file": {
-    "label": "XML File",
-    "icon": "https://api.iconify.design/vscode-icons:file-type-xml.svg?width=24&height=24",
-    "docs": "integrations/store/file/xml-file",
-    "group": [
-      "ConfigStore",
-      "File"
-    ],
-    "store": {
-      "base": "File",
-      "type": "xml-file",
-      "code": "/ts/packages/node/src/stores/XmlFile.ts"
+    links: {
+      website: 'https://www.json.org/json-en.html',
     },
-    "links": {
-      "website": "https://en.wikipedia.org/wiki/XML"
-    }
   },
-  "ini-file": {
-    "label": "INI File",
-    "icon": "https://api.iconify.design/vscode-icons:file-type-ini.svg?width=24&height=24",
-    "docs": "integrations/store/file/ini-file",
-    "group": [
-      "ConfigStore",
-      "File"
-    ],
-    "store": {
-      "base": "File",
-      "type": "ini-file",
-      "code": "/ts/packages/node/src/stores/IniFile.ts"
+  'csv-file': {
+    label: 'CSV File',
+    icon: 'https://api.iconify.design/gala:file-csv.svg?width=24&height=24',
+    docs: 'integrations/store/file/csv-file',
+    group: ['ConfigStore', 'File'],
+    store: {
+      base: 'File',
+      type: 'csv-file',
+      code: '/packages/node/src/stores/CsvFile.ts',
     },
-    "links": {
-      "website": "https://en.wikipedia.org/wiki/INI_file"
-    }
-  },
-  "toml-file": {
-    "label": "TOML File",
-    "icon": "https://api.iconify.design/logos:toml.svg?width=24&height=24",
-    "docs": "integrations/store/file/toml-file",
-    "group": [
-      "ConfigStore",
-      "File"
-    ],
-    "store": {
-      "base": "File",
-      "type": "toml-file",
-      "code": "/ts/packages/node/src/stores/TomlFile.ts"
+    links: {
+      website: 'https://en.wikipedia.org/wiki/Comma-separated_values',
     },
-    "links": {
-      "website": "https://toml.io"
-    }
   },
-  "sqlite": {
-    "label": "SQLite",
-    "icon": "https://api.iconify.design/devicon:sqlite.svg?width=24&height=24",
-    "docs": "integrations/store/db/sqlite",
-    "group": [
-      "ConfigStore",
-      "Database"
-    ],
-    "store": {
-      "base": "ORM",
-      "type": "sqlite",
-      "code": "/ts/packages/node/src/stores/SQLite.ts"
+  'xml-file': {
+    label: 'XML File',
+    icon: 'https://api.iconify.design/vscode-icons:file-type-xml.svg?width=24&height=24',
+    docs: 'integrations/store/file/xml-file',
+    group: ['ConfigStore', 'File'],
+    store: {
+      base: 'File',
+      type: 'xml-file',
+      code: '/packages/node/src/stores/XmlFile.ts',
     },
-    "links": {
-      "website": "https://www.sqlite.org"
-    }
-  },
-  "mysql": {
-    "label": "MySQL",
-    "icon": "https://api.iconify.design/logos:mysql-icon.svg?width=24&height=24",
-    "docs": "integrations/store/db/mysql",
-    "group": [
-      "ConfigStore",
-      "Database"
-    ],
-    "store": {
-      "base": "ORM",
-      "type": "mysql",
-      "code": "/ts/packages/node/src/stores/MySQL.ts"
+    links: {
+      website: 'https://en.wikipedia.org/wiki/XML',
     },
-    "links": {
-      "website": "https://www.mysql.com"
-    }
   },
-  "mariadb": {
-    "label": "MariaDB",
-    "icon": "https://api.iconify.design/logos:mariadb-icon.svg?width=24&height=24",
-    "docs": "integrations/store/db/mariadb",
-    "group": [
-      "ConfigStore",
-      "Database"
-    ],
-    "store": {
-      "base": "ORM",
-      "type": "mariadb",
-      "code": "/ts/packages/node/src/stores/MariaDB.ts"
+  'ini-file': {
+    label: 'INI File',
+    icon: 'https://api.iconify.design/vscode-icons:file-type-ini.svg?width=24&height=24',
+    docs: 'integrations/store/file/ini-file',
+    group: ['ConfigStore', 'File'],
+    store: {
+      base: 'File',
+      type: 'ini-file',
+      code: '/packages/node/src/stores/IniFile.ts',
     },
-    "links": {
-      "website": "https://mariadb.org"
-    }
-  },
-  "postgresql": {
-    "label": "PostgreSQL",
-    "icon": "https://api.iconify.design/logos:postgresql.svg?width=24&height=24",
-    "docs": "integrations/store/db/postgresql",
-    "group": [
-      "ConfigStore",
-      "Database"
-    ],
-    "store": {
-      "base": "ORM",
-      "type": "postgresql",
-      "code": "/ts/packages/node/src/stores/PostgresSQL.ts"
+    links: {
+      website: 'https://en.wikipedia.org/wiki/INI_file',
     },
-    "links": {
-      "website": "https://www.postgresql.org"
-    }
   },
-  "cockroachdb": {
-    "label": "CockroachDB",
-    "icon": "https://api.iconify.design/simple-icons:cockroachlabs.svg?width=24&height=24",
-    "docs": "integrations/store/db/cockroachdb",
-    "group": [
-      "ConfigStore",
-      "Database"
-    ],
-    "store": {
-      "base": "ORM",
-      "type": "cockroachdb",
-      "code": "/ts/packages/node/src/stores/CockroachDB.ts"
+  'toml-file': {
+    label: 'TOML File',
+    icon: 'https://api.iconify.design/logos:toml.svg?width=24&height=24',
+    docs: 'integrations/store/file/toml-file',
+    group: ['ConfigStore', 'File'],
+    store: {
+      base: 'File',
+      type: 'toml-file',
+      code: '/packages/node/src/stores/TomlFile.ts',
     },
-    "links": {
-      "website": "https://www.cockroachlabs.com"
-    }
-  },
-  "mssql": {
-    "label": "Microsoft SQL Server",
-    "icon": "https://api.iconify.design/devicon:microsoftsqlserver.svg?width=24&height=24",
-    "docs": "integrations/store/db/mssql",
-    "group": [
-      "ConfigStore",
-      "Database"
-    ],
-    "store": {
-      "base": "ORM",
-      "type": "mssql",
-      "code": "/ts/packages/node/src/stores/MSSQL.ts"
+    links: {
+      website: 'https://toml.io',
     },
-    "links": {
-      "website": "https://www.microsoft.com/en-us/sql-server"
-    }
   },
-  "hashicorp-vault": {
-    "label": "HashiCorp Vault",
-    "icon": "https://api.iconify.design/logos:vault-icon.svg?width=24&height=24",
-    "docs": "integrations/store/secret/hashicorp-vault",
-    "group": [
-      "ConfigStore",
-      "Secret"
-    ],
-    "store": {
-      "base": "KeyValue",
-      "type": "hashicorp-vault",
-      "code": "/ts/packages/node/src/stores/HashiCorpVault.ts"
+  sqlite: {
+    label: 'SQLite',
+    icon: 'https://api.iconify.design/devicon:sqlite.svg?width=24&height=24',
+    docs: 'integrations/store/db/sqlite',
+    group: ['ConfigStore', 'Database'],
+    store: {
+      base: 'ORM',
+      type: 'sqlite',
+      code: '/packages/node/src/stores/SQLite.ts',
     },
-    "links": {
-      "website": "https://www.vaultproject.io"
-    }
-  },
-  "aws-secrets-manager": {
-    "label": "AWS Secrets Manager",
-    "icon": "https://api.iconify.design/logos:aws-secrets-manager.svg?width=24&height=24",
-    "docs": "integrations/store/secret/aws-secrets-manager",
-    "group": [
-      "ConfigStore",
-      "Secret"
-    ],
-    "store": {
-      "base": "KeyValue",
-      "type": "aws-secrets-manager",
-      "code": "/ts/packages/node/src/stores/AWSSecretsManager.ts"
+    links: {
+      website: 'https://www.sqlite.org',
     },
-    "links": {
-      "website": "https://aws.amazon.com/secrets-manager"
-    }
   },
-  "azure-key-vault": {
-    "label": "Azure Key Vault",
-    "icon": "https://symbols.getvecta.com/stencil_28/41_key-vault.2876abee6f.svg",
-    "docs": "integrations/store/secret/azure-key-vault",
-    "group": [
-      "ConfigStore",
-      "Secret"
-    ],
-    "store": {
-      "base": "KeyValue",
-      "type": "azure-key-vault",
-      "code": "/ts/packages/node/src/stores/AzureKeyVault.ts"
+  mysql: {
+    label: 'MySQL',
+    icon: 'https://api.iconify.design/logos:mysql-icon.svg?width=24&height=24',
+    docs: 'integrations/store/db/mysql',
+    group: ['ConfigStore', 'Database'],
+    store: {
+      base: 'ORM',
+      type: 'mysql',
+      code: '/packages/node/src/stores/MySQL.ts',
     },
-    "links": {
-      "website": "https://azure.microsoft.com/en-us/services/key-vault"
-    }
-  },
-  "gcp-secret-manager": {
-    "label": "GCP Secret Manager",
-    "icon": "https://www.svgrepo.com/download/375492/secret-manager.svg",
-    "docs": "integrations/store/secret/gcp-secret-manager",
-    "group": [
-      "ConfigStore",
-      "Secret"
-    ],
-    "store": {
-      "base": "KeyValue",
-      "type": "gcp-secret-manager",
-      "code": "/ts/packages/node/src/stores/GCPSecretManager.ts"
+    links: {
+      website: 'https://www.mysql.com',
     },
-    "links": {
-      "website": "https://cloud.google.com/secret-manager"
-    }
   },
-  "kubernetes-secret": {
-    "label": "Kubernetes Secret",
-    "icon": "https://api.iconify.design/logos:kubernetes.svg?width=24&height=24",
-    "docs": "integrations/store/secret/kubernetes-secret",
-    "group": [
-      "ConfigStore",
-      "Secret"
-    ],
-    "store": {
-      "base": "KeyValue",
-      "type": "kubernetes-secret",
-      "code": "/ts/packages/node/src/stores/KubernetesSecret.ts"
+  mariadb: {
+    label: 'MariaDB',
+    icon: 'https://api.iconify.design/logos:mariadb-icon.svg?width=24&height=24',
+    docs: 'integrations/store/db/mariadb',
+    group: ['ConfigStore', 'Database'],
+    store: {
+      base: 'ORM',
+      type: 'mariadb',
+      code: '/packages/node/src/stores/MariaDB.ts',
     },
-    "links": {
-      "website": "https://kubernetes.io/docs/concepts/configuration/secret"
-    }
-  },
-  "launchdarkly": {
-    "label": "LaunchDarkly",
-    "icon": "https://api.iconify.design/logos:launchdarkly-icon.svg?width=24&height=24",
-    "docs": "integrations/store/ff/launchdarkly",
-    "group": [
-      "ConfigStore",
-      "Feature Flag"
-    ],
-    "store": {
-      "base": "OpenFeature",
-      "type": "launchdarkly",
-      "code": "/ts/packages/node/src/stores/LaunchDarkly.ts"
+    links: {
+      website: 'https://mariadb.org',
     },
-    "links": {
-      "website": "https://launchdarkly.com"
-    }
   },
-  "cloudbees-feature-management": {
-    "label": "CloudBees Feature Management",
-    "icon": "https://api.iconify.design/simple-icons:cloudbees.svg?width=24&height=24",
-    "docs": "integrations/store/ff/cloudbees-feature-management",
-    "group": [
-      "ConfigStore",
-      "Feature Flag"
-    ],
-    "store": {
-      "base": "OpenFeature",
-      "type": "cloudbees-feature-management",
-      "code": "/ts/packages/node/src/stores/CloudBeesFeatureManagement.ts"
+  postgresql: {
+    label: 'PostgreSQL',
+    icon: 'https://api.iconify.design/logos:postgresql.svg?width=24&height=24',
+    docs: 'integrations/store/db/postgresql',
+    group: ['ConfigStore', 'Database'],
+    store: {
+      base: 'ORM',
+      type: 'postgresql',
+      code: '/packages/node/src/stores/PostgresSQL.ts',
     },
-    "links": {
-      "website": "https://www.cloudbees.com/products/feature-management"
-    }
-  },
-  "split": {
-    "label": "Split",
-    "icon": "https://splitsoftware.gallerycdn.vsassets.io/extensions/splitsoftware/splitio/1.0.1/1686315163828/Microsoft.VisualStudio.Services.Icons.Default",
-    "docs": "integrations/store/ff/split",
-    "group": [
-      "ConfigStore",
-      "Feature Flag"
-    ],
-    "store": {
-      "base": "OpenFeature",
-      "type": "split",
-      "code": "/ts/packages/node/src/stores/Split.ts"
+    links: {
+      website: 'https://www.postgresql.org',
     },
-    "links": {
-      "website": "https://www.split.io"
-    }
   },
-  "in-memory": {
-    "label": "In-Memory",
-    "icon": "https://api.iconify.design/ic:memory.svg?width=24&height=24",
-    "docs": "integrations/store/other/in-memory",
-    "group": [
-      "ConfigStore",
-      "Other"
-    ],
-    "store": {
-      "type": "in-memory",
-      "code": "/ts/packages/ts/src/stores/InMemory.ts"
+  cockroachdb: {
+    label: 'CockroachDB',
+    icon: 'https://api.iconify.design/simple-icons:cockroachlabs.svg?width=24&height=24',
+    docs: 'integrations/store/db/cockroachdb',
+    group: ['ConfigStore', 'Database'],
+    store: {
+      base: 'ORM',
+      type: 'cockroachdb',
+      code: '/packages/node/src/stores/CockroachDB.ts',
     },
-    "links": {
-      "website": "https://en.wikipedia.org/wiki/In-memory_database"
-    }
-  },
-  "aws-parameter-store": {
-    "label": "AWS Systems Manager Parameter Store",
-    "icon": "https://api.iconify.design/logos:aws-systems-manager.svg?width=24&height=24",
-    "docs": "integrations/store/other/aws-parameter-store",
-    "group": [
-      "ConfigStore",
-      "Other"
-    ],
-    "store": {
-      "base": "KeyValue",
-      "type": "aws-parameter-store",
-      "code": "/ts/packages/node/src/stores/AWSParameterStore.ts"
+    links: {
+      website: 'https://www.cockroachlabs.com',
     },
-    "links": {
-      "website": "https://aws.amazon.com/systems-manager/features/#Parameter_Store"
-    }
   },
-  "localforage": {
-    "label": "LocalForage",
-    "icon": "https://api.iconify.design/iconoir:db.svg?width=24&height=24",
-    "docs": "integrations/store/other/localforage",
-    "group": [
-      "ConfigStore",
-      "Other"
-    ],
-    "store": {
-      "base": "KeyValue",
-      "type": "localforage",
-      "code": "/ts/packages/browser/src/stores/LocalForage.ts"
+  mssql: {
+    label: 'Microsoft SQL Server',
+    icon: 'https://api.iconify.design/devicon:microsoftsqlserver.svg?width=24&height=24',
+    docs: 'integrations/store/db/mssql',
+    group: ['ConfigStore', 'Database'],
+    store: {
+      base: 'ORM',
+      type: 'mssql',
+      code: '/packages/node/src/stores/MSSQL.ts',
     },
-    "links": {
-      "website": "https://localforage.github.io/localForage"
-    }
-  },
-  "docker": {
-    "label": "Docker",
-    "icon": "https://api.iconify.design/logos:docker-icon.svg?width=24&height=24",
-    "docs": "integrations/container/docker",
-    "group": [
-      "Container"
-    ],
-    "links": {
-      "website": "https://www.docker.com"
-    }
-  },
-  "docker-compose": {
-    "label": "Docker Compose",
-    "icon": "https://api.iconify.design/logos:docker-icon.svg?width=24&height=24",
-    "docs": "integrations/container/docker-compose",
-    "group": [
-      "Container"
-    ],
-    "links": {
-      "website": "https://docs.docker.com/compose"
-    }
-  },
-  "kubernetes": {
-    "label": "Kubernetes",
-    "icon": "https://api.iconify.design/logos:kubernetes.svg?width=24&height=24",
-    "docs": "integrations/container/kubernetes",
-    "group": [
-      "Container"
-    ],
-    "links": {
-      "website": "https://kubernetes.io"
-    }
-  },
-  "aws-ecs": {
-    "label": "AWS ECS",
-    "icon": "https://api.iconify.design/logos:aws-ecs.svg?width=24&height=24",
-    "docs": "integrations/container/aws-ecs",
-    "group": [
-      "Container"
-    ],
-    "links": {
-      "website": "https://aws.amazon.com/ecs"
-    }
-  },
-  "jenkins": {
-    "label": "Jenkins",
-    "icon": "https://api.iconify.design/logos:jenkins.svg?width=24&height=24",
-    "docs": "integrations/cicd/jenkins",
-    "group": [
-      "CI/CD"
-    ],
-    "links": {
-      "website": "https://www.jenkins.io"
-    }
-  },
-  "github-actions": {
-    "label": "GitHub Actions",
-    "icon": "https://api.iconify.design/logos:github-actions.svg?width=24&height=24",
-    "docs": "integrations/cicd/github-actions",
-    "group": [
-      "CI/CD"
-    ],
-    "links": {
-      "website": "https://github.com/features/actions"
-    }
-  },
-  "circleci": {
-    "label": "CircleCI",
-    "icon": "https://api.iconify.design/logos:circleci.svg?width=24&height=24",
-    "docs": "integrations/cicd/circleci",
-    "group": [
-      "CI/CD"
-    ],
-    "links": {
-      "website": "https://circleci.com"
-    }
-  },
-  "gitlab-cicd": {
-    "label": "GitLab CI/CD",
-    "icon": "https://api.iconify.design/logos:gitlab.svg?width=24&height=24",
-    "docs": "integrations/cicd/gitlab-cicd",
-    "group": [
-      "CI/CD"
-    ],
-    "links": {
-      "website": "https://docs.gitlab.com/ee/ci"
-    }
-  },
-  "terraform": {
-    "label": "Terraform",
-    "icon": "https://api.iconify.design/logos:terraform-icon.svg?width=24&height=24",
-    "docs": "integrations/iac/terraform",
-    "group": [
-      "Infrastructure-as-Code"
-    ],
-    "links": {
-      "website": "https://www.terraform.io"
-    }
-  },
-  "helm": {
-    "label": "Helm",
-    "icon": "https://api.iconify.design/logos:helm.svg?width=24&height=24",
-    "docs": "integrations/iac/helm",
-    "group": [
-      "Infrastructure-as-Code"
-    ],
-    "links": {
-      "website": "https://helm.sh"
-    }
-  },
-  "aws-cdk": {
-    "label": "AWS CDK",
-    "icon": "https://api.iconify.design/logos:aws-cloudformation.svg?width=24&height=24",
-    "docs": "integrations/iac/aws-cdk",
-    "group": [
-      "Infrastructure-as-Code"
-    ],
-    "links": {
-      "website": "https://aws.amazon.com/cdk"
-    }
-  },
-  "pulumi": {
-    "label": "Pulumi",
-    "icon": "https://api.iconify.design/logos:pulumi-icon.svg?width=24&height=24",
-    "docs": "integrations/iac/pulumi",
-    "group": [
-      "Infrastructure-as-Code"
-    ],
-    "links": {
-      "website": "https://www.pulumi.com"
-    }
-  },
-  "vite": {
-    "label": "Vite",
-    "icon": "https://api.iconify.design/logos:vitejs.svg?width=24&height=24",
-    "docs": "integrations/framework/web/vite",
-    "group": [
-      "Framework",
-      "Web"
-    ],
-    "framework": {},
-    "links": {
-      "website": "https://vitejs.dev",
-      "env": "https://vitejs.dev/guide/env-and-mode.html"
-    }
-  },
-  "nextjs": {
-    "label": "Next.js",
-    "icon": "https://api.iconify.design/logos:nextjs-icon.svg?width=24&height=24",
-    "docs": "integrations/framework/web/nextjs",
-    "group": [
-      "Framework",
-      "Web"
-    ],
-    "framework": {},
-    "links": {
-      "website": "https://nextjs.org",
-      "env": "https://nextjs.org/docs/pages/building-your-application/configuring/environment-variables"
-    }
-  },
-  "remix": {
-    "label": "Remix",
-    "icon": "https://api.iconify.design/logos:remix-icon.svg?width=24&height=24",
-    "docs": "integrations/framework/web/remix",
-    "group": [
-      "Framework",
-      "Web"
-    ],
-    "framework": {},
-    "links": {
-      "website": "https://remix.run",
-      "env": "https://remix.run/docs/en/main/guides/envvars"
-    }
-  },
-  "gatsby": {
-    "label": "Gatsby",
-    "icon": "https://api.iconify.design/logos:gatsby.svg?width=24&height=24",
-    "docs": "integrations/framework/web/gatsby",
-    "group": [
-      "Framework",
-      "Web"
-    ],
-    "framework": {},
-    "links": {
-      "website": "https://www.gatsbyjs.com",
-      "env": "https://www.gatsbyjs.com/docs/how-to/local-development/environment-variables"
-    }
-  },
-  "astro": {
-    "label": "Astro",
-    "icon": "https://api.iconify.design/logos:astro-icon.svg?width=24&height=24",
-    "docs": "integrations/framework/web/astro",
-    "group": [
-      "Framework",
-      "Web"
-    ],
-    "framework": {},
-    "links": {
-      "website": "https://astro.build",
-      "env": "https://docs.astro.build/en/guides/environment-variables/"
-    }
-  },
-  "nuxt": {
-    "label": "Nuxt",
-    "icon": "https://api.iconify.design/logos:nuxt-icon.svg?width=24&height=24",
-    "docs": "integrations/framework/web/nuxt",
-    "group": [
-      "Framework",
-      "Web"
-    ],
-    "framework": {},
-    "links": {
-      "website": "https://nuxtjs.org",
-      "env": "https://nuxt.com/docs/guide/going-further/runtime-config#environment-variables"
-    }
-  },
-  "sveltekit": {
-    "label": "SvelteKit",
-    "icon": "https://api.iconify.design/logos:svelte-icon.svg?width=24&height=24",
-    "docs": "integrations/framework/web/sveltekit",
-    "group": [
-      "Framework",
-      "Web"
-    ],
-    "framework": {},
-    "links": {
-      "website": "https://kit.svelte.dev",
-      "env": "https://kit.svelte.dev/docs/adapter-node#environment-variables"
-    }
-  },
-  "express": {
-    "label": "Express",
-    "icon": "https://api.iconify.design/simple-icons:express.svg?width=24&height=24",
-    "docs": "integrations/framework/backend/express",
-    "group": [
-      "Framework",
-      "Backend",
-      "Node.js"
-    ],
-    "framework": {
-      "lang": "Node.js"
+    links: {
+      website: 'https://www.microsoft.com/en-us/sql-server',
     },
-    "links": {
-      "website": "https://expressjs.com"
-    }
   },
-  "nestjs": {
-    "label": "NestJS",
-    "icon": "https://api.iconify.design/logos:nestjs.svg?width=24&height=24",
-    "docs": "integrations/framework/backend/nestjs",
-    "group": [
-      "Framework",
-      "Backend",
-      "Node.js"
-    ],
-    "framework": {
-      "lang": "Node.js"
+  'hashicorp-vault': {
+    label: 'HashiCorp Vault',
+    icon: 'https://api.iconify.design/logos:vault-icon.svg?width=24&height=24',
+    docs: 'integrations/store/secret/hashicorp-vault',
+    group: ['ConfigStore', 'Secret'],
+    store: {
+      base: 'KeyValue',
+      type: 'hashicorp-vault',
+      code: '/packages/node/src/stores/HashiCorpVault.ts',
     },
-    "links": {
-      "website": "https://nestjs.com",
-      "env": "https://docs.nestjs.com/techniques/configuration"
-    }
+    links: {
+      website: 'https://www.vaultproject.io',
+    },
   },
-  "fastify": {
-    "label": "Fastify",
-    "icon": "https://api.iconify.design/logos:fastify-icon.svg?width=24&height=24",
-    "docs": "integrations/framework/backend/fastify",
-    "group": [
-      "Framework",
-      "Backend",
-      "Node.js"
-    ],
-    "framework": {
-      "lang": "Node.js"
+  'aws-secrets-manager': {
+    label: 'AWS Secrets Manager',
+    icon: 'https://api.iconify.design/logos:aws-secrets-manager.svg?width=24&height=24',
+    docs: 'integrations/store/secret/aws-secrets-manager',
+    group: ['ConfigStore', 'Secret'],
+    store: {
+      base: 'KeyValue',
+      type: 'aws-secrets-manager',
+      code: '/packages/node/src/stores/AWSSecretsManager.ts',
     },
-    "links": {
-      "website": "https://www.fastify.io"
-    }
+    links: {
+      website: 'https://aws.amazon.com/secrets-manager',
+    },
   },
-  "fastapi": {
-    "label": "FastAPI",
-    "icon": "https://api.iconify.design/logos:fastapi-icon.svg?width=24&height=24",
-    "docs": "integrations/framework/backend/fastapi",
-    "group": [
-      "Framework",
-      "Backend",
-      "Python"
-    ],
-    "framework": {
-      "lang": "Python"
+  'azure-key-vault': {
+    label: 'Azure Key Vault',
+    icon: 'https://symbols.getvecta.com/stencil_28/41_key-vault.2876abee6f.svg',
+    docs: 'integrations/store/secret/azure-key-vault',
+    group: ['ConfigStore', 'Secret'],
+    store: {
+      base: 'KeyValue',
+      type: 'azure-key-vault',
+      code: '/packages/node/src/stores/AzureKeyVault.ts',
     },
-    "links": {
-      "website": "https://fastapi.tiangolo.com",
-      "env": "https://fastapi.tiangolo.com/advanced/settings"
-    }
+    links: {
+      website: 'https://azure.microsoft.com/en-us/services/key-vault',
+    },
   },
-  "django": {
-    "label": "Django",
-    "icon": "https://api.iconify.design/logos:django-icon.svg?width=24&height=24",
-    "docs": "integrations/framework/backend/django",
-    "group": [
-      "Framework",
-      "Backend",
-      "Python"
-    ],
-    "framework": {
-      "lang": "Python"
+  'gcp-secret-manager': {
+    label: 'GCP Secret Manager',
+    icon: 'https://www.svgrepo.com/download/375492/secret-manager.svg',
+    docs: 'integrations/store/secret/gcp-secret-manager',
+    group: ['ConfigStore', 'Secret'],
+    store: {
+      base: 'KeyValue',
+      type: 'gcp-secret-manager',
+      code: '/packages/node/src/stores/GCPSecretManager.ts',
     },
-    "links": {
-      "website": "https://www.djangoproject.com",
-      "env": ""
-    }
+    links: {
+      website: 'https://cloud.google.com/secret-manager',
+    },
   },
-  "flask": {
-    "label": "Flask",
-    "icon": "https://api.iconify.design/simple-icons:flask.svg?width=24&height=24",
-    "docs": "integrations/framework/backend/flask",
-    "group": [
-      "Framework",
-      "Backend",
-      "Python"
-    ],
-    "framework": {
-      "lang": "Python"
+  'kubernetes-secret': {
+    label: 'Kubernetes Secret',
+    icon: 'https://api.iconify.design/logos:kubernetes.svg?width=24&height=24',
+    docs: 'integrations/store/secret/kubernetes-secret',
+    group: ['ConfigStore', 'Secret'],
+    store: {
+      base: 'KeyValue',
+      type: 'kubernetes-secret',
+      code: '/packages/node/src/stores/KubernetesSecret.ts',
     },
-    "links": {
-      "website": "https://flask.palletsprojects.com",
-      "env": "https://flask.palletsprojects.com/en/latest/config/"
-    }
+    links: {
+      website: 'https://kubernetes.io/docs/concepts/configuration/secret',
+    },
   },
-  "laravel": {
-    "label": "Laravel",
-    "icon": "https://api.iconify.design/logos:laravel.svg?width=24&height=24",
-    "docs": "integrations/framework/backend/laravel",
-    "group": [
-      "Framework",
-      "Backend",
-      "PHP"
-    ],
-    "framework": {
-      "lang": "PHP"
+  launchdarkly: {
+    label: 'LaunchDarkly',
+    icon: 'https://api.iconify.design/logos:launchdarkly-icon.svg?width=24&height=24',
+    docs: 'integrations/store/ff/launchdarkly',
+    group: ['ConfigStore', 'Feature Flag'],
+    store: {
+      base: 'OpenFeature',
+      type: 'launchdarkly',
+      code: '/packages/node/src/stores/LaunchDarkly.ts',
     },
-    "links": {
-      "website": "https://laravel.com",
-      "env": "https://laravel.com/docs/8.x/configuration"
-    }
+    links: {
+      website: 'https://launchdarkly.com',
+    },
   },
-  "symfony": {
-    "label": "Symfony",
-    "icon": "https://api.iconify.design/logos:symfony.svg?width=24&height=24",
-    "docs": "integrations/framework/backend/symfony",
-    "group": [
-      "Framework",
-      "Backend",
-      "PHP"
-    ],
-    "framework": {
-      "lang": "PHP"
+  'cloudbees-feature-management': {
+    label: 'CloudBees Feature Management',
+    icon: 'https://api.iconify.design/simple-icons:cloudbees.svg?width=24&height=24',
+    docs: 'integrations/store/ff/cloudbees-feature-management',
+    group: ['ConfigStore', 'Feature Flag'],
+    store: {
+      base: 'OpenFeature',
+      type: 'cloudbees-feature-management',
+      code: '/packages/node/src/stores/CloudBeesFeatureManagement.ts',
     },
-    "links": {
-      "website": "https://symfony.com",
-      "env": "https://symfony.com/doc/current/configuration.html"
-    }
+    links: {
+      website: 'https://www.cloudbees.com/products/feature-management',
+    },
   },
-  "rails": {
-    "label": "Rails",
-    "icon": "https://api.iconify.design/logos:rails.svg?width=24&height=24",
-    "docs": "integrations/framework/backend/rails",
-    "group": [
-      "Framework",
-      "Backend",
-      "Other"
-    ],
-    "framework": {
-      "lang": "Ruby"
+  split: {
+    label: 'Split',
+    icon: 'https://splitsoftware.gallerycdn.vsassets.io/extensions/splitsoftware/splitio/1.0.1/1686315163828/Microsoft.VisualStudio.Services.Icons.Default',
+    docs: 'integrations/store/ff/split',
+    group: ['ConfigStore', 'Feature Flag'],
+    store: {
+      base: 'OpenFeature',
+      type: 'split',
+      code: '/packages/node/src/stores/Split.ts',
     },
-    "links": {
-      "website": "https://rubyonrails.org",
-      "env": "https://guides.rubyonrails.org/configuring.html"
-    }
+    links: {
+      website: 'https://www.split.io',
+    },
   },
-  "spring": {
-    "label": "Spring",
-    "icon": "https://api.iconify.design/logos:spring-icon.svg?width=24&height=24",
-    "docs": "integrations/framework/backend/spring",
-    "group": [
-      "Framework",
-      "Backend",
-      "Other"
-    ],
-    "framework": {
-      "lang": "Java"
+  'in-memory': {
+    label: 'In-Memory',
+    icon: 'https://api.iconify.design/ic:memory.svg?width=24&height=24',
+    docs: 'integrations/store/other/in-memory',
+    group: ['ConfigStore', 'Other'],
+    store: {
+      type: 'in-memory',
+      code: '/packages/ts/src/stores/InMemory.ts',
     },
-    "links": {
-      "website": "https://spring.io",
-      "env": "https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.external-config"
-    }
+    links: {
+      website: 'https://en.wikipedia.org/wiki/In-memory_database',
+    },
   },
-  "aspnet": {
-    "label": "ASP.NET",
-    "icon": "https://api.iconify.design/logos:dotnet.svg?width=24&height=24",
-    "docs": "integrations/framework/backend/aspnet",
-    "group": [
-      "Framework",
-      "Backend",
-      "Other"
-    ],
-    "framework": {
-      "lang": "C#"
+  'aws-parameter-store': {
+    label: 'AWS Systems Manager Parameter Store',
+    icon: 'https://api.iconify.design/logos:aws-systems-manager.svg?width=24&height=24',
+    docs: 'integrations/store/other/aws-parameter-store',
+    group: ['ConfigStore', 'Other'],
+    store: {
+      base: 'KeyValue',
+      type: 'aws-parameter-store',
+      code: '/packages/node/src/stores/AWSParameterStore.ts',
     },
-    "links": {
-      "website": "https://dotnet.microsoft.com/apps/aspnet"
-    }
+    links: {
+      website: 'https://aws.amazon.com/systems-manager/features/#Parameter_Store',
+    },
   },
-  "wordpress": {
-    "label": "WordPress",
-    "icon": "https://api.iconify.design/logos:wordpress-icon.svg?width=24&height=24",
-    "docs": "integrations/framework/backend/wordpress",
-    "group": [
-      "Framework",
-      "Backend",
-      "CMS"
-    ],
-    "framework": {
-      "sub": "CMS"
+  localforage: {
+    label: 'LocalForage',
+    icon: 'https://api.iconify.design/iconoir:db.svg?width=24&height=24',
+    docs: 'integrations/store/other/localforage',
+    group: ['ConfigStore', 'Other'],
+    store: {
+      base: 'KeyValue',
+      type: 'localforage',
+      code: '/packages/browser/src/stores/LocalForage.ts',
     },
-    "links": {
-      "website": "https://wordpress.org"
-    }
+    links: {
+      website: 'https://localforage.github.io/localForage',
+    },
   },
-  "strapi": {
-    "label": "Strapi",
-    "icon": "https://api.iconify.design/logos:strapi-icon.svg?width=24&height=24",
-    "docs": "integrations/framework/backend/strapi",
-    "group": [
-      "Framework",
-      "Backend",
-      "CMS"
-    ],
-    "framework": {
-      "sub": "CMS"
+  docker: {
+    label: 'Docker',
+    icon: 'https://api.iconify.design/logos:docker-icon.svg?width=24&height=24',
+    docs: 'integrations/container/docker',
+    group: ['Container'],
+    links: {
+      website: 'https://www.docker.com',
     },
-    "links": {
-      "website": "https://strapi.io"
-    }
   },
-  "expo": {
-    "label": "Expo",
-    "icon": "https://api.iconify.design/logos:expo-icon.svg?width=24&height=24",
-    "docs": "integrations/framework/app/expo",
-    "group": [
-      "Framework",
-      "App",
-      "Mobile"
-    ],
-    "framework": {
-      "sub": "Mobile"
+  'docker-compose': {
+    label: 'Docker Compose',
+    icon: 'https://api.iconify.design/logos:docker-icon.svg?width=24&height=24',
+    docs: 'integrations/container/docker-compose',
+    group: ['Container'],
+    links: {
+      website: 'https://docs.docker.com/compose',
     },
-    "links": {
-      "website": "https://expo.dev",
-      "env": "https://docs.expo.dev/workflow/configuration"
-    }
   },
-  "react-native": {
-    "label": "React Native",
-    "icon": "https://api.iconify.design/logos:react.svg?width=24&height=24",
-    "docs": "integrations/framework/app/react-native",
-    "group": [
-      "Framework",
-      "App",
-      "Mobile"
-    ],
-    "framework": {
-      "sub": "Mobile"
+  kubernetes: {
+    label: 'Kubernetes',
+    icon: 'https://api.iconify.design/logos:kubernetes.svg?width=24&height=24',
+    docs: 'integrations/container/kubernetes',
+    group: ['Container'],
+    links: {
+      website: 'https://kubernetes.io',
     },
-    "links": {
-      "website": "https://reactnative.dev",
-      "env": ""
-    }
   },
-  "flutter": {
-    "label": "Flutter",
-    "icon": "https://api.iconify.design/logos:flutter.svg?width=24&height=24",
-    "docs": "integrations/framework/app/flutter",
-    "group": [
-      "Framework",
-      "App",
-      "Mobile"
-    ],
-    "framework": {
-      "sub": "Mobile"
+  'aws-ecs': {
+    label: 'AWS ECS',
+    icon: 'https://api.iconify.design/logos:aws-ecs.svg?width=24&height=24',
+    docs: 'integrations/container/aws-ecs',
+    group: ['Container'],
+    links: {
+      website: 'https://aws.amazon.com/ecs',
     },
-    "links": {
-      "website": "https://flutter.dev",
-      "env": ""
-    }
   },
-  "electron": {
-    "label": "Electron",
-    "icon": "https://api.iconify.design/logos:electron.svg?width=24&height=24",
-    "docs": "integrations/framework/app/electron",
-    "group": [
-      "Framework",
-      "App",
-      "Desktop"
-    ],
-    "framework": {
-      "sub": "Desktop"
+  jenkins: {
+    label: 'Jenkins',
+    icon: 'https://api.iconify.design/logos:jenkins.svg?width=24&height=24',
+    docs: 'integrations/cicd/jenkins',
+    group: ['CI/CD'],
+    links: {
+      website: 'https://www.jenkins.io',
     },
-    "links": {
-      "website": "https://www.electronjs.org",
-      "env": "https://www.electronjs.org/docs/api/environment-variables"
-    }
-  }
+  },
+  'github-actions': {
+    label: 'GitHub Actions',
+    icon: 'https://api.iconify.design/logos:github-actions.svg?width=24&height=24',
+    docs: 'integrations/cicd/github-actions',
+    group: ['CI/CD'],
+    links: {
+      website: 'https://github.com/features/actions',
+    },
+  },
+  circleci: {
+    label: 'CircleCI',
+    icon: 'https://api.iconify.design/logos:circleci.svg?width=24&height=24',
+    docs: 'integrations/cicd/circleci',
+    group: ['CI/CD'],
+    links: {
+      website: 'https://circleci.com',
+    },
+  },
+  'gitlab-cicd': {
+    label: 'GitLab CI/CD',
+    icon: 'https://api.iconify.design/logos:gitlab.svg?width=24&height=24',
+    docs: 'integrations/cicd/gitlab-cicd',
+    group: ['CI/CD'],
+    links: {
+      website: 'https://docs.gitlab.com/ee/ci',
+    },
+  },
+  terraform: {
+    label: 'Terraform',
+    icon: 'https://api.iconify.design/logos:terraform-icon.svg?width=24&height=24',
+    docs: 'integrations/iac/terraform',
+    group: ['Infrastructure-as-Code'],
+    links: {
+      website: 'https://www.terraform.io',
+    },
+  },
+  helm: {
+    label: 'Helm',
+    icon: 'https://api.iconify.design/logos:helm.svg?width=24&height=24',
+    docs: 'integrations/iac/helm',
+    group: ['Infrastructure-as-Code'],
+    links: {
+      website: 'https://helm.sh',
+    },
+  },
+  'aws-cdk': {
+    label: 'AWS CDK',
+    icon: 'https://api.iconify.design/logos:aws-cloudformation.svg?width=24&height=24',
+    docs: 'integrations/iac/aws-cdk',
+    group: ['Infrastructure-as-Code'],
+    links: {
+      website: 'https://aws.amazon.com/cdk',
+    },
+  },
+  pulumi: {
+    label: 'Pulumi',
+    icon: 'https://api.iconify.design/logos:pulumi-icon.svg?width=24&height=24',
+    docs: 'integrations/iac/pulumi',
+    group: ['Infrastructure-as-Code'],
+    links: {
+      website: 'https://www.pulumi.com',
+    },
+  },
+  vite: {
+    label: 'Vite',
+    icon: 'https://api.iconify.design/logos:vitejs.svg?width=24&height=24',
+    docs: 'integrations/framework/web/vite',
+    group: ['Framework', 'Web'],
+    framework: {},
+    links: {
+      website: 'https://vitejs.dev',
+      env: 'https://vitejs.dev/guide/env-and-mode.html',
+    },
+  },
+  nextjs: {
+    label: 'Next.js',
+    icon: 'https://api.iconify.design/logos:nextjs-icon.svg?width=24&height=24',
+    docs: 'integrations/framework/web/nextjs',
+    group: ['Framework', 'Web'],
+    framework: {},
+    links: {
+      website: 'https://nextjs.org',
+      env: 'https://nextjs.org/docs/pages/building-your-application/configuring/environment-variables',
+    },
+  },
+  remix: {
+    label: 'Remix',
+    icon: 'https://api.iconify.design/logos:remix-icon.svg?width=24&height=24',
+    docs: 'integrations/framework/web/remix',
+    group: ['Framework', 'Web'],
+    framework: {},
+    links: {
+      website: 'https://remix.run',
+      env: 'https://remix.run/docs/en/main/guides/envvars',
+    },
+  },
+  gatsby: {
+    label: 'Gatsby',
+    icon: 'https://api.iconify.design/logos:gatsby.svg?width=24&height=24',
+    docs: 'integrations/framework/web/gatsby',
+    group: ['Framework', 'Web'],
+    framework: {},
+    links: {
+      website: 'https://www.gatsbyjs.com',
+      env: 'https://www.gatsbyjs.com/docs/how-to/local-development/environment-variables',
+    },
+  },
+  astro: {
+    label: 'Astro',
+    icon: 'https://api.iconify.design/logos:astro-icon.svg?width=24&height=24',
+    docs: 'integrations/framework/web/astro',
+    group: ['Framework', 'Web'],
+    framework: {},
+    links: {
+      website: 'https://astro.build',
+      env: 'https://docs.astro.build/en/guides/environment-variables/',
+    },
+  },
+  nuxt: {
+    label: 'Nuxt',
+    icon: 'https://api.iconify.design/logos:nuxt-icon.svg?width=24&height=24',
+    docs: 'integrations/framework/web/nuxt',
+    group: ['Framework', 'Web'],
+    framework: {},
+    links: {
+      website: 'https://nuxtjs.org',
+      env: 'https://nuxt.com/docs/guide/going-further/runtime-config#environment-variables',
+    },
+  },
+  sveltekit: {
+    label: 'SvelteKit',
+    icon: 'https://api.iconify.design/logos:svelte-icon.svg?width=24&height=24',
+    docs: 'integrations/framework/web/sveltekit',
+    group: ['Framework', 'Web'],
+    framework: {},
+    links: {
+      website: 'https://kit.svelte.dev',
+      env: 'https://kit.svelte.dev/docs/adapter-node#environment-variables',
+    },
+  },
+  express: {
+    label: 'Express',
+    icon: 'https://api.iconify.design/simple-icons:express.svg?width=24&height=24',
+    docs: 'integrations/framework/backend/express',
+    group: ['Framework', 'Backend', 'Node.js'],
+    framework: {
+      lang: 'Node.js',
+    },
+    links: {
+      website: 'https://expressjs.com',
+    },
+  },
+  nestjs: {
+    label: 'NestJS',
+    icon: 'https://api.iconify.design/logos:nestjs.svg?width=24&height=24',
+    docs: 'integrations/framework/backend/nestjs',
+    group: ['Framework', 'Backend', 'Node.js'],
+    framework: {
+      lang: 'Node.js',
+    },
+    links: {
+      website: 'https://nestjs.com',
+      env: 'https://docs.nestjs.com/techniques/configuration',
+    },
+  },
+  fastify: {
+    label: 'Fastify',
+    icon: 'https://api.iconify.design/logos:fastify-icon.svg?width=24&height=24',
+    docs: 'integrations/framework/backend/fastify',
+    group: ['Framework', 'Backend', 'Node.js'],
+    framework: {
+      lang: 'Node.js',
+    },
+    links: {
+      website: 'https://www.fastify.io',
+    },
+  },
+  fastapi: {
+    label: 'FastAPI',
+    icon: 'https://api.iconify.design/logos:fastapi-icon.svg?width=24&height=24',
+    docs: 'integrations/framework/backend/fastapi',
+    group: ['Framework', 'Backend', 'Python'],
+    framework: {
+      lang: 'Python',
+    },
+    links: {
+      website: 'https://fastapi.tiangolo.com',
+      env: 'https://fastapi.tiangolo.com/advanced/settings',
+    },
+  },
+  django: {
+    label: 'Django',
+    icon: 'https://api.iconify.design/logos:django-icon.svg?width=24&height=24',
+    docs: 'integrations/framework/backend/django',
+    group: ['Framework', 'Backend', 'Python'],
+    framework: {
+      lang: 'Python',
+    },
+    links: {
+      website: 'https://www.djangoproject.com',
+      env: '',
+    },
+  },
+  flask: {
+    label: 'Flask',
+    icon: 'https://api.iconify.design/simple-icons:flask.svg?width=24&height=24',
+    docs: 'integrations/framework/backend/flask',
+    group: ['Framework', 'Backend', 'Python'],
+    framework: {
+      lang: 'Python',
+    },
+    links: {
+      website: 'https://flask.palletsprojects.com',
+      env: 'https://flask.palletsprojects.com/en/latest/config/',
+    },
+  },
+  laravel: {
+    label: 'Laravel',
+    icon: 'https://api.iconify.design/logos:laravel.svg?width=24&height=24',
+    docs: 'integrations/framework/backend/laravel',
+    group: ['Framework', 'Backend', 'PHP'],
+    framework: {
+      lang: 'PHP',
+    },
+    links: {
+      website: 'https://laravel.com',
+      env: 'https://laravel.com/docs/8.x/configuration',
+    },
+  },
+  symfony: {
+    label: 'Symfony',
+    icon: 'https://api.iconify.design/logos:symfony.svg?width=24&height=24',
+    docs: 'integrations/framework/backend/symfony',
+    group: ['Framework', 'Backend', 'PHP'],
+    framework: {
+      lang: 'PHP',
+    },
+    links: {
+      website: 'https://symfony.com',
+      env: 'https://symfony.com/doc/current/configuration.html',
+    },
+  },
+  rails: {
+    label: 'Rails',
+    icon: 'https://api.iconify.design/logos:rails.svg?width=24&height=24',
+    docs: 'integrations/framework/backend/rails',
+    group: ['Framework', 'Backend', 'Other'],
+    framework: {
+      lang: 'Ruby',
+    },
+    links: {
+      website: 'https://rubyonrails.org',
+      env: 'https://guides.rubyonrails.org/configuring.html',
+    },
+  },
+  spring: {
+    label: 'Spring',
+    icon: 'https://api.iconify.design/logos:spring-icon.svg?width=24&height=24',
+    docs: 'integrations/framework/backend/spring',
+    group: ['Framework', 'Backend', 'Other'],
+    framework: {
+      lang: 'Java',
+    },
+    links: {
+      website: 'https://spring.io',
+      env: 'https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.external-config',
+    },
+  },
+  aspnet: {
+    label: 'ASP.NET',
+    icon: 'https://api.iconify.design/logos:dotnet.svg?width=24&height=24',
+    docs: 'integrations/framework/backend/aspnet',
+    group: ['Framework', 'Backend', 'Other'],
+    framework: {
+      lang: 'C#',
+    },
+    links: {
+      website: 'https://dotnet.microsoft.com/apps/aspnet',
+    },
+  },
+  wordpress: {
+    label: 'WordPress',
+    icon: 'https://api.iconify.design/logos:wordpress-icon.svg?width=24&height=24',
+    docs: 'integrations/framework/backend/wordpress',
+    group: ['Framework', 'Backend', 'CMS'],
+    framework: {
+      sub: 'CMS',
+    },
+    links: {
+      website: 'https://wordpress.org',
+    },
+  },
+  strapi: {
+    label: 'Strapi',
+    icon: 'https://api.iconify.design/logos:strapi-icon.svg?width=24&height=24',
+    docs: 'integrations/framework/backend/strapi',
+    group: ['Framework', 'Backend', 'CMS'],
+    framework: {
+      sub: 'CMS',
+    },
+    links: {
+      website: 'https://strapi.io',
+    },
+  },
+  expo: {
+    label: 'Expo',
+    icon: 'https://api.iconify.design/logos:expo-icon.svg?width=24&height=24',
+    docs: 'integrations/framework/app/expo',
+    group: ['Framework', 'App', 'Mobile'],
+    framework: {
+      sub: 'Mobile',
+    },
+    links: {
+      website: 'https://expo.dev',
+      env: 'https://docs.expo.dev/workflow/configuration',
+    },
+  },
+  'react-native': {
+    label: 'React Native',
+    icon: 'https://api.iconify.design/logos:react.svg?width=24&height=24',
+    docs: 'integrations/framework/app/react-native',
+    group: ['Framework', 'App', 'Mobile'],
+    framework: {
+      sub: 'Mobile',
+    },
+    links: {
+      website: 'https://reactnative.dev',
+      env: '',
+    },
+  },
+  flutter: {
+    label: 'Flutter',
+    icon: 'https://api.iconify.design/logos:flutter.svg?width=24&height=24',
+    docs: 'integrations/framework/app/flutter',
+    group: ['Framework', 'App', 'Mobile'],
+    framework: {
+      sub: 'Mobile',
+    },
+    links: {
+      website: 'https://flutter.dev',
+      env: '',
+    },
+  },
+  electron: {
+    label: 'Electron',
+    icon: 'https://api.iconify.design/logos:electron.svg?width=24&height=24',
+    docs: 'integrations/framework/app/electron',
+    group: ['Framework', 'App', 'Desktop'],
+    framework: {
+      sub: 'Desktop',
+    },
+    links: {
+      website: 'https://www.electronjs.org',
+      env: 'https://www.electronjs.org/docs/api/environment-variables',
+    },
+  },
 };
+
+;

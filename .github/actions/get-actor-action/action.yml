@@ -1,21 +1,23 @@
-name: "Get actor information"
+name: Get actor information
+description: Extract GitHub actor information like username, permission, etc.
 
 inputs:
   github-token:
+    description: GitHub token
     required: true
 
 outputs:
   actor-username:
-    description: "Actor username"
+    description: Actor username
     value: ${{ steps.actor-info.outputs.username }}
   actor-permission:
-    description: "Actor permission"
+    description: Actor permission
     value: ${{ steps.actor-info.outputs.permission }}
 
 runs:
-  using: "composite"
+  using: composite
   steps:
-    # todo: enenche code with actions/github-script@v6 instead of bash
+    # todo: enhance code with actions/github-script@v6 instead of bash
     - name: Extract actor information
       id: actor-info
       shell: bash

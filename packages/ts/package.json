@@ -1,0 +1,43 @@
+{
+  "name": "@configu/ts",
+  "version": "0.0.0",
+  "license": "Apache-2.0",
+  "description": "Configu TypeScript SDK",
+  "author": "@configu/dev",
+  "exports": "./build/index.js",
+  "types": "./build/index.d.ts",
+  "files": [
+    "/build"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/configu/configu",
+    "directory": "packages/ts"
+  },
+  "bugs": {
+    "url": "https://github.com/configu/configu/issues",
+    "email": "dev@configu.com"
+  },
+  "homepage": "https://configu.com",
+  "keywords": [
+    "cfgu",
+    "configu",
+    "configu-ts",
+    "configu-typescript"
+  ],
+  "scripts": {
+    "clean": "shx rm -rf tsconfig.tsbuildinfo build",
+    "build": "tsc --build"
+  },
+  "dependencies": {
+    "ajv": "^8.13.0",
+    "axios": "^1.6.2",
+    "lodash": "^4.17.21",
+    "mustache": "^4.2.0",
+    "validator": "^13.11.0"
+  },
+  "devDependencies": {
+    "@types/mustache": "^4.2.5",
+    "@types/validator": "^13.11.9"
+  }
+}

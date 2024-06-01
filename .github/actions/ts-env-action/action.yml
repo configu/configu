@@ -1,53 +1,33 @@
-name: "TypeScript environment setup"
+# todo: consider contributing this to the pnpm/action-setup repo by updating the GitHub Action one and reorder page
+# https://pnpm.io/continuous-integration#github-actions
+name: TypeScript environment setup
+description: Setup Node.js and install dependencies
 
 inputs:
-  node-version:
-    description: "Node.js version"
-    required: true
-    default: "20.x"
-  npm-version:
-    description: "npm version"
-    required: true
-    default: "latest"
   install-dependencies:
+    description: Runs pnpm install in the dependencies-root directory
     required: true
-    default: "true"
-  dependencies-root:
-    description: "Runs npm-install in this directory"
-    required: true
-    default: "."
+    default: 'true'
 
 runs:
-  using: "composite"
+  using: 'composite'
   steps:
-    - name: Install Node.js ${{ inputs.node-version }}
-      uses: actions/setup-node@v3
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
       with:
-        node-version: ${{ inputs.node-version }}
-        registry-url: "https://registry.npmjs.org"
-        scope: "@configu"
+        node-version-file: '.node-version'
+        cache: 'pnpm' # todo: currently cache is not working properly, try https://github.com/pnpm/action-setup#use-cache-to-reduce-installation-time
+        registry-url: 'https://registry.npmjs.org'
+        scope: '@configu'
 
-    - name: Install npm latest
-      shell: bash
-      run: |
-        npm install -g npm@${{ inputs.npm-version }}
-        npm -v
-
-    # - name: Install useful npm global packages
-    #   shell: bash
-    #   run: |
-    #     npm install -g json env-cmd serve ngrok
-    #     npm list -g --depth 0
-
-    - name: Set CWD environment variable
-      shell: bash
-      run: |
-        echo "CWD=${{ inputs.dependencies-root }}" >> $GITHUB_ENV
-
-    - name: Install npm dependencies
+    - name: Install dependencies
       shell: bash
       if: ${{ inputs.install-dependencies == 'true' }} # * there is a bug in gh-actions causing booleans to be strings in composite actions - see: https://github.com/actions/runner/issues/1483#issuecomment-1042393939
       run: |
-        cd ${{ env.CWD }}
-        npm ci --include=dev
-        npm list --depth 0
+        pnpm install
+        pnpm list --recursive --depth 0
+      env:
+        HUSKY: '0'

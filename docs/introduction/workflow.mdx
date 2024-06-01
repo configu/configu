@@ -1,16 +1,12 @@
 ---
-title: "Workflow"
+title: 'Workflow'
 description: "Configu is designed to revolutionize the way software configurations are managed, integrating seamlessly into the software development lifecycle. Its architecture and workflow are meticulously crafted to support and enhance configuration management, making it a critical component of modern software development practices. Let's delve into the intricacies of how Configu operates, from its architectural foundation to its comprehensive workflow."
-icon: "infinity"
+icon: 'infinity'
 ---
 
-import { Related } from '/snippets/callouts.mdx'
+import { Related } from '/snippets/callouts.mdx';
 
 <Related name="Configu Concepts" link="/introduction/concepts#configu-concepts" />
-
-{/* ### Architecture
-
-At the core of Configu's architecture is its capacity to integrate effortlessly into any stage of the software development lifecycle. This integration is facilitated by a dynamic flow that encapsulates the entire process of managing configurations, from creation and modification to deployment and runtime use. The architecture is built to support a wide range of applications and infrastructures, ensuring that Configu adapts to your needs rather than the other way around. */}
 
 The Configu workflow is an iterative process that boosts configuration management as a regular part of your development cycle:
 
@@ -25,27 +21,32 @@ The Configu workflow is an iterative process that boosts configuration managemen
     **Purpose**: Establish and continually refine the structure and rules for your configuration instances directly within your code, utilizing the `ConfigSchema`.
 
     **Impact**: Ensures that your configurations are meticulously defined, providing a clear blueprint for how each configuration should be structured and validated.
+
   </Step>
   <Step title="Synchronize with VCS">
     **Purpose**: Maintain your `ConfigSchema` in sync with your codebase within your Version Control System (VCS).
 
     **Impact**: Facilitates team collaboration and version tracking of configurations, ensuring all changes are captured and versioned with the corresponding code changes.
+
   </Step>
   <Step title="Upsert Configurations">
     **Purpose**: Utilize `ConfigSchema` and `ConfigSet` to insert or update `Configs` in a `ConfigStore`.
 
     **Impact**: Provides a dynamic and flexible way to mutate configurations, allowing for easy updates and ensuring configurations are consistently validated against the schema.
     These are instructions or content that only pertain to the third step.
+
   </Step>
   <Step title="Evaluate Configurations">
     **Purpose**: Utilize `ConfigSchema` and `ConfigSet` to fetch `Configs` from a `ConfigStore`.
 
     **Impact**: Ensures that only valid configurations are retrieved and used, reducing the risk of misconfiguration and drifts.
+
   </Step>
   <Step title="Export Configurations">
     **Purpose**: Post-evaluation, `Configs` are transformed to a proper configuration artifact. Utilize the `Configu CLI` for build and deploy time operations, and the `Configu Proxy & SDKs` for runtime operations.
 
     **Impact**: Streamlines the deployment process, allowing configurations to be easily utilized across different stages and environments, from development to production.
+
   </Step>
   <Step icon="repeat">
   </Step>

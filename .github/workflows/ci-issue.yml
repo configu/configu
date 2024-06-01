@@ -1,12 +1,12 @@
-name: "CI/Issue"
+name: CI/Issue
 
 on:
   issues:
-    types: [opened, reopened]
+    types: ['opened', 'reopened']
 
 jobs:
   ci-issue:
-    name: "CI/Issue"
+    name: CI/Issue
     runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -23,4 +23,4 @@ jobs:
       - name: Issue Labels
         if: ${{ steps.actor.outputs.actor-permission == 'read' || steps.actor.outputs.actor-permission == 'none' }}
         run: |
-          gh issue edit ${{ github.event.issue.number }} --add-label "triage" --add-label "community"
+          gh issue edit ${{ github.event.issue.number }} --add-label 'triage' --add-label 'community'

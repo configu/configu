@@ -1,17 +1,17 @@
-name: "CI/TypeScript"
+name: CI/TypeScript
 
 on:
   pull_request:
     branches:
-      - main
+      - 'main'
     paths:
-      - "ts/packages/ts/**"
-      - "ts/packages/node/**"
-      - "ts/packages/browser/**"
+      - 'packages/ts/**'
+      - 'packages/node/**'
+      - 'packages/browser/**'
 
 jobs:
   ci-typescript:
-    name: "CI/TypeScript"
+    name: CI/TypeScript
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -20,24 +20,17 @@ jobs:
 
       - uses: ./.github/actions/ts-env-action
 
-      - uses: ./.github/actions/ts-env-action
-        with:
-          dependencies-root: "ts"
-
       - name: Run formatter
         run: |
-          cd ${{ env.CWD }}
-          npm run format:check
+          pnpm run format:check
 
       - name: Run linter
         run: |
-          cd ${{ env.CWD }}
-          npm run lint:check
+          pnpm run lint:check
 
       - name: Run tests & Generate coverage report
         run: |
-          cd ${{ env.CWD }}
-          npm run test:cov
+          pnpm run test:cov
 
       # - name: Upload coverage to Codecov
       #   uses: codecov/codecov-action@v2

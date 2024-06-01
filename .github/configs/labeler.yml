@@ -1,32 +1,25 @@
-"@configu/core":
-  - "package.json"
-  - "types/**"
+'@configu/repo':
+  - '*' # Add 'repo' label to any root file changes
 
-"@configu/cicd":
-  - ".github/**"
+'@configu/cicd':
+  - '.github/**'
 
-"@configu/docs":
-  - "docs/**"
+'@configu/docs':
+  - 'docs/**'
 
-"@configu/examples":
-  - "examples/**"
+'@configu/examples':
+  - 'examples/**'
 
-"@configu/ts":
-  - "ts/packages/ts/**"
-  - "ts/packages/node/**"
-  - "ts/packages/browser/**"
+'@configu/ts':
+  - 'packages/ts/**'
+  - 'packages/node/**'
+  - 'packages/browser/**'
 
-"@configu/py":
-  - "py/**"
+'@configu/lib':
+  - 'packages/lib/**'
 
-"@configu/go":
-  - "go/**"
+'@configu/cli':
+  - 'packages/cli/**'
 
-"@configu/lib":
-  - "ts/packages/lib/**"
-
-"@configu/cli":
-  - "ts/packages/cli/**"
-
-"@configu/vscode":
-  - "ts/packages/vscode/**"
+'@configu/vscode':
+  - 'packages/vscode/**'

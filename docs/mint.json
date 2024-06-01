@@ -95,31 +95,24 @@
         "interfaces/.configu",
         {
           "group": "Configu CLI",
-          "pages": [
-            "interfaces/cli/overview",
-            "interfaces/cli/setup",
-            "interfaces/cli/command-ref"
-          ]
+          "pages": ["interfaces/cli/overview", "interfaces/cli/setup", "interfaces/cli/ref"]
         },
         {
           "group": "Configu Proxy",
-          "pages": [
-            "interfaces/proxy/overview"
-          ]
+          "pages": ["interfaces/proxy/overview"]
         },
         {
           "group": "IDE Extensions",
-          "pages": [
-            "interfaces/ide/vscode",
-            "interfaces/ide/intellij"
-          ]
+          "pages": ["interfaces/ide/vscode", "interfaces/ide/intellij"]
         },
         {
           "group": "Internal SDKs",
           "pages": [
             "interfaces/sdk/overview",
-            "interfaces/sdk/nodejs",
-            "interfaces/sdk/browser"
+            "interfaces/sdk/ts/overview",
+            "interfaces/sdk/node/overview",
+            "interfaces/sdk/browser/overview",
+            "interfaces/sdk/lib/overview"
           ]
         }
       ]
