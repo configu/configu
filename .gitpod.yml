@@ -1,0 +1,19 @@
+# For format details, see https://www.gitpod.io/docs/references/gitpod-yml
+image:
+  file: .devcontainer/Dockerfile
+tasks:
+  - name: install
+    before: node -v && pnpm -v && configu -v
+    init: pnpm install
+vscode:
+  extensions:
+    - 'streetsidesoftware.code-spell-checker'
+    - 'dbaeumer.vscode-eslint'
+    - 'esbenp.prettier-vscode'
+    - 'yzhang.markdown-all-in-one'
+    - 'yoavbls.pretty-ts-errors'
+    - 'ms-vscode-remote.remote-containers'
+ports:
+  - name: Docs
+    port: 3000
+    onOpen: open-preview
