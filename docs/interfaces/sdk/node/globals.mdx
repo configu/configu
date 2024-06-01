@@ -1,0 +1,2799 @@
+---
+title: '@configu/node Reference'
+---
+
+## Classes
+
+### AWSParameterStoreConfigStore
+
+A storage engine interface for `Config`s records.
+https://configu.com/docs/config-store/
+
+#### Extends
+
+- [`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore)
+
+#### Constructors
+
+##### new AWSParameterStoreConfigStore()
+
+> **new AWSParameterStoreConfigStore**(`configuration`): [`AWSParameterStoreConfigStore`](/interfaces/sdk/node/globals#awsparameterstoreconfigstore)
+
+###### Parameters
+
+• **configuration**: `SSMClientConfig`
+
+###### Returns
+
+[`AWSParameterStoreConfigStore`](/interfaces/sdk/node/globals#awsparameterstoreconfigstore)
+
+###### Overrides
+
+[`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore).[`constructor`](/interfaces/sdk/ts/globals#constructors-13)
+
+###### Source
+
+[node/src/stores/AWSParameterStore.ts:15](https://github.com/configu/configu/blob/main/packages/node/src/stores/AWSParameterStore.ts#L15)
+
+#### Methods
+
+##### delete()
+
+> **delete**(`key`): `Promise`\<`void`\>
+
+###### Parameters
+
+• **key**: `string`
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Overrides
+
+[`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore).[`delete`](/interfaces/sdk/ts/globals#delete)
+
+###### Source
+
+[node/src/stores/AWSParameterStore.ts:34](https://github.com/configu/configu/blob/main/packages/node/src/stores/AWSParameterStore.ts#L34)
+
+##### getByKey()
+
+> **getByKey**(`key`): `Promise`\<`string`\>
+
+###### Parameters
+
+• **key**: `string`
+
+###### Returns
+
+`Promise`\<`string`\>
+
+###### Overrides
+
+[`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore).[`getByKey`](/interfaces/sdk/ts/globals#getbykey)
+
+###### Source
+
+[node/src/stores/AWSParameterStore.ts:21](https://github.com/configu/configu/blob/main/packages/node/src/stores/AWSParameterStore.ts#L21)
+
+##### upsert()
+
+> **upsert**(`key`, `value`): `Promise`\<`void`\>
+
+###### Parameters
+
+• **key**: `string`
+
+• **value**: `string`
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Overrides
+
+[`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore).[`upsert`](/interfaces/sdk/ts/globals#upsert)
+
+###### Source
+
+[node/src/stores/AWSParameterStore.ts:28](https://github.com/configu/configu/blob/main/packages/node/src/stores/AWSParameterStore.ts#L28)
+
+---
+
+### AWSSecretsManagerConfigStore
+
+A storage engine interface for `Config`s records.
+https://configu.com/docs/config-store/
+
+#### Extends
+
+- [`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore)
+
+#### Constructors
+
+##### new AWSSecretsManagerConfigStore()
+
+> **new AWSSecretsManagerConfigStore**(`configuration`): [`AWSSecretsManagerConfigStore`](/interfaces/sdk/node/globals#awssecretsmanagerconfigstore)
+
+###### Parameters
+
+• **configuration**: `SecretsManagerClientConfig`
+
+###### Returns
+
+[`AWSSecretsManagerConfigStore`](/interfaces/sdk/node/globals#awssecretsmanagerconfigstore)
+
+###### Overrides
+
+[`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore).[`constructor`](/interfaces/sdk/ts/globals#constructors-13)
+
+###### Source
+
+[node/src/stores/AWSSecretsManager.ts:15](https://github.com/configu/configu/blob/main/packages/node/src/stores/AWSSecretsManager.ts#L15)
+
+#### Methods
+
+##### delete()
+
+> **delete**(`key`): `Promise`\<`void`\>
+
+###### Parameters
+
+• **key**: `string`
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Overrides
+
+[`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore).[`delete`](/interfaces/sdk/ts/globals#delete)
+
+###### Source
+
+[node/src/stores/AWSSecretsManager.ts:40](https://github.com/configu/configu/blob/main/packages/node/src/stores/AWSSecretsManager.ts#L40)
+
+##### getByKey()
+
+> **getByKey**(`key`): `Promise`\<`string`\>
+
+###### Parameters
+
+• **key**: `string`
+
+###### Returns
+
+`Promise`\<`string`\>
+
+###### Overrides
+
+[`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore).[`getByKey`](/interfaces/sdk/ts/globals#getbykey)
+
+###### Source
+
+[node/src/stores/AWSSecretsManager.ts:21](https://github.com/configu/configu/blob/main/packages/node/src/stores/AWSSecretsManager.ts#L21)
+
+##### upsert()
+
+> **upsert**(`key`, `value`): `Promise`\<`void`\>
+
+###### Parameters
+
+• **key**: `string`
+
+• **value**: `string`
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Overrides
+
+[`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore).[`upsert`](/interfaces/sdk/ts/globals#upsert)
+
+###### Source
+
+[node/src/stores/AWSSecretsManager.ts:27](https://github.com/configu/configu/blob/main/packages/node/src/stores/AWSSecretsManager.ts#L27)
+
+---
+
+### AzureKeyVaultConfigStore
+
+A storage engine interface for `Config`s records.
+https://configu.com/docs/config-store/
+
+#### Extends
+
+- [`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore)
+
+#### Constructors
+
+##### new AzureKeyVaultConfigStore()
+
+> **new AzureKeyVaultConfigStore**(`__namedParameters`): [`AzureKeyVaultConfigStore`](/interfaces/sdk/node/globals#azurekeyvaultconfigstore)
+
+###### Parameters
+
+• **\_\_namedParameters**: [`AzureKeyVaultConfigStoreConfiguration`](/interfaces/sdk/node/globals#azurekeyvaultconfigstoreconfiguration)
+
+###### Returns
+
+[`AzureKeyVaultConfigStore`](/interfaces/sdk/node/globals#azurekeyvaultconfigstore)
+
+###### Overrides
+
+[`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore).[`constructor`](/interfaces/sdk/ts/globals#constructors-13)
+
+###### Source
+
+[node/src/stores/AzureKeyVault.ts:13](https://github.com/configu/configu/blob/main/packages/node/src/stores/AzureKeyVault.ts#L13)
+
+#### Methods
+
+##### delete()
+
+> **delete**(`key`): `Promise`\<`void`\>
+
+###### Parameters
+
+• **key**: `string`
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Overrides
+
+[`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore).[`delete`](/interfaces/sdk/ts/globals#delete)
+
+###### Source
+
+[node/src/stores/AzureKeyVault.ts:32](https://github.com/configu/configu/blob/main/packages/node/src/stores/AzureKeyVault.ts#L32)
+
+##### getByKey()
+
+> **getByKey**(`key`): `Promise`\<`string`\>
+
+###### Parameters
+
+• **key**: `string`
+
+###### Returns
+
+`Promise`\<`string`\>
+
+###### Overrides
+
+[`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore).[`getByKey`](/interfaces/sdk/ts/globals#getbykey)
+
+###### Source
+
+[node/src/stores/AzureKeyVault.ts:20](https://github.com/configu/configu/blob/main/packages/node/src/stores/AzureKeyVault.ts#L20)
+
+##### upsert()
+
+> **upsert**(`key`, `value`): `Promise`\<`void`\>
+
+###### Parameters
+
+• **key**: `string`
+
+• **value**: `string`
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Overrides
+
+[`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore).[`upsert`](/interfaces/sdk/ts/globals#upsert)
+
+###### Source
+
+[node/src/stores/AzureKeyVault.ts:27](https://github.com/configu/configu/blob/main/packages/node/src/stores/AzureKeyVault.ts#L27)
+
+---
+
+### CloudBeesConfigStore
+
+#### Extends
+
+- `OpenFeatureConfigStore`
+
+#### Constructors
+
+##### new CloudBeesConfigStore()
+
+> **new CloudBeesConfigStore**(`configuration`): [`CloudBeesConfigStore`](/interfaces/sdk/node/globals#cloudbeesconfigstore)
+
+###### Parameters
+
+• **configuration**: [`CloudBeesConfigStoreConfiguration`](/interfaces/sdk/node/globals#cloudbeesconfigstoreconfiguration)
+
+###### Returns
+
+[`CloudBeesConfigStore`](/interfaces/sdk/node/globals#cloudbeesconfigstore)
+
+###### Overrides
+
+`OpenFeatureConfigStore.constructor`
+
+###### Source
+
+[node/src/stores/CloudBees.ts:13](https://github.com/configu/configu/blob/main/packages/node/src/stores/CloudBees.ts#L13)
+
+#### Properties
+
+##### provider
+
+> `protected` `readonly` **provider**: `Provider` \| `Promise`\<`Provider`\>
+
+###### Inherited from
+
+`OpenFeatureConfigStore.provider`
+
+###### Source
+
+[node/src/stores/OpenFeature.ts:16](https://github.com/configu/configu/blob/main/packages/node/src/stores/OpenFeature.ts#L16)
+
+#### Methods
+
+##### get()
+
+> **get**(`queries`): `Promise`\<[`Config`](/interfaces/sdk/ts/globals#config)[]\>
+
+###### Parameters
+
+• **queries**: [`ConfigStoreQuery`](/interfaces/sdk/ts/globals#configstorequery)[]
+
+###### Returns
+
+`Promise`\<[`Config`](/interfaces/sdk/ts/globals#config)[]\>
+
+###### Inherited from
+
+`OpenFeatureConfigStore.get`
+
+###### Source
+
+[node/src/stores/OpenFeature.ts:55](https://github.com/configu/configu/blob/main/packages/node/src/stores/OpenFeature.ts#L55)
+
+##### init()
+
+> **init**(): `Promise`\<`void`\>
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Inherited from
+
+`OpenFeatureConfigStore.init`
+
+###### Source
+
+[node/src/stores/OpenFeature.ts:26](https://github.com/configu/configu/blob/main/packages/node/src/stores/OpenFeature.ts#L26)
+
+##### set()
+
+> **set**(`configs`): `Promise`\<`void`\>
+
+###### Parameters
+
+• **configs**: [`Config`](/interfaces/sdk/ts/globals#config)[]
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Inherited from
+
+`OpenFeatureConfigStore.set`
+
+###### Source
+
+[node/src/stores/OpenFeature.ts:64](https://github.com/configu/configu/blob/main/packages/node/src/stores/OpenFeature.ts#L64)
+
+---
+
+### CockroachDBConfigStore
+
+#### Extends
+
+- `ORMConfigStore`
+
+#### Constructors
+
+##### new CockroachDBConfigStore()
+
+> **new CockroachDBConfigStore**(`configuration`): [`CockroachDBConfigStore`](/interfaces/sdk/node/globals#cockroachdbconfigstore)
+
+###### Parameters
+
+• **configuration**: `Omit`\<`CockroachConnectionOptions`, `"type"`\>
+
+###### Returns
+
+[`CockroachDBConfigStore`](/interfaces/sdk/node/globals#cockroachdbconfigstore)
+
+###### Overrides
+
+`ORMConfigStore.constructor`
+
+###### Source
+
+[node/src/stores/CockroachDB.ts:8](https://github.com/configu/configu/blob/main/packages/node/src/stores/CockroachDB.ts#L8)
+
+#### Properties
+
+##### dataSource
+
+> `readonly` **dataSource**: `DataSource`
+
+###### Inherited from
+
+`ORMConfigStore.dataSource`
+
+###### Source
+
+[node/src/stores/ORM.ts:34](https://github.com/configu/configu/blob/main/packages/node/src/stores/ORM.ts#L34)
+
+#### Methods
+
+##### get()
+
+> **get**(`queries`): `Promise`\<[`Config`](/interfaces/sdk/ts/globals#config)[]\>
+
+###### Parameters
+
+• **queries**: [`ConfigStoreQuery`](/interfaces/sdk/ts/globals#configstorequery)[]
+
+###### Returns
+
+`Promise`\<[`Config`](/interfaces/sdk/ts/globals#config)[]\>
+
+###### Inherited from
+
+`ORMConfigStore.get`
+
+###### Source
+
+[node/src/stores/ORM.ts:69](https://github.com/configu/configu/blob/main/packages/node/src/stores/ORM.ts#L69)
+
+##### init()
+
+> **init**(): `Promise`\<`void`\>
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Inherited from
+
+`ORMConfigStore.init`
+
+###### Source
+
+[node/src/stores/ORM.ts:48](https://github.com/configu/configu/blob/main/packages/node/src/stores/ORM.ts#L48)
+
+##### set()
+
+> **set**(`configs`): `Promise`\<`void`\>
+
+###### Parameters
+
+• **configs**: [`Config`](/interfaces/sdk/ts/globals#config)[]
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Inherited from
+
+`ORMConfigStore.set`
+
+###### Source
+
+[node/src/stores/ORM.ts:80](https://github.com/configu/configu/blob/main/packages/node/src/stores/ORM.ts#L80)
+
+---
+
+### CsvFileConfigStore
+
+#### Extends
+
+- `FileConfigStore`
+
+#### Constructors
+
+##### new CsvFileConfigStore()
+
+> **new CsvFileConfigStore**(`__namedParameters`): [`CsvFileConfigStore`](/interfaces/sdk/node/globals#csvfileconfigstore)
+
+###### Parameters
+
+• **\_\_namedParameters**: [`CsvFileConfigStoreConfiguration`](/interfaces/sdk/node/globals#csvfileconfigstoreconfiguration)
+
+###### Returns
+
+[`CsvFileConfigStore`](/interfaces/sdk/node/globals#csvfileconfigstore)
+
+###### Overrides
+
+`FileConfigStore.constructor`
+
+###### Source
+
+[node/src/stores/CsvFile.ts:8](https://github.com/configu/configu/blob/main/packages/node/src/stores/CsvFile.ts#L8)
+
+#### Properties
+
+##### initialFileState
+
+> `readonly` **initialFileState**: `string`
+
+###### Inherited from
+
+`FileConfigStore.initialFileState`
+
+###### Source
+
+[node/src/stores/File.ts:9](https://github.com/configu/configu/blob/main/packages/node/src/stores/File.ts#L9)
+
+##### path
+
+> `readonly` **path**: `string`
+
+###### Inherited from
+
+`FileConfigStore.path`
+
+###### Source
+
+[node/src/stores/File.ts:8](https://github.com/configu/configu/blob/main/packages/node/src/stores/File.ts#L8)
+
+#### Methods
+
+##### get()
+
+> **get**(`queries`): `Promise`\<[`Config`](/interfaces/sdk/ts/globals#config)[]\>
+
+###### Parameters
+
+• **queries**: [`ConfigStoreQuery`](/interfaces/sdk/ts/globals#configstorequery)[]
+
+###### Returns
+
+`Promise`\<[`Config`](/interfaces/sdk/ts/globals#config)[]\>
+
+###### Inherited from
+
+`FileConfigStore.get`
+
+###### Source
+
+[node/src/stores/File.ts:40](https://github.com/configu/configu/blob/main/packages/node/src/stores/File.ts#L40)
+
+##### init()
+
+> **init**(): `Promise`\<`void`\>
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Inherited from
+
+`FileConfigStore.init`
+
+###### Source
+
+[node/src/stores/File.ts:16](https://github.com/configu/configu/blob/main/packages/node/src/stores/File.ts#L16)
+
+##### parse()
+
+> **parse**(`fileContent`): [`Config`](/interfaces/sdk/ts/globals#config)[]
+
+###### Parameters
+
+• **fileContent**: `string`
+
+###### Returns
+
+[`Config`](/interfaces/sdk/ts/globals#config)[]
+
+###### Overrides
+
+`FileConfigStore.parse`
+
+###### Source
+
+[node/src/stores/CsvFile.ts:13](https://github.com/configu/configu/blob/main/packages/node/src/stores/CsvFile.ts#L13)
+
+##### set()
+
+> **set**(`configs`): `Promise`\<`void`\>
+
+###### Parameters
+
+• **configs**: [`Config`](/interfaces/sdk/ts/globals#config)[]
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Inherited from
+
+`FileConfigStore.set`
+
+###### Source
+
+[node/src/stores/File.ts:51](https://github.com/configu/configu/blob/main/packages/node/src/stores/File.ts#L51)
+
+##### stringify()
+
+> **stringify**(`nextConfigs`): `string`
+
+###### Parameters
+
+• **nextConfigs**: [`Config`](/interfaces/sdk/ts/globals#config)[]
+
+###### Returns
+
+`string`
+
+###### Overrides
+
+`FileConfigStore.stringify`
+
+###### Source
+
+[node/src/stores/CsvFile.ts:17](https://github.com/configu/configu/blob/main/packages/node/src/stores/CsvFile.ts#L17)
+
+---
+
+### EtcdConfigStore
+
+EtcdConfigStore is a KeyValueConfigStore implementation that uses etcd3 as a backend.
+
+#### Description
+
+etcd3 is a Node.js client for etcd, a distributed key-value store.
+
+#### See
+
+https://www.npmjs.com/package/etcd3
+
+#### Example
+
+```ts
+import { EtcdConfigStore } from './EtcdConfigStore';
+const configStore = new EtcdConfigStore({ hosts: '127.0.0.1:2379' });
+```
+
+#### Extends
+
+- [`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore)
+
+#### Constructors
+
+##### new EtcdConfigStore()
+
+> **new EtcdConfigStore**(`config`): [`EtcdConfigStore`](/interfaces/sdk/node/globals#etcdconfigstore)
+
+###### Parameters
+
+• **config**: `IOptions`
+
+###### Returns
+
+[`EtcdConfigStore`](/interfaces/sdk/node/globals#etcdconfigstore)
+
+###### Overrides
+
+[`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore).[`constructor`](/interfaces/sdk/ts/globals#constructors-13)
+
+###### Source
+
+[node/src/stores/Etcd.ts:20](https://github.com/configu/configu/blob/main/packages/node/src/stores/Etcd.ts#L20)
+
+#### Properties
+
+##### client
+
+> **client**: `Etcd3`
+
+###### Source
+
+[node/src/stores/Etcd.ts:18](https://github.com/configu/configu/blob/main/packages/node/src/stores/Etcd.ts#L18)
+
+#### Methods
+
+##### delete()
+
+> `protected` **delete**(`key`): `Promise`\<`void`\>
+
+###### Parameters
+
+• **key**: `string`
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Overrides
+
+[`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore).[`delete`](/interfaces/sdk/ts/globals#delete)
+
+###### Source
+
+[node/src/stores/Etcd.ts:34](https://github.com/configu/configu/blob/main/packages/node/src/stores/Etcd.ts#L34)
+
+##### getByKey()
+
+> `protected` **getByKey**(`key`): `Promise`\<`string`\>
+
+###### Parameters
+
+• **key**: `string`
+
+###### Returns
+
+`Promise`\<`string`\>
+
+###### Overrides
+
+[`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore).[`getByKey`](/interfaces/sdk/ts/globals#getbykey)
+
+###### Source
+
+[node/src/stores/Etcd.ts:25](https://github.com/configu/configu/blob/main/packages/node/src/stores/Etcd.ts#L25)
+
+##### upsert()
+
+> `protected` **upsert**(`key`, `value`): `Promise`\<`void`\>
+
+###### Parameters
+
+• **key**: `string`
+
+• **value**: `string`
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Overrides
+
+[`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore).[`upsert`](/interfaces/sdk/ts/globals#upsert)
+
+###### Source
+
+[node/src/stores/Etcd.ts:30](https://github.com/configu/configu/blob/main/packages/node/src/stores/Etcd.ts#L30)
+
+---
+
+### ExportCommand
+
+#### Extends
+
+- [`ExportCommand`](/interfaces/sdk/ts/globals#exportcommand)
+
+#### Constructors
+
+##### new ExportCommand()
+
+> **new ExportCommand**(`parameters`): [`ExportCommand`](/interfaces/sdk/node/globals#exportcommand)
+
+###### Parameters
+
+• **parameters**: `ExportCommandParameters`
+
+###### Returns
+
+[`ExportCommand`](/interfaces/sdk/node/globals#exportcommand)
+
+###### Overrides
+
+[`ExportCommand`](/interfaces/sdk/ts/globals#exportcommand).[`constructor`](/interfaces/sdk/ts/globals#constructors-11)
+
+###### Source
+
+[node/src/commands/ExportCommand.ts:15](https://github.com/configu/configu/blob/main/packages/node/src/commands/ExportCommand.ts#L15)
+
+#### Properties
+
+##### parameters
+
+> **parameters**: `ExportCommandParameters`
+
+###### Inherited from
+
+[`ExportCommand`](/interfaces/sdk/ts/globals#exportcommand).[`parameters`](/interfaces/sdk/ts/globals#parameters-3)
+
+###### Source
+
+[node/src/commands/ExportCommand.ts:15](https://github.com/configu/configu/blob/main/packages/node/src/commands/ExportCommand.ts#L15)
+
+#### Methods
+
+##### run()
+
+> **run**(): `Promise`\<`object`\>
+
+###### Returns
+
+`Promise`\<`object`\>
+
+###### Overrides
+
+[`ExportCommand`](/interfaces/sdk/ts/globals#exportcommand).[`run`](/interfaces/sdk/ts/globals#run-3)
+
+###### Source
+
+[node/src/commands/ExportCommand.ts:19](https://github.com/configu/configu/blob/main/packages/node/src/commands/ExportCommand.ts#L19)
+
+---
+
+### GCPSecretManagerConfigStore
+
+A storage engine interface for `Config`s records.
+https://configu.com/docs/config-store/
+
+#### Extends
+
+- [`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore)
+
+#### Constructors
+
+##### new GCPSecretManagerConfigStore()
+
+> **new GCPSecretManagerConfigStore**(`__namedParameters`): [`GCPSecretManagerConfigStore`](/interfaces/sdk/node/globals#gcpsecretmanagerconfigstore)
+
+###### Parameters
+
+• **\_\_namedParameters**: `ClientOptions` & `object`
+
+###### Returns
+
+[`GCPSecretManagerConfigStore`](/interfaces/sdk/node/globals#gcpsecretmanagerconfigstore)
+
+###### Overrides
+
+[`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore).[`constructor`](/interfaces/sdk/ts/globals#constructors-13)
+
+###### Source
+
+[node/src/stores/GCPSecretManager.ts:12](https://github.com/configu/configu/blob/main/packages/node/src/stores/GCPSecretManager.ts#L12)
+
+#### Methods
+
+##### delete()
+
+> **delete**(`key`): `Promise`\<`void`\>
+
+###### Parameters
+
+• **key**: `string`
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Overrides
+
+[`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore).[`delete`](/interfaces/sdk/ts/globals#delete)
+
+###### Source
+
+[node/src/stores/GCPSecretManager.ts:62](https://github.com/configu/configu/blob/main/packages/node/src/stores/GCPSecretManager.ts#L62)
+
+##### getByKey()
+
+> **getByKey**(`key`): `Promise`\<`string`\>
+
+###### Parameters
+
+• **key**: `string`
+
+###### Returns
+
+`Promise`\<`string`\>
+
+###### Overrides
+
+[`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore).[`getByKey`](/interfaces/sdk/ts/globals#getbykey)
+
+###### Source
+
+[node/src/stores/GCPSecretManager.ts:24](https://github.com/configu/configu/blob/main/packages/node/src/stores/GCPSecretManager.ts#L24)
+
+##### upsert()
+
+> **upsert**(`key`, `value`): `Promise`\<`void`\>
+
+###### Parameters
+
+• **key**: `string`
+
+• **value**: `string`
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Overrides
+
+[`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore).[`upsert`](/interfaces/sdk/ts/globals#upsert)
+
+###### Source
+
+[node/src/stores/GCPSecretManager.ts:43](https://github.com/configu/configu/blob/main/packages/node/src/stores/GCPSecretManager.ts#L43)
+
+---
+
+### HashiCorpVaultConfigStore
+
+A storage engine interface for `Config`s records.
+https://configu.com/docs/config-store/
+
+#### Extends
+
+- [`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore)
+
+#### Constructors
+
+##### new HashiCorpVaultConfigStore()
+
+> **new HashiCorpVaultConfigStore**(`configuration`): [`HashiCorpVaultConfigStore`](/interfaces/sdk/node/globals#hashicorpvaultconfigstore)
+
+###### Parameters
+
+• **configuration**: [`HashiCorpVaultConfigStoreConfiguration`](/interfaces/sdk/node/globals#hashicorpvaultconfigstoreconfiguration)
+
+###### Returns
+
+[`HashiCorpVaultConfigStore`](/interfaces/sdk/node/globals#hashicorpvaultconfigstore)
+
+###### Overrides
+
+[`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore).[`constructor`](/interfaces/sdk/ts/globals#constructors-13)
+
+###### Source
+
+[node/src/stores/HashiCorpVault.ts:10](https://github.com/configu/configu/blob/main/packages/node/src/stores/HashiCorpVault.ts#L10)
+
+#### Methods
+
+##### delete()
+
+> **delete**(`key`): `Promise`\<`void`\>
+
+###### Parameters
+
+• **key**: `string`
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Overrides
+
+[`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore).[`delete`](/interfaces/sdk/ts/globals#delete)
+
+###### Source
+
+[node/src/stores/HashiCorpVault.ts:41](https://github.com/configu/configu/blob/main/packages/node/src/stores/HashiCorpVault.ts#L41)
+
+##### getByKey()
+
+> **getByKey**(`key`): `Promise`\<`string`\>
+
+###### Parameters
+
+• **key**: `string`
+
+###### Returns
+
+`Promise`\<`string`\>
+
+###### Overrides
+
+[`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore).[`getByKey`](/interfaces/sdk/ts/globals#getbykey)
+
+###### Source
+
+[node/src/stores/HashiCorpVault.ts:31](https://github.com/configu/configu/blob/main/packages/node/src/stores/HashiCorpVault.ts#L31)
+
+##### upsert()
+
+> **upsert**(`key`, `value`): `Promise`\<`void`\>
+
+###### Parameters
+
+• **key**: `string`
+
+• **value**: `string`
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Overrides
+
+[`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore).[`upsert`](/interfaces/sdk/ts/globals#upsert)
+
+###### Source
+
+[node/src/stores/HashiCorpVault.ts:37](https://github.com/configu/configu/blob/main/packages/node/src/stores/HashiCorpVault.ts#L37)
+
+---
+
+### IniFileConfigStore
+
+#### Extends
+
+- `FileConfigStore`
+
+#### Constructors
+
+##### new IniFileConfigStore()
+
+> **new IniFileConfigStore**(`__namedParameters`): [`IniFileConfigStore`](/interfaces/sdk/node/globals#inifileconfigstore)
+
+###### Parameters
+
+• **\_\_namedParameters**: [`IniFileConfigStoreConfiguration`](/interfaces/sdk/node/globals#inifileconfigstoreconfiguration)
+
+###### Returns
+
+[`IniFileConfigStore`](/interfaces/sdk/node/globals#inifileconfigstore)
+
+###### Overrides
+
+`FileConfigStore.constructor`
+
+###### Source
+
+[node/src/stores/IniFile.ts:9](https://github.com/configu/configu/blob/main/packages/node/src/stores/IniFile.ts#L9)
+
+#### Properties
+
+##### initialFileState
+
+> `readonly` **initialFileState**: `string`
+
+###### Inherited from
+
+`FileConfigStore.initialFileState`
+
+###### Source
+
+[node/src/stores/File.ts:9](https://github.com/configu/configu/blob/main/packages/node/src/stores/File.ts#L9)
+
+##### path
+
+> `readonly` **path**: `string`
+
+###### Inherited from
+
+`FileConfigStore.path`
+
+###### Source
+
+[node/src/stores/File.ts:8](https://github.com/configu/configu/blob/main/packages/node/src/stores/File.ts#L8)
+
+#### Methods
+
+##### get()
+
+> **get**(`queries`): `Promise`\<[`Config`](/interfaces/sdk/ts/globals#config)[]\>
+
+###### Parameters
+
+• **queries**: [`ConfigStoreQuery`](/interfaces/sdk/ts/globals#configstorequery)[]
+
+###### Returns
+
+`Promise`\<[`Config`](/interfaces/sdk/ts/globals#config)[]\>
+
+###### Inherited from
+
+`FileConfigStore.get`
+
+###### Source
+
+[node/src/stores/File.ts:40](https://github.com/configu/configu/blob/main/packages/node/src/stores/File.ts#L40)
+
+##### init()
+
+> **init**(): `Promise`\<`void`\>
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Inherited from
+
+`FileConfigStore.init`
+
+###### Source
+
+[node/src/stores/File.ts:16](https://github.com/configu/configu/blob/main/packages/node/src/stores/File.ts#L16)
+
+##### parse()
+
+> **parse**(`fileContent`): `object`[]
+
+###### Parameters
+
+• **fileContent**: `string`
+
+###### Returns
+
+`object`[]
+
+###### Overrides
+
+`FileConfigStore.parse`
+
+###### Source
+
+[node/src/stores/IniFile.ts:14](https://github.com/configu/configu/blob/main/packages/node/src/stores/IniFile.ts#L14)
+
+##### set()
+
+> **set**(`configs`): `Promise`\<`void`\>
+
+###### Parameters
+
+• **configs**: [`Config`](/interfaces/sdk/ts/globals#config)[]
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Inherited from
+
+`FileConfigStore.set`
+
+###### Source
+
+[node/src/stores/File.ts:51](https://github.com/configu/configu/blob/main/packages/node/src/stores/File.ts#L51)
+
+##### stringify()
+
+> **stringify**(`nextConfigs`): `string`
+
+###### Parameters
+
+• **nextConfigs**: [`Config`](/interfaces/sdk/ts/globals#config)[]
+
+###### Returns
+
+`string`
+
+###### Overrides
+
+`FileConfigStore.stringify`
+
+###### Source
+
+[node/src/stores/IniFile.ts:35](https://github.com/configu/configu/blob/main/packages/node/src/stores/IniFile.ts#L35)
+
+---
+
+### JsonFileConfigStore
+
+#### Extends
+
+- `FileConfigStore`
+
+#### Constructors
+
+##### new JsonFileConfigStore()
+
+> **new JsonFileConfigStore**(`__namedParameters`): [`JsonFileConfigStore`](/interfaces/sdk/node/globals#jsonfileconfigstore)
+
+###### Parameters
+
+• **\_\_namedParameters**: [`JsonFileConfigStoreConfiguration`](/interfaces/sdk/node/globals#jsonfileconfigstoreconfiguration)
+
+###### Returns
+
+[`JsonFileConfigStore`](/interfaces/sdk/node/globals#jsonfileconfigstore)
+
+###### Overrides
+
+`FileConfigStore.constructor`
+
+###### Source
+
+[node/src/stores/JsonFile.ts:7](https://github.com/configu/configu/blob/main/packages/node/src/stores/JsonFile.ts#L7)
+
+#### Properties
+
+##### initialFileState
+
+> `readonly` **initialFileState**: `string`
+
+###### Inherited from
+
+`FileConfigStore.initialFileState`
+
+###### Source
+
+[node/src/stores/File.ts:9](https://github.com/configu/configu/blob/main/packages/node/src/stores/File.ts#L9)
+
+##### path
+
+> `readonly` **path**: `string`
+
+###### Inherited from
+
+`FileConfigStore.path`
+
+###### Source
+
+[node/src/stores/File.ts:8](https://github.com/configu/configu/blob/main/packages/node/src/stores/File.ts#L8)
+
+#### Methods
+
+##### get()
+
+> **get**(`queries`): `Promise`\<[`Config`](/interfaces/sdk/ts/globals#config)[]\>
+
+###### Parameters
+
+• **queries**: [`ConfigStoreQuery`](/interfaces/sdk/ts/globals#configstorequery)[]
+
+###### Returns
+
+`Promise`\<[`Config`](/interfaces/sdk/ts/globals#config)[]\>
+
+###### Inherited from
+
+`FileConfigStore.get`
+
+###### Source
+
+[node/src/stores/File.ts:40](https://github.com/configu/configu/blob/main/packages/node/src/stores/File.ts#L40)
+
+##### init()
+
+> **init**(): `Promise`\<`void`\>
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Inherited from
+
+`FileConfigStore.init`
+
+###### Source
+
+[node/src/stores/File.ts:16](https://github.com/configu/configu/blob/main/packages/node/src/stores/File.ts#L16)
+
+##### parse()
+
+> **parse**(`fileContent`): `ConfigStoreContents`[]
+
+###### Parameters
+
+• **fileContent**: `string`
+
+###### Returns
+
+`ConfigStoreContents`[]
+
+###### Overrides
+
+`FileConfigStore.parse`
+
+###### Source
+
+[node/src/stores/JsonFile.ts:12](https://github.com/configu/configu/blob/main/packages/node/src/stores/JsonFile.ts#L12)
+
+##### set()
+
+> **set**(`configs`): `Promise`\<`void`\>
+
+###### Parameters
+
+• **configs**: [`Config`](/interfaces/sdk/ts/globals#config)[]
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Inherited from
+
+`FileConfigStore.set`
+
+###### Source
+
+[node/src/stores/File.ts:51](https://github.com/configu/configu/blob/main/packages/node/src/stores/File.ts#L51)
+
+##### stringify()
+
+> **stringify**(`nextConfigs`): `string`
+
+###### Parameters
+
+• **nextConfigs**: [`Config`](/interfaces/sdk/ts/globals#config)[]
+
+###### Returns
+
+`string`
+
+###### Overrides
+
+`FileConfigStore.stringify`
+
+###### Source
+
+[node/src/stores/JsonFile.ts:16](https://github.com/configu/configu/blob/main/packages/node/src/stores/JsonFile.ts#L16)
+
+---
+
+### KeyvConfigStore
+
+KeyvConfigStore is a KeyValueConfigStore implementation that uses Keyv as a backend.
+
+#### Description
+
+Keyv is a simple key-value store for Node.js with support for multiple backends.
+
+#### See
+
+https://www.npmjs.com/package/keyv
+
+#### Example
+
+```ts
+import Keyv from 'keyv';
+import { KeyvConfigStore } from '@configu/ts-node';
+const keyvMongo = new Keyv('mongodb://user:pass@localhost:27017/dbname');
+const configStore = new KeyvConfigStore({ keyvInstance: keyvMongo });
+```
+
+#### Extends
+
+- [`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore)
+
+#### Constructors
+
+##### new KeyvConfigStore()
+
+> **new KeyvConfigStore**(`__namedParameters`): [`KeyvConfigStore`](/interfaces/sdk/node/globals#keyvconfigstore)
+
+###### Parameters
+
+• **\_\_namedParameters**: [`KeyvConfigStoreConfiguration`](/interfaces/sdk/node/globals#keyvconfigstoreconfiguration)
+
+###### Returns
+
+[`KeyvConfigStore`](/interfaces/sdk/node/globals#keyvconfigstore)
+
+###### Overrides
+
+[`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore).[`constructor`](/interfaces/sdk/ts/globals#constructors-13)
+
+###### Source
+
+[node/src/stores/Keyv.ts:24](https://github.com/configu/configu/blob/main/packages/node/src/stores/Keyv.ts#L24)
+
+#### Properties
+
+##### client
+
+> **client**: `Keyv`\<`any`, `Record`\<`string`, `unknown`\>\>
+
+###### Source
+
+[node/src/stores/Keyv.ts:22](https://github.com/configu/configu/blob/main/packages/node/src/stores/Keyv.ts#L22)
+
+#### Methods
+
+##### delete()
+
+> `protected` **delete**(`key`): `Promise`\<`void`\>
+
+###### Parameters
+
+• **key**: `string`
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Overrides
+
+[`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore).[`delete`](/interfaces/sdk/ts/globals#delete)
+
+###### Source
+
+[node/src/stores/Keyv.ts:38](https://github.com/configu/configu/blob/main/packages/node/src/stores/Keyv.ts#L38)
+
+##### getByKey()
+
+> `protected` **getByKey**(`key`): `Promise`\<`string`\>
+
+###### Parameters
+
+• **key**: `string`
+
+###### Returns
+
+`Promise`\<`string`\>
+
+###### Overrides
+
+[`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore).[`getByKey`](/interfaces/sdk/ts/globals#getbykey)
+
+###### Source
+
+[node/src/stores/Keyv.ts:29](https://github.com/configu/configu/blob/main/packages/node/src/stores/Keyv.ts#L29)
+
+##### upsert()
+
+> `protected` **upsert**(`key`, `value`): `Promise`\<`void`\>
+
+###### Parameters
+
+• **key**: `string`
+
+• **value**: `string`
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Overrides
+
+[`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore).[`upsert`](/interfaces/sdk/ts/globals#upsert)
+
+###### Source
+
+[node/src/stores/Keyv.ts:34](https://github.com/configu/configu/blob/main/packages/node/src/stores/Keyv.ts#L34)
+
+---
+
+### KubernetesSecretConfigStore
+
+A storage engine interface for `Config`s records.
+https://configu.com/docs/config-store/
+
+#### Extends
+
+- [`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore)
+
+#### Constructors
+
+##### new KubernetesSecretConfigStore()
+
+> **new KubernetesSecretConfigStore**(`__namedParameters`): [`KubernetesSecretConfigStore`](/interfaces/sdk/node/globals#kubernetessecretconfigstore)
+
+###### Parameters
+
+• **\_\_namedParameters**: [`KubernetesSecretConfigStoreConfiguration`](/interfaces/sdk/node/globals#kubernetessecretconfigstoreconfiguration)
+
+###### Returns
+
+[`KubernetesSecretConfigStore`](/interfaces/sdk/node/globals#kubernetessecretconfigstore)
+
+###### Overrides
+
+[`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore).[`constructor`](/interfaces/sdk/ts/globals#constructors-13)
+
+###### Source
+
+[node/src/stores/KubernetesSecret.ts:14](https://github.com/configu/configu/blob/main/packages/node/src/stores/KubernetesSecret.ts#L14)
+
+#### Methods
+
+##### delete()
+
+> **delete**(`key`): `Promise`\<`void`\>
+
+###### Parameters
+
+• **key**: `string`
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Overrides
+
+[`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore).[`delete`](/interfaces/sdk/ts/globals#delete)
+
+###### Source
+
+[node/src/stores/KubernetesSecret.ts:65](https://github.com/configu/configu/blob/main/packages/node/src/stores/KubernetesSecret.ts#L65)
+
+##### getByKey()
+
+> **getByKey**(`key`): `Promise`\<`string`\>
+
+###### Parameters
+
+• **key**: `string`
+
+###### Returns
+
+`Promise`\<`string`\>
+
+###### Overrides
+
+[`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore).[`getByKey`](/interfaces/sdk/ts/globals#getbykey)
+
+###### Source
+
+[node/src/stores/KubernetesSecret.ts:27](https://github.com/configu/configu/blob/main/packages/node/src/stores/KubernetesSecret.ts#L27)
+
+##### upsert()
+
+> **upsert**(`key`, `value`): `Promise`\<`void`\>
+
+###### Parameters
+
+• **key**: `string`
+
+• **value**: `string`
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Overrides
+
+[`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore).[`upsert`](/interfaces/sdk/ts/globals#upsert)
+
+###### Source
+
+[node/src/stores/KubernetesSecret.ts:34](https://github.com/configu/configu/blob/main/packages/node/src/stores/KubernetesSecret.ts#L34)
+
+---
+
+### LaunchDarklyConfigStore
+
+#### Extends
+
+- `OpenFeatureConfigStore`
+
+#### Constructors
+
+##### new LaunchDarklyConfigStore()
+
+> **new LaunchDarklyConfigStore**(`configurations`): [`LaunchDarklyConfigStore`](/interfaces/sdk/node/globals#launchdarklyconfigstore)
+
+###### Parameters
+
+• **configurations**: [`LaunchDarklyConfigStoreConfiguration`](/interfaces/sdk/node/globals#launchdarklyconfigstoreconfiguration)
+
+###### Returns
+
+[`LaunchDarklyConfigStore`](/interfaces/sdk/node/globals#launchdarklyconfigstore)
+
+###### Overrides
+
+`OpenFeatureConfigStore.constructor`
+
+###### Source
+
+[node/src/stores/LaunchDarkly.ts:15](https://github.com/configu/configu/blob/main/packages/node/src/stores/LaunchDarkly.ts#L15)
+
+#### Properties
+
+##### provider
+
+> `protected` `readonly` **provider**: `Provider` \| `Promise`\<`Provider`\>
+
+###### Inherited from
+
+`OpenFeatureConfigStore.provider`
+
+###### Source
+
+[node/src/stores/OpenFeature.ts:16](https://github.com/configu/configu/blob/main/packages/node/src/stores/OpenFeature.ts#L16)
+
+#### Methods
+
+##### get()
+
+> **get**(`queries`): `Promise`\<[`Config`](/interfaces/sdk/ts/globals#config)[]\>
+
+###### Parameters
+
+• **queries**: [`ConfigStoreQuery`](/interfaces/sdk/ts/globals#configstorequery)[]
+
+###### Returns
+
+`Promise`\<[`Config`](/interfaces/sdk/ts/globals#config)[]\>
+
+###### Overrides
+
+`OpenFeatureConfigStore.get`
+
+###### Source
+
+[node/src/stores/LaunchDarkly.ts:29](https://github.com/configu/configu/blob/main/packages/node/src/stores/LaunchDarkly.ts#L29)
+
+##### init()
+
+> **init**(): `Promise`\<`void`\>
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Inherited from
+
+`OpenFeatureConfigStore.init`
+
+###### Source
+
+[node/src/stores/OpenFeature.ts:26](https://github.com/configu/configu/blob/main/packages/node/src/stores/OpenFeature.ts#L26)
+
+##### set()
+
+> **set**(`configs`): `Promise`\<`void`\>
+
+###### Parameters
+
+• **configs**: [`Config`](/interfaces/sdk/ts/globals#config)[]
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Inherited from
+
+`OpenFeatureConfigStore.set`
+
+###### Source
+
+[node/src/stores/OpenFeature.ts:64](https://github.com/configu/configu/blob/main/packages/node/src/stores/OpenFeature.ts#L64)
+
+---
+
+### MSSQLConfigStore
+
+#### Extends
+
+- `ORMConfigStore`
+
+#### Constructors
+
+##### new MSSQLConfigStore()
+
+> **new MSSQLConfigStore**(`configuration`): [`MSSQLConfigStore`](/interfaces/sdk/node/globals#mssqlconfigstore)
+
+###### Parameters
+
+• **configuration**: `Omit`\<`SqlServerConnectionOptions`, `"type"`\>
+
+###### Returns
+
+[`MSSQLConfigStore`](/interfaces/sdk/node/globals#mssqlconfigstore)
+
+###### Overrides
+
+`ORMConfigStore.constructor`
+
+###### Source
+
+[node/src/stores/MSSQL.ts:8](https://github.com/configu/configu/blob/main/packages/node/src/stores/MSSQL.ts#L8)
+
+#### Properties
+
+##### dataSource
+
+> `readonly` **dataSource**: `DataSource`
+
+###### Inherited from
+
+`ORMConfigStore.dataSource`
+
+###### Source
+
+[node/src/stores/ORM.ts:34](https://github.com/configu/configu/blob/main/packages/node/src/stores/ORM.ts#L34)
+
+#### Methods
+
+##### get()
+
+> **get**(`queries`): `Promise`\<[`Config`](/interfaces/sdk/ts/globals#config)[]\>
+
+###### Parameters
+
+• **queries**: [`ConfigStoreQuery`](/interfaces/sdk/ts/globals#configstorequery)[]
+
+###### Returns
+
+`Promise`\<[`Config`](/interfaces/sdk/ts/globals#config)[]\>
+
+###### Inherited from
+
+`ORMConfigStore.get`
+
+###### Source
+
+[node/src/stores/ORM.ts:69](https://github.com/configu/configu/blob/main/packages/node/src/stores/ORM.ts#L69)
+
+##### init()
+
+> **init**(): `Promise`\<`void`\>
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Inherited from
+
+`ORMConfigStore.init`
+
+###### Source
+
+[node/src/stores/ORM.ts:48](https://github.com/configu/configu/blob/main/packages/node/src/stores/ORM.ts#L48)
+
+##### set()
+
+> **set**(`configs`): `Promise`\<`void`\>
+
+###### Parameters
+
+• **configs**: [`Config`](/interfaces/sdk/ts/globals#config)[]
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Inherited from
+
+`ORMConfigStore.set`
+
+###### Source
+
+[node/src/stores/ORM.ts:80](https://github.com/configu/configu/blob/main/packages/node/src/stores/ORM.ts#L80)
+
+---
+
+### MariaDBConfigStore
+
+#### Extends
+
+- `ORMConfigStore`
+
+#### Constructors
+
+##### new MariaDBConfigStore()
+
+> **new MariaDBConfigStore**(`configuration`): [`MariaDBConfigStore`](/interfaces/sdk/node/globals#mariadbconfigstore)
+
+###### Parameters
+
+• **configuration**: `Omit`\<`MysqlConnectionOptions`, `"type"`\>
+
+###### Returns
+
+[`MariaDBConfigStore`](/interfaces/sdk/node/globals#mariadbconfigstore)
+
+###### Overrides
+
+`ORMConfigStore.constructor`
+
+###### Source
+
+[node/src/stores/MariaDB.ts:8](https://github.com/configu/configu/blob/main/packages/node/src/stores/MariaDB.ts#L8)
+
+#### Properties
+
+##### dataSource
+
+> `readonly` **dataSource**: `DataSource`
+
+###### Inherited from
+
+`ORMConfigStore.dataSource`
+
+###### Source
+
+[node/src/stores/ORM.ts:34](https://github.com/configu/configu/blob/main/packages/node/src/stores/ORM.ts#L34)
+
+#### Methods
+
+##### get()
+
+> **get**(`queries`): `Promise`\<[`Config`](/interfaces/sdk/ts/globals#config)[]\>
+
+###### Parameters
+
+• **queries**: [`ConfigStoreQuery`](/interfaces/sdk/ts/globals#configstorequery)[]
+
+###### Returns
+
+`Promise`\<[`Config`](/interfaces/sdk/ts/globals#config)[]\>
+
+###### Inherited from
+
+`ORMConfigStore.get`
+
+###### Source
+
+[node/src/stores/ORM.ts:69](https://github.com/configu/configu/blob/main/packages/node/src/stores/ORM.ts#L69)
+
+##### init()
+
+> **init**(): `Promise`\<`void`\>
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Inherited from
+
+`ORMConfigStore.init`
+
+###### Source
+
+[node/src/stores/ORM.ts:48](https://github.com/configu/configu/blob/main/packages/node/src/stores/ORM.ts#L48)
+
+##### set()
+
+> **set**(`configs`): `Promise`\<`void`\>
+
+###### Parameters
+
+• **configs**: [`Config`](/interfaces/sdk/ts/globals#config)[]
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Inherited from
+
+`ORMConfigStore.set`
+
+###### Source
+
+[node/src/stores/ORM.ts:80](https://github.com/configu/configu/blob/main/packages/node/src/stores/ORM.ts#L80)
+
+---
+
+### MySQLConfigStore
+
+#### Extends
+
+- `ORMConfigStore`
+
+#### Constructors
+
+##### new MySQLConfigStore()
+
+> **new MySQLConfigStore**(`configuration`): [`MySQLConfigStore`](/interfaces/sdk/node/globals#mysqlconfigstore)
+
+###### Parameters
+
+• **configuration**: `Omit`\<`MysqlConnectionOptions`, `"type"`\>
+
+###### Returns
+
+[`MySQLConfigStore`](/interfaces/sdk/node/globals#mysqlconfigstore)
+
+###### Overrides
+
+`ORMConfigStore.constructor`
+
+###### Source
+
+[node/src/stores/MySQL.ts:7](https://github.com/configu/configu/blob/main/packages/node/src/stores/MySQL.ts#L7)
+
+#### Properties
+
+##### dataSource
+
+> `readonly` **dataSource**: `DataSource`
+
+###### Inherited from
+
+`ORMConfigStore.dataSource`
+
+###### Source
+
+[node/src/stores/ORM.ts:34](https://github.com/configu/configu/blob/main/packages/node/src/stores/ORM.ts#L34)
+
+#### Methods
+
+##### get()
+
+> **get**(`queries`): `Promise`\<[`Config`](/interfaces/sdk/ts/globals#config)[]\>
+
+###### Parameters
+
+• **queries**: [`ConfigStoreQuery`](/interfaces/sdk/ts/globals#configstorequery)[]
+
+###### Returns
+
+`Promise`\<[`Config`](/interfaces/sdk/ts/globals#config)[]\>
+
+###### Inherited from
+
+`ORMConfigStore.get`
+
+###### Source
+
+[node/src/stores/ORM.ts:69](https://github.com/configu/configu/blob/main/packages/node/src/stores/ORM.ts#L69)
+
+##### init()
+
+> **init**(): `Promise`\<`void`\>
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Inherited from
+
+`ORMConfigStore.init`
+
+###### Source
+
+[node/src/stores/ORM.ts:48](https://github.com/configu/configu/blob/main/packages/node/src/stores/ORM.ts#L48)
+
+##### set()
+
+> **set**(`configs`): `Promise`\<`void`\>
+
+###### Parameters
+
+• **configs**: [`Config`](/interfaces/sdk/ts/globals#config)[]
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Inherited from
+
+`ORMConfigStore.set`
+
+###### Source
+
+[node/src/stores/ORM.ts:80](https://github.com/configu/configu/blob/main/packages/node/src/stores/ORM.ts#L80)
+
+---
+
+### PostgreSQLConfigStore
+
+#### Extends
+
+- `ORMConfigStore`
+
+#### Constructors
+
+##### new PostgreSQLConfigStore()
+
+> **new PostgreSQLConfigStore**(`configuration`): [`PostgreSQLConfigStore`](/interfaces/sdk/node/globals#postgresqlconfigstore)
+
+###### Parameters
+
+• **configuration**: `Omit`\<`PostgresConnectionOptions`, `"type"`\>
+
+###### Returns
+
+[`PostgreSQLConfigStore`](/interfaces/sdk/node/globals#postgresqlconfigstore)
+
+###### Overrides
+
+`ORMConfigStore.constructor`
+
+###### Source
+
+[node/src/stores/PostgreSQL.ts:8](https://github.com/configu/configu/blob/main/packages/node/src/stores/PostgreSQL.ts#L8)
+
+#### Properties
+
+##### dataSource
+
+> `readonly` **dataSource**: `DataSource`
+
+###### Inherited from
+
+`ORMConfigStore.dataSource`
+
+###### Source
+
+[node/src/stores/ORM.ts:34](https://github.com/configu/configu/blob/main/packages/node/src/stores/ORM.ts#L34)
+
+#### Methods
+
+##### get()
+
+> **get**(`queries`): `Promise`\<[`Config`](/interfaces/sdk/ts/globals#config)[]\>
+
+###### Parameters
+
+• **queries**: [`ConfigStoreQuery`](/interfaces/sdk/ts/globals#configstorequery)[]
+
+###### Returns
+
+`Promise`\<[`Config`](/interfaces/sdk/ts/globals#config)[]\>
+
+###### Inherited from
+
+`ORMConfigStore.get`
+
+###### Source
+
+[node/src/stores/ORM.ts:69](https://github.com/configu/configu/blob/main/packages/node/src/stores/ORM.ts#L69)
+
+##### init()
+
+> **init**(): `Promise`\<`void`\>
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Inherited from
+
+`ORMConfigStore.init`
+
+###### Source
+
+[node/src/stores/ORM.ts:48](https://github.com/configu/configu/blob/main/packages/node/src/stores/ORM.ts#L48)
+
+##### set()
+
+> **set**(`configs`): `Promise`\<`void`\>
+
+###### Parameters
+
+• **configs**: [`Config`](/interfaces/sdk/ts/globals#config)[]
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Inherited from
+
+`ORMConfigStore.set`
+
+###### Source
+
+[node/src/stores/ORM.ts:80](https://github.com/configu/configu/blob/main/packages/node/src/stores/ORM.ts#L80)
+
+---
+
+### SQLiteConfigStore
+
+#### Extends
+
+- `ORMConfigStore`
+
+#### Constructors
+
+##### new SQLiteConfigStore()
+
+> **new SQLiteConfigStore**(`configuration`): [`SQLiteConfigStore`](/interfaces/sdk/node/globals#sqliteconfigstore)
+
+###### Parameters
+
+• **configuration**: [`SQLiteConfigStoreConfiguration`](/interfaces/sdk/node/globals#sqliteconfigstoreconfiguration)
+
+###### Returns
+
+[`SQLiteConfigStore`](/interfaces/sdk/node/globals#sqliteconfigstore)
+
+###### Overrides
+
+`ORMConfigStore.constructor`
+
+###### Source
+
+[node/src/stores/SQLite.ts:7](https://github.com/configu/configu/blob/main/packages/node/src/stores/SQLite.ts#L7)
+
+#### Properties
+
+##### dataSource
+
+> `readonly` **dataSource**: `DataSource`
+
+###### Inherited from
+
+`ORMConfigStore.dataSource`
+
+###### Source
+
+[node/src/stores/ORM.ts:34](https://github.com/configu/configu/blob/main/packages/node/src/stores/ORM.ts#L34)
+
+#### Methods
+
+##### get()
+
+> **get**(`queries`): `Promise`\<[`Config`](/interfaces/sdk/ts/globals#config)[]\>
+
+###### Parameters
+
+• **queries**: [`ConfigStoreQuery`](/interfaces/sdk/ts/globals#configstorequery)[]
+
+###### Returns
+
+`Promise`\<[`Config`](/interfaces/sdk/ts/globals#config)[]\>
+
+###### Inherited from
+
+`ORMConfigStore.get`
+
+###### Source
+
+[node/src/stores/ORM.ts:69](https://github.com/configu/configu/blob/main/packages/node/src/stores/ORM.ts#L69)
+
+##### init()
+
+> **init**(): `Promise`\<`void`\>
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Inherited from
+
+`ORMConfigStore.init`
+
+###### Source
+
+[node/src/stores/ORM.ts:48](https://github.com/configu/configu/blob/main/packages/node/src/stores/ORM.ts#L48)
+
+##### set()
+
+> **set**(`configs`): `Promise`\<`void`\>
+
+###### Parameters
+
+• **configs**: [`Config`](/interfaces/sdk/ts/globals#config)[]
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Inherited from
+
+`ORMConfigStore.set`
+
+###### Source
+
+[node/src/stores/ORM.ts:80](https://github.com/configu/configu/blob/main/packages/node/src/stores/ORM.ts#L80)
+
+---
+
+### TomlFileConfigStore
+
+#### Extends
+
+- `FileConfigStore`
+
+#### Constructors
+
+##### new TomlFileConfigStore()
+
+> **new TomlFileConfigStore**(`__namedParameters`): [`TomlFileConfigStore`](/interfaces/sdk/node/globals#tomlfileconfigstore)
+
+###### Parameters
+
+• **\_\_namedParameters**: [`TomlFileConfigStoreConfiguration`](/interfaces/sdk/node/globals#tomlfileconfigstoreconfiguration)
+
+###### Returns
+
+[`TomlFileConfigStore`](/interfaces/sdk/node/globals#tomlfileconfigstore)
+
+###### Overrides
+
+`FileConfigStore.constructor`
+
+###### Source
+
+[node/src/stores/TomlFile.ts:9](https://github.com/configu/configu/blob/main/packages/node/src/stores/TomlFile.ts#L9)
+
+#### Properties
+
+##### initialFileState
+
+> `readonly` **initialFileState**: `string`
+
+###### Inherited from
+
+`FileConfigStore.initialFileState`
+
+###### Source
+
+[node/src/stores/File.ts:9](https://github.com/configu/configu/blob/main/packages/node/src/stores/File.ts#L9)
+
+##### path
+
+> `readonly` **path**: `string`
+
+###### Inherited from
+
+`FileConfigStore.path`
+
+###### Source
+
+[node/src/stores/File.ts:8](https://github.com/configu/configu/blob/main/packages/node/src/stores/File.ts#L8)
+
+#### Methods
+
+##### get()
+
+> **get**(`queries`): `Promise`\<[`Config`](/interfaces/sdk/ts/globals#config)[]\>
+
+###### Parameters
+
+• **queries**: [`ConfigStoreQuery`](/interfaces/sdk/ts/globals#configstorequery)[]
+
+###### Returns
+
+`Promise`\<[`Config`](/interfaces/sdk/ts/globals#config)[]\>
+
+###### Inherited from
+
+`FileConfigStore.get`
+
+###### Source
+
+[node/src/stores/File.ts:40](https://github.com/configu/configu/blob/main/packages/node/src/stores/File.ts#L40)
+
+##### init()
+
+> **init**(): `Promise`\<`void`\>
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Inherited from
+
+`FileConfigStore.init`
+
+###### Source
+
+[node/src/stores/File.ts:16](https://github.com/configu/configu/blob/main/packages/node/src/stores/File.ts#L16)
+
+##### parse()
+
+> **parse**(`fileContent`): `object`[]
+
+###### Parameters
+
+• **fileContent**: `string`
+
+###### Returns
+
+`object`[]
+
+###### Overrides
+
+`FileConfigStore.parse`
+
+###### Source
+
+[node/src/stores/TomlFile.ts:14](https://github.com/configu/configu/blob/main/packages/node/src/stores/TomlFile.ts#L14)
+
+##### set()
+
+> **set**(`configs`): `Promise`\<`void`\>
+
+###### Parameters
+
+• **configs**: [`Config`](/interfaces/sdk/ts/globals#config)[]
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Inherited from
+
+`FileConfigStore.set`
+
+###### Source
+
+[node/src/stores/File.ts:51](https://github.com/configu/configu/blob/main/packages/node/src/stores/File.ts#L51)
+
+##### stringify()
+
+> **stringify**(`nextConfigs`): `string`
+
+###### Parameters
+
+• **nextConfigs**: [`Config`](/interfaces/sdk/ts/globals#config)[]
+
+###### Returns
+
+`string`
+
+###### Overrides
+
+`FileConfigStore.stringify`
+
+###### Source
+
+[node/src/stores/TomlFile.ts:35](https://github.com/configu/configu/blob/main/packages/node/src/stores/TomlFile.ts#L35)
+
+---
+
+### XmlFileConfigStore
+
+#### Extends
+
+- `FileConfigStore`
+
+#### Constructors
+
+##### new XmlFileConfigStore()
+
+> **new XmlFileConfigStore**(`__namedParameters`): [`XmlFileConfigStore`](/interfaces/sdk/node/globals#xmlfileconfigstore)
+
+###### Parameters
+
+• **\_\_namedParameters**: [`XmlFileConfigStoreConfiguration`](/interfaces/sdk/node/globals#xmlfileconfigstoreconfiguration)
+
+###### Returns
+
+[`XmlFileConfigStore`](/interfaces/sdk/node/globals#xmlfileconfigstore)
+
+###### Overrides
+
+`FileConfigStore.constructor`
+
+###### Source
+
+[node/src/stores/XmlFile.ts:9](https://github.com/configu/configu/blob/main/packages/node/src/stores/XmlFile.ts#L9)
+
+#### Properties
+
+##### initialFileState
+
+> `readonly` **initialFileState**: `string`
+
+###### Inherited from
+
+`FileConfigStore.initialFileState`
+
+###### Source
+
+[node/src/stores/File.ts:9](https://github.com/configu/configu/blob/main/packages/node/src/stores/File.ts#L9)
+
+##### path
+
+> `readonly` **path**: `string`
+
+###### Inherited from
+
+`FileConfigStore.path`
+
+###### Source
+
+[node/src/stores/File.ts:8](https://github.com/configu/configu/blob/main/packages/node/src/stores/File.ts#L8)
+
+#### Methods
+
+##### get()
+
+> **get**(`queries`): `Promise`\<[`Config`](/interfaces/sdk/ts/globals#config)[]\>
+
+###### Parameters
+
+• **queries**: [`ConfigStoreQuery`](/interfaces/sdk/ts/globals#configstorequery)[]
+
+###### Returns
+
+`Promise`\<[`Config`](/interfaces/sdk/ts/globals#config)[]\>
+
+###### Inherited from
+
+`FileConfigStore.get`
+
+###### Source
+
+[node/src/stores/File.ts:40](https://github.com/configu/configu/blob/main/packages/node/src/stores/File.ts#L40)
+
+##### init()
+
+> **init**(): `Promise`\<`void`\>
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Inherited from
+
+`FileConfigStore.init`
+
+###### Source
+
+[node/src/stores/File.ts:16](https://github.com/configu/configu/blob/main/packages/node/src/stores/File.ts#L16)
+
+##### parse()
+
+> **parse**(`fileContent`): [`Config`](/interfaces/sdk/ts/globals#config)[]
+
+###### Parameters
+
+• **fileContent**: `string`
+
+###### Returns
+
+[`Config`](/interfaces/sdk/ts/globals#config)[]
+
+###### Overrides
+
+`FileConfigStore.parse`
+
+###### Source
+
+[node/src/stores/XmlFile.ts:16](https://github.com/configu/configu/blob/main/packages/node/src/stores/XmlFile.ts#L16)
+
+##### set()
+
+> **set**(`configs`): `Promise`\<`void`\>
+
+###### Parameters
+
+• **configs**: [`Config`](/interfaces/sdk/ts/globals#config)[]
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Inherited from
+
+`FileConfigStore.set`
+
+###### Source
+
+[node/src/stores/File.ts:51](https://github.com/configu/configu/blob/main/packages/node/src/stores/File.ts#L51)
+
+##### stringify()
+
+> **stringify**(`nextConfigs`): `string`
+
+###### Parameters
+
+• **nextConfigs**: [`Config`](/interfaces/sdk/ts/globals#config)[]
+
+###### Returns
+
+`string`
+
+###### Overrides
+
+`FileConfigStore.stringify`
+
+###### Source
+
+[node/src/stores/XmlFile.ts:29](https://github.com/configu/configu/blob/main/packages/node/src/stores/XmlFile.ts#L29)
+
+## Type Aliases
+
+### AWSParameterStoreConfigStoreConfiguration
+
+> **AWSParameterStoreConfigStoreConfiguration**: `SSMClientConfig`
+
+#### Source
+
+[node/src/stores/AWSParameterStore.ts:11](https://github.com/configu/configu/blob/main/packages/node/src/stores/AWSParameterStore.ts#L11)
+
+---
+
+### AWSSecretsManagerConfigStoreConfiguration
+
+> **AWSSecretsManagerConfigStoreConfiguration**: `SecretsManagerClientConfig`
+
+#### Source
+
+[node/src/stores/AWSSecretsManager.ts:11](https://github.com/configu/configu/blob/main/packages/node/src/stores/AWSSecretsManager.ts#L11)
+
+---
+
+### AzureKeyVaultConfigStoreConfiguration
+
+> **AzureKeyVaultConfigStoreConfiguration**: `object`
+
+#### Type declaration
+
+##### credential
+
+> **credential**: `DefaultAzureCredentialClientIdOptions`
+
+##### options?
+
+> `optional` **options**: `SecretClientOptions`
+
+##### vaultUrl
+
+> **vaultUrl**: `string`
+
+#### Source
+
+[node/src/stores/AzureKeyVault.ts:5](https://github.com/configu/configu/blob/main/packages/node/src/stores/AzureKeyVault.ts#L5)
+
+---
+
+### CloudBeesConfigStoreConfiguration
+
+> **CloudBeesConfigStoreConfiguration**: `object`
+
+#### Type declaration
+
+##### appKey
+
+> **appKey**: `string`
+
+##### context?
+
+> `optional` **context**: `EvaluationContext`
+
+##### providerOptions?
+
+> `optional` **providerOptions**: `RoxSetupOptions`
+
+#### Source
+
+[node/src/stores/CloudBees.ts:6](https://github.com/configu/configu/blob/main/packages/node/src/stores/CloudBees.ts#L6)
+
+---
+
+### CockroachDBConfigStoreConfiguration
+
+> **CockroachDBConfigStoreConfiguration**: `Omit`\<`CockroachConnectionOptions`, `"type"`\> & `ORMConfigStoreSharedConfiguration`
+
+#### Source
+
+[node/src/stores/CockroachDB.ts:4](https://github.com/configu/configu/blob/main/packages/node/src/stores/CockroachDB.ts#L4)
+
+---
+
+### CsvFileConfigStoreConfiguration
+
+> **CsvFileConfigStoreConfiguration**: `object`
+
+#### Type declaration
+
+##### path
+
+> **path**: `string`
+
+#### Source
+
+[node/src/stores/CsvFile.ts:5](https://github.com/configu/configu/blob/main/packages/node/src/stores/CsvFile.ts#L5)
+
+---
+
+### EtcdConfigStoreConfiguration
+
+> **EtcdConfigStoreConfiguration**: `IOptions`
+
+#### Source
+
+[node/src/stores/Etcd.ts:4](https://github.com/configu/configu/blob/main/packages/node/src/stores/Etcd.ts#L4)
+
+---
+
+### GCPSecretManagerConfigStoreConfiguration
+
+> **GCPSecretManagerConfigStoreConfiguration**: `ConstructorParameters`\<_typeof_ `SecretManagerServiceClient`\>\[`"0"`\] & `object`
+
+#### Type declaration
+
+##### projectId
+
+> **projectId**: `string`
+
+#### Source
+
+[node/src/stores/GCPSecretManager.ts:4](https://github.com/configu/configu/blob/main/packages/node/src/stores/GCPSecretManager.ts#L4)
+
+---
+
+### HashiCorpVaultConfigStoreConfiguration
+
+> **HashiCorpVaultConfigStoreConfiguration**: `object`
+
+#### Type declaration
+
+##### address?
+
+> `optional` **address**: `string`
+
+##### engine
+
+> **engine**: `string`
+
+##### token?
+
+> `optional` **token**: `string`
+
+#### Source
+
+[node/src/stores/HashiCorpVault.ts:4](https://github.com/configu/configu/blob/main/packages/node/src/stores/HashiCorpVault.ts#L4)
+
+---
+
+### IniFileConfigStoreConfiguration
+
+> **IniFileConfigStoreConfiguration**: `object`
+
+#### Type declaration
+
+##### path
+
+> **path**: `string`
+
+#### Source
+
+[node/src/stores/IniFile.ts:6](https://github.com/configu/configu/blob/main/packages/node/src/stores/IniFile.ts#L6)
+
+---
+
+### JsonFileConfigStoreConfiguration
+
+> **JsonFileConfigStoreConfiguration**: `object`
+
+#### Type declaration
+
+##### path
+
+> **path**: `string`
+
+#### Source
+
+[node/src/stores/JsonFile.ts:4](https://github.com/configu/configu/blob/main/packages/node/src/stores/JsonFile.ts#L4)
+
+---
+
+### KeyvConfigStoreConfiguration
+
+> **KeyvConfigStoreConfiguration**: `object`
+
+#### Type declaration
+
+##### keyvInstance
+
+> **keyvInstance**: `Keyv`
+
+#### Source
+
+[node/src/stores/Keyv.ts:6](https://github.com/configu/configu/blob/main/packages/node/src/stores/Keyv.ts#L6)
+
+---
+
+### KubernetesSecretConfigStoreConfiguration
+
+> **KubernetesSecretConfigStoreConfiguration**: `object`
+
+#### Type declaration
+
+##### kubeconfig?
+
+> `optional` **kubeconfig**: `string`
+
+##### namespace
+
+> **namespace**: `string`
+
+#### Source
+
+[node/src/stores/KubernetesSecret.ts:6](https://github.com/configu/configu/blob/main/packages/node/src/stores/KubernetesSecret.ts#L6)
+
+---
+
+### LaunchDarklyConfigStoreConfiguration
+
+> **LaunchDarklyConfigStoreConfiguration**: `object`
+
+#### Type declaration
+
+##### context
+
+> **context**: `EvaluationContext`
+
+##### ldOptions?
+
+> `optional` **ldOptions**: `LDOptions`
+
+##### sdkKey
+
+> **sdkKey**: `string`
+
+#### Source
+
+[node/src/stores/LaunchDarkly.ts:8](https://github.com/configu/configu/blob/main/packages/node/src/stores/LaunchDarkly.ts#L8)
+
+---
+
+### MSSQLConfigStoreConfiguration
+
+> **MSSQLConfigStoreConfiguration**: `Omit`\<`SqlServerConnectionOptions`, `"type"`\> & `ORMConfigStoreSharedConfiguration`
+
+#### Source
+
+[node/src/stores/MSSQL.ts:4](https://github.com/configu/configu/blob/main/packages/node/src/stores/MSSQL.ts#L4)
+
+---
+
+### MariaDBConfigStoreConfiguration
+
+> **MariaDBConfigStoreConfiguration**: `Omit`\<`MysqlConnectionOptions`, `"type"`\> & `ORMConfigStoreSharedConfiguration`
+
+#### Source
+
+[node/src/stores/MariaDB.ts:5](https://github.com/configu/configu/blob/main/packages/node/src/stores/MariaDB.ts#L5)
+
+---
+
+### MySQLConfigStoreConfiguration
+
+> **MySQLConfigStoreConfiguration**: `Omit`\<`MysqlConnectionOptions`, `"type"`\> & `ORMConfigStoreSharedConfiguration`
+
+#### Source
+
+[node/src/stores/MySQL.ts:4](https://github.com/configu/configu/blob/main/packages/node/src/stores/MySQL.ts#L4)
+
+---
+
+### PostgreSQLConfigStoreConfiguration
+
+> **PostgreSQLConfigStoreConfiguration**: `Omit`\<`PostgresConnectionOptions`, `"type"`\> & `ORMConfigStoreSharedConfiguration`
+
+#### Source
+
+[node/src/stores/PostgreSQL.ts:4](https://github.com/configu/configu/blob/main/packages/node/src/stores/PostgreSQL.ts#L4)
+
+---
+
+### SQLiteConfigStoreConfiguration
+
+> **SQLiteConfigStoreConfiguration**: `Omit`\<`SqliteConnectionOptions`, `"type"`\> & `ORMConfigStoreSharedConfiguration`
+
+#### Source
+
+[node/src/stores/SQLite.ts:4](https://github.com/configu/configu/blob/main/packages/node/src/stores/SQLite.ts#L4)
+
+---
+
+### TomlFileConfigStoreConfiguration
+
+> **TomlFileConfigStoreConfiguration**: `object`
+
+#### Type declaration
+
+##### path
+
+> **path**: `string`
+
+#### Source
+
+[node/src/stores/TomlFile.ts:6](https://github.com/configu/configu/blob/main/packages/node/src/stores/TomlFile.ts#L6)
+
+---
+
+### XmlFileConfigStoreConfiguration
+
+> **XmlFileConfigStoreConfiguration**: `object`
+
+#### Type declaration
+
+##### builderOptions?
+
+> `optional` **builderOptions**: `xml2js.BuilderOptions`
+
+##### path
+
+> **path**: `string`
+
+#### Source
+
+[node/src/stores/XmlFile.ts:5](https://github.com/configu/configu/blob/main/packages/node/src/stores/XmlFile.ts#L5)

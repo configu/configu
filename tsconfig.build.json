@@ -1,0 +1,21 @@
+{
+  "files": [],
+  "references": [
+    {
+      "path": "packages/ts"
+    },
+    {
+      "path": "packages/node"
+    },
+    {
+      "path": "packages/browser"
+    },
+    {
+      "path": "packages/lib"
+    },
+    {
+      "path": "packages/cli"
+    }
+    // { "path": "packages/vscode" },
+  ]
+}

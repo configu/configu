@@ -1,7 +1,7 @@
 ---
 title: Configu Interface Configuration File
 sidebarTitle: .configu
-description: "The `.configu` file is an optional configuration file used by the various Configu interfaces to customize its behavior. The file should be named `.configu` regardless of the format used: JSON or YAML."
+description: 'The `.configu` file is an optional configuration file used by the various Configu interfaces to customize its behavior. The file should be named `.configu` regardless of the format used: JSON or YAML.'
 ---
 
 ## Location
@@ -25,7 +25,7 @@ $schema: https://json-schema.org/draft/2020-12/schema-configu
 
 ```json JSON
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema-configu",
+  "$schema": "https://json-schema.org/draft/2020-12/schema-configu"
 }
 ```
 
@@ -54,11 +54,13 @@ The `.configu` file allows you to save `Configu CLI` snippets as friendly names,
 To define a custom script, add a new key-value pair to the `scripts` section of the `.configu` file, where the key represents the friendly name, and the value is the script content. The script content should consist of `Configu CLI` commands or a pipe of commands.
 
 <Tip>
-The `.configu` configuration file provides a way to customize the behavior of the Configu CLI. By defining custom stores and scripts in this file, you can easily reference them in CLI commands, making it more convenient to manage and collaborate on software configurations.
-
-Remember that the `.configu` file is optional, and if present, it will be automatically discovered by the CLI during its recursive search process.
+  The `.configu` configuration file provides a way to customize the behavior of the Configu CLI. By defining custom
+  stores and scripts in this file, you can easily reference them in CLI commands, making it more convenient to manage
+  and collaborate on software configurations.
+  <br />
+  Remember that the `.configu` file is optional, and if present, it will be automatically discovered by the CLI during
+  its recursive search process.
 </Tip>
-
 
 ## Example
 

@@ -1,7 +1,0 @@
-{
-  "GREETING": {
-    "type": "String",
-    "default": "foo",
-    "template": "foo"
-  }
-}

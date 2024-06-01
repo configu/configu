@@ -1,10 +1,10 @@
 ---
 title: Configu Configuration-as-Code Format
 sidebarTitle: .cfgu
-description: "The `Cfgu` format defines the characteristics of a software configuration in Configu, providing metadata and constraints for `ConfigValues`. When attached to a `ConfigKey` in a `ConfigSchema`, it enables validation of `ConfigValues`, facilitating their implementation in the code."
+description: 'The `Cfgu` format defines the characteristics of a software configuration in Configu, providing metadata and constraints for `ConfigValues`. When attached to a `ConfigKey` in a `ConfigSchema`, it enables validation of `ConfigValues`, facilitating their implementation in the code.'
 ---
 
-import { CfguExt } from '/snippets/variables.mdx'
+import { CfguExt } from '/snippets/variables.mdx';
 
 ## Location
 
@@ -27,7 +27,7 @@ $schema: https://json-schema.org/draft/2020-12/schema-cfgu
 
 ```json example.cfgu.json
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema-cfgu",
+  "$schema": "https://json-schema.org/draft/2020-12/schema-cfgu"
 }
 ```
 
@@ -199,50 +199,64 @@ $schema: https://json-schema.org/draft/2020-12/schema-cfgu
     <Info>Most of the validators are based on the [validator.js](https://github.com/validatorjs/validator.js?tab=readme-ov-file#validators) library. You can refer to the library's documentation for more information on the supported validators.</Info>
 
     <Tip>Configu is designed to be extensible, allowing you to add custom types as needed. If you require a type that is not currently supported, we encourage you to let us know or consider contributing it yourself. With Configu's flexibility, you can tailor the configuration system to suit your specific requirements.</Tip>
+
   </Accordion>
 </ResponseField>
 
 <ResponseField name="pattern" type="String">
   Define a regular expression a `ConigValue` must match.
-  - This property must be provided if the `type` is `RegEx`.
+  <br />
+  This property must be provided if the `type` is `RegEx`.
 </ResponseField>
 
 <ResponseField name="schema" type="JSON Schema">
   Specify a JSON schema a `ConigValue` must conform to.
-  - This property must be provided if the `type` is `JSONSchema`.
+  <br />
+  This property must be provided if the `type` is `JSONSchema`.
 </ResponseField>
 
 <ResponseField name="options" type="String[]">
   Specify a list of allowable `ConigValues` for a `ConfigKey`.
-  - This property cannot be set together with `template`.
-  - This property cannot be an empty array or contain empty strings.
-  - Each option must be unique and according to the `type` of the `ConfigKey`.
+  <br />
+  This property cannot be set together with `template`.
+  <br />
+  This property cannot be an empty array or contain empty strings.
+  <br />
+  Each option must be unique and according to the `type` of the `ConfigKey`.
 </ResponseField>
 
 <ResponseField name="default" type="String">
   Set a default `ConfigValue` for a `ConfigKey` if not explicitly provided.
-  - This property cannot be set together with `required` or `template` or `lazy` properties.
-  - If `options` is set, the default value must be one of the options.
+  <br />
+  This property cannot be set together with `required` or `template` or `lazy` properties.
+  <br />
+  If `options` is set, the default value must be one of the options.
 </ResponseField>
 
 <ResponseField name="required" type="Boolean">
-  Indicate whether a `ConfigKey` is essential for the application's functionality. When set to `true`, a `ConfigValue` must be found on `EvalCommand`.
-  - This property cannot be set together with `default`.
+  Indicate whether a `ConfigKey` is essential for the application's functionality. When set to `true`, a `ConfigValue`
+  must be found on `EvalCommand`.
+  <br />
+  This property cannot be set together with `default`.
 </ResponseField>
 
 <ResponseField name="depends" type="String[]">
   List other `ConfigKeys` this configuration depends on.
-  - This property cannot be an empty array or contain reserved words.
+  <br />
+  This property cannot be an empty array or contain reserved words.
 </ResponseField>
 
 <ResponseField name="template" type="String">
   Define a template for constructing a `ConfigValue` from other `Configs`.
-  - This property cannot be set together with `default` or `lazy`.
+  <br />
+  This property cannot be set together with `default` or `lazy`.
 </ResponseField>
 
 <ResponseField name="lazy" type="Boolean">
-  Indicate that a `ConfigValue` is set only during `EvalCommand` execution, excluding it from `UpsertCommand` assignments.
-  - This property cannot be set together with `default` or `template`.
+  Indicate that a `ConfigValue` is set only during `EvalCommand` execution, excluding it from `UpsertCommand`
+  assignments.
+  <br />
+  This property cannot be set together with `default` or `template`.
 </ResponseField>
 
 <ResponseField name="hidden" type="Boolean">
@@ -294,24 +308,13 @@ AWS_REGION:
   "NODE_ENV": {
     "description": "Defines the environment in which the application runs",
     "type": "String",
-    "options": [
-      "development",
-      "production",
-      "test"
-    ],
-    "default": "development",
+    "options": ["development", "production", "test"],
+    "default": "development"
   },
   "LOG_LEVEL": {
     "description": "Defines the level of logs to be recorded",
     "type": "String",
-    "options": [
-      "error",
-      "warn",
-      "info",
-      "verbose",
-      "debug",
-      "silly"
-    ],
+    "options": ["error", "warn", "info", "verbose", "debug", "silly"],
     "default": "info"
   },
   "SERVICE_ENDPOINT": {

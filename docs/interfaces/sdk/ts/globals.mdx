@@ -1,0 +1,2430 @@
+---
+title: '@configu/ts Reference'
+---
+
+## Enumerations
+
+### EvaluatedConfigOrigin
+
+#### Enumeration Members
+
+##### ConfigsOverride
+
+> **ConfigsOverride**: `"CONFIGS_OVERRIDE"`
+
+###### Source
+
+[packages/ts/src/commands/EvalCommand.ts:10](https://github.com/configu/configu/blob/main/packages/ts/src/commands/EvalCommand.ts#L10)
+
+##### EmptyValue
+
+> **EmptyValue**: `"EMPTY_VALUE"`
+
+###### Source
+
+[packages/ts/src/commands/EvalCommand.ts:14](https://github.com/configu/configu/blob/main/packages/ts/src/commands/EvalCommand.ts#L14)
+
+##### SchemaDefault
+
+> **SchemaDefault**: `"SCHEMA_DEFAULT"`
+
+###### Source
+
+[packages/ts/src/commands/EvalCommand.ts:13](https://github.com/configu/configu/blob/main/packages/ts/src/commands/EvalCommand.ts#L13)
+
+##### SchemaTemplate
+
+> **SchemaTemplate**: `"SCHEMA_TEMPLATE"`
+
+###### Source
+
+[packages/ts/src/commands/EvalCommand.ts:12](https://github.com/configu/configu/blob/main/packages/ts/src/commands/EvalCommand.ts#L12)
+
+##### StoreSet
+
+> **StoreSet**: `"STORE_SET"`
+
+###### Source
+
+[packages/ts/src/commands/EvalCommand.ts:11](https://github.com/configu/configu/blob/main/packages/ts/src/commands/EvalCommand.ts#L11)
+
+## Classes
+
+### `abstract` Command\<T\>
+
+#### Extended by
+
+- [`TestCommand`](/interfaces/sdk/ts/globals#testcommand)
+- [`UpsertCommand`](/interfaces/sdk/ts/globals#upsertcommand)
+- [`DeleteCommand`](/interfaces/sdk/ts/globals#deletecommand)
+- [`EvalCommand`](/interfaces/sdk/ts/globals#evalcommand)
+- [`ExportCommand`](/interfaces/sdk/ts/globals#exportcommand)
+
+#### Type parameters
+
+• **T**
+
+#### Constructors
+
+##### new Command()
+
+> **new Command**\<`T`\>(`parameters`): [`Command`](/interfaces/sdk/ts/globals#commandt)\<`T`\>
+
+###### Parameters
+
+• **parameters**: `Record`\<`string`, `unknown`\>
+
+###### Returns
+
+[`Command`](/interfaces/sdk/ts/globals#commandt)\<`T`\>
+
+###### Source
+
+[packages/ts/src/Command.ts:2](https://github.com/configu/configu/blob/main/packages/ts/src/Command.ts#L2)
+
+#### Properties
+
+##### parameters
+
+> **parameters**: `Record`\<`string`, `unknown`\>
+
+###### Source
+
+[packages/ts/src/Command.ts:2](https://github.com/configu/configu/blob/main/packages/ts/src/Command.ts#L2)
+
+#### Methods
+
+##### run()
+
+> `abstract` **run**(): `Promise`\<`T`\>
+
+###### Returns
+
+`Promise`\<`T`\>
+
+###### Source
+
+[packages/ts/src/Command.ts:3](https://github.com/configu/configu/blob/main/packages/ts/src/Command.ts#L3)
+
+---
+
+### ConfigError
+
+#### Extends
+
+- `Error`
+
+#### Extended by
+
+- [`ConfigStoreError`](/interfaces/sdk/ts/globals#configstoreerror)
+
+#### Constructors
+
+##### new ConfigError()
+
+> **new ConfigError**(`reason`, `hint`, `scope`): [`ConfigError`](/interfaces/sdk/ts/globals#configerror)
+
+###### Parameters
+
+• **reason**: `string`
+
+• **hint**: `string`= `''`
+
+• **scope**: [`string`, `string`][]= `[]`
+
+###### Returns
+
+[`ConfigError`](/interfaces/sdk/ts/globals#configerror)
+
+###### Overrides
+
+`Error.constructor`
+
+###### Source
+
+[packages/ts/src/utils.ts:8](https://github.com/configu/configu/blob/main/packages/ts/src/utils.ts#L8)
+
+#### Properties
+
+##### hint
+
+> `protected` `readonly` **hint**: `string` = `''`
+
+###### Source
+
+[packages/ts/src/utils.ts:10](https://github.com/configu/configu/blob/main/packages/ts/src/utils.ts#L10)
+
+##### reason
+
+> `protected` `readonly` **reason**: `string`
+
+###### Source
+
+[packages/ts/src/utils.ts:9](https://github.com/configu/configu/blob/main/packages/ts/src/utils.ts#L9)
+
+##### scope
+
+> `protected` `readonly` **scope**: [`string`, `string`][] = `[]`
+
+###### Source
+
+[packages/ts/src/utils.ts:11](https://github.com/configu/configu/blob/main/packages/ts/src/utils.ts#L11)
+
+#### Methods
+
+##### appendScope()
+
+> **appendScope**(`scope`): [`ConfigError`](/interfaces/sdk/ts/globals#configerror)
+
+###### Parameters
+
+• **scope**: [`string`, `string`][]
+
+###### Returns
+
+[`ConfigError`](/interfaces/sdk/ts/globals#configerror)
+
+###### Source
+
+[packages/ts/src/utils.ts:32](https://github.com/configu/configu/blob/main/packages/ts/src/utils.ts#L32)
+
+##### setHint()
+
+> **setHint**(`hint`): [`ConfigError`](/interfaces/sdk/ts/globals#configerror)
+
+###### Parameters
+
+• **hint**: `string`
+
+###### Returns
+
+[`ConfigError`](/interfaces/sdk/ts/globals#configerror)
+
+###### Source
+
+[packages/ts/src/utils.ts:28](https://github.com/configu/configu/blob/main/packages/ts/src/utils.ts#L28)
+
+##### setReason()
+
+> **setReason**(`reason`): [`ConfigError`](/interfaces/sdk/ts/globals#configerror)
+
+###### Parameters
+
+• **reason**: `string`
+
+###### Returns
+
+[`ConfigError`](/interfaces/sdk/ts/globals#configerror)
+
+###### Source
+
+[packages/ts/src/utils.ts:24](https://github.com/configu/configu/blob/main/packages/ts/src/utils.ts#L24)
+
+---
+
+### ConfigSchema
+
+A file containing binding records linking each unique `ConfigKey` to its corresponding
+`Cfgu` declaration.
+https://configu.com/docs/config-schema/
+
+#### Implements
+
+- [`IConfigSchema`](/interfaces/sdk/ts/globals#iconfigschema)
+
+#### Constructors
+
+##### new ConfigSchema()
+
+> **new ConfigSchema**(`name`, `contents`): [`ConfigSchema`](/interfaces/sdk/ts/globals#configschema)
+
+###### Parameters
+
+• **name**: `string`
+
+• **contents**
+
+###### Returns
+
+[`ConfigSchema`](/interfaces/sdk/ts/globals#configschema)
+
+###### Source
+
+[packages/ts/src/ConfigSchema.ts:421](https://github.com/configu/configu/blob/main/packages/ts/src/ConfigSchema.ts#L421)
+
+#### Properties
+
+##### contents
+
+> `readonly` **contents**: `object`
+
+###### Index signature
+
+\[`key`: `string`\]: [`Cfgu`](/interfaces/sdk/ts/globals#cfgu-1)
+
+###### Implementation of
+
+[`IConfigSchema`](/interfaces/sdk/ts/globals#iconfigschema).[`contents`](/interfaces/sdk/ts/globals#contents-1)
+
+###### Source
+
+[packages/ts/src/ConfigSchema.ts:423](https://github.com/configu/configu/blob/main/packages/ts/src/ConfigSchema.ts#L423)
+
+##### name
+
+> `readonly` **name**: `string`
+
+###### Implementation of
+
+[`IConfigSchema`](/interfaces/sdk/ts/globals#iconfigschema).[`name`](/interfaces/sdk/ts/globals#name-2)
+
+###### Source
+
+[packages/ts/src/ConfigSchema.ts:422](https://github.com/configu/configu/blob/main/packages/ts/src/ConfigSchema.ts#L422)
+
+##### CFGU
+
+> `static` **CFGU**: `object`
+
+###### NAME
+
+> **NAME**: `string` = `CFGU_NAME`
+
+###### PROPS
+
+> **PROPS**: keyof [`Cfgu`](/interfaces/sdk/ts/globals#cfgu-1)[] = `CFGU_PROP`
+
+###### VALIDATORS
+
+> **VALIDATORS**: `object`
+
+###### VALIDATORS.TYPE
+
+> **TYPE**: `Record`\<[`CfguType`](/interfaces/sdk/ts/globals#cfgutype), (`parameters`) => `boolean`\> = `CFGU_VALUE_TYPE_VALIDATORS`
+
+###### VALIDATORS.structure()
+
+> **structure**: (`cfgu`) => `void` = `cfguStructureValidator`
+
+###### Parameters
+
+• **cfgu**: [`Cfgu`](/interfaces/sdk/ts/globals#cfgu-1)
+
+###### Returns
+
+`void`
+
+###### VALIDATORS.valueOptions()
+
+> **valueOptions**: (`cfgu`, `value`) => `void` = `cfguValueOptionsValidator`
+
+###### Parameters
+
+• **cfgu**: [`Cfgu`](/interfaces/sdk/ts/globals#cfgu-1)
+
+• **value**: `string`
+
+###### Returns
+
+`void`
+
+###### VALIDATORS.valueType()
+
+> **valueType**: (`cfgu`, `value`) => `void` = `cfguValueTypeValidator`
+
+###### Parameters
+
+• **cfgu**: [`Cfgu`](/interfaces/sdk/ts/globals#cfgu-1)
+
+• **value**: `string`
+
+###### Returns
+
+`void`
+
+###### Source
+
+[packages/ts/src/ConfigSchema.ts:410](https://github.com/configu/configu/blob/main/packages/ts/src/ConfigSchema.ts#L410)
+
+---
+
+### ConfigSet
+
+A unique, case-sensitive path within a tree-like data structure that groups `Config`s
+contextually.
+https://configu.com/docs/config-set/
+
+#### Implements
+
+- [`IConfigSet`](/interfaces/sdk/ts/globals#iconfigset)
+
+#### Constructors
+
+##### new ConfigSet()
+
+> **new ConfigSet**(`path`): [`ConfigSet`](/interfaces/sdk/ts/globals#configset)
+
+###### Parameters
+
+• **path**: `string`= `ConfigSet.ROOT`
+
+###### Returns
+
+[`ConfigSet`](/interfaces/sdk/ts/globals#configset)
+
+###### Source
+
+[packages/ts/src/ConfigSet.ts:12](https://github.com/configu/configu/blob/main/packages/ts/src/ConfigSet.ts#L12)
+
+#### Properties
+
+##### hierarchy
+
+> `readonly` **hierarchy**: `string`[] = `[]`
+
+###### Implementation of
+
+[`IConfigSet`](/interfaces/sdk/ts/globals#iconfigset).[`hierarchy`](/interfaces/sdk/ts/globals#hierarchy-1)
+
+###### Source
+
+[packages/ts/src/ConfigSet.ts:10](https://github.com/configu/configu/blob/main/packages/ts/src/ConfigSet.ts#L10)
+
+##### path
+
+> `readonly` **path**: `string` = `ConfigSet.ROOT`
+
+###### Implementation of
+
+[`IConfigSet`](/interfaces/sdk/ts/globals#iconfigset).[`path`](/interfaces/sdk/ts/globals#path-1)
+
+###### Source
+
+[packages/ts/src/ConfigSet.ts:12](https://github.com/configu/configu/blob/main/packages/ts/src/ConfigSet.ts#L12)
+
+##### ROOT
+
+> `static` **ROOT**: `""`
+
+###### Source
+
+[packages/ts/src/ConfigSet.ts:7](https://github.com/configu/configu/blob/main/packages/ts/src/ConfigSet.ts#L7)
+
+##### ROOT_LABEL
+
+> `static` **ROOT_LABEL**: `"/"`
+
+###### Source
+
+[packages/ts/src/ConfigSet.ts:8](https://github.com/configu/configu/blob/main/packages/ts/src/ConfigSet.ts#L8)
+
+##### SEPARATOR
+
+> `static` **SEPARATOR**: `"/"`
+
+###### Source
+
+[packages/ts/src/ConfigSet.ts:6](https://github.com/configu/configu/blob/main/packages/ts/src/ConfigSet.ts#L6)
+
+---
+
+### `abstract` ConfigStore
+
+A storage engine interface for `Config`s records.
+https://configu.com/docs/config-store/
+
+#### Extended by
+
+- [`NoopConfigStore`](/interfaces/sdk/ts/globals#noopconfigstore)
+- [`InMemoryConfigStore`](/interfaces/sdk/ts/globals#inmemoryconfigstore)
+- [`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore)
+- [`ConfiguConfigStore`](/interfaces/sdk/ts/globals#configuconfigstore)
+
+#### Implements
+
+- [`IConfigStore`](/interfaces/sdk/ts/globals#iconfigstore)
+
+#### Constructors
+
+##### new ConfigStore()
+
+> **new ConfigStore**(`type`): [`ConfigStore`](/interfaces/sdk/ts/globals#configstore)
+
+###### Parameters
+
+• **type**: `string`
+
+###### Returns
+
+[`ConfigStore`](/interfaces/sdk/ts/globals#configstore)
+
+###### Source
+
+[packages/ts/src/ConfigStore.ts:4](https://github.com/configu/configu/blob/main/packages/ts/src/ConfigStore.ts#L4)
+
+#### Properties
+
+##### type
+
+> `readonly` **type**: `string`
+
+###### Implementation of
+
+[`IConfigStore`](/interfaces/sdk/ts/globals#iconfigstore).[`type`](/interfaces/sdk/ts/globals#type-7)
+
+###### Source
+
+[packages/ts/src/ConfigStore.ts:4](https://github.com/configu/configu/blob/main/packages/ts/src/ConfigStore.ts#L4)
+
+#### Methods
+
+##### get()
+
+> `abstract` **get**(`queries`): `Promise`\<[`Config`](/interfaces/sdk/ts/globals#config)[]\>
+
+###### Parameters
+
+• **queries**: [`ConfigStoreQuery`](/interfaces/sdk/ts/globals#configstorequery)[]
+
+###### Returns
+
+`Promise`\<[`Config`](/interfaces/sdk/ts/globals#config)[]\>
+
+###### Source
+
+[packages/ts/src/ConfigStore.ts:7](https://github.com/configu/configu/blob/main/packages/ts/src/ConfigStore.ts#L7)
+
+##### init()
+
+> **init**(): `Promise`\<`void`\>
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Source
+
+[packages/ts/src/ConfigStore.ts:6](https://github.com/configu/configu/blob/main/packages/ts/src/ConfigStore.ts#L6)
+
+##### set()
+
+> `abstract` **set**(`configs`): `Promise`\<`void`\>
+
+###### Parameters
+
+• **configs**: [`Config`](/interfaces/sdk/ts/globals#config)[]
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Source
+
+[packages/ts/src/ConfigStore.ts:8](https://github.com/configu/configu/blob/main/packages/ts/src/ConfigStore.ts#L8)
+
+---
+
+### ConfigStoreError
+
+#### Extends
+
+- [`ConfigError`](/interfaces/sdk/ts/globals#configerror)
+
+#### Constructors
+
+##### new ConfigStoreError()
+
+> **new ConfigStoreError**(`reason`, `hint`, `scope`): [`ConfigStoreError`](/interfaces/sdk/ts/globals#configstoreerror)
+
+###### Parameters
+
+• **reason**: `string`
+
+• **hint**: `string`= `''`
+
+• **scope**: [`string`, `string`][]= `[]`
+
+###### Returns
+
+[`ConfigStoreError`](/interfaces/sdk/ts/globals#configstoreerror)
+
+###### Inherited from
+
+[`ConfigError`](/interfaces/sdk/ts/globals#configerror).[`constructor`](/interfaces/sdk/ts/globals#constructors-1)
+
+###### Source
+
+[packages/ts/src/utils.ts:8](https://github.com/configu/configu/blob/main/packages/ts/src/utils.ts#L8)
+
+#### Properties
+
+##### hint
+
+> `protected` `readonly` **hint**: `string` = `''`
+
+###### Inherited from
+
+[`ConfigError`](/interfaces/sdk/ts/globals#configerror).[`hint`](/interfaces/sdk/ts/globals#hint)
+
+###### Source
+
+[packages/ts/src/utils.ts:10](https://github.com/configu/configu/blob/main/packages/ts/src/utils.ts#L10)
+
+##### reason
+
+> `protected` `readonly` **reason**: `string`
+
+###### Inherited from
+
+[`ConfigError`](/interfaces/sdk/ts/globals#configerror).[`reason`](/interfaces/sdk/ts/globals#reason)
+
+###### Source
+
+[packages/ts/src/utils.ts:9](https://github.com/configu/configu/blob/main/packages/ts/src/utils.ts#L9)
+
+##### scope
+
+> `protected` `readonly` **scope**: [`string`, `string`][] = `[]`
+
+###### Inherited from
+
+[`ConfigError`](/interfaces/sdk/ts/globals#configerror).[`scope`](/interfaces/sdk/ts/globals#scope)
+
+###### Source
+
+[packages/ts/src/utils.ts:11](https://github.com/configu/configu/blob/main/packages/ts/src/utils.ts#L11)
+
+#### Methods
+
+##### appendScope()
+
+> **appendScope**(`scope`): [`ConfigError`](/interfaces/sdk/ts/globals#configerror)
+
+###### Parameters
+
+• **scope**: [`string`, `string`][]
+
+###### Returns
+
+[`ConfigError`](/interfaces/sdk/ts/globals#configerror)
+
+###### Inherited from
+
+[`ConfigError`](/interfaces/sdk/ts/globals#configerror).[`appendScope`](/interfaces/sdk/ts/globals#appendscope)
+
+###### Source
+
+[packages/ts/src/utils.ts:32](https://github.com/configu/configu/blob/main/packages/ts/src/utils.ts#L32)
+
+##### setHint()
+
+> **setHint**(`hint`): [`ConfigError`](/interfaces/sdk/ts/globals#configerror)
+
+###### Parameters
+
+• **hint**: `string`
+
+###### Returns
+
+[`ConfigError`](/interfaces/sdk/ts/globals#configerror)
+
+###### Inherited from
+
+[`ConfigError`](/interfaces/sdk/ts/globals#configerror).[`setHint`](/interfaces/sdk/ts/globals#sethint)
+
+###### Source
+
+[packages/ts/src/utils.ts:28](https://github.com/configu/configu/blob/main/packages/ts/src/utils.ts#L28)
+
+##### setReason()
+
+> **setReason**(`reason`): [`ConfigError`](/interfaces/sdk/ts/globals#configerror)
+
+###### Parameters
+
+• **reason**: `string`
+
+###### Returns
+
+[`ConfigError`](/interfaces/sdk/ts/globals#configerror)
+
+###### Inherited from
+
+[`ConfigError`](/interfaces/sdk/ts/globals#configerror).[`setReason`](/interfaces/sdk/ts/globals#setreason)
+
+###### Source
+
+[packages/ts/src/utils.ts:24](https://github.com/configu/configu/blob/main/packages/ts/src/utils.ts#L24)
+
+---
+
+### ConfiguConfigStore
+
+A storage engine interface for `Config`s records.
+https://configu.com/docs/config-store/
+
+#### Extends
+
+- [`ConfigStore`](/interfaces/sdk/ts/globals#configstore)
+
+#### Constructors
+
+##### new ConfiguConfigStore()
+
+> **new ConfiguConfigStore**(`__namedParameters`): [`ConfiguConfigStore`](/interfaces/sdk/ts/globals#configuconfigstore)
+
+###### Parameters
+
+• **\_\_namedParameters**: [`ConfiguConfigStoreConfiguration`](/interfaces/sdk/ts/globals#configuconfigstoreconfiguration)
+
+###### Returns
+
+[`ConfiguConfigStore`](/interfaces/sdk/ts/globals#configuconfigstore)
+
+###### Overrides
+
+[`ConfigStore`](/interfaces/sdk/ts/globals#configstore).[`constructor`](/interfaces/sdk/ts/globals#constructors-4)
+
+###### Source
+
+[packages/ts/src/stores/Configu.ts:27](https://github.com/configu/configu/blob/main/packages/ts/src/stores/Configu.ts#L27)
+
+#### Properties
+
+##### tag?
+
+> `optional` **tag**: `string`
+
+###### Source
+
+[packages/ts/src/stores/Configu.ts:26](https://github.com/configu/configu/blob/main/packages/ts/src/stores/Configu.ts#L26)
+
+##### type
+
+> `readonly` **type**: `string`
+
+###### Inherited from
+
+[`ConfigStore`](/interfaces/sdk/ts/globals#configstore).[`type`](/interfaces/sdk/ts/globals#type-1)
+
+###### Source
+
+[packages/ts/src/ConfigStore.ts:4](https://github.com/configu/configu/blob/main/packages/ts/src/ConfigStore.ts#L4)
+
+#### Methods
+
+##### get()
+
+> **get**(`queries`): `Promise`\<[`Config`](/interfaces/sdk/ts/globals#config)[]\>
+
+###### Parameters
+
+• **queries**: [`ConfigStoreQuery`](/interfaces/sdk/ts/globals#configstorequery)[]
+
+###### Returns
+
+`Promise`\<[`Config`](/interfaces/sdk/ts/globals#config)[]\>
+
+###### Overrides
+
+[`ConfigStore`](/interfaces/sdk/ts/globals#configstore).[`get`](/interfaces/sdk/ts/globals#get)
+
+###### Source
+
+[packages/ts/src/stores/Configu.ts:53](https://github.com/configu/configu/blob/main/packages/ts/src/stores/Configu.ts#L53)
+
+##### init()
+
+> **init**(): `Promise`\<`void`\>
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Inherited from
+
+[`ConfigStore`](/interfaces/sdk/ts/globals#configstore).[`init`](/interfaces/sdk/ts/globals#init)
+
+###### Source
+
+[packages/ts/src/ConfigStore.ts:6](https://github.com/configu/configu/blob/main/packages/ts/src/ConfigStore.ts#L6)
+
+##### set()
+
+> **set**(`configs`): `Promise`\<`void`\>
+
+###### Parameters
+
+• **configs**: [`Config`](/interfaces/sdk/ts/globals#config)[]
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Overrides
+
+[`ConfigStore`](/interfaces/sdk/ts/globals#configstore).[`set`](/interfaces/sdk/ts/globals#set)
+
+###### Source
+
+[packages/ts/src/stores/Configu.ts:58](https://github.com/configu/configu/blob/main/packages/ts/src/stores/Configu.ts#L58)
+
+---
+
+### ConfiguConfigStoreApprovalQueueError
+
+#### Extends
+
+- `Error`
+
+#### Constructors
+
+##### new ConfiguConfigStoreApprovalQueueError()
+
+> **new ConfiguConfigStoreApprovalQueueError**(`protectedSet`, `queueUrl`): [`ConfiguConfigStoreApprovalQueueError`](/interfaces/sdk/ts/globals#configuconfigstoreapprovalqueueerror)
+
+###### Parameters
+
+• **protectedSet**: `string`
+
+• **queueUrl**: `string`
+
+###### Returns
+
+[`ConfiguConfigStoreApprovalQueueError`](/interfaces/sdk/ts/globals#configuconfigstoreapprovalqueueerror)
+
+###### Overrides
+
+`Error.constructor`
+
+###### Source
+
+[packages/ts/src/stores/Configu.ts:15](https://github.com/configu/configu/blob/main/packages/ts/src/stores/Configu.ts#L15)
+
+#### Properties
+
+##### queueUrl
+
+> `readonly` **queueUrl**: `string`
+
+###### Source
+
+[packages/ts/src/stores/Configu.ts:14](https://github.com/configu/configu/blob/main/packages/ts/src/stores/Configu.ts#L14)
+
+---
+
+### Convert
+
+#### Constructors
+
+##### new Convert()
+
+> **new Convert**(): [`Convert`](/interfaces/sdk/ts/globals#convert)
+
+###### Returns
+
+[`Convert`](/interfaces/sdk/ts/globals#convert)
+
+#### Methods
+
+##### cfguToJson()
+
+> `static` **cfguToJson**(`value`): `string`
+
+###### Parameters
+
+• **value**: [`Cfgu`](/interfaces/sdk/ts/globals#cfgu-1)
+
+###### Returns
+
+`string`
+
+###### Source
+
+[packages/ts/src/types/generated.ts:158](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L158)
+
+##### cfguTypeToJson()
+
+> `static` **cfguTypeToJson**(`value`): `string`
+
+###### Parameters
+
+• **value**: [`CfguType`](/interfaces/sdk/ts/globals#cfgutype)
+
+###### Returns
+
+`string`
+
+###### Source
+
+[packages/ts/src/types/generated.ts:150](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L150)
+
+##### configSchemaContentsToJson()
+
+> `static` **configSchemaContentsToJson**(`value`): `string`
+
+###### Parameters
+
+• **value**
+
+###### Returns
+
+`string`
+
+###### Source
+
+[packages/ts/src/types/generated.ts:182](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L182)
+
+##### configSchemaContentsValueToJson()
+
+> `static` **configSchemaContentsValueToJson**(`value`): `string`
+
+###### Parameters
+
+• **value**: `ConfigSchemaContents`
+
+###### Returns
+
+`string`
+
+###### Source
+
+[packages/ts/src/types/generated.ts:174](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L174)
+
+##### configSchemaToJson()
+
+> `static` **configSchemaToJson**(`value`): `string`
+
+###### Parameters
+
+• **value**: [`IConfigSchema`](/interfaces/sdk/ts/globals#iconfigschema)
+
+###### Returns
+
+`string`
+
+###### Source
+
+[packages/ts/src/types/generated.ts:190](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L190)
+
+##### configSetToJson()
+
+> `static` **configSetToJson**(`value`): `string`
+
+###### Parameters
+
+• **value**: [`IConfigSet`](/interfaces/sdk/ts/globals#iconfigset)
+
+###### Returns
+
+`string`
+
+###### Source
+
+[packages/ts/src/types/generated.ts:198](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L198)
+
+##### configStoreContentsElementToJson()
+
+> `static` **configStoreContentsElementToJson**(`value`): `string`
+
+###### Parameters
+
+• **value**: `ConfigStoreContents`
+
+###### Returns
+
+`string`
+
+###### Source
+
+[packages/ts/src/types/generated.ts:214](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L214)
+
+##### configStoreContentsToJson()
+
+> `static` **configStoreContentsToJson**(`value`): `string`
+
+###### Parameters
+
+• **value**: `ConfigStoreContents`[]
+
+###### Returns
+
+`string`
+
+###### Source
+
+[packages/ts/src/types/generated.ts:222](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L222)
+
+##### configStoreQueryToJson()
+
+> `static` **configStoreQueryToJson**(`value`): `string`
+
+###### Parameters
+
+• **value**: [`ConfigStoreQuery`](/interfaces/sdk/ts/globals#configstorequery)
+
+###### Returns
+
+`string`
+
+###### Source
+
+[packages/ts/src/types/generated.ts:206](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L206)
+
+##### configStoreToJson()
+
+> `static` **configStoreToJson**(`value`): `string`
+
+###### Parameters
+
+• **value**: [`IConfigStore`](/interfaces/sdk/ts/globals#iconfigstore)
+
+###### Returns
+
+`string`
+
+###### Source
+
+[packages/ts/src/types/generated.ts:230](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L230)
+
+##### configToJson()
+
+> `static` **configToJson**(`value`): `string`
+
+###### Parameters
+
+• **value**: [`Config`](/interfaces/sdk/ts/globals#config)
+
+###### Returns
+
+`string`
+
+###### Source
+
+[packages/ts/src/types/generated.ts:166](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L166)
+
+##### toCfgu()
+
+> `static` **toCfgu**(`json`): [`Cfgu`](/interfaces/sdk/ts/globals#cfgu-1)
+
+###### Parameters
+
+• **json**: `string`
+
+###### Returns
+
+[`Cfgu`](/interfaces/sdk/ts/globals#cfgu-1)
+
+###### Source
+
+[packages/ts/src/types/generated.ts:154](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L154)
+
+##### toCfguType()
+
+> `static` **toCfguType**(`json`): [`CfguType`](/interfaces/sdk/ts/globals#cfgutype)
+
+###### Parameters
+
+• **json**: `string`
+
+###### Returns
+
+[`CfguType`](/interfaces/sdk/ts/globals#cfgutype)
+
+###### Source
+
+[packages/ts/src/types/generated.ts:146](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L146)
+
+##### toConfig()
+
+> `static` **toConfig**(`json`): [`Config`](/interfaces/sdk/ts/globals#config)
+
+###### Parameters
+
+• **json**: `string`
+
+###### Returns
+
+[`Config`](/interfaces/sdk/ts/globals#config)
+
+###### Source
+
+[packages/ts/src/types/generated.ts:162](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L162)
+
+##### toConfigSchema()
+
+> `static` **toConfigSchema**(`json`): [`IConfigSchema`](/interfaces/sdk/ts/globals#iconfigschema)
+
+###### Parameters
+
+• **json**: `string`
+
+###### Returns
+
+[`IConfigSchema`](/interfaces/sdk/ts/globals#iconfigschema)
+
+###### Source
+
+[packages/ts/src/types/generated.ts:186](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L186)
+
+##### toConfigSchemaContents()
+
+> `static` **toConfigSchemaContents**(`json`): `object`
+
+###### Parameters
+
+• **json**: `string`
+
+###### Returns
+
+`object`
+
+###### Source
+
+[packages/ts/src/types/generated.ts:178](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L178)
+
+##### toConfigSchemaContentsValue()
+
+> `static` **toConfigSchemaContentsValue**(`json`): `ConfigSchemaContents`
+
+###### Parameters
+
+• **json**: `string`
+
+###### Returns
+
+`ConfigSchemaContents`
+
+###### Source
+
+[packages/ts/src/types/generated.ts:170](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L170)
+
+##### toConfigSet()
+
+> `static` **toConfigSet**(`json`): [`IConfigSet`](/interfaces/sdk/ts/globals#iconfigset)
+
+###### Parameters
+
+• **json**: `string`
+
+###### Returns
+
+[`IConfigSet`](/interfaces/sdk/ts/globals#iconfigset)
+
+###### Source
+
+[packages/ts/src/types/generated.ts:194](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L194)
+
+##### toConfigStore()
+
+> `static` **toConfigStore**(`json`): [`IConfigStore`](/interfaces/sdk/ts/globals#iconfigstore)
+
+###### Parameters
+
+• **json**: `string`
+
+###### Returns
+
+[`IConfigStore`](/interfaces/sdk/ts/globals#iconfigstore)
+
+###### Source
+
+[packages/ts/src/types/generated.ts:226](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L226)
+
+##### toConfigStoreContents()
+
+> `static` **toConfigStoreContents**(`json`): `ConfigStoreContents`[]
+
+###### Parameters
+
+• **json**: `string`
+
+###### Returns
+
+`ConfigStoreContents`[]
+
+###### Source
+
+[packages/ts/src/types/generated.ts:218](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L218)
+
+##### toConfigStoreContentsElement()
+
+> `static` **toConfigStoreContentsElement**(`json`): `ConfigStoreContents`
+
+###### Parameters
+
+• **json**: `string`
+
+###### Returns
+
+`ConfigStoreContents`
+
+###### Source
+
+[packages/ts/src/types/generated.ts:210](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L210)
+
+##### toConfigStoreQuery()
+
+> `static` **toConfigStoreQuery**(`json`): [`ConfigStoreQuery`](/interfaces/sdk/ts/globals#configstorequery)
+
+###### Parameters
+
+• **json**: `string`
+
+###### Returns
+
+[`ConfigStoreQuery`](/interfaces/sdk/ts/globals#configstorequery)
+
+###### Source
+
+[packages/ts/src/types/generated.ts:202](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L202)
+
+---
+
+### DeleteCommand
+
+#### Extends
+
+- [`Command`](/interfaces/sdk/ts/globals#commandt)\<`void`\>
+
+#### Constructors
+
+##### new DeleteCommand()
+
+> **new DeleteCommand**(`parameters`): [`DeleteCommand`](/interfaces/sdk/ts/globals#deletecommand)
+
+###### Parameters
+
+• **parameters**: [`DeleteCommandParameters`](/interfaces/sdk/ts/globals#deletecommandparameters)
+
+###### Returns
+
+[`DeleteCommand`](/interfaces/sdk/ts/globals#deletecommand)
+
+###### Overrides
+
+[`Command`](/interfaces/sdk/ts/globals#commandt).[`constructor`](/interfaces/sdk/ts/globals#constructors)
+
+###### Source
+
+[packages/ts/src/commands/DeleteCommand.ts:15](https://github.com/configu/configu/blob/main/packages/ts/src/commands/DeleteCommand.ts#L15)
+
+#### Properties
+
+##### parameters
+
+> **parameters**: [`DeleteCommandParameters`](/interfaces/sdk/ts/globals#deletecommandparameters)
+
+###### Inherited from
+
+[`Command`](/interfaces/sdk/ts/globals#commandt).[`parameters`](/interfaces/sdk/ts/globals#parameters)
+
+###### Source
+
+[packages/ts/src/commands/DeleteCommand.ts:15](https://github.com/configu/configu/blob/main/packages/ts/src/commands/DeleteCommand.ts#L15)
+
+#### Methods
+
+##### run()
+
+> **run**(): `Promise`\<`void`\>
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Overrides
+
+[`Command`](/interfaces/sdk/ts/globals#commandt).[`run`](/interfaces/sdk/ts/globals#run)
+
+###### Source
+
+[packages/ts/src/commands/DeleteCommand.ts:19](https://github.com/configu/configu/blob/main/packages/ts/src/commands/DeleteCommand.ts#L19)
+
+---
+
+### EvalCommand
+
+#### Extends
+
+- [`Command`](/interfaces/sdk/ts/globals#commandt)\<[`EvalCommandReturn`](/interfaces/sdk/ts/globals#evalcommandreturn)\>
+
+#### Constructors
+
+##### new EvalCommand()
+
+> **new EvalCommand**(`parameters`): [`EvalCommand`](/interfaces/sdk/ts/globals#evalcommand)
+
+###### Parameters
+
+• **parameters**: [`EvalCommandParameters`](/interfaces/sdk/ts/globals#evalcommandparameters)
+
+###### Returns
+
+[`EvalCommand`](/interfaces/sdk/ts/globals#evalcommand)
+
+###### Overrides
+
+[`Command`](/interfaces/sdk/ts/globals#commandt).[`constructor`](/interfaces/sdk/ts/globals#constructors)
+
+###### Source
+
+[packages/ts/src/commands/EvalCommand.ts:34](https://github.com/configu/configu/blob/main/packages/ts/src/commands/EvalCommand.ts#L34)
+
+#### Properties
+
+##### parameters
+
+> **parameters**: [`EvalCommandParameters`](/interfaces/sdk/ts/globals#evalcommandparameters)
+
+###### Inherited from
+
+[`Command`](/interfaces/sdk/ts/globals#commandt).[`parameters`](/interfaces/sdk/ts/globals#parameters)
+
+###### Source
+
+[packages/ts/src/commands/EvalCommand.ts:34](https://github.com/configu/configu/blob/main/packages/ts/src/commands/EvalCommand.ts#L34)
+
+#### Methods
+
+##### run()
+
+> **run**(): `Promise`\<`object`\>
+
+###### Returns
+
+`Promise`\<`object`\>
+
+###### Overrides
+
+[`Command`](/interfaces/sdk/ts/globals#commandt).[`run`](/interfaces/sdk/ts/globals#run)
+
+###### Source
+
+[packages/ts/src/commands/EvalCommand.ts:270](https://github.com/configu/configu/blob/main/packages/ts/src/commands/EvalCommand.ts#L270)
+
+---
+
+### ExportCommand
+
+#### Extends
+
+- [`Command`](/interfaces/sdk/ts/globals#commandt)\<[`ExportCommandReturn`](/interfaces/sdk/ts/globals#exportcommandreturn)\>
+
+#### Extended by
+
+#### Constructors
+
+##### new ExportCommand()
+
+> **new ExportCommand**(`parameters`): [`ExportCommand`](/interfaces/sdk/ts/globals#exportcommand)
+
+###### Parameters
+
+• **parameters**: [`ExportCommandParameters`](/interfaces/sdk/ts/globals#exportcommandparameters)
+
+###### Returns
+
+[`ExportCommand`](/interfaces/sdk/ts/globals#exportcommand)
+
+###### Overrides
+
+[`Command`](/interfaces/sdk/ts/globals#commandt).[`constructor`](/interfaces/sdk/ts/globals#constructors)
+
+###### Source
+
+[packages/ts/src/commands/ExportCommand.ts:17](https://github.com/configu/configu/blob/main/packages/ts/src/commands/ExportCommand.ts#L17)
+
+#### Properties
+
+##### parameters
+
+> **parameters**: [`ExportCommandParameters`](/interfaces/sdk/ts/globals#exportcommandparameters)
+
+###### Inherited from
+
+[`Command`](/interfaces/sdk/ts/globals#commandt).[`parameters`](/interfaces/sdk/ts/globals#parameters)
+
+###### Source
+
+[packages/ts/src/commands/ExportCommand.ts:17](https://github.com/configu/configu/blob/main/packages/ts/src/commands/ExportCommand.ts#L17)
+
+#### Methods
+
+##### run()
+
+> **run**(): `Promise`\<`object`\>
+
+###### Returns
+
+`Promise`\<`object`\>
+
+###### Overrides
+
+[`Command`](/interfaces/sdk/ts/globals#commandt).[`run`](/interfaces/sdk/ts/globals#run)
+
+###### Source
+
+[packages/ts/src/commands/ExportCommand.ts:49](https://github.com/configu/configu/blob/main/packages/ts/src/commands/ExportCommand.ts#L49)
+
+---
+
+### InMemoryConfigStore
+
+A storage engine interface for `Config`s records.
+https://configu.com/docs/config-store/
+
+#### Extends
+
+- [`ConfigStore`](/interfaces/sdk/ts/globals#configstore)
+
+#### Constructors
+
+##### new InMemoryConfigStore()
+
+> **new InMemoryConfigStore**(): [`InMemoryConfigStore`](/interfaces/sdk/ts/globals#inmemoryconfigstore)
+
+###### Returns
+
+[`InMemoryConfigStore`](/interfaces/sdk/ts/globals#inmemoryconfigstore)
+
+###### Overrides
+
+[`ConfigStore`](/interfaces/sdk/ts/globals#configstore).[`constructor`](/interfaces/sdk/ts/globals#constructors-4)
+
+###### Source
+
+[packages/ts/src/stores/InMemory.ts:8](https://github.com/configu/configu/blob/main/packages/ts/src/stores/InMemory.ts#L8)
+
+#### Properties
+
+##### type
+
+> `readonly` **type**: `string`
+
+###### Inherited from
+
+[`ConfigStore`](/interfaces/sdk/ts/globals#configstore).[`type`](/interfaces/sdk/ts/globals#type-1)
+
+###### Source
+
+[packages/ts/src/ConfigStore.ts:4](https://github.com/configu/configu/blob/main/packages/ts/src/ConfigStore.ts#L4)
+
+#### Methods
+
+##### get()
+
+> **get**(`queries`): `Promise`\<[`Config`](/interfaces/sdk/ts/globals#config)[]\>
+
+###### Parameters
+
+• **queries**: [`ConfigStoreQuery`](/interfaces/sdk/ts/globals#configstorequery)[]
+
+###### Returns
+
+`Promise`\<[`Config`](/interfaces/sdk/ts/globals#config)[]\>
+
+###### Overrides
+
+[`ConfigStore`](/interfaces/sdk/ts/globals#configstore).[`get`](/interfaces/sdk/ts/globals#get)
+
+###### Source
+
+[packages/ts/src/stores/InMemory.ts:12](https://github.com/configu/configu/blob/main/packages/ts/src/stores/InMemory.ts#L12)
+
+##### init()
+
+> **init**(): `Promise`\<`void`\>
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Inherited from
+
+[`ConfigStore`](/interfaces/sdk/ts/globals#configstore).[`init`](/interfaces/sdk/ts/globals#init)
+
+###### Source
+
+[packages/ts/src/ConfigStore.ts:6](https://github.com/configu/configu/blob/main/packages/ts/src/ConfigStore.ts#L6)
+
+##### set()
+
+> **set**(`configs`): `Promise`\<`void`\>
+
+###### Parameters
+
+• **configs**: [`Config`](/interfaces/sdk/ts/globals#config)[]
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Overrides
+
+[`ConfigStore`](/interfaces/sdk/ts/globals#configstore).[`set`](/interfaces/sdk/ts/globals#set)
+
+###### Source
+
+[packages/ts/src/stores/InMemory.ts:20](https://github.com/configu/configu/blob/main/packages/ts/src/stores/InMemory.ts#L20)
+
+---
+
+### `abstract` KeyValueConfigStore
+
+A storage engine interface for `Config`s records.
+https://configu.com/docs/config-store/
+
+#### Extends
+
+- [`ConfigStore`](/interfaces/sdk/ts/globals#configstore)
+
+#### Extended by
+
+#### Constructors
+
+##### new KeyValueConfigStore()
+
+> **new KeyValueConfigStore**(`type`): [`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore)
+
+###### Parameters
+
+• **type**: `string`
+
+###### Returns
+
+[`KeyValueConfigStore`](/interfaces/sdk/ts/globals#keyvalueconfigstore)
+
+###### Overrides
+
+[`ConfigStore`](/interfaces/sdk/ts/globals#configstore).[`constructor`](/interfaces/sdk/ts/globals#constructors-4)
+
+###### Source
+
+[packages/ts/src/stores/KeyValue.ts:6](https://github.com/configu/configu/blob/main/packages/ts/src/stores/KeyValue.ts#L6)
+
+#### Properties
+
+##### type
+
+> `readonly` **type**: `string`
+
+###### Inherited from
+
+[`ConfigStore`](/interfaces/sdk/ts/globals#configstore).[`type`](/interfaces/sdk/ts/globals#type-1)
+
+###### Source
+
+[packages/ts/src/ConfigStore.ts:4](https://github.com/configu/configu/blob/main/packages/ts/src/ConfigStore.ts#L4)
+
+#### Methods
+
+##### delete()
+
+> `protected` `abstract` **delete**(`key`): `Promise`\<`void`\>
+
+###### Parameters
+
+• **key**: `string`
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Source
+
+[packages/ts/src/stores/KeyValue.ts:14](https://github.com/configu/configu/blob/main/packages/ts/src/stores/KeyValue.ts#L14)
+
+##### get()
+
+> **get**(`queries`): `Promise`\<[`Config`](/interfaces/sdk/ts/globals#config)[]\>
+
+###### Parameters
+
+• **queries**: [`ConfigStoreQuery`](/interfaces/sdk/ts/globals#configstorequery)[]
+
+###### Returns
+
+`Promise`\<[`Config`](/interfaces/sdk/ts/globals#config)[]\>
+
+###### Overrides
+
+[`ConfigStore`](/interfaces/sdk/ts/globals#configstore).[`get`](/interfaces/sdk/ts/globals#get)
+
+###### Source
+
+[packages/ts/src/stores/KeyValue.ts:40](https://github.com/configu/configu/blob/main/packages/ts/src/stores/KeyValue.ts#L40)
+
+##### getByKey()
+
+> `protected` `abstract` **getByKey**(`key`): `Promise`\<`string`\>
+
+###### Parameters
+
+• **key**: `string`
+
+###### Returns
+
+`Promise`\<`string`\>
+
+###### Source
+
+[packages/ts/src/stores/KeyValue.ts:10](https://github.com/configu/configu/blob/main/packages/ts/src/stores/KeyValue.ts#L10)
+
+##### init()
+
+> **init**(): `Promise`\<`void`\>
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Inherited from
+
+[`ConfigStore`](/interfaces/sdk/ts/globals#configstore).[`init`](/interfaces/sdk/ts/globals#init)
+
+###### Source
+
+[packages/ts/src/ConfigStore.ts:6](https://github.com/configu/configu/blob/main/packages/ts/src/ConfigStore.ts#L6)
+
+##### set()
+
+> **set**(`configs`): `Promise`\<`void`\>
+
+###### Parameters
+
+• **configs**: [`Config`](/interfaces/sdk/ts/globals#config)[]
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Overrides
+
+[`ConfigStore`](/interfaces/sdk/ts/globals#configstore).[`set`](/interfaces/sdk/ts/globals#set)
+
+###### Source
+
+[packages/ts/src/stores/KeyValue.ts:82](https://github.com/configu/configu/blob/main/packages/ts/src/stores/KeyValue.ts#L82)
+
+##### upsert()
+
+> `protected` `abstract` **upsert**(`key`, `value`): `Promise`\<`void`\>
+
+###### Parameters
+
+• **key**: `string`
+
+• **value**: `string`
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Source
+
+[packages/ts/src/stores/KeyValue.ts:12](https://github.com/configu/configu/blob/main/packages/ts/src/stores/KeyValue.ts#L12)
+
+---
+
+### NoopConfigStore
+
+A storage engine interface for `Config`s records.
+https://configu.com/docs/config-store/
+
+#### Extends
+
+- [`ConfigStore`](/interfaces/sdk/ts/globals#configstore)
+
+#### Constructors
+
+##### new NoopConfigStore()
+
+> **new NoopConfigStore**(): [`NoopConfigStore`](/interfaces/sdk/ts/globals#noopconfigstore)
+
+###### Returns
+
+[`NoopConfigStore`](/interfaces/sdk/ts/globals#noopconfigstore)
+
+###### Overrides
+
+[`ConfigStore`](/interfaces/sdk/ts/globals#configstore).[`constructor`](/interfaces/sdk/ts/globals#constructors-4)
+
+###### Source
+
+[packages/ts/src/stores/Noop.ts:5](https://github.com/configu/configu/blob/main/packages/ts/src/stores/Noop.ts#L5)
+
+#### Properties
+
+##### type
+
+> `readonly` **type**: `string`
+
+###### Inherited from
+
+[`ConfigStore`](/interfaces/sdk/ts/globals#configstore).[`type`](/interfaces/sdk/ts/globals#type-1)
+
+###### Source
+
+[packages/ts/src/ConfigStore.ts:4](https://github.com/configu/configu/blob/main/packages/ts/src/ConfigStore.ts#L4)
+
+#### Methods
+
+##### get()
+
+> **get**(`queries`): `Promise`\<[`Config`](/interfaces/sdk/ts/globals#config)[]\>
+
+###### Parameters
+
+• **queries**: [`ConfigStoreQuery`](/interfaces/sdk/ts/globals#configstorequery)[]
+
+###### Returns
+
+`Promise`\<[`Config`](/interfaces/sdk/ts/globals#config)[]\>
+
+###### Overrides
+
+[`ConfigStore`](/interfaces/sdk/ts/globals#configstore).[`get`](/interfaces/sdk/ts/globals#get)
+
+###### Source
+
+[packages/ts/src/stores/Noop.ts:9](https://github.com/configu/configu/blob/main/packages/ts/src/stores/Noop.ts#L9)
+
+##### init()
+
+> **init**(): `Promise`\<`void`\>
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Inherited from
+
+[`ConfigStore`](/interfaces/sdk/ts/globals#configstore).[`init`](/interfaces/sdk/ts/globals#init)
+
+###### Source
+
+[packages/ts/src/ConfigStore.ts:6](https://github.com/configu/configu/blob/main/packages/ts/src/ConfigStore.ts#L6)
+
+##### set()
+
+> **set**(`configs`): `Promise`\<`void`\>
+
+###### Parameters
+
+• **configs**: [`Config`](/interfaces/sdk/ts/globals#config)[]
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Overrides
+
+[`ConfigStore`](/interfaces/sdk/ts/globals#configstore).[`set`](/interfaces/sdk/ts/globals#set)
+
+###### Source
+
+[packages/ts/src/stores/Noop.ts:13](https://github.com/configu/configu/blob/main/packages/ts/src/stores/Noop.ts#L13)
+
+---
+
+### TestCommand
+
+#### Extends
+
+- [`Command`](/interfaces/sdk/ts/globals#commandt)\<`void`\>
+
+#### Constructors
+
+##### new TestCommand()
+
+> **new TestCommand**(`parameters`): [`TestCommand`](/interfaces/sdk/ts/globals#testcommand)
+
+###### Parameters
+
+• **parameters**: [`TestCommandParameters`](/interfaces/sdk/ts/globals#testcommandparameters)
+
+###### Returns
+
+[`TestCommand`](/interfaces/sdk/ts/globals#testcommand)
+
+###### Overrides
+
+[`Command`](/interfaces/sdk/ts/globals#commandt).[`constructor`](/interfaces/sdk/ts/globals#constructors)
+
+###### Source
+
+[packages/ts/src/commands/TestCommand.ts:13](https://github.com/configu/configu/blob/main/packages/ts/src/commands/TestCommand.ts#L13)
+
+#### Properties
+
+##### parameters
+
+> **parameters**: [`TestCommandParameters`](/interfaces/sdk/ts/globals#testcommandparameters)
+
+###### Inherited from
+
+[`Command`](/interfaces/sdk/ts/globals#commandt).[`parameters`](/interfaces/sdk/ts/globals#parameters)
+
+###### Source
+
+[packages/ts/src/commands/TestCommand.ts:13](https://github.com/configu/configu/blob/main/packages/ts/src/commands/TestCommand.ts#L13)
+
+#### Methods
+
+##### run()
+
+> **run**(): `Promise`\<`void`\>
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Overrides
+
+[`Command`](/interfaces/sdk/ts/globals#commandt).[`run`](/interfaces/sdk/ts/globals#run)
+
+###### Source
+
+[packages/ts/src/commands/TestCommand.ts:17](https://github.com/configu/configu/blob/main/packages/ts/src/commands/TestCommand.ts#L17)
+
+---
+
+### UpsertCommand
+
+#### Extends
+
+- [`Command`](/interfaces/sdk/ts/globals#commandt)\<`void`\>
+
+#### Constructors
+
+##### new UpsertCommand()
+
+> **new UpsertCommand**(`parameters`): [`UpsertCommand`](/interfaces/sdk/ts/globals#upsertcommand)
+
+###### Parameters
+
+• **parameters**: [`UpsertCommandParameters`](/interfaces/sdk/ts/globals#upsertcommandparameters)
+
+###### Returns
+
+[`UpsertCommand`](/interfaces/sdk/ts/globals#upsertcommand)
+
+###### Overrides
+
+[`Command`](/interfaces/sdk/ts/globals#commandt).[`constructor`](/interfaces/sdk/ts/globals#constructors)
+
+###### Source
+
+[packages/ts/src/commands/UpsertCommand.ts:19](https://github.com/configu/configu/blob/main/packages/ts/src/commands/UpsertCommand.ts#L19)
+
+#### Properties
+
+##### parameters
+
+> **parameters**: [`UpsertCommandParameters`](/interfaces/sdk/ts/globals#upsertcommandparameters)
+
+###### Inherited from
+
+[`Command`](/interfaces/sdk/ts/globals#commandt).[`parameters`](/interfaces/sdk/ts/globals#parameters)
+
+###### Source
+
+[packages/ts/src/commands/UpsertCommand.ts:19](https://github.com/configu/configu/blob/main/packages/ts/src/commands/UpsertCommand.ts#L19)
+
+#### Methods
+
+##### run()
+
+> **run**(): `Promise`\<`void`\>
+
+###### Returns
+
+`Promise`\<`void`\>
+
+###### Overrides
+
+[`Command`](/interfaces/sdk/ts/globals#commandt).[`run`](/interfaces/sdk/ts/globals#run)
+
+###### Source
+
+[packages/ts/src/commands/UpsertCommand.ts:23](https://github.com/configu/configu/blob/main/packages/ts/src/commands/UpsertCommand.ts#L23)
+
+## Interfaces
+
+### Cfgu
+
+A generic declaration of a `Config`, using properties like type, description and
+constraints.
+https://configu.com/docs/cfgu/
+
+#### Properties
+
+##### default?
+
+> `optional` **default**: `string`
+
+###### Source
+
+[packages/ts/src/types/generated.ts:26](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L26)
+
+##### depends?
+
+> `optional` **depends**: `string`[]
+
+###### Source
+
+[packages/ts/src/types/generated.ts:27](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L27)
+
+##### description?
+
+> `optional` **description**: `string`
+
+###### Source
+
+[packages/ts/src/types/generated.ts:28](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L28)
+
+##### hidden?
+
+> `optional` **hidden**: `boolean`
+
+###### Source
+
+[packages/ts/src/types/generated.ts:29](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L29)
+
+##### labels?
+
+> `optional` **labels**: `string`[]
+
+###### Source
+
+[packages/ts/src/types/generated.ts:30](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L30)
+
+##### lazy?
+
+> `optional` **lazy**: `boolean`
+
+###### Source
+
+[packages/ts/src/types/generated.ts:31](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L31)
+
+##### options?
+
+> `optional` **options**: `string`[]
+
+###### Source
+
+[packages/ts/src/types/generated.ts:32](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L32)
+
+##### pattern?
+
+> `optional` **pattern**: `string`
+
+###### Source
+
+[packages/ts/src/types/generated.ts:33](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L33)
+
+##### required?
+
+> `optional` **required**: `boolean`
+
+###### Source
+
+[packages/ts/src/types/generated.ts:34](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L34)
+
+##### schema?
+
+> `optional` **schema**: `object`
+
+###### Index signature
+
+\[`key`: `string`\]: `any`
+
+###### Source
+
+[packages/ts/src/types/generated.ts:35](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L35)
+
+##### template?
+
+> `optional` **template**: `string`
+
+###### Source
+
+[packages/ts/src/types/generated.ts:36](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L36)
+
+##### type
+
+> **type**: [`CfguType`](/interfaces/sdk/ts/globals#cfgutype)
+
+###### Source
+
+[packages/ts/src/types/generated.ts:37](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L37)
+
+---
+
+### Config
+
+A generic representation of `application configuration` using three properties: `key`,
+`value`, `set`.
+https://configu.com/docs/terminology/#config
+
+#### Properties
+
+##### key
+
+> **key**: `string`
+
+###### Source
+
+[packages/ts/src/types/generated.ts:84](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L84)
+
+##### set
+
+> **set**: `string`
+
+###### Source
+
+[packages/ts/src/types/generated.ts:85](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L85)
+
+##### value
+
+> **value**: `string`
+
+###### Source
+
+[packages/ts/src/types/generated.ts:86](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L86)
+
+---
+
+### ConfigStoreQuery
+
+#### Properties
+
+##### key
+
+> **key**: `string`
+
+###### Source
+
+[packages/ts/src/types/generated.ts:125](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L125)
+
+##### set
+
+> **set**: `string`
+
+###### Source
+
+[packages/ts/src/types/generated.ts:126](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L126)
+
+---
+
+### IConfigSchema
+
+A file containing binding records linking each unique `ConfigKey` to its corresponding
+`Cfgu` declaration.
+https://configu.com/docs/config-schema/
+
+#### Properties
+
+##### contents
+
+> **contents**: `object`
+
+###### Index signature
+
+\[`key`: `string`\]: `ConfigSchemaContents`
+
+###### Source
+
+[packages/ts/src/types/generated.ts:95](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L95)
+
+##### name
+
+> **name**: `string`
+
+###### Source
+
+[packages/ts/src/types/generated.ts:96](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L96)
+
+---
+
+### IConfigSet
+
+A unique, case-sensitive path within a tree-like data structure that groups `Config`s
+contextually.
+https://configu.com/docs/config-set/
+
+#### Properties
+
+##### hierarchy
+
+> **hierarchy**: `string`[]
+
+###### Source
+
+[packages/ts/src/types/generated.ts:120](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L120)
+
+##### path
+
+> **path**: `string`
+
+###### Source
+
+[packages/ts/src/types/generated.ts:121](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L121)
+
+---
+
+### IConfigStore
+
+A storage engine interface for `Config`s records.
+https://configu.com/docs/config-store/
+
+#### Properties
+
+##### type
+
+> **type**: `string`
+
+###### Source
+
+[packages/ts/src/types/generated.ts:140](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L140)
+
+## Type Aliases
+
+### CfguType
+
+> **CfguType**: `"ARN"` \| `"AWSRegion"` \| `"AZRegion"` \| `"AlibabaRegion"` \| `"Base64"` \| `"Boolean"` \| `"Color"` \| `"ConnectionString"` \| `"Country"` \| `"Currency"` \| `"DateTime"` \| `"DockerImage"` \| `"Domain"` \| `"Email"` \| `"GCPRegion"` \| `"Hex"` \| `"IBMRegion"` \| `"IPv4"` \| `"IPv6"` \| `"JSONSchema"` \| `"Language"` \| `"LatLong"` \| `"Locale"` \| `"MACAddress"` \| `"MD5"` \| `"MIMEType"` \| `"MobilePhone"` \| `"MongoId"` \| `"Number"` \| `"OracleRegion"` \| `"RegEx"` \| `"SHA"` \| `"SemVer"` \| `"String"` \| `"URL"` \| `"UUID"`
+
+#### Source
+
+[packages/ts/src/types/generated.ts:40](https://github.com/configu/configu/blob/main/packages/ts/src/types/generated.ts#L40)
+
+---
+
+### ConfiguConfigStoreConfiguration
+
+> **ConfiguConfigStoreConfiguration**: `object`
+
+#### Type declaration
+
+##### credentials
+
+> **credentials**: `object`
+
+##### credentials.org
+
+> **org**: `string`
+
+##### credentials.token
+
+> **token**: `string`
+
+##### endpoint?
+
+> `optional` **endpoint**: `string`
+
+##### source?
+
+> `optional` **source**: `string`
+
+##### tag?
+
+> `optional` **tag**: `string`
+
+#### Source
+
+[packages/ts/src/stores/Configu.ts:6](https://github.com/configu/configu/blob/main/packages/ts/src/stores/Configu.ts#L6)
+
+---
+
+### DeleteCommandParameters
+
+> **DeleteCommandParameters**: `object`
+
+#### Type declaration
+
+##### schema
+
+> **schema**: [`ConfigSchema`](/interfaces/sdk/ts/globals#configschema)
+
+##### set
+
+> **set**: [`ConfigSet`](/interfaces/sdk/ts/globals#configset)
+
+##### store
+
+> **store**: [`ConfigStore`](/interfaces/sdk/ts/globals#configstore)
+
+#### Source
+
+[packages/ts/src/commands/DeleteCommand.ts:8](https://github.com/configu/configu/blob/main/packages/ts/src/commands/DeleteCommand.ts#L8)
+
+---
+
+### EvalCommandParameters
+
+> **EvalCommandParameters**: `object`
+
+#### Type declaration
+
+##### configs?
+
+> `optional` **configs**: `object`
+
+###### Index signature
+
+\[`key`: `string`\]: `string`
+
+##### pipe?
+
+> `optional` **pipe**: [`EvalCommandReturn`](/interfaces/sdk/ts/globals#evalcommandreturn)
+
+##### schema
+
+> **schema**: [`ConfigSchema`](/interfaces/sdk/ts/globals#configschema)
+
+##### set
+
+> **set**: [`ConfigSet`](/interfaces/sdk/ts/globals#configset)
+
+##### store
+
+> **store**: [`ConfigStore`](/interfaces/sdk/ts/globals#configstore)
+
+##### validate?
+
+> `optional` **validate**: `boolean`
+
+#### Source
+
+[packages/ts/src/commands/EvalCommand.ts:24](https://github.com/configu/configu/blob/main/packages/ts/src/commands/EvalCommand.ts#L24)
+
+---
+
+### EvalCommandReturn
+
+> **EvalCommandReturn**: `object`
+
+#### Index signature
+
+\[`key`: `string`\]: `object`
+
+#### Source
+
+[packages/ts/src/commands/EvalCommand.ts:17](https://github.com/configu/configu/blob/main/packages/ts/src/commands/EvalCommand.ts#L17)
+
+---
+
+### ExportCommandParameters
+
+> **ExportCommandParameters**: `object`
+
+#### Type declaration
+
+##### filter()?
+
+> `optional` **filter**: (`{ context, result }`) => `boolean`
+
+###### Parameters
+
+• **\{ context, result \}**: [`EvalCommandReturn`](/interfaces/sdk/ts/globals#evalcommandreturn)\[`"string"`\]
+
+###### Returns
+
+`boolean`
+
+##### keys()?
+
+> `optional` **keys**: (`key`) => `string`
+
+###### Parameters
+
+• **key**: `string`
+
+###### Returns
+
+`string`
+
+##### pipe
+
+> **pipe**: [`EvalCommandReturn`](/interfaces/sdk/ts/globals#evalcommandreturn)
+
+#### Source
+
+[packages/ts/src/commands/ExportCommand.ts:10](https://github.com/configu/configu/blob/main/packages/ts/src/commands/ExportCommand.ts#L10)
+
+---
+
+### ExportCommandReturn
+
+> **ExportCommandReturn**: `object`
+
+#### Index signature
+
+\[`key`: `string`\]: `string`
+
+#### Source
+
+[packages/ts/src/commands/ExportCommand.ts:6](https://github.com/configu/configu/blob/main/packages/ts/src/commands/ExportCommand.ts#L6)
+
+---
+
+### TestCommandParameters
+
+> **TestCommandParameters**: `object`
+
+#### Type declaration
+
+##### clean?
+
+> `optional` **clean**: `boolean`
+
+##### store
+
+> **store**: [`ConfigStore`](/interfaces/sdk/ts/globals#configstore)
+
+#### Source
+
+[packages/ts/src/commands/TestCommand.ts:7](https://github.com/configu/configu/blob/main/packages/ts/src/commands/TestCommand.ts#L7)
+
+---
+
+### UpsertCommandParameters
+
+> **UpsertCommandParameters**: `object`
+
+#### Type declaration
+
+##### configs?
+
+> `optional` **configs**: `object`
+
+###### Index signature
+
+\[`key`: `string`\]: `string`
+
+##### pipe?
+
+> `optional` **pipe**: [`EvalCommandReturn`](/interfaces/sdk/ts/globals#evalcommandreturn)
+
+##### schema
+
+> **schema**: [`ConfigSchema`](/interfaces/sdk/ts/globals#configschema)
+
+##### set
+
+> **set**: [`ConfigSet`](/interfaces/sdk/ts/globals#configset)
+
+##### store
+
+> **store**: [`ConfigStore`](/interfaces/sdk/ts/globals#configstore)
+
+#### Source
+
+[packages/ts/src/commands/UpsertCommand.ts:10](https://github.com/configu/configu/blob/main/packages/ts/src/commands/UpsertCommand.ts#L10)
+
+## Variables
+
+### TMPL
+
+> `const` **TMPL**: `object`
+
+#### Type declaration
+
+##### parse()
+
+> **parse**: (`template`) => `object`[]
+
+###### Parameters
+
+• **template**: `string`
+
+###### Returns
+
+`object`[]
+
+##### render()
+
+> **render**: (`template`, `context`) => `string`
+
+###### Parameters
+
+• **template**: `string`
+
+• **context**: `any`
+
+###### Returns
+
+`string`
+
+#### Source
+
+[packages/ts/src/utils.ts:47](https://github.com/configu/configu/blob/main/packages/ts/src/utils.ts#L47)
+
+---
+
+### bla
+
+> `const` **bla**: `"bla"` = `'bla'`
+
+#### Source
+
+[packages/ts/src/utils.ts:5](https://github.com/configu/configu/blob/main/packages/ts/src/utils.ts#L5)
+
+## Functions
+
+### JSON_SCHEMA()
+
+> **JSON_SCHEMA**(`schema`, `value`): `boolean`
+
+#### Parameters
+
+• **schema**: `SchemaObject`
+
+• **value**: `any`
+
+#### Returns
+
+`boolean`
+
+#### Source
+
+[packages/ts/src/utils.ts:65](https://github.com/configu/configu/blob/main/packages/ts/src/utils.ts#L65)
+
+---
+
+### NAME()
+
+> **NAME**(`name`): `boolean`
+
+#### Parameters
+
+• **name**: `string`
+
+#### Returns
+
+`boolean`
+
+#### Source
+
+[packages/ts/src/utils.ts:43](https://github.com/configu/configu/blob/main/packages/ts/src/utils.ts#L43)
+
+---
+
+### REGEX()
+
+> **REGEX**(`pattern`, `string`): `boolean`
+
+#### Parameters
+
+• **pattern**: `string` \| `RegExp`
+
+• **string**: `string`
+
+#### Returns
+
+`boolean`
+
+#### Source
+
+[packages/ts/src/utils.ts:39](https://github.com/configu/configu/blob/main/packages/ts/src/utils.ts#L39)

@@ -50,7 +50,6 @@ Instantly start experimenting and developing.
 
 <!-- [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/configu/configu) -->
 
-
 ### Local environment
 
 - Install git
@@ -83,25 +82,13 @@ The [documentation repository](https://github.com/configu/docs) holds the offici
 
 The [./ts](https://github.com/configu/configu/tree/main/ts) directory houses a sub-monorepo that includes the following packages:
 
-- [./ts/packages/ts](https://github.com/configu/configu/tree/main/ts/packages/ts): Shared code for both the Node.js and browser SDKs
-  - [./ts/packages/ts/src/stores](https://github.com/configu/configu/tree/main/ts/packages/ts/src/stores): [ConfigStores](https://configu.com/docs/config-store/) supported for all TS based packages
-  - [./ts/packages/ts/src/commands](https://github.com/configu/configu/tree/main/ts/packages/ts/src/commands): [Commands](https://configu.com/docs/commands/) supported for all TS based packages
-- [./ts/packages/node](https://github.com/configu/configu/tree/main/ts/packages/node): The Node.js SDK
-- [./ts/packages/browser](https://github.com/configu/configu/tree/main/ts/packages/browser): The browser SDK
-- [./ts/packages/cli](https://github.com/configu/configu/tree/main/ts/packages/cli): Configu CLI, which is built using [oclif](https://oclif.io/) and the Node.js SDK
-- [./ts/packages/vscode](https://github.com/configu/configu/tree/main/ts/packages/vscode): a VSCode extension for working with Configu
-
-#### **./py**
-
-The [./py](https://github.com/configu/configu/tree/main/py) directory houses the Python SDK that is powered by [Poetry](https://python-poetry.org/).
-
-#### **./go**
-
-The [./go](https://github.com/configu/configu/tree/main/go) directory houses the Go SDK.
-
-<!-- #### **./java**
-
-The [./java]() directory will shortly contain the Java SDK. -->
+- [./packages/ts](https://github.com/configu/configu/tree/main/packages/ts): Shared code for both the Node.js and browser SDKs
+  - [./packages/ts/src/stores](https://github.com/configu/configu/tree/main/packages/ts/src/stores): [ConfigStores](https://configu.com/docs/config-store/) supported for all TS based packages
+  - [./packages/ts/src/commands](https://github.com/configu/configu/tree/main/packages/ts/src/commands): [Commands](https://configu.com/docs/commands/) supported for all TS based packages
+- [./packages/node](https://github.com/configu/configu/tree/main/packages/node): The Node.js SDK
+- [./packages/browser](https://github.com/configu/configu/tree/main/packages/browser): The browser SDK
+- [./packages/cli](https://github.com/configu/configu/tree/main/packages/cli): Configu CLI, which is built using [oclif](https://oclif.io/) and the Node.js SDK
+- [./packages/vscode](https://github.com/configu/configu/tree/main/packages/vscode): a VSCode extension for working with Configu
 
 ### Sending a Pull Request
 
@@ -123,7 +110,7 @@ After you have submitted your pull request, we'll try to get back to you as soon
 
 ## Resources
 
-> Working on your first Pull Request? You can learn how from this *free* series, [How to Contribute to an Open Source Project on GitHub](https://egghead.io/courses/how-to-contribute-to-an-open-source-project-on-github).
+> Working on your first Pull Request? You can learn how from this _free_ series, [How to Contribute to an Open Source Project on GitHub](https://egghead.io/courses/how-to-contribute-to-an-open-source-project-on-github).
 
 - [Open Source Guides](https://opensource.guide/how-to-contribute/)
 - [GitHub Help](https://help.github.com)

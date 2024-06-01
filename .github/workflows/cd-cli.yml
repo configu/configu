@@ -1,23 +1,23 @@
-name: "CD/@configu/cli"
+name: CD/@configu/cli
 
 on:
   push:
     tags:
-      - cli/v*
+      - 'cli/v*'
 
 jobs:
   cd-cli:
-    name: "CD/@configu/cli"
+    name: CD/@configu/cli
     runs-on: ubuntu-latest
     env:
-      PACKAGE_NAME: "@configu/cli"
-      PACKAGE_PATH: "packages/cli"
+      PACKAGE_NAME: '@configu/cli'
+      PACKAGE_PATH: 'packages/cli'
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }} # required by aws, oclif
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }} # required by aws, oclif
       AWS_REGION: ${{ secrets.AWS_REGION }} # required by aws, oclif
-      S3_BUCKET: "cli.configu.com"
-      CLOUDFRONT_DISTRIBUTION: "E1I302A2MRSW0O"
-      DOCKERHUB_REPOSITORY: "configu/cli"
+      S3_BUCKET: 'cli.configu.com'
+      CLOUDFRONT_DISTRIBUTION: 'E1I302A2MRSW0O'
+      DOCKERHUB_REPOSITORY: 'configu/cli'
     steps:
       - uses: actions/checkout@v4
 
@@ -29,11 +29,7 @@ jobs:
 
       - uses: ./.github/actions/ts-env-action
 
-      - uses: ./.github/actions/ts-env-action
-        with:
-          dependencies-root: "ts"
-
-      - uses: aws-actions/configure-aws-credentials@v2
+      - uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -41,24 +37,24 @@ jobs:
       # ---
       - name: Bump package version
         run: |
-          cd ${{ env.CWD }}
-          npm --no-git-tag-version version ${{ steps.deployment.outputs.release-version }} \
-            --workspace=${{ env.PACKAGE_NAME }}
+          pnpm --filter ${{ env.PACKAGE_NAME }} exec \
+            npm --no-git-tag-version version ${{ steps.deployment.outputs.release-version }}
 
       - name: Build package code and produce tarballs
         run: |
-          cd ${{ env.CWD }}
-          npm run build:oclif \
-            --workspace=${{ env.PACKAGE_NAME }}
+          pnpm --filter ${{ env.PACKAGE_NAME }} run \
+            build:tar
 
       # https://github.com/oclif/oclif
       # https://github.com/oclif/oclif/blob/61cb7664ce38f1b7827ff652f063c3be7adeb1af/src/tarballs/config.ts
       - name: Publish tarballs to storage
         run: |
-          cd ${{ env.CWD }}/${{ env.PACKAGE_PATH }}
-          npx oclif upload tarballs
+          cd ${{ env.PACKAGE_PATH }}
+          pnpm oclif upload tarballs \
+            --root tmp
           if [ "${{ steps.deployment.outputs.release-channel }}" = "latest" ]; then channel="stable"; else channel="${{ steps.deployment.outputs.release-channel }}"; fi
-          npx oclif promote \
+          pnpm oclif promote \
+            --root tmp \
             --channel $channel \
             --version ${{ steps.deployment.outputs.release-version }} \
             --sha ${{ steps.deployment.outputs.release-sha }} \
@@ -66,7 +62,7 @@ jobs:
 
       - name: Copy installation scripts to storage
         run: |
-          cd ${{ env.CWD }}/${{ env.PACKAGE_PATH }}
+          cd ${{ env.PACKAGE_PATH }}
           aws s3 cp ./scripts s3://${{ env.S3_BUCKET }} --recursive
 
       - name: Invalidate storage CDN
@@ -78,7 +74,7 @@ jobs:
         if: ${{startsWith(github.ref, 'refs/tags/') }}
         with:
           files: |
-            ${{ env.CWD }}/${{ env.PACKAGE_PATH }}/dist/*
+            ${{ env.PACKAGE_PATH }}/tmp/dist/*
 
       - uses: docker/setup-qemu-action@v3
 
@@ -92,22 +88,10 @@ jobs:
       - name: Build docker image and push to Docker Hub
         uses: docker/build-push-action@v5
         with:
-          context: ${{ env.CWD }}/${{ env.PACKAGE_PATH }}
+          context: ${{ env.PACKAGE_PATH }}
           platforms: linux/amd64,linux/arm64
           tags: ${{ env.DOCKERHUB_REPOSITORY }}:${{ steps.deployment.outputs.release-version }},${{ env.DOCKERHUB_REPOSITORY }}:${{ steps.deployment.outputs.release-channel }}
           push: true
-
-      - name: Publish manifest
-        if: ${{ steps.deployment.outputs.release-channel == 'latest' }}
-        run: |
-          cd ${{ env.CWD }}/${{ env.PACKAGE_PATH }}
-          aws s3 cp ./oclif.manifest.json s3://${{ env.S3_BUCKET }}/${{ env.S3_FOLDER }}/manifest.json
-          aws s3 cp ./manifest.md s3://${{ env.S3_BUCKET }}/${{ env.S3_FOLDER }}/manifest.md
-          aws cloudfront create-invalidation --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION }} --paths "/${{ env.S3_FOLDER }}*"
-        env:
-          S3_BUCKET: "oss.configu.com"
-          S3_FOLDER: "cli"
-          CLOUDFRONT_DISTRIBUTION: "E7C5AL5O299SC"
       # ---
       - uses: ./.github/actions/deploy-end-action
         if: always()

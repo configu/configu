@@ -1,16 +1,16 @@
-name: "CD/@configu/ts"
+name: CD/@configu/ts
 
 on:
   push:
     tags:
-      - ts/v*
+      - 'ts/v*'
 
 jobs:
   cd-ts:
-    name: "CD/@configu/ts"
+    name: CD/@configu/ts
     runs-on: ubuntu-latest
     env:
-      PACKAGE_NAME: "@configu/ts"
+      PACKAGE_NAME: '@configu/ts'
     permissions:
       contents: read
       id-token: write
@@ -25,55 +25,31 @@ jobs:
 
       - uses: ./.github/actions/ts-env-action
 
-      - uses: ./.github/actions/ts-env-action
-        with:
-          install-dependencies: false
-          dependencies-root: "ts"
-
-      - uses: aws-actions/configure-aws-credentials@v2
+      - uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
       # ---
+      # todo: convert npm to pnpm commands and handle docs publishing
+      # https://pnpm.io/workspaces#workspace-protocol-workspace
       - name: Bump package version
         run: |
-          cd ${{ env.CWD }}
-          npm --no-git-tag-version version ${{ steps.deployment.outputs.release-version }} \
-            --workspace=@configu/ts --workspace=@configu/node --workspace=@configu/browser
-          npm pkg set dependencies.@configu/ts=${{ steps.deployment.outputs.release-version }} \
-            --workspace=@configu/node --workspace=@configu/browser
-          npm install
+          pnpm --filter ${{ env.PACKAGE_NAME }} --filter @configu/node --filter @configu/browser exec \
+            npm --no-git-tag-version version ${{ steps.deployment.outputs.release-version }}
 
       - name: Build package code
         run: |
-          cd ${{ env.CWD }}
-          npm run build \
-            --workspace=@configu/ts --workspace=@configu/node --workspace=@configu/browser
+          pnpm run build
+          pnpm --filter @configu/browser run build:bundle
 
       - name: Publish to npm
         run: |
-          cd ${{ env.CWD }}
-          npm publish --access public --provenance --tag ${{ steps.deployment.outputs.release-channel }} \
-            --workspace=@configu/ts --workspace=@configu/node --workspace=@configu/browser
+          git diff
+          pnpm --filter ${{ env.PACKAGE_NAME }} --filter @configu/node --filter @configu/browser publish \
+            --access public --provenance --no-git-checks --tag ${{ steps.deployment.outputs.release-channel }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Build package docs
-        if: ${{ steps.deployment.outputs.release-channel == 'latest' }}
-        run: |
-          cd ${{ env.CWD }}
-          npm run build:docs
-
-      - name: Publish docs
-        if: ${{ steps.deployment.outputs.release-channel == 'latest' }}
-        run: |
-          aws s3 sync ${{ env.CWD }}/docs s3://${{ env.S3_BUCKET }}/${{ env.S3_FOLDER }}
-          aws cloudfront create-invalidation --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION }} --paths "/${{ env.S3_FOLDER }}*"
-        env:
-          S3_BUCKET: "oss.configu.com"
-          S3_FOLDER: "ts"
-          CLOUDFRONT_DISTRIBUTION: "E7C5AL5O299SC"
       # ---
       - uses: ./.github/actions/deploy-end-action
         if: always()
