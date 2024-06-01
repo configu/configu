@@ -87,9 +87,9 @@ const prepareREADME = async ({ source, target, title = 'Overview' }) => {
   const description = contents.match(/.*\n/)[0].replace('\n', '');
   contents = contents.replace(/.*\n/, '');
   // Remove any HTML comments
-  contents = contents.replace(/<!--.*\n/g, '');
+  contents = contents.replace(/<!--.*?-->/g, '');
   // Replace any absolute docs link to relative link
-  contents = contents.replace(/https:\/\/docs.configu.com/g, '');
+  contents = contents.replace(/https:\/\/docs\.configu\.com/g, '');
   // Remove .mdx extension from links
   contents = contents.replace(/\.mdx/g, '');
 
@@ -119,7 +119,7 @@ app.renderer.on(MarkdownPageEvent.END, (page) => {
   // Remove .mdx extension from links
   page.contents = page.contents?.replace(/\.mdx/g, '');
   // Remove any HTML comments
-  page.contents = page.contents?.replace(/<!--.*\n/, '');
+  page.contents = page.contents?.replace(/<!--.*?-->/g, '');
 });
 app.renderer.postRenderAsyncJobs.push(async (renderer) => {
   const { navigation, urls } = renderer;
