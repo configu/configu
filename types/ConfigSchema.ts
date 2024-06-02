@@ -1,6 +1,6 @@
 import { Cfgu } from './Cfgu';
 
-export interface ConfigSchemaContentsValue extends Cfgu {};
+export interface ConfigSchemaContentsValue extends Cfgu {}
 export type ConfigSchemaContents = { [ConfigKey: string]: ConfigSchemaContentsValue };
 
 /**

@@ -1,0 +1,45 @@
+{
+  "name": "@configu/lib",
+  "version": "0.0.0",
+  "license": "Apache-2.0",
+  "description": "Configu common library",
+  "author": "@configu/dev",
+  "exports": "./build/index.js",
+  "types": "./build/index.d.ts",
+  "files": [
+    "/build"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/configu/configu",
+    "directory": "packages/lib"
+  },
+  "bugs": {
+    "url": "https://github.com/configu/configu/issues",
+    "email": "dev@configu.com"
+  },
+  "homepage": "https://configu.com",
+  "keywords": [
+    "cfgu",
+    "configu",
+    "configu-common",
+    "configu-lib"
+  ],
+  "scripts": {
+    "clean": "shx rm -rf tsconfig.tsbuildinfo build",
+    "build": "tsc --build"
+  },
+  "dependencies": {
+    "@configu/ts": "^0.20.1",
+    "change-case": "4.1.2",
+    "dotenv": "^16.3.1",
+    "js-yaml": "^4.1.0",
+    "lodash": "^4.17.21",
+    "type-fest": "^4.8.3",
+    "validator": "^13.11.0"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/validator": "^13.11.9"
+  }
+}

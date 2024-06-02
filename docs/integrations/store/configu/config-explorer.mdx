@@ -13,23 +13,45 @@ You can also search and filter the data by:
 
 - Set - set name or part of it
 - Key - key name or part of it
-- Hierarchy - set and all its children
 
-<Frame>![image](/images-old/configs-explorer/configs-filters.png)</Frame>
+<Frame>![image](/images/configs-explorer/configs-filters.png)</Frame>
 
-## Sets View
+## Graph View
 
-The Sets view is the default view, and it shows all your [ConfigSets](/introduction/concepts#configset) on a graph with the relationship between them.
+The Graph view is the default view, and it shows all your [ConfigSets](/introduction/concepts#configset) on a graph, illustrating the relationships between them.
 
-<Frame>![image](/images-old/configs-explorer/platform-configs-explorer-sets.png)</Frame>
+<Frame>![image](/images/configs-explorer/platform-configs-explorer-sets.png)</Frame>
 
-## Configs View
+You can right-click any set to open the context menu and perform actions like viewing the configs or configs history, cloning the set, deleting it and more.
 
-The Configs view shows all the configs data you have permission for (e.g., set name, key, value, last update).
+<Frame>![image](/images/configs-explorer/sets-graph-menu.png)</Frame>
+
+## Grid View
+
+The Grid view presents your [Configs](/introduction/concepts#config) in a grid layout. By default, each column represents a ConfigSet, while each row corresponds to a ConfigKey. Within the grid, each cell displays the value of the config within its respective set. Every config cell is interactive, granting access to the config value provided you have the necessary permissions.
+
+<Frame>![image](/images/configs-explorer/platform-configs-explorer-grid.png)</Frame>
+
+Moreover, right-clicking on any cell within the grid reveals a context menu offering relevant actions. For instance, the `All Configs` context menu allows you to reveal all config values, transpose the grid, and revert any modifications made to the view.
+
+Some notable actions include:
+
+- **Pinning**: Pin the selected column or row to the left or top of the grid.
+- **Sorting**: Alphabetically or by last update date for columns or rows.
+- **History**: View the history of the selected config or set.
+- **Delete**: Remove the selected config or set.
+- **Clone**: Duplicate the selected set.
+- **Permissions**: Examine the permissions of the selected set or config.
+
+<Frame>![image](/images/configs-explorer/configs-grid-menus.png)</Frame>
+
+## List View
+
+The List view shows all the [Configs](/introduction/concepts#config) data you have permission for (e.g., set name, key, value, last update).
 Admin can mask the values for security reasons.
 
-<Frame>![image](/images-old/configs-explorer/platform-configs-explorer-configs.jpg)</Frame>
+<Frame>![image](/images/configs-explorer/platform-configs-explorer-configs.png)</Frame>
 
 You can show masked values, see the history of the config, or delete it (if you have permission).
 
-<Frame>![image](/images-old/configs-explorer/config-explorer-actions.png)</Frame>
+<Frame>![image](/images/configs-explorer/config-explorer-actions.png)</Frame>

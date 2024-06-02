@@ -15,10 +15,9 @@ The default role applies to all new members. You may change the default role to 
 <Frame>![image](/images-old/authorization/roles-default-role.png)</Frame>
 <Frame>![image](/images-old/authorization/roles-default-role-select.png)</Frame>
 
-<Info>
-- Changing the default role does not change the roles of existing members.
-- Tokens receive a default role of reader and are not affected by the default role.
-</Info>
+<Info>Changing the default role does not change the roles of existing members.</Info>
+
+<Info>Tokens receive a default role of `reader` and are not affected by the default role.</Info>
 
 ## Predefined roles
 
@@ -28,8 +27,9 @@ Empower your organization with clear boundaries and well-defined roles that enha
 <Frame>![image](/images-old/authorization/roles-predefined.png)</Frame>
 
 <Info>
-- Predefined roles are immutable and cannot be changed or deleted.
-- The **Admin** role allows management of members, tokens, roles, webhooks, and organization settings.
+  Predefined roles are immutable and cannot be changed or deleted.
+  <br />
+  The **Admin** role allows management of members, tokens, roles, webhooks, and organization settings.
 </Info>
 
 ## Assign roles
@@ -59,24 +59,27 @@ Every organization is unique, with specific requirements and workflows. That's w
 <Frame>![image](/images-old/authorization/roles-create-form.png)</Frame>
 
 <Info>
-- The **read** permission grants access to read config values of the selected set and its parent sets.
-- The **write** permission grants access to read and edit config values of the selected set and its child sets.
-- The **read all** permission grants access to read config values of all sets.
-- The **write all** permission grants access to read and edit config values of all sets.
-
-- Duplicate rules are omitted when creating/updating roles.
+  The **read** permission grants access to read config values of the selected set and its parent sets.
+  <br />
+  The **write** permission grants access to read and edit config values of the selected set and its child sets.
+  <br />
+  The **read all** permission grants access to read config values of all sets.
+  <br />
+  The **write all** permission grants access to read and edit config values of all sets.
+  <br />
+  Duplicate rules are omitted when creating/updating roles.
 </Info>
 
 <Tip>
-Rules can be created for config sets that do not yet exist. This is useful for the following cases:
-
-- You want your member or token to have read access to a config set as soon as it's created.
-- You want to give your member or token the ability to create a config set.
+  Rules can be created for config sets that do not yet exist. This is useful for the following cases:
+  <br />
+  You want your member or token to have read access to a config set as soon as it's created.
+  <br />
+  You want to give your member or token the ability to create a config set.
 </Tip>
 
 <Warning>
-Role names are unique, attempting to use an existing role name including predefined roles will result in an error.
-
+  Role names are unique, attempting to use an existing role name including predefined roles will result in an error.
 </Warning>
 
 ## Updating a custom role
@@ -90,8 +93,9 @@ Role names are unique, attempting to use an existing role name including predefi
 <Frame>![image](/images-old/authorization/roles-delete.png)</Frame>
 
 <Warning>
-- The deleted role will be unassigned from any member or token that used it.
-- Custom roles that have been selected as the default role cannot be deleted.
+  The deleted role will be unassigned from any member or token that used it.
+  <br />
+  Custom roles that have been selected as the default role cannot be deleted.
 </Warning>
 
 ## Assign config attribute
@@ -107,10 +111,15 @@ Members can be assigned a config attribute which gives them access to a specific
 <Frame>![image](/images-old/authorization/abac-config-permissions.png)</Frame>
 
 <Info>
-- The **read** permission grants access to read the config value.
-- The **write** permission grants access to edit the config.
-- The **manage** permission grants access to edit the config and also assign config attributes to other members.
-- Tokens cannot be assigned a config attribute.
-- Only members with the **Admin** and **Owner** role can initially assign attributes.
-- Attributes are additive, meaning that a member with multiple attributes will have the union of all their permissions.
+  The **read** permission grants access to read the config value.
+  <br />
+  The **write** permission grants access to edit the config.
+  <br />
+  The **manage** permission grants access to edit the config and also assign config attributes to other members.
+  <br />
+  Tokens cannot be assigned a config attribute.
+  <br />
+  Only members with the **Admin** and **Owner** role can initially assign attributes.
+  <br />
+  Attributes are additive, meaning that a member with multiple attributes will have the union of all their permissions.
 </Info>

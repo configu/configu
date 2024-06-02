@@ -1,0 +1,453 @@
+---
+title: 'Command Reference'
+sidebarTitle: 'Reference'
+description: 'A reference guide for all Configu CLI commands.'
+---
+
+import { Related } from '/snippets/callouts.mdx';
+
+<Related name="Hello, World!" link="/guides/hello-world" />
+
+## Commands
+
+<Tip>
+  Use `configu -h` or to get a list of all available commands.
+  <br />
+  Use `configu [COMMAND] -h` to get help for a specific command.
+</Tip>
+
+- [`configu autocomplete [SHELL]`](#configu-autocomplete-shell)
+- [`configu delete`](#configu-delete)
+- [`configu eval`](#configu-eval)
+- [`configu export`](#configu-export)
+- [`configu find`](#configu-find)
+- [`configu init`](#configu-init)
+- [`configu login`](#configu-login)
+- [`configu run`](#configu-run)
+- [`configu test`](#configu-test)
+- [`configu update [CHANNEL]`](#configu-update-channel)
+- [`configu upsert`](#configu-upsert)
+
+## configu autocomplete [SHELL]
+
+Display autocomplete installation instructions.
+
+```bash
+USAGE
+  $ configu autocomplete [SHELL] [-r]
+
+ARGUMENTS
+  SHELL  (zsh|bash|powershell) Shell type
+
+FLAGS
+  -r, --refresh-cache  Refresh cache (ignores displaying instructions)
+
+DESCRIPTION
+  Display autocomplete installation instructions.
+
+EXAMPLES
+  $ configu autocomplete
+
+  $ configu autocomplete bash
+
+  $ configu autocomplete zsh
+
+  $ configu autocomplete powershell
+
+  $ configu autocomplete --refresh-cache
+```
+
+## configu delete
+
+Bulk delete `Configs` from a `ConfigStore`
+
+```bash
+USAGE
+  $ configu delete --store <value> --set <value> --schema <value>
+
+FLAGS
+  --schema=<value>  (required) `ConfigSchema` (config-keys declaration) path/to/[schema].cfgu.json file to operate the
+                    delete against. The keys declared in the `ConfigSchema` and its values from the `ConfigSet` will be
+                    deleted from the `ConfigStore`
+  --set=<value>     (required) `ConfigSet` (config-values context) to delete `Configs` from. Use an empty string for the
+                    root set
+  --store=<value>   (required) `ConfigStore` (configs data-source) to delete `Configs` from
+
+DESCRIPTION
+  Bulk delete `Configs` from a `ConfigStore`
+
+EXAMPLES
+  Delete all `Configs` declared at `ConfigSchema` file at './config/schema.cfgu.json' from a `ConfigSet` called
+  'dev/branch' within a 'configu' `ConfigStore`
+
+    $ configu delete --store 'configu' --set 'dev/branch' --schema './config/schema.cfgu.json'
+
+  Delete all `Configs` declared at `ConfigSchema` file at './config/schema.cfgu.json' from the 'staging' `ConfigSet`
+  within a 'hashicorp-vault' `ConfigStore`
+
+    $ configu delete --store 'hashicorp-vault' --set 'staging' --schema './config/schema.cfgu.json'
+```
+
+## configu eval
+
+Fetch `Configs` from `ConfigStore` on demand based on `ConfigSet` and `ConfigSchema`
+
+```bash
+USAGE
+  $ configu eval --schema <value> [--store <value>] [--set <value>] [-c <value>] [--force-cache]
+
+FLAGS
+  -c, --config=<value>...  'key=value' pairs to override fetched `Configs`
+      --force-cache        Force the use of cache store
+      --schema=<value>     (required) `ConfigSchema` (config-keys declaration) path/to/[schema].cfgu.json file to
+                           operate the eval against. The keys declared in the `ConfigSchema` will be fetched and
+                           evaluated from the to the `ConfigStore`. In case of key duplication from multiple
+                           `ConfigSchema`, the order of the --schema flag in the pipe will come to hand as the rightmost
+                           key overriding the rest
+      --set=<value>        `ConfigSet` (config-values context) to fetch `Configs` from. Use an empty string for the root
+                           set
+      --store=<value>      `ConfigStore` (configs data-source) to fetch `Configs` from
+
+DESCRIPTION
+  Fetch `Configs` from `ConfigStore` on demand based on `ConfigSet` and `ConfigSchema`
+
+EXAMPLES
+  Fetch all `Configs` declared at `ConfigSchema` file at './config/schema.cfgu.json' from the 'prod' `ConfigSet`
+  within a 'configu' `ConfigStore`
+
+    $ configu eval --store 'configu' --set 'prod' --schema './config/schema.cfgu.json'
+
+  Fetch all `Configs` declared at `ConfigSchema` file at './service.cfgu.json' from the 'service' `ConfigSet` within a
+  'configu' `ConfigStore` and override 'key1' value
+
+    $ configu eval --store 'configu' --set 'service' --schema './service.cfgu.json' --config 'key1=value1'
+
+  Pipe multiple eval commands and export as Kubernetes ConfigMap .yaml file
+
+    $ configu eval --store 'configu' --set 'prod' --schema './config/schema.cfgu.json' \
+      | configu eval --store 'configu' --set 'service' --schema './service.cfgu.json' -c 'key1=value1' \
+      | configu eval --store 'aws-secrets-manager' --set 'prod' --schema './service.cfgu.json' -c 'key1=value1' \
+      | configu export --format 'KubernetesConfigMap' --label 'service-prod' > service-prod.yaml
+```
+
+## configu export
+
+Export `Configs` as configuration data in various modes
+
+```bash
+USAGE
+  $ configu export [--explain | --format
+    JSON|CompactJSON|YAML|Dotenv|KubernetesConfigMap|HelmValues|TerraformTfvars|TOML | --template <value> | --source |
+    --run <value>] [--label <value>] [--eol ] [--template-input object|array ] [--prefix <value>] [--suffix <value>]
+    [--casing CamelCase|CapitalCase|ConstantCase|DotCase|KebabCase|NoCase|PascalCase|PascalSnakeCase|PathCase|SentenceCa
+    se|SnakeCase|TrainCase] [--pick-label <value>] [--omit-label <value>] [--pick-key <value>] [--omit-key <value>]
+    [--pick-hidden | --omit-hidden] [--pick-empty | --omit-empty]
+
+FLAGS
+  --casing=<option>          Transforms the casing of Config Keys in the export result to camelCase, PascalCase, Capital
+                             Case, snake_case, param-case, CONSTANT_CASE and others
+                             <options: CamelCase|CapitalCase|ConstantCase|DotCase|KebabCase|NoCase|PascalCase|PascalSnak
+                             eCase|PathCase|SentenceCase|SnakeCase|TrainCase>
+  --eol                      Adds EOL (\n on POSIX \r\n on Windows) to the end of the stdout
+  --explain                  Outputs metadata on the exported `Configs`
+  --format=<option>          Format exported `Configs` to common configuration formats. Redirect the output to file, if
+                             needed
+                             <options: JSON|CompactJSON|YAML|Dotenv|KubernetesConfigMap|HelmValues|TerraformTfvars|TOML>
+  --label=<value>            Metadata required in some formats like Kubernetes ConfigMap
+  --omit-empty               Exclude config keys with empty values. By default, empty values are included
+  --omit-hidden              Explicitly exclude config keys marked as hidden. By default, hidden keys are omitted
+  --omit-key=<value>...      Omit a specific key from the previous eval command return to export
+  --omit-label=<value>...    Omit a specific label from the previous eval command return to export
+  --pick-empty               Include config keys with empty values. By default, empty values are included
+  --pick-hidden              Explicitly include config keys marked as hidden. By default, hidden keys are omitted
+  --pick-key=<value>...      Pick a specific key from the previous eval command return to export
+  --pick-label=<value>...    Pick a specific label from the previous eval command return to export
+  --prefix=<value>           Append a fixed string to the beginning of each Config Key in the export result
+  --run=<value>              Spawns executable as child-process and pass exported `Configs` as environment variables
+  --source                   Source exported `Configs` as environment variables to the current shell
+  --suffix=<value>           Append a fixed string to the end of each Config Key in the export result
+  --template=<value>         Path to a file containing {{mustache}} templates to render (inject/substitute) the exported
+                             `Configs` into
+  --template-input=<option>  Inject `Configs` to template as object or array of `{key: string, value: string}[]`
+                             <options: object|array>
+
+DESCRIPTION
+  Export `Configs` as configuration data in various modes
+
+EXAMPLES
+  Pipe eval commands result to export command to output metadata on the exported `Configs`
+
+    $ configu eval ... | configu export --explain
+
+  Pipe eval commands result to export command to create a Dotenv .env file
+
+    $ configu eval ... | configu export --format 'Dotenv'
+
+  Pipe eval commands result to export command to create a Kubernetes ConfigMap .yaml
+
+    $ configu eval ... | configu export --format 'KubernetesConfigMap' --label 'service-prod.yaml'
+
+  Pipe eval commands result to export command to render `Configs` into a mustache '{{ }}' template file
+
+    $ configu eval ... | configu export --template 'mustache.tmpl.yaml'
+
+  Pipe eval commands result to export command to source `Configs` as environment variables to the current shell
+
+    (set -a; source <(configu eval ... | configu export --source); set +a && <command-that-uses-the-envs>)
+
+  Pipe eval commands result to export command to pass `Configs` as environment variables to a child-process
+
+    $ configu eval ... | configu export --run 'node index.js'
+
+  Pipe eval commands result to export command and apply a prefix / suffix to each Config Key in the export result
+
+    $ configu eval ... | configu export --prefix "MYAPP_" --suffix "_PROD"
+
+  Pipe eval commands result to export command and apply casing to each Config Key in the export result
+
+    $ configu eval ... | configu export --casing "SnakeCase"
+
+  Pipe eval commands result to export command and exclude specific labels
+
+    $ configu eval ... | configu export --omit-label 'deprecated' --omit-label 'temporary'
+
+  Pipe eval commands result to export command and include only configs under specific labels
+
+    $ configu eval ... |  configu export --pick-label 'production' --pick-label 'secure'
+
+  Pipe eval commands result to export command and exclude specific keys
+
+    $ configu eval ... | configu export --omit-key 'DEBUG_MODE' --omit-key 'TEST_ACCOUNT'
+
+  Pipe eval commands result to export command. Include hidden configs and exclude configs with empty values
+
+    $ configu eval ... | configu export --pick-hidden  --omit-empty
+```
+
+## configu find
+
+Finding all config parameters and their usage in the source code based on CFGU files
+
+```bash
+USAGE
+  $ configu find --dir <value> [--include <value>] [--exclude <value>] [--unused] [--templates]
+
+FLAGS
+  --dir=<value>         (required) [default: .] Path to source code
+  --exclude=<value>...  [default: ] Glob pattern to ignore
+  --include=<value>...  [default: ] Path to a specific .cfgu file (default: all CFGU files in the source code)
+  --[no-]templates      [default: false] Show parameters that are parts of templates and treat them as used parameters
+  --unused              Only show unused parameters
+
+DESCRIPTION
+  Finding all config parameters and their usage in the source code based on CFGU files
+
+EXAMPLES
+  Find all config parameters and their usage in current directory
+
+    $ configu find
+
+  Find all config parameters and their usage in specific directory from provided CFGU file
+
+    $ configu find --dir <PATH_TO_SCAN> --include <PATH_TO_CFGU>
+
+  Find all unused config parameters in specific directory
+
+    $ configu find --dir <PATH_TO_SCAN> --unused
+```
+
+## configu init
+
+Create a `ConfigSchema` .cfgu file in the current working dir
+
+```bash
+USAGE
+  $ configu init [--name <value>] [--dir <value>] [-f] [--start | --import <value> | --example]
+    [--defaults ] [--types ]
+
+FLAGS
+  -f, --force           Override the .cfgu file in case it already exists
+      --defaults        Assign the values from the imported file as the default value for the keys that will be created
+                        in the .cfgu file
+      --dir=<value>     [default: /Users/ran/dev/configu/packages/cli] Set the directory that will contain the new .cfgu
+                        file. The default is the current directory
+      --example         Fills the new .cfgu file with a variety of detailed examples
+      --import=<value>  Import an existing .env or flat .json file and create a new .cfgu file from its records
+      --name=<value>    [default: cli] Set the name of the new .cfgu file. The default is the current directory name in
+                        parameter-case
+      --start           Fills the new .cfgu file with a get-started example
+      --types           Infer the Cfgu type of the values from the imported file and assign them to the keys that will
+                        be created in the .cfgu file. The default is String
+
+DESCRIPTION
+  Create a `ConfigSchema` .cfgu file in the current working dir
+
+EXAMPLES
+  Create a new .cfgu file in the current directory with the default name (current directory name in parameter-case)
+
+    $ configu init
+
+  Create a new .cfgu file in the current directory with a specific name (my-project.cfgu)
+
+    $ configu init --name 'my-project'
+
+  Create a new .cfgu file in a specific directory (./config) with a specific name (my-project.cfgu)
+
+    $ configu init --dir './config' --name 'my-project'
+
+  Import an existing flat .json file and create a new .cfgu file from it's records
+
+    $ configu init --import './config.json'
+
+  Import an existing .env file and create a new .cfgu file from it's records, assigning the values as the default
+  value for the keys in the .cfgu file and inferring the Cfgu type of the values and assigning them to the keys in the
+  .cfgu file
+
+    $ configu init --import './.env' --defaults --types
+
+  Create a new get-started.cfgu file filled with a variety of pre-made, detailed record examples
+
+    $ configu init --get-started
+```
+
+## configu login
+
+Initiate interactive login session to Configu `ConfigStore`
+
+```bash
+USAGE
+  $ configu login
+
+DESCRIPTION
+  Initiate interactive login session to Configu `ConfigStore`
+
+EXAMPLES
+  $ configu login
+```
+
+## configu run
+
+Run a script from the scripts section in the .configu file
+
+```bash
+USAGE
+  $ configu run -s <value> [-d <value>]
+
+FLAGS
+  -d, --dir=<value>     Set the directory where the script is being executed. The default is the location of the
+                        .configu file
+  -s, --script=<value>  (required) The script property from the scripts section in the .configu file
+
+DESCRIPTION
+  Run a script from the scripts section in the .configu file
+
+EXAMPLES
+  Run 'my-script' from the scripts section in the .configu file
+
+    $ configu run --script 'my-script'
+```
+
+## configu test
+
+Verify credentials and write access to a `ConfigStore`
+
+```bash
+USAGE
+  $ configu test --store <value> [--clean]
+
+FLAGS
+  --clean          Delete `CONFIGU_TEST` config from the `ConfigStore` after test completed
+  --store=<value>  (required) `ConfigStore` (configs data-source) to upsert `CONFIGU_TEST` config to
+
+DESCRIPTION
+  Verify credentials and write access to a `ConfigStore`
+
+EXAMPLES
+  Test connection to a 'configu' `ConfigStore`
+
+    $ configu test --store 'configu'
+
+  Test connection to a 'configu' `ConfigStore` and clean afterwards
+
+    $ configu test --store 'configu' --clean
+```
+
+## configu update [CHANNEL]
+
+update the configu CLI
+
+```bash
+USAGE
+  $ configu update [CHANNEL] [-a] [--force] [-i | -v <value>]
+
+FLAGS
+  -a, --available        See available versions.
+  -i, --interactive      Interactively select version to install. This is ignored if a channel is provided.
+  -v, --version=<value>  Install a specific version.
+      --force            Force a re-download of the requested version.
+
+DESCRIPTION
+  update the configu CLI
+
+EXAMPLES
+  Update to the stable channel:
+
+    $ configu update stable
+
+  Update to a specific version:
+
+    $ configu update --version 1.0.0
+
+  Interactively select version:
+
+    $ configu update --interactive
+
+  See available versions:
+
+    $ configu update --available
+```
+
+## configu upsert
+
+Create, update or delete `Configs` from a `ConfigStore`
+
+```bash
+USAGE
+  $ configu upsert --store <value> --set <value> --schema <value> [-c <value> | --import <value>]
+
+FLAGS
+  -c, --config=<value>...  'key=value' pairs to upsert. Use an empty value to delete a `Config`
+      --import=<value>     Import an existing .env or flat .json file and create `Configs` from its records
+      --schema=<value>     (required) `ConfigSchema` (config-keys declaration) path/to/[schema].cfgu.json file to
+                           operate the upsert against. The keys declared in the `ConfigSchema` can be assigned a value
+                           in the `ConfigSet` that will be upserted as a `Config` to the `ConfigStore`
+      --set=<value>        (required) `ConfigSet` (config-values context) to assign the upserted `Configs`. Use an empty
+                           string for the root set
+      --store=<value>      (required) `ConfigStore` (configs data-source) to upsert `Configs` to
+
+DESCRIPTION
+  Create, update or delete `Configs` from a `ConfigStore`
+
+EXAMPLES
+  Upsert a `Config` to the 'root' `ConfigSet` of a 'configu' `ConfigStore` using a `ConfigSchema` file at
+  './config/schema.cfgu'
+
+    $ configu upsert --store 'configu' --set '' --schema './config/schema.cfgu.json' --config 'key=value'
+
+  Upsert multiple `Configs` to a `ConfigSet` called 'prod' within a 'configu' `ConfigStore` using a `ConfigSchema`
+  file at './config/schema.cfgu.json'
+
+    $ configu upsert --store 'configu' --set 'prod' --schema './config/schema.cfgu.json' --config 'key1=value1' -c \
+      'key2=value2' -c 'key3=value3'
+
+  Delete a `Config` from a `ConfigSet` called 'prod' within a 'configu' `ConfigStore` using a `ConfigSchema` file at
+  './config/schema.cfgu.json'
+
+    $ configu upsert --store 'configu' --set 'prod' --schema './config/schema.cfgu.json' --config 'keyToDelete='
+
+  Upsert a `Config` to a `ConfigSet` called 'prod' within 'hashicorp-vault' `ConfigStore` using a `ConfigSchema` file
+  at './config/schema.cfgu.json'
+
+    $ configu upsert --store 'hashicorp-vault' --set 'prod' --schema './config/schema.cfgu.json' --config \
+      'secretKey=secretValue'
+```

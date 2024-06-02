@@ -12,6 +12,10 @@ export const Important = () => (
 
 export const Related = ({ name, link }) => (
   <Tip>
-    We recommend reading the <a href={link} target="_blank"><b>{name}</b></a> section first for a better foundation.
+    We recommend reading the{' '}
+    <a href={link} target="_blank">
+      <b>{name}</b>
+    </a>{' '}
+    section first for a better foundation.
   </Tip>
 );

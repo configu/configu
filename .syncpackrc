@@ -1,0 +1,31 @@
+{
+  "versionGroups": [
+    {
+      "label": "Ignore local packages",
+      "dependencies": [
+        "$LOCAL"
+      ],
+      "isIgnored": true
+    },
+    {
+      "label": "Ignore issues in these packages",
+      "packages": [
+        "examples"
+      ],
+      "dependencies": [
+        "**"
+      ],
+      "isIgnored": true
+    },
+    {
+      "label": "Please use lodash instead of underscore",
+      "packages": [
+        "**"
+      ],
+      "dependencies": [
+        "underscore"
+      ],
+      "isBanned": true
+    }
+  ]
+}

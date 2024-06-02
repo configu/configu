@@ -1,13 +1,13 @@
-name: "CI/Healthcare Routines"
+name: CI/Healthcare
 
 on:
   pull_request:
     branches:
-      - main
+      - 'main'
 
 jobs:
   ci-health:
-    name: "CI/Healthcare"
+    name: CI/Healthcare
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

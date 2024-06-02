@@ -1,7 +1,0 @@
-{
-  "string config key": {
-    "prefix": "key",
-    "body": ["\"${1:<KEY>}\": {", "  \"type\": \"String\"", "},"],
-    "description": "Declare a new \"String\" typed configuration schema"
-  }
-}
