@@ -8,4 +8,5 @@ export * from './Input';
 export * from './LayoutSwitch';
 export * from './Message';
 export * from './Switch';
+export * from './Search';
 export * from './Typography';
