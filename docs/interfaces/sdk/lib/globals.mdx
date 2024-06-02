@@ -1,0 +1,255 @@
+---
+title: '@configu/lib Reference'
+---
+
+## Type Aliases
+
+### CiCd
+
+> **CiCd**: `"GitHubActions"` \| `"CircleCI"` \| `"GitLabCICD"` \| `"AzurePipelines"` \| `"BitbucketPipelines"` \| `"TeamCity"` \| `"Buddy"` \| `"Jenkins"` \| `"Codefresh"`
+
+#### Source
+
+[integrations/cicd.ts:1](https://github.com/configu/configu/blob/main/packages/lib/src/integrations/cicd.ts#L1)
+
+---
+
+### ConfigFormat
+
+> **ConfigFormat**: `"JSON"` \| `"CompactJSON"` \| `"YAML"` \| `"Dotenv"` \| `"KubernetesConfigMap"` \| `"HelmValues"` \| `"TerraformTfvars"` \| `"TOML"`
+
+#### Source
+
+[formatters/ConfigFormat.ts:1](https://github.com/configu/configu/blob/main/packages/lib/src/formatters/ConfigFormat.ts#L1)
+
+---
+
+### Runtime
+
+> **Runtime**: `"Heroku"` \| `"Vercel"` \| `"Netlify"` \| `"Firebase"` \| `"AwsLambda"` \| `"AzureFunctions"` \| `"GcpCloudFunctions"` \| `"AwsEcs"`
+
+#### Source
+
+[integrations/runtime.ts:1](https://github.com/configu/configu/blob/main/packages/lib/src/integrations/runtime.ts#L1)
+
+---
+
+### StoreType
+
+> **StoreType**: `LiteralUnion`\<`"noop"` \| `"in-memory"` \| `"configu"` \| `"json-file"` \| `"csv-file"` \| `"ini-file"` \| `"toml-file"` \| `"xml-file"` \| `"hashicorp-vault"` \| `"aws-parameter-store"` \| `"aws-secrets-manager"` \| `"azure-key-vault"` \| `"gcp-secret-manager"` \| `"kubernetes-secret"` \| `"sqlite"` \| `"mysql"` \| `"mariadb"` \| `"postgres"` \| `"cockroachdb"` \| `"mssql"` \| `"launch-darkly"` \| `"cloud-bees"` \| `"etcd"`, `string`\>
+
+#### Source
+
+[integrations/store.ts:3](https://github.com/configu/configu/blob/main/packages/lib/src/integrations/store.ts#L3)
+
+## Variables
+
+### CI_CD_LABEL
+
+> `const` **CI_CD_LABEL**: `Record`\<[`CiCd`](/interfaces/sdk/lib/globals#cicd), `string`\>
+
+#### Source
+
+[integrations/cicd.ts:12](https://github.com/configu/configu/blob/main/packages/lib/src/integrations/cicd.ts#L12)
+
+---
+
+### CI_CD_TYPE
+
+> `const` **CI_CD_TYPE**: [`CiCd`](/interfaces/sdk/lib/globals#cicd)[]
+
+#### Source
+
+[integrations/cicd.ts:35](https://github.com/configu/configu/blob/main/packages/lib/src/integrations/cicd.ts#L35)
+
+---
+
+### CI_CD_WEBSITE
+
+> `const` **CI_CD_WEBSITE**: `Record`\<[`CiCd`](/interfaces/sdk/lib/globals#cicd), `string`\>
+
+#### Source
+
+[integrations/cicd.ts:23](https://github.com/configu/configu/blob/main/packages/lib/src/integrations/cicd.ts#L23)
+
+---
+
+### CONFIG_FORMAT_EXTENSION
+
+> `const` **CONFIG_FORMAT_EXTENSION**: `Record`\<[`ConfigFormat`](/interfaces/sdk/lib/globals#configformat), `string`\>
+
+#### Source
+
+[formatters/ConfigFormat.ts:22](https://github.com/configu/configu/blob/main/packages/lib/src/formatters/ConfigFormat.ts#L22)
+
+---
+
+### CONFIG_FORMAT_LABEL
+
+> `const` **CONFIG_FORMAT_LABEL**: `Record`\<[`ConfigFormat`](/interfaces/sdk/lib/globals#configformat), `string`\>
+
+#### Source
+
+[formatters/ConfigFormat.ts:11](https://github.com/configu/configu/blob/main/packages/lib/src/formatters/ConfigFormat.ts#L11)
+
+---
+
+### CONFIG_FORMAT_TYPE
+
+> `const` **CONFIG_FORMAT_TYPE**: [`ConfigFormat`](/interfaces/sdk/lib/globals#configformat)[]
+
+#### Source
+
+[formatters/ConfigFormat.ts:33](https://github.com/configu/configu/blob/main/packages/lib/src/formatters/ConfigFormat.ts#L33)
+
+---
+
+### FOO
+
+> `const` **FOO**: `object`
+
+#### Index signature
+
+\[`key`: `string`\]: `Cfgu`
+
+#### Source
+
+[schemas/foo.ts:3](https://github.com/configu/configu/blob/main/packages/lib/src/schemas/foo.ts#L3)
+
+---
+
+### GET_STARTED
+
+> `const` **GET_STARTED**: `object`
+
+#### Index signature
+
+\[`key`: `string`\]: `Cfgu`
+
+#### Source
+
+[schemas/getStarted.ts:3](https://github.com/configu/configu/blob/main/packages/lib/src/schemas/getStarted.ts#L3)
+
+---
+
+### RUNTIME_LABEL
+
+> `const` **RUNTIME_LABEL**: `Record`\<[`Runtime`](/interfaces/sdk/lib/globals#runtime), `string`\>
+
+#### Source
+
+[integrations/runtime.ts:11](https://github.com/configu/configu/blob/main/packages/lib/src/integrations/runtime.ts#L11)
+
+---
+
+### RUNTIME_TYPE
+
+> `const` **RUNTIME_TYPE**: [`Runtime`](/interfaces/sdk/lib/globals#runtime)[]
+
+#### Source
+
+[integrations/runtime.ts:33](https://github.com/configu/configu/blob/main/packages/lib/src/integrations/runtime.ts#L33)
+
+---
+
+### RUNTIME_WEBSITE
+
+> `const` **RUNTIME_WEBSITE**: `Record`\<[`Runtime`](/interfaces/sdk/lib/globals#runtime), `string`\>
+
+#### Source
+
+[integrations/runtime.ts:22](https://github.com/configu/configu/blob/main/packages/lib/src/integrations/runtime.ts#L22)
+
+---
+
+### STORE_LABEL
+
+> `const` **STORE_LABEL**: `Record`\<[`StoreType`](/interfaces/sdk/lib/globals#storetype), `string`\>
+
+#### Source
+
+[integrations/store.ts:30](https://github.com/configu/configu/blob/main/packages/lib/src/integrations/store.ts#L30)
+
+---
+
+### STORE_TYPE
+
+> `const` **STORE_TYPE**: [`StoreType`](/interfaces/sdk/lib/globals#storetype)[]
+
+#### Source
+
+[integrations/store.ts:82](https://github.com/configu/configu/blob/main/packages/lib/src/integrations/store.ts#L82)
+
+---
+
+### STORE_WEBSITE
+
+> `const` **STORE_WEBSITE**: `Record`\<[`StoreType`](/interfaces/sdk/lib/globals#storetype), `string`\>
+
+#### Source
+
+[integrations/store.ts:56](https://github.com/configu/configu/blob/main/packages/lib/src/integrations/store.ts#L56)
+
+---
+
+### TYPES_CHECK_ORDER
+
+> `const` **TYPES_CHECK_ORDER**: `CfguType`[]
+
+#### Source
+
+[extractors/configAnalyzer.ts:4](https://github.com/configu/configu/blob/main/packages/lib/src/extractors/configAnalyzer.ts#L4)
+
+## Functions
+
+### analyzeValueType()
+
+> **analyzeValueType**(`value`): `CfguType`
+
+#### Parameters
+
+• **value**: `string`
+
+#### Returns
+
+`CfguType`
+
+#### Source
+
+[extractors/configAnalyzer.ts:26](https://github.com/configu/configu/blob/main/packages/lib/src/extractors/configAnalyzer.ts#L26)
+
+---
+
+### extractConfigs()
+
+> **extractConfigs**(`__namedParameters`): `Record`\<`string`, `ExtractedConfig`\>
+
+#### Parameters
+
+• **\_\_namedParameters**: `ExtractConfigParameters`
+
+#### Returns
+
+`Record`\<`string`, `ExtractedConfig`\>
+
+#### Source
+
+[extractors/configExtractors.ts:47](https://github.com/configu/configu/blob/main/packages/lib/src/extractors/configExtractors.ts#L47)
+
+---
+
+### formatConfigs()
+
+> **formatConfigs**(`__namedParameters`): `string`
+
+#### Parameters
+
+• **\_\_namedParameters**: `FormatterParameters` & `object`
+
+#### Returns
+
+`string`
+
+#### Source
+
+[formatters/configFormatters.ts:91](https://github.com/configu/configu/blob/main/packages/lib/src/formatters/configFormatters.ts#L91)

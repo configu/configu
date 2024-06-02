@@ -6,7 +6,7 @@
       "type": "node",
       "request": "launch",
       "console": "integratedTerminal",
-      "program": "${workspaceRoot}/ts/packages/cli/bin/dev.js",
+      "program": "${workspaceRoot}/packages/cli/bin/dev.js",
       "env": {
         // "VAULT_ADDR": "http://127.0.0.1:8200",
         // "VAULT_TOKEN": "root",
@@ -19,7 +19,7 @@
         // "export",
         // "eval",
         // "delete",
-        "run",
+        // "run"
         // "--script",
         // "test",
         // "--store",
@@ -29,54 +29,20 @@
         // "--schema",
         // "${workspaceFolder}/ts/ts.cfgu.json"
       ],
-      "outFiles": [
-        "${workspaceFolder}/**/*.js",
-        "!**/node_modules/**"
-      ],
-      "skipFiles": [
-        "<node_internals>/**",
-        "node_modules/**"
-      ],
-      "preLaunchTask": "build ts"
+      "outFiles": ["${workspaceFolder}/**/*.js", "!**/node_modules/**"],
+      "skipFiles": ["<node_internals>/**", "node_modules/**"]
     },
-    {
-      "name": "play node sdk",
-      "type": "node",
-      "request": "launch",
-      "cwd": "${workspaceRoot}/ts/packages/node",
-      "runtimeExecutable": "node",
-      "runtimeArgs": [
-        "--nolazy",
-        "--inspect",
-        "-r",
-        "ts-node/register"
-      ],
-      "args": [
-        "test/index.ts"
-      ],
-      "internalConsoleOptions": "openOnSessionStart",
-      "skipFiles": [
-        "<node_internals>/**",
-        "node_modules/**"
-      ],
-      "preLaunchTask": "build ts"
-    },
+    // https://tsx.is/vscode
     {
       "name": "run ts tests",
       "type": "node",
       "request": "launch",
       "cwd": "${workspaceRoot}/ts",
-      "runtimeArgs": [
-        "--inspect",
-        "node_modules/.bin/jest",
-        "--runInBand"
-      ],
-      "args": [
-        "ts/src/commands/commands.test.ts"
-      ],
+      "runtimeArgs": ["--inspect", "node_modules/.bin/jest", "--runInBand"],
+      "args": ["ts/src/commands/commands.test.ts"],
       // "args": ["ts/src/types/types.test.ts"],
       "outputCapture": "std"
       // "internalConsoleOptions": "neverOpen",
-    },
+    }
   ]
 }

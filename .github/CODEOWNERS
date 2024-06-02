@@ -14,5 +14,3 @@ package.json @rannn505
 types/ @configu/dev
 
 ts/ @configu/dev
-py/ @jamesL92 @RonConfigu
-go/ @jamesL92

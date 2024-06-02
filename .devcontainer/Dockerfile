@@ -1,58 +1,39 @@
-# Set base image
-FROM ubuntu:latest
+ARG NODE_VERSION="20"
+FROM node:${NODE_VERSION}
 
-# Maintainer
+ARG NVM_VERSION="v0.39.7"
+
 LABEL maintainer="dev@configu.com"
 
-# Set environment variables for non-interactive apt installs
-ENV DEBIAN_FRONTEND=non-interactive
-ENV HOME /root
-ENV PATH $HOME/.local/bin:$PATH
+ENV INSTALL_DIR="/usr/local/lib"
+ENV DEBIAN_FRONTEND="non-interactive"
+RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
-# Arguments for versions
-ARG NODE_VERSION
-ARG PYTHON_VERSION
-ARG GO_VERSION
+RUN apt-get -y update \
+  && apt-get install -y curl \
+  && apt-get -y autoclean
 
-# Validate ARGS
-RUN if [ -z "$NODE_VERSION" ]; then echo "NODE_VERSION argument is required" && exit 1; fi && \
-  if [ -z "$PYTHON_VERSION" ]; then echo "PYTHON_VERSION argument is required" && exit 1; fi && \
-  if [ -z "$GO_VERSION" ]; then echo "GO_VERSION argument is required" && exit 1; fi
+COPY [".nvmrc", "package.json", ".npmrc", "pnpm-lock.yaml", "./"]
 
-# Install basic dev tools
-RUN apt-get update && apt-get install -y \
-  git curl build-essential libssl-dev zlib1g-dev libbz2-dev \
-  libreadline-dev libsqlite3-dev wget llvm libncurses5-dev libncursesw5-dev \
-  xz-utils tk-dev libffi-dev liblzma-dev python3-openssl && \
-  rm -rf /var/lib/apt/lists/*
+ENV NVM_DIR="$INSTALL_DIR/.nvm"
+RUN mkdir -p $NVM_DIR
+RUN curl --silent -o- https://raw.githubusercontent.com/nvm-sh/nvm/${NVM_VERSION}/install.sh | bash
+RUN source $NVM_DIR/nvm.sh \
+  && nvm install \
+  && nvm use $(cat .nvmrc) \
+  && nvm alias default $(cat .nvmrc) \
+  && nvm ls \
+  && node -v
 
-# Install nvm and then install Node.js and npm
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash && \
-  . $HOME/.nvm/nvm.sh && nvm install $NODE_VERSION
+ENV PNPM_HOME="$INSTALL_DIR/.pnpm"
+RUN mkdir -p $PNPM_HOME
+ENV PATH="$PNPM_HOME:$PATH"
+ENV COREPACK_ENABLE_DOWNLOAD_PROMPT="0"
+RUN corepack enable \
+  && pnpm -v
+RUN pnpm fetch
 
-# Install pyenv and Python
-RUN curl https://pyenv.run | bash
-ENV PATH $HOME/.pyenv/shims:$HOME/.pyenv/bin:$PATH
-RUN pyenv install $PYTHON_VERSION && pyenv global $PYTHON_VERSION
-
-# Install poetry globally
-RUN curl -sSL https://install.python-poetry.org | python3 -
-
-# Install goenv and Go
-RUN git clone https://github.com/syndbg/goenv.git ~/.goenv && \
-  echo 'export GOENV_ROOT="$HOME/.goenv"' >> ~/.bashrc && \
-  echo 'export PATH="$GOENV_ROOT/bin:$PATH"' >> ~/.bashrc && \
-  echo 'eval "$(goenv init -)"' >> ~/.bashrc && \
-  . ~/.bashrc && \
-  goenv install $GO_VERSION && \
-  goenv global $GO_VERSION && \
-  go install golang.org/x/tools/gopls@latest
-
-# Install configu CLI
 RUN curl https://cli.configu.com/install.sh | sh
+RUN configu -v
 
-# Cleanup
-RUN apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-# Default command
 CMD ["/bin/bash"]

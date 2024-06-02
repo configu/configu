@@ -1,11 +1,11 @@
-name: "CI/Pull Request"
+name: CI/Pull Request
 
 on:
   pull_request_target:
 
 jobs:
   ci-pr:
-    name: "CI/Pull Request"
+    name: CI/Pull Request
     runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: PR Assignee
-        uses: toshimaru/auto-author-assign@v2.0.1
+        uses: toshimaru/auto-author-assign@v2.1.0
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -36,7 +36,7 @@ jobs:
       - name: PR Labels
         if: ${{ steps.actor.outputs.actor-permission == 'read' || steps.actor.outputs.actor-permission == 'none' }}
         run: |
-          gh pr edit ${{ github.event.pull_request.number }} --add-label "community"
+          gh pr edit ${{ github.event.pull_request.number }} --add-label 'community'
 
       - name: PR Metrics
         uses: microsoft/PR-Metrics@v1.5.7

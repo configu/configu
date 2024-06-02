@@ -36,20 +36,17 @@ You can make it easier for us if you provide versions of the relevant libraries 
 
 This repository is a [monorepo](https://trunkbaseddevelopment.com/monorepos/). This means there are multiple packages managed in this codebase, even though we publish them as separate packages.
 
-It is powered by [node.js](https://nodejs.org/) and [npm](https://www.npmjs.com/) and uses [husky](https://typicode.github.io/husky/) and [lint-staged](https://github.com/lint-staged/lint-staged) to enforce its coding guidelines.
+It is powered by [node.js](https://nodejs.org/) and [pnpm](https://pnpm.io/) and uses [husky](https://typicode.github.io/husky/) and [lint-staged](https://github.com/lint-staged/lint-staged) to enforce its coding guidelines.
 
-To see the full list of prerequisites, check out the `devEngines` property in the main [`package.json`](https://github.com/configu/configu/blob/main/package.json#L6) file.
+To see the full list of prerequisites, check out the `engines` property in the main [`package.json`](https://github.com/configu/configu/blob/main/package.json#L7) file.
 
-#### Cloud environments
+#### Cloud Development Environment
 
 Instantly start experimenting and developing.
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/configu/configu)
-
-[Open in CodeSandbox →](https://codesandbox.io/p/github/configu/configu/main)
-
-<!-- [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/configu/configu) -->
-
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/configu/configu)<br/>
+[![Edit in CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/github/configu/configu/main)<br/>
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/configu/configu)
 
 ### Local environment
 
@@ -61,47 +58,32 @@ Instantly start experimenting and developing.
 
 ### Repository Structure
 
-#### **.**
+#### **/**
 
-The root directory serves as the skeleton for the Configu project and provides the resources needed for developers to build and contribute to it.
+The [root](https://github.com/configu/configu/blob/main/package.json) directory serves as the skeleton for the Configu project and provides the resources needed for developers to build and contribute to it.
 
-#### **./types**
+#### **types/**
 
 The [./types](https://github.com/configu/configu/tree/main/types) directory holds the core types of the Configu project. These types are written in [TypeScript](https://www.typescriptlang.org/), and then converted into strongly-typed models and serializers in various programming languages using [`quicktype`](https://quicktype.io/). These core types serve as the foundation for all Configu SDKs.
 
-> Running `npm i` in the root directory triggers type generation of the various supported SDKs.
+> Running `pnpm install` in the root directory triggers type generation of the various supported SDKs.
 
-#### **./examples**
+#### **examples/**
 
 The [./examples](https://github.com/configu/configu/tree/main/examples) directory demonstrates various concepts and best practices with some real-world use-cases of Configu.
 
-#### **documentation**
+#### **docs/**
 
-The [documentation repository](https://github.com/configu/docs) holds the official Configu docs. Improvements to the documentation are always welcome. We use [Gatsby](https://github.com/gatsbyjs/gatsby) to build our documentation website. The website is published automatically whenever the `main` branch is updated.
+The [./docs](https://github.com/configu/configu/tree/main/docs) directory holds the official Configu docs. Improvements to the documentation are always welcome. We use [Mintlify](https://mintlify.com/) to build and host our documentation website. The website is published automatically whenever the `main` branch is updated.
 
-#### **./ts**
+#### **./packages**
 
-The [./ts](https://github.com/configu/configu/tree/main/ts) directory houses a sub-monorepo that includes the following packages:
-
-- [./ts/packages/ts](https://github.com/configu/configu/tree/main/ts/packages/ts): Shared code for both the Node.js and browser SDKs
-  - [./ts/packages/ts/src/stores](https://github.com/configu/configu/tree/main/ts/packages/ts/src/stores): [ConfigStores](https://configu.com/docs/config-store/) supported for all TS based packages
-  - [./ts/packages/ts/src/commands](https://github.com/configu/configu/tree/main/ts/packages/ts/src/commands): [Commands](https://configu.com/docs/commands/) supported for all TS based packages
-- [./ts/packages/node](https://github.com/configu/configu/tree/main/ts/packages/node): The Node.js SDK
-- [./ts/packages/browser](https://github.com/configu/configu/tree/main/ts/packages/browser): The browser SDK
-- [./ts/packages/cli](https://github.com/configu/configu/tree/main/ts/packages/cli): Configu CLI, which is built using [oclif](https://oclif.io/) and the Node.js SDK
-- [./ts/packages/vscode](https://github.com/configu/configu/tree/main/ts/packages/vscode): a VSCode extension for working with Configu
-
-#### **./py**
-
-The [./py](https://github.com/configu/configu/tree/main/py) directory houses the Python SDK that is powered by [Poetry](https://python-poetry.org/).
-
-#### **./go**
-
-The [./go](https://github.com/configu/configu/tree/main/go) directory houses the Go SDK.
-
-<!-- #### **./java**
-
-The [./java]() directory will shortly contain the Java SDK. -->
+- [./packages/ts](https://github.com/configu/configu/tree/main/packages/ts): Shared code for both the Node.js and browser SDKs
+  - [./packages/ts/src/stores](https://github.com/configu/configu/tree/main/packages/ts/src/stores): [ConfigStores](https://configu.com/docs/config-store/) supported for all TS based packages
+  - [./packages/ts/src/commands](https://github.com/configu/configu/tree/main/packages/ts/src/commands): [Commands](https://configu.com/docs/commands/) supported for all TS based packages
+- [./packages/node](https://github.com/configu/configu/tree/main/packages/node): The Node.js SDK
+- [./packages/browser](https://github.com/configu/configu/tree/main/packages/browser): The browser SDK
+- [./packages/cli](https://github.com/configu/configu/tree/main/packages/cli): Configu CLI, which is built using [oclif](https://oclif.io/) and the Node.js SDK
 
 ### Sending a Pull Request
 
@@ -123,7 +105,7 @@ After you have submitted your pull request, we'll try to get back to you as soon
 
 ## Resources
 
-> Working on your first Pull Request? You can learn how from this *free* series, [How to Contribute to an Open Source Project on GitHub](https://egghead.io/courses/how-to-contribute-to-an-open-source-project-on-github).
+> Working on your first Pull Request? You can learn how from this _free_ series, [How to Contribute to an Open Source Project on GitHub](https://egghead.io/courses/how-to-contribute-to-an-open-source-project-on-github).
 
 - [Open Source Guides](https://opensource.guide/how-to-contribute/)
 - [GitHub Help](https://help.github.com)

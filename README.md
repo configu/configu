@@ -28,6 +28,7 @@
 </p>
 
 ## ⭐️ Configu?
+
 <!-- docs/introduction/overview#Configu -->
 
 <a href="https://configu.com" target="_blank">
@@ -74,8 +75,7 @@ Every contribution matters! Here’s how you can jump in and make an impact:
 Massive thanks 🙏 to all our [contributors](https://github.com/configu/configu/graphs/contributors) for your time and efforts in making Configu better. Keep rocking 💪!
 
 > [!NOTE]
-> Eager to code? Kickstart your Configu development now:<br/>
-> [GitHub Codespaces »](https://codespaces.new/configu/configu) ・ [CodeSandbox »](https://codesandbox.io/p/github/configu/configu/main)
+> Eager to code? Kickstart your Configu development now:<br/> [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/configu/configu) [![Edit in CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/github/configu/configu/main) [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/configu/configu)
 
 <!-- ## 🗺️ Roadmap
 

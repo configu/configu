@@ -1,5 +1,6 @@
 {
   "configu": {
+    "enabled": true,
     "label": "Configu Platform",
     "icon": "https://raw.githubusercontent.com/configu/configu/main/docs/images/icon/icon.svg",
     "docs": "integrations/store/configu/overview",
@@ -21,7 +22,7 @@
     "store": {
       "base": "Configu",
       "type": "configu",
-      "code": "/ts/packages/ts/src/stores/Configu.ts"
+      "code": "/packages/ts/src/stores/Configu.ts"
     },
     "links": {
       "website": "https://configu.com",
@@ -37,7 +38,7 @@
     "store": {
       "base": "File",
       "type": "json-file",
-      "code": "/ts/packages/node/src/stores/JsonFile.ts"
+      "code": "/packages/node/src/stores/JsonFile.ts"
     },
     "links": {
       "website": "https://www.json.org/json-en.html"
@@ -51,7 +52,7 @@
     "store": {
       "base": "File",
       "type": "csv-file",
-      "code": "/ts/packages/node/src/stores/CsvFile.ts"
+      "code": "/packages/node/src/stores/CsvFile.ts"
     },
     "links": {
       "website": "https://en.wikipedia.org/wiki/Comma-separated_values"
@@ -65,7 +66,7 @@
     "store": {
       "base": "File",
       "type": "xml-file",
-      "code": "/ts/packages/node/src/stores/XmlFile.ts"
+      "code": "/packages/node/src/stores/XmlFile.ts"
     },
     "links": {
       "website": "https://en.wikipedia.org/wiki/XML"
@@ -79,7 +80,7 @@
     "store": {
       "base": "File",
       "type": "ini-file",
-      "code": "/ts/packages/node/src/stores/IniFile.ts"
+      "code": "/packages/node/src/stores/IniFile.ts"
     },
     "links": {
       "website": "https://en.wikipedia.org/wiki/INI_file"
@@ -93,7 +94,7 @@
     "store": {
       "base": "File",
       "type": "toml-file",
-      "code": "/ts/packages/node/src/stores/TomlFile.ts"
+      "code": "/packages/node/src/stores/TomlFile.ts"
     },
     "links": {
       "website": "https://toml.io"
@@ -108,7 +109,7 @@
     "store": {
       "base": "ORM",
       "type": "sqlite",
-      "code": "/ts/packages/node/src/stores/SQLite.ts"
+      "code": "/packages/node/src/stores/SQLite.ts"
     },
     "links": {
       "website": "https://www.sqlite.org"
@@ -122,7 +123,7 @@
     "store": {
       "base": "ORM",
       "type": "mysql",
-      "code": "/ts/packages/node/src/stores/MySQL.ts"
+      "code": "/packages/node/src/stores/MySQL.ts"
     },
     "links": {
       "website": "https://www.mysql.com"
@@ -136,7 +137,7 @@
     "store": {
       "base": "ORM",
       "type": "mariadb",
-      "code": "/ts/packages/node/src/stores/MariaDB.ts"
+      "code": "/packages/node/src/stores/MariaDB.ts"
     },
     "links": {
       "website": "https://mariadb.org"
@@ -150,7 +151,7 @@
     "store": {
       "base": "ORM",
       "type": "postgresql",
-      "code": "/ts/packages/node/src/stores/PostgresSQL.ts"
+      "code": "/packages/node/src/stores/PostgresSQL.ts"
     },
     "links": {
       "website": "https://www.postgresql.org"
@@ -164,7 +165,7 @@
     "store": {
       "base": "ORM",
       "type": "cockroachdb",
-      "code": "/ts/packages/node/src/stores/CockroachDB.ts"
+      "code": "/packages/node/src/stores/CockroachDB.ts"
     },
     "links": {
       "website": "https://www.cockroachlabs.com"
@@ -178,7 +179,7 @@
     "store": {
       "base": "ORM",
       "type": "mssql",
-      "code": "/ts/packages/node/src/stores/MSSQL.ts"
+      "code": "/packages/node/src/stores/MSSQL.ts"
     },
     "links": {
       "website": "https://www.microsoft.com/en-us/sql-server"
@@ -193,7 +194,7 @@
     "store": {
       "base": "KeyValue",
       "type": "hashicorp-vault",
-      "code": "/ts/packages/node/src/stores/HashiCorpVault.ts"
+      "code": "/packages/node/src/stores/HashiCorpVault.ts"
     },
     "links": {
       "website": "https://www.vaultproject.io"
@@ -207,7 +208,7 @@
     "store": {
       "base": "KeyValue",
       "type": "aws-secrets-manager",
-      "code": "/ts/packages/node/src/stores/AWSSecretsManager.ts"
+      "code": "/packages/node/src/stores/AWSSecretsManager.ts"
     },
     "links": {
       "website": "https://aws.amazon.com/secrets-manager"
@@ -221,7 +222,7 @@
     "store": {
       "base": "KeyValue",
       "type": "azure-key-vault",
-      "code": "/ts/packages/node/src/stores/AzureKeyVault.ts"
+      "code": "/packages/node/src/stores/AzureKeyVault.ts"
     },
     "links": {
       "website": "https://azure.microsoft.com/en-us/services/key-vault"
@@ -235,7 +236,7 @@
     "store": {
       "base": "KeyValue",
       "type": "gcp-secret-manager",
-      "code": "/ts/packages/node/src/stores/GCPSecretManager.ts"
+      "code": "/packages/node/src/stores/GCPSecretManager.ts"
     },
     "links": {
       "website": "https://cloud.google.com/secret-manager"
@@ -249,7 +250,7 @@
     "store": {
       "base": "KeyValue",
       "type": "kubernetes-secret",
-      "code": "/ts/packages/node/src/stores/KubernetesSecret.ts"
+      "code": "/packages/node/src/stores/KubernetesSecret.ts"
     },
     "links": {
       "website": "https://kubernetes.io/docs/concepts/configuration/secret"
@@ -264,7 +265,7 @@
     "store": {
       "base": "OpenFeature",
       "type": "launchdarkly",
-      "code": "/ts/packages/node/src/stores/LaunchDarkly.ts"
+      "code": "/packages/node/src/stores/LaunchDarkly.ts"
     },
     "links": {
       "website": "https://launchdarkly.com"
@@ -278,7 +279,7 @@
     "store": {
       "base": "OpenFeature",
       "type": "cloudbees-feature-management",
-      "code": "/ts/packages/node/src/stores/CloudBeesFeatureManagement.ts"
+      "code": "/packages/node/src/stores/CloudBeesFeatureManagement.ts"
     },
     "links": {
       "website": "https://www.cloudbees.com/products/feature-management"
@@ -292,7 +293,7 @@
     "store": {
       "base": "OpenFeature",
       "type": "split",
-      "code": "/ts/packages/node/src/stores/Split.ts"
+      "code": "/packages/node/src/stores/Split.ts"
     },
     "links": {
       "website": "https://www.split.io"
@@ -306,7 +307,7 @@
     "group": ["ConfigStore", "Other"],
     "store": {
       "type": "in-memory",
-      "code": "/ts/packages/ts/src/stores/InMemory.ts"
+      "code": "/packages/ts/src/stores/InMemory.ts"
     },
     "links": {
       "website": "https://en.wikipedia.org/wiki/In-memory_database"
@@ -320,7 +321,7 @@
     "store": {
       "base": "KeyValue",
       "type": "aws-parameter-store",
-      "code": "/ts/packages/node/src/stores/AWSParameterStore.ts"
+      "code": "/packages/node/src/stores/AWSParameterStore.ts"
     },
     "links": {
       "website": "https://aws.amazon.com/systems-manager/features/#Parameter_Store"
@@ -334,7 +335,7 @@
     "store": {
       "base": "KeyValue",
       "type": "localforage",
-      "code": "/ts/packages/browser/src/stores/LocalForage.ts"
+      "code": "/packages/browser/src/stores/LocalForage.ts"
     },
     "links": {
       "website": "https://localforage.github.io/localForage"

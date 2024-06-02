@@ -1,17 +1,18 @@
-name: "CI/Release Drafter"
+name: CI/Release Drafter
 
 on:
   push:
     branches:
-      - main
+      - 'main'
 
 jobs:
   ci-release:
-    name: "CI/Release"
+    name: CI/Release
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        package: [ts, py, go, lib, cli, vscode]
+        package: [ts, lib, cli]
+        # package: [ts, lib, cli, vscode]
     permissions:
       contents: write
       pull-requests: read
