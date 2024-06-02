@@ -6,7 +6,7 @@ description: 'The `.configu` file is an optional configuration file used by the 
 
 ## Location
 
-Configu interfaces recursively searches for the `.configu` file starting from the current working directory and continuing up to the user's home directory. Once it finds a `.configu` file, it uses it solosly and stops searching.
+Configu interfaces recursively search for the `.configu` file starting from the current working directory and continuing up to the user's home directory. Once it finds a `.configu` file, it uses it solely and stops searching.
 
 ## Format
 
@@ -15,7 +15,7 @@ The `.configu` file can be written in one of the following formats: `YAML` or `J
 ## $schema
 
 include the `$schema` property at the beginning of the file to specify the `Cfgu` version to communicate to other readers and tooling which specification version is intended.
-Also most modern editors will use this property to provide intellisense and validation for the `Cfgu` file.
+Also, most modern editors will use this property to provide IntelliSense and validation for the `Cfgu` file.
 
 <CodeGroup>
 
@@ -39,13 +39,13 @@ The `.configu` file allows you to save `ConfigStore` configurations as friendly 
 
 To define a `ConfigStore`, add a new key-value pair to the `stores` section of the `.configu` file, where the key represents the friendly name, and the value is an object with the `type` and `configuration` properties. The `type` property represents the store type, and the `configuration` property contains the specific configuration options for the store.
 
-For detailed information about the available store options, please refer to the relevant store on the [intergrations section](/integrations/overview#configstore).
+For detailed information about the available store options, please refer to the relevant store in the [integrations section](/integrations/overview#configstore).
 
 ### schemas
 
 The `.configu` file allows you to save `ConfigSchema` paths as friendly names, which can be later used as values for the `--schema` flag in all the commands.
 
-To define a custom script, add a new key-value pair to the `schemas` section of the `.configu` file, where the key represents the friendly name, and the value is the schema absoulte or relative path.
+To define a custom script, add a new key-value pair to the `schemas` section of the `.configu` file, where the key represents the friendly name, and the value is the schema absolute or relative path.
 
 ### scripts
 
@@ -121,7 +121,7 @@ scripts:
 
 ## Environment Variables
 
-The `.configu` file allows you to use environment variables in its different sections. this is come handy for `store configuration options` or `scripts` when you want to avoid expicit write of sensative authentication credentials etc. and you want to inject them from the outside and before runing configu. To use an environment variable, you can utilize [mustache templating](https://mustache.github.io/) as such:
+The `.configu` file allows you to use environment variables in its different sections. This comes in handy for `store configuration options` or `scripts` when you want to avoid explicitly writing sensitive authentication credentials etc. and you want to inject them from the outside before running Configu. To use an environment variable, you can utilize [mustache templating](https://mustache.github.io/) as such:
 
 ```yaml
 $schema: https://json-schema.org/draft/2020-12/schema
