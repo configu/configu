@@ -5,6 +5,7 @@ ARG NVM_VERSION="v0.39.7"
 
 LABEL maintainer="dev@configu.com"
 
+ENV INSTALL_DIR="/usr/local/lib"
 ENV DEBIAN_FRONTEND="non-interactive"
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
@@ -14,8 +15,9 @@ RUN apt-get -y update \
 
 COPY [".nvmrc", "package.json", ".npmrc", "pnpm-lock.yaml", "./"]
 
-ENV NVM_DIR="~/.nvm"
+ENV NVM_DIR="$INSTALL_DIR/.nvm"
 RUN mkdir -p $NVM_DIR
+
 RUN curl --silent -o- https://raw.githubusercontent.com/nvm-sh/nvm/${NVM_VERSION}/install.sh | bash
 RUN source $NVM_DIR/nvm.sh \
   && nvm install \
@@ -24,7 +26,7 @@ RUN source $NVM_DIR/nvm.sh \
   && nvm ls \
   && node -v
 
-ENV PNPM_HOME="$~/.pnpm"
+ENV PNPM_HOME="$INSTALL_DIR/.pnpm"
 RUN mkdir -p $PNPM_HOME
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable \

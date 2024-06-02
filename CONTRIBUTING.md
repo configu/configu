@@ -44,11 +44,9 @@ To see the full list of prerequisites, check out the `engines` property in the m
 
 Instantly start experimenting and developing.
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/configu/configu)
-
-[Open in CodeSandbox →](https://codesandbox.io/p/github/configu/configu/main)
-
-<!-- [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/configu/configu) -->
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/configu/configu)<br/>
+[![Edit in CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/github/configu/configu/main)<br/>
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/configu/configu)
 
 ### Local environment
 
