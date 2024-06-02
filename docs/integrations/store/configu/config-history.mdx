@@ -19,9 +19,7 @@ Tags are a way to mark a specific snapshot of the organization's configs as a ve
 Once a tag is created, you can compare it with the current state of your organization and revert to it.
 **Tags can be created, viewed, and reverted only by the organization's admins.**
 
-<Warning>
-  Tags can only be created and applied to the entire organization, not to a specific set or config.
-</Warning>
+<Warning>Tags can only be created and applied to the entire organization, not to a specific set or config.</Warning>
 
 #### Create a tag
 
@@ -41,8 +39,8 @@ curl --request POST \
 }'
 ```
 
-<Info>  Tag can be any alphanumeric string. optionally with the following characters: `. _ / -`</Info>
-<Tip>  Your organization ID can be found under [organization settings](/integrations/store/configu/settings)</Tip>
+<Info>Tag can be any alphanumeric string. optionally with the following characters: `. _ / -`</Info>
+<Tip>Your organization ID can be found under [organization settings](/integrations/store/configu/settings)</Tip>
 
 Upon success (status 200), your tag will be ready for use.
 You can now view it in the history log and revert to it if necessary by opening the action menu and clicking **Show diff**.
@@ -53,24 +51,16 @@ You can now view it in the history log and revert to it if necessary by opening 
 
 <Frame>![image](/images-old/configs-history/history-revert-tag.png)</Frame>
 
-<Info>
-- Only members with the `Admin` role have permission to access the `show diff` and `revert` actions.
-</Info>
+<Info>Only members with the `Admin` role have permission to access the `show diff` and `revert` actions.</Info>
 
 #### Evaluating with a tag
 
 You can use a tag to evaluate your configs with a specific snapshot of any existing tags to ensure your evaluations are deterministic. To do this, use `ConfiguConfigStore` with the `tag` parameter using any existing tag name.
 
-Example usage with the [Node.js SDK](/interfaces/sdk/nodejs):
+Example usage with the [Node.js SDK](/interfaces/sdk/node/overview):
 
 ```js
-import {
-  ConfiguConfigStore,
-  ConfigSet,
-  ConfigSchema,
-  EvalCommand,
-  ExportCommand,
-} from '@configu/node';
+import { ConfiguConfigStore, ConfigSet, ConfigSchema, EvalCommand, ExportCommand } from '@configu/node';
 import schemaContents from './start.cfgu.json';
 
 (async () => {
@@ -109,8 +99,8 @@ To evaluate using the CLI, make sure to set the `CONFIGU_TAG` environment variab
 </Warning>
 
 <Info>
-- Evaluations with a tag will be marked with the tag in the [audit log](/integrations/store/configu/audit-logs).
-- Evaluations with a tag will trigger webhooks with the tag name in the payload as `tag`.
+  - Evaluations with a tag will be marked with the tag in the [audit log](/integrations/store/configu/audit-logs). -
+  Evaluations with a tag will trigger webhooks with the tag name in the payload as `tag`.
 </Info>
 
 #### Exploring a tag
@@ -124,8 +114,11 @@ This will take you to the explorer tab where you will see the snapshot of the th
 <Frame>![image](/images-old/configs-history/history-exploration-mode.png)</Frame>
 
 <Info>
-- All navigation options are disabled during tag exploration.
-- All regular config action menu options besides `show value` are disabled during tag exploration. You can view the value of the configs if you have the appropriate permission.
+  All navigation options are disabled during tag exploration.
+  <br />
+  All regular config action menu options besides `show value` are disabled during tag exploration.
+  <br />
+  You can view the value of the configs if you have the appropriate permission.
 </Info>
 
 At any point you can exit the exploration mode by clicking `return to latest tag` in the banner at the top of the page.

@@ -1,0 +1,132 @@
+{
+  "name": "@configu/cli",
+  "version": "0.0.0",
+  "license": "Apache-2.0",
+  "description": "Configu CLI",
+  "author": "@configu/dev",
+  "scripts": {
+    "clean": "shx rm -rf tsconfig.tsbuildinfo build dist tmp",
+    "build": "tsc --build",
+    "build:ref": "zx ref.mjs",
+    "build:tar": "zx pack.mjs",
+    "build:docker": "docker build --progress plain -t configu/cli -f ./Dockerfile .",
+    "test": "echo NO TESTS"
+  },
+  "oclif": {
+    "bin": "configu",
+    "binAliases": [
+      "cfgu"
+    ],
+    "dirname": "configu",
+    "scope": "configu",
+    "commands": "./build/commands",
+    "topicSeparator": " ",
+    "topics": {},
+    "plugins": [
+      "@oclif/plugin-autocomplete",
+      "@oclif/plugin-not-found",
+      "@oclif/plugin-update"
+    ],
+    "additionalVersionFlags": [
+      "v",
+      "V",
+      "-v",
+      "-V",
+      "version",
+      "--version"
+    ],
+    "additionalHelpFlags": [
+      "h",
+      "H",
+      "-h",
+      "-H",
+      "help",
+      "--help"
+    ],
+    "update": {
+      "node": {
+        "version": "20.10.0",
+        "targets": [
+          "linux-x64",
+          "linux-arm",
+          "linux-arm64",
+          "win32-x64",
+          "win32-x86",
+          "darwin-x64",
+          "darwin-arm64"
+        ]
+      },
+      "s3": {
+        "bucket": "cli.configu.com",
+        "folder": "",
+        "acl": " ",
+        "host": "https://cli.configu.com",
+        "xz": false
+      }
+    }
+  },
+  "engines": {
+    "node": ">=v20.0.0"
+  },
+  "exports": "./build/index.js",
+  "types": "./build/index.d.ts",
+  "bin": {
+    "configu": "./bin/run.js",
+    "cfgu": "./bin/run.js"
+  },
+  "files": [
+    "/bin",
+    "/build/**/*.js",
+    "/oclif.manifest.json"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/configu/configu",
+    "directory": "packages/cli"
+  },
+  "bugs": {
+    "url": "https://github.com/configu/configu/issues",
+    "email": "dev@configu.com"
+  },
+  "homepage": "https://configu.com",
+  "keywords": [
+    "cfgu",
+    "configu",
+    "configu-cli",
+    "configu-command-line"
+  ],
+  "dependencies": {
+    "@configu/lib": "^0.7.3",
+    "@configu/node": "^0.24.0",
+    "@configu/ts": "^0.24.0",
+    "@oclif/core": "^3.14.1",
+    "@oclif/plugin-autocomplete": "^3.0.3",
+    "@oclif/plugin-not-found": "^3.0.5",
+    "@oclif/plugin-update": "^4.1.5",
+    "axios": "^1.6.2",
+    "chalk": "4.1.2",
+    "change-case": "4.1.2",
+    "ci-info": "^4.0.0",
+    "cosmiconfig": "^9.0.0",
+    "fast-glob": "^3.3.2",
+    "inquirer": "8.2.5",
+    "js-yaml": "^4.1.0",
+    "lodash": "^4.17.21",
+    "log-symbols": "4.1.0",
+    "open": "8.4.2",
+    "openid-client": "^5.6.1",
+    "parse-json": "5.2.0"
+  },
+  "devDependencies": {
+    "@oclif/prettier-config": "^0.2.1",
+    "@oclif/test": "^3.2.13",
+    "@types/inquirer": "8.2.5",
+    "@types/js-yaml": "^4.0.9",
+    "@types/parse-json": "^4.0.2",
+    "aws-sdk": "^2.1616.0",
+    "eslint-config-oclif": "^5.2.0",
+    "eslint-config-oclif-typescript": "^3.1.7",
+    "oclif": "^4.0.4",
+    "tslib": "^2.6.2"
+  }
+}

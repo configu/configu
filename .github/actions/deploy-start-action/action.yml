@@ -1,33 +1,36 @@
-name: "Deployment start hook"
+name: Deployment start hook
+description: Run pre deployment tasks
 
 inputs:
   package-name:
+    description: The name of the package eg. @configu/xyz
     required: true
   slack-webhook:
+    description: The Slack webhook URL
     required: true
 
 outputs:
   release-package:
-    description: "Release package"
+    description: Release package
     value: ${{ steps.release-info.outputs.package }}
   release-sha:
-    description: "Release sha"
+    description: Release sha
     value: ${{ steps.release-info.outputs.sha }}
   release-branch:
-    description: "Release branch"
+    description: Release branch
     value: ${{ steps.release-info.outputs.branch }}
   release-tag:
-    description: "Release tag"
+    description: Release tag
     value: ${{ steps.release-info.outputs.tag }}
   release-version:
-    description: "Release version"
+    description: Release version
     value: ${{ steps.release-info.outputs.version }}
   release-channel:
-    description: "Release channel"
+    description: Release channel
     value: ${{ steps.release-info.outputs.channel }}
 
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Extract release information
       id: release-info
@@ -70,13 +73,13 @@ runs:
         echo "version: $version"
         echo "channel: $channel"
 
-    - name: Post Slack build message
+    - name: Post Slack message
       id: slack
-      uses: slackapi/slack-github-action@v1.24.0
+      uses: slackapi/slack-github-action@v1.26.0
       with:
         payload: |
           {
-            "text": "${{ inputs.package-name }} v${{ steps.release-info.outputs.version }} is now being deployed"
+            "text": "${{ inputs.package-name }} v${{ steps.release-info.outputs.version }} is now being released"
           }
       env:
         SLACK_WEBHOOK_URL: ${{ inputs.slack-webhook }}

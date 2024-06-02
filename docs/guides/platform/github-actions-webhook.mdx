@@ -4,20 +4,21 @@ title: Trigger Github Actions using a Configu Webhook
 description: Learn how to trigger a [GitHub workflow](https://docs.github.com/en/actions/using-workflows/triggering-a-workflow) from a webhook invocation.
 ---
 
-
 ## Prerequisites
+
 - Access permissions to create a WebHook for Github Actions.
 - Configu Cloud organization with admin permissions (if you donn't have an account, get one free [here](https://app.configu.com))
 
 ## Create a Configu Webhook
 
 1. Define your target workflow payload URL: `https://api.github.com/repos/{owner}/{repo}/actions/workflows/{action-id}/dispatches`, example:
-<Frame>![image](/images-old/webhooks/github-customize-your-payload.png)</Frame>
+   <Frame>![image](/images-old/webhooks/github-customize-your-payload.png)</Frame>
 2. Customize your header to include an `Authorization` header with your GitHub personal access token. Example:
-<Frame>![image](/images-old/webhooks/github-authorization-header.png)</Frame>
+   <Frame>![image](/images-old/webhooks/github-authorization-header.png)</Frame>
 3. Customize your payload to contain the data you need, for this example:
-<Frame>![image](/images-old/webhooks/github-customize-your-payload.png)</Frame>
-you will need to send the following payload data:
-<Frame>![image](/images-old/webhooks/github-customize-your-payload-2.png)</Frame>
+   <Frame>![image](/images-old/webhooks/github-customize-your-payload.png)</Frame>
+   you will need to send the following payload data:
+   <Frame>![image](/images-old/webhooks/github-customize-your-payload-2.png)</Frame>
+
 - `ref` is the branch that contains the workflow definition
 - `inputs` is the data that the workflow will use that is sent from the webhook

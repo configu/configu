@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    // // ! These options are necessary so that TypeDoc can resolve references across packages
+    // "declarationMap": true,
+    // "sourceMap": true,
+    // // !
+    "target": "es6",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "incremental": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "removeComments": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "useUnknownInCatchVariables": false,
+    "strictPropertyInitialization": false,
+    "noUncheckedIndexedAccess": true
+    // // ! Turned on as @configu/node uses decorators and for "test:cov" script
+    // "experimentalDecorators": true,
+    // "emitDecoratorMetadata": true,
+    // // !
+  }
+}

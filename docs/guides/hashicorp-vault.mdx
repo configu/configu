@@ -79,16 +79,19 @@ Doing that increases developers' velocity and helps them avoid leaving the termi
 Running a local environment was never easier, choose your preferred way to inject your environment variables:
 
 - Run Configu seamlessly with your app
+
 ```bash
 configu eval --schema "./my-app.cfgu.json" --defaults | configu export --run "py my-app.py"
 ```
 
 - Inject the variables into your shell
+
 ```bash
 configu eval --schema "./my-app.cfgu.json" --defaults | configu export --source
 ```
 
 - Download and use `.env` file or any other format you want
+
 ```bash
 configu eval --schema "./my-app.cfgu.json" --defaults | configu export --format "Dotenv" > .env.development
 ```
@@ -100,7 +103,7 @@ In the following example, we will manage our configs over our HashiCorp Vault se
 
 ### Authenticate HashiCorp Vault
 
-Configu's CLI uses the standard env vars HashiCorp use, if you have the Vault CLI configured and working, there's no special action to take.
+Configu's CLI uses the standard env vars HashiCorp uses, if you have the Vault CLI configured and working, there's no special action to take.
 If not please configure your environment with the required variables (See variables [here](https://github.com/hashicorp/vault/blob/api/v1.0.4/api/client.go#L28)).
 
 ### Upsert values
@@ -113,7 +116,7 @@ configu upsert --store "hashicorp-vault" --schema "./my-app.cfgu.json" --set "pr
 
 ### Export values
 
-Same to the way we previously used the Cfgu defaults we can evaluate and export from any store we need.
+Similar to the way we previously used the Cfgu defaults we can evaluate and export from any store we need.
 
 ```bash
 configu eval --store "hashicorp-vault" --schema "./my-app.cfgu.json" --set "prod" \

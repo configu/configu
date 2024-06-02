@@ -1,11 +1,11 @@
 ---
-title: "Concepts"
+title: 'Concepts'
 description: "Gain a solid understanding of the foundational elements that drive Configu's configuration management system. This page provides a short overview of key concepts to help you navigate and utilize Configu effectively."
-icon: "book-sparkles"
+icon: 'book-sparkles'
 ---
 
-import { CfguExt } from '/snippets/variables.mdx'
-import { Important } from '/snippets/callouts.mdx'
+import { CfguExt } from '/snippets/variables.mdx';
+import { Important } from '/snippets/callouts.mdx';
 
 ## Software Configuration
 
@@ -30,12 +30,14 @@ Configuration-as-Code (CaC) transforms `software configurations` into code for c
 ## Configu Concepts
 
 <Tip>
-For a comprehensive understanding of the concepts introduced below, we encourage you to **expand the "Learn more about" sections**. This will provide you with detailed explanations and insights, enhancing your grasp of Configu's core functionalities and design principles.
+  For a comprehensive understanding of the concepts introduced below, we encourage you to **expand the "Learn more
+  about" sections**. This will provide you with detailed explanations and insights, enhancing your grasp of Configu's
+  core functionalities and design principles.
 </Tip>
 
 ### Config
 
-<img alt="Config" height="32" width="32" align="right" noZoom src="/images/config/Config.svg"/>
+<img alt="Config" height="32" width="32" align="right" noZoom src="/images/config/Config.svg" />
 
 A generic representation of `software configuration` using three properties: `key`, `value`, `set`. It is the core data model that powers Configu's configuration management.
 
@@ -63,6 +65,7 @@ A `ConfigStore` is a storage system for `Configs` in Configu, serving as a mecha
 You can choose the most suitable `ConfigStore` based on your specific needs and workflow. Each `ConfigStore` has its own type and can be referenced as instances of their respective class implementation when using Configu's SDK. When using Configu's CLI, `ConfigStores` are referenced using their type, which can also be declared as friendly names in the [.configu file](/).
 
 Configu's interfaces [support a wide range of `ConfigStores`](/). In case you don't find a `ConfigStore` that meets your requirements, Configu allows you to easily create your own by implementing a simple abstract class with `get` and `set` methods. This flexibility empowers you to extend Configu and tailor it to your specific configuration management needs.
+
 </Accordion>
 
 ### ConfigSet
@@ -81,7 +84,9 @@ At the top of the ConfigSet hierarchy is the **root set**, represented by an emp
 Each stored `Config` is associated with a "set" property, which links it to a particular path in the ConfigSet hierarchy. When evaluating a configuration, Configu searches for the corresponding value by traversing the hierarchy from the supplied path's last node up to the root set. This mechanism allows for seamless **inheritance and overriding** of configuration values, making it effortless to customize software behavior for different environments or use cases.
 
 <Info>
-ConfigSets can represent any context that requires distinct configuration values. For example, you can utilize ConfigSets to group configurations based on regions, deployment stages, or specific feature sets. This flexibility empowers you to structure your configuration hierarchy in a way that best fits your application's needs.
+  ConfigSets can represent any context that requires distinct configuration values. For example, you can utilize
+  ConfigSets to group configurations based on regions, deployment stages, or specific feature sets. This flexibility
+  empowers you to structure your configuration hierarchy in a way that best fits your application's needs.
 </Info>
 
 Let's explore an example of a ConfigSet hierarchy:
@@ -120,6 +125,7 @@ In this example, the `root set` represents the top-level of the hierarchy.
 The `staging` set, a child of the root set, contains configurations specific to the staging environment. It defines an `API_URL` for the staging API endpoint. Additionally, it has a child set called `feature-flags`, which encompasses specific feature flags and their corresponding values.
 
 The `production` set, another child of the root set, includes a configuration for the API URL, representing the production API endpoint.
+
 </Accordion>
 
 ### ConfigKey
@@ -136,7 +142,7 @@ Here are some examples of how a configuration named "CONFIG" might be used as an
 <CodeGroup>
 
 ```javascript Node.js
-process.env.CONFIG
+process.env.CONFIG;
 ```
 
 ```python Python
@@ -209,9 +215,9 @@ Here is an example of a `ConfigSchema` file:
 
 ```yaml example.cfgu.yaml
 API_KEY:
-  type: "String"
+  type: 'String'
   required: true
-  description: "API key for a 3rd party service"
+  description: 'API key for a 3rd party service'
 ```
 
 ```json example.cfgu.json
@@ -226,8 +232,8 @@ API_KEY:
 
 </CodeGroup>
 
-
 In this example, the `ConfigSchema` binds a configuration called "API_KEY" with a type of "String". The configuration is marked as required and has a short description.
+
 </Accordion>
 
 ### UpsertCommand
@@ -284,9 +290,7 @@ A tool that securely stores and manages sensitive data. It provides an interface
 
 The process of deploying configuration data to a target environment. This process involves exporting configuration data from a source, transforming it into a suitable artifact, and injecting it into the target environment or service, such as shell environments, Docker containers, Kubernetes clusters, AWS Lambda functions, ECS containers, Vercel deployments, Netlify setups, and more.
 
-<Tip>
-  Check out our [guides](/guides) section for examples of configuration deployments.
-</Tip>
+<Tip>Check out our [guides](/guides) section for examples of configuration deployments.</Tip>
 
 ### Configuration file
 
@@ -301,7 +305,6 @@ Standard formats for configuration files include [XML](https://www.w3.org/XML/),
 ### Configuration template
 
 A file containing placeholders like `{{CONFIG_KEY}}`, `<CONFIG_KEY>`, `${CONFIG_KEY}`, etc., which are replaced with actual values during rendering with a template engine. Templates enable dynamic configuration generation based on context.
-
 
 ### Configuration template engine
 

@@ -14,14 +14,11 @@
     "editor.formatOnSave": false
   },
   "[typescript]": {
-    "editor.formatOnSave": false,
+    "editor.formatOnSave": false
   },
   "typescript.tsdk": "ts/node_modules/typescript/lib",
   "typescript.referencesCodeLens.enabled": true,
-  "eslint.validate": [
-    "javascript",
-    "typescript"
-  ],
+  "eslint.validate": ["javascript", "typescript"],
   "search.exclude": {
     "**/node_modules": true,
     "**/build": true,
@@ -30,8 +27,5 @@
     "package-lock.json": true,
     "tsconfig.tsbuildinfo": true
   },
-  "cSpell.words": [
-    "cfgu",
-    "configu",
-  ],
+  "yaml.schemas": {}
 }
