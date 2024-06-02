@@ -8,13 +8,14 @@ LABEL maintainer="dev@configu.com"
 ENV DEBIAN_FRONTEND="non-interactive"
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
-RUN apt-get update \
+RUN apt-get -y update \
   && apt-get install -y curl \
   && apt-get -y autoclean
 
 COPY [".nvmrc", "package.json", ".npmrc", "pnpm-lock.yaml", "./"]
 
-ENV NVM_DIR="$HOME/.nvm"
+ENV NVM_DIR="~/.nvm"
+RUN mkdir -p $NVM_DIR
 
 RUN curl --silent -o- https://raw.githubusercontent.com/nvm-sh/nvm/${NVM_VERSION}/install.sh | bash
 RUN source $NVM_DIR/nvm.sh \
@@ -24,10 +25,12 @@ RUN source $NVM_DIR/nvm.sh \
   && nvm ls \
   && node -v
 # https://www.gitpod.io/docs/introduction/languages/javascript#setting-up-a-custom-dockerfile
+RUN mkdir -p ~/.bashrc.d \
+  && chmod 700 ~/.bashrc.d
 RUN echo "nvm use default &>/dev/null" >> ~/.bashrc.d/51-nvm-fix
 
-
-ENV PNPM_HOME="$HOME/.pnpm"
+ENV PNPM_HOME="$~/.pnpm"
+RUN mkdir -p $PNPM_HOME
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable \
   && pnpm -v
