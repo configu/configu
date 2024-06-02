@@ -24,10 +24,6 @@ RUN source $NVM_DIR/nvm.sh \
   && nvm alias default $(cat .nvmrc) \
   && nvm ls \
   && node -v
-# https://www.gitpod.io/docs/introduction/languages/javascript#setting-up-a-custom-dockerfile
-RUN mkdir -p ~/.bashrc.d \
-  && chmod 700 ~/.bashrc.d
-RUN echo "nvm use default &>/dev/null" >> ~/.bashrc.d/51-nvm-fix
 
 ENV PNPM_HOME="$~/.pnpm"
 RUN mkdir -p $PNPM_HOME
