@@ -16,7 +16,6 @@ COPY [".nvmrc", "package.json", ".npmrc", "pnpm-lock.yaml", "./"]
 
 ENV NVM_DIR="~/.nvm"
 RUN mkdir -p $NVM_DIR
-
 RUN curl --silent -o- https://raw.githubusercontent.com/nvm-sh/nvm/${NVM_VERSION}/install.sh | bash
 RUN source $NVM_DIR/nvm.sh \
   && nvm install \
