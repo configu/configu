@@ -1,5 +1,4 @@
-// For format details, see https://aka.ms/devcontainer.json. For config options, see the
-// README at: https://github.com/devcontainers/templates/tree/main/src/typescript-node
+// For format details, see https://aka.ms/devcontainer.json.
 {
   "name": "Configu Dev Container",
   "build": {
@@ -12,12 +11,16 @@
   "customizations": {
     "vscode": {
       "extensions": [
-        "streetsidesoftware.code-spell-checker",
+        "EditorConfig.EditorConfig",
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
-        "yzhang.markdown-all-in-one",
+        "streetsidesoftware.code-spell-checker",
+        "christian-kohler.npm-intellisense",
+        "christian-kohler.path-intellisense",
+        "redhat.vscode-yaml",
         "yoavbls.pretty-ts-errors",
-        "ms-vscode-remote.remote-containers"
+        "yzhang.markdown-all-in-one",
+        "unifiedjs.vscode-mdx"
       ]
     }
   },
