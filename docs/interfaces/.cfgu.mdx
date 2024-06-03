@@ -22,13 +22,17 @@ Also, most modern editors will use this property to provide IntelliSense and val
 <CodeGroup>
 
 ```yaml example.cfgu.yaml
-$schema: https://json-schema.org/draft/2020-12/schema-cfgu
+$schema: https://raw.githubusercontent.com/configu/configu/main/packages/schema/.cfgu.json
 ```
 
 ```json example.cfgu.json
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema-cfgu"
+  "$schema": "https://raw.githubusercontent.com/configu/configu/main/packages/schema/.cfgu.json"
 }
+```
+
+```yaml vscode-yaml
+# yaml-language-server: $schema=https://raw.githubusercontent.com/configu/configu/main/packages/schema/.cfgu.json
 ```
 
 </CodeGroup>

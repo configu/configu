@@ -13,3 +13,4 @@ The `@configu/schema` package is an integral part of the Configu ecosystem, desi
 - [JSONSchema.dev](https://jsonschema.dev)
 - [JSON Schema Store](https://www.schemastore.org)
 - [JSON Schema Store CONTRIBUTING](https://github.com/SchemaStore/schemastore/blob/master/CONTRIBUTING.md)
+- [JSON Schema Store PR](https://github.com/SchemaStore/schemastore/pull/3834)
