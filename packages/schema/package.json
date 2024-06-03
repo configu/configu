@@ -1,0 +1,37 @@
+{
+  "name": "@configu/schema",
+  "version": "0.0.0",
+  "license": "Apache-2.0",
+  "description": "Configu Files JSON Schema",
+  "author": "@configu/dev",
+  "files": [
+    "/*.json"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/configu/configu",
+    "directory": "packages/schema"
+  },
+  "bugs": {
+    "url": "https://github.com/configu/configu/issues",
+    "email": "dev@configu.com"
+  },
+  "homepage": "https://configu.com",
+  "keywords": [
+    "cfgu",
+    "configu",
+    "configu-json-schema",
+    "json-schema"
+  ],
+  "scripts": {
+    "test": "pnpm \"/^test:.*/\"",
+    "test:cfgu": "ajv test -s .cfgu.json -d \"data/*.cfgu.json\" --valid --verbose",
+    "test:configu": "ajv test -s .configu.json -d \"data/.configu.yml\" --valid --verbose"
+  },
+  "dependencies": {
+    "ajv": "^8.14.0"
+  },
+  "devDependencies": {
+    "ajv-cli": "^5.0.0"
+  }
+}

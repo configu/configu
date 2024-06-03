@@ -1,0 +1,20 @@
+$schema: 'https://raw.githubusercontent.com/configu/configu/main/packages/schema/.configu.json'
+stores:
+  store1:
+    cache: true
+    type: storeType1
+    configuration:
+      option1: value1
+      option2: value2
+  store2:
+    type: storeType2
+    configuration:
+      option3: value3
+      option4: value4
+cache: /path/to/db.sqlite
+schemas:
+  schema1: ../path/to/schema1.json
+  schema2: /path/to/schema2.json
+scripts:
+  script1: 'configu command1 --option1 value1'
+  script2: 'configu command2 --option2 value2 | configu command3'

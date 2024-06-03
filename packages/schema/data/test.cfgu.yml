@@ -1,0 +1,28 @@
+$schema: 'https://raw.githubusercontent.com/configu/configu/main/packages/schema/.cfgu.json'
+NODE_ENV:
+  description: Defines the environment in which the application runs
+  type: String
+  options:
+    - development
+    - production
+    - test
+  default: development
+LOG_LEVEL:
+  description: Defines the level of logs to be recorded
+  type: String
+  options:
+    - error
+    - warn
+    - info
+    - verbose
+    - debug
+    - silly
+  default: info
+SERVICE_ENDPOINT:
+  description: Defines the endpoint for the service
+  type: URL
+  required: true
+AWS_REGION:
+  description: Defines the AWS region for the service
+  type: AWSRegion
+  default: us-east-1

@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/configu/configu/main/packages/schema/.configu.json",
+  "$comment": "https://jsonschema.dev/s/3pOmT",
+  "title": "JSON Schema for Configu .configu file",
+  "description": "https://docs.configu.com/interfaces/.configu",
+  "$defs": {
+    "StoresProperty": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "cache": {
+            "type": "boolean"
+          },
+          "configuration": {
+            "type": "object"
+          }
+        },
+        "required": ["type"]
+      }
+    },
+    "StringMapProperty": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "ConfiguConfigurationFile": {
+      "type": "object",
+      "minProperties": 1,
+      "properties": {
+        "$schema": {
+          "type": "string"
+        },
+        "stores": {
+          "$ref": "#/$defs/StoresProperty"
+        },
+        "cache": {
+          "type": "string"
+        },
+        "schemas": {
+          "$ref": "#/$defs/StringMapProperty"
+        },
+        "scripts": {
+          "$ref": "#/$defs/StringMapProperty"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/$defs/ConfiguConfigurationFile"
+}
