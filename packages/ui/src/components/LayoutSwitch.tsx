@@ -23,7 +23,7 @@ const LayoutSwitchTrigger = React.forwardRef<React.ElementRef<typeof TabsPrimiti
     <TabsPrimitive.Trigger
       ref={ref}
       className={cn(
-        'text-gray data-[state=active]:text-blue data-[state=active]:border-blue inline-flex h-full items-center justify-center whitespace-nowrap border border-gray-200 bg-gray-100 px-7 text-sm font-medium first:rounded-l-3xl last:rounded-r-3xl hover:border-gray-800 hover:text-gray-800 disabled:pointer-events-none data-[state=active]:bg-blue-100 dark:border-gray-400 dark:bg-gray-900 dark:text-gray-400 dark:hover:border-gray-300 dark:hover:text-gray-200 dark:data-[state=active]:border-blue-300 dark:data-[state=active]:bg-blue-900 dark:data-[state=active]:text-blue-300',
+        'text-gray data-[state=active]:text-blue data-[state=active]:border-blue inline-flex h-full w-28 items-center justify-center whitespace-nowrap border border-gray-200 bg-gray-100 text-sm font-medium first:rounded-l-3xl last:rounded-r-3xl hover:border-gray-800 hover:text-gray-800 disabled:pointer-events-none data-[state=active]:bg-blue-100 dark:border-gray-400 dark:bg-gray-900 dark:text-gray-400 dark:hover:border-gray-300 dark:hover:text-gray-200 dark:data-[state=active]:border-blue-300 dark:data-[state=active]:bg-blue-900 dark:data-[state=active]:text-blue-300',
         className,
       )}
       {...props}
