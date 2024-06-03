@@ -79,7 +79,7 @@ const config = {
     },
     extend: {
       fontFamily: {
-        dmSans: ['DM Sans', 'serif'],
+        dmSans: ['DM Sans Variable', 'sans-serif'],
       },
       colors: {
         border: 'hsl(var(--border))',
