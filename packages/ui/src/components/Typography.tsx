@@ -2,7 +2,7 @@ import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../lib/utils';
 
-const textVariants = cva('font-dmSans', {
+const textVariants = cva('font-dmSans text-black dark:text-white', {
   variants: {
     variant: {
       h1: 'text-3xl font-black',
