@@ -181,7 +181,7 @@ export const LogoWritingWhiteSafeArea = (props: React.SVGProps<SVGSVGElement>) =
 export const ArrowLeftIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
-      <g fill={'none'}>
+      <g>
         <path
           fillRule={'evenodd'}
           clipRule={'evenodd'}
@@ -196,7 +196,7 @@ export const ArrowLeftIcon = (props: React.SVGProps<SVGSVGElement>) => {
 export const ArrowDownIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
-      <g fill={'none'}>
+      <g>
         <path
           fillRule={'evenodd'}
           clipRule={'evenodd'}
@@ -211,7 +211,7 @@ export const ArrowDownIcon = (props: React.SVGProps<SVGSVGElement>) => {
 export const ArrowUpIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
-      <g fill={'none'}>
+      <g>
         <path
           fillRule={'evenodd'}
           clipRule={'evenodd'}
@@ -225,7 +225,7 @@ export const ArrowUpIcon = (props: React.SVGProps<SVGSVGElement>) => {
 export const ArrowRightIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
-      <g fill={'none'}>
+      <g>
         <path
           fillRule={'evenodd'}
           clipRule={'evenodd'}
@@ -240,7 +240,7 @@ export const ArrowRightIcon = (props: React.SVGProps<SVGSVGElement>) => {
 export const LockIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
-      <g fill={'none'}>
+      <g>
         <path
           fillRule={'evenodd'}
           clipRule={'evenodd'}
@@ -255,7 +255,7 @@ export const LockIcon = (props: React.SVGProps<SVGSVGElement>) => {
 export const UnlockIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
-      <g fill={'none'}>
+      <g>
         <path
           fillRule={'evenodd'}
           clipRule={'evenodd'}
@@ -274,7 +274,7 @@ export const UnlockIcon = (props: React.SVGProps<SVGSVGElement>) => {
 export const CheckInCircleIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
-      <g fill={'none'}>
+      <g>
         <path
           fillRule={'evenodd'}
           clipRule={'evenodd'}
@@ -289,7 +289,7 @@ export const CheckInCircleIcon = (props: React.SVGProps<SVGSVGElement>) => {
 export const CheckCircleIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
-      <g fill={'none'}>
+      <g>
         <path
           fillRule={'evenodd'}
           clipRule={'evenodd'}
@@ -304,7 +304,7 @@ export const CheckCircleIcon = (props: React.SVGProps<SVGSVGElement>) => {
 export const ConfiguIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
-      <g fill={'none'}>
+      <g>
         <path
           fillRule={'evenodd'}
           clipRule={'evenodd'}
@@ -319,7 +319,7 @@ export const ConfiguIcon = (props: React.SVGProps<SVGSVGElement>) => {
 export const CheckIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
-      <g fill={'none'}>
+      <g>
         <path
           fillRule={'evenodd'}
           clipRule={'evenodd'}
@@ -334,7 +334,7 @@ export const CheckIcon = (props: React.SVGProps<SVGSVGElement>) => {
 export const ChevronDownIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
-      <g fill={'none'}>
+      <g>
         <path
           fillRule={'evenodd'}
           clipRule={'evenodd'}
@@ -349,7 +349,7 @@ export const ChevronDownIcon = (props: React.SVGProps<SVGSVGElement>) => {
 export const ChevronLeftIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
-      <g fill={'none'}>
+      <g>
         <path
           fillRule={'evenodd'}
           clipRule={'evenodd'}
@@ -364,7 +364,7 @@ export const ChevronLeftIcon = (props: React.SVGProps<SVGSVGElement>) => {
 export const ChevronRightIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
-      <g fill={'none'}>
+      <g>
         <path
           fillRule={'evenodd'}
           clipRule={'evenodd'}
@@ -379,7 +379,7 @@ export const ChevronRightIcon = (props: React.SVGProps<SVGSVGElement>) => {
 export const ChevronUpIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
-      <g fill={'none'}>
+      <g>
         <path
           fillRule={'evenodd'}
           clipRule={'evenodd'}
@@ -394,7 +394,7 @@ export const ChevronUpIcon = (props: React.SVGProps<SVGSVGElement>) => {
 export const DarkModeIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
-      <g fill={'none'}>
+      <g>
         <path
           fillRule={'evenodd'}
           clipRule={'evenodd'}
@@ -409,7 +409,7 @@ export const DarkModeIcon = (props: React.SVGProps<SVGSVGElement>) => {
 export const DeleteIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
-      <g fill={'none'}>
+      <g>
         <path
           fillRule={'evenodd'}
           clipRule={'evenodd'}
@@ -424,7 +424,7 @@ export const DeleteIcon = (props: React.SVGProps<SVGSVGElement>) => {
 export const LightModeIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
-      <g fill={'none'}>
+      <g>
         <path
           fillRule={'evenodd'}
           clipRule={'evenodd'}
@@ -487,7 +487,7 @@ export const LightModeIcon = (props: React.SVGProps<SVGSVGElement>) => {
 export const UploadIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
-      <g fill={'none'}>
+      <g>
         <path
           fillRule={'evenodd'}
           clipRule={'evenodd'}
@@ -508,7 +508,7 @@ export const UploadIcon = (props: React.SVGProps<SVGSVGElement>) => {
 export const SetIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
-      <g fill={'none'}>
+      <g>
         <path
           fillRule={'evenodd'}
           clipRule={'evenodd'}
@@ -535,7 +535,7 @@ export const SetIcon = (props: React.SVGProps<SVGSVGElement>) => {
 export const DatabaseIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
-      <g fill={'none'}>
+      <g>
         <path
           fillRule={'evenodd'}
           clipRule={'evenodd'}
@@ -561,7 +561,7 @@ export const DatabaseIcon = (props: React.SVGProps<SVGSVGElement>) => {
 export const DuplicateIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
-      <g fill={'none'}>
+      <g>
         <path
           fillRule={'evenodd'}
           clipRule={'evenodd'}
@@ -588,7 +588,7 @@ export const DuplicateIcon = (props: React.SVGProps<SVGSVGElement>) => {
 export const DownloadIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
-      <g fill={'none'}>
+      <g>
         <path
           fillRule={'evenodd'}
           clipRule={'evenodd'}
@@ -609,7 +609,7 @@ export const DownloadIcon = (props: React.SVGProps<SVGSVGElement>) => {
 export const ConfigIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
-      <g fill={'none'}>
+      <g>
         <path
           fillRule={'evenodd'}
           clipRule={'evenodd'}
@@ -624,7 +624,7 @@ export const ConfigIcon = (props: React.SVGProps<SVGSVGElement>) => {
 export const SchemaIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
-      <g fill={'none'}>
+      <g>
         <path
           fillRule={'evenodd'}
           clipRule={'evenodd'}
@@ -639,7 +639,7 @@ export const SchemaIcon = (props: React.SVGProps<SVGSVGElement>) => {
 export const FormatIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
-      <g fill={'none'}>
+      <g>
         <path
           fillRule={'evenodd'}
           clipRule={'evenodd'}
@@ -654,7 +654,7 @@ export const FormatIcon = (props: React.SVGProps<SVGSVGElement>) => {
 export const EditIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
-      <g fill={'none'}>
+      <g>
         <path
           stroke="currentColor"
           strokeMiterlimit={10}
@@ -695,7 +695,7 @@ export const CopyIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const BriefcaseIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         stroke="currentColor"
         strokeLinecap="square"
@@ -708,7 +708,7 @@ export const BriefcaseIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const TagIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         d="M5.66602 5.66602H5.67268M14.7273 9.94065L9.94732 14.7207C9.82349 14.8446 9.67644 14.943 9.51457 15.0101C9.35271 15.0772 9.1792 15.1117 9.00398 15.1117C8.82876 15.1117 8.65526 15.0772 8.4934 15.0101C8.33153 14.943 8.18448 14.8446 8.06065 14.7207L2.33398 9.00065V2.33398H9.00065L14.7273 8.06065C14.9757 8.31047 15.115 8.6484 15.115 9.00065C15.115 9.3529 14.9757 9.69083 14.7273 9.94065Z"
         stroke="currentColor"
@@ -721,7 +721,7 @@ export const TagIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const FileIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         fill="currentColor"
         fillRule="evenodd"
@@ -734,7 +734,7 @@ export const FileIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const AuditsIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         fill="currentColor"
         fillRule="evenodd"
@@ -747,7 +747,7 @@ export const AuditsIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const TokenIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         fill="currentColor"
         fillRule="evenodd"
@@ -765,7 +765,7 @@ export const TokenIcon = (props: React.SVGProps<SVGSVGElement>) => {
 };
 export const WebhooksIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         fill="currentColor"
         fillRule="evenodd"
@@ -778,7 +778,7 @@ export const WebhooksIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const MembersIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         stroke="currentColor"
         strokeLinecap="round"
@@ -791,7 +791,7 @@ export const MembersIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const AtSignIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         stroke="currentColor"
         strokeLinecap="round"
@@ -804,7 +804,7 @@ export const AtSignIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const MemberIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         stroke="currentColor"
         strokeLinecap="round"
@@ -825,7 +825,7 @@ export const MemberIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const ViewIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         fill="currentColor"
         fillRule="evenodd"
@@ -838,7 +838,7 @@ export const ViewIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const BranchIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         stroke="currentColor"
         strokeLinecap="round"
@@ -851,7 +851,7 @@ export const BranchIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const CommandIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -870,7 +870,7 @@ export const CommandIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const KIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -886,7 +886,7 @@ export const KIcon = (props: React.SVGProps<SVGSVGElement>) => {
 };
 export const TreeDownIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         d="M7.00033 1.33347C6.17782 1.33347 5.50033 2.01097 5.50033 2.83347V4.83347C5.50033 5.65597 6.17782 6.33347 7.00033 6.33347H7.50033V7.6668H5.16699C4.34449 7.6668 3.66699 8.3443 3.66699 9.1668V9.6668H3.16699C2.34449 9.6668 1.66699 10.3443 1.66699 11.1668V13.1668C1.66699 13.9893 2.34449 14.6668 3.16699 14.6668H5.16699C5.98949 14.6668 6.66699 13.9893 6.66699 13.1668V11.1668C6.66699 10.3443 5.98949 9.6668 5.16699 9.6668H4.66699V9.1668C4.66699 8.88463 4.88483 8.6668 5.16699 8.6668H10.8337C11.1158 8.6668 11.3337 8.88463 11.3337 9.1668V9.6668H10.8337C10.0112 9.6668 9.33366 10.3443 9.33366 11.1668V13.1668C9.33366 13.9893 10.0112 14.6668 10.8337 14.6668H12.8337C13.6562 14.6668 14.3337 13.9893 14.3337 13.1668V11.1668C14.3337 10.3443 13.6562 9.6668 12.8337 9.6668H12.3337V9.1668C12.3337 8.3443 11.6562 7.6668 10.8337 7.6668H8.50033V6.33347H9.00033C9.82283 6.33347 10.5003 5.65597 10.5003 4.83347V2.83347C10.5003 2.01097 9.82283 1.33347 9.00033 1.33347H7.00033ZM7.00033 2.33347H9.00033C9.28249 2.33347 9.50033 2.5513 9.50033 2.83347V4.83347C9.50033 5.11563 9.28249 5.33347 9.00033 5.33347H7.00033C6.71816 5.33347 6.50033 5.11563 6.50033 4.83347V2.83347C6.50033 2.5513 6.71816 2.33347 7.00033 2.33347ZM3.16699 10.6668H5.16699C5.44916 10.6668 5.66699 10.8846 5.66699 11.1668V13.1668C5.66699 13.449 5.44916 13.6668 5.16699 13.6668H3.16699C2.88483 13.6668 2.66699 13.449 2.66699 13.1668V11.1668C2.66699 10.8846 2.88483 10.6668 3.16699 10.6668ZM10.8337 10.6668H12.8337C13.1158 10.6668 13.3337 10.8846 13.3337 11.1668V13.1668C13.3337 13.449 13.1158 13.6668 12.8337 13.6668H10.8337C10.5515 13.6668 10.3337 13.449 10.3337 13.1668V11.1668C10.3337 10.8846 10.5515 10.6668 10.8337 10.6668Z"
         fill="currentColor"
@@ -897,7 +897,7 @@ export const TreeDownIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const TreeUpIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         d="M9.00032 14.6668C9.82282 14.6668 10.5003 13.9893 10.5003 13.1668V11.1668C10.5003 10.3443 9.82282 9.6668 9.00032 9.6668H8.50032V8.33347H10.8336C11.6561 8.33347 12.3336 7.65597 12.3336 6.83347L12.3336 6.33347H12.8336C13.6561 6.33347 14.3336 5.65597 14.3336 4.83347V2.83347C14.3336 2.01097 13.6561 1.33347 12.8336 1.33347H10.8336C10.0111 1.33347 9.33365 2.01097 9.33365 2.83347L9.33365 4.83347C9.33365 5.65597 10.0111 6.33347 10.8336 6.33347H11.3336V6.83347C11.3336 7.11563 11.1158 7.33347 10.8336 7.33347L5.16698 7.33347C4.88482 7.33347 4.66698 7.11563 4.66698 6.83347V6.33347H5.16698C5.98948 6.33347 6.66698 5.65597 6.66698 4.83347L6.66698 2.83347C6.66698 2.01097 5.98948 1.33347 5.16698 1.33347H3.16698C2.34448 1.33347 1.66698 2.01097 1.66698 2.83347V4.83347C1.66698 5.65597 2.34448 6.33347 3.16698 6.33347H3.66698V6.83347C3.66698 7.65597 4.34448 8.33347 5.16698 8.33347H7.50032V9.6668H7.00032C6.17782 9.6668 5.50032 10.3443 5.50032 11.1668V13.1668C5.50032 13.9893 6.17782 14.6668 7.00032 14.6668L9.00032 14.6668ZM9.00032 13.6668H7.00032C6.71815 13.6668 6.50032 13.449 6.50032 13.1668V11.1668C6.50032 10.8846 6.71815 10.6668 7.00032 10.6668H9.00032C9.28248 10.6668 9.50032 10.8846 9.50032 11.1668V13.1668C9.50032 13.449 9.28248 13.6668 9.00032 13.6668ZM12.8336 5.33347H10.8336C10.5515 5.33347 10.3336 5.11563 10.3336 4.83347V2.83347C10.3336 2.5513 10.5515 2.33347 10.8336 2.33347H12.8336C13.1158 2.33347 13.3336 2.5513 13.3336 2.83347V4.83347C13.3336 5.11563 13.1158 5.33347 12.8336 5.33347ZM5.16698 5.33347H3.16698C2.88482 5.33347 2.66698 5.11563 2.66698 4.83347V2.83347C2.66698 2.5513 2.88482 2.33347 3.16698 2.33347H5.16698C5.44915 2.33347 5.66698 2.5513 5.66698 2.83347V4.83347C5.66698 5.11563 5.44915 5.33347 5.16698 5.33347Z"
         fill="currentColor"
@@ -908,7 +908,7 @@ export const TreeUpIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const RepositoryIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -939,7 +939,7 @@ export const RepositoryIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const ReplaceIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -970,7 +970,7 @@ export const ReplaceIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const MenuGridIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -983,7 +983,7 @@ export const MenuGridIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const CloseIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -996,7 +996,7 @@ export const CloseIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const SearchIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -1009,7 +1009,7 @@ export const SearchIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const RevisionsIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -1022,7 +1022,7 @@ export const RevisionsIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const OrganizationIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -1035,7 +1035,7 @@ export const OrganizationIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const DomainIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -1048,7 +1048,7 @@ export const DomainIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const PlanIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -1061,7 +1061,7 @@ export const PlanIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const ActionsIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -1074,7 +1074,7 @@ export const ActionsIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const VersionsIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -1099,7 +1099,7 @@ export const VersionsIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const TimeIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -1118,7 +1118,7 @@ export const TimeIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const TreeRightIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         d="M1.33365 9.00013C1.33365 9.82263 2.01115 10.5001 2.83365 10.5001H4.83365C5.65615 10.5001 6.33365 9.82263 6.33365 9.00013V8.50013H7.66698V10.8335C7.66698 11.656 8.34448 12.3335 9.16698 12.3335H9.66698V12.8335C9.66698 13.656 10.3445 14.3335 11.167 14.3335H13.167C13.9895 14.3335 14.667 13.656 14.667 12.8335V10.8335C14.667 10.011 13.9895 9.33347 13.167 9.33347H11.167C10.3445 9.33347 9.66698 10.011 9.66698 10.8335V11.3335H9.16698C8.88482 11.3335 8.66698 11.1156 8.66698 10.8335V5.1668C8.66698 4.88463 8.88482 4.6668 9.16698 4.6668H9.66698V5.1668C9.66698 5.9893 10.3445 6.6668 11.167 6.6668H13.167C13.9895 6.6668 14.667 5.9893 14.667 5.1668V3.1668C14.667 2.3443 13.9895 1.6668 13.167 1.6668H11.167C10.3445 1.6668 9.66698 2.3443 9.66698 3.1668V3.6668H9.16698C8.34448 3.6668 7.66698 4.3443 7.66698 5.1668L7.66698 7.50013H6.33365L6.33365 7.00013C6.33365 6.17763 5.65615 5.50013 4.83365 5.50013H2.83365C2.01115 5.50013 1.33365 6.17763 1.33365 7.00013L1.33365 9.00013ZM2.33365 9.00013L2.33365 7.00013C2.33365 6.71797 2.55148 6.50013 2.83365 6.50013H4.83365C5.11582 6.50013 5.33365 6.71797 5.33365 7.00013L5.33365 9.00013C5.33365 9.2823 5.11582 9.50013 4.83365 9.50013H2.83365C2.55148 9.50013 2.33365 9.2823 2.33365 9.00013ZM10.667 12.8335V10.8335C10.667 10.5513 10.8848 10.3335 11.167 10.3335H13.167C13.4491 10.3335 13.667 10.5513 13.667 10.8335V12.8335C13.667 13.1156 13.4491 13.3335 13.167 13.3335H11.167C10.8848 13.3335 10.667 13.1156 10.667 12.8335ZM10.667 5.1668V3.1668C10.667 2.88463 10.8848 2.6668 11.167 2.6668H13.167C13.4491 2.6668 13.667 2.88463 13.667 3.1668V5.1668C13.667 5.44897 13.4491 5.6668 13.167 5.6668H11.167C10.8848 5.6668 10.667 5.44897 10.667 5.1668Z"
         fill="currentColor"
@@ -1129,7 +1129,7 @@ export const TreeRightIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const TreeLeftIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         d="M14.667 7.00013C14.667 6.17763 13.9895 5.50013 13.167 5.50013H11.167C10.3445 5.50013 9.66699 6.17763 9.66699 7.00013V7.50013H8.33366V5.1668C8.33366 4.3443 7.65616 3.6668 6.83366 3.6668H6.33366V3.1668C6.33366 2.3443 5.65616 1.6668 4.83366 1.6668H2.83366C2.01116 1.6668 1.33366 2.3443 1.33366 3.1668V5.1668C1.33366 5.9893 2.01116 6.6668 2.83366 6.6668H4.83366C5.65616 6.6668 6.33366 5.9893 6.33366 5.1668V4.6668H6.83366C7.11583 4.6668 7.33366 4.88463 7.33366 5.1668L7.33366 10.8335C7.33366 11.1156 7.11583 11.3335 6.83366 11.3335H6.33366V10.8335C6.33366 10.011 5.65616 9.33347 4.83366 9.33347H2.83366C2.01116 9.33347 1.33366 10.011 1.33366 10.8335V12.8335C1.33366 13.656 2.01116 14.3335 2.83366 14.3335H4.83366C5.65616 14.3335 6.33366 13.656 6.33366 12.8335V12.3335H6.83366C7.65616 12.3335 8.33366 11.656 8.33366 10.8335V8.50013H9.66699V9.00013C9.66699 9.82263 10.3445 10.5001 11.167 10.5001H13.167C13.9895 10.5001 14.667 9.82263 14.667 9.00013V7.00013ZM13.667 7.00013V9.00013C13.667 9.2823 13.4492 9.50013 13.167 9.50013H11.167C10.8848 9.50013 10.667 9.2823 10.667 9.00013V7.00013C10.667 6.71797 10.8848 6.50013 11.167 6.50013H13.167C13.4492 6.50013 13.667 6.71797 13.667 7.00013ZM5.33366 3.1668V5.1668C5.33366 5.44897 5.11582 5.6668 4.83366 5.6668L2.83366 5.6668C2.55149 5.6668 2.33366 5.44897 2.33366 5.1668V3.1668C2.33366 2.88463 2.55149 2.6668 2.83366 2.6668L4.83366 2.6668C5.11582 2.6668 5.33366 2.88463 5.33366 3.1668ZM5.33366 10.8335V12.8335C5.33366 13.1156 5.11582 13.3335 4.83366 13.3335H2.83366C2.55149 13.3335 2.33366 13.1156 2.33366 12.8335V10.8335C2.33366 10.5513 2.55149 10.3335 2.83366 10.3335H4.83366C5.11582 10.3335 5.33366 10.5513 5.33366 10.8335Z"
         fill="currentColor"
@@ -1140,7 +1140,7 @@ export const TreeLeftIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const ListIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -1153,7 +1153,7 @@ export const ListIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const TableIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -1170,7 +1170,7 @@ export const TableIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const PinIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -1193,7 +1193,7 @@ export const PinIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const UnpinIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -1206,7 +1206,7 @@ export const UnpinIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const ValueIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -1231,7 +1231,7 @@ export const ValueIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const ZoomInIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -1243,7 +1243,7 @@ export const ZoomInIcon = (props: React.SVGProps<SVGSVGElement>) => {
 };
 export const ZoomOutIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -1256,7 +1256,7 @@ export const ZoomOutIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const FullscreenIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -1269,7 +1269,7 @@ export const FullscreenIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const ZoomOutMapIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -1296,7 +1296,7 @@ export const ZoomOutMapIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const SortDownIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         d="M0.833344 3.30022C0.833344 3.02407 1.0572 2.80022 1.33334 2.80022H12C12.2762 2.80022 12.5 3.02407 12.5 3.30022C12.5 3.57636 12.2762 3.80022 12 3.80022H1.33334C1.0572 3.80022 0.833344 3.57636 0.833344 3.30022Z"
         fill="currentColor"
@@ -1323,7 +1323,7 @@ export const SortDownIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const SortUpIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         d="M13.0202 2.94666C12.8249 2.7514 12.5084 2.7514 12.3131 2.94666L10.3131 4.94666C10.1178 5.14193 10.1178 5.45851 10.3131 5.65377C10.5084 5.84903 10.8249 5.84903 11.0202 5.65377L12.1667 4.50732V9.96688C12.1667 10.243 12.3905 10.4669 12.6667 10.4669C12.9428 10.4669 13.1667 10.243 13.1667 9.96688V4.50732L14.3131 5.65377C14.5084 5.84903 14.8249 5.84903 15.0202 5.65377C15.2155 5.45851 15.2155 5.14193 15.0202 4.94666L13.0202 2.94666Z"
         fill="currentColor"
@@ -1350,7 +1350,7 @@ export const SortUpIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const SortTimeDownIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         d="M4.66501 5.2662C4.94115 5.2662 5.16501 5.49006 5.16501 5.7662V7.4652H6.86401C7.14015 7.4652 7.36401 7.68906 7.36401 7.9652C7.36401 8.24135 7.14015 8.4652 6.86401 8.4652H4.66501C4.38887 8.4652 4.16501 8.24135 4.16501 7.9652V5.7662C4.16501 5.49006 4.38887 5.2662 4.66501 5.2662Z"
         fill="currentColor"
@@ -1371,7 +1371,7 @@ export const SortTimeDownIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const SortTimeUpIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         d="M4.66501 5.2662C4.94115 5.2662 5.16501 5.49006 5.16501 5.7662V7.4652H6.86401C7.14015 7.4652 7.36401 7.68906 7.36401 7.9652C7.36401 8.24135 7.14015 8.4652 6.86401 8.4652H4.66501C4.38887 8.4652 4.16501 8.24135 4.16501 7.9652V5.7662C4.16501 5.49006 4.38887 5.2662 4.66501 5.2662Z"
         fill="currentColor"
@@ -1392,7 +1392,7 @@ export const SortTimeUpIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const InfoIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -1404,7 +1404,7 @@ export const InfoIcon = (props: React.SVGProps<SVGSVGElement>) => {
 };
 export const ZoomOutMap2Icon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         d="M3 13V8.71385H3.77877V11.6685L11.6716 3.77877H8.71385V3H13V7.28615H12.2212V4.32836L4.33147 12.2212H7.28615V13H3Z"
         fill="currentColor"
@@ -1414,7 +1414,7 @@ export const ZoomOutMap2Icon = (props: React.SVGProps<SVGSVGElement>) => {
 };
 export const UnauthorizedIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -1426,7 +1426,7 @@ export const UnauthorizedIcon = (props: React.SVGProps<SVGSVGElement>) => {
 };
 export const ResetIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         d="M1.83334 8.00022C1.83334 4.59447 4.59425 1.83356 8.00001 1.83356C10.2473 1.83356 12.2147 3.03575 13.2927 4.83355H11.3333C11.0572 4.83355 10.8333 5.0574 10.8333 5.33355C10.8333 5.60969 11.0572 5.83355 11.3333 5.83355H14.1005C14.1083 5.83373 14.1161 5.83373 14.1239 5.83355H14.2667C14.7638 5.83355 15.1667 5.43059 15.1667 4.93355V2.00021C15.1667 1.72407 14.9428 1.50021 14.6667 1.50021C14.3905 1.50021 14.1667 1.72407 14.1667 2.00021V4.34677C12.9183 2.24402 10.6243 0.833557 8.00001 0.833557C4.04197 0.833557 0.833344 4.04218 0.833344 8.00022C0.833344 11.9582 4.04197 15.1669 8.00001 15.1669C11.5931 15.1669 14.5679 12.5231 15.0866 9.07461C15.1277 8.80154 14.9397 8.54687 14.6666 8.50579C14.3935 8.46471 14.1389 8.65277 14.0978 8.92584C13.6515 11.8924 11.0909 14.1669 8.00001 14.1669C4.59425 14.1669 1.83334 11.4059 1.83334 8.00022Z"
         fill="currentColor"
@@ -1437,7 +1437,7 @@ export const ResetIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const WarningIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -1462,7 +1462,7 @@ export const WarningIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const PlayIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         d="M4.60392 3.02476C4.33728 2.86674 4 3.05893 4 3.36887V12.6315C4 12.9415 4.33728 13.1337 4.60392 12.9757L12.4193 8.34434C12.6807 8.18941 12.6807 7.81101 12.4193 7.65608L4.60392 3.02476Z"
         fill="currentColor"
@@ -1479,7 +1479,7 @@ export const PlayIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const DoubleCheckIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -1504,7 +1504,7 @@ export const DoubleCheckIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const StarIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -1517,7 +1517,7 @@ export const StarIcon = (props: React.SVGProps<SVGSVGElement>) => {
 
 export const ForkIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props} fill="none">
+    <svg width={ICON_WIDTH} height={ICON_HEIGHT} viewBox={ICON_VIEWBOX} {...props}>
       <path
         d="M4.0625 4.06271C4.29456 4.06271 4.51712 3.97053 4.68122 3.80643C4.84531 3.64234 4.9375 3.41978 4.9375 3.18771C4.9375 2.95565 4.84531 2.73309 4.68122 2.569C4.51712 2.4049 4.29456 2.31271 4.0625 2.31271C3.83044 2.31271 3.60788 2.4049 3.44378 2.569C3.27969 2.73309 3.1875 2.95565 3.1875 3.18771C3.1875 3.41978 3.27969 3.64234 3.44378 3.80643C3.60788 3.97053 3.83044 4.06271 4.0625 4.06271ZM6.25 3.18771C6.25 4.16662 5.60742 4.99514 4.71875 5.27404V6.25021C4.71875 6.85451 5.2082 7.34396 5.8125 7.34396H10.1875C10.7918 7.34396 11.2812 6.85451 11.2812 6.25021V5.27404C10.3926 4.99514 9.75 4.16662 9.75 3.18771C9.75 1.97912 10.7289 1.00021 11.9375 1.00021C13.1461 1.00021 14.125 1.97912 14.125 3.18771C14.125 4.16662 13.4824 4.99514 12.5938 5.27404V6.25021C12.5938 7.57912 11.5164 8.65646 10.1875 8.65646H8.65625V10.7264C9.54492 11.0053 10.1875 11.8338 10.1875 12.8127C10.1875 14.0213 9.20859 15.0002 8 15.0002C6.79141 15.0002 5.8125 14.0213 5.8125 12.8127C5.8125 11.8338 6.45508 11.0053 7.34375 10.7264V8.65646H5.8125C4.48359 8.65646 3.40625 7.57912 3.40625 6.25021V5.27404C2.51758 4.99514 1.875 4.16662 1.875 3.18771C1.875 1.97912 2.85391 1.00021 4.0625 1.00021C5.27109 1.00021 6.25 1.97912 6.25 3.18771ZM11.9375 4.06271C12.1696 4.06271 12.3921 3.97053 12.5562 3.80643C12.7203 3.64234 12.8125 3.41978 12.8125 3.18771C12.8125 2.95565 12.7203 2.73309 12.5562 2.569C12.3921 2.4049 12.1696 2.31271 11.9375 2.31271C11.7054 2.31271 11.4829 2.4049 11.3188 2.569C11.1547 2.73309 11.0625 2.95565 11.0625 3.18771C11.0625 3.41978 11.1547 3.64234 11.3188 3.80643C11.4829 3.97053 11.7054 4.06271 11.9375 4.06271ZM8.875 12.8127C8.875 12.5806 8.78281 12.3581 8.61872 12.194C8.45462 12.0299 8.23206 11.9377 8 11.9377C7.76794 11.9377 7.54538 12.0299 7.38128 12.194C7.21719 12.3581 7.125 12.5806 7.125 12.8127C7.125 13.0448 7.21719 13.2673 7.38128 13.4314C7.54538 13.5955 7.76794 13.6877 8 13.6877C8.23206 13.6877 8.45462 13.5955 8.61872 13.4314C8.78281 13.2673 8.875 13.0448 8.875 12.8127Z"
         fill="currentColor"
