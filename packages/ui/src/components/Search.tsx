@@ -11,10 +11,18 @@ export type SearchItem = {
   value: string;
 };
 
-const Search = ({ items }: { items: SearchItem[] }) => {
+export interface SearchProps {
+  items: SearchItem[];
+  placeholder?: string;
+  searchPlaceholder?: string;
+}
+
+const Search = ({ items, placeholder, searchPlaceholder }: SearchProps) => {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState('');
 
+  // TODO: apply ds once it's complete
+  // TODO: remove usage of button - it doesn't match DS requirements
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -22,15 +30,15 @@ const Search = ({ items }: { items: SearchItem[] }) => {
           variant="secondary"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between"
+          className="justify-between"
           icon={<SearchIcon />}
         >
-          {value ? items.find((item) => item.value === value)?.label : 'Select item...'}
+          {value ? items.find((item) => item.value === value)?.label : placeholder ?? 'Search'}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder="Search..." className="h-9" />
+          <CommandInput placeholder={searchPlaceholder ?? 'Search'} className="h-9" />
           <CommandList>
             <CommandEmpty>No item found.</CommandEmpty>
             <CommandGroup>

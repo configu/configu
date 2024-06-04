@@ -36,9 +36,11 @@ const SelectTrigger = React.forwardRef<React.ElementRef<typeof SelectPrimitive.T
         )}
         {...props}
       >
-        <div className="inline-flex items-center">
+        <div className="inline-flex items-center overflow-hidden">
           {icon && <div className="mr-2">{icon}</div>}
-          <Text variant="regular13">{children}</Text>
+          <Text variant="regular13" className="truncate">
+            {children}
+          </Text>
         </div>
         <SelectPrimitive.Icon asChild>
           <ChevronDownIcon />
