@@ -42,7 +42,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, icon, ...props }, ref) => {
     const Comp = asChild ? Slot : 'button';
     return (
-      <div className={props.disabled ? 'cursor-not-allowed' : ''}>
+      <div className={props.disabled ? 'w-min cursor-not-allowed' : ''}>
         <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props}>
           <div className="inline-flex items-center">
             {icon && <div className={props.children ? 'mr-1' : undefined}>{icon}</div>}

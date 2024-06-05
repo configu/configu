@@ -30,7 +30,8 @@ const Search = ({ items, placeholder, searchPlaceholder }: SearchProps) => {
           variant="secondary"
           role="combobox"
           aria-expanded={open}
-          className="justify-between"
+          className="justify-between has-[p]:w-full"
+          size={'lg'}
           icon={<SearchIcon />}
         >
           {value ? items.find((item) => item.value === value)?.label : placeholder ?? 'Search'}
