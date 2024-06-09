@@ -33,12 +33,13 @@ const Search = ({ items, placeholder, searchPlaceholder, value, onValueChange }:
   };
 
   // TODO: apply ds once it's complete
+  // TODO: try using button instead of div for accessibility
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <div
           className={cn(
-            'flex h-10 cursor-pointer items-center justify-between rounded-3xl border pb-3 pl-4 pr-3 pt-[11px] hover:border-gray-400 dark:border-gray-300 dark:text-gray-300 dark:hover:border-white',
+            'flex h-10 cursor-pointer items-center justify-between rounded-3xl border pb-3 pl-4 pr-3 pt-[11px] hover:border-gray-400 dark:border-gray-300 dark:bg-gray-900 dark:text-gray-300 dark:hover:border-white',
             internalValue
               ? 'border-black text-black hover:border-black dark:border-white dark:text-white dark:hover:border-white'
               : 'border-gray-200 text-gray-400 dark:border-gray-300',
