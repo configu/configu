@@ -36,11 +36,11 @@ const DarkModeSwitch = React.forwardRef<
   React.ElementRef<typeof SwitchPrimitives.Root>,
   React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root>
 >(({ className, ...props }, ref) => {
-  const [isChecked, setIsChecked] = React.useState(props.defaultChecked ?? false);
-
-  const handleCheckedChange = (checked: boolean) => {
-    setIsChecked(checked);
-  };
+  const [internalChecked, setInternalChecked] = React.useState(props.defaultChecked ?? false);
+  const isChecked = React.useMemo(() => {
+    if (props.checked !== undefined) return props.checked;
+    return internalChecked;
+  }, [props.checked, internalChecked]);
 
   return (
     <SwitchPrimitives.Root
@@ -50,14 +50,14 @@ const DarkModeSwitch = React.forwardRef<
       )}
       {...props}
       ref={ref}
-      onCheckedChange={(checked: boolean) => {
-        handleCheckedChange(checked);
-        props.onCheckedChange?.(checked);
+      onCheckedChange={(next: boolean) => {
+        setInternalChecked(next);
+        props.onCheckedChange?.(next);
       }}
     >
       <SwitchPrimitives.Thumb
         className={cn(
-          'bg-yellow pointer-events-none block flex h-[38px] w-[38px] items-center justify-center rounded-full border border-yellow-600 transition-transform',
+          'bg-yellow pointer-events-none flex h-[38px] w-[38px] items-center justify-center rounded-full border border-yellow-600 transition-transform',
           'data-[state=unchecked]:translate-x-0',
           'data-[state=checked]:translate-x-6 data-[state=checked]:border-blue-200 data-[state=checked]:bg-blue-800',
           'data-[state=checked]:text-[#FFF5B8] data-[state=unchecked]:text-[#7A5C09]',
