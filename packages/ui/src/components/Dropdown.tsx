@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as SelectPrimitive from '@radix-ui/react-select';
 import { cn } from '../lib/utils';
-import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from './Icons';
+import { CheckIcon, ChevronDownIcon } from './Icons';
 import { Text } from './Typography';
 
 const Dropdown = SelectPrimitive.Root;
@@ -56,34 +56,6 @@ const DropdownTrigger = React.forwardRef<React.ElementRef<typeof SelectPrimitive
 );
 DropdownTrigger.displayName = SelectPrimitive.Trigger.displayName;
 
-const DropdownScrollUpButton = React.forwardRef<
-  React.ElementRef<typeof SelectPrimitive.ScrollUpButton>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollUpButton>
->(({ className, ...props }, ref) => (
-  <SelectPrimitive.ScrollUpButton
-    ref={ref}
-    className={cn('flex cursor-default items-center justify-center py-1', className)}
-    {...props}
-  >
-    <ChevronUpIcon />
-  </SelectPrimitive.ScrollUpButton>
-));
-DropdownScrollUpButton.displayName = SelectPrimitive.ScrollUpButton.displayName;
-
-const DropdownScrollDownButton = React.forwardRef<
-  React.ElementRef<typeof SelectPrimitive.ScrollDownButton>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollDownButton>
->(({ className, ...props }, ref) => (
-  <SelectPrimitive.ScrollDownButton
-    ref={ref}
-    className={cn('flex cursor-default items-center justify-center py-1', className)}
-    {...props}
-  >
-    <ChevronDownIcon />
-  </SelectPrimitive.ScrollDownButton>
-));
-DropdownScrollDownButton.displayName = SelectPrimitive.ScrollDownButton.displayName;
-
 const DropdownContent = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>
@@ -92,25 +64,23 @@ const DropdownContent = React.forwardRef<
     <SelectPrimitive.Content
       ref={ref}
       className={cn(
-        'bg-popover text-popover-foreground data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-3xl border shadow-md',
+        'relative z-50 max-h-96 overflow-hidden rounded-3xl border border-blue-400 bg-white shadow-[0_2px_14px_0_#0000001F] dark:border-blue-200 dark:bg-gray-900 dark:shadow-[0_2px_14px_0_#FFFFFF6B]',
+        'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
         position === 'popper' &&
-          'data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1',
+          'data-[side=bottom]:translate-y-[-1px] data-[side=left]:-translate-x-[-1px] data-[side=right]:translate-x-[-1px] data-[side=top]:-translate-y-[-1px]',
         className,
       )}
       position={position}
       {...props}
     >
-      <DropdownScrollUpButton />
       <SelectPrimitive.Viewport
         className={cn(
-          'p-1',
           position === 'popper' &&
-            'h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]',
+            'h-[var(--radix-select-trigger-height)] w-full max-w-[var(--radix-select-trigger-width)]',
         )}
       >
         {children}
       </SelectPrimitive.Viewport>
-      <DropdownScrollDownButton />
     </SelectPrimitive.Content>
   </SelectPrimitive.Portal>
 ));
@@ -123,38 +93,23 @@ const DropdownItem = React.forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
-      'focus:bg-accent focus:text-accent-foreground relative flex w-full cursor-default select-none items-center rounded-3xl py-1.5 pl-8 pr-2 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+      'cursor-default select-none text-wrap pb-[11px] pl-4 pt-3 outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+      'text-gray-600 hover:border-0 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-200',
+      'active:text-blue active:bg-blue-100 dark:active:bg-blue-900 dark:active:text-blue-300',
       className,
     )}
     {...props}
   >
-    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+    <div className="flex items-center gap-1">
       <SelectPrimitive.ItemIndicator>
         <CheckIcon />
       </SelectPrimitive.ItemIndicator>
-    </span>
-
-    <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
+      <SelectPrimitive.ItemText>
+        <Text variant={'regular13'}>{children}</Text>
+      </SelectPrimitive.ItemText>
+    </div>
   </SelectPrimitive.Item>
 ));
 DropdownItem.displayName = SelectPrimitive.Item.displayName;
 
-const DropdownSeparator = React.forwardRef<
-  React.ElementRef<typeof SelectPrimitive.Separator>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Separator>
->(({ className, ...props }, ref) => (
-  <SelectPrimitive.Separator ref={ref} className={cn('bg-muted -mx-1 my-1 h-px', className)} {...props} />
-));
-DropdownSeparator.displayName = SelectPrimitive.Separator.displayName;
-
-export {
-  Dropdown,
-  DropdownGroup,
-  DropdownValue,
-  DropdownTrigger,
-  DropdownContent,
-  DropdownItem,
-  DropdownSeparator,
-  DropdownScrollUpButton,
-  DropdownScrollDownButton,
-};
+export { Dropdown, DropdownGroup, DropdownValue, DropdownTrigger, DropdownContent, DropdownItem };
