@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { CommandList } from 'cmdk';
 import { cn } from '../lib/utils';
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from './Command';
+import { Command, CommandEmpty, CommandInput, CommandItem } from './Command';
 import { Popover, PopoverContent, PopoverTrigger } from './Popover';
 import { CheckIcon, CloseIcon, SearchIcon } from './Icons';
 import { Text } from './Typography';
@@ -32,20 +32,19 @@ const Search = ({ items, placeholder, searchPlaceholder, value, onValueChange }:
     onValueChange?.(nextValue);
   };
 
-  // TODO: apply ds once it's complete
-  // TODO: try using button instead of div for accessibility
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <div
           className={cn(
-            'flex h-10 cursor-pointer items-center justify-between rounded-3xl border pb-3 pl-4 pr-3 pt-[11px] hover:border-gray-400 dark:border-gray-300 dark:bg-gray-900 dark:text-gray-300 dark:hover:border-white',
-            internalValue
-              ? 'border-black text-black hover:border-black dark:border-white dark:text-white dark:hover:border-white'
-              : 'border-gray-200 text-gray-400 dark:border-gray-300',
+            'flex h-10 cursor-pointer items-center justify-between rounded-3xl border border-gray-200 pb-3 pl-4 pr-3 pt-[11px] text-gray-400 hover:border-gray-400 dark:border-gray-300 dark:bg-gray-900 dark:text-gray-300 dark:hover:border-white',
+            internalValue &&
+              'border-black text-black hover:border-black dark:border-white dark:text-white dark:hover:border-white',
+            open &&
+              'border-blue-400 text-blue-400 hover:border-blue-400 dark:border-blue-300 dark:text-blue-300 dark:hover:border-blue-300',
           )}
         >
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 truncate">
             <div>
               <SearchIcon />
             </div>
@@ -68,28 +67,32 @@ const Search = ({ items, placeholder, searchPlaceholder, value, onValueChange }:
           )}
         </div>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
-        <Command value={internalValue}>
-          <CommandInput placeholder={searchPlaceholder ?? 'Search'} className="h-9" />
+      <PopoverContent>
+        <Command value={internalValue} filter={(val, search) => (val.includes(search) ? 1 : -1)}>
+          <CommandInput placeholder={searchPlaceholder ?? 'Search'} />
           <CommandList>
-            <CommandEmpty>No item found.</CommandEmpty>
-            <CommandGroup>
-              {items.map((item) => (
-                <CommandItem
-                  key={item.value}
-                  value={item.value}
-                  onSelect={(currentValue) => {
-                    updateValue(currentValue === value ? '' : currentValue);
-                    setOpen(false);
-                  }}
-                >
-                  {item.label}
-                  <CheckIcon
-                    className={cn('ml-auto h-4 w-4', internalValue === item.value ? 'opacity-100' : 'opacity-0')}
-                  />
-                </CommandItem>
-              ))}
-            </CommandGroup>
+            <CommandEmpty>
+              <Text variant={'regular13'}>No item found.</Text>
+            </CommandEmpty>
+            {items.map((item) => (
+              <CommandItem
+                key={item.value}
+                value={item.value}
+                onSelect={(currentValue) => {
+                  updateValue(currentValue === value ? '' : currentValue);
+                  setOpen(false);
+                }}
+              >
+                <div className="flex items-center gap-1">
+                  <div className={cn(internalValue !== item.value && 'hidden')}>
+                    <CheckIcon />
+                  </div>
+                  <div>
+                    <Text variant={'regular13'}> {item.label}</Text>
+                  </div>
+                </div>
+              </CommandItem>
+            ))}
           </CommandList>
         </Command>
       </PopoverContent>
