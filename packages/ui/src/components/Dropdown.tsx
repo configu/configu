@@ -75,8 +75,7 @@ const DropdownContent = React.forwardRef<
     >
       <SelectPrimitive.Viewport
         className={cn(
-          position === 'popper' &&
-            'h-[var(--radix-select-trigger-height)] w-full max-w-[var(--radix-select-trigger-width)]',
+          position === 'popper' && 'h-[var(--radix-select-trigger-height)] w-[var(--radix-select-trigger-width)]',
         )}
       >
         {children}
