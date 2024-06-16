@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "lodash": "^4.17.21",
-    "mintlify": "^4.0.162",
+    "mintlify": "^4.0.168",
     "typedoc": "^0.25.13",
     "typedoc-plugin-frontmatter": "^1.0.0",
     "typedoc-plugin-markdown": "^4.0.3"

@@ -30,9 +30,9 @@ const integrationsNavArray = _(INTEGRATIONS_INDEX_CONTENT)
     const { enabled, docs, pages = [] } = cur;
     const [group, subgroup] = cur.group;
 
-    // if (!enabled) {
-    //   return acc;
-    // }
+    if (!enabled) {
+      return acc;
+    }
 
     // Initialize the group if it doesn't exist
     if (!acc.some((item) => item.group === group)) {

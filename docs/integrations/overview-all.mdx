@@ -1,0 +1,212 @@
+---
+title: Overview
+description: Learn how to integrate Configu into your project.
+---
+
+import { Construction } from '/snippets/callouts.mdx';
+import { integrations } from '/snippets/index.mdx';
+import { IntegrationCard } from '/snippets/integration.mdx';
+
+<Construction />
+
+## ConfigStore
+
+[ConfigStores](/introduction/concepts#configstore) are pivotal in managing your configurations effectively. Choose from a variety of storage solutions to fit your project's needs.
+
+<Tip>
+  In case you don't find a `ConfigStore` that meets your requirements, Configu allows you to easily create your own by
+  [implementing a simple abstract class](https://github.com/configu/configu/blob/main/packages/ts/src/ConfigStore.ts)
+  with `get` and `set` methods. This flexibility empowers you to extend Configu and tailor it to your specific
+  configuration management needs. Please also consider contributing your custom `ConfigStore` back to the community by
+  submitting a pull request to the [Configu GitHub repository](https://github.com/configu/configu).
+</Tip>
+
+### Configu
+
+<IntegrationCard
+  data={{
+    ...integrations['configu'],
+    description: (
+      <p>
+        Enjoy the full power of Configu with our hosted platform.
+        <br />
+        Authorization, versioning, auditing, visualizations, and more.
+      </p>
+    ),
+  }}
+/>
+
+### File
+
+Start with the basics: file-based stores. These integrations allow you to accommodate your configuration data within a file in various formats.
+
+<CardGroup cols={4}>
+  <IntegrationCard data={integrations['json-file']} />
+  <IntegrationCard data={integrations['csv-file']} />
+  <IntegrationCard data={integrations['xml-file']} />
+  <IntegrationCard data={integrations['ini-file']} />
+  <IntegrationCard data={integrations['toml-file']} />
+</CardGroup>
+
+### Database
+
+Enhance your project with robust database storage solutions for your configuration data, offering scalability and faster fetching.
+
+<CardGroup cols={4}>
+  <IntegrationCard data={integrations['sqlite']} />
+  <IntegrationCard data={integrations['mysql']} />
+  <IntegrationCard data={integrations['mariadb']} />
+  <IntegrationCard data={integrations['postgresql']} />
+  <IntegrationCard data={integrations['cockroachdb']} />
+  <IntegrationCard data={integrations['mssql']} />
+</CardGroup>
+
+### Secret
+
+Secure your sensitive configuration data with these secret management integrations, ensuring your configurations are secure with the best practices.
+
+<CardGroup cols={4}>
+  <IntegrationCard data={integrations['hashicorp-vault']} />
+  <IntegrationCard data={integrations['aws-secrets-manager']} />
+  <IntegrationCard data={integrations['azure-key-vault']} />
+  <IntegrationCard data={integrations['gcp-secret-manager']} />
+  <IntegrationCard data={integrations['kubernetes-secret']} />
+</CardGroup>
+
+### Feature Flag
+
+Feature Flags are part of the application configuration family. They allow you to toggle functionality in your applications without deploying new code. Configu integrates with leading feature flag services to help streamline these toggles effectively under the same unified API of your other application configuration data.
+
+<CardGroup cols={4}>
+  <IntegrationCard data={integrations['launchdarkly']} />
+  <IntegrationCard data={integrations['cloudbees-feature-management']} />
+  <IntegrationCard data={integrations['split']} />
+</CardGroup>
+
+### Other
+
+Beyond the typical configuration storage solutions, Configu offers integration with a variety of other services and tools to cater to specific needs.
+
+<CardGroup cols={4}>
+  <IntegrationCard data={integrations['in-memory']} />
+  <IntegrationCard data={integrations['aws-parameter-store']} />
+  <IntegrationCard data={integrations['localforage']} />
+</CardGroup>
+
+## Container
+
+Container technologies have revolutionized the way applications are deployed. Explore Configu's integrations to manage configurations seamlessly across different container platforms.
+
+<CardGroup cols={4}>
+  <IntegrationCard data={integrations['docker']} />
+  <IntegrationCard data={integrations['docker-compose']} />
+  <IntegrationCard data={integrations['kubernetes']} />
+  <IntegrationCard data={integrations['aws-ecs']} />
+</CardGroup>
+
+## CI/CD
+
+Continuous Integration and Continuous Deployment (CI/CD) are critical for modern development workflows. Discover how Configu integrates with popular CI/CD tools.
+
+<CardGroup cols={4}>
+  <IntegrationCard data={integrations['jenkins']} />
+  <IntegrationCard data={integrations['github-actions']} />
+  <IntegrationCard data={integrations['circleci']} />
+  <IntegrationCard data={integrations['gitlab-cicd']} />
+  {/* <IntegrationCard data={integrations["azure-pipelines"]} /> */}
+</CardGroup>
+
+## Infrastructure-as-Code (IaC)
+
+Infrastructure as Code (IaC) allows you to manage and provision infrastructure through code. Explore Configu's integrations with IaC tools for more efficient infrastructure management.
+
+<CardGroup cols={4}>
+  <IntegrationCard data={integrations['terraform']} />
+  {/* <IntegrationCard data={integrations["vagrant"]} /> */}
+  <IntegrationCard data={integrations['helm']} />
+  <IntegrationCard data={integrations['aws-cdk']} />
+  <IntegrationCard data={integrations['pulumi']} />
+</CardGroup>
+
+{/* prettier-ignore */}
+{/* <CardGroup cols={4}>
+
+  <Card
+    title="Ansible"
+    icon={<img alt="Ansible Icon" noZoom src="https://api.iconify.design/logos:ansible.svg?width=24&height=24" />}
+    href="integrations/iac/ansible"
+  />
+  <Card
+    title="Puppet"
+    icon={<img alt="Puppet Icon" noZoom src="https://api.iconify.design/logos:puppet-icon.svg?width=24&height=24" />}
+    href="integrations/iac/puppet"
+  />
+  <Card
+    title="Chef"
+    icon={<img alt="Chef Icon" noZoom src="https://api.iconify.design/logos:chef.svg?width=24&height=24" />}
+    href="integrations/iac/chef"
+  />
+</CardGroup> */}
+
+## Framework
+
+### Web
+
+<CardGroup cols={4}>
+  <IntegrationCard data={integrations['vite']} />
+  <IntegrationCard data={integrations['nextjs']} />
+  <IntegrationCard data={integrations['remix']} />
+  <IntegrationCard data={integrations['gatsby']} />
+  <IntegrationCard data={integrations['astro']} />
+  <IntegrationCard data={integrations['nuxt']} />
+  <IntegrationCard data={integrations['sveltekit']} />
+</CardGroup>
+
+### Backend
+
+Power your server-side applications with Configu's support for these backend frameworks, ensuring smooth and efficient backend operations.
+
+<CardGroup cols={4}>
+  <IntegrationCard data={integrations['express']} />
+  <IntegrationCard data={integrations['nestjs']} />
+  <IntegrationCard data={integrations['fastify']} />
+</CardGroup>
+
+<CardGroup cols={4}>
+  <IntegrationCard data={integrations['django']} />
+  <IntegrationCard data={integrations['flask']} />
+  <IntegrationCard data={integrations['fastapi']} />
+</CardGroup>
+
+<CardGroup cols={4}>
+  <IntegrationCard data={integrations['laravel']} />
+  <IntegrationCard data={integrations['symfony']} />
+</CardGroup>
+
+<CardGroup cols={4}>
+  <IntegrationCard data={integrations['rails']} />
+  <IntegrationCard data={integrations['spring']} />
+  <IntegrationCard data={integrations['aspnet']} />
+</CardGroup>
+
+<CardGroup cols={4}>
+  <IntegrationCard data={integrations['wordpress']} />
+  <IntegrationCard data={integrations['strapi']} />
+</CardGroup>
+
+### App
+
+Create feature-rich and interactive applications with Configu's integration into app development frameworks, enhancing mobile and desktop application development.
+
+<CardGroup cols={4}>
+  <IntegrationCard data={integrations['expo']} />
+  <IntegrationCard data={integrations['react-native']} />
+  <IntegrationCard data={integrations['flutter']} />
+  {/* <IntegrationCard data={integrations["ionic"]} /> */}
+  {/* <IntegrationCard data={integrations["cordova"]} /> */}
+</CardGroup>
+
+<CardGroup cols={4}>
+  <IntegrationCard data={integrations['electron']} />
+  {/* <IntegrationCard data={integrations["nwjs"]} /> */}
+</CardGroup>
