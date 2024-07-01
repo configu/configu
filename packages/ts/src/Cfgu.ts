@@ -208,11 +208,30 @@ export const CfguSchema: JsonSchemaType<Cfgu> = {
 export type ConfigSchemaContents = { [ConfigKey: string]: Cfgu };
 
 export const ConfigSchemaContents: JsonSchemaType<ConfigSchemaContents> = {
+  $schema: 'http://json-schema.org/draft-07/schema#',
+  $id: 'https://raw.githubusercontent.com/configu/configu/main/packages/schema/.cfgu.json',
+  $comment: 'https://jsonschema.dev/s/sZY8z',
+  title: 'JSON Schema for Configu .cfgu files',
+  description: 'https://docs.configu.com/interfaces/.cfgu',
+
   type: 'object',
   required: [],
   additionalProperties: false,
   minProperties: 1,
   patternProperties: {
     [NamingPattern]: CfguSchema,
+  },
+};
+
+export const MetaSchema: JsonSchemaType<{ $schema?: string }> = {
+  type: 'object',
+  properties: {
+    $schema: {
+      default: 'https://raw.githubusercontent.com/configu/configu/main/packages/schema/.cfgu.json',
+      description: 'Url to JSON Schema',
+      type: 'string',
+      // format: 'uri',
+      nullable: true,
+    },
   },
 };

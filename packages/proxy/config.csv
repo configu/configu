@@ -1,0 +1,4 @@
+set,key,value
+dev,SUBJECT,Peleg
+prod,GREETING,shalom
+prod,SUBJECT,Ran

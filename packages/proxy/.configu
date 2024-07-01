@@ -1,0 +1,6 @@
+stores:
+  csv:
+    type: csv-file
+    backup: true
+    configuration:
+      path: "./config.csv"
