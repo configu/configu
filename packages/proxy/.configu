@@ -1,0 +1,8 @@
+stores:
+  my_store:
+    type: configu
+    backup: true
+    configuration:
+      credentials:
+        org: 6sense-demo
+        token: avG5leJfW47TINwHguGdMBDMnM23ukn7yc8L79bN

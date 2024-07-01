@@ -95,7 +95,7 @@ export class ConfiguInterfaceConfiguration {
     }
     const storeConfig = this.config.stores?.[storeName];
     if (!storeConfig) {
-      throw new Error(`Store "${storeConfig}" not found`);
+      throw new Error(`Store "${storeName}" not found`);
     }
     return constructStore(storeConfig.type, storeConfig.configuration);
   }

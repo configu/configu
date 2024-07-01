@@ -4,23 +4,16 @@ ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 
-COPY . /app
-WORKDIR /app
-
-FROM base AS prod-deps
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
-
 FROM base AS build
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-RUN pnpm run build
-
-# ----------
+COPY . /src
+WORKDIR /src
+RUN pnpm install --frozen-lockfile
+RUN pnpm run --filter=@configu/proxy build
+RUN pnpm deploy --filter=@configu/proxy --prod /dist
 
 FROM base
-COPY --from=prod-deps /app/node_modules /app/node_modules
-COPY --from=build /app/build /app/build
+COPY --from=build /dist /dist
+WORKDIR /dist
+RUN ls -la .
 EXPOSE 8080
-
-WORKDIR /app/build
-
-CMD [ "node", "index.js" ]
+CMD [ "node", "build/index.js" ]

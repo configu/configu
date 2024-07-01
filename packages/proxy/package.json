@@ -6,8 +6,7 @@
   "author": "@configu/dev",
   "scripts": {
     "dev": "tsx watch --inspect --clear-screen=false src/index.ts",
-    "build:docker": "docker build --progress plain -t configu/proxy:latest -f ./Dockerfile .",
-    "start:docker": "docker run --rm -p 8080:8080 -v tmp/@proxy/.configu:/app/.configu --name configu-proxy configu/proxy",
+    "build:docker": "docker build --progress plain -t configu/proxy:latest -f ./Dockerfile ../..",
     "build:python": "openapi-generator-cli generate -i configuproxy.json -g python -o sdk/python --package-name 'configu_proxy'",
     "build:javascript": "openapi-generator-cli generate -i configuproxy.json -g javascript -o sdk/javascript --package-name '@configu/proxy'"
   },
