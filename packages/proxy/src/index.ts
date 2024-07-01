@@ -29,7 +29,7 @@ server.register(swagger, {
       // summary: config.CONFIGU_PKG.description,
       // description: config.CONFIGU_PKG.description,
       description:
-        'This site hosts documentation generated from the Fly.io Machines API OpenAPI specification. Visit our complete [Machines API docs](https://fly.io/docs/machines/api/) for how to get started, more information about each endpoint, parameter descriptions, and examples.',
+        'This site hosts documentation generated from the [Configu](https://github.com/configu/configu) Proxy API OpenAPI specification. Visit our complete [Proxy API docs](https://docs.configu.com/interfaces/proxy) for how to get started, more information about each endpoint, parameter descriptions, and examples.',
       contact: {
         name: config.CONFIGU_PKG.author,
         ...config.CONFIGU_PKG.bugs,
@@ -77,12 +77,12 @@ server.register(swaggerUI, {
     // layout: 'modern',
     customCss: `.darklight { padding: 18px 24px !important; } .darklight-reference-promo { display: none !important; }`,
     metaData: {
-      title: 'Page title',
-      description: 'My page page',
-      ogDescription: 'Still about my my page',
-      ogTitle: 'Page title',
-      ogImage: 'https://example.com/image.png',
-      twitterCard: 'summary_large_image',
+      title: config.CONFIGU_PKG.name,
+      // description: 'My page page',
+      // ogDescription: 'Still about my my page',
+      ogTitle: config.CONFIGU_PKG.name,
+      // ogImage: 'https://example.com/image.png',
+      // twitterCard: 'summary_large_image',
       // Add more...
     },
   },

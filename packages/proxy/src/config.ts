@@ -4,7 +4,7 @@ import CONFIGU_PKG from '../package.json';
 // The host address to serve the HTTP server on.
 const CONFIGU_HTTP_ADDR = process.env.CONFIGU_HTTP_ADDR ?? '0.0.0.0';
 // The host port to serve the HTTP server on.
-const CONFIGU_HTTP_PORT = Number(process.env.CONFIGU_HTTP_PORT ?? 3000);
+const CONFIGU_HTTP_PORT = Number(process.env.CONFIGU_HTTP_PORT ?? 8080);
 // Enables or disables transport layer security (TLS).
 const CONFIGU_HTTP_TLS_ENABLED = (process.env.CONFIGU_HTTP_TLS_ENABLED ?? 'false') === 'true';
 // The (absolute) file path of the certificate to use for the TLS connection.
