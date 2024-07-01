@@ -1,6 +1,7 @@
 export * from './types';
 export * from './utils';
 
+export * from './Cfgu';
 export * from './ConfigStore';
 export * from './ConfigSet';
 export * from './ConfigSchema';
