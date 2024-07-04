@@ -41,3 +41,4 @@ oclif.manifest.json
 
 # pnpm v8-compile-cache dependency
 v8-compile-cache*/
+.idea
