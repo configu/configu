@@ -1,8 +1,11 @@
 import Fastify, { FastifyInstance } from 'fastify';
-// import helmet from '@fastify/helmet';
-import cors from '@fastify/cors';
-import swagger from '@fastify/swagger';
-import swaggerUI from '@scalar/fastify-api-reference';
+import GracefulServer from '@gquittet/graceful-server';
+import Helmet from '@fastify/helmet';
+import Cors, { FastifyCorsOptions } from '@fastify/cors';
+import BearerAuth from '@fastify/bearer-auth';
+import Swagger, { FastifyDynamicSwaggerOptions } from '@fastify/swagger';
+import SwaggerUI from '@scalar/fastify-api-reference';
+
 import { config } from './config';
 import { routes } from './routes';
 
@@ -11,82 +14,79 @@ const server: FastifyInstance = Fastify({
   trustProxy: config.CONFIGU_HTTP_TRUST_PROXY,
   logger: config.CONFIGU_LOG_ENABLED,
 });
+const gracefulServer = GracefulServer(server.server);
 
-// server.register(helmet, {});
-server.register(cors, {
+server.register(Helmet);
+
+const CORS_OPTIONS: FastifyCorsOptions = {
   origin: config.CONFIGU_HTTP_ALLOWED_ORIGINS,
   methods: ['GET', 'POST', 'OPTIONS', 'HEAD'],
   allowedHeaders: ['Authorization', 'Content-Type', 'Content-Encoding'],
   exposedHeaders: ['Content-Type', 'Content-Disposition'],
   credentials: true,
   maxAge: 86400,
-});
-server.register(swagger, {
-  openapi: {
-    openapi: '3.1.0',
-    info: {
-      title: config.CONFIGU_PKG.name,
-      // summary: config.CONFIGU_PKG.description,
-      // description: config.CONFIGU_PKG.description,
-      description:
-        'This site hosts documentation generated from the [Configu](https://github.com/configu/configu) Proxy API OpenAPI specification. Visit our complete [Proxy API docs](https://docs.configu.com/interfaces/proxy) for how to get started, more information about each endpoint, parameter descriptions, and examples.',
-      contact: {
-        name: config.CONFIGU_PKG.author,
-        ...config.CONFIGU_PKG.bugs,
-      },
-      license: { name: config.CONFIGU_PKG.license, identifier: config.CONFIGU_PKG.license },
-      version: config.CONFIGU_PKG.version,
+};
+server.register(Cors, CORS_OPTIONS);
+
+const OPENAPI_OPTIONS: FastifyDynamicSwaggerOptions['openapi'] = {
+  openapi: '3.1.0',
+  info: {
+    title: config.CONFIGU_PKG.name,
+    description:
+      'This site hosts documentation generated from the [Configu](https://github.com/configu/configu) Proxy API OpenAPI specification. Visit our complete [Proxy API docs](https://docs.configu.com/interfaces/proxy) for how to get started, more information about each endpoint, parameter descriptions, and examples.',
+    contact: {
+      name: config.CONFIGU_PKG.author,
+      ...config.CONFIGU_PKG.bugs,
     },
-    externalDocs: {
-      url: 'https://docs.configu.com/interfaces/proxy',
-    },
-    servers: [
-      {
-        url: `${config.HTTPS_CONFIG ? 'https' : 'http'}://${config.CONFIGU_HTTP_ADDR}:${config.CONFIGU_HTTP_PORT}`,
-      },
-    ],
-    // tags: [
-    //   { name: 'user', description: 'User related end-points' },
-    //   { name: 'code', description: 'Code related end-points' },
-    // ],
-    // components: {
-    //   securitySchemes: {
-    //     bearerAuth: {
-    //       type: 'http',
-    //       scheme: 'bearer',
-    //       bearerFormat: 'PresharedKey',
-    //     },
-    //   },
-    // },
-    // security: [{ key: [], id: [] }, { id: [] }],
+    license: { name: config.CONFIGU_PKG.license, identifier: config.CONFIGU_PKG.license },
+    version: config.CONFIGU_PKG.version,
   },
-});
-
-server.register(routes);
-
-// Serve an OpenAPI file
-// server.get('/openapi.json', async (request, reply) => {
-//   return server.swagger();
-// });
-
-server.register(swaggerUI, {
-  routePrefix: '/docs',
-  configuration: {
-    // isEditable: true,
-    theme: 'default',
-    // layout: 'modern',
-    customCss: `.darklight { padding: 18px 24px !important; } .darklight-reference-promo { display: none !important; }`,
-    metaData: {
-      title: config.CONFIGU_PKG.name,
-      // description: 'My page page',
-      // ogDescription: 'Still about my my page',
-      ogTitle: config.CONFIGU_PKG.name,
-      // ogImage: 'https://example.com/image.png',
-      // twitterCard: 'summary_large_image',
-      // Add more...
-    },
+  externalDocs: {
+    url: 'https://docs.configu.com/interfaces/proxy',
   },
+  servers: [
+    {
+      url: config.CONFIGU_PUBLIC_URL,
+    },
+  ],
+};
+if (config.CONFIGU_AUTH_ENABLED) {
+  const AUTH_NAME = 'Preshared Key';
+  OPENAPI_OPTIONS.components = {
+    securitySchemes: {
+      [AUTH_NAME]: {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: AUTH_NAME,
+      },
+    },
+  };
+  OPENAPI_OPTIONS.security = [{ [AUTH_NAME]: [] }];
+}
+server.register(Swagger, { openapi: OPENAPI_OPTIONS });
+
+server.register(async (instance) => {
+  if (config.CONFIGU_AUTH_ENABLED) {
+    instance.register(BearerAuth, { keys: config.CONFIGU_AUTH_PRESHARED_KEYS });
+  }
+  instance.register(routes);
 });
+
+if (config.CONFIGU_DOCS_ENABLED) {
+  server.register(SwaggerUI, {
+    routePrefix: '/docs',
+    configuration: {
+      theme: 'default',
+      customCss: `.darklight { padding: 18px 24px !important; } .darklight-reference-promo { display: none !important; }`,
+      metaData: {
+        title: config.CONFIGU_PKG.name,
+        description: config.CONFIGU_PKG.description,
+        ogTitle: config.CONFIGU_PKG.name,
+        ogDescription: config.CONFIGU_PKG.description,
+      },
+    },
+  });
+}
 
 (async () => {
   try {
@@ -94,6 +94,7 @@ server.register(swaggerUI, {
       host: config.CONFIGU_HTTP_ADDR,
       port: config.CONFIGU_HTTP_PORT,
     });
+    gracefulServer.setReady();
   } catch (err) {
     server.log.error(err);
     process.exit(1);

@@ -11,7 +11,7 @@ See [interfaces/proxy](https://docs.configu.com/interfaces/proxy/overview).
 ## Usage
 
 ```bash
-docker run --rm -it \
+docker run --rm --init \
   -v /Users/ran/dev/configu/packages/proxy/.configu:/config/.configu \
   -e CONFIGU_CONFIG_FILE=/config/.configu \
   -p 8080:8080 \
@@ -29,3 +29,20 @@ docker run --rm -it \
 - **CONFIGU_HTTP_TRUST_PROXY**: Enables or disables the trust proxy setting.
 - **CONFIGU_LOG_ENABLED**: Enables or disables request logging.
 - **CONFIGU_CONFIG_FILE**: The (absolute) file path of the .configu configuration file.
+
+```bash
+openssl req -x509 -newkey rsa:2048 -nodes -sha256 -subj '/CN=localhost' \
+-keyout server.key -out server.crt
+```
+
+```
+docker run --rm --init \
+  -v /Users/ran/dev/configu/packages/proxy/.configu:/config/.configu \
+  -v /Users/ran/dev/configu/packages/proxy/certs:/config/certs \
+  -e CONFIGU_HTTP_PORT=3000 \
+  -e CONFIGU_AUTH_ENABLED=true -e CONFIGU_AUTH_PRESHARED_KEYS=token \
+  -e CONFIGU_HTTP_TLS_ENABLED=true -e CONFIGU_HTTP_TLS_CERT=/config/certs/localhost.pem -e CONFIGU_HTTP_TLS_KEY=/config/certs/localhost-key.pem \
+  -e CONFIGU_CONFIG_FILE=/config/.configu \
+  -p 3000:3000 \
+  configu/proxy
+```
