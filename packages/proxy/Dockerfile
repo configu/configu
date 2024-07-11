@@ -9,7 +9,7 @@ RUN corepack enable
 
 FROM base AS build
 WORKDIR /src
-COPY --exclude=**/node_modules --exclude=*.md --exclude=**/build --exclude=**/dist --exclude=**/tmp . /src
+COPY --exclude=**/node_modules --exclude=**/*.md --exclude=**/build --exclude=**/dist --exclude=**/tmp . /src
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile --ignore-scripts
 RUN pnpm clean && pnpm run --filter=@configu/proxy build
 RUN pnpm deploy --filter=@configu/proxy --prod /dist --ignore-scripts
