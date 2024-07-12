@@ -9,24 +9,54 @@ import { Construction } from '/snippets/callouts.mdx';
 
 You can configure the Configu Proxy server using environment variables. The following environment variables are available:
 
-- **CONFIGU_HTTP_PORT**: The host port to serve the HTTP server on. Default is `8080`.
-- **CONFIGU_HTTP_TLS_ENABLED**: Enables or disables transport layer security (TLS). Default is `false`.
-- **CONFIGU_HTTP_TLS_CERT**: The (absolute) file path of the certificate to use for the TLS connection.
-- **CONFIGU_HTTP_TLS_KEY**: The (absolute) file path of the TLS key that should be used for the TLS connection.
-- **CONFIGU_AUTH_ENABLED**: Enables or disables the authentication mechanism. Default is `false`.
-- **CONFIGU_AUTH_PRESHARED_KEYS**: Comma-separated list of pre-shared keys that are allowed to make requests to the server.
-- **CONFIGU_PUBLIC_URL**: The public URL of the server. Default is `http://localhost:8080`.
-- **CONFIGU_HTTP_ALLOWED_ORIGINS**: Comma-separated list of origins that are allowed to make requests to the server. Default is `*`.
-- **CONFIGU_HTTP_TRUST_PROXY**: Enables or disables the trust proxy setting. Default is `false`.
-- **CONFIGU_LOG_ENABLED**: Enables or disables request logging. Default is `true`.
-- **CONFIGU_DOCS_ENABLED**: Enables or disables the API reference documentation route at `/docs`. Default is `true`.
-- **CONFIGU_CONFIG_FILE**: The (absolute) file path of the [`.configu`](/interfaces/.configu) configuration file. Required.
+<ResponseField name="CONFIGU_CONFIG_FILE" type="string" required>
+  The (absolute) file path of the [`.configu`](/interfaces/.configu) configuration file.
+</ResponseField>
+<ResponseField name="CONFIGU_HTTP_PORT" type="number" default="8080">
+  The host port to serve the HTTP server on.
+</ResponseField>
+<ResponseField name="CONFIGU_HTTP_TLS_ENABLED" type="boolean" default="false">
+  Enables or disables transport layer security (TLS). - The `CONFIGU_HTTP_TLS_CERT` and `CONFIGU_HTTP_TLS_KEY`
+  environment variables are required when `CONFIGU_HTTP_TLS_ENABLED` is set to `true`.
+</ResponseField>
+<ResponseField name="CONFIGU_HTTP_TLS_CERT" type="string">
+  The (absolute) file path of the certificate to use for the TLS connection.
+</ResponseField>
+<ResponseField name="CONFIGU_HTTP_TLS_KEY" type="string">
+  The (absolute) file path of the TLS key that should be used for the TLS connection.
+</ResponseField>
+<ResponseField name="CONFIGU_AUTH_ENABLED" type="boolean" default="false">
+  Enables or disables the authentication mechanism. - The `CONFIGU_AUTH_PRESHARED_KEYS` environment variable is required
+  when `CONFIGU_AUTH_ENABLED` is set to `true`.
+</ResponseField>
+<ResponseField name="CONFIGU_AUTH_PRESHARED_KEYS" type="string">
+  Comma-separated list of pre-shared keys that are allowed to make requests to the server.
+</ResponseField>
+<ResponseField name="CONFIGU_PUBLIC_URL" type="string" default="http://localhost:8080">
+  The public URL of the server.
+</ResponseField>
+<ResponseField name="CONFIGU_HTTP_ALLOWED_ORIGINS" type="string" default="*">
+  Comma-separated list of origins that are allowed to make requests to the server.
+</ResponseField>
+<ResponseField name="CONFIGU_HTTP_TRUST_PROXY" type="boolean" default="false">
+  Enables or disables the trust proxy setting.
+</ResponseField>
+<ResponseField name="CONFIGU_LOG_ENABLED" type="boolean" default="true">
+  Enables or disables request logging.
+</ResponseField>
+<ResponseField name="CONFIGU_DOCS_ENABLED" type="boolean" default="true">
+  Enables or disables the API reference documentation route at `/docs`.
+</ResponseField>
 
-<Note>
-  - The `CONFIGU_HTTP_TLS_CERT` and `CONFIGU_HTTP_TLS_KEY` environment variables are required when
-  `CONFIGU_HTTP_TLS_ENABLED` is set to `true`. - The `CONFIGU_AUTH_PRESHARED_KEYS` environment variable is required when
-  `CONFIGU_AUTH_ENABLED` is set to `true`.
-</Note>
+### Production Best Practices
+
+For production environments, it is recommended to:
+
+- Enable authentication using pre-shared keys. `CONFIGU_AUTH_ENABLED=true` and `CONFIGU_AUTH_PRESHARED_KEYS=key1,key2`.
+- Disable request logging. `CONFIGU_LOG_ENABLED=false`.
+- Disable the API reference documentation route at `/docs`. `CONFIGU_DOCS_ENABLED=false`.
+- Enable transport layer security (TLS) and use a valid certificate from a trusted certificate authority (CA). `CONFIGU_HTTP_TLS_ENABLED=true`, `CONFIGU_HTTP_TLS_CERT=/path/to/cert.pem`, and `CONFIGU_HTTP_TLS_KEY=/path/to/key.pem`.
+- Use a reverse proxy like [Nginx](https://nginx.org/), [Caddy](https://caddyserver.com/), [Traefik](https://traefik.io/) or [HAProxy](https://www.haproxy.org/) to handle TLS termination and load balancing. `CONFIGU_HTTP_TRUST_PROXY=true`.
 
 ### Generating a Self-Signed Certificate
 
@@ -44,21 +74,6 @@ Using [mkcert](https://mkcert.dev):
 mkcert --install
 mkcert -key-file server.key -cert-file server.crt localhost
 ```
-
-### Production Best Practices
-
-For production environments, it is recommended to:
-
-- Enable authentication using pre-shared keys.
-  `CONFIGU_AUTH_ENABLED=true` and `CONFIGU_AUTH_PRESHARED_KEYS=key1,key2`.
-- Disable request logging.
-  `CONFIGU_LOG_ENABLED=false`.
-- Disable the API reference documentation route at `/docs`.
-  `CONFIGU_DOCS_ENABLED=false`.
-- Enable transport layer security (TLS) and use a valid certificate from a trusted certificate authority (CA).
-  `CONFIGU_HTTP_TLS_ENABLED=true`, `CONFIGU_HTTP_TLS_CERT=/path/to/cert.pem`, and `CONFIGU_HTTP_TLS_KEY=/path/to/key.pem`.
-- Use a reverse proxy like [Nginx](https://nginx.org/), [Caddy](https://caddyserver.com/), [Traefik](https://traefik.io/) or [HAProxy](https://www.haproxy.org/) to handle TLS termination and load balancing.
-  `CONFIGU_HTTP_TRUST_PROXY=true`.
 
 ## Running Configu Proxy
 

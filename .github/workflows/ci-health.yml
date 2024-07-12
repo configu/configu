@@ -1,6 +1,8 @@
 name: CI/Healthcare
 
 on:
+  repository_dispatch:
+  workflow_dispatch:
   pull_request:
     branches:
       - 'main'
