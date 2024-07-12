@@ -3,11 +3,11 @@ title: Setup
 description: Setting up Configu Proxy server
 ---
 
+import { Construction } from '/snippets/callouts.mdx';
+
 ## Configuring Configu Proxy
 
 You can configure the Configu Proxy server using environment variables. The following environment variables are available:
-
-{/* - **CONFIGU_HTTP_ADDR**: The host address to serve the HTTP server on. */}
 
 - **CONFIGU_HTTP_PORT**: The host port to serve the HTTP server on. Default is `8080`.
 - **CONFIGU_HTTP_TLS_ENABLED**: Enables or disables transport layer security (TLS). Default is `false`.
@@ -19,7 +19,7 @@ You can configure the Configu Proxy server using environment variables. The foll
 - **CONFIGU_HTTP_ALLOWED_ORIGINS**: Comma-separated list of origins that are allowed to make requests to the server. Default is `*`.
 - **CONFIGU_HTTP_TRUST_PROXY**: Enables or disables the trust proxy setting. Default is `false`.
 - **CONFIGU_LOG_ENABLED**: Enables or disables request logging. Default is `true`.
-- **CONFIGU_DOCS_ENABLED**: Enables or disables the api reference documentation route at `/docs`. Default is `true`.
+- **CONFIGU_DOCS_ENABLED**: Enables or disables the API reference documentation route at `/docs`. Default is `true`.
 - **CONFIGU_CONFIG_FILE**: The (absolute) file path of the [`.configu`](/interfaces/.configu) configuration file. Required.
 
 <Note>
@@ -30,12 +30,12 @@ You can configure the Configu Proxy server using environment variables. The foll
 
 ### Generating a Self-Signed Certificate
 
-You can generate a self-signed certificate for testing purposes.
+For development purposes, you can generate a self-signed certificate
 
 Using [OpenSSL](https://www.openssl.org/):
 
 ```shell
-openssl req -x509 -newkey rsa:2048 -nodes -sha256 -subj '/CN=localhost' -keyout server.key -out server.crt
+openssl req -x509 -newkey rsa:4096 -nodes -sha256 -subj '/CN=localhost' -keyout server.key -out server.crt
 ```
 
 Using [mkcert](https://mkcert.dev):
@@ -94,6 +94,29 @@ Replace `/path/to/.configu` with the path to your `.configu` configuration file 
 
 ### Using Docker Compose
 
+You can use Docker Compose to run the Configu Proxy server. Here is an example configuration:
+
+```yaml docker-compose.yml
+version: '3'
+services:
+  configu-proxy:
+    image: configu/proxy:latest
+    ports:
+      - '8080:8080'
+    volumes:
+      - /path/to/.configu:/config/.configu
+    environment:
+      CONFIGU_CONFIG_FILE: '/config/.configu'
+```
+
+Replace `/path/to/.configu` with the path to your `.configu` configuration file.
+
+Run the following command to start the server:
+
+```shell
+docker-compose up
+```
+
 ### Using Kubernetes
 
 You can deploy the Configu Proxy server on Kubernetes using a [Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/) and a [Service](https://kubernetes.io/docs/concepts/services-networking/service/). Here is an example configuration:
@@ -116,35 +139,35 @@ spec:
       containers:
         - name: configu-proxy
           image: configu/proxy
-          env:
-            - name: CONFIGU_CONFIG_FILE
-              value: /config/.configu
           ports:
             - containerPort: 8080
           volumeMounts:
             - name: configu-config
               mountPath: /config
-  volumes:
-    - name: configu-config
-      configMap:
-        name: configu-config
+              readOnly: true
+          env:
+            - name: CONFIGU_CONFIG_FILE
+              value: '/config/.configu'
+          volumes:
+            - name: configu-config
+              configMap:
+                name: configu-config
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: configu-proxy
 spec:
+  type: LoadBalancer
+  ports:
+    - port: 443
+      targetPort: 8080
+      protocol: TCP
   selector:
     app: configu-proxy
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 8080
 ```
 
-Replace `/config/.configu` with the path to your `.configu` configuration file.
-
-Run the following command to create a ConfigMap with your `.configu` configuration file:
+Create a ConfigMap with your `.configu` configuration file:
 
 ```shell
 kubectl create configmap configu-config --from-file=/path/to/.configu
@@ -152,15 +175,19 @@ kubectl create configmap configu-config --from-file=/path/to/.configu
 
 Replace `/path/to/.configu` with the path to your `.configu` configuration file.
 
-````shell
-Run the following commands to deploy the Configu Proxy server:
-
+Apply the configuration:
 
 ```shell
-kubectl apply -f deployment.yaml
-kubectl apply -f service.yaml
-````
+kubectl apply -f configu-proxy.yaml
+```
+
+Verify the deployment:
+
+```shell
+kubectl get pods -l app=configu-proxy
+kubectl get svc -l app=configu-proxy
+```
 
 ### Using Helm
 
-<Construction>
+<Construction />

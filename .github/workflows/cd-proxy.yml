@@ -1,0 +1,71 @@
+name: CD/@configu/proxy
+
+on:
+  push:
+    tags:
+      - 'proxy/v*'
+
+jobs:
+  cd-cli:
+    name: CD/@configu/cli
+    runs-on: ubuntu-latest
+    env:
+      PACKAGE_NAME: '@configu/proxy'
+      PACKAGE_PATH: 'packages/prxoxy'
+      DOCKERHUB_REPOSITORY: 'configu/proxy'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/deploy-start-action
+        id: deployment
+        with:
+          package-name: ${{ env.PACKAGE_NAME }}
+          slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+      # ---
+      # todo: consider use this action to set tags
+      # - uses: docker/metadata-action@v5
+      #   id: meta
+      #   with:
+      #     images: name/app
+
+      - uses: docker/setup-qemu-action@v3
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build docker image and push to Docker Hub
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ${{ env.PACKAGE_PATH }}/Dockerfile
+          build-args: |
+            NODE_VERSION=20.12.2
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            ${{ env.DOCKERHUB_REPOSITORY }}:${{ steps.deployment.outputs.release-version }}
+            ${{ env.DOCKERHUB_REPOSITORY }}:${{ steps.deployment.outputs.release-channel }}
+          push: true
+          provenance: true
+          sbom: true
+
+      - name: Docker Hub Description
+        # if: ${{ steps.deployment.outputs.release-channel == 'latest' }}
+        uses: peter-evans/dockerhub-description@v4
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          repository: ${{ env.DOCKERHUB_REPOSITORY }}
+          short-description: Containerized Configu Proxy
+          readme-filepath: ${{ env.PACKAGE_PATH }}/README.md
+          enable-url-completion: true
+      # ---
+      - uses: ./.github/actions/deploy-end-action
+        if: always()
+        with:
+          package-name: ${{ env.PACKAGE_NAME }}
+          package-version: ${{ steps.deployment.outputs.release-version }}
+          slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
