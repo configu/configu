@@ -46,7 +46,8 @@ jobs:
       - name: Publish to npm
         run: |
           git diff
-          pnpm --filter ${{ env.PACKAGE_NAME }} oclif manifest
+          pnpm --filter ${{ env.PACKAGE_NAME }} exec \
+            oclif manifest
           pnpm --filter ${{ env.PACKAGE_NAME }} publish \
             --access public --provenance --no-git-checks --tag ${{ steps.deployment.outputs.release-channel }}
 
