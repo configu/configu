@@ -50,6 +50,8 @@ jobs:
             oclif manifest
           pnpm --filter ${{ env.PACKAGE_NAME }} publish \
             --access public --provenance --no-git-checks --tag ${{ steps.deployment.outputs.release-channel }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Build package code and produce tarballs
         run: |
