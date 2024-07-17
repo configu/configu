@@ -18,6 +18,9 @@ jobs:
       S3_BUCKET: 'cli.configu.com'
       CLOUDFRONT_DISTRIBUTION: 'E1I302A2MRSW0O'
       DOCKERHUB_REPOSITORY: 'configu/cli'
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - uses: actions/checkout@v4
 
@@ -43,6 +46,7 @@ jobs:
       - name: Publish to npm
         run: |
           git diff
+          pnpm --filter ${{ env.PACKAGE_NAME }} oclif manifest
           pnpm --filter ${{ env.PACKAGE_NAME }} publish \
             --access public --provenance --no-git-checks --tag ${{ steps.deployment.outputs.release-channel }}
 
