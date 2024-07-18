@@ -16,7 +16,8 @@
       "integrations/store/configu/authorization",
       "integrations/store/configu/members",
       "integrations/store/configu/tokens",
-      "integrations/store/configu/settings"
+      "integrations/store/configu/settings",
+      "integrations/store/configu/billing"
     ],
     "group": ["ConfigStore", "Configu"],
     "store": {
