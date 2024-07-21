@@ -99,7 +99,7 @@
         },
         {
           "group": "Configu Proxy",
-          "pages": ["interfaces/proxy/overview"]
+          "pages": ["interfaces/proxy/overview", "interfaces/proxy/setup", "interfaces/proxy/ref"]
         },
         {
           "group": "Internal SDKs",
