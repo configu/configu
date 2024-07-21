@@ -18,6 +18,9 @@ jobs:
       S3_BUCKET: 'cli.configu.com'
       CLOUDFRONT_DISTRIBUTION: 'E1I302A2MRSW0O'
       DOCKERHUB_REPOSITORY: 'configu/cli'
+    permissions:
+      contents: write
+      id-token: write
     steps:
       - uses: actions/checkout@v4
 
@@ -39,6 +42,16 @@ jobs:
         run: |
           pnpm --filter ${{ env.PACKAGE_NAME }} exec \
             npm --no-git-tag-version version ${{ steps.deployment.outputs.release-version }}
+
+      - name: Publish to npm
+        run: |
+          git diff
+          pnpm --filter ${{ env.PACKAGE_NAME }} exec \
+            oclif manifest
+          pnpm --filter ${{ env.PACKAGE_NAME }} publish \
+            --access public --provenance --no-git-checks --tag ${{ steps.deployment.outputs.release-channel }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Build package code and produce tarballs
         run: |
@@ -70,7 +83,7 @@ jobs:
           aws cloudfront create-invalidation --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION }} --paths "/*"
 
       - name: Upload artifacts to release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         if: ${{startsWith(github.ref, 'refs/tags/') }}
         with:
           files: |
