@@ -1,6 +1,8 @@
 name: CI/Healthcare
 
 on:
+  repository_dispatch:
+  workflow_dispatch:
   pull_request:
     branches:
       - 'main'
@@ -13,7 +15,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Link Checker # https://github.com/marketplace/actions/lychee-broken-link-checker
-        uses: lycheeverse/lychee-action@v1.7.0
+        uses: lycheeverse/lychee-action@v1.10.0
         with:
           fail: true
           args: --verbose --no-progress --exclude-all-private --exclude 'stackoverflow.com' --exclude 'support.discord.com' --exclude-path 'examples' --exclude-path 'docs/snippets/callouts.mdx' .

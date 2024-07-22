@@ -2101,6 +2101,20 @@ https://configu.com/docs/config-store/
 
 ---
 
+### ConfigSchemaContents
+
+> **ConfigSchemaContents**: `object`
+
+#### Index signature
+
+\[`ConfigKey`: `string`\]: `Cfgu`
+
+#### Source
+
+[packages/ts/src/Cfgu.ts:208](https://github.com/configu/configu/blob/main/packages/ts/src/Cfgu.ts#L208)
+
+---
+
 ### ConfiguConfigStoreConfiguration
 
 > **ConfiguConfigStoreConfiguration**: `object`
@@ -2269,6 +2283,30 @@ https://configu.com/docs/config-store/
 
 ---
 
+### JsonSchemaObject
+
+> **JsonSchemaObject**: `SchemaObject`
+
+#### Source
+
+[packages/ts/src/Cfgu.ts:4](https://github.com/configu/configu/blob/main/packages/ts/src/Cfgu.ts#L4)
+
+---
+
+### JsonSchemaType\<T\>
+
+> **JsonSchemaType**\<`T`\>: `JSONSchemaType`\<`T`\>
+
+#### Type parameters
+
+• **T**
+
+#### Source
+
+[packages/ts/src/Cfgu.ts:3](https://github.com/configu/configu/blob/main/packages/ts/src/Cfgu.ts#L3)
+
+---
+
 ### TestCommandParameters
 
 > **TestCommandParameters**: `object`
@@ -2324,6 +2362,150 @@ https://configu.com/docs/config-store/
 [packages/ts/src/commands/UpsertCommand.ts:10](https://github.com/configu/configu/blob/main/packages/ts/src/commands/UpsertCommand.ts#L10)
 
 ## Variables
+
+### CfguSchema
+
+> `const` **CfguSchema**: [`JsonSchemaType`](/interfaces/sdk/ts/globals#jsonschematypet)\<`Cfgu`\>
+
+#### Source
+
+[packages/ts/src/Cfgu.ts:94](https://github.com/configu/configu/blob/main/packages/ts/src/Cfgu.ts#L94)
+
+---
+
+### CfguSchemaDefs
+
+> `const` **CfguSchemaDefs**: `object`
+
+#### Type declaration
+
+##### ArrayProperty
+
+> `readonly` **ArrayProperty**: `object`
+
+##### ArrayProperty.items
+
+> `readonly` **items**: `object`
+
+##### ArrayProperty.items.minLength
+
+> `readonly` **minLength**: `1` = `1`
+
+##### ArrayProperty.items.type
+
+> `readonly` **type**: `"string"` = `'string'`
+
+##### ArrayProperty.minItems
+
+> `readonly` **minItems**: `1` = `1`
+
+##### ArrayProperty.nullable
+
+> `readonly` **nullable**: `true` = `true`
+
+##### ArrayProperty.type
+
+> `readonly` **type**: `"array"` = `'array'`
+
+##### ArrayProperty.uniqueItems
+
+> `readonly` **uniqueItems**: `true` = `true`
+
+##### BooleanProperty
+
+> `readonly` **BooleanProperty**: `object`
+
+##### BooleanProperty.nullable
+
+> `readonly` **nullable**: `true` = `true`
+
+##### BooleanProperty.type
+
+> `readonly` **type**: `"boolean"` = `'boolean'`
+
+##### ConfigKey
+
+> `readonly` **ConfigKey**: `object`
+
+##### ConfigKey.minLength
+
+> `readonly` **minLength**: `1` = `1`
+
+##### ConfigKey.pattern
+
+> `readonly` **pattern**: `"^[A-Za-z0-9_-]+$"` = `NamingPattern`
+
+##### ConfigKey.type
+
+> `readonly` **type**: `"string"` = `'string'`
+
+##### StringProperty
+
+> `readonly` **StringProperty**: `object`
+
+##### StringProperty.minLength
+
+> `readonly` **minLength**: `1` = `1`
+
+##### StringProperty.nullable
+
+> `readonly` **nullable**: `true` = `true`
+
+##### StringProperty.type
+
+> `readonly` **type**: `"string"` = `'string'`
+
+#### Source
+
+[packages/ts/src/Cfgu.ts:67](https://github.com/configu/configu/blob/main/packages/ts/src/Cfgu.ts#L67)
+
+---
+
+### CfguTypes
+
+> `const` **CfguTypes**: readonly [`"Boolean"`, `"Number"`, `"String"`, `"RegEx"`, `"UUID"`, `"SemVer"`, `"IPv4"`, `"IPv6"`, `"Domain"`, `"URL"`, `"ConnectionString"`, `"Hex"`, `"Base64"`, `"MD5"`, `"SHA"`, `"Color"`, `"Email"`, `"MobilePhone"`, `"Locale"`, `"LatLong"`, `"Country"`, `"Currency"`, `"DockerImage"`, `"MACAddress"`, `"MIMEType"`, `"MongoId"`, `"AWSRegion"`, `"AZRegion"`, `"GCPRegion"`, `"OracleRegion"`, `"IBMRegion"`, `"AlibabaRegion"`, `"Language"`, `"DateTime"`, `"ARN"`, `"JSONSchema"`]
+
+#### Source
+
+[packages/ts/src/Cfgu.ts:8](https://github.com/configu/configu/blob/main/packages/ts/src/Cfgu.ts#L8)
+
+---
+
+### ConfigSchemaContents
+
+> **ConfigSchemaContents**: [`JsonSchemaType`](/interfaces/sdk/ts/globals#jsonschematypet)\<[`ConfigSchemaContents`](/interfaces/sdk/ts/globals#configschemacontents)\>
+
+#### Source
+
+[packages/ts/src/Cfgu.ts:208](https://github.com/configu/configu/blob/main/packages/ts/src/Cfgu.ts#L208)
+
+---
+
+### MetaSchema
+
+> `const` **MetaSchema**: [`JsonSchemaType`](/interfaces/sdk/ts/globals#jsonschematypet)\<`object`\>
+
+#### Type declaration
+
+##### $schema?
+
+> `optional` **$schema**: `string`
+
+#### Source
+
+[packages/ts/src/Cfgu.ts:226](https://github.com/configu/configu/blob/main/packages/ts/src/Cfgu.ts#L226)
+
+---
+
+### NamingPattern
+
+> `const` **NamingPattern**: `"^[A-Za-z0-9_-]+$"` = `'^[A-Za-z0-9_-]+$'`
+
+#### Source
+
+[packages/ts/src/Cfgu.ts:6](https://github.com/configu/configu/blob/main/packages/ts/src/Cfgu.ts#L6)
+
+---
 
 ### TMPL
 

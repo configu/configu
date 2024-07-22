@@ -1,0 +1,208 @@
+---
+title: Setup
+description: Setting up Configu Proxy server
+---
+
+import { Construction } from '/snippets/callouts.mdx';
+
+## Configuring Configu Proxy
+
+You can configure the Configu Proxy server using environment variables. The following environment variables are available:
+
+<ResponseField name="CONFIGU_CONFIG_FILE" type="string" required>
+  The (absolute) file path of the [`.configu`](/interfaces/.configu) configuration file.
+</ResponseField>
+<ResponseField name="CONFIGU_HTTP_PORT" type="number" default="8080">
+  The host port to serve the HTTP server on.
+</ResponseField>
+<ResponseField name="CONFIGU_HTTP_TLS_ENABLED" type="boolean" default="false">
+  Enables or disables transport layer security (TLS). - The `CONFIGU_HTTP_TLS_CERT` and `CONFIGU_HTTP_TLS_KEY`
+  environment variables are required when `CONFIGU_HTTP_TLS_ENABLED` is set to `true`.
+</ResponseField>
+<ResponseField name="CONFIGU_HTTP_TLS_CERT" type="string">
+  The (absolute) file path of the certificate to use for the TLS connection.
+</ResponseField>
+<ResponseField name="CONFIGU_HTTP_TLS_KEY" type="string">
+  The (absolute) file path of the TLS key that should be used for the TLS connection.
+</ResponseField>
+<ResponseField name="CONFIGU_AUTH_ENABLED" type="boolean" default="false">
+  Enables or disables the authentication mechanism. - The `CONFIGU_AUTH_PRESHARED_KEYS` environment variable is required
+  when `CONFIGU_AUTH_ENABLED` is set to `true`.
+</ResponseField>
+<ResponseField name="CONFIGU_AUTH_PRESHARED_KEYS" type="string">
+  Comma-separated list of pre-shared keys that are allowed to make requests to the server.
+</ResponseField>
+<ResponseField name="CONFIGU_PUBLIC_URL" type="string" default="http://localhost:8080">
+  The public URL of the server.
+</ResponseField>
+<ResponseField name="CONFIGU_HTTP_ALLOWED_ORIGINS" type="string" default="*">
+  Comma-separated list of origins that are allowed to make requests to the server.
+</ResponseField>
+<ResponseField name="CONFIGU_HTTP_TRUST_PROXY" type="boolean" default="false">
+  Enables or disables the trust proxy setting.
+</ResponseField>
+<ResponseField name="CONFIGU_LOG_ENABLED" type="boolean" default="true">
+  Enables or disables request logging.
+</ResponseField>
+<ResponseField name="CONFIGU_DOCS_ENABLED" type="boolean" default="true">
+  Enables or disables the API reference documentation route at `/docs`.
+</ResponseField>
+
+### Production Best Practices
+
+For production environments, it is recommended to:
+
+- Enable authentication using pre-shared keys. `CONFIGU_AUTH_ENABLED=true` and `CONFIGU_AUTH_PRESHARED_KEYS=key1,key2`.
+- Disable request logging. `CONFIGU_LOG_ENABLED=false`.
+- Disable the API reference documentation route at `/docs`. `CONFIGU_DOCS_ENABLED=false`.
+- Enable transport layer security (TLS) and use a valid certificate from a trusted certificate authority (CA). `CONFIGU_HTTP_TLS_ENABLED=true`, `CONFIGU_HTTP_TLS_CERT=/path/to/cert.pem`, and `CONFIGU_HTTP_TLS_KEY=/path/to/key.pem`.
+- Use a reverse proxy like [Nginx](https://nginx.org/), [Caddy](https://caddyserver.com/), [Traefik](https://traefik.io/) or [HAProxy](https://www.haproxy.org/) to handle TLS termination and load balancing. `CONFIGU_HTTP_TRUST_PROXY=true`.
+
+### Generating a Self-Signed Certificate
+
+For development purposes, you can generate a self-signed certificate
+
+Using [OpenSSL](https://www.openssl.org/):
+
+```shell
+openssl req -x509 -newkey rsa:4096 -nodes -sha256 -subj '/CN=localhost' -keyout server.key -out server.crt
+```
+
+Using [mkcert](https://mkcert.dev):
+
+```shell
+mkcert --install
+mkcert -key-file server.key -cert-file server.crt localhost
+```
+
+## Running Configu Proxy
+
+### Using Docker
+
+You can run the Configu Proxy server using Docker. The following command starts the server:
+
+```shell
+docker run --rm --init \
+  -v /path/to/.configu:/config/.configu \
+  -e CONFIGU_CONFIG_FILE=/config/.configu \
+  -p 8080:8080 \
+  configu/proxy
+```
+
+Replace `/path/to/.configu` with the path to your `.configu` configuration file.
+
+Here is an example configuration for running the Configu Proxy server on different port with authentication and TLS enabled:
+
+```shell
+docker run --rm --init \
+  -v /path/to/.configu:/config/.configu \
+  -v /path/to/certs:/config/certs \
+  -e CONFIGU_HTTP_PORT=3000 \
+  -e CONFIGU_AUTH_ENABLED=true -e CONFIGU_AUTH_PRESHARED_KEYS=token \
+  -e CONFIGU_HTTP_TLS_ENABLED=true -e CONFIGU_HTTP_TLS_CERT=/config/certs/localhost.pem -e CONFIGU_HTTP_TLS_KEY=/config/certs/localhost-key.pem \
+  -e CONFIGU_CONFIG_FILE=/config/.configu \
+  -p 3000:3000 \
+  configu/proxy
+```
+
+Replace `/path/to/.configu` with the path to your `.configu` configuration file and `/path/to/certs` with the path to your certificate and key files.
+
+### Using Docker Compose
+
+You can use Docker Compose to run the Configu Proxy server. Here is an example configuration:
+
+```yaml docker-compose.yml
+version: '3'
+services:
+  configu-proxy:
+    image: configu/proxy:latest
+    ports:
+      - '8080:8080'
+    volumes:
+      - /path/to/.configu:/config/.configu
+    environment:
+      CONFIGU_CONFIG_FILE: '/config/.configu'
+```
+
+Replace `/path/to/.configu` with the path to your `.configu` configuration file.
+
+Run the following command to start the server:
+
+```shell
+docker-compose up
+```
+
+### Using Kubernetes
+
+You can deploy the Configu Proxy server on Kubernetes using a [Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/) and a [Service](https://kubernetes.io/docs/concepts/services-networking/service/). Here is an example configuration:
+
+```yaml configu-proxy.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: configu-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: configu-proxy
+  template:
+    metadata:
+      labels:
+        app: configu-proxy
+    spec:
+      containers:
+        - name: configu-proxy
+          image: configu/proxy
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: configu-config
+              mountPath: /config
+              readOnly: true
+          env:
+            - name: CONFIGU_CONFIG_FILE
+              value: '/config/.configu'
+          volumes:
+            - name: configu-config
+              configMap:
+                name: configu-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: configu-proxy
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 443
+      targetPort: 8080
+      protocol: TCP
+  selector:
+    app: configu-proxy
+```
+
+Create a ConfigMap with your `.configu` configuration file:
+
+```shell
+kubectl create configmap configu-config --from-file=/path/to/.configu
+```
+
+Replace `/path/to/.configu` with the path to your `.configu` configuration file.
+
+Apply the configuration:
+
+```shell
+kubectl apply -f configu-proxy.yaml
+```
+
+Verify the deployment:
+
+```shell
+kubectl get pods -l app=configu-proxy
+kubectl get svc -l app=configu-proxy
+```
+
+### Using Helm
+
+<Construction />

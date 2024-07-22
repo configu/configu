@@ -10,7 +10,7 @@
     "node": ">=20",
     "pnpm": ">=9"
   },
-  "packageManager": "pnpm@9.1.4",
+  "packageManager": "pnpm@9.5.0",
   "scripts": {
     "prepare": "pnpm \"/^prepare:.*/\"",
     "prepare:hooks": "husky",

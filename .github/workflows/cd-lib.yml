@@ -6,7 +6,7 @@ on:
       - 'lib/v*'
 
 jobs:
-  cd-lig:
+  cd-lib:
     name: CD/@configu/lib
     runs-on: ubuntu-latest
     env:

@@ -1,0 +1,68 @@
+---
+title: 'API Reference'
+sidebarTitle: 'Reference'
+description: 'A reference guide for all Configu Proxy Endpoints.'
+---
+
+## Endpoints
+
+#### POST /export
+
+Recives an EvalCommand pipeline as body:
+
+```json
+[
+  {
+    "store": "<name of the ConfigStore as appears in the .configu file of the server>",
+    "set": "<ConfigSet path>",
+    "schema": {
+      "name": "<name of the ConfigSchema>",
+      "contents": {
+        "{{key}}": "<Cfgu>"
+      }
+    },
+    "configs": {
+      "{{key}}": "<value to override>"
+    }
+  },
+  {
+    <another Eval ...>
+  }
+]
+```
+
+Exports the requested configuration as an object.
+
+```json
+{
+  "key": "value"
+}
+```
+
+#### GET /docs
+
+Responds with an interactive API documentation page.
+
+<Frame caption="Configu Proxy Server Docs">
+  <img alt="Configu Proxy Server Docs" src="/images/proxy-docs-route.jpg" />
+</Frame>
+
+### GET /live
+
+Responds with a `200 OK` status code with the uptime of the server in seconds.
+
+```json
+{ "uptime": 42 }
+```
+
+### GET /ready
+
+Responds with a
+
+- `200 OK` status code if the server is ready to accept requests.
+
+```json
+{ "status": "ready" }
+```
+
+- `503 Service Unavailable` status code with an empty response if the server is not ready (started, shutting down, etc).
