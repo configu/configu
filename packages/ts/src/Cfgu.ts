@@ -18,7 +18,7 @@ export const CfguTypes = [
   'IPv6',
   'Domain',
   'URL',
-  'ConnectionString',
+  // 'ConnectionString',
   'Hex',
   'Base64',
   'MD5',
