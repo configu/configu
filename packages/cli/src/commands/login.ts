@@ -10,10 +10,10 @@ import { isDev } from '../helpers';
 
 const CONFIGU_API_URL = process.env.CONFIGU_API_URL ?? (isDev ? 'http://localhost:8080' : 'https://api.configu.com');
 const CONFIGU_APP_URL = process.env.CONFIGU_APP_URL ?? (isDev ? 'http://localhost:3000' : 'https://app.configu.com');
-const AUTH0_DOMAIN = 'configu.us.auth0.com';
 /* cspell:disable-next-line */
-const AUTH0_CLIENT_ID = 'qxv0WQpwqApo4BNEYMMb4rfn1Xam9A4D';
-const AUTH0_API_IDENTIFIER = 'https://api.configu.com';
+const AUTH_ISSUER = 'https://configu-dev-nh8rwa.zitadel.cloud';
+const AUTH_CLIENT_ID = '278947443452766014';
+const AUTH_API_IDENTIFIER = '278576455032556409';
 const SETUP_ERROR_MESSAGE = `Initial setup in not completed. Go to ${CONFIGU_APP_URL} activate your user and create your first organization`;
 
 export default class Login extends BaseCommand<typeof Login> {
@@ -53,16 +53,17 @@ export default class Login extends BaseCommand<typeof Login> {
     }
   }
 
-  private async loginWithAuth0() {
+  private async loginWithAuth() {
     try {
-      const auth0 = await Issuer.discover(`https://${AUTH0_DOMAIN}`);
-      const client = new auth0.Client({
-        client_id: AUTH0_CLIENT_ID,
+      const auth = await Issuer.discover(AUTH_ISSUER);
+      const client = new auth.Client({
+        client_id: AUTH_CLIENT_ID,
+        response_types: ['id_token', 'code'],
         token_endpoint_auth_method: 'none',
         id_token_signed_response_alg: 'RS256',
       });
 
-      const handle = await client.deviceAuthorization({ audience: AUTH0_API_IDENTIFIER });
+      const handle = await client.deviceAuthorization({ audience: AUTH_API_IDENTIFIER });
       const { user_code: userCode, verification_uri_complete: verificationUriComplete, expires_in: expiresIn } = handle;
 
       await ux.anykey(
@@ -75,11 +76,13 @@ export default class Login extends BaseCommand<typeof Login> {
 
       const tokens = await handle.poll();
 
-      if (!tokens?.access_token) {
+      if (!tokens?.id_token) {
         throw new Error('no access token');
       }
 
-      const userDataResponse = await this.getDataUser(tokens?.access_token);
+      const accessToken = tokens.id_token;
+
+      const userDataResponse = await this.getDataUser(accessToken);
 
       const choices = userDataResponse?.data?.orgs.map((org: any) => ({ name: org.name, value: org._id }));
       const { orgId } = await inquirer.prompt<{ orgId: string }>([
@@ -91,7 +94,7 @@ export default class Login extends BaseCommand<typeof Login> {
         },
       ]);
 
-      return { org: orgId, token: tokens.access_token, type: 'Bearer' } as const;
+      return { org: orgId, token: accessToken, type: 'Bearer' } as const;
     } catch (error) {
       switch (error.error) {
         case 'access_denied': {
@@ -113,7 +116,7 @@ export default class Login extends BaseCommand<typeof Login> {
   }
 
   public async run(): Promise<void> {
-    const credentials = await this.loginWithAuth0();
+    const credentials = await this.loginWithAuth();
     this.config.configu.data = {
       credentials,
       endpoint: this.flags.endpoint,
