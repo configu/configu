@@ -8,3 +8,5 @@ export class SQLiteConfigStore extends ORMConfigStore {
     super('sqlite', { ...configuration, type: 'sqlite' });
   }
 }
+
+new SQLiteConfigStore({ database: 'config.sqlite' });

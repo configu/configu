@@ -28,9 +28,7 @@
     "test:cfgu": "ajv test -s .cfgu.json -d \"data/*.cfgu.json\" --valid --verbose",
     "test:configu": "ajv test -s .configu.json -d \"data/.configu.yml\" --valid --verbose"
   },
-  "dependencies": {
-    "ajv": "^8.14.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "ajv-cli": "^5.0.0"
   }

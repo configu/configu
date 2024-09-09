@@ -317,30 +317,36 @@ const cfguValueTypeValidator = (cfgu: Cfgu, value: string) => {
   throw new ConfigError('invalid config value', hint);
 };
 const cfguStructureValidator = (cfgu: Cfgu) => {
+  // handled via JSONSchema
   try {
     Convert.cfguToJson(cfgu);
   } catch (error) {
     throw new ConfigError('invalid cfgu structure', error.message);
   }
 
+  // handled via JSONSchema
   if (cfgu.type === 'RegEx' && !cfgu.pattern) {
     throw new ConfigError('invalid type property', `type "${cfgu.type}" must come with a pattern property`);
   }
 
+  // handled via JSONSchema
   if (cfgu.type === 'JSONSchema' && !cfgu.schema) {
     throw new ConfigError('invalid type property', `type "${cfgu.type}" must come with a schema property`);
   }
 
   if (cfgu.options) {
     const reason = 'invalid options property';
+    // handled via JSONSchema
     if (_.isEmpty(cfgu.options)) {
       throw new ConfigError(reason, `options mustn't be empty if set`);
     }
+    // handled via JSONSchema
     if (cfgu.template) {
       throw new ConfigError(reason, `options mustn't set together with template properties`);
     }
     cfgu.options.forEach((option, idx) => {
       // https://github.com/configu/configu/pull/255#discussion_r1332296098
+      // handled via JSONSchema
       if (option === '') {
         throw new ConfigError(reason, `options mustn't contain an empty string`);
       }
@@ -354,6 +360,7 @@ const cfguStructureValidator = (cfgu: Cfgu) => {
 
   if (cfgu.default) {
     const reason = 'invalid default property';
+    // handled via JSONSchema
     if (cfgu.required || cfgu.template) {
       throw new ConfigError(reason, `default mustn't set together with required or template properties`);
     }
@@ -363,6 +370,7 @@ const cfguStructureValidator = (cfgu: Cfgu) => {
         `value "${cfgu.default}" must be one of ${_.map(cfgu.options, (option) => `'${option}'`).join(',')}`,
       );
     }
+    // handled via JSONSchema
     if (cfgu.lazy) {
       throw new ConfigError(reason, `default mustn't set together with lazy property`);
     }
@@ -374,9 +382,11 @@ const cfguStructureValidator = (cfgu: Cfgu) => {
   }
 
   if (cfgu.depends) {
+    // handled via JSONSchema
     if (_.isEmpty(cfgu.depends)) {
       throw new ConfigError('invalid depends property', `depends mustn't be empty if set`);
     }
+    // handled via JSONSchema
     if (cfgu.depends.some((depend) => !NAME(depend))) {
       throw new ConfigError('invalid depends property', `depends mustn't contain reserved words`);
     }

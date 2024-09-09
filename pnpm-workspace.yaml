@@ -2,3 +2,7 @@ packages:
   - 'packages/*'
   - 'docs'
   # - 'examples'
+
+
+a:
+b: 2

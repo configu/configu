@@ -1,0 +1,46 @@
+{
+  "name": "@configu/logic",
+  "version": "0.0.0",
+  "license": "Apache-2.0",
+  "author": "@configu/dev",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/configu/configu",
+    "directory": "packages/lib"
+  },
+  "bugs": {
+    "url": "https://github.com/configu/configu/issues",
+    "email": "dev@configu.com"
+  },
+  "homepage": "https://configu.com",
+  "keywords": [
+    "cfgu",
+    "configu",
+    "configu-common",
+    "configu-lib"
+  ],
+  "scripts": {
+    "clean": "shx rm -rf tsconfig.tsbuildinfo build",
+    "build": "tsc --build",
+    "bundle": "tsup"
+  },
+  "dependencies": {
+    "@configu/sdk": "workspace:*"
+  },
+  "devDependencies": {}
+}

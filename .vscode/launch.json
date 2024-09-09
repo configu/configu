@@ -1,6 +1,51 @@
 {
   "version": "0.2.0",
   "configurations": [
+    // https://tsx.is/vscode
+    {
+      // https://tsx.is/vscode#method-2-attach-the-debugger-to-a-running-node-js-process
+      "name": "tsx",
+      "type": "node",
+      "request": "launch",
+      "program": "${file}",
+      "runtimeExecutable": "tsx",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "skipFiles": [
+        "<node_internals>/**",
+        "${workspaceFolder}/node_modules/**",
+      ],
+    },
+    {
+      // https://tsx.is/vscode#method-2-attach-the-debugger-to-a-running-node-js-process
+      "name": "Attach to process",
+      "type": "node",
+      "request": "attach",
+      "port": 9229,
+      "skipFiles": [
+        "<node_internals>/**",
+        "${workspaceFolder}/node_modules/**",
+      ],
+    },
+    {
+      "name": "Tests",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "tsx",
+      "runtimeArgs": [
+        "--test",
+        "--inspect",
+      ],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "skipFiles": [
+        "<node_internals>/**",
+        "${workspaceFolder}/node_modules/**",
+      ],
+      "args": [
+        // "ts/src/commands/commands.test.ts"
+      ],
+    },
     {
       "name": "play cli",
       "type": "node",
@@ -29,20 +74,14 @@
         // "--schema",
         // "${workspaceFolder}/ts/ts.cfgu.json"
       ],
-      "outFiles": ["${workspaceFolder}/**/*.js", "!**/node_modules/**"],
-      "skipFiles": ["<node_internals>/**", "node_modules/**"]
+      "outFiles": [
+        "${workspaceFolder}/**/*.js",
+        "!**/node_modules/**"
+      ],
+      "skipFiles": [
+        "<node_internals>/**",
+        "node_modules/**"
+      ]
     },
-    // https://tsx.is/vscode
-    {
-      "name": "run ts tests",
-      "type": "node",
-      "request": "launch",
-      "cwd": "${workspaceRoot}/ts",
-      "runtimeArgs": ["--inspect", "node_modules/.bin/jest", "--runInBand"],
-      "args": ["ts/src/commands/commands.test.ts"],
-      // "args": ["ts/src/types/types.test.ts"],
-      "outputCapture": "std"
-      // "internalConsoleOptions": "neverOpen",
-    }
   ]
 }

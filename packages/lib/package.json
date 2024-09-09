@@ -30,16 +30,21 @@
     "build": "tsc --build"
   },
   "dependencies": {
-    "@configu/ts": "^0.20.1",
+    "@apideck/better-ajv-errors": "^0.3.6",
+    "ajv": "^8.15.0",
     "change-case": "4.1.2",
-    "dotenv": "^16.3.1",
+    "dotenv": "^16.4.5",
     "js-yaml": "^4.1.0",
     "lodash": "^4.17.21",
-    "type-fest": "^4.8.3",
-    "validator": "^13.11.0"
+    "mustache": "^4.2.0",
+    "parse-json": "5.2.0",
+    "type-fest": "^4.19.0",
+    "validator": "^13.12.0"
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.9",
-    "@types/validator": "^13.11.9"
+    "@types/lodash": "^4.17.4",
+    "@types/mustache": "^4.2.5",
+    "@types/validator": "^13.11.10"
   }
 }
