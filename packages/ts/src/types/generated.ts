@@ -45,7 +45,7 @@ export type CfguType =
   | 'Base64'
   | 'Boolean'
   | 'Color'
-  | 'ConnectionString'
+  // | 'ConnectionString'
   | 'Country'
   | 'Currency'
   | 'DateTime'

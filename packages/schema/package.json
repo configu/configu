@@ -25,8 +25,9 @@
   ],
   "scripts": {
     "test": "pnpm \"/^test:.*/\"",
-    "test:cfgu": "ajv test -s .cfgu.json -d \"data/*.cfgu.json\" --valid --verbose",
-    "test:configu": "ajv test -s .configu.json -d \"data/.configu.yml\" --valid --verbose"
+    "test:cfgu": "ajv test -s .cfgu.next.json -d \"data/*.cfgu.json\" --valid --verbose",
+    "test:configu": "ajv test -s .configu.json -d \"data/.configu.yml\" --valid --verbose",
+    "build:cfgu": "zx build.mjs"
   },
   "dependencies": {},
   "devDependencies": {

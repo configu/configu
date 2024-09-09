@@ -99,11 +99,7 @@
         },
         {
           "group": "Configu Proxy",
-          "pages": ["interfaces/proxy/overview"]
-        },
-        {
-          "group": "IDE Extensions",
-          "pages": ["interfaces/ide/vscode", "interfaces/ide/intellij"]
+          "pages": ["interfaces/proxy/overview", "interfaces/proxy/setup", "interfaces/proxy/ref"]
         },
         {
           "group": "Internal SDKs",
@@ -139,125 +135,8 @@
                 "integrations/store/configu/authorization",
                 "integrations/store/configu/members",
                 "integrations/store/configu/tokens",
-                "integrations/store/configu/settings"
-              ]
-            },
-            {
-              "group": "File",
-              "pages": [
-                "integrations/store/file/json-file",
-                "integrations/store/file/csv-file",
-                "integrations/store/file/xml-file",
-                "integrations/store/file/ini-file",
-                "integrations/store/file/toml-file"
-              ]
-            },
-            {
-              "group": "Database",
-              "pages": [
-                "integrations/store/db/sqlite",
-                "integrations/store/db/mysql",
-                "integrations/store/db/mariadb",
-                "integrations/store/db/postgresql",
-                "integrations/store/db/cockroachdb",
-                "integrations/store/db/mssql"
-              ]
-            },
-            {
-              "group": "Secret",
-              "pages": [
-                "integrations/store/secret/hashicorp-vault",
-                "integrations/store/secret/aws-secrets-manager",
-                "integrations/store/secret/azure-key-vault",
-                "integrations/store/secret/gcp-secret-manager",
-                "integrations/store/secret/kubernetes-secret"
-              ]
-            },
-            {
-              "group": "Feature Flag",
-              "pages": [
-                "integrations/store/ff/launchdarkly",
-                "integrations/store/ff/cloudbees-feature-management",
-                "integrations/store/ff/split"
-              ]
-            },
-            {
-              "group": "Other",
-              "pages": [
-                "integrations/store/other/in-memory",
-                "integrations/store/other/aws-parameter-store",
-                "integrations/store/other/localforage"
-              ]
-            }
-          ]
-        },
-        {
-          "group": "Container",
-          "pages": [
-            "integrations/container/docker",
-            "integrations/container/docker-compose",
-            "integrations/container/kubernetes",
-            "integrations/container/aws-ecs"
-          ]
-        },
-        {
-          "group": "CI/CD",
-          "pages": [
-            "integrations/cicd/jenkins",
-            "integrations/cicd/github-actions",
-            "integrations/cicd/circleci",
-            "integrations/cicd/gitlab-cicd"
-          ]
-        },
-        {
-          "group": "Infrastructure-as-Code",
-          "pages": [
-            "integrations/iac/terraform",
-            "integrations/iac/helm",
-            "integrations/iac/aws-cdk",
-            "integrations/iac/pulumi"
-          ]
-        },
-        {
-          "group": "Framework",
-          "pages": [
-            {
-              "group": "Web",
-              "pages": [
-                "integrations/framework/web/vite",
-                "integrations/framework/web/nextjs",
-                "integrations/framework/web/remix",
-                "integrations/framework/web/gatsby",
-                "integrations/framework/web/astro",
-                "integrations/framework/web/nuxt",
-                "integrations/framework/web/sveltekit"
-              ]
-            },
-            {
-              "group": "Backend",
-              "pages": [
-                "integrations/framework/backend/express",
-                "integrations/framework/backend/nestjs",
-                "integrations/framework/backend/fastify",
-                "integrations/framework/backend/fastapi",
-                "integrations/framework/backend/django",
-                "integrations/framework/backend/flask",
-                "integrations/framework/backend/laravel",
-                "integrations/framework/backend/symfony",
-                "integrations/framework/backend/rails",
-                "integrations/framework/backend/spring",
-                "integrations/framework/backend/aspnet",
-                "integrations/framework/backend/wordpress",
-                "integrations/framework/backend/strapi"
-              ]
-            },
-            {
-              "group": "App",
-              "pages": [
-                "integrations/framework/app/expo",
-                "integrations/framework/app/react-native",
-                "integrations/framework/app/flutter",
-                "integrations/framework/app/electron"
+                "integrations/store/configu/settings",
+                "integrations/store/configu/billing"
               ]
             }
           ]

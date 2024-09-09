@@ -21,5 +21,8 @@
 '@configu/cli':
   - 'packages/cli/**'
 
+'@configu/proxy':
+  - 'packages/proxy/**'
+
 '@configu/vscode':
   - 'packages/vscode/**'

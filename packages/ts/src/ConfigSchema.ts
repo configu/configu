@@ -40,9 +40,9 @@ const CFGU_VALUE_TYPE_VALIDATORS: Record<CfguType, (parameters: Cfgu & { value: 
   IPv6: ({ value }) => validator.isIP(value, 6),
   Domain: ({ value }) => validator.isFQDN(value),
   URL: ({ value }) => validator.isURL(value),
-  ConnectionString: ({ value }) =>
-    // eslint-disable-next-line no-useless-escape
-    /^(?:([^:\/?#\s]+):\/{2})?(?:([^@\/?#\s]+)@)?([^\/?#\s]+)?(?:\/([^?#\s]*))?(?:[?]([^#\s]+))?\S*$/gm.test(value),
+  // ConnectionString: ({ value }) =>
+  //   // eslint-disable-next-line no-useless-escape
+  //   /^(?:([^:\/?#\s]+):\/{2})?(?:([^@\/?#\s]+)@)?([^\/?#\s]+)?(?:\/([^?#\s]*))?(?:[?]([^#\s]+))?\S*$/gm.test(value),
   Hex: ({ value }) => validator.isHexadecimal(value),
   Base64: ({ value }) => validator.isBase64(value),
   MD5: ({ value }) => validator.isHash(value, 'md5'),
