@@ -11,9 +11,7 @@ import { isDev } from '../helpers';
 const CONFIGU_API_URL = process.env.CONFIGU_API_URL ?? (isDev ? 'http://localhost:8080' : 'https://api.configu.com');
 const CONFIGU_APP_URL = process.env.CONFIGU_APP_URL ?? (isDev ? 'http://localhost:3000' : 'https://app.configu.com');
 /* cspell:disable-next-line */
-const AUTH_ISSUER = 'https://configu-dev-nh8rwa.zitadel.cloud';
-const AUTH_CLIENT_ID = '278947443452766014';
-const AUTH_API_IDENTIFIER = '278576455032556409';
+const { AUTH_CLIENT_ID, AUTH_API_IDENTIFIER, AUTH_ISSUER = 'http://localhost:3001' } = process.env;
 const SETUP_ERROR_MESSAGE = `Initial setup in not completed. Go to ${CONFIGU_APP_URL} activate your user and create your first organization`;
 
 export default class Login extends BaseCommand<typeof Login> {
@@ -57,7 +55,7 @@ export default class Login extends BaseCommand<typeof Login> {
     try {
       const auth = await Issuer.discover(AUTH_ISSUER);
       const client = new auth.Client({
-        client_id: AUTH_CLIENT_ID,
+        client_id: AUTH_CLIENT_ID as string,
         response_types: ['id_token', 'code'],
         token_endpoint_auth_method: 'none',
         id_token_signed_response_alg: 'RS256',
