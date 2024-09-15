@@ -231,6 +231,302 @@ importers:
         specifier: 13.12.2
         version: 13.12.2
 
+  packages/integrations:
+    dependencies:
+      '@configu/ts':
+        specifier: workspace:*
+        version: link:../ts
+      lodash-es:
+        specifier: ^4.17.21
+        version: 4.17.21
+    devDependencies:
+      '@types/lodash-es':
+        specifier: ^4.17.12
+        version: 4.17.12
+      '@types/node':
+        specifier: 20.12.12
+        version: 20.12.12
+
+  packages/integrations/expressions/validators:
+    dependencies:
+      validator:
+        specifier: ^13.11.0
+        version: 13.12.0
+    devDependencies:
+      '@types/node':
+        specifier: 20.12.12
+        version: 20.12.12
+      '@types/validator':
+        specifier: ^13.11.9
+        version: 13.12.2
+      tsup:
+        specifier: 8.2.4
+        version: 8.2.4(jiti@2.0.0)(tsx@4.19.1)(typescript@5.6.2)(yaml@2.5.1)
+      typescript:
+        specifier: ^5.4.5
+        version: 5.6.2
+
+  packages/integrations/formatters/CompactJSON:
+    dependencies:
+      change-case:
+        specifier: 4.1.2
+        version: 4.1.2
+      js-yaml:
+        specifier: ^4.1.0
+        version: 4.1.0
+      lodash-es:
+        specifier: ^4.17.21
+        version: 4.17.21
+    devDependencies:
+      '@types/js-yaml':
+        specifier: ^4.0.9
+        version: 4.0.9
+      '@types/lodash-es':
+        specifier: ^4.17.12
+        version: 4.17.12
+      '@types/node':
+        specifier: 20.12.12
+        version: 20.12.12
+      tsup:
+        specifier: 8.2.4
+        version: 8.2.4(jiti@2.0.0)(tsx@4.19.1)(typescript@5.6.2)(yaml@2.5.1)
+      typescript:
+        specifier: ^5.4.5
+        version: 5.6.2
+
+  packages/integrations/formatters/Dotenv:
+    dependencies:
+      change-case:
+        specifier: 4.1.2
+        version: 4.1.2
+    devDependencies:
+      '@types/node':
+        specifier: 20.12.12
+        version: 20.12.12
+      tsup:
+        specifier: 8.2.4
+        version: 8.2.4(jiti@2.0.0)(tsx@4.19.1)(typescript@5.6.2)(yaml@2.5.1)
+      typescript:
+        specifier: ^5.4.5
+        version: 5.6.2
+
+  packages/integrations/formatters/HelmValues:
+    dependencies:
+      change-case:
+        specifier: 4.1.2
+        version: 4.1.2
+      js-yaml:
+        specifier: ^4.1.0
+        version: 4.1.0
+      lodash-es:
+        specifier: ^4.17.21
+        version: 4.17.21
+    devDependencies:
+      '@types/node':
+        specifier: 20.12.12
+        version: 20.12.12
+      tsup:
+        specifier: 8.2.4
+        version: 8.2.4(jiti@2.0.0)(tsx@4.19.1)(typescript@5.6.2)(yaml@2.5.1)
+      typescript:
+        specifier: ^5.4.5
+        version: 5.6.2
+
+  packages/integrations/formatters/JSON:
+    devDependencies:
+      '@types/node':
+        specifier: 20.12.12
+        version: 20.12.12
+      tsup:
+        specifier: 8.2.4
+        version: 8.2.4(jiti@2.0.0)(tsx@4.19.1)(typescript@5.6.2)(yaml@2.5.1)
+      typescript:
+        specifier: ^5.4.5
+        version: 5.6.2
+
+  packages/integrations/formatters/KubernetesConfigMap:
+    dependencies:
+      js-yaml:
+        specifier: ^4.1.0
+        version: 4.1.0
+    devDependencies:
+      '@types/js-yaml':
+        specifier: ^4.0.9
+        version: 4.0.9
+      '@types/node':
+        specifier: 20.12.12
+        version: 20.12.12
+      tsup:
+        specifier: 8.2.4
+        version: 8.2.4(jiti@2.0.0)(tsx@4.19.1)(typescript@5.6.2)(yaml@2.5.1)
+      typescript:
+        specifier: ^5.4.5
+        version: 5.6.2
+
+  packages/integrations/formatters/TOML:
+    dependencies:
+      validator:
+        specifier: ^13.11.0
+        version: 13.12.0
+    devDependencies:
+      '@types/node':
+        specifier: 20.12.12
+        version: 20.12.12
+      '@types/validator':
+        specifier: ^13.11.9
+        version: 13.12.2
+      tsup:
+        specifier: 8.2.4
+        version: 8.2.4(jiti@2.0.0)(tsx@4.19.1)(typescript@5.6.2)(yaml@2.5.1)
+      typescript:
+        specifier: ^5.4.5
+        version: 5.6.2
+
+  packages/integrations/formatters/TerraformTfvars:
+    dependencies:
+      change-case:
+        specifier: 4.1.2
+        version: 4.1.2
+    devDependencies:
+      '@types/node':
+        specifier: 20.12.12
+        version: 20.12.12
+      tsup:
+        specifier: 8.2.4
+        version: 8.2.4(jiti@2.0.0)(tsx@4.19.1)(typescript@5.6.2)(yaml@2.5.1)
+      typescript:
+        specifier: ^5.4.5
+        version: 5.6.2
+
+  packages/integrations/formatters/YAML:
+    dependencies:
+      js-yaml:
+        specifier: ^4.1.0
+        version: 4.1.0
+    devDependencies:
+      '@types/js-yaml':
+        specifier: ^4.0.9
+        version: 4.0.9
+      '@types/node':
+        specifier: 20.12.12
+        version: 20.12.12
+      tsup:
+        specifier: 8.2.4
+        version: 8.2.4(jiti@2.0.0)(tsx@4.19.1)(typescript@5.6.2)(yaml@2.5.1)
+      typescript:
+        specifier: ^5.4.5
+        version: 5.6.2
+
+  packages/integrations/stores/aws-parameter:
+    dependencies:
+      '@aws-sdk/client-ssm':
+        specifier: ^3.465.0
+        version: 3.583.0
+    devDependencies:
+      '@types/node':
+        specifier: 20.12.12
+        version: 20.12.12
+      tsup:
+        specifier: 8.2.4
+        version: 8.2.4(jiti@2.0.0)(tsx@4.19.1)(typescript@5.6.2)(yaml@2.5.1)
+      typescript:
+        specifier: ^5.4.5
+        version: 5.6.2
+
+  packages/integrations/stores/configu:
+    dependencies:
+      validator:
+        specifier: ^13.11.0
+        version: 13.12.0
+    devDependencies:
+      '@types/node':
+        specifier: 20.12.12
+        version: 20.12.12
+      '@types/validator':
+        specifier: ^13.11.9
+        version: 13.12.2
+      axios:
+        specifier: ^1.6.2
+        version: 1.7.2
+      tsup:
+        specifier: 8.2.4
+        version: 8.2.4(jiti@2.0.0)(tsx@4.19.1)(typescript@5.6.2)(yaml@2.5.1)
+      typescript:
+        specifier: ^5.4.5
+        version: 5.6.2
+
+  packages/integrations/stores/csv-file:
+    dependencies:
+      '@configu/integrations':
+        specifier: workspace:*
+        version: link:../..
+      csv:
+        specifier: ^6.3.8
+        version: 6.3.9
+    devDependencies:
+      '@types/node':
+        specifier: 20.12.12
+        version: 20.12.12
+      tsup:
+        specifier: 8.2.4
+        version: 8.2.4(jiti@2.0.0)(tsx@4.19.1)(typescript@5.6.2)(yaml@2.5.1)
+      typescript:
+        specifier: ^5.4.5
+        version: 5.6.2
+
+  packages/integrations/stores/hashicorp-vault:
+    devDependencies:
+      '@types/node':
+        specifier: 20.12.12
+        version: 20.12.12
+      axios:
+        specifier: ^1.6.2
+        version: 1.7.2
+      tsup:
+        specifier: 8.2.4
+        version: 8.2.4(jiti@2.0.0)(tsx@4.19.1)(typescript@5.6.2)(yaml@2.5.1)
+      typescript:
+        specifier: ^5.4.5
+        version: 5.6.2
+
+  packages/integrations/stores/json-file:
+    dependencies:
+      '@configu/integrations':
+        specifier: workspace:*
+        version: link:../..
+    devDependencies:
+      '@types/node':
+        specifier: 20.12.12
+        version: 20.12.12
+      tsup:
+        specifier: 8.2.4
+        version: 8.2.4(jiti@2.0.0)(tsx@4.19.1)(typescript@5.6.2)(yaml@2.5.1)
+      typescript:
+        specifier: ^5.4.5
+        version: 5.6.2
+
+  packages/integrations/stores/sqlite:
+    dependencies:
+      lodash-es:
+        specifier: ^4.17.21
+        version: 4.17.21
+      reflect-metadata:
+        specifier: ^0.1.13
+        version: 0.1.14
+      typeorm:
+        specifier: ^0.3.17
+        version: 0.3.20(mssql@10.0.2)(pg@8.11.5)(sqlite3@5.1.7)(ts-node@10.9.2(@types/node@20.12.12)(typescript@5.6.2))
+    devDependencies:
+      '@types/node':
+        specifier: 20.12.12
+        version: 20.12.12
+      tsup:
+        specifier: 8.2.4
+        version: 8.2.4(jiti@2.0.0)(tsx@4.19.1)(typescript@5.6.2)(yaml@2.5.1)
+      typescript:
+        specifier: ^5.4.5
+        version: 5.6.2
+
   packages/lib:
     dependencies:
       '@configu/ts':
@@ -2174,6 +2470,9 @@ packages:
 
   '@types/katex@0.16.7':
     resolution: {integrity: sha512-HMwFiRujE5PjrgwHQ25+bsLJgowjGjm5Z8FVSf0N6PwgJrwxH0QxzHYDcKsTfV3wva0vzrpqMTJS2jXPr5BMEQ==}
+
+  '@types/lodash-es@4.17.12':
+    resolution: {integrity: sha512-0NgftHUcV4v34VhXm8QBSftKVXtbkBG3ViCjs6+eJ5a6y6Mi/jiFGPc1sC7QK+9BFhWrURE3EOggmWaSxL9OzQ==}
 
   '@types/lodash.isequal@4.5.8':
     resolution: {integrity: sha512-uput6pg4E/tj2LGxCZo9+y27JNyB2OZuuI/T5F+ylVDYuqICLG2/ktjxx0v6GvVntAf8TvEzeQLcV0ffRirXuA==}
@@ -4889,6 +5188,9 @@ packages:
     resolution: {integrity: sha512-iPZK6eYjbxRu3uB4/WZ3EsEIMJFMqAoopl3R+zuq0UjcAm/MO6KCweDgPfP3elTztoKP3KtnVHxTn2NHBSDVUw==}
     engines: {node: '>=10'}
 
+  lodash-es@4.17.21:
+    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
+
   lodash.camelcase@4.3.0:
     resolution: {integrity: sha512-TwuEnCnxbc3rAvhf/LbG7tJUDzhqXyFnv3dtzLOPgCG/hODL7WFnsbwktkD7yUV0RrreP/l1PALq/YSg6VvjlA==}
 
@@ -6725,6 +7027,25 @@ packages:
   tslib@2.7.0:
     resolution: {integrity: sha512-gLXCKdN1/j47AiHiOkJN69hJmcbGTHI0ImLmbYLHykhgeN0jVGola9yVjFgzCUklsZQMW55o+dW7IXv3RCXDzA==}
 
+  tsup@8.2.4:
+    resolution: {integrity: sha512-akpCPePnBnC/CXgRrcy72ZSntgIEUa1jN0oJbbvpALWKNOz1B7aM+UVDWGRGIO/T/PZugAESWDJUAb5FD48o8Q==}
+    engines: {node: '>=18'}
+    hasBin: true
+    peerDependencies:
+      '@microsoft/api-extractor': ^7.36.0
+      '@swc/core': ^1
+      postcss: ^8.4.12
+      typescript: '>=4.5.0'
+    peerDependenciesMeta:
+      '@microsoft/api-extractor':
+        optional: true
+      '@swc/core':
+        optional: true
+      postcss:
+        optional: true
+      typescript:
+        optional: true
+
   tsup@8.3.0:
     resolution: {integrity: sha512-ALscEeyS03IomcuNdFdc0YWGVIkwH1Ws7nfTbAPuoILvEV2hpGQAY72LIOjglGo4ShWpZfpBqP/jpQVCzqYQag==}
     engines: {node: '>=18'}
@@ -8558,7 +8879,7 @@ snapshots:
   '@eslint/eslintrc@2.1.4':
     dependencies:
       ajv: 6.12.6
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.7
       espree: 9.6.1
       globals: 13.24.0
       ignore: 5.3.1
@@ -8670,7 +8991,7 @@ snapshots:
   '@humanwhocodes/config-array@0.13.0':
     dependencies:
       '@humanwhocodes/object-schema': 2.0.3
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.7
       minimatch: 3.1.2
     transitivePeerDependencies:
       - supports-color
@@ -9800,6 +10121,10 @@ snapshots:
 
   '@types/katex@0.16.7': {}
 
+  '@types/lodash-es@4.17.12':
+    dependencies:
+      '@types/lodash': 4.17.9
+
   '@types/lodash.isequal@4.5.8':
     dependencies:
       '@types/lodash': 4.17.9
@@ -9897,7 +10222,7 @@ snapshots:
 
   '@types/xml2js@0.4.14':
     dependencies:
-      '@types/node': 20.12.12
+      '@types/node': 22.6.0
 
   '@types/xmldom@0.1.34': {}
 
@@ -9996,7 +10321,7 @@ snapshots:
     dependencies:
       '@typescript-eslint/typescript-estree': 7.18.0(typescript@5.6.2)
       '@typescript-eslint/utils': 7.18.0(eslint@8.57.1)(typescript@5.6.2)
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.7
       eslint: 8.57.1
       ts-api-utils: 1.3.0(typescript@5.6.2)
     optionalDependencies:
@@ -10029,7 +10354,7 @@ snapshots:
     dependencies:
       '@typescript-eslint/types': 7.11.0
       '@typescript-eslint/visitor-keys': 7.11.0
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.7
       globby: 11.1.0
       is-glob: 4.0.3
       minimatch: 9.0.4
@@ -10044,7 +10369,7 @@ snapshots:
     dependencies:
       '@typescript-eslint/types': 7.18.0
       '@typescript-eslint/visitor-keys': 7.18.0
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.7
       globby: 11.1.0
       is-glob: 4.0.3
       minimatch: 9.0.4
@@ -10164,7 +10489,7 @@ snapshots:
 
   agent-base@7.1.1:
     dependencies:
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.7
     transitivePeerDependencies:
       - supports-color
 
@@ -10628,7 +10953,7 @@ snapshots:
       path-case: 3.0.4
       sentence-case: 3.0.4
       snake-case: 3.0.4
-      tslib: 2.6.2
+      tslib: 2.7.0
 
   change-case@5.4.4: {}
 
@@ -11126,7 +11451,7 @@ snapshots:
       base64id: 2.0.0
       cookie: 0.4.2
       cors: 2.8.5
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.7
       engine.io-parser: 5.2.2
       ws: 8.11.0
     transitivePeerDependencies:
@@ -12528,7 +12853,7 @@ snapshots:
     dependencies:
       '@tootallnate/once': 1.1.2
       agent-base: 6.0.2
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.7
     transitivePeerDependencies:
       - supports-color
     optional: true
@@ -12537,7 +12862,7 @@ snapshots:
     dependencies:
       '@tootallnate/once': 2.0.0
       agent-base: 6.0.2
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.7
     transitivePeerDependencies:
       - supports-color
 
@@ -13091,6 +13416,8 @@ snapshots:
     dependencies:
       p-locate: 5.0.0
 
+  lodash-es@4.17.21: {}
+
   lodash.camelcase@4.3.0: {}
 
   lodash.get@4.4.2: {}
@@ -13643,7 +13970,7 @@ snapshots:
   micromark@3.2.0:
     dependencies:
       '@types/debug': 4.1.12
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.7
       decode-named-character-reference: 1.0.2
       micromark-core-commonmark: 1.1.0
       micromark-factory-space: 1.1.0
@@ -13863,7 +14190,7 @@ snapshots:
 
   nock@13.5.4:
     dependencies:
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.7
       json-stringify-safe: 5.0.1
       propagate: 2.0.1
     transitivePeerDependencies:
@@ -15049,7 +15376,7 @@ snapshots:
 
   socket.io-adapter@2.5.4:
     dependencies:
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.7
       ws: 8.11.0
     transitivePeerDependencies:
       - bufferutil
@@ -15059,7 +15386,7 @@ snapshots:
   socket.io-parser@4.2.4:
     dependencies:
       '@socket.io/component-emitter': 3.1.2
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.7
     transitivePeerDependencies:
       - supports-color
 
@@ -15068,7 +15395,7 @@ snapshots:
       accepts: 1.3.8
       base64id: 2.0.0
       cors: 2.8.5
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.7
       engine.io: 6.5.4
       socket.io-adapter: 2.5.4
       socket.io-parser: 4.2.4
@@ -15080,7 +15407,7 @@ snapshots:
   socks-proxy-agent@6.2.1:
     dependencies:
       agent-base: 6.0.2
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.7
       socks: 2.8.3
     transitivePeerDependencies:
       - supports-color
@@ -15182,7 +15509,7 @@ snapshots:
 
   stdout-stderr@0.1.13:
     dependencies:
-      debug: 4.3.4(supports-color@8.1.1)
+      debug: 4.3.7
       strip-ansi: 6.0.1
     transitivePeerDependencies:
       - supports-color
@@ -15461,6 +15788,25 @@ snapshots:
 
   ts-interface-checker@0.1.13: {}
 
+  ts-node@10.9.2(@types/node@20.12.12)(typescript@5.6.2):
+    dependencies:
+      '@cspotcode/source-map-support': 0.8.1
+      '@tsconfig/node10': 1.0.11
+      '@tsconfig/node12': 1.0.11
+      '@tsconfig/node14': 1.0.3
+      '@tsconfig/node16': 1.0.4
+      '@types/node': 20.12.12
+      acorn: 8.11.3
+      acorn-walk: 8.3.2
+      arg: 4.1.3
+      create-require: 1.1.1
+      diff: 4.0.2
+      make-error: 1.3.6
+      typescript: 5.6.2
+      v8-compile-cache-lib: 3.0.1
+      yn: 3.1.1
+    optional: true
+
   ts-node@10.9.2(@types/node@22.6.0)(typescript@5.6.2):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
@@ -15493,6 +15839,32 @@ snapshots:
   tslib@2.6.2: {}
 
   tslib@2.7.0: {}
+
+  tsup@8.2.4(jiti@2.0.0)(tsx@4.19.1)(typescript@5.6.2)(yaml@2.5.1):
+    dependencies:
+      bundle-require: 5.0.0(esbuild@0.23.1)
+      cac: 6.7.14
+      chokidar: 3.6.0
+      consola: 3.2.3
+      debug: 4.3.7
+      esbuild: 0.23.1
+      execa: 5.1.1
+      globby: 11.1.0
+      joycon: 3.1.1
+      picocolors: 1.0.1
+      postcss-load-config: 6.0.1(jiti@2.0.0)(tsx@4.19.1)(yaml@2.5.1)
+      resolve-from: 5.0.0
+      rollup: 4.22.4
+      source-map: 0.8.0-beta.0
+      sucrase: 3.35.0
+      tree-kill: 1.2.2
+    optionalDependencies:
+      typescript: 5.6.2
+    transitivePeerDependencies:
+      - jiti
+      - supports-color
+      - tsx
+      - yaml
 
   tsup@8.3.0(jiti@2.0.0)(tsx@4.19.1)(typescript@5.6.2)(yaml@2.5.1):
     dependencies:
@@ -15604,6 +15976,31 @@ snapshots:
       minimatch: 9.0.4
       shiki: 0.14.7
       typescript: 5.6.2
+
+  typeorm@0.3.20(mssql@10.0.2)(pg@8.11.5)(sqlite3@5.1.7)(ts-node@10.9.2(@types/node@20.12.12)(typescript@5.6.2)):
+    dependencies:
+      '@sqltools/formatter': 1.2.5
+      app-root-path: 3.1.0
+      buffer: 6.0.3
+      chalk: 4.1.2
+      cli-highlight: 2.1.11
+      dayjs: 1.11.11
+      debug: 4.3.4(supports-color@8.1.1)
+      dotenv: 16.4.5
+      glob: 10.4.1
+      mkdirp: 2.1.6
+      reflect-metadata: 0.2.2
+      sha.js: 2.4.11
+      tslib: 2.6.2
+      uuid: 9.0.1
+      yargs: 17.7.2
+    optionalDependencies:
+      mssql: 10.0.2
+      pg: 8.11.5
+      sqlite3: 5.1.7
+      ts-node: 10.9.2(@types/node@20.12.12)(typescript@5.6.2)
+    transitivePeerDependencies:
+      - supports-color
 
   typeorm@0.3.20(mssql@10.0.2)(pg@8.11.5)(sqlite3@5.1.7)(ts-node@10.9.2(@types/node@22.6.0)(typescript@5.6.2)):
     dependencies:

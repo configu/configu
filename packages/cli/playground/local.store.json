@@ -1,0 +1,12 @@
+[
+  {
+    "key": "MY_ENV_1",
+    "set": "playground",
+    "value": "todo"
+  },
+  {
+    "key": "MY_ENV_2",
+    "set": "playground",
+    "value": "tada"
+  }
+]
