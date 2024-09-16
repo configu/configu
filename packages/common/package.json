@@ -3,20 +3,10 @@
   "version": "0.0.0",
   "license": "Apache-2.0",
   "author": "@configu/dev",
-  "type": "module",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    "./package.json": "./package.json",
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
-    }
-  },
+  "exports": "./build/index.js",
+  "types": "./build/index.d.ts",
   "files": [
-    "dist"
+    "/build"
   ],
   "repository": {
     "type": "git",
@@ -41,7 +31,8 @@
   },
   "dependencies": {
     "@configu/node": "workspace:*",
-    "@configu/ts": "workspace:*"
+    "@configu/ts": "workspace:*",
+    "change-case": "4.1.2"
   },
   "devDependencies": {}
 }
