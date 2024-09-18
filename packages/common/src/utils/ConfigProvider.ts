@@ -5,7 +5,7 @@ import { TMPL } from '@configu/ts';
 export class ConfigProvider {
   constructor(public readonly content: any) {}
 
-  static parseFileContent(result: CosmiconfigResult) {
+  static parseLoadResult(result: CosmiconfigResult) {
     if (!result) throw new Error('no configuration file found');
     try {
       const stringifiedContent = JSON.stringify(result.config);
@@ -36,7 +36,7 @@ export class ConfigProvider {
       throw error;
     }
 
-    const content = this.parseFileContent(result);
+    const content = this.parseLoadResult(result);
     return new ConfigProvider(content);
   }
 
@@ -47,7 +47,7 @@ export class ConfigProvider {
     });
     const result = await explorer.search();
 
-    const content = this.parseFileContent(result);
+    const content = this.parseLoadResult(result);
     return new ConfigProvider(content);
   }
 }
