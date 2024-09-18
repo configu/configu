@@ -33,6 +33,7 @@
     "@configu/node": "workspace:*",
     "@configu/ts": "workspace:*",
     "change-case": "4.1.2",
+    "cosmiconfig": "^9.0.0",
     "lodash": "^4.17.21"
   },
   "devDependencies": {}
