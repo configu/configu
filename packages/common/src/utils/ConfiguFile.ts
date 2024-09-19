@@ -126,7 +126,7 @@ export class ConfiguFile {
     });
   }
 
-  runScript(scriptName: string, directory?: string) {
+  runScript({ scriptName, directory }: { scriptName: string; directory?: string }) {
     let cwd: string;
 
     if (directory) cwd = nodePath.resolve(directory);
