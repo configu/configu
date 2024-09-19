@@ -3,12 +3,12 @@ import fs from 'fs/promises';
 import path from 'path';
 import { type Config, Command, type Flags, type Interfaces, Errors, ux } from '@oclif/core';
 import _ from 'lodash';
-import { cosmiconfig } from 'cosmiconfig';
 import axios from 'axios';
 import chalk from 'chalk';
 import logSymbols from 'log-symbols';
 import ci from 'ci-info';
-import { type EvalCommandReturn, type ConfiguConfigStore, TMPL, ConfigSchema, ConfigError } from '@configu/ts';
+import { type EvalCommandReturn, type ConfiguConfigStore, ConfigSchema, ConfigError, ConfigStore } from '@configu/ts';
+import { ConfiguFile } from '@configu/common';
 import { constructStore, getPathBasename, readFile, readStdin, loadJSON, loadYAML } from './helpers';
 
 type BaseConfig = {
@@ -17,15 +17,6 @@ type BaseConfig = {
   configu: {
     file: string; // $HOME/.config/configu/config.json
     data: ConstructorParameters<typeof ConfiguConfigStore>['0'] | Record<string, never>;
-  };
-  cli: {
-    file?: string; // .configu file
-    data: Partial<{
-      stores: Record<string, { type: string; configuration: Record<string, any>; cache?: boolean }>;
-      cache?: string;
-      schemas: Record<string, string>;
-      scripts: Record<string, string>;
-    }>;
   };
 } & Config;
 
@@ -40,6 +31,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
   protected args!: Args<T>;
 
   public config: BaseConfig;
+  public configuFile: ConfiguFile;
 
   log = this.print;
   logToStderr = this.print;
@@ -77,28 +69,17 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     ux.action.stop(` ${mark} ${chalk.dim(text ?? defaultText)}`);
   }
 
-  getCacheStoreInstanceByStoreFlag(storeFlag?: string) {
-    if (!storeFlag) {
-      return undefined;
-    }
-    const storeCache = this.config.cli.data.stores?.[storeFlag]?.cache;
-    if (!storeCache) {
-      return undefined;
-    }
-    const database = this.config.cli.data.cache ?? path.join(this.config.cacheDir, 'config.sqlite');
-    return constructStore('sqlite', { database, tableName: storeFlag });
-  }
-
-  getStoreInstanceByStoreFlag(storeFlag?: string) {
+  getStoreInstanceByStoreFlag(storeFlag?: string): ConfigStore {
     if (!storeFlag) {
       throw new Error('--store flag is missing');
     }
 
-    const storeType = this.config.cli.data.stores?.[storeFlag]?.type ?? storeFlag;
+    const storeType = this.configuFile.contents.stores?.[storeFlag]?.type ?? storeFlag;
     // * stores may support independent configuration e.g from env vars, local config file etc.
-    const storeConfiguration = this.config.cli.data.stores?.[storeFlag]?.configuration;
+    const storeConfiguration = this.configuFile.contents.stores?.[storeFlag]?.configuration;
 
     if (storeFlag === this.config.bin || storeType === this.config.bin) {
+      // TODO: replace constructStore with ConfiguStore
       return constructStore(
         this.config.bin,
         _.merge(
@@ -118,14 +99,14 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       );
     }
 
-    return constructStore(storeType, storeConfiguration);
+    return this.configuFile.getStoreInstance(storeFlag);
   }
 
   async getSchemaInstanceBySchemaFlag(schemaFlag?: string) {
     if (!schemaFlag) {
       throw new Error('--schema flag is missing');
     }
-    const schemaPath = this.config.cli.data.schemas?.[schemaFlag] ?? schemaFlag;
+    const schemaPath = this.configuFile.contents.schemas?.[schemaFlag] ?? schemaFlag;
     const schemaBasename = getPathBasename(schemaPath);
     const [schemaName, cfguExt, fileExt] = schemaBasename.split('.');
 
@@ -239,26 +220,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
       this.config.configu.data = {};
     }
 
-    try {
-      const ConfigProvider = cosmiconfig(this.config.bin, {
-        searchPlaces: [`.${this.config.bin}`],
-        searchStrategy: 'global',
-      });
-      const configResult = await ConfigProvider.search();
-      this.config.cli = {
-        file: configResult?.filepath,
-        data: {},
-      };
-      const rawCliConfigData = JSON.stringify(configResult?.config ?? this.config.cli.data);
-      const compiledCliConfigData = TMPL.render(rawCliConfigData, {
-        ...process.env,
-        ..._.mapKeys(process.env, (k) => `${k}`),
-      });
-      const cliConfigData = JSON.parse(compiledCliConfigData);
-      this.config.cli.data = cliConfigData;
-    } catch (error) {
-      throw new Error(`invalid configuration file ${error.message}`);
-    }
+    this.configuFile = await ConfiguFile.loadFromSearch();
   }
 
   protected async catch(error: { exitCode?: number } & Error): Promise<any> {

@@ -96,6 +96,7 @@
     "configu-command-line"
   ],
   "dependencies": {
+    "@configu/common": "workspace:*",
     "@configu/lib": "^0.7.3",
     "@configu/node": "^0.24.0",
     "@configu/ts": "^0.24.0",

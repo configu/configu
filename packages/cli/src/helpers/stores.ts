@@ -54,6 +54,7 @@ const TYPE_TO_STORE_CTOR: Record<StoreType, ConfigStoreCtor> = {
   etcd: EtcdConfigStore,
 };
 
+// TODO: retire this function
 export const constructStore = (type: string, configuration: any): ConfigStore => {
   const StoreCtor = TYPE_TO_STORE_CTOR[type];
   if (!StoreCtor) {
