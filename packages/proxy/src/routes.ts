@@ -3,7 +3,7 @@ import { FromSchema } from 'json-schema-to-ts';
 import { ConfigSchema, ConfigSet, EvalCommand, UpsertCommand, ExportCommand } from '@configu/node';
 import { CfguSchema, ConfigSchemaContents, EvalCommandReturn, EvaluatedConfigOrigin, NamingPattern } from '@configu/ts';
 import _ from 'lodash';
-import { ConfiguInterfaceConfiguration } from './utils';
+import { getConfiguFile } from './utils';
 
 const body = {
   type: 'array',
@@ -78,11 +78,12 @@ export const routes: FastifyPluginAsync = async (server, opts): Promise<void> =>
       },
     },
     async (request, reply) => {
+      const configuFile = await getConfiguFile();
       const evalResToExport = await request.body.reduce<Promise<EvalCommandReturn>>(
         async (previousResult, { store, set, schema: { name, contents }, configs }) => {
           const pipe = await previousResult;
 
-          const storeInstance = ConfiguInterfaceConfiguration.getStoreInstance(store);
+          const storeInstance = configuFile.getStoreInstance(store);
           const setInstance = new ConfigSet(set);
           const schemaInstance = new ConfigSchema(name, contents as unknown as ConfigSchemaContents);
 
@@ -95,7 +96,7 @@ export const routes: FastifyPluginAsync = async (server, opts): Promise<void> =>
           });
           const evalRes = await evalCmd.run();
 
-          const backupStoreInstance = ConfiguInterfaceConfiguration.getBackupStoreInstance(store);
+          const backupStoreInstance = configuFile.getBackupStoreInstance(store);
           if (backupStoreInstance) {
             const backupConfigs = _(evalRes)
               .pickBy((entry) => entry.result.origin === EvaluatedConfigOrigin.StoreSet)

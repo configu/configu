@@ -1,6 +1,9 @@
 import _ from 'lodash';
 import { cosmiconfig, CosmiconfigResult } from 'cosmiconfig';
 import { JsonSchemaType, TMPL, JSON_SCHEMA, ConfigStore } from '@configu/ts';
+import nodePath from 'path';
+import { SQLiteConfigStore } from '@configu/node';
+import { constructStore } from './ConfigStoreConstructor';
 
 type StoreConfigurationObject = { type: string; configuration?: Record<string, unknown>; backup?: boolean };
 export type ConfiguFileContents = Partial<{
@@ -49,7 +52,10 @@ export const ConfiguFileContents: JsonSchemaType<ConfiguFileContents> = {
 };
 
 export class ConfiguFile {
-  constructor(public readonly contents: ConfiguFileContents) {
+  constructor(
+    public readonly path: string,
+    public readonly contents: ConfiguFileContents,
+  ) {
     if (!JSON_SCHEMA(ConfiguFileContents, this.contents)) {
       throw new Error(`ConfiguFile.contents is invalid`);
     }
@@ -64,6 +70,7 @@ export class ConfiguFile {
         ..._.mapKeys(process.env, (k) => `${k}`),
       });
       const configData = JSON.parse(compiledCliConfigData);
+      return new ConfiguFile(result.filepath, configData);
       return configData;
     } catch (error) {
       throw new Error(`invalid configuration file ${error.message}`);
@@ -86,8 +93,7 @@ export class ConfiguFile {
       throw error;
     }
 
-    const contents = this.parseLoadResult(result);
-    return new ConfiguFile(contents);
+    return this.parseLoadResult(result);
   }
 
   static async loadFromSearch(): Promise<ConfiguFile> {
@@ -97,10 +103,26 @@ export class ConfiguFile {
     });
     const result = await explorer.search();
 
-    const contents = this.parseLoadResult(result);
-    return new ConfiguFile(contents);
+    return this.parseLoadResult(result);
   }
 
-  // getStoreInstance(storeName?: string): ConfigStore {}
-  // getBackupStoreInstance(storeName?: string): ConfigStore {}
+  getStoreInstance(storeName: string): ConfigStore {
+    const storeConfig = this.contents.stores?.[storeName];
+    if (!storeConfig) {
+      throw new Error(`Store "${storeName}" not found`);
+    }
+    return constructStore(storeConfig.type, storeConfig.configuration);
+  }
+
+  getBackupStoreInstance(storeName: string) {
+    const shouldBackup = this.contents.stores?.[storeName]?.backup;
+    if (!shouldBackup) {
+      return undefined;
+    }
+    const database = this.contents.backup ?? nodePath.join(nodePath.dirname(this.path), 'config.backup.sqlite');
+    return new SQLiteConfigStore({
+      database,
+      tableName: storeName,
+    });
+  }
 }

@@ -37,6 +37,7 @@
     "configu-server"
   ],
   "dependencies": {
+    "@configu/common": "workspace:*",
     "@configu/lib": "workspace:*",
     "@configu/node": "workspace:*",
     "@configu/ts": "workspace:*",

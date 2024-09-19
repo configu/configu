@@ -8,6 +8,7 @@ import SwaggerUI from '@scalar/fastify-api-reference';
 
 import { config } from './config';
 import { routes } from './routes';
+import { getConfiguFile } from './utils';
 
 const server: FastifyInstance = Fastify({
   https: config.HTTPS_CONFIG,
@@ -90,6 +91,8 @@ if (config.CONFIGU_DOCS_ENABLED) {
 
 (async () => {
   try {
+    // TODO: share the file with the routes
+    const configuFile = await getConfiguFile();
     await server.listen({
       host: config.CONFIGU_HTTP_ADDR,
       port: config.CONFIGU_HTTP_PORT,
