@@ -3,6 +3,7 @@ import { cosmiconfig, CosmiconfigResult } from 'cosmiconfig';
 import { JsonSchemaType, TMPL, JSON_SCHEMA, ConfigStore } from '@configu/ts';
 import nodePath from 'path';
 import { SQLiteConfigStore } from '@configu/node';
+import { spawnSync } from 'child_process';
 import { constructStore } from './ConfigStoreConstructor';
 
 type StoreConfigurationObject = { type: string; configuration?: Record<string, unknown>; backup?: boolean };
@@ -71,7 +72,6 @@ export class ConfiguFile {
       });
       const configData = JSON.parse(compiledCliConfigData);
       return new ConfiguFile(result.filepath, configData);
-      return configData;
     } catch (error) {
       throw new Error(`invalid configuration file ${error.message}`);
     }
@@ -123,6 +123,25 @@ export class ConfiguFile {
     return new SQLiteConfigStore({
       database,
       tableName: storeName,
+    });
+  }
+
+  runScript(scriptName: string, directory?: string) {
+    let cwd: string;
+
+    if (directory) cwd = nodePath.resolve(directory);
+    else cwd = nodePath.dirname(this.path);
+
+    const script = this.contents.scripts?.[scriptName];
+    if (!script) {
+      throw new Error(`Script "${scriptName}" is not presented at ${cwd}`);
+    }
+
+    spawnSync(script, {
+      cwd,
+      stdio: 'inherit',
+      env: process.env,
+      shell: true,
     });
   }
 }
