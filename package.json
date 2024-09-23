@@ -10,7 +10,7 @@
     "node": ">=20",
     "pnpm": ">=9"
   },
-  "packageManager": "pnpm@9.5.0",
+  "packageManager": "pnpm@9.11.0",
   "scripts": {
     "prepare": "pnpm \"/^prepare:.*/\"",
     "prepare:hooks": "husky",
@@ -32,26 +32,27 @@
     "start": "shx echo \"Interactive start script is coming soon <3\""
   },
   "devDependencies": {
-    "@cspell/eslint-plugin": "^8.8.1",
-    "@types/lodash": "^4.17.4",
-    "@types/node": "20.12.12",
-    "@typescript-eslint/eslint-plugin": "^7.9.0",
-    "@typescript-eslint/parser": "^7.9.0",
-    "esbuild": "^0.21.3",
-    "eslint": "^8.57.0",
+    "@cspell/eslint-plugin": "^8.14.4",
+    "@types/lodash": "^4.17.9",
+    "@types/node": "22.6.0",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "esbuild": "^0.24.0",
+    "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-prettier": "^5.1.3",
-    "husky": "^9.0.11",
-    "lint-staged": "^15.2.2",
-    "prettier": "^3.2.5",
+    "eslint-plugin-import": "^2.30.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
+    "prettier": "^3.3.3",
     "shx": "^0.3.4",
-    "syncpack": "^12.3.2",
+    "syncpack": "^13.0.0",
     "ts-node": "^10.9.2",
-    "tslib": "^2.6.2",
-    "tsx": "^4.10.5",
-    "typescript": "^5.4.5",
-    "zx": "8.1.0"
+    "tslib": "^2.7.0",
+    "tsx": "^4.19.1",
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.2",
+    "zx": "8.1.8"
   }
 }
