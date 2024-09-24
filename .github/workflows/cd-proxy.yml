@@ -43,7 +43,7 @@ jobs:
           context: .
           file: ${{ env.PACKAGE_PATH }}/Dockerfile
           build-args: |
-            NODE_VERSION=20.12.2
+            NODE_VERSION=22.9.0
           platforms: linux/amd64,linux/arm64
           tags: |
             ${{ env.DOCKERHUB_REPOSITORY }}:${{ steps.deployment.outputs.release-version }}

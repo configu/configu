@@ -2,8 +2,6 @@ import _ from 'lodash';
 import Mustache from 'mustache';
 import Ajv, { type SchemaObject } from 'ajv';
 
-export const bla = 'bla';
-
 export class ConfigError extends Error {
   constructor(
     protected readonly reason: string,
