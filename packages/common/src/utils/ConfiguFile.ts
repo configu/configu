@@ -164,6 +164,7 @@ export class ConfiguFile {
 
   // TODO: temporary placement of this method in a separate class
   async loadSchema({ recursive }: { recursive?: boolean } = {}): Promise<ConfigSchema | undefined> {
+    // TODO: this doesn't support a dynamic name
     const explorer = cosmiconfig('cfgu', {
       searchPlaces: ALLOWED_CFGU_EXT.map((ext) => `cfgu.${ext}`),
       searchStrategy: recursive ? 'global' : 'none',
