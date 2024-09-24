@@ -4,6 +4,7 @@ import { ConfigSchema, ConfigSet, EvalCommand, UpsertCommand, ExportCommand } fr
 import { CfguSchema, ConfigSchemaContents, EvalCommandReturn, EvaluatedConfigOrigin, NamingPattern } from '@configu/ts';
 import _ from 'lodash';
 import { getConfiguFile } from './utils';
+import { config } from './config';
 
 const body = {
   type: 'array',
@@ -83,7 +84,13 @@ export const routes: FastifyPluginAsync = async (server, opts): Promise<void> =>
         async (previousResult, { store, set, schema: { name, contents }, configs }) => {
           const pipe = await previousResult;
 
-          const storeInstance = configuFile.getStoreInstance(store);
+          const storeInstance = await configuFile.getStoreInstance({
+            storeName: store,
+            cacheDir: config.CONFIGU_STORES_CACHE_DIR,
+            configuration: configuFile.contents.stores?.[store]?.configuration,
+            // TODO: get version from configu file somehow
+            // version: configuFile.contents.stores?.[store]?.version,
+          });
           const setInstance = new ConfigSet(set);
           const schemaInstance = new ConfigSchema(name, contents as unknown as ConfigSchemaContents);
 
@@ -96,7 +103,13 @@ export const routes: FastifyPluginAsync = async (server, opts): Promise<void> =>
           });
           const evalRes = await evalCmd.run();
 
-          const backupStoreInstance = configuFile.getBackupStoreInstance(store);
+          const backupStoreInstance = await configuFile.getBackupStoreInstance({
+            storeName: store,
+            cacheDir: config.CONFIGU_STORES_CACHE_DIR,
+            configuration: configuFile.contents.stores?.[store]?.configuration,
+            // TODO: get version from configu file somehow
+            // version: configuFile.contents.stores?.[store]?.version,
+          });
           if (backupStoreInstance) {
             const backupConfigs = _(evalRes)
               .pickBy((entry) => entry.result.origin === EvaluatedConfigOrigin.StoreSet)

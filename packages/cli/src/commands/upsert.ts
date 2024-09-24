@@ -56,7 +56,7 @@ export default class Upsert extends BaseCommand<typeof Upsert> {
   };
 
   public async run(): Promise<void> {
-    const store = this.getStoreInstanceByStoreFlag(this.flags.store);
+    const store = await this.getStoreInstanceByStoreFlag(this.flags.store);
     const set = new ConfigSet(this.flags.set);
     const schema = await this.getSchemaInstanceBySchemaFlag(this.flags.schema);
     const pipe = await this.readPreviousEvalCommandReturn();

@@ -106,7 +106,17 @@ export class ConfiguFile {
     return this.parseLoadResult(result);
   }
 
-  getStoreInstance(storeName: string): ConfigStore {
+  async getStoreInstance({
+    storeName,
+    cacheDir,
+    configuration,
+    version,
+  }: {
+    storeName: string;
+    cacheDir: string;
+    configuration?: Record<string, unknown>;
+    version?: string;
+  }): Promise<ConfigStore> {
     const storeConfig = this.contents.stores?.[storeName];
     if (!storeConfig) {
       throw new Error(`Store "${storeName}" not found`);
@@ -114,11 +124,17 @@ export class ConfiguFile {
     return constructStore(storeConfig.type, storeConfig.configuration);
   }
 
-  getBackupStoreInstance(storeName: string) {
-    const shouldBackup = this.contents.stores?.[storeName]?.backup;
-    if (!shouldBackup) {
-      return undefined;
-    }
+  async getBackupStoreInstance({
+    storeName,
+    cacheDir,
+    configuration,
+    version,
+  }: {
+    storeName: string;
+    cacheDir: string;
+    configuration?: Record<string, unknown>;
+    version?: string;
+  }): Promise<ConfigStore> {
     const database = this.contents.backup ?? nodePath.join(nodePath.dirname(this.path), 'config.backup.sqlite');
     return new SQLiteConfigStore({
       database,

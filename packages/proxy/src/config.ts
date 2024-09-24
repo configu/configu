@@ -32,6 +32,8 @@ const CONFIGU_LOG_ENABLED = (process.env.CONFIGU_LOG_ENABLED ?? 'true') === 'tru
 const CONFIGU_DOCS_ENABLED = (process.env.CONFIGU_DOCS_ENABLED ?? 'true') === 'true';
 // The (absolute) file path of the .configu configuration file.
 const CONFIGU_CONFIG_FILE = process.env.CONFIGU_CONFIG_FILE ?? '.configu';
+// TODO: decide naming
+const CONFIGU_STORES_CACHE_DIR = process.env.CONFIGU_STORES_CACHE_DIR ?? 'cache/stores';
 
 let HTTPS_CONFIG: ServerOptions | null = null;
 if (CONFIGU_HTTP_TLS_ENABLED) {
@@ -63,4 +65,5 @@ export const config = {
   CONFIGU_LOG_ENABLED,
   CONFIGU_DOCS_ENABLED,
   CONFIGU_CONFIG_FILE,
+  CONFIGU_STORES_CACHE_DIR,
 };

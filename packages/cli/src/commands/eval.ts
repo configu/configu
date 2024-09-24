@@ -4,11 +4,12 @@ import {
   type EvalCommandReturn,
   EvaluatedConfigOrigin,
   type ConfigStore,
-  ConfigStoreError,
   type ConfigSchema,
   UpsertCommand,
 } from '@configu/ts';
-import { NoopConfigStore, ConfigSet, EvalCommand } from '@configu/node';
+import { NoopConfigStore, ConfigSet } from '@configu/node';
+import { EvalCommand } from '@configu/common';
+
 import _ from 'lodash';
 import { BaseCommand } from '../base';
 
@@ -70,7 +71,7 @@ export default class Eval extends BaseCommand<typeof Eval> {
     const pipe = await this.readPreviousEvalCommandReturn();
 
     if (typeof this.flags.store === 'string' && (typeof this.flags.set === 'string' || this.flags.set === undefined)) {
-      const store = this.getStoreInstanceByStoreFlag(this.flags.store);
+      const store = await this.getStoreInstanceByStoreFlag(this.flags.store);
       return {
         store,
         set: new ConfigSet(this.flags.set),
@@ -103,29 +104,27 @@ export default class Eval extends BaseCommand<typeof Eval> {
   }
 
   public async run(): Promise<void> {
-    const backupStore = this.flags.store ? this.configuFile.getBackupStoreInstance(this.flags.store) : undefined;
-    const shouldEvalFromBackupStore = this.flags['from-backup'];
+    const backupStore =
+      this.flags.store && this.configuFile.contents.stores?.[this.flags.store]?.backup
+        ? await this.configuFile.getBackupStoreInstance({
+            storeName: this.flags.store,
+            cacheDir: this.config.cacheDir,
+            configuration: this.configuFile.contents.stores?.[this.flags.store]?.configuration,
+            // TODO: get version from configu file somehow
+            // version: this.configuFile.contents.stores?.[this.flags.store]?.version,
+          })
+        : undefined;
     const evalCommandParameters = await this.constructEvalCommandParameters();
-    let evalCommandReturn;
 
-    if (backupStore && !shouldEvalFromBackupStore) {
-      try {
-        evalCommandReturn = await new EvalCommand(evalCommandParameters).run();
-        const { schema, set } = evalCommandParameters;
-        await this.updateBackupStore(backupStore, set, schema, evalCommandReturn);
-      } catch (error) {
-        if (error instanceof ConfigStoreError) {
-          evalCommandReturn = await new EvalCommand({ ...evalCommandParameters, store: backupStore }).run();
-        } else {
-          throw error;
-        }
-      }
-    } else {
-      evalCommandReturn = await new EvalCommand({
-        ...evalCommandParameters,
-        store: shouldEvalFromBackupStore && backupStore ? backupStore : evalCommandParameters.store,
-      }).run();
-    }
+    const evalCommandReturn = await new EvalCommand({
+      ...evalCommandParameters,
+      // TODO: should be resolved after the addition of @configu/sdk
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
+      schema: evalCommandParameters.schema,
+      backupStore,
+      evalFromBackup: this.flags['from-backup'],
+    }).run();
 
     this.print(JSON.stringify(evalCommandReturn), { stdout: 'stdout' });
   }

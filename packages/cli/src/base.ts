@@ -9,7 +9,7 @@ import logSymbols from 'log-symbols';
 import ci from 'ci-info';
 import { type EvalCommandReturn, type ConfiguConfigStore, ConfigSchema, ConfigError, ConfigStore } from '@configu/ts';
 import { ConfiguFile } from '@configu/common';
-import { constructStore, getPathBasename, readFile, readStdin, loadJSON, loadYAML } from './helpers';
+import { getPathBasename, readFile, readStdin, loadJSON, loadYAML } from './helpers';
 
 type BaseConfig = {
   ci: typeof ci;
@@ -69,7 +69,7 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     ux.action.stop(` ${mark} ${chalk.dim(text ?? defaultText)}`);
   }
 
-  getStoreInstanceByStoreFlag(storeFlag?: string): ConfigStore {
+  async getStoreInstanceByStoreFlag(storeFlag?: string): Promise<ConfigStore> {
     if (!storeFlag) {
       throw new Error('--store flag is missing');
     }
@@ -79,10 +79,10 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
     const storeConfiguration = this.configuFile.contents.stores?.[storeFlag]?.configuration;
 
     if (storeFlag === this.config.bin || storeType === this.config.bin) {
-      // TODO: replace constructStore with ConfiguStore
-      return constructStore(
-        this.config.bin,
-        _.merge(
+      return this.configuFile.getStoreInstance({
+        storeName: this.config.bin,
+        cacheDir: this.config.cacheDir,
+        configuration: _.merge(
           this.config.configu.data, // from configu login
           {
             // from environment variables
@@ -96,10 +96,18 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
           storeConfiguration, // from .configu file
           { source: 'cli' },
         ),
-      );
+        // TODO: get version from configu file somehow
+        // version: this.configuFile.contents.stores?.[storeFlag]?.version,
+      });
     }
 
-    return this.configuFile.getStoreInstance(storeFlag);
+    return this.configuFile.getStoreInstance({
+      storeName: storeType,
+      cacheDir: this.config.cacheDir,
+      configuration: storeConfiguration,
+      // TODO: get version from configu file somehow
+      // version: this.configuFile.contents.stores?.[storeFlag]?.version,
+    });
   }
 
   async getSchemaInstanceBySchemaFlag(schemaFlag?: string) {
