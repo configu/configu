@@ -15,7 +15,7 @@ export type EvalCommandParameters = BaseEvalCommandParameters & {
 };
 
 export class EvalCommand extends BaseEvalCommand {
-  constructor(public parameters: EvalCommandParameters) {
+  constructor(public override parameters: EvalCommandParameters) {
     super(parameters);
   }
 
@@ -30,7 +30,7 @@ export class EvalCommand extends BaseEvalCommand {
     await new UpsertCommand({ store: backupStore, set, schema, configs }).run();
   }
 
-  async run() {
+  override async run() {
     let evalCommandReturn: EvalCommandReturn;
 
     if (this.parameters.backupStore && !this.parameters.evalFromBackup) {

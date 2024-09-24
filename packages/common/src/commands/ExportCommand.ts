@@ -38,7 +38,7 @@ export type ExportCommandParameters = BaseExportCommandParameters & {
 };
 
 export class ExportCommand extends BaseExportCommand {
-  constructor(public parameters: ExportCommandParameters) {
+  constructor(public override parameters: ExportCommandParameters) {
     super(parameters);
   }
 
@@ -57,7 +57,7 @@ export class ExportCommand extends BaseExportCommand {
     };
   }
 
-  async run() {
+  override async run() {
     const keys = this.keysMutations();
     if (keys) this.parameters.keys = keys;
     const res = await super.run();

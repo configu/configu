@@ -2,12 +2,9 @@
   "name": "@configu/common",
   "version": "0.0.0",
   "license": "Apache-2.0",
+  "description": "Configu Node.js Common Library",
   "author": "@configu/dev",
-  "exports": "./build/index.js",
-  "types": "./build/index.d.ts",
-  "files": [
-    "/build"
-  ],
+  "homepage": "https://configu.com",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/configu/configu",
@@ -17,12 +14,26 @@
     "url": "https://github.com/configu/configu/issues",
     "email": "dev@configu.com"
   },
-  "homepage": "https://configu.com",
   "keywords": [
     "cfgu",
     "configu",
     "configu-common",
     "configu-lib"
+  ],
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "/dist"
   ],
   "scripts": {
     "clean": "shx rm -rf tsconfig.tsbuildinfo build",
@@ -32,9 +43,11 @@
   "dependencies": {
     "@configu/node": "workspace:*",
     "@configu/ts": "workspace:*",
+    "@configu/sdk": "workspace:*",
     "change-case": "4.1.2",
     "cosmiconfig": "^9.0.0",
     "lodash": "^4.17.21",
     "type-fest": "^4.8.3"
-  }
+  },
+  "devDependencies": {}
 }

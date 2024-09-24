@@ -16,6 +16,7 @@
     "prepare:hooks": "husky",
     "prepare:deps": "shx echo 'todo: restore syncpack list-mismatches'",
     "prepare:build": "pnpm build",
+    "prepare:bundle": "pnpm -r bundle",
     "prepare:art": "shx cat docs/images/ascii-art.txt",
     "clean": "pnpm -r clean",
     "clean:all": "pnpm clean && shx rm -rf **/node_modules .eslintcache lcov.info",

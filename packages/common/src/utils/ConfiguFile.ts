@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import { cosmiconfig, CosmiconfigResult } from 'cosmiconfig';
 import { JsonSchemaType, TMPL, JSON_SCHEMA, ConfigStore, ConfigSchema, ConfigSchemaContents } from '@configu/ts';
+import { Expression } from '@configu/sdk';
 import nodePath from 'path';
 import { SQLiteConfigStore } from '@configu/node';
 import { spawnSync } from 'child_process';

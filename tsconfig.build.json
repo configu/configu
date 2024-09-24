@@ -14,9 +14,6 @@
       "path": "packages/lib"
     },
     {
-      "path": "packages/common"
-    },
-    {
       "path": "packages/cli"
     },
     {
