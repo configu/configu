@@ -11,14 +11,14 @@ export type ConfigStoreConstructor = new (configuration: object) => ConfigStore;
  * https://configu.com/docs/config-store/
  */
 export abstract class ConfigStore {
-  public readonly name: string;
+  public readonly type: string;
 
   constructor() {
     const { name } = this.constructor;
     if (!name.endsWith(ConfigStore.name)) {
       throw new Error(`ConfigStore class name must end with "${ConfigStore.name}"`);
     }
-    this.name = name.slice(0, -ConfigStore.name.length);
+    this.type = name.slice(0, -ConfigStore.name.length);
   }
 
   async init() {}
