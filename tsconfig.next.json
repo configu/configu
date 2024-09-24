@@ -5,7 +5,7 @@
     "module": "Preserve",
     "noEmit": true,
     "removeComments": true,
-    "incremental": true,
+    // "incremental": true,
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
