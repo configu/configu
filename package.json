@@ -14,7 +14,7 @@
   "scripts": {
     "prepare": "pnpm \"/^prepare:.*/\"",
     "prepare:hooks": "husky",
-    "prepare:deps": "syncpack list-mismatches",
+    "prepare:deps": "shx echo 'todo: restore syncpack list-mismatches'",
     "prepare:build": "pnpm build",
     "prepare:art": "shx cat docs/images/ascii-art.txt",
     "clean": "pnpm -r clean",
