@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "../../tsconfig.next.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "composite": true
+    // "outDir": "build",
+  },
+  "include": ["src", "src/**/*.json"]
+}

@@ -1,0 +1,53 @@
+{
+  "name": "@configu/sdk",
+  "version": "0.0.0",
+  "license": "Apache-2.0",
+  "description": "Configu TypeScript SDK",
+  "author": "@configu/dev",
+  "homepage": "https://configu.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/configu/configu",
+    "directory": "packages/sdk"
+  },
+  "bugs": {
+    "url": "https://github.com/configu/configu/issues",
+    "email": "dev@configu.com"
+  },
+  "keywords": [
+    "cfgu",
+    "configu",
+    "configu-sdk",
+    "configu-ts",
+    "configu-typescript"
+  ],
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "clean": "shx rm -rf tsconfig.tsbuildinfo build",
+    "build": "tsc --build",
+    "bundle": "tsup"
+  },
+  "dependencies": {
+    "@apideck/better-ajv-errors": "^0.3.6",
+    "adaptive-expressions": "^4.23.1",
+    "ajv": "^8.17.1",
+    "lodash": "^4.17.21",
+    "parse-json": "8.1.0",
+    "type-fest": "^4.26.1"
+  },
+  "devDependencies": {}
+}
