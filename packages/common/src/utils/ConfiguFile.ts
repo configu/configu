@@ -1,10 +1,12 @@
 import _ from 'lodash';
 import { cosmiconfig, CosmiconfigResult } from 'cosmiconfig';
-import { JsonSchemaType, TMPL, JSON_SCHEMA, ConfigStore } from '@configu/ts';
+import { JsonSchemaType, TMPL, JSON_SCHEMA, ConfigStore, ConfigSchema, ConfigSchemaContents } from '@configu/ts';
 import nodePath from 'path';
 import { SQLiteConfigStore } from '@configu/node';
 import { spawnSync } from 'child_process';
 import { constructStore } from './ConfigStoreConstructor';
+
+const ALLOWED_CFGU_EXT = ['json', 'yaml', 'yml'];
 
 type StoreConfigurationObject = { type: string; configuration?: Record<string, unknown>; backup?: boolean };
 export type ConfiguFileContents = Partial<{
@@ -40,7 +42,6 @@ export const ConfiguFileContents: JsonSchemaType<ConfiguFileContents> = {
       type: 'object',
       nullable: true,
       required: [],
-
       additionalProperties: { type: 'string' },
     },
     scripts: {
@@ -159,5 +160,17 @@ export class ConfiguFile {
       env: process.env,
       shell: true,
     });
+  }
+
+  // TODO: temporary placement of this method in a separate class
+  async loadSchema({ recursive }: { recursive?: boolean } = {}): Promise<ConfigSchema | undefined> {
+    const explorer = cosmiconfig('cfgu', {
+      searchPlaces: ALLOWED_CFGU_EXT.map((ext) => `cfgu.${ext}`),
+      searchStrategy: recursive ? 'global' : 'none',
+    });
+    const result = await explorer.search();
+    if (!result) return undefined;
+
+    return new ConfigSchema('placeholder', result.config as unknown as ConfigSchemaContents);
   }
 }
