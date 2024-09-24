@@ -5,7 +5,6 @@
     "module": "Preserve",
     "noEmit": true,
     "removeComments": true,
-    // "incremental": true,
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
@@ -17,6 +16,7 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "useUnknownInCatchVariables": false
   }
 }

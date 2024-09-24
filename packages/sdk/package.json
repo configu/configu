@@ -23,22 +23,25 @@
   ],
   "type": "module",
   "types": "./dist/index.d.ts",
+  "module": "./dist/index.js",
   "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
+      "import": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "require": "./dist/index.cjs"
+      }
     }
   },
   "files": [
     "dist"
   ],
   "scripts": {
-    "clean": "shx rm -rf tsconfig.tsbuildinfo build",
-    "build": "tsc --build",
     "bundle": "tsup"
   },
   "dependencies": {
