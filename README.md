@@ -1,4 +1,4 @@
-<!-- <img src="https://raw.githubusercontent.com/configu/configu/main/assets/hacktoberfest-23-banner.svg" alt="Hacktoberfest 23 Banner" /> -->
+<img src="https://raw.githubusercontent.com/configu/configu/main/assets/hacktoberfest-24-banner.svg" alt="Hacktoberfest 24 Banner" />
 <br/>
 <p align="center">
   <a target="_blank" href="https://configu.com">
