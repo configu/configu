@@ -8,6 +8,7 @@ import { constructStore } from './ConfigStoreConstructor';
 
 const ALLOWED_CFGU_EXT = ['json', 'yaml', 'yml'];
 
+// TODO: consider adding version to the store configuration instead of basing it off of type, it'll spare us from string manipulation on the store type to extract the version
 type StoreConfigurationObject = { type: string; configuration?: Record<string, unknown>; backup?: boolean };
 export type ConfiguFileContents = Partial<{
   $schema: string;
@@ -162,9 +163,9 @@ export class ConfiguFile {
     });
   }
 
-  // TODO: temporary placement of this method in a separate class
+  // TODO: consider placement of this method in a separate class
   async loadSchema({ recursive }: { recursive?: boolean } = {}): Promise<ConfigSchema | undefined> {
-    // TODO: this doesn't support a dynamic name
+    // TODO: this doesn't support a dynamic schema name
     const explorer = cosmiconfig('cfgu', {
       searchPlaces: ALLOWED_CFGU_EXT.map((ext) => `cfgu.${ext}`),
       searchStrategy: recursive ? 'global' : 'none',
