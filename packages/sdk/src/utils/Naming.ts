@@ -9,6 +9,10 @@ export class Naming {
     'Config',
     'ConfigStore',
     'ConfigSet',
+    'ConfigKey',
+    'Key',
+    'ConfigValue',
+    'Value',
     'ConfigSchema',
     'Configu',
   ];
@@ -17,18 +21,5 @@ export class Naming {
   static readonly errorMessage = `must match ${Naming.pattern} and not be one of ${Naming.reserved.join(', ')}`;
   static validate(name: string) {
     return RegExp(Naming.pattern).test(name) && !Naming.lowerCaseReserved.includes(name.toLowerCase());
-  }
-}
-
-export class String {
-  static createRegExp(patternString: string): RegExp {
-    // Create a RegExp object from the pattern string
-    const match = patternString.match(/^\/(.*?)\/([gimyusdv]*)$/);
-    if (match) {
-      const [, pattern = '', flags = ''] = match;
-      return new RegExp(pattern, flags);
-    }
-    // Handle strings that don't specify flags
-    return new RegExp(patternString);
   }
 }

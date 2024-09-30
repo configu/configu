@@ -206,6 +206,31 @@ importers:
         specifier: ^2.6.2
         version: 2.6.2
 
+  packages/common:
+    dependencies:
+      '@configu/sdk':
+        specifier: workspace:*
+        version: link:../sdk
+      change-case:
+        specifier: 5.4.4
+        version: 5.4.4
+      cosmiconfig:
+        specifier: ^9.0.0
+        version: 9.0.0(typescript@5.6.2)
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
+      type-fest:
+        specifier: ^4.26.1
+        version: 4.26.1
+      validator:
+        specifier: 13.12.0
+        version: 13.12.0
+    devDependencies:
+      '@types/validator':
+        specifier: 13.12.2
+        version: 13.12.2
+
   packages/lib:
     dependencies:
       '@configu/ts':
@@ -2237,6 +2262,9 @@ packages:
   '@types/validator@13.12.0':
     resolution: {integrity: sha512-nH45Lk7oPIJ1RVOF6JgFI6Dy0QpHEzq4QecZhvguxYPDwT8c93prCMqAtiIttm39voZ+DDR+qkNnMpJmMBRqag==}
 
+  '@types/validator@13.12.2':
+    resolution: {integrity: sha512-6SlHBzUW8Jhf3liqrGGXyTJSIFe4nqlJ5A5KaMZ2l/vbM3Wh3KSybots/wfWVzNLK4D1NZluDlSQIbIEPx6oyA==}
+
   '@types/wrap-ansi@3.0.0':
     resolution: {integrity: sha512-ltIpx+kM7g/MLRZfkbL7EsCEjfzCcScLpkg37eXEtx5kmrAKBkTJwd1GIAjDSL8wTpM6Hzn5YO4pSb91BEwu1g==}
 
@@ -2822,6 +2850,9 @@ packages:
 
   change-case@4.1.2:
     resolution: {integrity: sha512-bSxY2ws9OtviILG1EiY5K7NNxkqg/JnRnFxLtKQ96JaviiIxi7djMrSd0ECT9AC+lttClmYwKw53BWpOMblo7A==}
+
+  change-case@5.4.4:
+    resolution: {integrity: sha512-HRQyTk2/YPEkt9TnUPbOpr64Uw3KOicFWPVBb+xiHvd6eBx/qPr9xqfBFDT8P2vWsvvz4jbEkfDe71W3VyNu2w==}
 
   character-entities-html4@2.1.0:
     resolution: {integrity: sha512-1v7fgQRj6hnSwFpq1Eu0ynr/CDEw0rXo2B61qXrLNdHZmPKgb7fqS1a2JwF0rISo9q77jDI8VMEHoApn8qDoZA==}
@@ -8089,7 +8120,7 @@ snapshots:
       dotenv: 16.4.5
       js-yaml: 4.1.0
       lodash: 4.17.21
-      type-fest: 4.18.3
+      type-fest: 4.26.1
       validator: 13.12.0
     transitivePeerDependencies:
       - debug
@@ -9857,6 +9888,8 @@ snapshots:
 
   '@types/validator@13.12.0': {}
 
+  '@types/validator@13.12.2': {}
+
   '@types/wrap-ansi@3.0.0': {}
 
   '@types/ws@8.5.10':
@@ -10597,6 +10630,8 @@ snapshots:
       sentence-case: 3.0.4
       snake-case: 3.0.4
       tslib: 2.6.2
+
+  change-case@5.4.4: {}
 
   character-entities-html4@2.1.0: {}
 

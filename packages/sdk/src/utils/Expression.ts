@@ -1,12 +1,18 @@
 import _ from 'lodash';
-import { Expression as AdaptiveExpressions, ReturnType } from 'adaptive-expressions';
+import {
+  Expression as AdaptiveExpressions,
+  ExpressionEvaluator,
+  ReturnType,
+  FunctionUtils,
+} from 'adaptive-expressions';
 
 export type ExpressionString = string;
-export type ExpressionReturnType = ReturnType;
 export type ExpressionObject = AdaptiveExpressions;
-export type ExpressionContext = Record<string, unknown>;
+export type ExpressionReturnType = ReturnType;
+export type ExpressionFunction<P extends any[] = any[], R = any> = (...args: P) => R;
 
 export class Expression {
+  static functions = AdaptiveExpressions.functions;
   private static marker = { start: '${', end: '}' };
   private static delimiters = [
     { start: '{{', end: '}}' },
@@ -24,6 +30,38 @@ export class Expression {
     'g',
   );
 
+  static register<P extends any[] = any[], R = any>({ key, fn }: { key: string; fn: ExpressionFunction<P, R> }) {
+    AdaptiveExpressions.functions.add(
+      key,
+      new ExpressionEvaluator(key, (expr, state, options) => {
+        console.log('Expression:', expr.toString());
+        console.log('State:', state);
+
+        let value: any;
+
+        const arg0 = state.getValue('_');
+
+        const { args, error: childrenError } = FunctionUtils.evaluateChildren(expr, state, options);
+        let error = childrenError;
+
+        if (error) {
+          return { value, error };
+        }
+
+        try {
+          if (arg0 && arg0 !== args[0]) {
+            args.unshift(arg0);
+          }
+          value = fn(...(args as P));
+        } catch (e) {
+          error = e;
+        }
+
+        return { value, error };
+      }),
+    );
+  }
+
   static parse(expression: string): ExpressionObject {
     try {
       const expressionToParse = expression.replace(Expression.pattern, (match, group) => {
@@ -31,16 +69,8 @@ export class Expression {
       });
       return AdaptiveExpressions.parse(expressionToParse);
     } catch (error) {
-      throw new Error(`Failed to parse expression: ${expression}`);
+      throw new Error(`Failed to parse expression "${expression}"\n${error}`);
     }
-  }
-
-  static eval({ expression, context = {} }: { expression: string; context: ExpressionContext }) {
-    const { value, error } = this.parse(expression).tryEvaluate(context);
-    if (error) {
-      return '';
-    }
-    return value !== undefined ? value : '';
   }
 
   static sort(expressionsDict: Record<string, string>): string[] {
@@ -83,3 +113,25 @@ export class Expression {
     return sorted.filter((key) => Object.prototype.hasOwnProperty.call(expressionsDict, key));
   }
 }
+
+// Expression.register({
+//   key: 'isInt',
+//   fn: (str: string, opts: object) => {
+//     console.log(str, opts);
+//     return true;
+//   },
+// });
+
+// const expression = 'isInt({ gt: 5 })';
+// const context = { $: { value: '6' }, _: '6' };
+
+// try {
+//   const exp = Expression.parse(expression);
+//   // console.log(exp);
+//   // console.log(exp.returnType, exp.toString());
+
+//   const res = exp.tryEvaluate(context);
+//   console.log(res, typeof res.value);
+// } catch (error) {
+//   console.error('Error:', error);
+// }

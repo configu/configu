@@ -5,7 +5,7 @@ import { Cfgu } from '../core/Cfgu';
 import { ConfigStore, ConfigQuery } from '../core/ConfigStore';
 import { ConfigSet } from '../core/ConfigSet';
 import { ConfigSchema } from '../core/ConfigSchema';
-import { Expression } from '../utils/Expression';
+import { Expression } from '../utils';
 
 export enum EvaluatedConfigOrigin {
   Const = 'const',
@@ -42,7 +42,7 @@ export type EvalCommandExpressionContext = {
     schema: Jsonify<ConfigSchema>;
   };
   $: EvaluatedConfig;
-  _: EvaluatedConfig;
+  // _: EvaluatedConfig;
 };
 
 export class EvalCommand extends ConfigCommand<EvalCommandInput, EvalCommandOutput> {
@@ -198,19 +198,20 @@ export class EvalCommand extends ConfigCommand<EvalCommandInput, EvalCommandOutp
 
     Expression.sort(constExpressionsDict).forEach((key) => {
       const expression = constExpressionsDict[key] as string;
-      const evaluatedConfig = resultWithConstExpressions[key] as EvaluatedConfig;
+      const preEvaluatedConfig = resultWithConstExpressions[key] as EvaluatedConfig;
       const context: EvalCommandExpressionContext = {
         context: {
           store: { ...store },
           set: { ...set },
           schema: { ...schema },
         },
-        $: evaluatedConfig,
-        _: evaluatedConfig,
+        $: preEvaluatedConfig,
+        // _: preEvaluatedConfig,
         ..._.mapValues(resultWithConstExpressions, (current) => current.value),
       };
 
-      (resultWithConstExpressions[key] as EvaluatedConfig).value = Expression.eval({ expression, context });
+      const { value, error } = Expression.parse(expression).tryEvaluate(context);
+      (resultWithConstExpressions[key] as EvaluatedConfig).value = value ?? '';
     });
     return resultWithConstExpressions;
   }

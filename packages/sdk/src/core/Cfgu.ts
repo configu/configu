@@ -1,5 +1,4 @@
-import { ExpressionString } from '../utils/Expression';
-import { JsonSchema, JsonSchemaObject, JsonSchemaType } from '../utils/Json';
+import { ExpressionString, JsonSchema, JsonSchemaObject, JsonSchemaType } from '../utils';
 
 export const CfguType = ['boolean', 'number', 'string', 'object', 'array'] as const;
 export type CfguType = (typeof CfguType)[number];

@@ -1,4 +1,5 @@
-import { ConfigStore, ConfigQuery, Config } from '../core/ConfigStore';
+import { Config } from '../core/Config';
+import { ConfigStore, ConfigQuery } from '../core/ConfigStore';
 
 export class NoopConfigStore extends ConfigStore {
   override get(queries: ConfigQuery[]): Promise<Config[]> {

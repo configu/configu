@@ -2,12 +2,12 @@ import packageJson from '../../package.json' with { type: 'json' };
 
 export type ConfigCommandInput<I extends object> = I;
 
-export type ConfigCommandOutput<O extends object> = {
+export type ConfigCommandOutput<O> = {
   result: O;
   metadata: { version: string; start: number; end: number; duration: number };
 };
 
-export abstract class ConfigCommand<I extends object, O extends object> {
+export abstract class ConfigCommand<I extends object, O> {
   constructor(public input: I) {}
   abstract execute(): Promise<O>;
 

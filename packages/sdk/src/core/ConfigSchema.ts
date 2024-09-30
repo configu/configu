@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import { Cfgu, CfguSchema } from './Cfgu';
-import { Naming } from '../utils/String';
-import { JsonSchema } from '../utils/Json';
+import { Naming, JsonSchema } from '../utils';
 
 /**
  * A file containing binding records linking each unique `ConfigKey` to its corresponding `Cfgu` declaration.

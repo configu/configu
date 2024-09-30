@@ -1,49 +1,69 @@
 import _ from 'lodash';
 import { ConfigCommand } from './ConfigCommand';
 import { EvalCommandOutput, EvaluatedConfig } from './EvalCommand';
-import { Naming } from '../utils/String';
+import { Json, Naming } from '../utils';
 
-export type ExportCommandOutput = {
-  [key: string]: string;
-};
+export type ExportCommandOutput = string;
+
+type ExportCommandFilter = (config: EvaluatedConfig) => boolean;
+type ExportCommandMapper = (config: EvaluatedConfig) => EvaluatedConfig;
+type ExportCommandReducer = (configs: EvaluatedConfig[]) => string;
 
 export type ExportCommandInput = {
   pipe: EvalCommandOutput;
   filter?: (config: EvaluatedConfig) => boolean;
-  keys?: (config: EvaluatedConfig) => string;
+  map?: (config: EvaluatedConfig) => EvaluatedConfig;
+  reduce?: (configs: EvaluatedConfig[]) => string;
 };
 
 export class ExportCommand extends ConfigCommand<ExportCommandInput, ExportCommandOutput> {
   async execute() {
-    const exportedPipe = this.mutateKeys(this.filterPipe());
-    const result: ExportCommandOutput = _.mapValues(exportedPipe, (current) => current.value);
-    return result;
+    const { pipe } = this.input;
+    const filteredPipe = this.filter(pipe);
+    const mappedPipe = this.map(filteredPipe);
+    return this.reduce(mappedPipe);
   }
 
-  private filterPipe() {
-    const { pipe, filter } = this.input;
+  static filterHidden: ExportCommandFilter = (config) => {
+    return !config.cfgu.hidden;
+  };
 
-    // apply default filter - hide hidden configs
-    if (!filter) {
-      return _.pickBy(pipe, ({ cfgu }) => !cfgu.hidden);
+  static validateKey: ExportCommandMapper = (config) => {
+    if (!Naming.validate(config.key)) {
+      throw new Error(`ConfigKey "${config.key}" ${Naming.errorMessage}`);
     }
+    return config;
+  };
+
+  static formatJson: ExportCommandReducer = (configs) => {
+    return Json.stringify({ data: _.map(configs, (current) => current.value) });
+  };
+
+  private filter(pipe: EvalCommandOutput) {
+    const { filter = ExportCommand.filterHidden } = this.input;
     return _.pickBy(pipe, filter);
   }
 
-  private mutateKeys(result: EvalCommandOutput): EvalCommandOutput {
-    const { keys } = this.input;
+  private map(pipe: EvalCommandOutput) {
+    const { map } = this.input;
+    const mapAndValidate: ExportCommandMapper = (config) => {
+      const mappedConfig = map?.(config) ?? config;
+      return ExportCommand.validateKey(mappedConfig);
+    };
+    return _.mapValues(pipe, mapAndValidate);
+  }
 
-    if (!keys) {
-      return result;
-    }
+  private reduce(pipe: EvalCommandOutput) {
+    const { reduce = ExportCommand.formatJson } = this.input;
 
-    return _.mapKeys(result, (current) => {
-      const mutatedKey = keys(current);
-      if (!Naming.validate(mutatedKey)) {
-        throw new Error(`ConfigKey "${mutatedKey}" ${Naming.errorMessage}`);
-      }
-      // original key at current.context.key
-      return mutatedKey;
-    });
+    const reducerInput = _(pipe)
+      .mapValues((current, key) => ({
+        ...current,
+        originalKey: key,
+      }))
+      .values()
+      .value();
+
+    return reduce(reducerInput);
   }
 }

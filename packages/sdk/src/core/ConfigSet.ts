@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { Naming } from '../utils/String';
+import { Naming } from '../utils';
 
 /**
  * A unique, case-sensitive path within a tree-like data structure that groups `Config`s contextually.

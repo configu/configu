@@ -1,6 +1,5 @@
 import { Config } from './Config';
 
-export * from './Config';
 export type ConfigQuery = Pick<Config, 'set' | 'key'>;
 
 // eslint-disable-next-line no-use-before-define
