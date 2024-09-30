@@ -6,7 +6,8 @@ export type ConfigFormat =
   | 'KubernetesConfigMap'
   | 'HelmValues'
   | 'TerraformTfvars'
-  | 'TOML';
+  | 'TOML'
+  | 'INI';
 
 export const CONFIG_FORMAT_LABEL: Record<ConfigFormat, string> = {
   JSON: 'JSON',
@@ -17,6 +18,7 @@ export const CONFIG_FORMAT_LABEL: Record<ConfigFormat, string> = {
   HelmValues: 'Helm Values',
   TerraformTfvars: 'Terraform Tfvars',
   TOML: 'TOML',
+  INI: 'INI',
 };
 
 export const CONFIG_FORMAT_EXTENSION: Record<ConfigFormat, string> = {
@@ -28,6 +30,7 @@ export const CONFIG_FORMAT_EXTENSION: Record<ConfigFormat, string> = {
   HelmValues: 'yaml',
   TerraformTfvars: 'tfvars',
   TOML: 'toml',
+  INI: 'ini',
 };
 
 export const CONFIG_FORMAT_TYPE = Object.keys(CONFIG_FORMAT_LABEL) as ConfigFormat[];
