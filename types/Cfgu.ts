@@ -34,7 +34,8 @@ export type CfguType =
   | 'Language'
   | 'DateTime'
   | 'ARN'
-  | 'JSONSchema';
+  | 'JSONSchema'
+  | 'Slug';
 
 /**
  * A generic declaration of a `Config`, using properties like type, description and constraints.
