@@ -14,20 +14,28 @@
     "url": "https://github.com/configu/configu/issues",
     "email": "dev@configu.com"
   },
-  "keywords": [
-    "cfgu",
-    "configu",
-    "configu-common",
-    "configu-lib",
-    "configu-node"
-  ],
+  "keywords": ["cfgu", "configu", "configu-common", "configu-lib", "configu-node"],
   "type": "module",
-  "types": "./src/index.ts",
-  "module": "./src/index.ts",
-  "files": [
-    "src"
-  ],
-  "scripts": {},
+  "types": "./dist/index.d.ts",
+  "module": "./dist/index.js",
+  "main": "./dist/index.cjs",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "require": "./dist/index.cjs"
+      }
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "bundle": "tsup"
+  },
   "dependencies": {
     "@configu/sdk": "workspace:*",
     "change-case": "5.4.4",
@@ -39,6 +47,6 @@
     "validator": "13.12.0"
   },
   "devDependencies": {
-    "@types/js-yaml": "4.0.9"
+    "@types/js-yaml": "16.11.7"
   }
 }
