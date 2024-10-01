@@ -6,7 +6,7 @@ export class InMemoryConfigStore extends ConfigStore {
   private data: { [ConfigSet: string]: { [ConfigKey: string]: Config } } = {};
 
   async get(queries: ConfigQuery[]): Promise<Config[]> {
-    return _(queries)
+    return _.chain(queries)
       .map(({ set, key }) => _.get(this.data, [set, key], { set, key, value: '' }))
       .filter('value')
       .value();

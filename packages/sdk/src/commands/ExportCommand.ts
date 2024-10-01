@@ -56,7 +56,7 @@ export class ExportCommand extends ConfigCommand<ExportCommandInput, ExportComma
   private reduce(pipe: EvalCommandOutput) {
     const { reduce = ExportCommand.formatJson } = this.input;
 
-    const reducerInput = _(pipe)
+    const reducerInput = _.chain(pipe)
       .mapValues((current, key) => ({
         ...current,
         originalKey: key,

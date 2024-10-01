@@ -43,7 +43,7 @@ export class UpsertCommand extends ConfigCommand<UpsertCommandInput, UpsertComma
     // delete all configs if input is empty
     if (_.isEmpty(configs) && _.isEmpty(pipe)) {
       const currentConfigs = await this.getCurrentConfigs(Object.keys(schema.keys));
-      result = _(schema.keys)
+      result = _.chain(schema.keys)
         .mapValues<ConfigDiff>((cfgu, key) => ({
           prev: currentConfigs[key] ?? '',
           next: '',
@@ -53,7 +53,7 @@ export class UpsertCommand extends ConfigCommand<UpsertCommandInput, UpsertComma
         .value();
     } else {
       // prepare pipe configs
-      const pipeConfigs = _(pipe)
+      const pipeConfigs = _.chain(pipe)
         .pickBy((value, key) => {
           const cfgu = schema.keys[key];
           return (
@@ -67,7 +67,7 @@ export class UpsertCommand extends ConfigCommand<UpsertCommandInput, UpsertComma
         .value();
 
       // validate configs input
-      _(configs)
+      _.chain(configs)
         .entries()
         .forEach(([key, value]) => {
           const cfgu = schema.keys[key];
@@ -99,7 +99,7 @@ export class UpsertCommand extends ConfigCommand<UpsertCommandInput, UpsertComma
       // merge pipe and configs, configs will override pipe
       const upsertConfigsDict = { ...pipeConfigs, ...configs };
       const currentConfigs = await this.getCurrentConfigs(Object.keys(upsertConfigsDict));
-      result = _(upsertConfigsDict)
+      result = _.chain(upsertConfigsDict)
         .mapValues((value, key) => {
           const prev = currentConfigs[key] ?? '';
           const next = value;
@@ -120,7 +120,7 @@ export class UpsertCommand extends ConfigCommand<UpsertCommandInput, UpsertComma
     }
 
     if (!this.input.dry) {
-      const upsertConfigsArray = _(result)
+      const upsertConfigsArray = _.chain(result)
         .entries()
         .map<Config>(([key, diff]) => ({ set: set.path, key, value: diff.next }))
         .value();
@@ -133,11 +133,11 @@ export class UpsertCommand extends ConfigCommand<UpsertCommandInput, UpsertComma
   private async getCurrentConfigs(keys: string[]) {
     const { store, set } = this.input;
 
-    const storeQueries = _(keys)
+    const storeQueries = _.chain(keys)
       .map((key) => ({ set: set.path, key }))
       .value() satisfies ConfigQuery[];
     const storeConfigsArray = await store.get(storeQueries);
-    const storeConfigsDict = _(storeConfigsArray)
+    const storeConfigsDict = _.chain(storeConfigsArray)
       .keyBy((config) => config.key)
       .mapValues((config) => config.value)
       .value();

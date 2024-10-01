@@ -12,7 +12,7 @@ export class ConfigSchema {
       throw new Error('ConfigSchema.contents is required');
     }
 
-    _(this.keys)
+    _.chain(this.keys)
       .entries()
       .forEach(([key, cfgu]) => {
         if (!Naming.validate(key)) {

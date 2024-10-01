@@ -75,7 +75,7 @@ export class Expression {
 
   static sort(expressionsDict: Record<string, string>): string[] {
     // Initialize templates to references graph
-    const graph: Record<string, string[]> = _(expressionsDict)
+    const graph: Record<string, string[]> = _.chain(expressionsDict)
       .mapValues((template) => Expression.parse(template).references())
       .value();
 

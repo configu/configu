@@ -108,13 +108,13 @@ export class EvalCommand extends ConfigCommand<EvalCommandInput, EvalCommandOutp
   private async evalStore(result: EvalCommandOutput): Promise<EvalCommandOutput> {
     const { store, set } = this.input;
 
-    const storeQueries = _(result)
+    const storeQueries = _.chain(result)
       .values()
       .filter((current) => current.origin === EvaluatedConfigOrigin.Empty)
       .flatMap((current) => set.hierarchy.map((node) => ({ set: node, key: current.key })))
       .value() satisfies ConfigQuery[];
     const storeConfigsArray = await store.get(storeQueries);
-    const storeConfigsDict = _(storeConfigsArray)
+    const storeConfigsDict = _.chain(storeConfigsArray)
       .orderBy([(config) => set.hierarchy.indexOf(config.set)], ['asc']) // "asc" because _.keyBy will keep the last element for each key
       .keyBy((config) => config.key) // https://lodash.com/docs#keyBy
       .value();
@@ -191,7 +191,7 @@ export class EvalCommand extends ConfigCommand<EvalCommandInput, EvalCommandOutp
 
     const resultWithConstExpressions = { ...result };
 
-    const constExpressionsDict = _(result)
+    const constExpressionsDict = _.chain(result)
       .pickBy((current) => current.origin === EvaluatedConfigOrigin.Const)
       .mapValues((current) => current.cfgu.const as string)
       .value();
@@ -226,7 +226,7 @@ export class EvalCommand extends ConfigCommand<EvalCommandInput, EvalCommandOutp
     const evaluatedConfigsDict = _.mapValues(result, (current) => current.value);
 
     // * validate the eval result against the provided schema
-    _(result)
+    _.chain(result)
       .values()
       .forEach(({ key, cfgu, origin, value }) => {
         // const { key, cfgu } = current;
