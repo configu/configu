@@ -73,7 +73,8 @@ export type CfguType =
   | 'SemVer'
   | 'String'
   | 'URL'
-  | 'UUID';
+  | 'UUID'
+  | 'Slug';
 
 /**
  * A generic representation of `application configuration` using three properties: `key`,
@@ -508,5 +509,6 @@ const typeMap: any = {
     'String',
     'URL',
     'UUID',
+    'Slug',
   ],
 };
