@@ -29,9 +29,7 @@
     "test:configu": "ajv test -s .configu.json -d \"data/.configu.yml\" --valid --verbose",
     "build:cfgu": "zx build.mjs"
   },
-  "dependencies": {
-    "@configu/ts": "workspace:*"
-  },
+  "dependencies": {},
   "devDependencies": {
     "ajv-cli": "^5.0.0"
   }
