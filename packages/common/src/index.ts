@@ -1,3 +1,3 @@
 // import './test';
 
-export * from './Registry';
+export * from './registry';
