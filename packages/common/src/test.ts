@@ -1,5 +1,5 @@
 import { Expression } from '@configu/sdk';
-import { Registry } from './Registry';
+import { Registry } from './registry';
 
 const test = async () => {
   await Registry.register('./module.js');
