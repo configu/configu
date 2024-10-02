@@ -234,7 +234,7 @@ export default class Export extends BaseCommand<typeof Export> {
       const formattedConfigs = formatConfigs({
         format: 'Dotenv',
         json: configs,
-        pretty: this.flags.pretty,
+        // pretty: this.flags.pretty,
         label,
         wrap: true,
       });
@@ -254,7 +254,7 @@ export default class Export extends BaseCommand<typeof Export> {
 
     const formattedConfigs = formatConfigs({
       format: (this.flags.format as ConfigFormat) ?? 'JSON',
-      pretty: this.flags.pretty,
+      // pretty: this.flags.pretty,
       json: configs,
       label,
     });

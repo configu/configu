@@ -1,4 +1,4 @@
-_extends: ./release-drafter.yml
+_extends: .github/configs/release-drafter.yml
 include-paths:
   - 'packages/cli/'
 name-template: 'cli/v$RESOLVED_VERSION'

@@ -1,10 +1,6 @@
 name: Build Deferred Integrations
 
-on:
-  push:
-    branches:
-      - 446-ability-to-register-integrations-into-configu
-      - main
+on: workflow_dispatch
 
 env:
   PACKAGE_NAME: 'configu-integrations'
