@@ -46,11 +46,14 @@ export default class Run extends BaseCommand<typeof Run> {
       throw new Error(`Script "${this.flags.script}" is not presented at ${cwd}`);
     }
 
-    spawnSync(script, {
+    const command = spawnSync(script, {
       cwd,
       stdio: 'inherit',
       env: process.env,
       shell: true,
     });
+    // command.status is null whenever the child process is terminated by a signal.
+    // In this case, we'll use 1 as the exit code (e.g. to represent SIGTERM/SIGKILL).
+    this.exit(command.status ?? 1);
   }
 }
