@@ -45,7 +45,7 @@ jobs:
       - uses: actions/upload-artifact@master
         with:
           name: ${{ env.PACKAGE_NAME }}-${{ matrix.os }}
-          path: ${{ env.PACKAGE_PATH }}/dist/latest
+          path: ${{ env.PACKAGE_PATH }}/dist
   end-release:
     runs-on: ubuntu-latest
     needs: build
@@ -55,7 +55,7 @@ jobs:
       - uses: actions/download-artifact@master
         with:
           name: ${{ env.PACKAGE_NAME }}-ubuntu-latest
-          path: ${{ env.PACKAGE_PATH }}/dist/latest
+          path: ${{ env.PACKAGE_PATH }}/dist
       - uses: actions/download-artifact@master
         with:
           name: ${{ env.PACKAGE_NAME }}-macos-latest
