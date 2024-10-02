@@ -119,6 +119,10 @@ export default class Export extends BaseCommand<typeof Export> {
     label: Flags.string({
       description: `Metadata required in some formats like Kubernetes ConfigMap`,
     }),
+    pretty: Flags.boolean({
+      description: `Pretty-prints output for supported formats`,
+      dependsOn: ['format'],
+    }),
     eol: Flags.boolean({
       description: `Adds EOL (\\n on POSIX \\r\\n on Windows) to the end of the stdout`,
       aliases: ['EOL'],
@@ -227,7 +231,13 @@ export default class Export extends BaseCommand<typeof Export> {
     }
 
     if (this.flags.source) {
-      const formattedConfigs = formatConfigs({ format: 'Dotenv', json: configs, label, wrap: true });
+      const formattedConfigs = formatConfigs({
+        format: 'Dotenv',
+        json: configs,
+        // pretty: this.flags.pretty,
+        label,
+        wrap: true,
+      });
       this.printStdout(formattedConfigs);
       return;
     }
@@ -244,6 +254,7 @@ export default class Export extends BaseCommand<typeof Export> {
 
     const formattedConfigs = formatConfigs({
       format: (this.flags.format as ConfigFormat) ?? 'JSON',
+      // pretty: this.flags.pretty,
       json: configs,
       label,
     });
