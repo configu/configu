@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import { camelCase, snakeCase } from 'change-case';
 import { dump as ymlStringify } from 'js-yaml';
+import { stringify as iniStringify } from 'ini';
 import validator from 'validator';
 import type { ExportCommandReturn } from '@configu/ts';
 import type { ConfigFormat } from './ConfigFormat';
@@ -86,6 +87,7 @@ const configFormatters: Record<ConfigFormat, FormatterFunction> = {
   HelmValues: jsonToHelmValues,
   TerraformTfvars: jsonToTfvars,
   TOML: jsonToToml,
+  INI: ({ json }) => iniStringify(json),
 };
 
 export const formatConfigs = ({ format, ...restParams }: FormatterParameters & { format: ConfigFormat }) => {
