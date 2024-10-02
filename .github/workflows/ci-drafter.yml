@@ -17,16 +17,6 @@ jobs:
       contents: write
       pull-requests: read
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Merge drafter configuration
-        run: |
-          cat .github/configs/release-drafter.yml >> .github/configs/${{ matrix.package }}-release-drafter.yml
-          cat .github/configs/${{ matrix.package }}-release-drafter.yml
-
-      - name: Print merged configuration
-        run: cat .github/configs/${{ matrix.package }}-release-drafter.yml
-
       - name: Draft release ${{ matrix.package }}
         uses: release-drafter/release-drafter@v6
         with:

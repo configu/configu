@@ -1,3 +1,4 @@
+_extends: ./release-drafter.yml
 include-paths:
   - 'packages/cli/'
 name-template: 'cli/v$RESOLVED_VERSION'

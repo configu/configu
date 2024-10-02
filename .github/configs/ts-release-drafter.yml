@@ -1,3 +1,4 @@
+_extends: ./release-drafter.yml
 include-paths:
   - 'packages/ts/'
   - 'packages/node/'

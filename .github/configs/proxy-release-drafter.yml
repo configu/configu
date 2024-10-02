@@ -1,3 +1,4 @@
+_extends: ./release-drafter.yml
 include-paths:
   - 'packages/proxy/'
 name-template: 'proxy/v$RESOLVED_VERSION'
