@@ -11,10 +11,18 @@ const hasWhitespace = (str: string) => {
 
 type FormatterParameters = {
   json: ExportCommandReturn;
+  formatOptions?: { [key: string]: string };
   label: string;
   wrap?: boolean; // * Wraps all values with quotes
 };
 type FormatterFunction = (params: FormatterParameters) => string;
+
+const jsonToFormattedJson: FormatterFunction = ({ json, formatOptions }) => {
+  if (formatOptions?.pretty === 'true') {
+    return JSON.stringify(json, null, 2);
+  }
+  return JSON.stringify(json);
+};
 
 const jsonToDotenv: FormatterFunction = ({ json, wrap }) => {
   return Object.entries(json)
@@ -78,8 +86,7 @@ const jsonToHelmValues: FormatterFunction = ({ json }) => {
 };
 
 const configFormatters: Record<ConfigFormat, FormatterFunction> = {
-  JSON: ({ json }) => JSON.stringify(json, null, 2),
-  CompactJSON: ({ json }) => JSON.stringify(json),
+  JSON: jsonToFormattedJson,
   YAML: ({ json }) => ymlStringify(json),
   Dotenv: jsonToDotenv,
   KubernetesConfigMap: jsonToKubernetesConfigMap,

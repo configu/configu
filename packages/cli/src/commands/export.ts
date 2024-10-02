@@ -24,6 +24,7 @@ export const NO_CONFIGS_WARNING_TEXT = 'no configuration was fetched';
 export const CONFIG_EXPORT_RUN_DEFAULT_ERROR_TEXT = 'could not export configurations';
 
 type TemplateContext = { [key: string]: string } | { key: string; value: string }[];
+type FormatOptions = { [key: string]: string };
 
 enum FilterFlag {
   OmitEmpty = 'omit-empty',
@@ -116,6 +117,10 @@ export default class Export extends BaseCommand<typeof Export> {
       options: CONFIG_FORMAT_TYPE,
       exclusive: ['explain', 'template', 'source', 'run'],
     }),
+    formatOptions: Flags.string({
+      description: `Options to be passed to the formatter, in key=value format.`,
+      multiple: true,
+    }),
     label: Flags.string({
       description: `Metadata required in some formats like Kubernetes ConfigMap`,
     }),
@@ -190,6 +195,24 @@ export default class Export extends BaseCommand<typeof Export> {
     this.print(finalConfigData, { stdout: 'stdout', eol: this.flags.eol });
   }
 
+  reduceFormatOptionsFlag(): FormatOptions {
+    if (!this.flags.formatOptions) {
+      return {};
+    }
+
+    return _(this.flags.formatOptions)
+      .map((pair, idx) => {
+        const [key, ...rest] = pair.split('=');
+        if (!key) {
+          throw new Error(`formatOptions key is missing at --formatOptions[${idx}]`);
+        }
+        return { key, value: rest.join('=') ?? '' };
+      })
+      .keyBy('key')
+      .mapValues('value')
+      .value();
+  }
+
   explainConfigs(configs: EvalCommandReturn) {
     const data = _(configs)
       .values()
@@ -225,9 +248,10 @@ export default class Export extends BaseCommand<typeof Export> {
       this.printStdout(compiledContent);
       return;
     }
+    const formatOptions = this.reduceFormatOptionsFlag();
 
     if (this.flags.source) {
-      const formattedConfigs = formatConfigs({ format: 'Dotenv', json: configs, label, wrap: true });
+      const formattedConfigs = formatConfigs({ format: 'Dotenv', formatOptions, json: configs, label, wrap: true });
       this.printStdout(formattedConfigs);
       return;
     }
@@ -244,6 +268,7 @@ export default class Export extends BaseCommand<typeof Export> {
 
     const formattedConfigs = formatConfigs({
       format: (this.flags.format as ConfigFormat) ?? 'JSON',
+      formatOptions,
       json: configs,
       label,
     });
