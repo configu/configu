@@ -1,6 +1,5 @@
 export type ConfigFormat =
   | 'JSON'
-  | 'CompactJSON'
   | 'YAML'
   | 'Dotenv'
   | 'KubernetesConfigMap'
@@ -11,7 +10,6 @@ export type ConfigFormat =
 
 export const CONFIG_FORMAT_LABEL: Record<ConfigFormat, string> = {
   JSON: 'JSON',
-  CompactJSON: 'JSON',
   YAML: 'YAML',
   Dotenv: '.env',
   KubernetesConfigMap: 'Kubernetes ConfigMap',
@@ -23,7 +21,6 @@ export const CONFIG_FORMAT_LABEL: Record<ConfigFormat, string> = {
 
 export const CONFIG_FORMAT_EXTENSION: Record<ConfigFormat, string> = {
   JSON: 'json',
-  CompactJSON: 'json',
   YAML: 'yaml',
   Dotenv: 'env',
   KubernetesConfigMap: 'yaml',
