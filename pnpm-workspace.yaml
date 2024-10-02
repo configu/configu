@@ -1,4 +1,7 @@
 packages:
   - 'packages/*'
   - 'docs'
+  - 'packages/integrations/expressions/*'
+  - 'packages/integrations/formatters/*'
+  - 'packages/integrations/stores/*'
   # - 'examples'

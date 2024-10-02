@@ -28,9 +28,10 @@
     "lint:fix": "pnpm lint --fix",
     "bundle": "pnpm -r bundle",
     "build": "tsc --build --verbose tsconfig.build.json",
-    "test": "tsx --test \"packages\"",
-    "test:cov": "tsx --test --experimental-test-coverage --test-reporter=spec --test-reporter=lcov --test-reporter-destination=stdout --test-reporter-destination=lcov.info \"packages\"",
-    "test:watch": "tsx --test --watch \"packages\"",
+    "build:integrations": "pnpm run --filter \"@configu-integrations/*\" build",
+    "test": "tsx --test packages/**/src/**/*.test.ts",
+    "test:cov": "tsx --test --experimental-test-coverage --test-reporter=spec --test-reporter=lcov --test-reporter-destination=stdout --test-reporter-destination=lcov.info packages/**/src/**/*.test.ts",
+    "test:watch": "tsx --test --watch packages/**/src/**/*.test.ts",
     "start": "shx echo \"Interactive start script is coming soon <3\""
   },
   "devDependencies": {

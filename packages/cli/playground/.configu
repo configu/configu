@@ -1,0 +1,13 @@
+stores:
+  local:
+    type: json-file
+    configuration:
+      path: local.store.json
+  csv:
+    type: csv-file
+    configuration:
+      path: local.store.csv
+  sqlite:
+    type: sqlite
+    configuration:
+      path: local.store.sql

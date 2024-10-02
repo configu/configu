@@ -1,0 +1,38 @@
+{
+  "name": "@configu/integrations",
+  "version": "0.0.0",
+  "license": "Apache-2.0",
+  "description": "Configu Node.js SDK",
+  "author": "@configu/dev",
+  "engines": {
+    "node": ">=v16"
+  },
+  "files": [],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/configu/configu",
+    "directory": "packages/integrations"
+  },
+  "bugs": {
+    "url": "https://github.com/configu/configu/issues",
+    "email": "dev@configu.com"
+  },
+  "homepage": "https://configu.com",
+  "keywords": [
+    "cfgu",
+    "configu"
+  ],
+  "scripts": {
+    "clean": "shx rm -rf tsconfig.tsbuildinfo build",
+    "test": "node --import tsx --test **/**/*.test.ts",
+    "test:watch": "node --import tsx --test --watch *.test.ts"
+  },
+  "dependencies": {
+    "@configu/ts": "workspace:*",
+    "lodash-es": "^4.17.21"
+  },
+  "devDependencies": {
+    "@types/lodash-es": "^4.17.12",
+    "@types/node": "20.12.12"
+  }
+}
