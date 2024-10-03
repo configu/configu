@@ -20,6 +20,7 @@ export type CfguType =
   | 'Locale'
   | 'LatLong'
   | 'Country'
+  | 'CreditCard'
   | 'Currency'
   | 'DockerImage'
   | 'MACAddress'

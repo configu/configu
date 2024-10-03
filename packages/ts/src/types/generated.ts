@@ -47,6 +47,7 @@ export type CfguType =
   | 'Color'
   // | 'ConnectionString'
   | 'Country'
+  | 'CreditCard'
   | 'Currency'
   | 'DateTime'
   | 'DockerImage'
@@ -482,6 +483,7 @@ const typeMap: any = {
     'Color',
     'ConnectionString',
     'Country',
+    'CreditCard',
     'Currency',
     'DateTime',
     'DockerImage',
