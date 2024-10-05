@@ -10,7 +10,7 @@ terraform {
 }
 
 provider "docker" {}
-
+#creating nginx image with latest tag for docker
 resource "docker_image" "nginx" {
   name         = "nginx:latest"
   keep_locally = false
