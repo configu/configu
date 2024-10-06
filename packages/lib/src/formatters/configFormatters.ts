@@ -4,6 +4,7 @@ import { dump as ymlStringify } from 'js-yaml';
 import { stringify as iniStringify } from 'ini';
 import validator from 'validator';
 import type { ExportCommandReturn } from '@configu/ts';
+import { type Input, stringify as csvStringify } from 'csv-stringify/sync';
 import type { ConfigFormat } from './ConfigFormat';
 
 const hasWhitespace = (str: string) => {
@@ -79,6 +80,11 @@ const jsonToHelmValues: FormatterFunction = ({ json }) => {
   return ymlStringify(camelCaseKeys);
 };
 
+const csvStringifyOptions = {
+  header: true,
+  delimiter: ',',
+};
+
 const configFormatters: Record<ConfigFormat, FormatterFunction> = {
   JSON: ({ json, pretty }) => (pretty ? JSON.stringify(json, null, 2) : JSON.stringify(json)),
   YAML: ({ json }) => ymlStringify(json),
@@ -88,6 +94,7 @@ const configFormatters: Record<ConfigFormat, FormatterFunction> = {
   TerraformTfvars: jsonToTfvars,
   TOML: jsonToToml,
   INI: ({ json }) => iniStringify(json),
+  CSV: ({ json }) => csvStringify([json], csvStringifyOptions),
 };
 
 export const formatConfigs = ({ format, ...restParams }: FormatterParameters & { format: ConfigFormat }) => {

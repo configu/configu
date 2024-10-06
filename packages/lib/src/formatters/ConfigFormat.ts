@@ -6,7 +6,8 @@ export type ConfigFormat =
   | 'HelmValues'
   | 'TerraformTfvars'
   | 'TOML'
-  | 'INI';
+  | 'INI'
+  | 'CSV';
 
 export const CONFIG_FORMAT_LABEL: Record<ConfigFormat, string> = {
   JSON: 'JSON',
@@ -17,6 +18,7 @@ export const CONFIG_FORMAT_LABEL: Record<ConfigFormat, string> = {
   TerraformTfvars: 'Terraform Tfvars',
   TOML: 'TOML',
   INI: 'INI',
+  CSV: 'CSV',
 };
 
 export const CONFIG_FORMAT_EXTENSION: Record<ConfigFormat, string> = {
@@ -28,6 +30,7 @@ export const CONFIG_FORMAT_EXTENSION: Record<ConfigFormat, string> = {
   TerraformTfvars: 'tfvars',
   TOML: 'toml',
   INI: 'ini',
+  CSV: 'csv',
 };
 
 export const CONFIG_FORMAT_TYPE = Object.keys(CONFIG_FORMAT_LABEL) as ConfigFormat[];
