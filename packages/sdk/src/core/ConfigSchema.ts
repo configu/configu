@@ -1,15 +1,17 @@
 import _ from 'lodash';
 import { Cfgu, CfguSchema } from './Cfgu';
-import { Naming, JsonSchema } from '../utils';
+import { Naming, JsonSchemaType } from '../utils';
+
+export type ConfigSchemaKeys = { [ConfigKey: string]: Cfgu };
 
 /**
  * A file containing binding records linking each unique `ConfigKey` to its corresponding `Cfgu` declaration.
  * https://configu.com/docs/config-schema/
  */
 export class ConfigSchema {
-  constructor(public readonly keys: { [ConfigKey: string]: Cfgu }) {
-    if (!this.keys || _.isEmpty(this.keys)) {
-      throw new Error('ConfigSchema.contents is required');
+  constructor(public readonly keys: ConfigSchemaKeys = {}) {
+    if (_.isEmpty(this.keys)) {
+      throw new Error('ConfigSchema.keys is required');
     }
 
     _.chain(this.keys)
@@ -19,9 +21,19 @@ export class ConfigSchema {
           throw new Error(`ConfigSchema.keys "${key}" ${Naming.errorMessage}`);
         }
 
-        if (!JsonSchema.validate({ schema: CfguSchema, data: cfgu })) {
-          throw new Error(`ConfigSchema.keys "${key}" is invalid\n${JsonSchema.getLastValidationError()}`);
-        }
+        // if (!JsonSchema.validate({ schema: CfguSchema, data: cfgu })) {
+        //   throw new Error(`ConfigSchema.keys "${key}" is invalid\n${JsonSchema.getLastValidationError()}`);
+        // }
       });
   }
 }
+
+export const ConfigSchemaKeysSchema: JsonSchemaType<ConfigSchemaKeys> = {
+  type: 'object',
+  required: [],
+  additionalProperties: false,
+  minProperties: 1,
+  patternProperties: {
+    [Naming.pattern]: CfguSchema,
+  },
+};
