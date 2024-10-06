@@ -1,6 +1,7 @@
 import { cwd } from 'process';
-import fs from 'fs/promises';
-import path from 'path';
+import fs from 'node:fs/promises';
+import path from 'pathe';
+import { filename } from 'pathe/utils';
 import _ from 'lodash';
 import parseJson from 'parse-json';
 import yaml from 'js-yaml';
@@ -12,10 +13,19 @@ export const isDev = NODE_ENV === 'development';
 // file: return the file name with extension
 export const getPathBasename = (fullPath = cwd()) => path.basename(path.resolve(fullPath));
 
+console.log(
+  ['C:\\temp\\.configu', 'C:\\temp\\schema.cfgu.json', '/home/.configu', '/home/usr/dir/schema.cfgu.yml'].map(
+    getPathBasename,
+  ),
+);
+console.log(
+  ['C:\\temp\\.configu', 'C:\\temp\\schema.cfgu.json', '/home/.configu', '/home/usr/dir/schema.cfgu.yml'].map(filename),
+);
+
 export const readFile = async (filePath: string, throwIfEmpty: string | boolean = false) => {
   try {
     const absolutePath = path.resolve(filePath);
-    const content = await fs.readFile(absolutePath, { encoding: 'utf8' });
+    const content = await fs.readFile(absolutePath, { encoding: 'utf-8' });
 
     if (throwIfEmpty && _.isEmpty(content)) {
       const errorMessage = typeof throwIfEmpty !== 'boolean' ? throwIfEmpty : 'file is empty';

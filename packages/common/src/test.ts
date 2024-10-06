@@ -1,12 +1,12 @@
-import { Expression } from '@configu/sdk';
-import { Registry } from './Registry';
+import { ConfigStore, Expression } from '@configu/sdk';
+import { Registry } from './Registry2';
 
 const test = async () => {
-  await Registry.register('./module.js');
+  await Registry.register('../../../module.js');
 
-  console.log(Registry.store.keys());
+  // console.log(Registry.store.keys());
 
-  console.log(Expression.functions.get('isInt'));
+  // console.log(Expression.functions.get('isInt'));
   const expression = 'isInt({ gt: 5 })';
   const context = { $: { value: '6' }, _: '6' };
 
@@ -23,5 +23,3 @@ const test = async () => {
 };
 
 test();
-
-console.log('Done');

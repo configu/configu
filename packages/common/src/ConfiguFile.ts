@@ -1,10 +1,10 @@
-import { join, dirname, resolve } from 'node:path';
 import { homedir } from 'node:os';
 import { spawnSync } from 'node:child_process';
-import { ConfigSchema, ConfigStore, Expression, JsonSchema, JsonSchemaType } from '@configu/sdk';
+import { join, dirname, resolve } from 'pathe';
 import { findUp } from 'find-up';
+import { ConfigSchema, ConfigStore, Expression, JsonSchema, JsonSchemaType } from '@configu/sdk';
 import { readFile, parseJSON, parseYAML } from './utils';
-import { Registry } from './Registry';
+import { Registry } from './Registry2';
 import { CfguFile } from './CfguFile';
 
 export interface ConfiguFileContents {
@@ -129,21 +129,12 @@ export class ConfiguFile {
   // const storeConfiguration = { ...this.contents.stores?.[nameOrType]?.configuration, ...configuration };
   // }
 
-  static constructStore(type: string, configuration = {}): ConfigStore {
-    const StoreCtor = Registry.store.get(type);
-    if (!StoreCtor) {
-      throw new Error(`unknown store type ${type}`);
-    }
-
-    return new StoreCtor(configuration);
-  }
-
   getStoreInstance(name: string): ConfigStore {
     const storeConfig = this.contents.stores?.[name];
     if (!storeConfig) {
       throw new Error(`Store "${name}" not found`);
     }
-    return ConfiguFile.constructStore(storeConfig.type, storeConfig.configuration);
+    return Registry.constructStore(ConfigStore.deterministicType(storeConfig.type), storeConfig.configuration);
   }
 
   getBackupStoreInstance(name: string): ConfigStore | undefined {
@@ -152,7 +143,7 @@ export class ConfiguFile {
       return undefined;
     }
     const database = this.contents.backup ?? join(dirname(this.path), 'config.backup.sqlite');
-    return ConfiguFile.constructStore('sqlite', { database, tableName: name });
+    return Registry.constructStore('sqlite', { database, tableName: name });
   }
 
   async getSchemaInstance(name: string): Promise<ConfigSchema> {

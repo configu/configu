@@ -1,4 +1,4 @@
-import _, { min } from 'lodash';
+import _ from 'lodash';
 // import parseJson from 'parse-json'; // todo: find a way to require esm module in cjs builds
 import Ajv, { SchemaObject, JSONSchemaType } from 'ajv';
 // https://npmtrends.com/@apideck/better-ajv-errors-vs-@readme/better-ajv-errors-vs-@segment/ajv-human-errors-vs-@stoplight/better-ajv-errors-vs-ajv-error-messages-vs-ajv-errors-vs-better-ajv-errors

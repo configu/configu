@@ -1,5 +1,7 @@
+import { readFile } from 'node:fs/promises';
+import { basename } from 'pathe';
 import { ConfigSchema, ConfigSchemaKeys, ConfigSchemaKeysSchema, JsonSchema, JsonSchemaType } from '@configu/sdk';
-import { readFile, parseJSON, parseYAML, getPathBasename } from './utils';
+import { parseJSON, parseYAML } from './utils';
 
 export interface CfguFileContents {
   $schema?: string;
@@ -56,8 +58,7 @@ export class CfguFile {
   static allowedExtensions = ['.json', '.yaml', '.yml'];
 
   private static async init(path: string, contents: string): Promise<CfguFile> {
-    const schemaBasename = getPathBasename(path);
-    const [, cfguExt, fileExt] = schemaBasename.split('.');
+    const [, cfguExt, fileExt] = basename(path).split('.');
 
     if (cfguExt !== 'cfgu' || !fileExt || !CfguFile.allowedExtensions.includes(fileExt)) {
       throw new Error(`CfguFile.path "${path}" is not a valid .cfgu file`);
@@ -75,7 +76,7 @@ export class CfguFile {
   }
 
   static async load(path: string): Promise<CfguFile> {
-    const contents = await readFile(path);
+    const contents = await readFile(path, { encoding: 'utf8' });
     return CfguFile.init(path, contents);
   }
 
