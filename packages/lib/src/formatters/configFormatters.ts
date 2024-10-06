@@ -4,7 +4,7 @@ import { dump as ymlStringify } from 'js-yaml';
 import { stringify as iniStringify } from 'ini';
 import validator from 'validator';
 import type { ExportCommandReturn } from '@configu/ts';
-import { type Input, stringify as csvStringify } from 'csv-stringify/sync';
+import { stringify as csvStringify } from 'csv-stringify/sync';
 import type { ConfigFormat } from './ConfigFormat';
 
 const hasWhitespace = (str: string) => {
