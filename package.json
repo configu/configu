@@ -15,7 +15,7 @@
     "prepare": "pnpm \"/^prepare:.*/\"",
     "prepare:hooks": "husky",
     "prepare:deps": "shx echo 'todo: restore syncpack list-mismatches'",
-    "prepare:build": "pnpm build",
+    "prepare:build": "shx echo 'todo: pnpm build'",
     "prepare:bundle": "pnpm bundle",
     "prepare:art": "shx cat docs/images/ascii-art.txt",
     "clean": "pnpm -r clean",
