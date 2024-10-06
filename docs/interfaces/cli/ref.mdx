@@ -152,7 +152,7 @@ FLAGS
   --explain                  Outputs metadata on the exported `Configs`
   --format=<option>          Format exported `Configs` to common configuration formats. Redirect the output to file, if
                              needed
-                             <options: JSON|CompactJSON|YAML|CSV|KubernetesConfigMap|HelmValues|TerraformTfvars|TOML>
+                             <options: JSON|CompactJSON|YAML|Dotenv|KubernetesConfigMap|HelmValues|TerraformTfvars|TOML|CSV>
   --label=<value>            Metadata required in some formats like Kubernetes ConfigMap
   --omit-empty               Exclude config keys with empty values. By default, empty values are included
   --omit-hidden              Explicitly exclude config keys marked as hidden. By default, hidden keys are omitted
@@ -179,9 +179,9 @@ EXAMPLES
 
     $ configu eval ... | configu export --explain
 
-  Pipe eval commands result to export command to create a CSV .env file
+  Pipe eval commands result to export command to create a Dotenv .env file
 
-    $ configu eval ... | configu export --format 'CSV'
+    $ configu eval ... | configu export --format 'Dotenv'
 
   Pipe eval commands result to export command to create a Kubernetes ConfigMap .yaml
 
