@@ -60,7 +60,7 @@ export class Registry {
   }
 
   static constructStore(type: string, configuration = {}): ConfigStore {
-    const StoreCtor = Registry.store.get(type);
+    const StoreCtor = Registry.store.get(ConfigStore.deterministicType(type));
     if (!StoreCtor) {
       throw new Error(`unknown store type ${type}`);
     }
