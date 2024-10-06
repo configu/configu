@@ -4,7 +4,7 @@ import { join, dirname, resolve } from 'pathe';
 import { findUp } from 'find-up';
 import { ConfigSchema, ConfigStore, Expression, JsonSchema, JsonSchemaType } from '@configu/sdk';
 import { readFile, parseJSON, parseYAML } from './utils';
-import { Registry } from './Registry2';
+import { Registry } from './Registry';
 import { CfguFile } from './CfguFile';
 
 export interface ConfiguFileContents {
