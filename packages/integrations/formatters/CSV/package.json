@@ -1,0 +1,35 @@
+{
+  "name": "@configu-integrations/csv",
+  "version": "0.0.0",
+  "author": "@configu/dev",
+  "license": "Apache-2.0",
+  "description": "Configu Node.js SDK",
+  "engines": {
+    "node": ">=v16"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/configu/configu",
+    "directory": "packages/integrations"
+  },
+  "bugs": {
+    "url": "https://github.com/configu/configu/issues",
+    "email": "dev@configu.com"
+  },
+  "homepage": "https://configu.com",
+  "keywords": [
+    "cfgu",
+    "configu"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "dependencies": {
+    "csv-stringify": "^6.5.1"
+  },
+  "devDependencies": {
+    "@types/node": "20.12.12",
+    "tsup": "8.2.4",
+    "typescript": "^5.4.5"
+  }
+}
