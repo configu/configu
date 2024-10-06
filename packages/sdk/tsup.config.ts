@@ -10,5 +10,6 @@ export default defineConfig([
     splitting: true,
     treeshake: true,
     clean: true,
+    keepNames: true,
   },
 ]);
