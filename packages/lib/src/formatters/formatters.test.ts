@@ -27,4 +27,9 @@ describe('Formatters', () => {
     const formatted = formatConfigs({ json, format: 'JSON', label: 'test' });
     equal(formatted, '{\n  "KEY0": "KEY0",\n  "KEY1": "KEY1"\n}');
   });
+
+  test('should export to CSV format', () => {
+    const formatted = formatConfigs({ json, format: 'CSV', label: 'test' });
+    equal(formatted, 'KEY0,KEY1\nKEY0,KEY1');
+  });
 });
