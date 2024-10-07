@@ -38,25 +38,13 @@ To get started with [Configu Platform](https://app.configu.com/), you'll need to
 ### 4. Upsert Configs to ConfigSet
 
 ```shell
-configu upsert \
-  --store 'configu' --set 'development' --schema './start.cfgu.json' \
-  --config "GREETING=hey" --config "SUBJECT=<YOUR_NAME>" \
-&& configu upsert \
-  --store 'configu' --set 'development/qa' --schema './start.cfgu.json' \
-  -c "GREETING=hola"
-&& configu upsert \
-  --store 'configu' --set 'production' --schema './start.cfgu.json' \
-  -c "GREETING=welcome"
+configu upsert --store 'configu' --set 'development' --schema './start.cfgu.json' --config "GREETING=hey" --config "SUBJECT=<YOUR_NAME>" && configu upsert --store 'configu' --set 'development/qa' --schema './start.cfgu.json' -c "GREETING=hola" && configu upsert --store 'configu' --set 'production' --schema './start.cfgu.json' -c "GREETING=welcome"
 ```
 
 ### 5. Export the configuration data
 
 ```shell
-configu eval \
-  --store 'configu' --set 'development/qa' --schema './get-started.cfgu.json' \
-| configu export \
-  --format "Dotenv" \
-> ".env"
+configu eval --store 'configu' --set 'development/qa' --schema './start.cfgu.json' | configu export --format "Dotenv" > ".env"
 ```
 
 As a result, you will get a `.env` file with the configurations declared in the "get-started" ConfigSchema and their values from the "test" ConfigSet.
