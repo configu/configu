@@ -5,6 +5,8 @@ import path from 'pathe';
 import { tsImport } from 'tsx/esm/api';
 import { ConfigStore, ConfigStoreConstructor, Expression, ExpressionFunction } from '@configu/sdk';
 
+const CONFIGU_HOME = path.join(process.cwd(), '/.configu-cache');
+
 export class Registry {
   private static store = new Map<string, ConfigStoreConstructor>();
 
@@ -14,6 +16,30 @@ export class Registry {
 
   static isExpression(value: unknown): value is ExpressionFunction<any[], any> {
     return typeof value === 'function';
+  }
+
+  private static async ensureCacheDir() {
+    await mkdir(path.join(CONFIGU_HOME, '/utils'), { recursive: true });
+    await writeFile(
+      path.join(CONFIGU_HOME, 'package.json'),
+      JSON.stringify({
+        name: 'cached-integrations',
+        version: '1.0.0',
+        imports: {
+          '#configu/*': './utils/*.mjs',
+        },
+      }),
+    );
+    const g = global as any;
+    g.ConfiguSDK = await import('@configu/sdk');
+    await writeFile(
+      path.join(CONFIGU_HOME, '/utils/sdk.mjs'),
+      `
+    ${Object.keys(g.ConfiguSDK)
+      .map((key) => `export const ${key} = ConfiguSDK.${key};`)
+      .join('\n')}
+    `,
+    );
   }
 
   static async import(filePath: string) {
@@ -42,21 +68,23 @@ export class Registry {
   }
 
   static async remoteRegister(key: string) {
-    const VERSION = 'latest';
-    const CONFIGU_HOME = path.join(process.cwd(), '/.configu-cache');
+    if (Registry.store.has(key)) {
+      return;
+    }
+    await Registry.ensureCacheDir();
 
-    const MODULE_PATH = path.join(CONFIGU_HOME, `/${key}-${VERSION}.js`);
+    const [KEY, VERSION = 'latest'] = key.split('@');
+    const MODULE_PATH = path.join(CONFIGU_HOME, `/${KEY}-${VERSION}.js`);
 
     if (!existsSync(MODULE_PATH)) {
       const res = await fetch(
-        `https://github.com/configu/configu/releases/download/${VERSION}/${key}-${platform()}.js`,
+        `https://github.com/configu/configu/releases/download/integrations-${VERSION}/${KEY}-${platform()}.js`,
       );
       if (res.ok) {
-        await mkdir(CONFIGU_HOME, { recursive: true });
-        await writeFile(MODULE_PATH, await res.text());
+        await writeFile(MODULE_PATH, (await res.text()).replaceAll('@configu/sdk', '#configu/sdk'));
       }
     }
-    Registry.register(MODULE_PATH);
+    await Registry.register(MODULE_PATH);
   }
 
   static constructStore(type: string, configuration = {}): ConfigStore {
