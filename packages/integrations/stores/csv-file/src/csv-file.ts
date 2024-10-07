@@ -1,4 +1,4 @@
-import { type Config } from '@configu/ts/src';
+import { type Config } from '@configu/sdk';
 import { parse, stringify } from 'csv/sync';
 import { FileConfigStore } from '@configu/integrations/src/utils/File';
 

@@ -239,9 +239,9 @@ importers:
 
   packages/integrations:
     dependencies:
-      '@configu/ts':
+      '@configu/sdk':
         specifier: workspace:*
-        version: link:../ts
+        version: link:../sdk
       lodash-es:
         specifier: ^4.17.21
         version: 4.17.21
@@ -428,6 +428,12 @@ importers:
       '@aws-sdk/client-ssm':
         specifier: ^3.465.0
         version: 3.583.0
+      '@configu/integrations':
+        specifier: workspace:*
+        version: link:../..
+      '@configu/sdk':
+        specifier: workspace:*
+        version: link:../../../sdk
     devDependencies:
       '@types/node':
         specifier: 20.12.12
@@ -441,6 +447,9 @@ importers:
 
   packages/integrations/stores/configu:
     dependencies:
+      '@configu/sdk':
+        specifier: workspace:*
+        version: link:../../../sdk
       validator:
         specifier: ^13.11.0
         version: 13.12.0
@@ -466,6 +475,9 @@ importers:
       '@configu/integrations':
         specifier: workspace:*
         version: link:../..
+      '@configu/sdk':
+        specifier: workspace:*
+        version: link:../../../sdk
       csv:
         specifier: ^6.3.8
         version: 6.3.9
@@ -481,6 +493,13 @@ importers:
         version: 5.6.2
 
   packages/integrations/stores/hashicorp-vault:
+    dependencies:
+      '@configu/integrations':
+        specifier: workspace:*
+        version: link:../..
+      '@configu/sdk':
+        specifier: workspace:*
+        version: link:../../../sdk
     devDependencies:
       '@types/node':
         specifier: 20.12.12
@@ -500,6 +519,9 @@ importers:
       '@configu/integrations':
         specifier: workspace:*
         version: link:../..
+      '@configu/sdk':
+        specifier: workspace:*
+        version: link:../../../sdk
     devDependencies:
       '@types/node':
         specifier: 20.12.12
@@ -513,6 +535,9 @@ importers:
 
   packages/integrations/stores/sqlite:
     dependencies:
+      '@configu/sdk':
+        specifier: workspace:*
+        version: link:../../../sdk
       lodash-es:
         specifier: ^4.17.21
         version: 4.17.21

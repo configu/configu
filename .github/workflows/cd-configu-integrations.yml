@@ -67,7 +67,7 @@ jobs:
           make_latest: true
           prerelease: true
           name: integrations
-          tag_name: ${{ env.VERSION }}
+          tag_name: integrations-${{ env.VERSION }}
           files: |
             ${{ env.PACKAGE_PATH }}/dist/latest/**/*
 

@@ -1,6 +1,6 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import axios, { type Axios } from 'axios';
-import { KeyValueConfigStore } from '@configu/ts';
+import { KeyValueConfigStore } from '@configu/integrations/src/utils/KeyValue';
 
 export type HashiCorpVaultConfigStoreConfiguration = { address?: string; token?: string; engine: string };
 

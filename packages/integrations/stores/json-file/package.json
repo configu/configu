@@ -26,7 +26,8 @@
     "build": "tsup"
   },
   "dependencies": {
-    "@configu/integrations": "workspace:*"
+    "@configu/integrations": "workspace:*",
+    "@configu/sdk": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "20.12.12",
