@@ -1,35 +1,41 @@
-import path from 'node:path';
 import { platform } from 'node:os';
 import { existsSync } from 'node:fs';
 import { mkdir, writeFile } from 'node:fs/promises';
-import { ConfigStore, Expression, ExpressionFunction } from '@configu/sdk';
-
-export type ConfigStoreConstructor = new (configuration: object) => ConfigStore;
+import path from 'pathe';
+import { tsImport } from 'tsx/esm/api';
+import { ConfigStore, ConfigStoreConstructor, Expression, ExpressionFunction } from '@configu/sdk';
 
 export class Registry {
-  static store = new Map<string, ConfigStoreConstructor>();
+  private static store = new Map<string, ConfigStoreConstructor>();
 
-  static isConfigStore(value: any): value is ConfigStoreConstructor {
-    return typeof value === 'function' && value.prototype instanceof ConfigStore;
+  static isConfigStore(value: unknown): value is ConfigStoreConstructor {
+    return typeof value === 'function' && 'type' in value;
   }
 
-  static isExpression(value: any): value is ExpressionFunction<any[], any> {
+  static isExpression(value: unknown): value is ExpressionFunction<any[], any> {
     return typeof value === 'function';
   }
 
+  static async import(filePath: string) {
+    // const module = await import(filePath);
+    const module = await tsImport(filePath, import.meta.url);
+    return module;
+  }
+
   static async register(filePath: string) {
-    const module = await import(filePath);
+    const module = await Registry.import(filePath);
 
     Object.entries(module).forEach(([key, value]) => {
       // console.log('Registering:', key, value);
+
       if (key === 'default') {
         return;
       }
       if (Registry.isConfigStore(value)) {
-        console.log('Registering Store:', key);
-        Registry.store.set(key, value);
+        // console.log('Registering ConfigStore:', value.type);
+        Registry.store.set(value.type, value);
       } else if (Registry.isExpression(value)) {
-        console.log('Registering Expression:', key);
+        // console.log('Registering Expression:', key);
         Expression.register({ key, fn: value });
       }
     });
@@ -51,5 +57,14 @@ export class Registry {
       }
     }
     Registry.register(MODULE_PATH);
+  }
+
+  static constructStore(type: string, configuration = {}): ConfigStore {
+    const StoreCtor = Registry.store.get(ConfigStore.deterministicType(type));
+    if (!StoreCtor) {
+      throw new Error(`unknown store type ${type}`);
+    }
+
+    return new StoreCtor(configuration);
   }
 }
