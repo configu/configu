@@ -25,7 +25,10 @@
   "scripts": {
     "build": "tsup"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@configu/sdk": "workspace:*",
+    "@configu/integrations": "workspace:*"
+  },
   "devDependencies": {
     "axios": "^1.6.2",
     "@types/node": "20.12.12",

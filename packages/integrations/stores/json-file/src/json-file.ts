@@ -1,5 +1,6 @@
-import { type Config, Convert } from '@configu/ts';
 import { FileConfigStore } from '@configu/integrations/src/utils/File';
+import { Config } from '@configu/sdk';
+import { Convert } from './utils/generated';
 
 export type JsonFileConfigStoreConfiguration = { path: string };
 
