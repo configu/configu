@@ -27,7 +27,8 @@
   },
   "dependencies": {
     "csv": "^6.3.8",
-    "@configu/integrations": "workspace:*"
+    "@configu/integrations": "workspace:*",
+    "@configu/sdk": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "20.12.12",

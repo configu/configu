@@ -28,7 +28,7 @@
     "test:watch": "node --import tsx --test --watch *.test.ts"
   },
   "dependencies": {
-    "@configu/ts": "workspace:*",
+    "@configu/sdk": "workspace:*",
     "lodash-es": "^4.17.21"
   },
   "devDependencies": {

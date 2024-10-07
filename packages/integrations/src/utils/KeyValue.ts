@@ -1,5 +1,5 @@
 import _ from 'lodash-es';
-import { Config, ConfigStore, ConfigStoreQuery } from '@configu/ts';
+import { Config, ConfigStore, ConfigStoreQuery } from '@configu/sdk';
 
 export abstract class KeyValueConfigStore extends ConfigStore {
   constructor(type: string) {

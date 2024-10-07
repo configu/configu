@@ -26,7 +26,8 @@
     "build": "tsup"
   },
   "dependencies": {
-    "validator": "^13.11.0"
+    "validator": "^13.11.0",
+    "@configu/sdk": "workspace:*"
   },
   "devDependencies": {
     "axios": "^1.6.2",
