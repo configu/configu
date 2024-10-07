@@ -24,6 +24,15 @@
   "type": "module",
   "types": "./src/index.ts",
   "module": "./src/index.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": {
+        "types": "./src/index.ts",
+        "default": "./src/index.ts"
+      }
+    }
+  },
   "files": [
     "src"
   ],

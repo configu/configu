@@ -6,6 +6,7 @@ import BearerAuth from '@fastify/bearer-auth';
 import Swagger, { FastifyDynamicSwaggerOptions } from '@fastify/swagger';
 import SwaggerUI from '@scalar/fastify-api-reference';
 
+import { ConfiguFile, Registry } from '@configu/common';
 import { config } from './config';
 import { routes } from './routes';
 
@@ -90,6 +91,8 @@ if (config.CONFIGU_DOCS_ENABLED) {
 
 (async () => {
   try {
+    // TODO: Pass this ConfiguFile instance to the routes
+    await ConfiguFile.load(config.CONFIGU_CONFIG_FILE);
     await server.listen({
       host: config.CONFIGU_HTTP_ADDR,
       port: config.CONFIGU_HTTP_PORT,
