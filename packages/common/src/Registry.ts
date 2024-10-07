@@ -19,27 +19,11 @@ export class Registry {
   }
 
   private static async ensureCacheDir() {
-    await mkdir(path.join(CONFIGU_HOME, '/utils'), { recursive: true });
-    await writeFile(
-      path.join(CONFIGU_HOME, 'package.json'),
-      JSON.stringify({
-        name: 'cached-integrations',
-        version: '1.0.0',
-        imports: {
-          '#configu/*': './utils/*.mjs',
-        },
-      }),
-    );
-    const g = global as any;
-    g.ConfiguSDK = await import('@configu/sdk');
-    await writeFile(
-      path.join(CONFIGU_HOME, '/utils/sdk.mjs'),
-      `
-    ${Object.keys(g.ConfiguSDK)
-      .map((key) => `export const ${key} = ConfiguSDK.${key};`)
-      .join('\n')}
-    `,
-    );
+    try {
+      await mkdir(CONFIGU_HOME, { recursive: true });
+    } catch {
+      // ignore
+    }
   }
 
   static async import(filePath: string) {
@@ -81,7 +65,7 @@ export class Registry {
         `https://github.com/configu/configu/releases/download/integrations-${VERSION}/${KEY}-${platform()}.js`,
       );
       if (res.ok) {
-        await writeFile(MODULE_PATH, (await res.text()).replaceAll('@configu/sdk', '#configu/sdk'));
+        await writeFile(MODULE_PATH, await res.text());
       }
     }
     await Registry.register(MODULE_PATH);
