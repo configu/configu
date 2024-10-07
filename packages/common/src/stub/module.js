@@ -7,6 +7,7 @@ export const Dotenv = (configs, opts) => {
 };
 
 export class AWSParameterStoreConfigStore {
+  type = 'aws-parameter';
   get(queries) {
     throw new Error('Method not implemented.');
   }
@@ -17,6 +18,8 @@ export class AWSParameterStoreConfigStore {
 }
 
 export class AzureKeyVaultConfigStore {
+  type = 'azure-key-vault';
+
   get(queries) {
     throw new Error('Method not implemented.');
   }
@@ -27,6 +30,7 @@ export class AzureKeyVaultConfigStore {
 }
 
 export class CsvFileConfigStore {
+  type = 'csv-file';
   get(queries) {
     throw new Error('Method not implemented.');
   }
@@ -37,6 +41,7 @@ export class CsvFileConfigStore {
 }
 
 export class MSSQLConfigStore {
+  type = 'mssql';
   get(queries) {
     throw new Error('Method not implemented.');
   }
@@ -47,6 +52,7 @@ export class MSSQLConfigStore {
 }
 
 export class SQLiteConfigStore {
+  type = 'sqlite';
   get(queries) {
     throw new Error('Method not implemented.');
   }

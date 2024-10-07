@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
-export class DemoStoreStub {
+export class DemoConfigStore {
+  static type = 'demo';
+
   get(queries) {
     throw new Error('Method not implemented.');
   }

@@ -13,17 +13,18 @@ async function importFresh(modulePath) {
 }
 
 describe('Registry', () => {
+  const classSuffix = 'ConfigStore';
   let Registry: typeof RegistryType;
   beforeEach(async () => {
     Registry = (await importFresh('../registry')).Registry;
   });
 
   test('should register a store', async () => {
-    assert.equal(Registry.store.has('DemoStoreStub'), false);
+    assert.equal(Registry.store.has('demo'), false);
 
     await Registry.register('./stub/demo-store.stub.js');
 
-    assert.equal(Registry.store.has('DemoStoreStub'), true);
+    assert.equal(Registry.store.has('demo'), true);
   });
 
   test('should register an expression', async () => {
@@ -59,31 +60,32 @@ describe('Registry', () => {
     });
 
     test('should not remote register a store if already registered', async () => {
-      assert.equal(Registry.store.has('DemoStubStore'), false);
+      assert.equal(Registry.store.has('demo'), false);
 
       await Registry.register('./stub/demo-store.stub.js');
-      assert.equal(Registry.store.has('DemoStubStore'), true);
+      assert.equal(Registry.store.has('demo'), true);
 
       assert.equal(mockFetch.mock.calls.length, 0);
 
-      const existingStore = Registry.store.get('DemoStubStore');
+      const existingStore = Registry.store.get('demo');
 
-      await Registry.remoteRegister('DemoStubStore');
+      await Registry.remoteRegister('demo');
 
-      assert.equal(Registry.store.has('DemoStubStore'), true);
-      assert.equal(Registry.store.get('DemoStubStore'), existingStore);
+      assert.equal(Registry.store.has('demo'), true);
+      assert.equal(Registry.store.get('demo'), existingStore);
       assert.equal(mockFetch.mock.calls.length, 0);
     });
 
     test('should use cached store if exists instead of fetching from github', async () => {
-      const randomStoreClassName = `DemoStub${Math.random().toString(36).substring(7)}Store`;
+      const randomStoreClassName = `DemoStub${Math.random().toString(36).substring(7)}ConfigStore`;
 
       assert.equal(Registry.store.has(randomStoreClassName), false);
       await mkdir(cacheDir, { recursive: true });
       await writeFile(
         path.join(cacheDir, `/${randomStoreClassName}-latest.js`),
         `
-export class ${randomStoreClassName} {
+export class ${randomStoreClassName}${classSuffix} {
+  static type = '${randomStoreClassName.toLowerCase()}';
   get(queries) {
     throw new Error('Method not implemented.');
   }
@@ -97,13 +99,13 @@ export class ${randomStoreClassName} {
       await Registry.remoteRegister(randomStoreClassName);
 
       assert.equal(mockFetch.mock.calls.length, 0);
-      assert.equal(Registry.store.has(randomStoreClassName), true);
+      assert.equal(Registry.store.has(randomStoreClassName.toLowerCase()), true);
     });
 
     test('should fetch remote store and register it', async () => {
-      const randomStoreClassName = `FetchedDemoStub${Math.random().toString(36).substring(7)}Store`;
+      const randomStoreClassName = `FetchedDemoStub${Math.random().toString(36).substring(7)}`;
 
-      assert.equal(Registry.store.has(randomStoreClassName), false);
+      assert.equal(Registry.store.has(randomStoreClassName.toLowerCase()), false);
       assert.equal(mockFetch.mock.calls.length, 0);
 
       mockFetch.mock.mockImplementation(async () => {
@@ -111,7 +113,8 @@ export class ${randomStoreClassName} {
           ok: true,
           async text() {
             return `
-export class ${randomStoreClassName} {
+export class ${randomStoreClassName}${classSuffix} {
+  static type = '${randomStoreClassName.toLowerCase()}';
   get(queries) {
     throw new Error('Method not implemented.');
   }
@@ -126,7 +129,7 @@ export class ${randomStoreClassName} {
 
       await Registry.remoteRegister(randomStoreClassName);
       assert.equal(mockFetch.mock.calls.length, 1);
-      assert.equal(Registry.store.has(randomStoreClassName), true);
+      assert.equal(Registry.store.has(randomStoreClassName.toLowerCase()), true);
     });
   });
 });

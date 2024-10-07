@@ -28,7 +28,6 @@
     "src"
   ],
   "scripts": {
-    "bundle": "tsup",
     "test": "node --import tsx --test src/**/*.test.ts",
     "test:watch": "node --watch --import tsx --test src/**/*.test.ts"
   },
