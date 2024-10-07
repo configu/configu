@@ -1,0 +1,47 @@
+{
+  "name": "@configu/cli",
+  "version": "0.0.0",
+  "license": "Apache-2.0",
+  "description": "Configu CLI",
+  "author": "@configu/dev",
+  "homepage": "https://configu.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/configu/configu",
+    "directory": "packages/cli"
+  },
+  "bugs": {
+    "url": "https://github.com/configu/configu/issues",
+    "email": "dev@configu.com"
+  },
+  "keywords": [
+    "cfgu",
+    "configu",
+    "configu-cli",
+    "configu-command-line"
+  ],
+  "type": "module",
+  "bin": {
+    "configu": "./dist/run.cjs"
+  },
+  "exports": {
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "/dist"
+  ],
+  "scripts": {
+    "bundle": "tsup",
+    "configu": "tsx src/run.ts",
+    "start": "pnpm configu"
+  },
+  "dependencies": {
+    "@configu/sdk": "workspace:*",
+    "@configu/common": "workspace:*",
+    "clipanion": "^4.0.0-rc.4",
+    "consola": "^3.2.3",
+    "std-env": "^3.7.0"
+  },
+  "bundleDependencies": [],
+  "devDependencies": {}
+}
