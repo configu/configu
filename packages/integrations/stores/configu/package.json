@@ -30,7 +30,7 @@
     "@configu/sdk": "workspace:*"
   },
   "devDependencies": {
-    "axios": "^1.6.2",
+    "axios": "^1.7.4",
     "@types/validator": "^13.11.9",
     "@types/node": "20.12.12",
     "tsup": "8.2.4",
