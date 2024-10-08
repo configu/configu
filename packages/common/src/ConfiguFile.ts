@@ -87,7 +87,8 @@ export class ConfiguFile {
 
   private static async init(path: string, contents: string): Promise<ConfiguFile> {
     // expend contents with env vars
-    const { value: renderedContents, error } = Expression.parse(`${contents}`).tryEvaluate(process.env);
+    // todo: find a way to escape template inside Expression class
+    const { value: renderedContents, error } = Expression.parse(`\`${contents}\``).tryEvaluate(process.env);
     if (error || typeof renderedContents !== 'string') {
       throw new Error(`ConfiguFile.contents "${path}" is invalid\n${error}`);
     }

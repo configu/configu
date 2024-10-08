@@ -41,6 +41,7 @@ export class Registry {
     });
   }
 
+  // todo: handle initialization of $HOME/.configu/.cache
   static async remoteRegister(key: string) {
     const VERSION = 'latest';
     const CONFIGU_HOME = path.join(process.cwd(), '/.configu-cache');
@@ -60,7 +61,7 @@ export class Registry {
   }
 
   static constructStore(type: string, configuration = {}): ConfigStore {
-    const StoreCtor = Registry.store.get(ConfigStore.deterministicType(type));
+    const StoreCtor = Registry.store.get(type);
     if (!StoreCtor) {
       throw new Error(`unknown store type ${type}`);
     }
