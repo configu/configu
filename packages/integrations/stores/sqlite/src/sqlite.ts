@@ -1,10 +1,10 @@
-import { type SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionOptions';
-import { ORMConfigStore, type ORMConfigStoreSharedConfiguration } from './utils/ORM';
+import { type SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionOptions.js';
+import { ORMConfigStore, type ORMConfigStoreSharedConfiguration } from '@configu/integrations/src/utils/ORM';
 
 export type SQLiteConfigStoreConfiguration = Omit<SqliteConnectionOptions, 'type'> & ORMConfigStoreSharedConfiguration;
 
 export class SQLiteConfigStore extends ORMConfigStore {
   constructor(configuration: SQLiteConfigStoreConfiguration) {
-    super('sqlite', { ...configuration, type: 'sqlite' });
+    super({ ...configuration, type: 'sqlite' });
   }
 }

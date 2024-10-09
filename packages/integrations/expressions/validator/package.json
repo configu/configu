@@ -1,12 +1,8 @@
 {
-  "name": "@configu-integrations/validators",
+  "name": "@configu-integrations/validator",
   "version": "0.0.0",
   "license": "Apache-2.0",
-  "description": "Configu Node.js SDK",
   "author": "@configu/dev",
-  "engines": {
-    "node": ">=v16"
-  },
   "files": [],
   "repository": {
     "type": "git",
@@ -26,10 +22,10 @@
     "build": "tsup"
   },
   "dependencies": {
-    "validator": "^13.11.0"
+    "validator": "^13.12.0"
   },
   "devDependencies": {
-    "@types/validator": "^13.11.9",
+    "@types/validator": "^13.12.2",
     "@types/node": "20.12.12",
     "tsup": "8.2.4",
     "typescript": "^5.4.5"

@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { ConfigStore, type ConfigStoreQuery, type Config as IConfig } from '@configu/sdk';
+import { ConfigStore, type ConfigQuery, type Config as IConfig } from '@configu/sdk';
 import { DataSource, type DataSourceOptions, Entity, Index, PrimaryGeneratedColumn, Column } from 'typeorm';
 import _ from 'lodash-es';
 
@@ -34,8 +34,8 @@ export abstract class ORMConfigStore extends ConfigStore {
   readonly dataSource: DataSource;
   private readonly configEntity: ReturnType<typeof createEntity>;
 
-  protected constructor(type: string, { tableName = 'config', ...dataSourceOptions }: ORMConfigStoreConfiguration) {
-    super(type);
+  protected constructor({ tableName = 'config', ...dataSourceOptions }: ORMConfigStoreConfiguration) {
+    super();
     this.configEntity = createEntity(tableName);
     this.dataSource = new DataSource({
       // TODO: synchronize is not production safe - create a migration script to initialize tables
@@ -45,7 +45,7 @@ export abstract class ORMConfigStore extends ConfigStore {
     });
   }
 
-  async init() {
+  override async init() {
     if (this.dataSource.isInitialized) {
       return;
     }
@@ -66,7 +66,7 @@ export abstract class ORMConfigStore extends ConfigStore {
     }
   }
 
-  async get(queries: ConfigStoreQuery[]): Promise<IConfig[]> {
+  async get(queries: ConfigQuery[]): Promise<IConfig[]> {
     const configRepository = this.dataSource.getRepository(this.configEntity);
 
     const adjustedQuery = queries.map((entry) => ({
