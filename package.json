@@ -27,7 +27,6 @@
     "lint:check": "pnpm lint --quiet",
     "lint:fix": "pnpm lint --fix",
     "bundle": "pnpm -r bundle",
-    "build": "tsc --build --verbose tsconfig.build.json",
     "build:integrations": "pnpm run --filter \"@configu-integrations/*\" build",
     "test": "tsx --test \"packages/**/src/**/*.test.ts\" \"packages/integrations/expressions/**/src/**/*.test.ts\" \"packages/integrations/formatters/**/src/**/*.test.ts\" \"packages/integrations/stores/**/src/**/*.test.ts\"",
     "test:cov": "tsx --test --experimental-test-coverage --test-reporter=spec --test-reporter=lcov --test-reporter-destination=stdout --test-reporter-destination=lcov.info  \"packages/**/src/**/*.test.ts\" \"packages/integrations/expressions/**/src/**/*.test.ts\" \"packages/integrations/formatters/**/src/**/*.test.ts\" \"packages/integrations/stores/**/src/**/*.test.ts\"",
