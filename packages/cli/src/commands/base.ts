@@ -2,6 +2,7 @@ import { Command, Option } from 'clipanion';
 import _ from 'lodash';
 import { CfguFile, ConfiguFile, parseJSON, Registry } from '@configu/common';
 import { EvalCommandOutput, NoopConfigStore, InMemoryConfigStore } from '@configu/sdk';
+import { XmlFileConfigStore } from '@configu-integrations/xml-file/src/xml-file';
 import { type CustomContext } from '../index';
 
 export type Context = CustomContext & { configu: ConfiguFile; UNICODE_NULL: '\u0000'; stdin: NodeJS.ReadStream };
@@ -14,7 +15,7 @@ export abstract class BaseCommand extends Command<Context> {
     this.context.configu = configu;
 
     // register builtins here
-    Registry.register({ NoopConfigStore, InMemoryConfigStore });
+    Registry.register({ NoopConfigStore, InMemoryConfigStore, XmlFileConfigStore });
   }
 
   getBackupStoreInstanceByFlag(flag?: string) {
