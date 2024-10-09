@@ -46,6 +46,7 @@ export const CfguTypes = [
   'ARN',
   // structured
   'JSONSchema',
+  'CreditCard',
 ] as const;
 type CfguType = (typeof CfguTypes)[number];
 

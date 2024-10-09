@@ -21,7 +21,7 @@ type BaseConfig = {
   cli: {
     file?: string; // .configu file
     data: Partial<{
-      stores: Record<string, { type: string; configuration: Record<string, any>; cache?: boolean }>;
+      stores: Record<string, { type: string; configuration: Record<string, any>; cache?: boolean; default?: boolean }>;
       cache?: string;
       schemas: Record<string, string>;
       scripts: Record<string, string>;
@@ -90,15 +90,20 @@ export abstract class BaseCommand<T extends typeof Command> extends Command {
   }
 
   getStoreInstanceByStoreFlag(storeFlag?: string) {
-    if (!storeFlag) {
-      throw new Error('--store flag is missing');
+    let selectedStoreFlag = storeFlag;
+    if (!selectedStoreFlag) {
+      const defaultStoreKey = _.findKey(this.config.cli.data.stores, { default: true });
+      if (!defaultStoreKey) {
+        throw new Error('--store flag is missing, and no default store is set');
+      }
+      selectedStoreFlag = defaultStoreKey;
     }
 
-    const storeType = this.config.cli.data.stores?.[storeFlag]?.type ?? storeFlag;
+    const storeType = this.config.cli.data.stores?.[selectedStoreFlag]?.type ?? selectedStoreFlag;
     // * stores may support independent configuration e.g from env vars, local config file etc.
-    const storeConfiguration = this.config.cli.data.stores?.[storeFlag]?.configuration;
+    const storeConfiguration = this.config.cli.data.stores?.[selectedStoreFlag]?.configuration;
 
-    if (storeFlag === this.config.bin || storeType === this.config.bin) {
+    if (selectedStoreFlag === this.config.bin || storeType === this.config.bin) {
       return constructStore(
         this.config.bin,
         _.merge(
