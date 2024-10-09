@@ -44,7 +44,7 @@
     "@launchdarkly/node-server-sdk": "^9.0.1",
     "@launchdarkly/openfeature-node-server": "^0.5.1",
     "@openfeature/server-sdk": "^1.7.4",
-    "axios": "^1.6.2",
+    "axios": "^1.7.4",
     "cloudbees-openfeature-provider-node": "^1.0.0",
     "csv": "^6.3.8",
     "etcd3": "^1.1.2",
