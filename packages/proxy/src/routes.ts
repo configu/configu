@@ -94,6 +94,9 @@ export const routes: FastifyPluginAsync = async (server, opts): Promise<void> =>
           const pipe = await previousResult;
 
           const storeInstance = configuFile.getStoreInstance(store);
+          if (!storeInstance) {
+            throw new Error(`store "${store}" not found`);
+          }
           const setInstance = new ConfigSet(set);
           const schemaInstance = new ConfigSchema(keys);
 

@@ -67,10 +67,15 @@
         "<node_internals>/**",
         // Ignore all dependencies (optional)
         "${workspaceFolder}/node_modules/**"
-      ],
-      "env": {
-        "MY_PATH": "./db.json"
-      }
+      ]
+      // "env": {
+      //   "MY_PATH": "./db.json"
+      // },
+      // "args": [
+      //   "eval",
+      //   "--schema",
+      //   "${workspaceFolder}/test.cfgu.yaml"
+      // ]
     }
   ]
 }

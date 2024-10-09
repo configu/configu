@@ -21,7 +21,8 @@ export class ExportCommand extends ConfigCommand<ExportCommandInput, ExportComma
     const { pipe } = this.input;
     const filteredPipe = this.filter(pipe);
     const mappedPipe = this.map(filteredPipe);
-    return this.reduce(mappedPipe);
+    const reducedPipe = this.reduce(mappedPipe);
+    return reducedPipe;
   }
 
   static filterHidden: ExportCommandFilter = (config) => {
@@ -36,7 +37,7 @@ export class ExportCommand extends ConfigCommand<ExportCommandInput, ExportComma
   };
 
   static formatJson: ExportCommandReducer = (configs) => {
-    return Json.stringify({ data: _.map(configs, (current) => current.value) });
+    return Json.stringify({ data: _.chain(configs).keyBy('key').mapValues('value').value(), beautify: true });
   };
 
   private filter(pipe: EvalCommandOutput) {

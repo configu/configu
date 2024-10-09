@@ -16,15 +16,7 @@ export class Registry {
     return typeof value === 'function';
   }
 
-  static async import(filePath: string) {
-    // const module = await import(filePath);
-    const module = await tsImport(filePath, import.meta.url);
-    return module;
-  }
-
-  static async register(filePath: string) {
-    const module = await Registry.import(filePath);
-
+  static async register(module: Record<string, unknown>) {
     Object.entries(module).forEach(([key, value]) => {
       // console.log('Registering:', key, value);
 
@@ -39,6 +31,17 @@ export class Registry {
         Expression.register({ key, fn: value });
       }
     });
+  }
+
+  static async import(filePath: string) {
+    // const module = await import(filePath);
+    const module = await tsImport(filePath, import.meta.url);
+    return module;
+  }
+
+  static async localRegister(filePath: string) {
+    const module = await Registry.import(filePath);
+    Registry.register(module);
   }
 
   // todo: handle initialization of $HOME/.configu/.cache
@@ -57,11 +60,13 @@ export class Registry {
         await writeFile(MODULE_PATH, await res.text());
       }
     }
-    Registry.register(MODULE_PATH);
+
+    Registry.localRegister(MODULE_PATH);
   }
 
   static constructStore(type: string, configuration = {}): ConfigStore {
-    const StoreCtor = Registry.store.get(type);
+    const normalizedType = ConfigStore.deterministicType(type);
+    const StoreCtor = Registry.store.get(normalizedType);
     if (!StoreCtor) {
       throw new Error(`unknown store type ${type}`);
     }

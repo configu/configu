@@ -50,12 +50,12 @@ export class CfguFile {
     public readonly path: string,
     public readonly contents: CfguFileContents,
   ) {
-    if (!JsonSchema.validate({ schema: CfguFileSchema, data: this.contents })) {
+    if (!JsonSchema.validate({ schema: CfguFileSchema, path, data: this.contents })) {
       throw new Error(`CfguFile.contents "${path}" is invalid\n${JsonSchema.getLastValidationError()}`);
     }
   }
 
-  static allowedExtensions = ['.json', '.yaml', '.yml'];
+  static allowedExtensions = ['json', 'yaml', 'yml'];
 
   private static async init(path: string, contents: string): Promise<CfguFile> {
     const [, cfguExt, fileExt] = basename(path).split('.');

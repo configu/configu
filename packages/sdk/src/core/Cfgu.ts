@@ -21,7 +21,7 @@ export interface Cfgu {
   // todo: add ticket to support expression in required
   // required?: boolean | ExpressionString;
   required?: boolean; // exclusive: const, default, template
-  type?: CfguType;
+  // type?: CfguType;
   enum?: string[];
   pattern?: string;
   schema?: JsonSchemaObject;
@@ -96,10 +96,10 @@ export const CfguSchema: JsonSchemaType<Cfgu> = {
     // template: CfguSchemaDefs.StringProperty,
 
     required: CfguSchemaDefs.BooleanProperty,
-    type: {
-      ...CfguSchemaDefs.StringProperty,
-      enum: CfguType,
-    },
+    // type: {
+    //   ...CfguSchemaDefs.StringProperty,
+    //   enum: CfguType,
+    // },
     enum: CfguSchemaDefs.ArrayProperty,
     pattern: CfguSchemaDefs.StringProperty,
     schema: CfguSchemaDefs.ObjectProperty,

@@ -80,7 +80,7 @@ export class ConfiguFile {
     public readonly path: string,
     public readonly contents: ConfiguFileContents,
   ) {
-    if (!JsonSchema.validate({ schema: ConfiguFileSchema, data: this.contents })) {
+    if (!JsonSchema.validate({ schema: ConfiguFileSchema, path, data: this.contents })) {
       throw new Error(`ConfiguFile.contents "${path}" is invalid\n${JsonSchema.getLastValidationError()}`);
     }
   }
@@ -120,25 +120,15 @@ export class ConfiguFile {
     return ConfiguFile.load(path);
   }
 
-  // mergeStoreObject({nameOrType: string, configuration = {}}): { type: string; configuration?: Record<string, unknown> } {
-  //   return {
-  //     type: this.contents.stores?.[nameOrType]?.type ?? nameOrType,
-  //     configuration: { ...this.contents.stores?.[nameOrType]?.configuration, ...configuration },
-  //     backup
-  //   };
-  // const storeType = this.contents.stores?.[nameOrType]?.type ?? nameOrType;
-  // const storeConfiguration = { ...this.contents.stores?.[nameOrType]?.configuration, ...configuration };
-  // }
-
-  getStoreInstance(name: string): ConfigStore {
+  getStoreInstance(name: string) {
     const storeConfig = this.contents.stores?.[name];
     if (!storeConfig) {
-      throw new Error(`Store "${name}" not found`);
+      return undefined;
     }
-    return Registry.constructStore(ConfigStore.deterministicType(storeConfig.type), storeConfig.configuration);
+    return Registry.constructStore(storeConfig.type, storeConfig.configuration);
   }
 
-  getBackupStoreInstance(name: string): ConfigStore | undefined {
+  getBackupStoreInstance(name: string) {
     const shouldBackup = this.contents.stores?.[name]?.backup;
     if (!shouldBackup) {
       return undefined;
@@ -147,12 +137,11 @@ export class ConfiguFile {
     return Registry.constructStore('sqlite', { database, tableName: name });
   }
 
-  async getSchemaInstance(name: string): Promise<ConfigSchema> {
+  async getSchemaInstance(name: string) {
     const schemaPath = this.contents.schemas?.[name];
     if (!schemaPath) {
-      throw new Error(`Schema "${name}" not found`);
+      return undefined;
     }
-
     const cfguFile = await CfguFile.load(schemaPath);
     return cfguFile.constructSchema();
   }

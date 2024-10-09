@@ -1,3 +1,9 @@
+/* NOTE:
+ * @configu/cli is currently work in progress and is not yet released.
+ * It expected to be released by the end of October 2024.
+ * * Latest released code can be found at: https://github.com/configu/configu/tree/52cee9c41fb03addc4c0983028e37df42945f5b7/packages/proxy
+ */
+
 import Fastify, { FastifyInstance } from 'fastify';
 import GracefulServer from '@gquittet/graceful-server';
 import Helmet from '@fastify/helmet';
