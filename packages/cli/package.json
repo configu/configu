@@ -103,7 +103,7 @@
     "@oclif/plugin-autocomplete": "^3.0.3",
     "@oclif/plugin-not-found": "^3.0.5",
     "@oclif/plugin-update": "^4.1.5",
-    "axios": "^1.6.2",
+    "axios": "^1.7.4",
     "chalk": "4.1.2",
     "change-case": "4.1.2",
     "ci-info": "^4.0.0",

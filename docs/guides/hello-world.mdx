@@ -43,7 +43,7 @@ configu upsert \
   --config "GREETING=hey" --config "SUBJECT=<YOUR_NAME>" \
 && configu upsert \
   --store 'configu' --set 'development/qa' --schema './start.cfgu.json' \
-  -c "GREETING=hola"
+  -c "GREETING=hola" \
 && configu upsert \
   --store 'configu' --set 'production' --schema './start.cfgu.json' \
   -c "GREETING=welcome"
@@ -53,7 +53,7 @@ configu upsert \
 
 ```shell
 configu eval \
-  --store 'configu' --set 'development/qa' --schema './get-started.cfgu.json' \
+  --store 'configu' --set 'development/qa' --schema './start.cfgu.json' \
 | configu export \
   --format "Dotenv" \
 > ".env"

@@ -19,7 +19,6 @@ export default class Test extends BaseCommand<typeof Test> {
   static flags = {
     store: Flags.string({
       description: `\`ConfigStore\` (configs data-source) to upsert \`CONFIGU_TEST\` config to`,
-      required: true,
       aliases: ['st'],
     }),
     clean: Flags.boolean({
