@@ -13,7 +13,7 @@ export type AWSParameterStoreConfigStoreConfiguration = SSMClientConfig;
 export class AWSParameterStoreConfigStore extends KeyValueConfigStore {
   private client: SSMClient;
   constructor(configuration: AWSParameterStoreConfigStoreConfiguration) {
-    super('aws-parameter-store');
+    super();
     this.client = new SSMClient(configuration);
   }
 

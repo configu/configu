@@ -7,7 +7,7 @@ export type CsvFileConfigStoreConfiguration = { path: string };
 export class CsvFileConfigStore extends FileConfigStore {
   constructor({ path }: CsvFileConfigStoreConfiguration) {
     const initialFileState = '';
-    super('csv-file', { path, initialFileState });
+    super({ path, initialFileState });
   }
 
   parse(fileContent: string): Config[] {

@@ -1,5 +1,5 @@
 import fs from 'node:fs/promises';
-import { type Config, ConfigStore, type ConfigStoreQuery } from '@configu/sdk';
+import { type Config, ConfigStore, type ConfigQuery } from '@configu/sdk';
 import _ from 'lodash-es';
 
 export type FileConfigStoreConfiguration = { path: string; initialFileState: string };
@@ -7,13 +7,13 @@ export type FileConfigStoreConfiguration = { path: string; initialFileState: str
 export abstract class FileConfigStore extends ConfigStore {
   readonly path: string;
   readonly initialFileState: string;
-  constructor(type: string, { path, initialFileState }: FileConfigStoreConfiguration) {
-    super(type);
+  constructor({ path, initialFileState }: FileConfigStoreConfiguration) {
+    super();
     this.path = path;
     this.initialFileState = initialFileState;
   }
 
-  async init() {
+  override async init() {
     try {
       await fs.access(this.path);
     } catch (error) {
@@ -37,7 +37,7 @@ export abstract class FileConfigStore extends ConfigStore {
     await fs.writeFile(this.path, fileContents);
   }
 
-  async get(queries: ConfigStoreQuery[]): Promise<Config[]> {
+  async get(queries: ConfigQuery[]): Promise<Config[]> {
     const fileContents = await this.read();
     const storedConfigs = this.parse(fileContents);
 
@@ -52,7 +52,7 @@ export abstract class FileConfigStore extends ConfigStore {
     const fileContents = await this.read();
     const storedConfigs = this.parse(fileContents);
 
-    const nextConfigs = _([...configs, ...storedConfigs])
+    const nextConfigs = _.chain([...configs, ...storedConfigs])
       .uniqBy((config) => `${config.set}.${config.key}`)
       .filter((config) => Boolean(config.value))
       .value();

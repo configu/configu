@@ -1,12 +1,8 @@
 {
-  "name": "@configu-integrations/aws-parameter",
+  "name": "@configu-integrations/aws-parameter-store",
   "version": "0.0.0",
   "license": "Apache-2.0",
-  "description": "Configu Node.js SDK",
   "author": "@configu/dev",
-  "engines": {
-    "node": ">=v16"
-  },
   "files": [],
   "repository": {
     "type": "git",
@@ -26,7 +22,7 @@
     "build": "tsup"
   },
   "dependencies": {
-    "@aws-sdk/client-ssm": "^3.465.0",
+    "@aws-sdk/client-ssm": "^3.667.0",
     "@configu/integrations": "workspace:*",
     "@configu/sdk": "workspace:*"
   },

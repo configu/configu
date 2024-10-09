@@ -2,11 +2,7 @@
   "name": "@configu-integrations/csv-file",
   "version": "0.0.0",
   "license": "Apache-2.0",
-  "description": "Configu Node.js SDK",
   "author": "@configu/dev",
-  "engines": {
-    "node": ">=v16"
-  },
   "files": [],
   "repository": {
     "type": "git",
@@ -26,9 +22,9 @@
     "build": "tsup"
   },
   "dependencies": {
-    "csv": "^6.3.8",
     "@configu/integrations": "workspace:*",
-    "@configu/sdk": "workspace:*"
+    "@configu/sdk": "workspace:*",
+    "csv": "^6.3.8"
   },
   "devDependencies": {
     "@types/node": "20.12.12",

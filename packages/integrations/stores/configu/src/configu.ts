@@ -1,7 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import axios, { type Axios } from 'axios';
-import validator from 'validator';
-import { Config, ConfigStore, ConfigStoreQuery } from '@configu/sdk';
+import isJWT from 'validator/es/lib/isJWT';
+import { Config, ConfigStore, ConfigQuery } from '@configu/sdk';
 
 export type ConfiguConfigStoreConfiguration = {
   credentials: { org: string; token: string };
@@ -30,7 +30,7 @@ export class ConfiguConfigStore extends ConfigStore {
     source = 'sdk',
     tag,
   }: ConfiguConfigStoreConfiguration) {
-    super('configu');
+    super();
 
     this.client = axios.create({
       baseURL: endpoint,
@@ -41,7 +41,7 @@ export class ConfiguConfigStore extends ConfigStore {
       responseType: 'json',
     });
 
-    if (validator.isJWT(credentials.token)) {
+    if (isJWT(credentials.token)) {
       this.client.defaults.headers.common.Authorization = `Bearer ${credentials.token}`;
     } else {
       this.client.defaults.headers.common.Token = credentials.token;
@@ -50,7 +50,7 @@ export class ConfiguConfigStore extends ConfigStore {
     this.tag = tag;
   }
 
-  async get(queries: ConfigStoreQuery[]): Promise<Config[]> {
+  async get(queries: ConfigQuery[]): Promise<Config[]> {
     const { data } = await this.client.post(`/config${this.tag ? `?tag=${this.tag}` : ''}`, { queries });
     return data;
   }

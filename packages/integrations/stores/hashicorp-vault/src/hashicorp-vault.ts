@@ -9,7 +9,7 @@ export class HashiCorpVaultConfigStore extends KeyValueConfigStore {
   private client: Axios;
   private engine: string;
   constructor(configuration: HashiCorpVaultConfigStoreConfiguration) {
-    super('hashicorp-vault');
+    super();
 
     const address = configuration.address ?? process.env.VAULT_ADDR;
     const token = configuration.token ?? process.env.VAULT_TOKEN;

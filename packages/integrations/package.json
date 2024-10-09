@@ -4,9 +4,6 @@
   "license": "Apache-2.0",
   "description": "Configu Integrations Index",
   "author": "@configu/dev",
-  "engines": {
-    "node": ">=v16"
-  },
   "files": [],
   "repository": {
     "type": "git",
@@ -29,7 +26,9 @@
   },
   "dependencies": {
     "@configu/sdk": "workspace:*",
-    "lodash-es": "^4.17.21"
+    "lodash-es": "^4.17.21",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.3.17"
   },
   "devDependencies": {
     "@types/lodash-es": "^4.17.12",
