@@ -1,9 +1,9 @@
-import { ConfigStore, Expression } from '@configu/sdk';
+import { Expression } from '@configu/sdk';
 import { Registry } from './Registry';
 
 const test = async () => {
   // await Registry.register('../../../module.js');
-  await Registry.register('./module.js');
+  await Registry.register('./stub/module.js');
 
   // console.log(Registry.store.keys());
 
