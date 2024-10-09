@@ -19,7 +19,6 @@ export default class Delete extends BaseCommand<typeof Delete> {
   static flags = {
     store: Flags.string({
       description: `\`ConfigStore\` (configs data-source) to delete \`Configs\` from`,
-      required: true,
       aliases: ['st'],
     }),
     set: Flags.string({
