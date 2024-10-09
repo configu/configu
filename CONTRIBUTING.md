@@ -62,12 +62,6 @@ Instantly start experimenting and developing.
 
 The [root](https://github.com/configu/configu/blob/main/package.json) directory serves as the skeleton for the Configu project and provides the resources needed for developers to build and contribute to it.
 
-#### **types/**
-
-The [./types](https://github.com/configu/configu/tree/main/types) directory holds the core types of the Configu project. These types are written in [TypeScript](https://www.typescriptlang.org/), and then converted into strongly-typed models and serializers in various programming languages using [`quicktype`](https://quicktype.io/). These core types serve as the foundation for all Configu SDKs.
-
-> Running `pnpm install` in the root directory triggers type generation of the various supported SDKs.
-
 #### **examples/**
 
 The [./examples](https://github.com/configu/configu/tree/main/examples) directory demonstrates various concepts and best practices with some real-world use-cases of Configu.
@@ -78,12 +72,41 @@ The [./docs](https://github.com/configu/configu/tree/main/docs) directory holds 
 
 #### **./packages**
 
-- [./packages/ts](https://github.com/configu/configu/tree/main/packages/ts): Shared code for both the Node.js and browser SDKs
-  - [./packages/ts/src/stores](https://github.com/configu/configu/tree/main/packages/ts/src/stores): [ConfigStores](https://configu.com/docs/config-store/) supported for all TS based packages
-  - [./packages/ts/src/commands](https://github.com/configu/configu/tree/main/packages/ts/src/commands): [Commands](https://configu.com/docs/commands/) supported for all TS based packages
-- [./packages/node](https://github.com/configu/configu/tree/main/packages/node): The Node.js SDK
-- [./packages/browser](https://github.com/configu/configu/tree/main/packages/browser): The browser SDK
-- [./packages/cli](https://github.com/configu/configu/tree/main/packages/cli): Configu CLI, which is built using [oclif](https://oclif.io/) and the Node.js SDK
+```mermaid
+flowchart RL
+%% Nodes
+    A("sdk")
+    B("common")
+	C("integrations")
+	D("cli")
+	E("proxy")
+
+%% Edges
+	B --> A
+	C --> A
+	B --> C
+
+	D --> A
+	E --> A
+
+	D --> B
+	E --> B
+
+%% Node Styling
+    style D color:#FFFFFF, fill:#AA00FF, stroke:#AA00FF
+    style E color:#FFFFFF, stroke:#00C853, fill:#00C853
+```
+
+- [./packages/sdk](https://github.com/configu/configu/tree/main/packages/sdk): The core SDK that contains the core Configu logic and interfaces
+  - [./packages/sdk/src/stores](https://github.com/configu/configu/tree/main/packages/ts/src/stores): [ConfigStores](https://configu.com/docs/config-store/) supported shipped together with the core SDK
+  - [./packages/sdk/src/commands](https://github.com/configu/configu/tree/main/packages/ts/src/commands): [Commands](https://configu.com/docs/commands/) supported shipped together with the core SDK
+- [./packages/integrations](https://github.com/configu/configu/tree/main/packages/integrations): Contains all the packages that extend the SDK interfaces
+  - [./packages/integrations/expressions/validators/src](https://github.com/configu/configu/tree/main/packages/integrations/expressions/validators/src): Contains all validator integrations
+  - [./packages/integrations/formatters](https://github.com/configu/configu/tree/main/packages/integrations/formatters): Contains all formatter integrations
+  - [./packages/integrations/stores](https://github.com/configu/configu/tree/main/packages/integrations): Contains all [ConfigStore](https://configu.com/docs/config-store/) integrations
+- [./packages/common](https://github.com/configu/configu/tree/main/packages/common): Shared code for both Configu Proxy and Configu CLI, extends the Configu SDK
+- [./packages/proxy](https://github.com/configu/configu/tree/main/packages/proxy): Configu Proxy, which is built using [fastify](https://fastify.dev/) and the Common package
+- [./packages/cli](https://github.com/configu/configu/tree/main/packages/cli): Configu CLI, which is built using [oclif](https://oclif.io/) and the Common package
 
 ### Sending a Pull Request
 
