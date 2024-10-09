@@ -19,12 +19,12 @@ export type JsonSchemaType<T> = JSONSchemaType<T>;
 export type JsonSchemaObject = SchemaObject;
 
 export class JsonSchema {
-  private static _ = new Ajv({ allErrors: true });
+  private static ajv = new Ajv({ allErrors: true, allowUnionTypes: true });
   private static lastValidationError: ValidationError[] = [];
   static validate({ schema, path, data }: { schema: SchemaObject; path?: string; data: unknown }) {
-    const valid = JsonSchema._.validate(schema, data);
+    const valid = JsonSchema.ajv.validate(schema, data);
     if (!valid) {
-      JsonSchema.lastValidationError = betterAjvErrors({ schema, data, errors: JsonSchema._.errors, basePath: path });
+      JsonSchema.lastValidationError = betterAjvErrors({ schema, data, errors: JsonSchema.ajv.errors, basePath: path });
     }
     return valid;
   }

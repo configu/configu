@@ -1,5 +1,5 @@
 {
-  "name": "@configu-integrations/configu",
+  "name": "@configu-integrations/validator",
   "version": "0.0.0",
   "license": "Apache-2.0",
   "author": "@configu/dev",
@@ -22,12 +22,10 @@
     "build": "tsup"
   },
   "dependencies": {
-    "validator": "^13.11.0",
-    "@configu/sdk": "workspace:*"
+    "validator": "^13.12.0"
   },
   "devDependencies": {
-    "axios": "^1.7.4",
-    "@types/validator": "^13.11.9",
+    "@types/validator": "^13.12.2",
     "@types/node": "20.12.12",
     "tsup": "8.2.4",
     "typescript": "^5.4.5"

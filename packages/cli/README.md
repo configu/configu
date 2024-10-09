@@ -41,3 +41,16 @@ pnpm install
 ### Contribute
 
 Follow the [Sending a Pull Request](https://github.com/configu/configu/blob/main/CONTRIBUTING.md#sending-a-pull-request) section from the `CONTRIBUTING.md`.
+
+### Debugging
+
+```bash
+cd packages/cli
+pnpm configu <command>
+```
+
+Breakpoints:
+
+- `cd packages/cli`
+- Open `src/run.ts`
+- Hit "Play" / "Debug" with the `tsx` preset

@@ -1,9 +1,12 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "../../tsconfig.json",
+  "include": ["src", "src/**/*.json"],
   "compilerOptions": {
-    "rootDir": "src",
-    "outDir": "build",
-    "composite": true
-  },
-  "include": ["src", "src/**/*.json"]
+    // TypeORM specific settings
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "strictPropertyInitialization": false,
+    "lib": ["ES6"]
+  }
 }

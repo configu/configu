@@ -1,18 +1,14 @@
 import _ from 'lodash-es';
-import { Config, ConfigStore, ConfigStoreQuery } from '@configu/sdk';
+import { Config, ConfigStore, ConfigQuery } from '@configu/sdk';
 
 export abstract class KeyValueConfigStore extends ConfigStore {
-  constructor(type: string) {
-    super(type);
-  }
-
   protected abstract getByKey(key: string): Promise<string>;
 
   protected abstract upsert(key: string, value: string): Promise<void>;
 
   protected abstract delete(key: string): Promise<void>;
 
-  private calcKey({ set, key }: ConfigStoreQuery): string {
+  private calcKey({ set, key }: ConfigQuery): string {
     if (!set) {
       return key;
     }
@@ -36,8 +32,8 @@ export abstract class KeyValueConfigStore extends ConfigStore {
     return jsonValue;
   }
 
-  async get(queries: ConfigStoreQuery[]): Promise<Config[]> {
-    const keys = _(queries)
+  async get(queries: ConfigQuery[]): Promise<Config[]> {
+    const keys = _.chain(queries)
       .map((q) => this.calcKey(q))
       .uniq()
       .value();
@@ -54,9 +50,9 @@ export abstract class KeyValueConfigStore extends ConfigStore {
       }
     });
     const kvArray = await Promise.all(kvPromises);
-    const kvDict = _(kvArray).keyBy('key').mapValues('value').value();
+    const kvDict = _.chain(kvArray).keyBy('key').mapValues('value').value();
 
-    const storedConfigs = _(queries)
+    const storedConfigs = _.chain(queries)
       .map((q) => {
         const { set, key } = q;
 
@@ -103,7 +99,7 @@ export abstract class KeyValueConfigStore extends ConfigStore {
         } catch (error) {
           prevValue = {};
         }
-        nextValue = _(prevValue).merge(value).omitBy(_.isEmpty).value();
+        nextValue = _.chain(prevValue).merge(value).omitBy(_.isEmpty).value();
       } else {
         nextValue = value;
       }

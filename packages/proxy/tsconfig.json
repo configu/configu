@@ -1,20 +1,5 @@
 {
-  "extends": "../../tsconfig.base.json",
-  "compilerOptions": {
-    "rootDir": "src",
-    "outDir": "build",
-    "composite": true
-  },
-  "references": [
-    {
-      "path": "../ts"
-    },
-    {
-      "path": "../lib"
-    },
-    {
-      "path": "../node"
-    }
-  ],
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "../../tsconfig.json",
   "include": ["src", "src/**/*.json"]
 }
