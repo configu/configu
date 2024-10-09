@@ -5,7 +5,7 @@ import { Expression } from '@configu/sdk';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { execSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
-import { Registry as RegistryType } from '../registry';
+import { Registry as RegistryType } from '../Registry';
 
 async function importFresh(modulePath) {
   const cacheBustingModulePath = `${modulePath}?update=${Date.now()}`;
@@ -16,7 +16,7 @@ describe('Registry', () => {
   const classSuffix = 'ConfigStore';
   let Registry: typeof RegistryType;
   beforeEach(async () => {
-    Registry = (await importFresh('../registry')).Registry;
+    Registry = (await importFresh('../Registry')).Registry;
   });
 
   test('should register a store', async () => {
