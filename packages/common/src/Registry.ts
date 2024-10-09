@@ -8,7 +8,7 @@ import { ConfigStore, ConfigStoreConstructor, Expression, ExpressionFunction } f
 const CONFIGU_HOME = path.join(process.cwd(), '/.configu-cache');
 
 export class Registry {
-  private static store = new Map<string, ConfigStoreConstructor>();
+  static store = new Map<string, ConfigStoreConstructor>();
 
   static isConfigStore(value: unknown): value is ConfigStoreConstructor {
     return typeof value === 'function' && 'type' in value;
