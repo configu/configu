@@ -36,7 +36,10 @@
   "files": [
     "src"
   ],
-  "scripts": {},
+  "scripts": {
+    "test": "node --import tsx --test src/**/*.test.ts",
+    "test:watch": "node --watch --import tsx --test src/**/*.test.ts"
+  },
   "imports": {
     "@configu/sdk": "../sdk/dist/index.js"
   },

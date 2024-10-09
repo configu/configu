@@ -5,6 +5,8 @@ import path from 'pathe';
 import { tsImport } from 'tsx/esm/api';
 import { ConfigStore, ConfigStoreConstructor, Expression, ExpressionFunction } from '@configu/sdk';
 
+const CONFIGU_HOME = path.join(process.cwd(), '/.configu-cache');
+
 export class Registry {
   private static store = new Map<string, ConfigStoreConstructor>();
 
@@ -44,19 +46,29 @@ export class Registry {
     Registry.register(module);
   }
 
+  private static async ensureCacheDir() {
+    try {
+      await mkdir(CONFIGU_HOME, { recursive: true });
+    } catch {
+      // ignore
+    }
+  }
+
   // todo: handle initialization of $HOME/.configu/.cache
   static async remoteRegister(key: string) {
-    const VERSION = 'latest';
-    const CONFIGU_HOME = path.join(process.cwd(), '/.configu-cache');
+    if (Registry.store.has(key)) {
+      return;
+    }
+    await Registry.ensureCacheDir();
 
-    const MODULE_PATH = path.join(CONFIGU_HOME, `/${key}-${VERSION}.js`);
+    const [KEY, VERSION = 'latest'] = key.split('@');
+    const MODULE_PATH = path.join(CONFIGU_HOME, `/${KEY}-${VERSION}.js`);
 
     if (!existsSync(MODULE_PATH)) {
       const res = await fetch(
-        `https://github.com/configu/configu/releases/download/${VERSION}/${key}-${platform()}.js`,
+        `https://github.com/configu/configu/releases/download/integrations-${VERSION}/${KEY}-${platform()}.js`,
       );
       if (res.ok) {
-        await mkdir(CONFIGU_HOME, { recursive: true });
         await writeFile(MODULE_PATH, await res.text());
       }
     }

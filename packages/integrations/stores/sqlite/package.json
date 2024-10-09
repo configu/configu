@@ -28,7 +28,8 @@
   "dependencies": {
     "lodash-es": "^4.17.21",
     "reflect-metadata": "^0.1.13",
-    "typeorm": "^0.3.17"
+    "typeorm": "^0.3.17",
+    "@configu/sdk": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "20.12.12",

@@ -1,4 +1,3 @@
-import { ConfigStore } from '@configu/sdk';
 // import validator from 'validator';
 
 // export const isInt = () => validator.isInt('2');
@@ -7,7 +6,8 @@ export const Dotenv = (configs, opts) => {
   return configs.map(({ key, value }) => `${key}="${value}"`).join('\n');
 };
 
-export class AWSParameterStoreConfigStore extends ConfigStore {
+export class AWSParameterStoreConfigStore {
+  type = 'aws-parameter';
   get(queries) {
     throw new Error('Method not implemented.');
   }
@@ -17,7 +17,9 @@ export class AWSParameterStoreConfigStore extends ConfigStore {
   }
 }
 
-export class AzureKeyVaultConfigStore extends ConfigStore {
+export class AzureKeyVaultConfigStore {
+  type = 'azure-key-vault';
+
   get(queries) {
     throw new Error('Method not implemented.');
   }
@@ -27,7 +29,8 @@ export class AzureKeyVaultConfigStore extends ConfigStore {
   }
 }
 
-export class CsvFileConfigStore extends ConfigStore {
+export class CsvFileConfigStore {
+  type = 'csv-file';
   get(queries) {
     throw new Error('Method not implemented.');
   }
@@ -37,7 +40,8 @@ export class CsvFileConfigStore extends ConfigStore {
   }
 }
 
-export class MSSQLConfigStore extends ConfigStore {
+export class MSSQLConfigStore {
+  type = 'mssql';
   get(queries) {
     throw new Error('Method not implemented.');
   }
@@ -47,7 +51,8 @@ export class MSSQLConfigStore extends ConfigStore {
   }
 }
 
-export class SQLiteConfigStore extends ConfigStore {
+export class SQLiteConfigStore {
+  type = 'sqlite';
   get(queries) {
     throw new Error('Method not implemented.');
   }
