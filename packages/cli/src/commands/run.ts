@@ -1,59 +1,26 @@
-import path from 'path';
-import { spawnSync } from 'child_process';
-import { Flags } from '@oclif/core';
-import { BaseCommand } from '../base';
+import { Command, Option } from 'clipanion';
+import { BaseCommand } from './base';
 
-export default class Run extends BaseCommand<typeof Run> {
-  static description = `Run a script from the scripts section in the .<%= config.bin %> file`;
+export class RunCommand extends BaseCommand {
+  static override paths = [['run']];
 
-  static examples = [
-    {
-      description: `Run 'my-script' from the scripts section in the .<%= config.bin %> file`,
-      command: `<%= config.bin %> <%= command.id %> --script 'my-script'`,
-    },
-  ];
+  static override usage = Command.Usage({
+    // category: `My category`,
+    description: `Run a script from the scripts section in the .<%= config.bin %> file`,
+    // details: `
+    //   A longer description of the command with some \`markdown code\`.
 
-  static flags = {
-    script: Flags.string({
-      description: `The script property from the scripts section in the .<%= config.bin %> file`,
-      required: true,
-      char: 's',
-    }),
-    dir: Flags.string({
-      description: `Set the directory where the script is being executed. The default is the location of the .<%= config.bin %> file`,
-      aliases: ['cwd'],
-      char: 'd',
-    }),
-  };
+    //   Multiple paragraphs are allowed. Clipanion will take care of both reindenting the content and wrapping the paragraphs as needed.
+    // `,
+    // examples: [
+    //   [`A basic example`, `$0 my-command`],
+    //   [`A second example`, `$0 my-command --with-parameter`],
+    // ],
+  });
 
-  getCwd() {
-    if (this.flags.dir) {
-      return path.resolve(this.flags.dir);
-    }
+  // name = Option.String(''
 
-    if (this.config.cli.file) {
-      return path.dirname(this.config.cli.file);
-    }
-
-    throw new Error(`Unable to find .${this.config.bin} file`);
-  }
-
-  public async run(): Promise<void> {
-    const cwd = this.getCwd();
-
-    const script = this.config.cli.data.scripts?.[this.flags.script];
-    if (!script) {
-      throw new Error(`Script "${this.flags.script}" is not presented at ${cwd}`);
-    }
-
-    const command = spawnSync(script, {
-      cwd,
-      stdio: 'inherit',
-      env: process.env,
-      shell: true,
-    });
-    // command.status is null whenever the child process is terminated by a signal.
-    // In this case, we'll use 1 as the exit code (e.g. to represent SIGTERM/SIGKILL).
-    this.exit(command.status ?? 1);
+  async execute() {
+    throw new Error('Not implemented');
   }
 }

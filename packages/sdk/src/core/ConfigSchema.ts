@@ -31,9 +31,10 @@ export class ConfigSchema {
 export const ConfigSchemaKeysSchema: JsonSchemaType<ConfigSchemaKeys> = {
   type: 'object',
   required: [],
-  additionalProperties: false,
+  // additionalProperties: false,
   minProperties: 1,
-  patternProperties: {
-    [Naming.pattern]: CfguSchema,
-  },
+  // patternProperties: {
+  //   [Naming.pattern]: CfguSchema,
+  // },
+  additionalProperties: CfguSchema,
 };

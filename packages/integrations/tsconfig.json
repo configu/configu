@@ -1,9 +1,5 @@
 {
-  "extends": "../../tsconfig.base.json",
-  "compilerOptions": {
-    "rootDir": "src",
-    "outDir": "build",
-    "composite": true
-  },
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "../../tsconfig.json",
   "include": ["src", "src/**/*.json"]
 }

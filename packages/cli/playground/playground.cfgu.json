@@ -1,8 +1,0 @@
-{
-  "MY_ENV_1": {
-    "type": "String"
-  },
-  "MY_ENV_2": {
-    "type": "String"
-  }
-}

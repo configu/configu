@@ -8,7 +8,7 @@ import { ConfigStore, ConfigStoreConstructor, Expression, ExpressionFunction } f
 const CONFIGU_HOME = path.join(process.cwd(), '/.configu-cache');
 
 export class Registry {
-  private static store = new Map<string, ConfigStoreConstructor>();
+  static store = new Map<string, ConfigStoreConstructor>();
 
   static isConfigStore(value: unknown): value is ConfigStoreConstructor {
     return typeof value === 'function' && 'type' in value;
@@ -18,23 +18,7 @@ export class Registry {
     return typeof value === 'function';
   }
 
-  private static async ensureCacheDir() {
-    try {
-      await mkdir(CONFIGU_HOME, { recursive: true });
-    } catch {
-      // ignore
-    }
-  }
-
-  static async import(filePath: string) {
-    // const module = await import(filePath);
-    const module = await tsImport(filePath, import.meta.url);
-    return module;
-  }
-
-  static async register(filePath: string) {
-    const module = await Registry.import(filePath);
-
+  static async register(module: Record<string, unknown>) {
     Object.entries(module).forEach(([key, value]) => {
       // console.log('Registering:', key, value);
 
@@ -51,6 +35,26 @@ export class Registry {
     });
   }
 
+  static async import(filePath: string) {
+    // const module = await import(filePath);
+    const module = await tsImport(filePath, import.meta.url);
+    return module;
+  }
+
+  static async localRegister(filePath: string) {
+    const module = await Registry.import(filePath);
+    Registry.register(module);
+  }
+
+  private static async ensureCacheDir() {
+    try {
+      await mkdir(CONFIGU_HOME, { recursive: true });
+    } catch {
+      // ignore
+    }
+  }
+
+  // todo: handle initialization of $HOME/.configu/.cache
   static async remoteRegister(key: string) {
     if (Registry.store.has(key)) {
       return;
@@ -68,11 +72,13 @@ export class Registry {
         await writeFile(MODULE_PATH, await res.text());
       }
     }
-    await Registry.register(MODULE_PATH);
+
+    Registry.localRegister(MODULE_PATH);
   }
 
   static constructStore(type: string, configuration = {}): ConfigStore {
-    const StoreCtor = Registry.store.get(ConfigStore.deterministicType(type));
+    const normalizedType = ConfigStore.deterministicType(type);
+    const StoreCtor = Registry.store.get(normalizedType);
     if (!StoreCtor) {
       throw new Error(`unknown store type ${type}`);
     }

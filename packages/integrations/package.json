@@ -2,7 +2,7 @@
   "name": "@configu/integrations",
   "version": "0.0.0",
   "license": "Apache-2.0",
-  "description": "Configu Node.js SDK",
+  "description": "Configu Integrations Index",
   "author": "@configu/dev",
   "engines": {
     "node": ">=v16"

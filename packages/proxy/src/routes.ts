@@ -1,9 +1,17 @@
 import { FastifyPluginAsync } from 'fastify';
 import { FromSchema } from 'json-schema-to-ts';
-import { ConfigSchema, ConfigSet, EvalCommand, UpsertCommand, ExportCommand } from '@configu/node';
-import { CfguSchema, ConfigSchemaContents, EvalCommandReturn, EvaluatedConfigOrigin, NamingPattern } from '@configu/ts';
+import {
+  ConfigSchema,
+  ConfigSet,
+  EvalCommand,
+  EvalCommandOutput,
+  EvaluatedConfigOrigin,
+  UpsertCommand,
+  ExportCommand,
+} from '@configu/sdk';
 import _ from 'lodash';
-import { ConfiguInterfaceConfiguration } from './utils';
+import { ConfiguFile } from '@configu/common';
+import { config } from './config';
 
 const body = {
   type: 'array',
@@ -22,7 +30,7 @@ const body = {
       },
       schema: {
         type: 'object',
-        required: ['name', 'contents'],
+        required: ['keys'],
         additionalProperties: false,
         properties: {
           name: {
@@ -30,7 +38,7 @@ const body = {
             minLength: 1,
           },
           // openapi and fastify plugins don't support the full JSON schema spec so the actual deep validations for the schema contents will be done by the ConfigSchema constructor
-          contents: {
+          keys: {
             description: 'https://docs.configu.com/interfaces/.cfgu',
             type: 'object',
             minProperties: 1,
@@ -78,13 +86,19 @@ export const routes: FastifyPluginAsync = async (server, opts): Promise<void> =>
       },
     },
     async (request, reply) => {
-      const evalResToExport = await request.body.reduce<Promise<EvalCommandReturn>>(
-        async (previousResult, { store, set, schema: { name, contents }, configs }) => {
+      // TODO: get the ConfiguFile instance from a shared location
+      const configuFile = await ConfiguFile.load(config.CONFIGU_CONFIG_FILE);
+
+      const evalResToExport = await request.body.reduce<Promise<EvalCommandOutput>>(
+        async (previousResult, { store, set, schema: { keys }, configs }) => {
           const pipe = await previousResult;
 
-          const storeInstance = ConfiguInterfaceConfiguration.getStoreInstance(store);
+          const storeInstance = configuFile.getStoreInstance(store);
+          if (!storeInstance) {
+            throw new Error(`store "${store}" not found`);
+          }
           const setInstance = new ConfigSet(set);
-          const schemaInstance = new ConfigSchema(name, contents as unknown as ConfigSchemaContents);
+          const schemaInstance = new ConfigSchema(keys);
 
           const evalCmd = new EvalCommand({
             store: storeInstance,
@@ -95,11 +109,12 @@ export const routes: FastifyPluginAsync = async (server, opts): Promise<void> =>
           });
           const evalRes = await evalCmd.run();
 
-          const backupStoreInstance = ConfiguInterfaceConfiguration.getBackupStoreInstance(store);
+          // TODO: move backup logic to common
+          const backupStoreInstance = configuFile.getBackupStoreInstance(store);
           if (backupStoreInstance) {
-            const backupConfigs = _(evalRes)
-              .pickBy((entry) => entry.result.origin === EvaluatedConfigOrigin.StoreSet)
-              .mapValues((entry) => entry.result.value)
+            const backupConfigs = _(evalRes.result)
+              .pickBy((entry) => entry.origin === EvaluatedConfigOrigin.Store)
+              .mapValues((entry) => entry.value)
               .value();
             await new UpsertCommand({
               store: backupStoreInstance,
@@ -109,14 +124,16 @@ export const routes: FastifyPluginAsync = async (server, opts): Promise<void> =>
             }).run();
           }
 
-          return evalRes;
+          return evalRes.result;
         },
         Promise.resolve({}),
       );
 
       const exportCmd = new ExportCommand({ pipe: evalResToExport });
       const exportRes = await exportCmd.run();
-      return exportRes;
+      // TODO: consider if this is the right way to parse the result
+      const parsedExportRes = JSON.parse(exportRes.result);
+      return reply.send(parsedExportRes);
     },
   );
 };

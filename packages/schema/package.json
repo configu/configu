@@ -30,7 +30,7 @@
     "build:cfgu": "zx build.mjs"
   },
   "dependencies": {
-    "@configu/ts": "workspace:*"
+    "@configu/sdk": "workspace:*"
   },
   "devDependencies": {
     "ajv-cli": "^5.0.0"
