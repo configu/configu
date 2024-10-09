@@ -1,102 +1,4 @@
-// To parse this data:
-//
-//   import { Convert, CfguType, Cfgu, Config, ConfigSchemaContentsValue, ConfigSchema, ConfigSet, ConfigStoreQuery, ConfigStoreContentsElement, ConfigStore } from "./file";
-//
-//   const cfguType = Convert.toCfguType(json);
-//   const cfgu = Convert.toCfgu(json);
-//   const config = Convert.toConfig(json);
-//   const configSchemaContentsValue = Convert.toConfigSchemaContentsValue(json);
-//   const configSchemaContents = Convert.toConfigSchemaContents(json);
-//   const configSchema = Convert.toConfigSchema(json);
-//   const configSet = Convert.toConfigSet(json);
-//   const configStoreQuery = Convert.toConfigStoreQuery(json);
-//   const configStoreContentsElement = Convert.toConfigStoreContentsElement(json);
-//   const configStoreContents = Convert.toConfigStoreContents(json);
-//   const configStore = Convert.toConfigStore(json);
-//
-// These functions will throw an error if the JSON doesn't
-// match the expected interface, even if the JSON is valid.
-
-/**
- * A generic declaration of a `Config`, using properties like type, description and
- * constraints.
- * https://configu.com/docs/cfgu/
- */
-export interface Cfgu {
-  default?: string;
-  depends?: string[];
-  description?: string;
-  hidden?: boolean;
-  labels?: string[];
-  lazy?: boolean;
-  options?: string[];
-  pattern?: string;
-  required?: boolean;
-  schema?: { [key: string]: any };
-  template?: string;
-  type: CfguType;
-}
-
-export type CfguType =
-  | 'ARN'
-  | 'AWSRegion'
-  | 'AZRegion'
-  | 'AlibabaRegion'
-  | 'Base64'
-  | 'Boolean'
-  | 'Color'
-  // | 'ConnectionString'
-  | 'Country'
-  | 'CreditCard'
-  | 'Currency'
-  | 'DateTime'
-  | 'DockerImage'
-  | 'Domain'
-  | 'Email'
-  | 'GCPRegion'
-  | 'Hex'
-  | 'IBMRegion'
-  | 'IPv4'
-  | 'IPv6'
-  | 'JSONSchema'
-  | 'Language'
-  | 'LatLong'
-  | 'Locale'
-  | 'MACAddress'
-  | 'MD5'
-  | 'MIMEType'
-  | 'MobilePhone'
-  | 'MongoId'
-  | 'Number'
-  | 'OracleRegion'
-  | 'RegEx'
-  | 'SHA'
-  | 'SemVer'
-  | 'String'
-  | 'URL'
-  | 'UUID'
-  | 'Slug';
-
-/**
- * A generic representation of `application configuration` using three properties: `key`,
- * `value`, `set`.
- * https://configu.com/docs/terminology/#config
- */
-export interface Config {
-  key: string;
-  set: string;
-  value: string;
-}
-
-/**
- * A file containing binding records linking each unique `ConfigKey` to its corresponding
- * `Cfgu` declaration.
- * https://configu.com/docs/config-schema/
- */
-export interface ConfigSchema {
-  contents: { [key: string]: ConfigSchemaContents };
-  name: string;
-}
+import { Cfgu, CfguType, Config, ConfigSchema } from '@configu/sdk';
 
 export interface ConfigSchemaContents {
   default?: string;
@@ -483,7 +385,6 @@ const typeMap: any = {
     'Color',
     'ConnectionString',
     'Country',
-    'CreditCard',
     'Currency',
     'DateTime',
     'DockerImage',

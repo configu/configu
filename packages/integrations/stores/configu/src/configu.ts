@@ -1,7 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import axios, { type Axios } from 'axios';
 import validator from 'validator';
-import { Config, ConfigStore, ConfigStoreQuery } from '@configu/ts';
+import { Config, ConfigStore, ConfigStoreQuery } from '@configu/sdk';
 
 export type ConfiguConfigStoreConfiguration = {
   credentials: { org: string; token: string };

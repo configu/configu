@@ -1,3 +1,4 @@
+/* eslint-disable @cspell/spellchecker */
 import _ from 'lodash';
 import validator from 'validator';
 import { type IConfigSchema, type Cfgu, type CfguType, Convert } from './types';
@@ -63,6 +64,7 @@ const CFGU_VALUE_TYPE_VALIDATORS: Record<CfguType, (parameters: Cfgu & { value: 
   MACAddress: ({ value }) => validator.isMACAddress(value),
   MIMEType: ({ value }) => validator.isMimeType(value),
   MongoId: ({ value }) => validator.isMongoId(value),
+  CreditCard: ({ value }) => validator.isCreditCard(value),
   AWSRegion: ({ value }) =>
     new Set([
       'af-south-1',
@@ -340,6 +342,7 @@ const cfguStructureValidator = (cfgu: Cfgu) => {
     if (cfgu.template) {
       throw new ConfigError(reason, `options mustn't set together with template properties`);
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     cfgu.options.forEach((option, idx) => {
       // https://github.com/configu/configu/pull/255#discussion_r1332296098
       if (option === '') {

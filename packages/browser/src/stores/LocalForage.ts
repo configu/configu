@@ -16,7 +16,7 @@ export class LocalForageConfigStore extends KeyValueConfigStore {
     if (typeof data === 'string') {
       return data ?? '';
     }
-    return data === null ? '' : JSON.stringify(data) ?? '';
+    return data === null ? '' : (JSON.stringify(data) ?? '');
   }
 
   // * https://localforage.github.io/localForage/#data-api-setitem

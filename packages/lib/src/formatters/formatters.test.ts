@@ -24,7 +24,7 @@ describe('Formatters', () => {
   });
 
   test('should export to json format', () => {
-    const formatted = formatConfigs({ json, format: 'JSON', label: 'test' });
+    const formatted = formatConfigs({ json, format: 'JSON', label: 'test', pretty: true });
     equal(formatted, '{\n  "KEY0": "KEY0",\n  "KEY1": "KEY1"\n}');
   });
 

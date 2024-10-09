@@ -20,6 +20,7 @@ export type CfguType =
   | 'Locale'
   | 'LatLong'
   | 'Country'
+  | 'CreditCard'
   | 'Currency'
   | 'DockerImage'
   | 'MACAddress'
@@ -45,6 +46,7 @@ export interface Cfgu {
   description?: string;
   type: CfguType;
   pattern?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   schema?: { [key: string]: any };
   options?: string[];
   default?: string;

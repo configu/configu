@@ -26,7 +26,9 @@
     "build": "tsup"
   },
   "dependencies": {
-    "@aws-sdk/client-ssm": "^3.465.0"
+    "@aws-sdk/client-ssm": "^3.465.0",
+    "@configu/integrations": "workspace:*",
+    "@configu/sdk": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "20.12.12",

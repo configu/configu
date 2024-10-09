@@ -30,7 +30,6 @@ export default class Upsert extends BaseCommand<typeof Upsert> {
   static flags = {
     store: Flags.string({
       description: `\`ConfigStore\` (configs data-source) to upsert \`Configs\` to`,
-      required: true,
       aliases: ['st'],
     }),
     set: Flags.string({
