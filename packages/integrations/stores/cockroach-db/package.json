@@ -23,7 +23,8 @@
   },
   "dependencies": {
     "@configu/integrations": "workspace:*",
-    "@configu/sdk": "workspace:*"
+    "@configu/sdk": "workspace:*",
+    "typeorm": "^0.3.17"
   },
   "devDependencies": {
     "@types/node": "20.12.12",
