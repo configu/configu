@@ -51,9 +51,10 @@ Instantly start experimenting and developing.
 ### Local environment
 
 - Install git
-- Install Node.js and Npm according to the `.nvmrc` file.
+- Install Node.js and PNPM according to the `.nvmrc` file.
   - We recommend [installing node.js via a package manager](https://nodejs.org/en/download/package-manager/).
-- Install `monorepo` dependencies by running `npm i` in the root directory.
+  - We recommend [installing pnpm via Corepack](https://pnpm.io/installation#using-corepack).
+- Install `monorepo` dependencies by running `pnpm i` in the root directory.
   - Alternatively, bootstrap the whole `monorepo` by running `.devcontainer/bootstrap.sh` script in the root directory.
 
 ### Repository Structure
@@ -75,8 +76,8 @@ The [./docs](https://github.com/configu/configu/tree/main/docs) directory holds 
 ```mermaid
 flowchart RL
 %% Nodes
-    A("sdk")
-    B("common")
+  A("sdk")
+  B("common")
 	C("integrations")
 	D("cli")
 	E("proxy")
