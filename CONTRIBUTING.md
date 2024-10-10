@@ -53,7 +53,7 @@ Instantly start experimenting and developing.
 - Install git
 - Install Node.js and Npm according to the `.nvmrc` file.
   - We recommend [installing node.js via a package manager](https://nodejs.org/en/download/package-manager/).
-- Install `monorepo` dependencies by running `npm i` in the root directory.
+- Install `monorepo` dependencies by running `pnpm i` in the root directory.
   - Alternatively, bootstrap the whole `monorepo` by running `.devcontainer/bootstrap.sh` script in the root directory.
 
 ### Repository Structure
