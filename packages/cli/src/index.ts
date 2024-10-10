@@ -12,6 +12,7 @@ import packageJson from '../package.json' with { type: 'json' };
 // import { HelloCommand } from './commands/hello';
 import { EvalCommand } from './commands/eval';
 import { ExportCommand } from './commands/export';
+import { TestCommand } from './commands/test';
 
 export type CustomContext = BaseContext & { stdenv: typeof stdenv; stdio: typeof consola };
 
@@ -31,6 +32,7 @@ export async function run(argv: string[]) {
 
   cli.register(EvalCommand);
   cli.register(ExportCommand);
+  cli.register(TestCommand);
 
   const context = {
     ...Cli.defaultContext,
