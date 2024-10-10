@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<root>
+  <config>
+    <set>production</set>
+    <key>TEST</key>
+    <value>blabla</value>
+  </config>
+</root>
