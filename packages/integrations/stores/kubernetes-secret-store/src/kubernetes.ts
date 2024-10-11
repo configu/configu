@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from 'lodash-es';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { KubeConfig, CoreV1Api, PatchUtils, type V1Secret } from '@kubernetes/client-node';
 import { KeyValueConfigStore } from '@configu/integrations/src/utils/KeyValue';
