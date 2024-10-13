@@ -127,12 +127,18 @@ export class ConfiguFile {
   }
 
   getDefaultStoreName() {
+    if (!this.contents.stores) {
+      return '';
+    }
+    if (Object.keys(this.contents.stores).length === 1) {
+      return Object.keys(this.contents.stores)[0] as string;
+    }
     const defaultStoreName = _.findKey(this.contents.stores, (store) => store.default);
     return defaultStoreName ?? '';
   }
 
   getStoreInstance(name?: string) {
-    const storeConfig = this.contents.stores?.[name || this.getDefaultStoreName()];
+    const storeConfig = this.contents.stores?.[name ?? this.getDefaultStoreName()];
     if (!storeConfig) {
       return undefined;
     }
