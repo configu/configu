@@ -3,6 +3,7 @@ import path from 'pathe';
 import _ from 'lodash';
 import parseJson from 'parse-json';
 import yaml from 'js-yaml';
+import { ConfigSchema } from '@configu/sdk';
 
 export const { NODE_ENV } = process.env;
 export const isDev = NODE_ENV === 'development';
@@ -63,4 +64,9 @@ export const parseYAML = (filePath: string, fileContent: string): any => {
     error.message = `YAML Error in ${filePath}:\n${error.message}`;
     throw error;
   }
+};
+
+export const mergeSchemas = (...schemas: ConfigSchema[]): ConfigSchema => {
+  // Later schemas take precedence in case of key duplication.
+  return new ConfigSchema(_.merge({}, ...schemas.map((schema) => schema.keys)));
 };

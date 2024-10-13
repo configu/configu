@@ -4,7 +4,7 @@ import { join, dirname, resolve } from 'pathe';
 import { findUp } from 'find-up';
 import { ConfigSchema, ConfigStore, Expression, JsonSchema, JsonSchemaType } from '@configu/sdk';
 import FastGlob from 'fast-glob';
-import { readFile, parseJSON, parseYAML } from './utils';
+import { readFile, parseJSON, parseYAML, mergeSchemas } from './utils';
 import { Registry } from './Registry';
 import { CfguFile } from './CfguFile';
 
@@ -156,7 +156,7 @@ export class ConfiguFile {
       }),
     );
 
-    return ConfigSchema.merge(...configSchemas);
+    return mergeSchemas(...configSchemas);
   }
 
   runScript(name: string, cwd?: string): void {

@@ -26,10 +26,6 @@ export class ConfigSchema {
         // }
       });
   }
-
-  static merge(...schemas: ConfigSchema[]): ConfigSchema {
-    return new ConfigSchema(_.merge({}, ...schemas.map((schema) => schema.keys)));
-  }
 }
 
 export const ConfigSchemaKeysSchema: JsonSchemaType<ConfigSchemaKeys> = {
