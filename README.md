@@ -24,7 +24,7 @@
   <strong>Open-source ConfigOps infrastructure</strong> that empowers engineering teams to seamlessly manage and collaborate on <strong>software configuration data</strong>—such as environment variables, secrets, and feature flags—<strong>across any system or environment.</strong> ⚙️✨
 </p>
 <p align="center">
-  <a target="_blank" href="https://docs.configu.com/guides/hello-world"><strong>Get Started 👋</strong></a> ・ <a target="_blank" href="https://docs.configu.com/guides/hello-world"><strong>Explore Docs 📚</strong></a> ・ <a target="_blank" href="https://discord.com/invite/cjSBxnB9z8"><strong>Join Chat 💬</strong></a>
+  <a target="_blank" href="https://docs.configu.com/guides/hello-world"><strong>Get Started 👋</strong></a> ・ <a target="_blank" href="https://docs.configu.com/"><strong>Explore Docs 📚</strong></a> ・ <a target="_blank" href="https://discord.com/invite/cjSBxnB9z8"><strong>Join Chat 💬</strong></a>
 </p>
 
 ## ⭐️ Configu?
