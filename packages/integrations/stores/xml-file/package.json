@@ -1,0 +1,36 @@
+{
+  "name": "@configu-integrations/xml-file",
+  "version": "0.0.0",
+  "license": "Apache-2.0",
+  "author": "@configu/dev",
+  "files": [],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/configu/configu",
+    "directory": "packages/integrations"
+  },
+  "bugs": {
+    "url": "https://github.com/configu/configu/issues",
+    "email": "dev@configu.com"
+  },
+  "homepage": "https://configu.com",
+  "keywords": [
+    "cfgu",
+    "configu"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "dependencies": {
+    "@configu/integrations": "workspace:*",
+    "@configu/sdk": "workspace:*",
+    "csv": "^6.3.8",
+    "xml2js": "0.6.2"
+  },
+  "devDependencies": {
+    "@types/node": "20.12.12",
+    "tsup": "8.2.4",
+    "typescript": "^5.4.5",
+    "@types/xml2js": "^0.4.14"
+  }
+}
