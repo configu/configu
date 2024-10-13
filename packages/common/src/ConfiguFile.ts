@@ -3,6 +3,7 @@ import { spawnSync } from 'node:child_process';
 import { join, dirname, resolve } from 'pathe';
 import { findUp } from 'find-up';
 import { ConfigSchema, ConfigStore, Expression, JsonSchema, JsonSchemaType } from '@configu/sdk';
+import FastGlob from 'fast-glob';
 import { readFile, parseJSON, parseYAML } from './utils';
 import { Registry } from './Registry';
 import { CfguFile } from './CfguFile';
@@ -142,8 +143,20 @@ export class ConfiguFile {
     if (!schemaPath) {
       return undefined;
     }
-    const cfguFile = await CfguFile.load(schemaPath);
-    return cfguFile.constructSchema();
+    let cfguFiles = FastGlob.sync(schemaPath);
+    if (cfguFiles.length === 0) {
+      return undefined;
+    }
+
+    cfguFiles = cfguFiles.sort((a, b) => a.split('/').length - b.split('/').length);
+    const configSchemas = await Promise.all(
+      cfguFiles.map(async (cfguFile) => {
+        const cfgu = await CfguFile.load(cfguFile);
+        return cfgu.constructSchema();
+      }),
+    );
+
+    return ConfigSchema.merge(...configSchemas);
   }
 
   runScript(name: string, cwd?: string): void {

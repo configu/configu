@@ -147,6 +147,9 @@ importers:
       '@configu/sdk':
         specifier: workspace:*
         version: link:../sdk
+      fast-glob:
+        specifier: ^3.3.2
+        version: 3.3.2
       find-up:
         specifier: ^7.0.0
         version: 7.0.0
