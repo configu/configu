@@ -60,7 +60,8 @@
         "AlibabaRegion",
         "Language",
         "DateTime",
-        "ARN"
+        "ARN",
+        "DataSize"
       ]
     },
     "Cfgu": {
@@ -143,6 +144,20 @@
           "else": {
             "properties": {
               "schema": false
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": { "type": { "const": "DataSize" } }
+          },
+          "then": {
+            "properties": {
+              "pattern": {
+                "type": "string",
+                "default": "^\\d+(\\.\\d+)?(B|KB|MB|GB|TB|PB)$",
+                "description": "Regex pattern for data size validation"
+              }
             }
           }
         },
