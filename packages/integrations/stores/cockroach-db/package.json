@@ -1,9 +1,9 @@
 {
-  "name": "@configu-integrations/configu",
+  "name": "@configu-integrations/cockroachdb",
   "version": "0.0.0",
   "license": "Apache-2.0",
   "author": "@configu/dev",
-  "main": "src/configu.ts",
+  "files": [],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/configu/configu",
@@ -22,12 +22,11 @@
     "build": "tsup"
   },
   "dependencies": {
-    "validator": "^13.11.0",
+    "@configu/integrations": "workspace:*",
     "@configu/sdk": "workspace:*",
-    "axios": "^1.7.4"
+    "typeorm": "^0.3.17"
   },
   "devDependencies": {
-    "@types/validator": "^13.11.9",
     "@types/node": "20.12.12",
     "tsup": "8.2.4",
     "typescript": "^5.4.5"

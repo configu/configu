@@ -11,6 +11,7 @@ export default defineConfig([
     // splitting: true,
     treeshake: true,
     noExternal: [/(.*)/],
+    splitting: false,
     // https://github.com/egoist/tsup/issues/939
     // outExtension: () => {
     //   return { js: '.js', dts: '.d.ts' };
