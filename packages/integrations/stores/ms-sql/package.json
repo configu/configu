@@ -1,5 +1,5 @@
 {
-  "name": "@configu-integrations/json-file",
+  "name": "@configu-integrations/ms-sql",
   "version": "0.0.0",
   "license": "Apache-2.0",
   "author": "@configu/dev",
@@ -23,7 +23,8 @@
   },
   "dependencies": {
     "@configu/integrations": "workspace:*",
-    "@configu/sdk": "workspace:*"
+    "@configu/sdk": "workspace:*",
+    "typeorm": "^0.3.17"
   },
   "devDependencies": {
     "@types/node": "20.12.12",
