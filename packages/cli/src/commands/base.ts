@@ -4,18 +4,21 @@ import { CfguFile, ConfiguFile, parseJSON, Registry } from '@configu/common';
 import { EvalCommandOutput } from '@configu/sdk';
 import path from 'path';
 import { type CustomContext } from '../index';
+import { getConfigDir } from '../helpers';
 
 export type Context = CustomContext & {
   configu: ConfiguFile;
   credentials: {
     file: string; // $HOME/.config/configu/config.json
     // TODO: consider getting this from ConfiguConfigStoreConfiguration
-    data: {
-      credentials: { org: string; token: string };
-      endpoint?: string;
-      source?: string;
-      tag?: string;
-    };
+    data:
+      | {
+          credentials: { org: string; token: string };
+          endpoint?: string;
+          source?: string;
+          tag?: string;
+        }
+      | Record<string, never>;
   };
   UNICODE_NULL: '\u0000';
   stdin: NodeJS.ReadStream;
@@ -27,8 +30,10 @@ export abstract class BaseCommand extends Command<Context> {
 
     const configu = await ConfiguFile.search();
     this.context.configu = configu;
-    // TODO: replicate this.configDir from oclif
-    // this.context.credentials.file = path.join(this.configDir, 'config.json');
+    this.context.credentials = {
+      file: path.join(getConfigDir(), 'config.json'),
+      data: {},
+    };
   }
 
   getBackupStoreInstanceByFlag(flag?: string) {
