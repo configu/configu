@@ -22,6 +22,8 @@
     "build": "tsup"
   },
   "dependencies": {
+    "@azure/identity": "4.4.1",
+    "@azure/keyvault-secrets": "4.8.0",
     "@configu/integrations": "workspace:*",
     "@configu/sdk": "workspace:*"
   },

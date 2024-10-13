@@ -45,6 +45,13 @@
   },
   "dependencies": {
     "@configu/sdk": "workspace:*",
+    "@configu-integrations/validator": "workspace:*",
+    "@configu-integrations/compact-json": "workspace:*",
+    "@configu-integrations/json": "workspace:*",
+    "@configu-integrations/dotenv": "workspace:*",
+    "@configu-integrations/toml": "workspace:*",
+    "@configu-integrations/configu": "workspace:*",
+    "@configu-integrations/json-file": "workspace:*",
     "find-up": "^7.0.0",
     "js-yaml": "^4.1.0",
     "lodash": "^4.17.21",
