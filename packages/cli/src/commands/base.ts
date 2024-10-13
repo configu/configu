@@ -12,9 +12,6 @@ export abstract class BaseCommand extends Command<Context> {
 
     const configu = await ConfiguFile.search();
     this.context.configu = configu;
-
-    // register builtins here
-    Registry.register({ NoopConfigStore, InMemoryConfigStore });
   }
 
   getBackupStoreInstanceByFlag(flag?: string) {
