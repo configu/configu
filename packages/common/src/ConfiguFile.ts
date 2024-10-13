@@ -5,13 +5,16 @@ import { findUp } from 'find-up';
 import { ConfigSchema, ConfigStore, Expression, JsonSchema, JsonSchemaType } from '@configu/sdk';
 import FastGlob from 'fast-glob';
 import _ from 'lodash';
-import { readFile, parseJSON, parseYAML, mergeSchemas } from './utils';
+import { readFile, parseJSON, parseYAML } from './utils';
 import { Registry } from './Registry';
 import { CfguFile } from './CfguFile';
 
 export interface ConfiguFileContents {
   $schema?: string;
-  stores?: Record<string, { type: string; configuration?: Record<string, unknown>; backup?: boolean }>;
+  stores?: Record<
+    string,
+    { type: string; configuration?: Record<string, unknown>; backup?: boolean; default?: boolean }
+  >;
   backup?: string;
   schemas?: Record<string, string>;
   scripts?: Record<string, string>;
@@ -67,6 +70,7 @@ export const ConfiguFileSchema: JsonSchemaType<ConfiguFileContents> = {
           type: { type: 'string' },
           configuration: { type: 'object', nullable: true },
           backup: { type: 'boolean', nullable: true },
+          default: { type: 'boolean', nullable: true },
         },
       },
       nullable: true,
@@ -122,16 +126,21 @@ export class ConfiguFile {
     return ConfiguFile.load(path);
   }
 
-  getStoreInstance(name: string) {
-    const storeConfig = this.contents.stores?.[name];
+  getDefaultStoreName() {
+    const defaultStoreName = _.findKey(this.contents.stores, (store) => store.default);
+    return defaultStoreName ?? '';
+  }
+
+  getStoreInstance(name?: string) {
+    const storeConfig = this.contents.stores?.[name || this.getDefaultStoreName()];
     if (!storeConfig) {
       return undefined;
     }
     return Registry.constructStore(storeConfig.type, storeConfig.configuration);
   }
 
-  getBackupStoreInstance(name: string) {
-    const shouldBackup = this.contents.stores?.[name]?.backup;
+  getBackupStoreInstance(name?: string) {
+    const shouldBackup = this.contents.stores?.[name || this.getDefaultStoreName()]?.backup;
     if (!shouldBackup) {
       return undefined;
     }
