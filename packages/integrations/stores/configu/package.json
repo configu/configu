@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "license": "Apache-2.0",
   "author": "@configu/dev",
-  "files": [],
+  "main": "src/configu.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/configu/configu",
@@ -23,10 +23,10 @@
   },
   "dependencies": {
     "validator": "^13.11.0",
-    "@configu/sdk": "workspace:*"
+    "@configu/sdk": "workspace:*",
+    "axios": "^1.7.4"
   },
   "devDependencies": {
-    "axios": "^1.7.4",
     "@types/validator": "^13.11.9",
     "@types/node": "20.12.12",
     "tsup": "8.2.4",
