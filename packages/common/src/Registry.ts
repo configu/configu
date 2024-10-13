@@ -7,6 +7,8 @@ import { ConfigStore, ConfigStoreConstructor, Expression, ExpressionFunction } f
 
 const CONFIGU_HOME = path.join(process.cwd(), '/.configu-cache');
 
+const expressionOptionalSuffix = 'Expression';
+
 export class Registry {
   static store = new Map<string, ConfigStoreConstructor>();
 
@@ -30,7 +32,11 @@ export class Registry {
         Registry.store.set(value.type, value);
       } else if (Registry.isExpression(value)) {
         // console.log('Registering Expression:', key);
-        Expression.register({ key, fn: value });
+        if (key.endsWith(expressionOptionalSuffix)) {
+          Expression.register({ key: key.slice(0, -expressionOptionalSuffix.length), fn: value });
+        } else {
+          Expression.register({ key, fn: value });
+        }
       }
     });
   }
