@@ -2,9 +2,24 @@ import { Command, Option } from 'clipanion';
 import _ from 'lodash';
 import { CfguFile, ConfiguFile, parseJSON, Registry } from '@configu/common';
 import { EvalCommandOutput } from '@configu/sdk';
+import path from 'path';
 import { type CustomContext } from '../index';
 
-export type Context = CustomContext & { configu: ConfiguFile; UNICODE_NULL: '\u0000'; stdin: NodeJS.ReadStream };
+export type Context = CustomContext & {
+  configu: ConfiguFile;
+  credentials: {
+    file: string; // $HOME/.config/configu/config.json
+    // TODO: consider getting this from ConfiguConfigStoreConfiguration
+    data: {
+      credentials: { org: string; token: string };
+      endpoint?: string;
+      source?: string;
+      tag?: string;
+    };
+  };
+  UNICODE_NULL: '\u0000';
+  stdin: NodeJS.ReadStream;
+};
 
 export abstract class BaseCommand extends Command<Context> {
   public async init(): Promise<void> {
@@ -12,6 +27,8 @@ export abstract class BaseCommand extends Command<Context> {
 
     const configu = await ConfiguFile.search();
     this.context.configu = configu;
+    // TODO: replicate this.configDir from oclif
+    // this.context.credentials.file = path.join(this.configDir, 'config.json');
   }
 
   getBackupStoreInstanceByFlag(flag?: string) {
