@@ -1,10 +1,8 @@
 /* cspell:disable */
 import { KeyValueConfigStore } from '@configu/integrations/src/utils/KeyValue';
 import type Keyv from 'keyv';
-
 // TODO: rework KeyvConfigStoreConfiguration for CLI support and then add KeyvConfigStore to `@configu/lib` & `@configu/cli`. Adapters are missing (https://www.npmjs.com/package/keyv#official-storage-adapters). Consider this strategy for reworking KeyvConfigStoreConfiguration: https://github.com/configu/configu/pull/167#discussion_r1268823038.
 export type KeyvConfigStoreConfiguration = { keyvInstance: Keyv };
-
 /**
  * KeyvConfigStore is a KeyValueConfigStore implementation that uses Keyv as a backend.
  * @description
@@ -20,21 +18,17 @@ export type KeyvConfigStoreConfiguration = { keyvInstance: Keyv };
  */
 export class KeyvConfigStore extends KeyValueConfigStore {
   client: Keyv;
-
   constructor({ keyvInstance }: KeyvConfigStoreConfiguration) {
     super('keyv');
     this.client = keyvInstance;
   }
-
   protected async getByKey(key: string): Promise<string> {
     const value = await this.client.get(key);
     return value ?? '';
   }
-
   protected async upsert(key: string, value: string): Promise<void> {
     await this.client.set(key, value);
   }
-
   protected async delete(key: string): Promise<void> {
     await this.client.delete(key);
   }
