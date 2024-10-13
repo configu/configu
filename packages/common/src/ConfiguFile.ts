@@ -4,6 +4,7 @@ import { join, dirname, resolve } from 'pathe';
 import { findUp } from 'find-up';
 import { ConfigSchema, ConfigStore, Expression, JsonSchema, JsonSchemaType } from '@configu/sdk';
 import FastGlob from 'fast-glob';
+import _ from 'lodash';
 import { readFile, parseJSON, parseYAML, mergeSchemas } from './utils';
 import { Registry } from './Registry';
 import { CfguFile } from './CfguFile';
@@ -156,7 +157,7 @@ export class ConfiguFile {
       }),
     );
 
-    return mergeSchemas(...configSchemas);
+    return this.mergeSchemas(...configSchemas);
   }
 
   runScript(name: string, cwd?: string): void {
@@ -173,5 +174,10 @@ export class ConfiguFile {
       env: process.env,
       shell: true,
     });
+  }
+
+  private mergeSchemas(...schemas: ConfigSchema[]): ConfigSchema {
+    // Later schemas take precedence in case of key duplication.
+    return new ConfigSchema(_.merge({}, ...schemas.map((schema) => schema.keys)));
   }
 }

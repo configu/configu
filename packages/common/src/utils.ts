@@ -65,8 +65,3 @@ export const parseYAML = (filePath: string, fileContent: string): any => {
     throw error;
   }
 };
-
-export const mergeSchemas = (...schemas: ConfigSchema[]): ConfigSchema => {
-  // Later schemas take precedence in case of key duplication.
-  return new ConfigSchema(_.merge({}, ...schemas.map((schema) => schema.keys)));
-};
