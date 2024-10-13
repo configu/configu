@@ -26,17 +26,17 @@ export class SplitConfigStore extends OpenFeatureConfigStore {
     this.splitClient = splitClient;
   }
 
-  getTreatment = (featureFlag: string, attributes?: Attributes): Treatment => {
+  getTreatment(featureFlag: string, attributes?: Attributes): Treatment {
     if (attributes) {
       return this.splitClient.getTreatment(featureFlag, attributes);
     }
     return this.splitClient.getTreatment(featureFlag);
-  };
+  }
 
-  getTreatments = (featureFlags: string[], attributes?: Attributes): Treatments => {
+  getTreatments(featureFlags: string[], attributes?: Attributes): Treatments {
     if (attributes) {
       return this.splitClient.getTreatments(featureFlags, attributes);
     }
     return this.splitClient.getTreatments(featureFlags);
-  };
+  }
 }
