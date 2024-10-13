@@ -1,7 +1,7 @@
 import { Command, Option } from 'clipanion';
 import _ from 'lodash';
 import { CfguFile, ConfiguFile, parseJSON, Registry } from '@configu/common';
-import { EvalCommandOutput, NoopConfigStore, InMemoryConfigStore } from '@configu/sdk';
+import { EvalCommandOutput } from '@configu/sdk';
 import { type CustomContext } from '../index';
 
 export type Context = CustomContext & { configu: ConfiguFile; UNICODE_NULL: '\u0000'; stdin: NodeJS.ReadStream };
