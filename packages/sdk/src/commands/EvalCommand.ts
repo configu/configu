@@ -7,6 +7,7 @@ import { ConfigSet } from '../core/ConfigSet';
 import { ConfigSchema } from '../core/ConfigSchema';
 import { Expression } from '../utils';
 
+// Enum for config evaluation origins
 export enum EvaluatedConfigOrigin {
   Const = 'const',
   Override = 'override',
@@ -15,6 +16,7 @@ export enum EvaluatedConfigOrigin {
   Empty = 'empty',
 }
 
+// Types for the evaluated config and command input/output
 export type EvaluatedConfig = {
   key: string;
   cfgu: Cfgu;
@@ -22,15 +24,13 @@ export type EvaluatedConfig = {
   value: string;
 };
 
-export type EvalCommandOutput = {
-  [key: string]: EvaluatedConfig;
-};
+export type EvalCommandOutput = Record<string, EvaluatedConfig>;
 
 export type EvalCommandInput = {
   store: ConfigStore;
   set: ConfigSet;
   schema: ConfigSchema;
-  configs?: { [key: string]: string };
+  configs?: Record<string, string>;
   pipe?: EvalCommandOutput;
   validate?: boolean;
 };
@@ -42,181 +42,135 @@ export type EvalCommandExpressionContext = {
     schema: Jsonify<ConfigSchema>;
   };
   $: EvaluatedConfig;
-  // _: EvaluatedConfig;
 };
 
+// Main EvalCommand class extending ConfigCommand
 export class EvalCommand extends ConfigCommand<EvalCommandInput, EvalCommandOutput> {
-  async execute() {
+  
+  // Execute the command
+  async execute(): Promise<EvalCommandOutput> {
     const { store } = this.input;
-
     await store.init();
 
-    let result: EvalCommandOutput = { ...this.evalEmpty() };
-    result = { ...result, ...this.evalOverride(result) };
-    result = { ...result, ...(await this.evalStore(result)) };
-    result = { ...result, ...this.evalDefault(result) };
-    result = { ...result, ...this.evalPipe(result) };
-    result = { ...result, ...this.evalConst(result) };
+    let result = this.initializeResult();
+    result = this.applyOverrides(result);
+    result = await this.applyStoreValues(result);
+    result = this.applyDefaultValues(result);
+    result = this.applyPipeValues(result);
+    result = this.applyConstValues(result);
 
     this.validateResult(result);
 
     return result;
   }
 
-  private evalEmpty(): EvalCommandOutput {
+  // Initialize the result with empty or constant values
+  private initializeResult(): EvalCommandOutput {
     const { schema } = this.input;
 
-    return _.mapValues<ConfigSchema['keys'], EvaluatedConfig>(schema.keys, (cfgu, key) => {
-      let origin = EvaluatedConfigOrigin.Empty;
-      if (cfgu.const) {
-        origin = EvaluatedConfigOrigin.Const;
-      }
-
-      return {
-        key,
-        cfgu,
-        origin,
-        value: '',
-      };
+    return _.mapValues(schema.keys, (cfgu, key) => {
+      const origin = cfgu.const ? EvaluatedConfigOrigin.Const : EvaluatedConfigOrigin.Empty;
+      return { key, cfgu, origin, value: '' };
     });
   }
 
-  private evalOverride(result: EvalCommandOutput): EvalCommandOutput {
+  // Apply overrides from the input configs
+  private applyOverrides(result: EvalCommandOutput): EvalCommandOutput {
     const { configs = {} } = this.input;
 
     return _.mapValues(result, (current) => {
-      if (current.origin !== EvaluatedConfigOrigin.Empty) {
-        return current;
-      }
+      if (current.origin !== EvaluatedConfigOrigin.Empty) return current;
 
-      const isOverridden = Object.prototype.hasOwnProperty.call(configs, current.key);
-      const isLazy = Boolean(current.cfgu.lazy);
-
-      if (!isOverridden && !isLazy) {
-        return current;
-      }
-
-      const overrideValue = configs?.[current.key] ?? '';
-      return {
-        ...current,
-        origin: EvaluatedConfigOrigin.Override,
-        value: overrideValue,
-      };
-    });
-  }
-
-  private async evalStore(result: EvalCommandOutput): Promise<EvalCommandOutput> {
-    const { store, set } = this.input;
-
-    const storeQueries = _.chain(result)
-      .values()
-      .filter((current) => current.origin === EvaluatedConfigOrigin.Empty)
-      .flatMap((current) => set.hierarchy.map((node) => ({ set: node, key: current.key })))
-      .value() satisfies ConfigQuery[];
-    const storeConfigsArray = await store.get(storeQueries);
-    const storeConfigsDict = _.chain(storeConfigsArray)
-      .orderBy([(config) => set.hierarchy.indexOf(config.set)], ['asc']) // "asc" because _.keyBy will keep the last element for each key
-      .keyBy((config) => config.key) // https://lodash.com/docs#keyBy
-      .value();
-
-    return _.mapValues(result, (current) => {
-      if (current.origin !== EvaluatedConfigOrigin.Empty) {
-        return current;
-      }
-
-      const storeConfig = storeConfigsDict?.[current.key];
-
-      if (!storeConfig || !storeConfig.value) {
-        return current;
-      }
-
-      return _.merge(current, {
-        // todo: add the evaluated set to the context somehow
-        // context: { set: { ...new ConfigSet(storeConfig.set) } },
-        origin: EvaluatedConfigOrigin.Store,
-        value: storeConfig.value,
-      });
-    });
-  }
-
-  private evalDefault(result: EvalCommandOutput): EvalCommandOutput {
-    return _.mapValues(result, (current) => {
-      if (current.origin !== EvaluatedConfigOrigin.Empty) {
-        return current;
-      }
-
-      if (current.cfgu.default) {
-        return {
-          ...current,
-          value: current.cfgu.default,
-          origin: EvaluatedConfigOrigin.Default,
-        };
+      const isOverridden = configs.hasOwnProperty(current.key);
+      if (isOverridden || Boolean(current.cfgu.lazy)) {
+        return { ...current, origin: EvaluatedConfigOrigin.Override, value: configs[current.key] || '' };
       }
 
       return current;
     });
   }
 
-  private evalPipe(result: EvalCommandOutput): EvalCommandOutput {
+  // Apply values from the store
+  private async applyStoreValues(result: EvalCommandOutput): Promise<EvalCommandOutput> {
+    const { store, set } = this.input;
+
+    const queries = _.chain(result)
+      .filter((current) => current.origin === EvaluatedConfigOrigin.Empty)
+      .flatMap((current) => set.hierarchy.map((node) => ({ set: node, key: current.key })))
+      .value() satisfies ConfigQuery[];
+
+    const storeConfigs = await store.get(queries);
+    const storeConfigsDict = _.keyBy(storeConfigs, 'key');
+
+    return _.mapValues(result, (current) => {
+      if (current.origin !== EvaluatedConfigOrigin.Empty) return current;
+
+      const storeConfig = storeConfigsDict[current.key];
+      if (storeConfig && storeConfig.value) {
+        return { ...current, origin: EvaluatedConfigOrigin.Store, value: storeConfig.value };
+      }
+
+      return current;
+    });
+  }
+
+  // Apply default values
+  private applyDefaultValues(result: EvalCommandOutput): EvalCommandOutput {
+    return _.mapValues(result, (current) => {
+      if (current.origin !== EvaluatedConfigOrigin.Empty) return current;
+
+      if (current.cfgu.default) {
+        return { ...current, origin: EvaluatedConfigOrigin.Default, value: current.cfgu.default };
+      }
+
+      return current;
+    });
+  }
+
+  // Apply piped values if provided
+  private applyPipeValues(result: EvalCommandOutput): EvalCommandOutput {
     const { pipe } = this.input;
 
-    if (!pipe) {
-      return result;
-    }
+    if (!pipe) return result;
 
-    const mergedResults = _.assignWith(result, pipe, (current, piped) => {
-      if (piped.origin === EvaluatedConfigOrigin.Empty) {
-        return current;
-      }
-
-      if (current.origin === EvaluatedConfigOrigin.Empty) {
-        return piped;
-      }
+    return _.assignWith(result, pipe, (current, piped) => {
+      if (piped.origin === EvaluatedConfigOrigin.Empty) return current;
+      if (current.origin === EvaluatedConfigOrigin.Empty) return piped;
 
       const isCurrentDefault = current.origin === EvaluatedConfigOrigin.Default;
       const isPipedDefault = piped.origin === EvaluatedConfigOrigin.Default;
 
-      if (isCurrentDefault && !isPipedDefault) {
-        return piped;
-      }
+      if (isCurrentDefault && !isPipedDefault) return piped;
 
       return current;
     });
-
-    return mergedResults;
   }
 
-  private evalConst(result: EvalCommandOutput): EvalCommandOutput {
+  // Apply constant values from expressions
+  private applyConstValues(result: EvalCommandOutput): EvalCommandOutput {
     const { store, set, schema } = this.input;
+    const constExpressionsDict = _.mapValues(
+      _.pickBy(result, (current) => current.origin === EvaluatedConfigOrigin.Const),
+      (current) => current.cfgu.const as string
+    );
 
-    const resultWithConstExpressions = { ...result };
-
-    const constExpressionsDict = _.chain(result)
-      .pickBy((current) => current.origin === EvaluatedConfigOrigin.Const)
-      .mapValues((current) => current.cfgu.const as string)
-      .value();
-
-    Expression.sort(constExpressionsDict).forEach((key) => {
-      const expression = constExpressionsDict[key] as string;
-      const preEvaluatedConfig = resultWithConstExpressions[key] as EvaluatedConfig;
+    const sortedKeys = Expression.sort(constExpressionsDict);
+    sortedKeys.forEach((key) => {
+      const expression = constExpressionsDict[key];
       const context: EvalCommandExpressionContext = {
-        context: {
-          store: { ...store },
-          set: { ...set },
-          schema: { ...schema },
-        },
-        $: preEvaluatedConfig,
-        // _: preEvaluatedConfig,
-        ..._.mapValues(resultWithConstExpressions, (current) => current.value),
+        context: { store: { ...store }, set: { ...set }, schema: { ...schema } },
+        $: result[key],
+        ..._.mapValues(result, (current) => current.value),
       };
 
-      const { value, error } = Expression.parse(expression).tryEvaluate(context);
-      (resultWithConstExpressions[key] as EvaluatedConfig).value = value ?? '';
+      const { value } = Expression.parse(expression).tryEvaluate(context);
+      result[key].value = value || '';
     });
-    return resultWithConstExpressions;
+
+    return result;
   }
 
-  private validateResult(result: EvalCommandOutput): void {
+private validateResult(result: EvalCommandOutput): void {
     const { validate = true } = this.input;
 
     if (!validate) {
