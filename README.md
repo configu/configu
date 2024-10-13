@@ -113,6 +113,13 @@ This repository is a monorepo that contains the Configu user interface packages.
 - [Webinar - Configuration-as-Code](https://www.youtube.com/live/Z_Vz8v6e-U4?si=bDao_gIo1xiLDeQS&t=107)
 - [Post - Configuration-as-Code](https://dev.to/rannn505/configuration-as-code-automating-application-configuration-45k6)
 
+## 🙌 Thanks to all of our contributors
+
+A huge thanks for spending your time and energy helping Configu grow! 🌱 Your contributions are incredibly valued.  
+
+<img src="https://contributors-img.web.app/image?repo=configu/configu" alt="Contributors"/>
+
+
 ## 🪪 License
 
 Configu is [Apache-2.0 licensed](https://github.com/configu/configu/blob/main/LICENSE). Copyright (c) 2022-present, [Configu](https://configu.com). Proudly created by [contributors](https://github.com/configu/configu/graphs/contributors) around the globe 🌍.
