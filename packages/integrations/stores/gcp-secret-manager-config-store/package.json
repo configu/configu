@@ -23,7 +23,8 @@
   },
   "dependencies": {
     "@configu/integrations": "workspace:*",
-    "@configu/sdk": "workspace:*"
+    "@configu/sdk": "workspace:*",
+    "@google-cloud/secret-manager": "^5.4.0"
   },
   "devDependencies": {
     "@types/node": "20.12.12",
