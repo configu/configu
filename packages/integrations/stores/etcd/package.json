@@ -22,11 +22,11 @@
     "build": "tsup"
   },
   "dependencies": {
+    "etcd3": "1.1.2",
     "@configu/sdk": "workspace:*",
     "@configu/integrations": "workspace:*"
   },
   "devDependencies": {
-    "etcd3": "1.1.2",
     "@types/node": "20.12.12",
     "tsup": "8.2.4",
     "typescript": "^5.4.5"
