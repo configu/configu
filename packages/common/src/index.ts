@@ -1,5 +1,7 @@
 // import './test';
 
+import './built-in-integrations';
+
 export * from './utils';
 export * from './Registry';
 
