@@ -24,7 +24,7 @@
   <strong>Open-source ConfigOps infrastructure</strong> that empowers engineering teams to seamlessly manage and collaborate on <strong>software configuration data</strong>—such as environment variables, secrets, and feature flags—<strong>across any system or environment.</strong> ⚙️✨
 </p>
 <p align="center">
-  <a target="_blank" href="https://docs.configu.com/guides/hello-world"><strong>Get Started 👋</strong></a> ・ <a target="_blank" href="https://docs.configu.com/guides/hello-world"><strong>Explore Docs 📚</strong></a> ・ <a target="_blank" href="https://docs.configu.com/guides/hello-world"><strong>Join Chat 💬</strong></a>
+  <a target="_blank" href="https://docs.configu.com/guides/hello-world"><strong>Get Started 👋</strong></a> ・ <a target="_blank" href="https://docs.configu.com/"><strong>Explore Docs 📚</strong></a> ・ <a target="_blank" href="https://discord.com/invite/cjSBxnB9z8"><strong>Join Chat 💬</strong></a>
 </p>
 
 ## ⭐️ Configu?
@@ -112,6 +112,12 @@ This repository is a monorepo that contains the Configu user interface packages.
 - [DEV Community ‍- #configuration](https://dev.to/t/configuration/top/infinity)
 - [Webinar - Configuration-as-Code](https://www.youtube.com/live/Z_Vz8v6e-U4?si=bDao_gIo1xiLDeQS&t=107)
 - [Post - Configuration-as-Code](https://dev.to/rannn505/configuration-as-code-automating-application-configuration-45k6)
+
+## 🙌 Thanks to all of our contributors
+
+A huge thanks for spending your time and energy helping Configu grow! 🌱 Your contributions are incredibly valued.
+
+<img src="https://contributors-img.web.app/image?repo=configu/configu" alt="Contributors"/>
 
 ## 🪪 License
 
