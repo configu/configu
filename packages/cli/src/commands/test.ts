@@ -1,5 +1,5 @@
 import { Command, Option } from 'clipanion';
-import { TestCommand as BaseTestCommand, ConfigStore } from '@configu/sdk';
+import { ConfigSchema, ConfigSet, UpsertCommand } from '@configu/sdk';
 import { BaseCommand } from './base';
 
 export class TestCommand extends BaseCommand {
@@ -21,9 +21,32 @@ export class TestCommand extends BaseCommand {
   async execute() {
     await this.init();
     const store = this.getStoreInstanceByStoreFlag(this.store);
+    const set = new ConfigSet();
+    const schema = new ConfigSchema({
+      CONFIGU_TEST: {},
+    });
 
     try {
-      await new BaseTestCommand({ store, clean: this.clean }).run();
+      await new UpsertCommand({
+        store,
+        set,
+        schema,
+        configs: {
+          CONFIGU_TEST: Date.now().toString(),
+        },
+      }).run();
+
+      if (this.clean) {
+        await new UpsertCommand({
+          store,
+          set,
+          schema,
+          configs: {
+            CONFIGU_TEST: '',
+          },
+        }).run();
+      }
+
       process.stdout.write(`Test passed for store ${this.store}`);
     } catch (error) {
       this.context.stdio.error(`Test failed for store ${this.store} with error: ${error.message}`);
