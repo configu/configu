@@ -115,10 +115,9 @@ This repository is a monorepo that contains the Configu user interface packages.
 
 ## 🙌 Thanks to all of our contributors
 
-A huge thanks for spending your time and energy helping Configu grow! 🌱 Your contributions are incredibly valued.  
+A huge thanks for spending your time and energy helping Configu grow! 🌱 Your contributions are incredibly valued.
 
 <img src="https://contributors-img.web.app/image?repo=configu/configu" alt="Contributors"/>
-
 
 ## 🪪 License
 
