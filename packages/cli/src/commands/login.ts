@@ -7,8 +7,6 @@ import fs from 'fs/promises';
 import { BaseCommand } from './base';
 import { isDev } from '../helpers';
 
-// TODO: Lazy evaluation - https://mael.dev/clipanion/docs/tips#lazy-evaluation
-
 const CONFIGU_API_URL = process.env.CONFIGU_API_URL ?? (isDev ? 'http://localhost:8080' : 'https://api.configu.com');
 const CONFIGU_APP_URL = process.env.CONFIGU_APP_URL ?? (isDev ? 'http://localhost:3000' : 'https://app.configu.com');
 const AUTH0_DOMAIN = 'configu.us.auth0.com';
@@ -65,13 +63,17 @@ export class LoginCommand extends BaseCommand {
       const handle = await client.deviceAuthorization({ audience: AUTH0_API_IDENTIFIER });
       const { user_code: userCode, verification_uri_complete: verificationUriComplete, expires_in: expiresIn } = handle;
 
-      // TODO: find or create an equivalent for ux.anykey
-      //     await ux.anykey(
-      //       `${chalk.bold('Press any key')} to open up the browser to login or press ctrl-c to abort.
-      // You should see the following code: ${chalk.bold(userCode)}. It expires in ${
-      //   expiresIn % 60 === 0 ? `${expiresIn / 60} minutes` : `${expiresIn} seconds`
-      // }.`,
-      //     );
+      const { confirmLogin } = await inquirer.prompt({
+        type: 'confirm',
+        name: 'confirmLogin',
+        message: `Press any key to open up the browser to login or press ctrl-c to abort.
+      You should see the following code: ${userCode}. It expires in ${
+        expiresIn % 60 === 0 ? `${expiresIn / 60} minutes` : `${expiresIn} seconds`
+      }. Continue?`,
+      });
+
+      if (!confirmLogin) return null;
+
       await open(verificationUriComplete);
 
       const tokens = await handle.poll();
@@ -116,11 +118,12 @@ export class LoginCommand extends BaseCommand {
   async execute() {
     await this.init();
     const credentials = await this.loginWithAuth0();
+    if (!credentials) return;
     this.context.credentials.data = {
       credentials,
       endpoint: this.endpoint ?? CONFIGU_API_URL,
     };
-    const rawConfiguConfigData = JSON.stringify(this.context.credentials);
+    const rawConfiguConfigData = JSON.stringify(this.context.credentials.data);
     await fs.writeFile(this.context.credentials.file, rawConfiguConfigData);
   }
 }

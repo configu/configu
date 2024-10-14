@@ -5,7 +5,7 @@ import { findUp } from 'find-up';
 import { ConfigSchema, ConfigStore, Expression, JsonSchema, JsonSchemaType } from '@configu/sdk';
 import FastGlob from 'fast-glob';
 import _ from 'lodash';
-import { readFile, parseJSON, parseYAML, mergeSchemas } from './utils';
+import { readFile, parseJSON, parseYAML } from './utils';
 import { Registry } from './Registry';
 import { CfguFile } from './CfguFile';
 
@@ -122,12 +122,12 @@ export class ConfiguFile {
     return ConfiguFile.load(path);
   }
 
-  getStoreInstance(name: string) {
+  getStoreInstance(name: string, configuration?: Record<string, unknown>) {
     const storeConfig = this.contents.stores?.[name];
     if (!storeConfig) {
       return undefined;
     }
-    return Registry.constructStore(storeConfig.type, storeConfig.configuration);
+    return Registry.constructStore(storeConfig.type, { ...configuration, ...storeConfig.configuration });
   }
 
   getBackupStoreInstance(name: string) {
