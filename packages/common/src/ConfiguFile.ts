@@ -160,19 +160,20 @@ export class ConfiguFile {
     return this.mergeSchemas(...configSchemas);
   }
 
-  runScript(name: string, cwd?: string): void {
+  runScript(name: string, options: { cwd?: string } = {}): void {
     const script = this.contents.scripts?.[name];
     if (!script) {
       throw new Error(`Script "${name}" not found`);
     }
 
-    const scriptRunDir = cwd ?? dirname(resolve(this.path));
+    const scriptRunDir = options.cwd ?? dirname(resolve(this.path));
 
     spawnSync(script, {
       cwd: scriptRunDir,
       stdio: 'inherit',
       env: process.env,
       shell: true,
+      ...options,
     });
   }
 

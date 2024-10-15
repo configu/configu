@@ -36,12 +36,15 @@
     "start": "pnpm configu"
   },
   "dependencies": {
-    "@configu/sdk": "workspace:*",
     "@configu/common": "workspace:*",
+    "@configu/sdk": "workspace:*",
+    "change-case": "4.1.2",
     "clipanion": "^4.0.0-rc.4",
     "consola": "^3.2.3",
     "lodash": "^4.17.21",
-    "std-env": "^3.7.0"
+    "std-env": "^3.7.0",
+    "tty-table": "4.2.3",
+    "typanion": "3.14.0"
   },
   "bundleDependencies": [],
   "devDependencies": {}
