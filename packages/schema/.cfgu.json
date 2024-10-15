@@ -60,6 +60,8 @@
         "AlibabaRegion",
         "Language",
         "DateTime",
+        "Duration",
+        "DateFormat",
         "ARN",
         "DataSize"
       ]
