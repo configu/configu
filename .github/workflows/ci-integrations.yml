@@ -18,6 +18,14 @@ jobs:
 
       - uses: ./.github/actions/ts-env-action
 
+      - name: Set NODE_ENV to development
+        run: |
+          echo "NODE_ENV=development" >> $GITHUB_ENV
+
+      - name: Install dependencies
+        run: |
+          pnpm install --no-frozen-lockfile
+
       - name: Run formatter
         run: |
           pnpm run format:check
