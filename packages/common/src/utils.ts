@@ -3,6 +3,7 @@ import path from 'pathe';
 import _ from 'lodash';
 import parseJson from 'parse-json';
 import yaml from 'js-yaml';
+import { ConfigSchema } from '@configu/sdk';
 
 export const { NODE_ENV } = process.env;
 export const isDev = NODE_ENV === 'development';

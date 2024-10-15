@@ -1,8 +1,11 @@
 {
-  "name": "@configu-integrations/keyv",
+  "name": "@configu-integrations/localforage",
   "version": "0.0.0",
   "license": "Apache-2.0",
   "author": "@configu/dev",
+  "browserslist": [
+    "defaults and supports es6-module"
+  ],
   "files": [],
   "repository": {
     "type": "git",
@@ -22,9 +25,9 @@
     "build": "tsup"
   },
   "dependencies": {
-    "keyv": "5.1.0",
+    "@configu/integrations": "workspace:*",
     "@configu/sdk": "workspace:*",
-    "@configu/integrations": "workspace:*"
+    "localforage": "^1.10.0"
   },
   "devDependencies": {
     "@types/node": "20.12.12",
