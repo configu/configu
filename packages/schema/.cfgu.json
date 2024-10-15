@@ -149,20 +149,6 @@
         },
         {
           "if": {
-            "properties": { "type": { "const": "DataSize" } }
-          },
-          "then": {
-            "properties": {
-              "pattern": {
-                "type": "string",
-                "default": "^\\d+(\\.\\d+)?(B|KB|MB|GB|TB|PB)$",
-                "description": "Regex pattern for data size validation"
-              }
-            }
-          }
-        },
-        {
-          "if": {
             "required": ["options"]
           },
           "then": {
