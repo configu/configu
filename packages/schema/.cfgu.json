@@ -151,48 +151,6 @@
         },
         {
           "if": {
-            "properties": { "type": { "const": "DataSize" } }
-          },
-          "then": {
-            "properties": {
-              "pattern": {
-                "type": "string",
-                "default": "^\\d+(\\.\\d+)?(B|KB|MB|GB|TB|PB)$",
-                "description": "Regex pattern for data size validation"
-              }
-            }
-          }
-        },
-        {
-          "if": {
-            "properties": { "type": { "const": "Duration" } }
-          },
-          "then": {
-            "properties": {
-              "pattern": {
-                "type": "string",
-                "default": "^(\\d+[smhdwMy])+$",
-                "description": "Regex pattern for duration validation (e.g., 1h30m, 2d, 3w)"
-              }
-            }
-          }
-        },
-        {
-          "if": {
-            "properties": { "type": { "const": "DateFormat" } }
-          },
-          "then": {
-            "properties": {
-              "pattern": {
-                "type": "string",
-                "default": "^(yyyy|yy|MM|M|dd|d|HH|H|mm|m|ss|s)([.-/\\s]?(yyyy|yy|MM|M|dd|d|HH|H|mm|m|ss|s))*$",
-                "description": "Regex pattern for various date formats validation (yyyy-MM-dd, dd/MM/yyyy HH:mm:ss)"
-              }
-            }
-          }
-        },
-        {
-          "if": {
             "required": ["options"]
           },
           "then": {
