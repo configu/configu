@@ -94,7 +94,8 @@ export class UpsertCommand extends ConfigCommand<UpsertCommandInput, UpsertComma
             }
             throw new Error(`Validation failed for config "${key}"`); // code flow should never reach here
           }
-        });
+        })
+        .value();
 
       // merge pipe and configs, configs will override pipe
       const upsertConfigsDict = { ...pipeConfigs, ...configs };
