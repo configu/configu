@@ -1,0 +1,35 @@
+name: CI/Integrations
+
+on:
+  pull_request:
+    branches:
+      - 'main'
+    paths:
+      - 'packages/integrations/**'
+
+jobs:
+  ci-integrations:
+    name: CI/Integrations
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/ts-env-action
+
+      - name: Run formatter
+        run: |
+          pnpm run format:check
+
+      - name: Run linter
+        run: |
+          pnpm run lint:check
+
+      - name: Run tests & Generate coverage report
+        run: |
+          pnpm run test:cov
+
+      - name: Run integrations build
+        run: |
+          pnpm run build:integrations

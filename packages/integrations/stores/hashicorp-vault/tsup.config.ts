@@ -13,6 +13,7 @@ export default defineConfig(async (): Promise<Options | Options[]> => {
     target: 'esnext',
     format: 'esm',
     noExternal: [/(.*)/],
+    splitting: false,
     outDir: `../../dist`,
     outExtension: () => ({
       js: `.os-${osName}.js`,
