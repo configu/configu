@@ -1,5 +1,5 @@
-import { type PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
-import { ORMConfigStore, type ORMConfigStoreSharedConfiguration } from './ORM';
+import { type PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions.js';
+import { ORMConfigStore, type ORMConfigStoreSharedConfiguration } from '@configu/integrations/src/utils/ORM';
 
 export type PostgreSQLConfigStoreConfiguration = Omit<PostgresConnectionOptions, 'type'> &
   ORMConfigStoreSharedConfiguration;
