@@ -60,7 +60,10 @@
         "AlibabaRegion",
         "Language",
         "DateTime",
-        "ARN"
+        "Duration",
+        "DateFormat",
+        "ARN",
+        "DataSize"
       ]
     },
     "Cfgu": {
