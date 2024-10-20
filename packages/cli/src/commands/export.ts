@@ -1,12 +1,5 @@
 import { Command, Option } from 'clipanion';
-import {
-  ExportCommand as BaseExportCommand,
-  EvalCommandOutput,
-  EvaluatedConfig,
-  EvaluatedConfigOrigin,
-  ExportCommandOutput,
-  Expression,
-} from '@configu/sdk';
+import { EvalCommandOutput, EvaluatedConfig, Expression, Naming } from '@configu/sdk';
 import _ from 'lodash';
 import {
   dotCase,
@@ -20,22 +13,10 @@ import {
   camelCase,
   paramCase,
 } from 'change-case';
-import { readFile, Registry } from '@configu/common';
 import Table from 'tty-table';
 import * as t from 'typanion';
 import { cwd } from 'process';
 import { BaseCommand } from './base';
-
-enum FilterFlag {
-  OmitEmpty = 'omit-empty',
-  OmitHidden = 'omit-hidden',
-  OmitKey = 'omit-key',
-  OmitLabel = 'omit-label',
-  PickEmpty = 'pick-empty',
-  PickHidden = 'pick-hidden',
-  PickKey = 'pick-key',
-  PickLabel = 'pick-label',
-}
 
 const casingFormatters: Record<string, (string: string) => string> = {
   CamelCase: camelCase,
@@ -52,33 +33,17 @@ const casingFormatters: Record<string, (string: string) => string> = {
   TrainCase: (string: string) => capitalCase(string).split(' ').join('-'),
 };
 
-type TemplateContext = { [key: string]: string } | { key: string; value: string }[];
-
-export class ExportCommand extends BaseCommand {
+export class CliExportCommand extends BaseCommand {
   static override paths = [['export'], ['ex']];
 
   static override usage = Command.Usage({
-    // category: `My category`,
     description: `Export \`Configs\` as configuration data in various modes`,
-    // details: `
-    //   A longer description of the command with some \`markdown code\`.
-
-    //   Multiple paragraphs are allowed. Clipanion will take care of both reindenting the content and wrapping the paragraphs as needed.
-    // `,
-    // examples: [
-    //   [`A basic example`, `$0 my-command`],
-    //   [`A second example`, `$0 my-command --with-parameter`],
-    // ],
   });
 
   format = Option.String('--format', {
     description: `Format exported \`Configs\` to common configuration formats. Redirect the output to file, if needed`,
     // TODO: get this list from somewhere? or maybe let this fail during runtime if not found in registry?
     // options: CONFIG_FORMAT_TYPE,
-  });
-
-  label = Option.String('--label', {
-    description: `Metadata required in some formats like Kubernetes ConfigMap`,
   });
 
   eol = Option.Boolean('--eol,--EOL', {
@@ -120,42 +85,14 @@ export class ExportCommand extends BaseCommand {
     validator: t.isEnum(Object.keys(casingFormatters)),
   });
 
-  'pick-label' = Option.Array('--pick-label', {
-    description: `Pick a specific label from the previous eval command return to export`,
-  });
-
-  'omit-label' = Option.Array('--omit-label', {
-    description: `Omit a specific label from the previous eval command return to export`,
-  });
-
-  'pick-key' = Option.Array('--pick-key', {
-    description: `Pick a specific key from the previous eval command return to export`,
-  });
-
-  'omit-key' = Option.Array('--omit-key', {
-    description: `Omit a specific key from the previous eval command return to export`,
-  });
-
-  'pick-hidden' = Option.Boolean('--pick-hidden', {
-    description: `Explicitly include config keys marked as hidden. By default, hidden keys are omitted`,
-  });
-
-  'omit-hidden' = Option.Boolean('--omit-hidden', {
-    description: `Explicitly exclude config keys marked as hidden. By default, hidden keys are omitted`,
-  });
-
-  'pick-empty' = Option.Boolean('--pick-empty', {
-    description: `Include config keys with empty values. By default, empty values are included`,
-  });
-
-  'omit-empty' = Option.Boolean('--omit-empty', {
-    description: `Exclude config keys with empty values. By default, empty values are included`,
+  filter = Option.String('--filter', {
+    // TODO: return to an array type
+    // filter = Option.Array('--filter', {
+    description: `Removes config keys by a given expression`,
   });
 
   static override schema = [
     t.hasMutuallyExclusiveKeys(['explain', 'format', 'template', 'source', 'run'], { missingIf: 'undefined' }),
-    t.hasMutuallyExclusiveKeys(['pick-hidden', 'omit-hidden'], { missingIf: 'undefined' }),
-    t.hasMutuallyExclusiveKeys(['pick-empty', 'omit-empty'], { missingIf: 'undefined' }),
     t.hasKeyRelationship('template-input', t.KeyRelationship.Requires, ['template']),
     t.hasKeyRelationship('eol', t.KeyRelationship.Requires, ['format']),
   ];
@@ -193,33 +130,24 @@ export class ExportCommand extends BaseCommand {
     };
   }
 
-  filterFromFlags(): ((config: EvaluatedConfig) => boolean) | undefined {
-    const filterFlags = _.pickBy(this, (value, key) => Object.values(FilterFlag).includes(key as FilterFlag));
-    if (_.isEmpty(filterFlags)) {
-      return undefined;
-    }
-    const pickedKeys = (_.pick(filterFlags, [FilterFlag.PickKey])[FilterFlag.PickKey] as string[]) ?? [];
-    const pickedLabels = (_.pick(filterFlags, [FilterFlag.PickLabel])[FilterFlag.PickLabel] as string[]) ?? [];
-    const omittedKeys = (_.pick(filterFlags, [FilterFlag.OmitKey])[FilterFlag.OmitKey] as string[]) ?? [];
-    const omittedLabels = (_.pick(filterFlags, [FilterFlag.OmitLabel])[FilterFlag.OmitLabel] as string[]) ?? [];
-
-    return ({ cfgu, origin, key }: EvaluatedConfig): boolean => {
-      const hiddenFilter = this[FilterFlag.PickHidden] ? true : !cfgu.hidden;
-      const emptyFilter = this[FilterFlag.OmitEmpty] ? origin !== EvaluatedConfigOrigin.Empty : true;
-
-      const isKeyPicked = pickedKeys.includes(key);
-      const isLabelPicked = _.intersection(pickedLabels, cfgu.label ?? []).length > 0;
-      const pickFilter = _.isEmpty([...pickedKeys, ...pickedLabels]) || isKeyPicked || isLabelPicked;
-
-      const isKeyOmitted = omittedKeys.includes(key);
-      const isLabelOmitted = _.intersection(omittedLabels, cfgu.label ?? []).length > 0;
-      const omitFilter = !isKeyOmitted && !isLabelOmitted;
-
-      return hiddenFilter && emptyFilter && pickFilter && omitFilter;
-    };
+  filterFromFlags(configs: EvalCommandOutput) {
+    if (this.filter === undefined) return configs;
+    console.log(Expression.functions.has('TOML'));
+    console.log(Expression.functions.has('validators'));
+    console.log(Expression.functions.has('isInt'));
+    console.log(Expression.functions.keys());
+    // TODO: why is validator not working??
+    const filteredConfigs = _.omitBy(configs, (config) => {
+      const { value, error: renderError } = Expression.parse(this.filter!).tryEvaluate({
+        $: config,
+      });
+      console.log(value);
+    });
+    // const filteredConfigs = _.reduce();
+    return configs;
   }
 
-  async exportConfigs(result: ExportCommandOutput, label: string) {
+  async exportConfigs(result: Record<string, string>) {
     // TODO: needs the parsed result from the export command
     // if (this.template) {
     //   const templateContent = await readFile(this.template);
@@ -238,23 +166,48 @@ export class ExportCommand extends BaseCommand {
     //   return;
     // }
 
-    // TODO: needs to use the Dotenv formatter from the registry
-    // if (this.source) {
-    //   const formattedConfigs = formatConfigs({ format: 'Dotenv', json: configs, label, wrap: true });
-    //   process.stdout.write(formattedConfigs);
-    //   return;
-    // }
-
     if (this.run) {
       this.context.configu.runScript(this.run, {
         cwd: cwd(),
-        // TODO: needs the parsed result from the export command
-        // env: { ...configs, ...process.env },
+        env: result,
       });
       return;
     }
 
-    process.stdout.write(result);
+    // eslint-disable-next-line no-template-curly-in-string
+    let expression = `\`${this.format ?? 'JSON({json:${pipe}})'}\``;
+    // eslint-disable-next-line no-template-curly-in-string
+    if (this.source) expression = '`Dotenv({json:${pipe},wrap:true})`';
+
+    // Renders the result value in the expression
+    const { value: renderedContent, error: renderError } = Expression.parse(expression).tryEvaluate({
+      pipe: result,
+    });
+    if (renderError) {
+      throw new Error(`format expression evaluation failed: ${renderError}`);
+    }
+    // Evaluates the expression
+    const { value: formattedResult, error: formattingError } = Expression.parse(renderedContent).tryEvaluate({});
+    if (formattingError || typeof formattedResult !== 'string') {
+      throw new Error(`format expression evaluation failed\n${formattingError}`);
+    }
+    process.stdout.write(formattedResult);
+  }
+
+  validateKey(config: EvaluatedConfig) {
+    if (!Naming.validate(config.key)) {
+      throw new Error(`ConfigKey "${config.key}" ${Naming.errorMessage}`);
+    }
+    return config;
+  }
+
+  private map(pipe: EvalCommandOutput) {
+    return _.chain(pipe)
+      .mapKeys('key')
+      .mapValues((config: EvaluatedConfig) => {
+        return this.validateKey(config).value;
+      })
+      .value();
   }
 
   async execute() {
@@ -271,17 +224,12 @@ export class ExportCommand extends BaseCommand {
       return;
     }
 
-    const label = this.label ?? `configs-${Date.now()}`;
-    const filter = this.filterFromFlags();
     const keys = this.keysMutations();
     const pipe = keys
       ? _.mapValues(previousEvalCommandOutput, (config, key) => ({ ...config, key: keys(key) }))
       : previousEvalCommandOutput;
-    // TODO: how do we implement the format flag? we somehow have to connect the format flag with the formatter from the registry and pass it via the 'reduce' prop of ExportCommand
-    const exportCommand = new BaseExportCommand({ pipe, filter });
-    const { result } = await exportCommand.run();
-    // TODO: the previous implementation expected the result to be an object but now export command returns a string that needs to be parsed.
-    // await this.exportConfigs(result, label);
-    process.stdout.write(result);
+    const filteredPipe = this.filterFromFlags(pipe);
+    const result = this.map(filteredPipe);
+    await this.exportConfigs(result);
   }
 }
