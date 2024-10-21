@@ -6,6 +6,6 @@ export type PostgreSQLConfigStoreConfiguration = Omit<PostgresConnectionOptions,
 
 export class PostgreSQLConfigStore extends ORMConfigStore {
   constructor(configuration: Omit<PostgresConnectionOptions, 'type'>) {
-    super('postgres', { ...configuration, type: 'postgres' });
+    super({ ...configuration, type: 'postgres' });
   }
 }
