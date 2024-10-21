@@ -16,7 +16,11 @@ import {
 import Table from 'tty-table';
 import * as t from 'typanion';
 import { cwd } from 'process';
+import { readFile } from '@configu/common';
+import * as os from 'os';
 import { BaseCommand } from './base';
+
+type TemplateContext = { [key: string]: string } | { key: string; value: string }[];
 
 const casingFormatters: Record<string, (string: string) => string> = {
   CamelCase: camelCase,
@@ -42,8 +46,6 @@ export class CliExportCommand extends BaseCommand {
 
   format = Option.String('--format', {
     description: `Format exported \`Configs\` to common configuration formats. Redirect the output to file, if needed`,
-    // TODO: get this list from somewhere? or maybe let this fail during runtime if not found in registry?
-    // options: CONFIG_FORMAT_TYPE,
   });
 
   eol = Option.Boolean('--eol,--EOL', {
@@ -91,9 +93,19 @@ export class CliExportCommand extends BaseCommand {
 
   static override schema = [
     t.hasMutuallyExclusiveKeys(['explain', 'format', 'template', 'source', 'run'], { missingIf: 'undefined' }),
-    t.hasKeyRelationship('template-input', t.KeyRelationship.Requires, ['template']),
-    t.hasKeyRelationship('eol', t.KeyRelationship.Requires, ['format']),
+    t.hasKeyRelationship('template-input', t.KeyRelationship.Requires, ['template'], { missingIf: 'undefined' }),
+    t.hasKeyRelationship('eol', t.KeyRelationship.Requires, ['format'], { missingIf: 'undefined' }),
   ];
+
+  printStdout(finalConfigData: string) {
+    process.stdout.write(finalConfigData);
+    if (this.eol && os.platform() === 'win32') {
+      process.stdout.write('\\r\\n');
+    }
+    if (this.eol && os.platform() !== 'win32') {
+      process.stdout.write('\n');
+    }
+  }
 
   explainConfigs(configs: EvalCommandOutput) {
     const data = _.chain(configs)
@@ -144,23 +156,30 @@ export class CliExportCommand extends BaseCommand {
   }
 
   async exportConfigs(result: Record<string, string>) {
-    // TODO: needs the parsed result from the export command
-    // if (this.template) {
-    //   const templateContent = await readFile(this.template);
-    //   let templateContext: TemplateContext = configs;
-    //   if (this['template-input'] === 'array') {
-    //     templateContext = _(configs)
-    //       .entries()
-    //       .map(([key, value]) => ({
-    //         key,
-    //         value,
-    //       }))
-    //       .value();
-    //   }
-    //   const { value: compiledContent } = Expression.parse(templateContent).tryEvaluate(templateContext);
-    //   process.stdout.write(compiledContent);
-    //   return;
-    // }
+    if (this.template) {
+      const templateContent = await readFile(this.template);
+      let templateContext: TemplateContext = result;
+      if (this['template-input'] === 'array') {
+        templateContext = _(result)
+          .entries()
+          .map(([key, value]) => ({
+            key,
+            value,
+          }))
+          .value();
+      }
+      const { value: templatedContent, error: renderError } = Expression.parse(`\`${templateContent}\``).tryEvaluate(
+        templateContext,
+      );
+      if (renderError) {
+        throw new Error(`template expression evaluation failed: ${renderError}`);
+      }
+      if (typeof templatedContent !== 'string') {
+        throw new Error('template expression does not evaluate to a string');
+      }
+      this.printStdout(templatedContent);
+      return;
+    }
 
     if (this.run) {
       this.context.configu.runScript(this.run, {
@@ -187,7 +206,7 @@ export class CliExportCommand extends BaseCommand {
     if (formattingError || typeof formattedResult !== 'string') {
       throw new Error(`format expression evaluation failed\n${formattingError}`);
     }
-    process.stdout.write(formattedResult);
+    this.printStdout(formattedResult);
   }
 
   validateKey(config: EvaluatedConfig) {
@@ -197,7 +216,7 @@ export class CliExportCommand extends BaseCommand {
     return config;
   }
 
-  private map(pipe: EvalCommandOutput) {
+  map(pipe: EvalCommandOutput) {
     return _.chain(pipe)
       .mapKeys('key')
       .mapValues((config: EvaluatedConfig) => {
