@@ -1,6 +1,6 @@
 import { execSync } from 'node:child_process';
 
-export function run() {
+export function run(filename = 'configu') {
   execSync('node --experimental-sea-config sea-config.json');
   execSync('cp $(command -v node) configu');
   execSync('codesign --remove-signature configu');
@@ -10,5 +10,5 @@ export function run() {
       '    --macho-segment-name NODE_SEA',
   );
   execSync('codesign --sign - configu');
-  execSync('mv configu dist/configu');
+  execSync(`mv configu dist/${filename}`);
 }

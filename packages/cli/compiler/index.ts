@@ -8,7 +8,7 @@ console.log('Platform:', os);
 async function compile() {
   const { run } = await import(join(import.meta.dirname, `${os}.ts`));
 
-  run();
+  run(`configu-${os}`);
 }
 
 compile();
