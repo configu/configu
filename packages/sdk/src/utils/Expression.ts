@@ -34,9 +34,6 @@ export class Expression {
     AdaptiveExpressions.functions.add(
       key,
       new ExpressionEvaluator(key, (expr, state, options) => {
-        console.log('Expression:', expr.toString());
-        console.log('State:', state);
-
         let value: any;
 
         const arg0 = state.getValue('_');
