@@ -1,0 +1,33 @@
+{
+  "name": "{{name}}",
+  "version": "0.0.0",
+  "license": "Apache-2.0",
+  "author": "@configu/dev",
+  "files": [],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/configu/configu",
+    "directory": "packages/integrations"
+  },
+  "bugs": {
+    "url": "https://github.com/configu/configu/issues",
+    "email": "dev@configu.com"
+  },
+  "homepage": "https://configu.com",
+  "keywords": [
+    "cfgu",
+    "configu"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "dependencies": {
+    "@configu/integrations": "*",
+    "@configu/sdk": "*"
+  },
+  "devDependencies": {
+    "@types/node": "20.12.12",
+    "tsup": "8.2.4",
+    "typescript": "^5.4.5"
+  }
+}

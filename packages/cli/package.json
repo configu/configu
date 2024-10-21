@@ -45,7 +45,8 @@
     "lodash": "^4.17.21",
     "open": "10.1.0",
     "openid-client": "5.7.0",
-    "std-env": "^3.7.0"
+    "std-env": "^3.7.0",
+    "change-case": "4.1.2"
   },
   "bundleDependencies": [],
   "devDependencies": {}
