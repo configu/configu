@@ -1,0 +1,73 @@
+---
+title: React Native with Configu
+description: "Learn how to use React Native with `Configu`. We'll use the `Configu CLI` and the `Configu ConfigStore` (Configu Platform) to declare, initialize, and export a simple set of configuration data which you can use in your React Native app"
+---
+
+import CliInstallSnippet from '/snippets/cli-install.mdx';
+
+### 1. Install Configu CLI
+
+<CliInstallSnippet />
+
+## 2. Create schema declaration
+
+```shell
+configu init
+```
+
+## 3. Connect to Configu ConfigStore
+
+You may now choose one of the many ConfigStore integrations that are available as your source of configurations for your React Native app. In this guide, we will use the [Configu ConfigStore](/integrations/store/configu) our chosen ConfigStore.
+
+```shell
+configu login
+```
+
+<Info>
+The [Configu `ConfigStore`](https://app.configu.com/) is a convenient way to get started with Configu, especially for users who are new to the tool. It is a configuration management platform that is easy to use and requires minimal setup, with a free starter plan option.
+
+To get started with [Configu Platform](https://app.configu.com/), you'll need to [register and create a new organization](https://app.configu.com/).
+
+</Info>
+
+## 4. Upsert values
+
+```shell
+configu upsert \
+  --store 'configu' --set 'development' --schema './start.cfgu.json' \
+  --config "GREETING=hey" --config "SUBJECT=<YOUR_NAME>" \
+&& configu upsert \
+  --store 'configu' --set 'development/qa' --schema './start.cfgu.json' \
+  -c "GREETING=hola" \
+&& configu upsert \
+  --store 'configu' --set 'production' --schema './start.cfgu.json' \
+  -c "GREETING=welcome"
+```
+
+## 5. Export values
+
+```shell
+configu eval \
+  --store 'configu' --set 'development/qa' --schema './start.cfgu.json' \
+| configu export \
+  --format "Dotenv" \
+> ".env"
+```
+
+As a result, you will get a `.env` file with the configurations declared in the "get-started" ConfigSchema and their values from the "test" ConfigSet.
+
+```.env
+GREETING=welcome
+SUBJECT=<YOUR_NAME>
+MESSAGE=welcome, <YOUR_NAME>!
+```
+
+## 6. Using the exported values in your React Native app
+
+That's it! You can now use the `.env` file in your React Native app to access the configuration values. The React Native team recommends using the [Expo framework](https://expo.dev) which has [in-built support for environment variables](https://docs.expo.dev/guides/environment-variables). If you use a framework other than Expo, you can refer to the documentation of that framework to learn how to use environment variables.
+
+<Tip>
+  To learn more about Configu and how to use it, you can continue to explore the documentation and join the Configu
+  [Discord channel](https://discord.com/invite/cjSBxnB9z8), where you can ask questions and get help from the Configu
+  team and other community members.
+</Tip>

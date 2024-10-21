@@ -150,6 +150,7 @@
         "guides/integrate-configu",
         "guides/ci-cd",
         "guides/hashicorp-vault",
+        "guides/react-native",
         {
           "group": "Configu Platform",
           "pages": [
