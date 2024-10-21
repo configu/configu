@@ -1,7 +1,7 @@
 import { execSync } from 'node:child_process';
 import { copyFileSync } from 'node:fs';
 
-export function run() {
+export function run(filename = 'configu') {
   execSync('node --experimental-sea-config sea-config.json');
   copyFileSync(process.execPath, 'configu.exe');
   execSync('signtool remove /s configu.exe');
@@ -10,5 +10,5 @@ export function run() {
       '    --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2',
   );
   execSync('signtool sign /fd SHA256 configu.exe');
-  execSync('mv configu.exe dist/configu');
+  execSync(`move configu.exe dist/${filename}.exe`);
 }
