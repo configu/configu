@@ -85,9 +85,7 @@ export class CliExportCommand extends BaseCommand {
     validator: t.isEnum(Object.keys(casingFormatters)),
   });
 
-  filter = Option.String('--filter', {
-    // TODO: return to an array type
-    // filter = Option.Array('--filter', {
+  filter = Option.Array('--filter', {
     description: `Removes config keys by a given expression`,
   });
 
@@ -130,21 +128,19 @@ export class CliExportCommand extends BaseCommand {
     };
   }
 
-  filterFromFlags(configs: EvalCommandOutput) {
-    if (this.filter === undefined) return configs;
-    console.log(Expression.functions.has('TOML'));
-    console.log(Expression.functions.has('validators'));
-    console.log(Expression.functions.has('isInt'));
-    console.log(Expression.functions.keys());
-    // TODO: why is validator not working??
+  filterFromFlag(configs: EvalCommandOutput, filterExpressions?: string[]): EvalCommandOutput {
+    const currentFilter = filterExpressions?.shift();
+    if (!currentFilter) return configs;
     const filteredConfigs = _.omitBy(configs, (config) => {
-      const { value, error: renderError } = Expression.parse(this.filter!).tryEvaluate({
+      const { value: filterResult, error } = Expression.parse(currentFilter).tryEvaluate({
         $: config,
       });
-      console.log(value);
+      if (error) throw new Error(`filter expression evaluation failed\n${error}`);
+
+      if (typeof filterResult !== 'boolean') throw new Error(`filter expression does not evaluate to a boolean}`);
+      return filterResult;
     });
-    // const filteredConfigs = _.reduce();
-    return configs;
+    return this.filterFromFlag(filteredConfigs, filterExpressions);
   }
 
   async exportConfigs(result: Record<string, string>) {
@@ -228,7 +224,7 @@ export class CliExportCommand extends BaseCommand {
     const pipe = keys
       ? _.mapValues(previousEvalCommandOutput, (config, key) => ({ ...config, key: keys(key) }))
       : previousEvalCommandOutput;
-    const filteredPipe = this.filterFromFlags(pipe);
+    const filteredPipe = this.filterFromFlag(pipe, this.filter);
     const result = this.map(filteredPipe);
     await this.exportConfigs(result);
   }
