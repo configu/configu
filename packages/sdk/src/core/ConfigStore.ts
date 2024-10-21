@@ -21,14 +21,17 @@ export abstract class ConfigStore {
     return _.camelCase(type).toLowerCase();
   }
 
-  static get type() {
-    const { name } = this;
+  static getTypeByName(name: string) {
     if (!name.endsWith(ConfigStore.name)) {
-      throw new Error(`ConfigStore class name must end with "${ConfigStore.name}"`);
+      throw new Error(`ConfigStore class name must end with "${ConfigStore.name}". (${name})`);
     }
     const nameWithoutSuffix = name.slice(0, -ConfigStore.name.length);
     const type = ConfigStore.deterministicType(nameWithoutSuffix);
     return type;
+  }
+
+  static get type() {
+    return ConfigStore.getTypeByName(this.name);
   }
 
   async init() {}

@@ -31,35 +31,39 @@ export class Expression {
   );
 
   static register<P extends any[] = any[], R = any>({ key, fn }: { key: string; fn: ExpressionFunction<P, R> }) {
-    AdaptiveExpressions.functions.add(
-      key,
-      new ExpressionEvaluator(key, (expr, state, options) => {
-        console.log('Expression:', expr.toString());
-        console.log('State:', state);
+    try {
+      AdaptiveExpressions.functions.add(
+        key,
+        new ExpressionEvaluator(key, (expr, state, options) => {
+          console.log('Expression:', expr.toString());
+          console.log('State:', state);
 
-        let value: any;
+          let value: any;
 
-        const arg0 = state.getValue('_');
+          const arg0 = state.getValue('_');
 
-        const { args, error: childrenError } = FunctionUtils.evaluateChildren(expr, state, options);
-        let error = childrenError;
+          const { args, error: childrenError } = FunctionUtils.evaluateChildren(expr, state, options);
+          let error = childrenError;
 
-        if (error) {
-          return { value, error };
-        }
-
-        try {
-          if (arg0 && arg0 !== args[0]) {
-            args.unshift(arg0);
+          if (error) {
+            return { value, error };
           }
-          value = fn(...(args as P));
-        } catch (e) {
-          error = e;
-        }
 
-        return { value, error };
-      }),
-    );
+          try {
+            if (arg0 && arg0 !== args[0]) {
+              args.unshift(arg0);
+            }
+            value = fn(...(args as P));
+          } catch (e) {
+            error = e;
+          }
+
+          return { value, error };
+        }),
+      );
+    } catch (e) {
+      throw new Error(`failed to register expression ${key}`, e);
+    }
   }
 
   static parse(expression: string): ExpressionObject {
