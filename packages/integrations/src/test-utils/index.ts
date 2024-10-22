@@ -1,11 +1,11 @@
 import test, { describe, beforeEach } from 'node:test';
 import * as assert from 'node:assert';
 import type { Config } from '@configu/sdk';
-import { Test, TestBed } from './test-bed';
+import { TestBed, TestModule } from './test-bed';
 
 describe('example', () => {
-  let module: TestBed;
-  const mockStore = Test.createMockStore();
+  let module: TestModule;
+  const mockStore = TestBed.createMockStore();
 
   const myExpression = test.mock.fn((str: string) => {
     return str.includes('foo');
@@ -18,12 +18,12 @@ describe('example', () => {
   });
 
   beforeEach(async () => {
-    module = await Test.createTestingBed({
-      schema: Test.createMockSchema(['FOO', 'BAR']),
+    module = await TestBed.createTestModule({
+      schema: TestBed.createMockSchema(['FOO', 'BAR']),
       set: 'default',
       stores: [mockStore],
       expressions: [
-        ...Test.createMockExpressions(['foo', 'bar']),
+        ...TestBed.createMockExpressions(['foo', 'bar']),
         { key: 'myExpression', value: myExpression },
         { key: 'MyDotEnv', value: DotEnv },
       ],
