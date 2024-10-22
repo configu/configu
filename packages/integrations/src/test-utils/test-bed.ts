@@ -2,7 +2,7 @@ import test, { Mock } from 'node:test';
 import { Config, ConfigSchemaKeys, ConfigStore } from '@configu/sdk';
 import { MockStore } from './mock-store';
 
-export interface TestBed {
+export interface TestModule {
   stores?: ConfigStore[];
   schema?: ConfigSchemaKeys;
   set?: string;
@@ -13,14 +13,14 @@ export interface TestBed {
   upsert: (configs: Record<string, string>) => Promise<void>;
 }
 
-export interface IExpression {
+export interface Expression {
   key: string;
-  value: any;
-  mock?: Mock<(s: string) => any>;
+  value: unknown;
+  mock?: Mock<(s: string) => unknown>;
 }
 
-export class Test {
-  static async createTestingBed({
+export class TestBed {
+  static async createTestModule({
     stores,
     expressions,
     set,
@@ -29,8 +29,8 @@ export class Test {
     stores?: ConfigStore[];
     schema?: ConfigSchemaKeys;
     set?: string;
-    expressions?: IExpression[];
-  }): Promise<TestBed> {
+    expressions?: Expression[];
+  }): Promise<TestModule> {
     return {
       stores,
       expressions,
@@ -61,7 +61,7 @@ export class Test {
     }, {} as ConfigSchemaKeys);
   }
 
-  static createMockExpressions(keys: string[], defaultReturnValue?: string): IExpression[] {
+  static createMockExpressions(keys: string[], defaultReturnValue?: string): Expression[] {
     return keys.map((key) => {
       const mock = test.mock.fn((str) => defaultReturnValue || `${key}:${str}`);
       return {
