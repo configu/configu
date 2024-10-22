@@ -31,6 +31,6 @@ export class RunCommand extends BaseCommand {
 
   async execute() {
     await this.init();
-    this.context.configu.runScript(this.script, this.dir);
+    this.context.configu.runScript(this.script, { cwd: this.dir });
   }
 }
