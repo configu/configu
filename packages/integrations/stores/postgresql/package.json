@@ -1,10 +1,10 @@
 {
-  "name": "@configu-integrations/postgre-sql-config-store",
+  "name": "@configu-integrations/postgresql",
   "version": "0.0.0",
   "license": "Apache-2.0",
   "author": "@configu/dev",
   "files": [
-    "src/postgre-sql-config-store.ts"
+    "src/postgresql.ts"
   ],
   "repository": {
     "type": "git",
