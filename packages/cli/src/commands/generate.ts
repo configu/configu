@@ -1,8 +1,8 @@
 import { Command, Option } from 'clipanion';
-import { cp, readFile, writeFile, rename } from 'node:fs/promises';
-import { dirname, join } from 'node:path';
-import { spawnSync } from 'node:child_process';
+import { readFile, writeFile, rename, readdir } from 'node:fs/promises';
+import { join } from 'node:path';
 import { pascalCase } from 'change-case';
+import tiged from 'tiged';
 import { BaseCommand } from './base';
 
 export class GenerateCommand extends BaseCommand {
@@ -10,7 +10,7 @@ export class GenerateCommand extends BaseCommand {
 
   static override usage = Command.Usage({
     // category: `My category`,
-    description: `Generate a boilerplated project for a custom \`ConfigStore\``,
+    description: 'Generate a boilerplated project for a custom `ConfigStore`',
     // details: `
     //   A longer description of the command with some \`markdown code\`.
 
@@ -23,47 +23,68 @@ export class GenerateCommand extends BaseCommand {
   });
 
   directory = Option.String('--dir,--di', {
-    description: `Location to generate the \`ConfigStore\` project`,
+    description: 'Location to generate the `ConfigStore` project',
     required: true,
   });
 
   name = Option.String('--name,--na', {
-    description: `Name of the \`ConfigStore\``,
+    description: 'Name of the `ConfigStore`',
     required: true,
   });
 
   async execute() {
     await this.init();
-
-    console.log(`Copying from ${join(dirname(import.meta.dirname), 'integration_template')} to ${this.directory}`);
-    console.log('Generating project...');
-    await this.generateBoilerplate();
-    await this.overrideTemplates();
-    await this.installDependencies();
+    this.context.stdio.info(`Generating project in ${this.directory}`);
+    await this.downloadProjectTemplate();
+    await this.prepareProjectFiles(this.directory);
+    this.context.stdio.success('Project setup complete.');
+    await this.showNextInstructions();
   }
 
-  private async generateBoilerplate() {
-    console.log(`Copying project boilerplate...\r`);
-    await cp(join(dirname(import.meta.dirname), 'integration_template'), this.directory, { recursive: true });
-    console.log(`Copying project boilerplate...done`);
+  private async downloadProjectTemplate() {
+    this.context.stdio.start('Downloading project template');
+    const emitter = tiged('configu/configu/packages/cli/src/integration_template', {
+      disableCache: true,
+      force: true,
+      verbose: true,
+    });
+    await emitter.clone(this.directory);
+    this.context.stdio.success('Complete');
   }
 
-  private async overrideTemplates() {
-    console.log(`Overriding to match your selected name...\r`);
-    rename(join(this.directory, 'src', '{{name}}.ts'), join(this.directory, 'src', `${this.name}.ts`));
-    await this.rewriteTemplateFile(join(this.directory, 'src', `${this.name}.ts`));
-    await this.rewriteTemplateFile(join(this.directory, `package.json`));
-    console.log(`Overriding to match your selected name...done`);
+  private async prepareProjectFiles(startPath: string) {
+    this.context.stdio.start('Preparing your project');
+    const files = await readdir(startPath, { withFileTypes: true });
+    await Promise.all(
+      files.map(async (file) => {
+        if (file.isDirectory()) {
+          await this.prepareProjectFiles(join(startPath, file.name));
+        } else {
+          await this.rewriteTemplateFile(join(startPath, file.name));
+        }
+        if (/.*\{\{name(:.*){0,1}\}\}.*/.test(file.name)) {
+          await rename(join(startPath, file.name), join(startPath, this.rewriteTemplated(file.name)));
+        }
+      }),
+    );
+    this.context.stdio.success('Complete');
   }
 
   private async rewriteTemplateFile(path: string) {
     const content = await readFile(path, 'utf-8');
-    const newContent = content.replaceAll('{{name}}', this.name).replaceAll('{{name:pascal}}', pascalCase(this.name));
-    await writeFile(path, newContent, 'utf-8');
+    await writeFile(path, this.rewriteTemplated(content), 'utf-8');
   }
 
-  private async installDependencies() {
-    console.log(`Installing dependencies...\r`);
-    spawnSync('pnpm', ['install'], { cwd: this.directory, stdio: 'inherit' });
+  private rewriteTemplated(content: string): string {
+    return content.replaceAll('{{name}}', this.name).replaceAll('{{name:pascal}}', pascalCase(this.name));
+  }
+
+  private async showNextInstructions() {
+    this.context.stdio.box(`Next steps:
+- Go to your new project directory: ${this.directory}
+- Run \`pnpm install\` to install dependencies
+  - Alternatively, use any package manager you prefer
+- Start writing your integration in \`src/${this.name}.ts\`
+`);
   }
 }
