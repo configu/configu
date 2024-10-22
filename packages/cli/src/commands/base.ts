@@ -1,8 +1,8 @@
-import { Command, Option } from 'clipanion';
+import { Command } from 'clipanion';
 import _ from 'lodash';
 import { CfguFile, ConfiguFile, parseJSON, readFile, Registry } from '@configu/common';
 import { EvalCommandOutput } from '@configu/sdk';
-import path from 'path';
+import path from 'node:path';
 import { type CustomContext } from '../index';
 import { configuStoreType, getConfigDir } from '../helpers';
 

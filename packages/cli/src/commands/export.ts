@@ -1,4 +1,4 @@
-import { Command, Option } from 'clipanion';
+import { Command } from 'clipanion';
 import { ExportCommand as BaseExportCommand } from '@configu/sdk';
 import { BaseCommand } from './base';
 

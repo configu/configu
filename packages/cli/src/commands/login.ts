@@ -3,7 +3,7 @@ import inquirer from 'inquirer';
 import open from 'open';
 import { Issuer, errors } from 'openid-client';
 import axios from 'axios';
-import fs from 'fs/promises';
+import fs from 'node:fs/promises';
 import { BaseCommand } from './base';
 import { isDev } from '../helpers';
 
