@@ -25,3 +25,5 @@ stores:
 ## Examples
 
 ## References
+
+- Integration documentation: https://www.postgresql.org/docs/current/tutorial-start.html
