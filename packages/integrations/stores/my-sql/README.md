@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The **MySQLConfigStore** is a storage integration that allows users to store and retrieve configuration data from a MySQL database. It is part of the broader ConfigStore framework, designed to provide a centralized and consistent way to manage configurations for your applications.
+The **MySQLConfigStore** is a storage integration that allows users to store and retrieve configuration data from a [MySQL database](https://www.mysql.com). It is part of the broader ConfigStore framework, designed to provide a centralized and consistent way to manage configurations for your applications.
 
 This documentation provides a detailed guide on how to integrate and use the MySQLConfigStore with usage examples, connection options, and a breakdown of relevant parameters.
 
