@@ -79,75 +79,37 @@ configu upsert --store "my-store" --set "test" --schema "./start.cfgu.json" \
    GRANT ALL PRIVILEGES ON config_store.* TO 'your_user'@'localhost';
    FLUSH PRIVILEGES;
    ```
+## Example
+Here's an example of how you can use the MySQLConfigStore with a Node.js application:
 
-## Performance Optimization
+```javascript
+const { MySQLConfigStore } = require('@configu-integrations/my-sql');
 
-### Connection Pooling Configuration
-- Use TypeORM's built-in connection pool to manage multiple connections efficiently.
-- Example:
-  ```typescript
-  const dataSource = new DataSource({
-      type: "mysql",
-      host: "localhost",
-      port: 3306,
-      username: "root",
-      password: "password",
-      database: "config_store",
-      extra: {
-          connectionLimit: 10,  // Set connection limit for pooling
-      },
-  });
-  ```
+const store = new MySQLConfigStore({
+  url: 'mysql://username:password@localhost:3306/database',
+  ssl: {
+    ca: './server-cert.pem',
+    key: './client-key.pem',
+    cert: './client-cert.pem',
+  },
+});
 
-### Query Optimization
-- Use indexed columns for frequently queried keys in the config store to improve query performance.
-- Example:
-  ```sql
-  CREATE INDEX idx_config_key ON config_store(config_key);
-  ```
+const upsertConfig = async () => {
+  try {
+    await store.upsert('test', {
+      GREETING: 'hey',
+      SUBJECT: 'configu mysql store',
+    });
+    console.log('Configuration data upserted successfully');
+  } catch (error) {
+    console.error('Error upserting configuration data:', error);
+  }
+};
 
-### Caching Strategies
-- Implement a caching layer (e.g., Redis) to reduce database load for frequently accessed configurations.
+upsertConfig();
+```
 
-## Migrations
-
-### Handling Schema Changes
-- Use TypeORM migrations to handle schema changes over time. Define your migrations and ensure they are applied when deploying your application.
-
-### Version Control for Configurations
-- Store configuration versions in your config store by adding a `version` column. This allows you to roll back to previous configurations if necessary.
-
-### Database Migration Scripts
-- Use `typeorm` CLI to generate and run migration scripts:
-  ```bash
-  typeorm migration:generate -n ConfigStoreMigration
-  typeorm migration:run
-  ```
-
-## Monitoring and Maintenance
-
-### Health Checks
-- Implement regular health checks to ensure that the MySQL connection is alive. You can periodically run a simple query like `SELECT 1` to verify connectivity.
-
-### Logging Strategies
-- Enable query logging for troubleshooting purposes. TypeORM allows for logging of all executed queries:
-  ```typescript
-  const dataSource = new DataSource({
-      logging: ["query", "error"],
-  });
-  ```
-
-### Backup Procedures
-- Regularly back up the MySQL database using tools like `mysqldump` to prevent data loss.
-  ```bash
-  mysqldump -u root -p config_store > backup.sql
-  ```
-
-### Monitoring Queries and Performance
-- Use MySQL monitoring tools like `Percona Monitoring and Management` or `MySQL Workbench` to keep track of slow queries, resource usage, and performance bottlenecks.
-
----
-### References
+## References
 For further reference, consult:
 - [MySQL Integration Docs](https://dev.mysql.com/doc)
 - [TypeORM Data Source Options](https://typeorm.io/data-source-options#mysql--mariadb-data-source-optionsurl)
