@@ -24,7 +24,8 @@
   "dependencies": {
     "@configu/integrations": "workspace:*",
     "@configu/sdk": "workspace:*",
-    "typeorm": "^0.3.17"
+    "@launchdarkly/node-server-sdk": "^9.7.0",
+    "@openfeature/server-sdk": "1.15.1"
   },
   "devDependencies": {
     "@types/node": "20.12.12",
