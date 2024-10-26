@@ -1,5 +1,211 @@
 ---
-// TODO: Add content to this page
+# **CockroachDBConfigStore Integration Documentation**
+
+## **Overview**
+
+`CockroachDBConfigStore` provides a configuration management solution that leverages CockroachDB's scalable and distributed SQL capabilities. This integration allows applications to retrieve and manage configuration data from a CockroachDB instance, ensuring high availability and consistency across deployments.
+
+This guide will explain what the `CockroachDBConfigStore` is, how to set it up, and provide examples to help you get started.
+
+---
+
+## **Motivation**
+
+- **Introduce users** to `ConfigStore` integrated with CockroachDB.
+- **Improve usability** by providing clear setup instructions and usage examples.
+- **Enhance completeness** of the integration package with a comprehensive guide.
+
+---
+
+## **Prerequisites**
+
+To use `CockroachDBConfigStore`, ensure the following:
+
+1. **CockroachDB Cluster or Instance**: A running CockroachDB server or cluster.
+2. **Connection Credentials**: Username, password, host address, and database name.
+3. **Node.js & TypeScript**: Ensure Node.js is installed (`>= v14`).
+4. **TypeORM Library**: This integration relies on TypeORM ORM for CockroachDB.
+
+Useful Resources:
+- [CockroachDB Documentation](https://www.cockroachlabs.com/docs)  
+- [TypeORM CockroachDB Data Source Options](https://typeorm.io/data-source-options#postgres--cockroachdb-data-source-options)
+
+---
+
+## **Installation**
+
+Install the necessary libraries:
+
+```bash
+npm install @configu/cli @configu/integrations @configu-integrations/cockroachdb typeorm pg
+```
+
+---
+
+## **Configuration Options**
+
+The `CockroachDBConfigStore` can be configured either using environment variables or programmatically with TypeORM.
+
+### **Environment Variables Setup**
+
+```bash
+COCKROACHDB_HOST=localhost
+COCKROACHDB_PORT=26257
+COCKROACHDB_USERNAME=myUser
+COCKROACHDB_PASSWORD=myPassword
+COCKROACHDB_DATABASE=myDatabase
+COCKROACHDB_SSL_MODE=disable
+```
+
+### **TypeORM Data Source Configuration**
+
+You can also set up the data source programmatically:
+
+```ts
+import { DataSource } from 'typeorm';
+
+const dataSource = new DataSource({
+  type: 'cockroachdb',
+  host: process.env.COCKROACHDB_HOST || 'localhost',
+  port: Number(process.env.COCKROACHDB_PORT) || 26257,
+  username: process.env.COCKROACHDB_USERNAME || 'myUser',
+  password: process.env.COCKROACHDB_PASSWORD || 'myPassword',
+  database: process.env.COCKROACHDB_DATABASE || 'myDatabase',
+  ssl: process.env.COCKROACHDB_SSL_MODE !== 'disable',
+});
+```
+
+---
+
+## **Creating CockroachDBConfigStore**
+
+Here’s how to initialize `CockroachDBConfigStore`:
+
+```ts
+import { CockroachDBConfigStore } from '@configu-integrations/cockroachdb';
+
+const configStore = new CockroachDBConfigStore({
+  dataSource,
+  tableName: 'Configurations',
+});
+
+dataSource.initialize().then(async () => {
+  console.log('CockroachDB Data Source initialized successfully.');
+});
+```
+
+---
+
+## **Usage Examples**
+
+### **Storing Configuration Data**
+
+```ts
+await configStore.set('apiUrl', 'https://example.com/api');
+await configStore.set('maxRetries', '5');
+```
+
+### **Retrieving Configuration Data**
+
+```ts
+const apiUrl = await configStore.get('apiUrl');
+console.log('API URL:', apiUrl); // Output: https://example.com/api
+```
+
+Retrieve multiple keys:
+
+```ts
+const config = await configStore.getMany(['apiUrl', 'maxRetries']);
+console.log(config); // Output: { apiUrl: 'https://example.com/api', maxRetries: '5' }
+```
+
+### **Deleting Configuration Data**
+
+```ts
+await configStore.delete('apiUrl');
+console.log('API URL removed from configuration.');
+```
+
+---
+
+## **Schema and Table Structure**
+
+Ensure the `Configurations` table is created with the following schema:
+
+```sql
+CREATE TABLE Configurations (
+    key STRING PRIMARY KEY,
+    value STRING NOT NULL
+);
+```
+
+---
+
+## **Example Use Case: Scalable Configuration Management**
+
+With CockroachDB’s distributed architecture, the `CockroachDBConfigStore` can be used for:
+
+- **API Configuration Management**: Store API endpoints and credentials.
+- **Feature Flags**: Enable or disable features across microservices.
+- **Global Config Management**: Ensure consistent configurations across multiple instances.
+
+---
+
+## **Error Handling and Troubleshooting**
+
+1. **Connection Issues**:  
+   Verify host, port, and SSL settings. Use the correct credentials and ensure the CockroachDB instance is reachable.
+
+2. **Table Not Found**:  
+   Make sure the `Configurations` table exists. If not, create it using the provided schema.
+
+3. **Authentication Errors**:  
+   Double-check username and password, and ensure the database user has sufficient privileges.
+
+4. **SSL/TLS Configuration**:  
+   Adjust the `ssl` setting based on whether encryption is needed for your setup.
+
+---
+
+## **Testing and Validation**
+
+Use the following script to test the integration:
+
+```ts
+(async () => {
+  await configStore.set('testKey', 'testValue');
+  const value = await configStore.get('testKey');
+  console.log('Retrieved:', value); // Output: testValue
+
+  await configStore.delete('testKey');
+  const deletedValue = await configStore.get('testKey');
+  console.log('After Deletion:', deletedValue); // Should print null or undefined
+})();
+```
+
+---
+
+## **Contribution Guidelines**
+
+If you encounter issues or want to enhance the integration, feel free to contribute by opening a pull request.
+
+Refer to this example PR:  
+[Add docs for @configu-integrations/aws-secrets-manager #575](https://github.com/configu/configu/pull/575)
+
+---
+
+## **Conclusion**
+
+`CockroachDBConfigStore` provides a powerful way to manage configurations using CockroachDB’s scalable infrastructure. With the examples and troubleshooting tips above, you can integrate and maintain this store effectively in your applications.
+
+---
+
+## **References**
+
+- [CockroachDB Documentation](https://www.cockroachlabs.com/docs)  
+- [TypeORM CockroachDB Data Source Options](https://typeorm.io/data-source-options#postgres--cockroachdb-data-source-options)  
+- [AWS Secrets Manager Example PR](https://github.com/configu/configu/pull/575)
+```
 ---
 
 import { Construction } from '/snippets/callouts.mdx';
