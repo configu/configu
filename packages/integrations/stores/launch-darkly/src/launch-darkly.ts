@@ -3,7 +3,7 @@ import { LaunchDarklyProvider } from '@launchdarkly/openfeature-node-server';
 import { type LDOptions } from '@launchdarkly/node-server-sdk';
 import { type ConfigStoreQuery, type Config } from '@configu/ts';
 import _ from 'lodash';
-import { OpenFeatureConfigStore } from './OpenFeature';
+import { OpenFeatureConfigStore } from '@configu/integrations/src/utils/OpenFeature';
 
 export type LaunchDarklyConfigStoreConfiguration = {
   sdkKey: string;
@@ -20,7 +20,7 @@ export class LaunchDarklyConfigStore extends OpenFeatureConfigStore {
       );
     // * stream is set to true by default, but we want to close the connection after each request
     const ldOptionsWithoutStream = { ...ldOptions, stream: false };
-    super('launch-darkly', {
+    super({
       provider: new LaunchDarklyProvider(sdkKey, ldOptionsWithoutStream),
       context,
     });
