@@ -1,4 +1,7 @@
 ---
+Below is the same content converted to **MDX** (Markdown + JSX) format. This ensures compatibility with MDX files, allowing for syntax highlighting, embedded components, and enhanced readability.
+
+```mdx
 ---
 title: MsSQLConfigStore Integration
 description: Comprehensive documentation for integrating MsSQLConfigStore with examples and troubleshooting tips.
@@ -44,14 +47,17 @@ To use `MsSQLConfigStore`, install the necessary libraries:
 
 ```bash
 npm install @configu/cli @configu/integrations @configu-integrations/mssql typeorm mssql
+```
 
 ---
 
-Configuration Options
-The MsSQLConfigStore requires specific data source configuration, passed either through environment variables or directly as connection options.
+## Configuration Options
 
-bash:
+The `MsSQLConfigStore` requires specific data source configuration, passed either through environment variables or directly as connection options.
 
+### Environment Variables Setup
+
+```bash
 MSSQL_HOST=localhost
 MSSQL_PORT=1433
 MSSQL_USERNAME=myUser
@@ -59,9 +65,11 @@ MSSQL_PASSWORD=myPassword
 MSSQL_DATABASE=myDatabase
 MSSQL_SCHEMA=dbo
 MSSQL_CONNECTION_TIMEOUT=30000
+```
 
-TypeORM Data Source Configuration
+### TypeORM Data Source Configuration
 
+```ts
 const dataSource = new DataSource({
   type: 'mssql',
   host: process.env.MSSQL_HOST || 'localhost',
@@ -74,11 +82,15 @@ const dataSource = new DataSource({
     enableArithAbort: true,
   },
 });
+```
 
-Creating MsSQLConfigStore
+---
 
-Here’s how to initialize the MsSQLConfigStore:
+## Creating MsSQLConfigStore
 
+Here’s how to initialize the `MsSQLConfigStore`:
+
+```ts
 const configStore = new MsSQLConfigStore({
   dataSource,
   tableName: 'Configurations', // Name of the table storing configs
@@ -88,62 +100,91 @@ const configStore = new MsSQLConfigStore({
 dataSource.initialize().then(async () => {
   console.log('MsSQL Data Source has been initialized.');
 });
+```
 
+---
 
+## Usage Examples
 
-Usage Examples
+### Storing Configuration Data
 
-Storing Configuration Data:
+```ts
 await configStore.set('apiUrl', 'https://example.com/api');
 await configStore.set('dbMaxConnections', '10');
+```
 
-Retrieving Configuration Data:
+### Retrieving Configuration Data
+
+Retrieve a specific key:
+
+```ts
 const apiUrl = await configStore.get('apiUrl');
 console.log('API URL:', apiUrl); // Output: https://example.com/api
+```
 
 Retrieve multiple keys:
+
+```ts
 const config = await configStore.getMany(['apiUrl', 'dbMaxConnections']);
 console.log(config); // Output: { apiUrl: 'https://example.com/api', dbMaxConnections: '10' }
+```
 
-Deleting Configuration Data
+### Deleting Configuration Data
+
+```ts
 await configStore.delete('apiUrl');
 console.log('API URL configuration removed.');
+```
 
-Schema and Table Structure
-Ensure that the Configurations table exists with the following schema:
+---
+
+## Schema and Table Structure
+
+Ensure that the `Configurations` table exists with the following schema:
+
+```sql
 CREATE TABLE Configurations (
     key NVARCHAR(255) PRIMARY KEY,
     value NVARCHAR(MAX) NOT NULL
 );
+```
 
+---
 
-Example Use Case: Centralized Configuration Management
-Using the MsSQLConfigStore integration, you can manage application configurations such as:
+## Example Use Case: Centralized Configuration Management
 
-API endpoints
-Database limits and connections
-Authentication keys
-Feature flags
+Using the `MsSQLConfigStore` integration, you can manage application configurations such as:
+
+- API endpoints  
+- Database limits and connections  
+- Authentication keys  
+- Feature flags  
+
 This setup ensures that configurations are easily retrievable from a central MsSQL database, providing consistency across deployments.
 
-Error Handling and Troubleshooting
-Connection Timeout:
-Ensure the MsSQL server is accessible and the connection options (host, port) are correct.
+---
 
-Table Not Found:
-Verify the table name matches the configured value. If needed, create the table with the schema provided.
+## Error Handling and Troubleshooting
 
-Incorrect Credentials:
-Double-check your MsSQL username and password.
+1. **Connection Timeout:**  
+   Ensure the MsSQL server is accessible and the connection options (host, port) are correct.
 
-SSL/TLS Encryption Errors:
-Use encrypt: false in the options if connecting locally without encryption.
+2. **Table Not Found:**  
+   Verify the table name matches the configured value. If needed, create the table with the schema provided.
 
-Testing and Validation
+3. **Incorrect Credentials:**  
+   Double-check your MsSQL username and password.
+
+4. **SSL/TLS Encryption Errors:**  
+   Use `encrypt: false` in the options if connecting locally without encryption.
+
+---
+
+## Testing and Validation
+
 Use this script to validate your integration:
 
-ts
-Copy code
+```ts
 (async () => {
   await configStore.set('testKey', 'testValue');
   const value = await configStore.get('testKey');
@@ -153,33 +194,33 @@ Copy code
   const deletedValue = await configStore.get('testKey');
   console.log('After Deletion:', deletedValue); // Should print null or undefined
 })();
-Contribution Guidelines
-If you find issues or want to contribute improvements, feel free to open a pull request at the official repository.
-
-Refer to this example PR:
-Add docs for @configu-integrations/aws-secrets-manager #575
-
-Conclusion
-The MsSQLConfigStore integration provides a seamless way to manage application configuration within an MsSQL database. By following the examples and troubleshooting tips above, you can efficiently integrate, use, and maintain the MsSQLConfigStore in your projects.
-
-References
-MsSQL Documentation
-TypeORM MsSQL Data Source Options
-AWS Secrets Manager Example PR
-
+```
 
 ---
 
-### **Explanation of MDX Changes**
+## Contribution Guidelines
 
-1. **Frontmatter (`---`)**: Added a `title` and `description` section to align with MDX conventions used in documentation websites.
-2. **JSX Imports**: Included `DataSource` and `MsSQLConfigStore` imports at the top to match how MDX embeds code components.
-3. **Consistent Code Blocks**: Used triple backticks with appropriate language tags (like `ts` for TypeScript and `sql` for SQL).
-4. **Links and Formatting**: Kept inline links and headers intact, ensuring readability.
+If you find issues or want to contribute improvements, feel free to open a pull request at the official repository.
 
-This version is now ready for use in MDX-based documentation systems like Docusaurus or Storybook.
+Refer to this example PR:  
+[Add docs for @configu-integrations/aws-secrets-manager #575](https://github.com/configu/configu/pull/575)
 
+---
 
+## Conclusion
+
+The `MsSQLConfigStore` integration provides a seamless way to manage application configuration within an MsSQL database. By following the examples and troubleshooting tips above, you can efficiently integrate, use, and maintain the `MsSQLConfigStore` in your projects.
+
+---
+
+## References
+
+- [MsSQL Documentation](https://learn.microsoft.com/en-us/sql/sql-server)  
+- [TypeORM MsSQL Data Source Options](https://typeorm.io/data-source-options#mssql-data-source-options)  
+- [AWS Secrets Manager Example PR](https://github.com/configu/configu/pull/575)
+```
+
+---
 ---
 
 import { Construction } from '/snippets/callouts.mdx';
