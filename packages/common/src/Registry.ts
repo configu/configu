@@ -31,6 +31,8 @@ export class Registry {
         // console.log('Registering ConfigStore:', value.type);
         Registry.store.set(value.type, value);
       } else if (Registry.isExpression(value)) {
+        const existingExpressionKeys = Array.from(Expression.functions.keys());
+        if (existingExpressionKeys.includes(key)) return;
         // console.log('Registering Expression:', key);
         if (key.endsWith(expressionOptionalSuffix)) {
           Expression.register({ key: key.slice(0, -expressionOptionalSuffix.length), fn: value });
