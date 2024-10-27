@@ -6,63 +6,42 @@ Integrates the Configu MySQLConfigStore with [MySQL](https://www.mysql.com).
 - Name: MySQL
 - Category: Database
 
-## Introduction
-
-The **MySQLConfigStore** is a storage integration that allows users to store and retrieve configuration data from a [MySQL database](https://www.mysql.com). It is part of the broader ConfigStore framework, designed to provide a centralized and consistent way to manage configurations for your applications.
-
-This documentation provides a detailed guide on how to integrate and use the MySQLConfigStore with usage examples, connection options, and a breakdown of relevant parameters.
-
-
 ## Configuration
 
-To use MySQLConfigStore, several configuration options must be defined. The connection options to the MySQL database are managed through TypeORM’s Data Source options.
-
-### MySQL Connection Configuration Parameters
-
-| Parameter        | Description                                                                                     | Default             |
-|------------------|-------------------------------------------------------------------------------------------------|---------------------|
-| `url`            | Connection URL for the MySQL server. Overrides other options.                                    | None                |
-| `host`           | Database host.                                                                                  | `localhost`         |
-| `port`           | Database port.                                                                                  | `3306`              |
-| `username`       | Username for database authentication.                                                           | None                |
-| `password`       | Password for database authentication.                                                           | None                |
-| `database`       | Name of the database to connect to.                                                             | None                |
-
-For additional parameters, refer to the [TypeORM documentation](https://typeorm.io/#/connection-options). 
+Configu needs to be authorized to access your MySQL database. Configu utilizes [TypeORM](https://typeorm.io) under the hood to establish a connection with the database using [data source options](https://typeorm.io/data-source-options#mysql--mariadb-data-source-options) you need to supply.
 
 ## Usage
 
 ### `.configu` store declaration
-
-To use the MySQLConfigStore with Configu, declare it in the `.configu` file as shown below:
 
 ```yaml
 stores:
   my-store:
     type: my-sql
     configuration:
-      url: mysql://<username>:<password>@<host>:<port>/<database>
-      ssl:
-        ca: <path-to-server-cert.pem>
-        key: <path-to-client-key.pem>
-        cert: <path-to-client-cert.pem>
+      host: localhost
+      username: test
+      password: test
+      database: test
 ```
 
 ### CLI examples
 
 #### Upsert command
 
-To upsert configuration data into the MySQLConfigStore, use the following CLI command:
-
 ```bash
 configu upsert --store "my-store" --set "test" --schema "./start.cfgu.json" \
     -c "GREETING=hey" \
-    -c "SUBJECT=configu mysql store"
+    -c "SUBJECT=configu"
 ``` 
+#### Eval and export commands
 
-## Error Handling
+```bash
+configu eval --store "my-store" --set "test" --schema "./start.cfgu.json" \
+ | configu export
+```
 
-### Common Errors and Solutions
+## Common Errors and Solutions
 
 1. **Connection Timeout Troubleshooting**
    - **Solution:** Increase the `connectTimeout` or `acquireTimeout` in the configuration options to handle long-running connection setups. Make sure the database is reachable from your application.
@@ -79,37 +58,7 @@ configu upsert --store "my-store" --set "test" --schema "./start.cfgu.json" \
    GRANT ALL PRIVILEGES ON config_store.* TO 'your_user'@'localhost';
    FLUSH PRIVILEGES;
    ```
-## Example
-Here's an example of how you can use the MySQLConfigStore with a Node.js application:
-
-```javascript
-const { MySQLConfigStore } = require('@configu-integrations/my-sql');
-
-const store = new MySQLConfigStore({
-  url: 'mysql://username:password@localhost:3306/database',
-  ssl: {
-    ca: './server-cert.pem',
-    key: './client-key.pem',
-    cert: './client-cert.pem',
-  },
-});
-
-const upsertConfig = async () => {
-  try {
-    await store.upsert('test', {
-      GREETING: 'hey',
-      SUBJECT: 'configu mysql store',
-    });
-    console.log('Configuration data upserted successfully');
-  } catch (error) {
-    console.error('Error upserting configuration data:', error);
-  }
-};
-
-upsertConfig();
-```
 
 ## References
-For further reference, consult:
-- [MySQL Integration Docs](https://dev.mysql.com/doc)
-- [TypeORM Data Source Options](https://typeorm.io/data-source-options#mysql--mariadb-data-source-optionsurl)
+- Integration documentation: https://dev.mysql.com/doc
+- TypeORM documentation: https://typeorm.io
