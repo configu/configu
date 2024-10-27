@@ -692,6 +692,9 @@ importers:
       '@openfeature/server-sdk':
         specifier: 1.15.1
         version: 1.15.1(@openfeature/core@1.4.0)
+      lodash-es:
+        specifier: 4.17.21
+        version: 4.17.21
     devDependencies:
       '@types/node':
         specifier: 20.12.12

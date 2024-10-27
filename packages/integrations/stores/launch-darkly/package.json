@@ -28,7 +28,8 @@
     "@configu/sdk": "workspace:*",
     "@launchdarkly/node-server-sdk": "^9.7.0",
     "@openfeature/server-sdk": "1.15.1",
-    "@launchdarkly/openfeature-node-server": "1.0.0"
+    "@launchdarkly/openfeature-node-server": "1.0.0",
+    "lodash-es": "4.17.21"
   },
   "devDependencies": {
     "@types/node": "20.12.12",
