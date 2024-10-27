@@ -5,7 +5,7 @@ import { findUp } from 'find-up';
 import { ConfigSchema, ConfigStore, Expression, JsonSchema, JsonSchemaType } from '@configu/sdk';
 import FastGlob from 'fast-glob';
 import _ from 'lodash';
-import { readFile, parseJSON, parseYAML, mergeSchemas } from './utils';
+import { readFile, parseJSON, parseYAML } from './utils';
 import { Registry } from './Registry';
 import { CfguFile } from './CfguFile';
 
@@ -122,12 +122,12 @@ export class ConfiguFile {
     return ConfiguFile.load(path);
   }
 
-  getStoreInstance(name: string) {
+  getStoreInstance(name: string, configuration?: Record<string, unknown>) {
     const storeConfig = this.contents.stores?.[name];
     if (!storeConfig) {
       return undefined;
     }
-    return Registry.constructStore(storeConfig.type, storeConfig.configuration);
+    return Registry.constructStore(storeConfig.type, { ...configuration, ...storeConfig.configuration });
   }
 
   getBackupStoreInstance(name: string) {
@@ -160,19 +160,21 @@ export class ConfiguFile {
     return this.mergeSchemas(...configSchemas);
   }
 
-  runScript(name: string, cwd?: string): void {
+  runScript(name: string, options: { cwd?: string; env?: Record<string, string> } = {}): void {
     const script = this.contents.scripts?.[name];
     if (!script) {
       throw new Error(`Script "${name}" not found`);
     }
 
-    const scriptRunDir = cwd ?? dirname(resolve(this.path));
+    const scriptRunDir = options.cwd ?? dirname(resolve(this.path));
 
+    const { env, ...restOpts } = options;
     spawnSync(script, {
       cwd: scriptRunDir,
       stdio: 'inherit',
-      env: process.env,
+      env: { ...process.env, ...env },
       shell: true,
+      ...restOpts,
     });
   }
 
