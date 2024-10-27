@@ -1,104 +1,99 @@
-# @configu/node
+# @configu-integrations/mssql
 
-Configu SDK for Node.js published to [npm](https://www.npmjs.com/package/@configu/node).
+Integrates the Configu Orchestrator with [Microsoft SQL Server](https://learn.microsoft.com/en-us/sql/sql-server).  
 
-## Install
+- Name: Microsoft SQL Server  
+- Category: Database  
+
+## Configuration
+
+Configu needs to be authorized to access your Microsoft SQL Server database. Configu utilizes [TypeORM](https://typeorm.io) under the hood to establish a connection with the database using [data source options](https://typeorm.io/data-source-options#mssql-data-source-options) you need to supply.
+
+### `.configu` Store Declaration
+
+```yaml
+stores:
+  my-store:
+    type: mssql
+    configuration:
+      host: localhost
+      username: test
+      password: test
+      database: test
+```
+
+### CLI Examples
+
+### **CLI Examples**  
+
+#### **Upsert Command**
 
 ```bash
-npm install @configu/node
-yarn add @configu/node
-pnpm add @configu/node
+configu upsert --store "my-mssql-store" --set "test" --schema "./start.cfgu.json" \
+    -c "API_URL=https://example.com" \
+    -c "RETRY_LIMIT=5"
 ```
 
-## Usage
-
-**With import / require:**
-
-```js
-import { JsonFileConfigStore, ConfigSet, ConfigSchema, UpsertCommand, EvalCommand, ExportCommand } from '@configu/node';
-import schemaContents from './start.cfgu.json';
-
-(async () => {
-  try {
-    const store = new JsonFileConfigStore({ path: 'config-db.json' });
-    const set = new ConfigSet('test');
-    const schema = new ConfigSchema('start', schemaContents);
-
-    await new UpsertCommand({
-      store,
-      set,
-      schema,
-      configs: {
-        GREETING: 'hey',
-        SUBJECT: 'configu node.js sdk',
-      },
-    }).run();
-
-    const data = await new EvalCommand({
-      store,
-      set,
-      schema,
-    }).run();
-
-    const configurationData = await new ExportCommand({
-      pipe: data,
-    }).run();
-  } catch (error) {
-    console.error(error);
-  }
-})();
-```
-
-**With fs & path**:
-
-```js
-import path from 'path';
-import fs from 'fs/promises';
-import {
-  JsonFileConfigStore,
-  ConfigSet,
-  ConfigSchema,
-  UpsertCommand,
-  EvalCommand,
-  ExportCommand,
-} from '@configu/node';
-
-(async () => {
-  try {
-    const store = new JsonFileConfigStore({ path: 'config-db.json' });
-    const set = new ConfigSet('test');
-
-    const schemaContentsString = await fs.readFile(path.join(__dirname, 'start.cfgu.json'));
-    const schemaContents = JSON.parse(schemaContentsString);
-    const schema = new ConfigSchema('start', schemaContents);
-
-    ...
-  } catch (error) {
-    console.error(error);
-  }
-})();
-```
-
-<!-- For more examples see [examples/node](https://github.com/configu/configu/tree/main/examples/node-sdk/) -->
-
-## Reference
-
-See [interfaces/sdk/node/globals](https://docs.configu.com/interfaces/sdk/node/globals).
-
-## Contributing
-
-### Requirements
-
-Follow the [Development](https://github.com/configu/configu/blob/main/CONTRIBUTING.md#development) section from the `CONTRIBUTING.md`.
-
-### Setup
-
-Run these commands in order:
+#### **Eval and Export Commands**  
+#### Upsert Command
 
 ```bash
-pnpm install
+configu upsert --store "my-store" --set "test" --schema "./start.cfgu.json" \
+    -c "GREETING=hey" \
+    -c "SUBJECT=configu"
 ```
 
-### Contribute
+#### Eval and Export Commands
 
-Follow the [Sending a Pull Request](https://github.com/configu/configu/blob/main/CONTRIBUTING.md#sending-a-pull-request) section from the `CONTRIBUTING.md`.
+```bash
+configu eval --store "my-store" --set "test" --schema "./start.cfgu.json" \
+ | configu export
+```
+
+## Common Errors and Solutions
+
+## **Common Errors and Solutions**  
+
+1. **Connection Timeout Issues**  
+   - **Solution**: Verify that the host, port, and network configurations are correct. Increase `connectTimeout` in the configuration if needed.
+
+2. **Authentication Failures**  
+   - **Solution**: Ensure the provided `username` and `password` are correct, and the user has access to the specified database. Use a SQL client to verify credentials.
+
+3. **Encryption Errors**  
+   - **Solution**: If your SQL Server instance enforces encryption, ensure the `encrypt` option is set to `true`. If not, set it to `false`.
+
+4. **Permission Issues**  
+   - **Solution**: Verify that the user has `READ` and `WRITE` access to the required database. Use the following SQL command to grant permissions:
+     ```sql
+     GRANT ALL PRIVILEGES ON DATABASE config_db TO [admin];
+     ```
+
+---
+
+## **References**  
+
+- Integration documentation: [Microsoft SQL Server](https://learn.microsoft.com/en-us/sql/sql-server)  
+- TypeORM documentation: [MSSQL Data Source Options](https://typeorm.io/data-source-options#mssql-data-source-options)  
+
+---
+
+1. Connection Issues  
+   - Solution: Verify that the host, port, and encryption settings are correct. Make sure the database server is reachable from your application.
+
+2. Authentication Failures  
+   - Solution: Confirm the correctness of the provided `username` and `password`. Ensure the user has appropriate access to the specified database. You can verify credentials by logging in using an SQL client tool.
+
+3. Encryption Configuration Problems  
+   - Solution: Check if the `encrypt` option is set correctly for your database setup. If SQL Server requires encrypted connections, ensure that encryption is enabled in the configuration.
+
+4. Database Permissions Issues  
+   - Solution: Ensure the user has `READ` and `WRITE` access to the required table. Use the following SQL command to grant permissions:
+   
+   ```sql
+   GRANT ALL ON config_store TO [your_user];
+   ```
+
+## References
+- Integration documentation: https://learn.microsoft.com/en-us/sql/sql-server
+- TypeORM documentation: https://typeorm.io
