@@ -1,13 +1,13 @@
-# @configu-integrations/launchdarkly
+# @configu-integrations/launch-darkly
 
 Integrates the Configu Orchestrator with [LaunchDarkly](https://launchdarkly.com/).
 
 - Name: LaunchDarkly
-- Category:
+- Category: Feature flag manager
 
 ## Configuration
 
-Configu needs to be authorized to access
+Configu needs to be authorized to access your LaunchDarkly project. You must specify an `sdkKey` that corresponds to an SDK key of an environment of some LaunchDarkly project and a context that has a `key` or a `targetingKey` that identifies the subject (end-user, or client service) of a flag evaluation. You may also configure [`ldOptions`](https://launchdarkly.github.io/node-server-sdk/interfaces/_launchdarkly_node_server_sdk_.LDOptions.html) to customize the LaunchDarkly client.
 
 ## Usage
 
@@ -18,6 +18,9 @@ stores:
   my-store:
     type: launch-darkly
     configuration:
+      sdkKey: example-sdkKey
+        context:
+          targetingKey: default
 ```
 
 ### CLI examples
@@ -27,7 +30,7 @@ stores:
 ```bash
 configu upsert --store "my-store" --set "test" --schema "./start.cfgu.json" \
     -c "GREETING=hey" \
-    -c "SUBJECT=configu node.js sdk"
+    -c "SUBJECT=configu"
 ```
 
 #### Eval and export commands
@@ -39,4 +42,4 @@ configu eval --store "my-store" --set "test" --schema "./start.cfgu.json" \
 
 ## References
 
-- Integration documentation: https://docs.launchdarkly.com/home/getting-started/setting-up?_gl=1*11fhv7o*_gcl_au*MTQ4NDYyNzQ0OC4xNzI5ODgzMTI5
+- Integration documentation: https://docs.launchdarkly.com
