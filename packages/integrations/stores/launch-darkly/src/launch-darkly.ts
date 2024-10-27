@@ -1,7 +1,7 @@
 import { type EvaluationContext, OpenFeature } from '@openfeature/server-sdk';
 import { LaunchDarklyProvider } from '@launchdarkly/openfeature-node-server';
 import { type LDOptions } from '@launchdarkly/node-server-sdk';
-import { type ConfigStoreQuery, type Config } from '@configu/sdk';
+import { type ConfigQuery, type Config } from '@configu/sdk';
 import _ from 'lodash';
 import { OpenFeatureConfigStore } from '@configu/integrations/src/utils/OpenFeature';
 
@@ -26,7 +26,7 @@ export class LaunchDarklyConfigStore extends OpenFeatureConfigStore {
     });
   }
 
-  async get(queries: ConfigStoreQuery[]): Promise<Config[]> {
+  async get(queries: ConfigQuery[]): Promise<Config[]> {
     const configs = await super.get(queries);
     await OpenFeature.close();
     return configs;
