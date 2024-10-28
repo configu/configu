@@ -1,13 +1,19 @@
-# @configu-integrations/azure-key-vault-config-store
+# @configu-integrations/azure-keyvault
 
 Integrates the Configu Orchestrator with [Azure Key Vault](https://learn.microsoft.com/en-us/azure/key-vault/).  
 
 - Name: Azure Key Vault  
-- Category: Secret Manager  
+- Category: Secret manager  
 
 ## Configuration
 
-Configu interacts with Azure Key Vault to manage secrets, keys, and certificates. You need to provide authentication details and specify the key vault's URL. Configu uses [Azure Identity SDK](https://learn.microsoft.com/en-us/azure/active-directory/develop/reference-v2-libraries) for secure authentication.
+Configu needs to be authorized to access Azure Key Vault. Configu uses the [default azure credentials](https://www.npmjs.com/package/@azure/identity#defaultazurecredential) which by default will read account information specified via [environment variables](https://www.npmjs.com/package/@azure/identity#environment-variables) and use it to authenticate. The `vaultUrl` parameter must always be provided.
+
+The examples below will use the following environment variables for authentication: `AZURE_CLIENT_ID`, `AZURE_CLIENT_SECRET`, `AZURE_TENANT_ID` in conjunction with the required `vaultUrl` parameter.
+
+## Limitations
+
+- Deleted configs do not immediately remove secrets [due to soft deletion](https://learn.microsoft.com/en-us/azure/key-vault/general/soft-delete-overview). Attempting to upsert to a deleted secret that is not purged will throw an error.
 
 ## Usage
 
@@ -15,13 +21,11 @@ Configu interacts with Azure Key Vault to manage secrets, keys, and certificates
 
 ```yaml
 stores:
-  my-azure-keyvault-store:
+  my-store:
     type: azure-key-vault
     configuration:
+      credential: {}
       vaultUrl: https://my-vault.vault.azure.net/
-      clientId: <your-client-id>
-      clientSecret: <your-client-secret>
-      tenantId: <your-tenant-id>
 ```
 
 ### CLI Examples
@@ -29,36 +33,36 @@ stores:
 #### Upsert Command
 
 ```bash
-configu upsert --store "my-azure-keyvault-store" --set "test" --schema "./start.cfgu.json" \
-    -c "STORAGE_CONNECTION_STRING=DefaultEndpointsProtocol=https;AccountName=..." \
-    -c "API_KEY=12345abcdef"
+configu upsert --store "my-store" --set "test" --schema "./start.cfgu.json" \
+    -c "GREETING=hey" \
+    -c "SUBJECT=configu"
 ```
 
-#### Eval and Export Commands
+#### Eval and export commands
 
 ```bash
-configu eval --store "my-azure-keyvault-store" --set "test" --schema "./start.cfgu.json" \
+configu eval --store "my-store" --set "test" --schema "./start.cfgu.json" \
  | configu export
 ```
 
-## Common Errors and Solutions
+## Common errors and solutions
 
-1. Authentication Failure
+1. Authentication failure
    - Solution: Ensure the correct `clientId`, `clientSecret`, and `tenantId` are provided. Verify the service principal's permissions in the Azure portal.
 
-2. Vault Not Found
+2. Vault not found
    - Solution: Ensure the `vaultUrl` is correct and the key vault exists in your Azure subscription. Verify with:
      ```bash
      az keyvault show --name my-vault
      ```
 
-3. Access Denied  
+3. Access denied  
    - Solution: Make sure the service principal has the necessary access policy to manage secrets. Use the following command to grant permissions:
      ```bash
      az keyvault set-policy --name my-vault --spn <your-client-id> --secret-permissions get list set delete
      ```
 
-4. Network Connectivity Issues 
+4. Network connectivity issues 
    - Solution: Verify that your network allows access to the vault endpoint. Test the connectivity with:
      ```bash
      curl -I https://my-vault.vault.azure.net/
@@ -66,6 +70,6 @@ configu eval --store "my-azure-keyvault-store" --set "test" --schema "./start.cf
 
 ## References
 
-- Integration documentation: https://learn.microsoft.com/en-us/azure/key-vault/
+- Integration documentation: https://docs.aws.amazon.com/secretsmanager
 - Azure Identity SDK: https://learn.microsoft.com/en-us/azure/active-directory/develop/reference-v2-libraries
 
