@@ -23,9 +23,9 @@ stores:
         targetingKey: <your-targeting-key>
 ```
 
-### CLI Examples
+### CLI examples
 
-#### Upsert Command
+#### Upsert command
 
 ```bash
 configu upsert --store "my-store" --set "test" --schema "./start.cfgu.json" \
