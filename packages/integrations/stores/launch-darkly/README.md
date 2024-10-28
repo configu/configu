@@ -19,8 +19,8 @@ stores:
     type: launch-darkly
     configuration:
       sdkKey: example-sdkKey
-        context:
-          targetingKey: default
+      context:
+        targetingKey: default
 ```
 
 ### CLI examples
