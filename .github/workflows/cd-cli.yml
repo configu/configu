@@ -5,24 +5,23 @@ on:
     tags:
       - 'cli/v*'
 
+env:
+  PACKAGE_NAME: '@configu/cli'
+  ARTIFACT_NAME: 'configu-cli'
+  PACKAGE_PATH: 'packages/cli'
+
 jobs:
   cd-cli:
-    name: CD/@configu/cli
-    runs-on: ubuntu-latest
-    env:
-      PACKAGE_NAME: '@configu/cli'
-      PACKAGE_PATH: 'packages/cli'
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }} # required by aws, oclif
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }} # required by aws, oclif
-      AWS_REGION: ${{ secrets.AWS_REGION }} # required by aws, oclif
-      S3_BUCKET: 'cli.configu.com'
-      CLOUDFRONT_DISTRIBUTION: 'E1I302A2MRSW0O'
-      DOCKERHUB_REPOSITORY: 'configu/cli'
-    permissions:
-      contents: write
-      id-token: write
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        node-version: [22.x]
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       - uses: ./.github/actions/deploy-start-action
         id: deployment
@@ -32,83 +31,38 @@ jobs:
 
       - uses: ./.github/actions/ts-env-action
 
-      - uses: aws-actions/configure-aws-credentials@v4
+      - name: Compile the CLI into a single executable
+        run: pnpm -r compile
+
+      - uses: actions/upload-artifact@master
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-      # ---
-      - name: Bump package version
-        run: |
-          pnpm --filter ${{ env.PACKAGE_NAME }} exec \
-            npm --no-git-tag-version version ${{ steps.deployment.outputs.release-version }}
-
-      - name: Publish to npm
-        run: |
-          git diff
-          pnpm --filter ${{ env.PACKAGE_NAME }} exec \
-            oclif manifest
-          pnpm --filter ${{ env.PACKAGE_NAME }} publish \
-            --access public --provenance --no-git-checks --tag ${{ steps.deployment.outputs.release-channel }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Build package code and produce tarballs
-        run: |
-          pnpm --filter ${{ env.PACKAGE_NAME }} run \
-            build:tar
-
-      # https://github.com/oclif/oclif
-      # https://github.com/oclif/oclif/blob/61cb7664ce38f1b7827ff652f063c3be7adeb1af/src/tarballs/config.ts
-      - name: Publish tarballs to storage
-        run: |
-          cd ${{ env.PACKAGE_PATH }}
-          pnpm oclif upload tarballs \
-            --root tmp
-          if [ "${{ steps.deployment.outputs.release-channel }}" = "latest" ]; then channel="stable"; else channel="${{ steps.deployment.outputs.release-channel }}"; fi
-          pnpm oclif promote \
-            --root tmp \
-            --channel $channel \
-            --version ${{ steps.deployment.outputs.release-version }} \
-            --sha ${{ steps.deployment.outputs.release-sha }} \
-            --indexes
-
-      - name: Copy installation scripts to storage
-        run: |
-          cd ${{ env.PACKAGE_PATH }}
-          aws s3 cp ./scripts s3://${{ env.S3_BUCKET }} --recursive
-
-      - name: Invalidate storage CDN
-        run: |
-          aws cloudfront create-invalidation --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION }} --paths "/*"
+          name: ${{ env.ARTIFACT_NAME }}-${{ matrix.os }}
+          path: ${{ env.PACKAGE_PATH }}/dist
+  end-release:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - uses: actions/download-artifact@master
+        with:
+          name: ${{ env.ARTIFACT_NAME }}-ubuntu-latest
+          path: ${{ env.PACKAGE_PATH }}/dist
+      - uses: actions/download-artifact@master
+        with:
+          name: ${{ env.ARTIFACT_NAME }}-macos-latest
+          path: ${{ env.PACKAGE_PATH }}/dist
+      - uses: actions/download-artifact@master
+        with:
+          name: ${{ env.ARTIFACT_NAME }}-windows-latest
+          path: ${{ env.PACKAGE_PATH }}/dist
 
       - name: Upload artifacts to release
         uses: softprops/action-gh-release@v2
-        if: ${{startsWith(github.ref, 'refs/tags/') }}
         with:
+          make_latest: true
+          prerelease: true
+          name: cli
+          tag_name: cli-${{ steps.deployment.outputs.release-version }}
           files: |
-            ${{ env.PACKAGE_PATH }}/tmp/dist/*
-
-      - uses: docker/setup-qemu-action@v3
-
-      - uses: docker/setup-buildx-action@v3
-
-      - uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Build docker image and push to Docker Hub
-        uses: docker/build-push-action@v5
-        with:
-          context: ${{ env.PACKAGE_PATH }}
-          platforms: linux/amd64,linux/arm64
-          tags: ${{ env.DOCKERHUB_REPOSITORY }}:${{ steps.deployment.outputs.release-version }},${{ env.DOCKERHUB_REPOSITORY }}:${{ steps.deployment.outputs.release-channel }}
-          push: true
-      # ---
-      - uses: ./.github/actions/deploy-end-action
-        if: always()
-        with:
-          package-name: ${{ env.PACKAGE_NAME }}
-          package-version: ${{ steps.deployment.outputs.release-version }}
-          slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+            ${{ env.ARTIFACT_NAME }}/dist/*
