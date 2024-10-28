@@ -1,13 +1,17 @@
-# @configu-integrations/hashi-corp-vault-config-store
+# @configu-integrations/hashicorp-vault
 
-Integrates the Configu Orchestrator with [HashiCorp Vault](https://www.vaultproject.io/), a secrets management tool for securely storing and accessing sensitive data.
+Integrates the Configu Orchestrator with [HashiCorp Vault](https://www.vaultproject.io/).
 
-- Name: HashiCorp Vault Config Store  
-- Category: Secret Manager  
+- Name: HashiCorp Vault
+- Category: Secret manager  
 
 ## Configuration
 
-Configu connects to your HashiCorp Vault instance to manage secrets. You need to provide the Vault's address, authentication token, and optionally, specify the path to the secrets engine. Ensure that the token has the necessary read and write permissions.  
+Configu needs to be authorized to access your HashiCorp vault account. For this, you need to provide the following parameters: `address`, `engine`, `token`. By default, Configu attempts to use the following environment variables for the vault address and token: `VAULT_ADDR`, `VAULT_TOKEN`. The `engine` parameter must always be provided.
+
+## Limitations
+
+- Only supports the K/V2 engine.
 
 ## Usage 
 
@@ -15,50 +19,49 @@ Configu connects to your HashiCorp Vault instance to manage secrets. You need to
 
 ```yaml
 stores:
-  my-vault-store:
-    type: hashi-corp-vault
+  my-store:
+    type: hashicorp-vault
     configuration:
-      address: http://127.0.0.1:8200
-      token: <your-auth-token>
-      path: secret/config # Optional, defaults to 'secret/'
-      timeout: 5000 # Timeout in milliseconds
+      address: https://vault.example.com
+      token: example-token
+      engine: example-engine
 ```
 
-### CLI Examples
+### CLI examples
 
-#### Upsert Command
+#### Upsert command
 
 ```bash
-configu upsert --store "my-vault-store" --set "test" --schema "./start.cfgu.json" \
-    -c "DB_PASSWORD=securepassword" \
-    -c "API_KEY=supersecretkey"
+configu upsert --store "my-store" --set "test" --schema "./start.cfgu.json" \
+    -c "GREETING=hey" \
+    -c "SUBJECT=configu"
 ```
 
-#### Eval and Export Commands
+#### Eval and export commands
 
 ```bash
-configu eval --store "my-vault-store" --set "test" --schema "./start.cfgu.json" \
+configu eval --store "my-store" --set "test" --schema "./start.cfgu.json" \
  | configu export
 ```
 
-## Common Errors and Solutions
+## Common errors and solutions
 
-1. Authentication Failure  
+1. Authentication failure  
    - Solution: Ensure the provided `token` is valid and has sufficient permissions. Verify the token with:
      ```bash
      vault token lookup
      ```
 
-2. Timeout Issues  
+2. Timeout issues  
    - Solution: Increase the `timeout` value in the configuration if the Vault server takes longer to respond.
 
-3. Path Not Found  
+3. Path not Found  
    - Solution: Ensure the provided `path` exists and the token has access to it. Use:
      ```bash
      vault list secret/
      ```
 
-4. Certificate Errors in HTTPS Connections  
+4. Certificate errors in HTTPS connections  
    - Solution: If using HTTPS, ensure that the correct CA certificates are configured. Use the `VAULT_CACERT` environment variable to specify the certificate path:
      ```bash
      export VAULT_CACERT=/path/to/ca.pem
@@ -66,5 +69,4 @@ configu eval --store "my-vault-store" --set "test" --schema "./start.cfgu.json" 
 
 ## References
 
-- Integration documentation: https://www.vaultproject.io/docs 
-- CLI tool: https://developer.hashicorp.com/vault/docs/commands
+- Integration documentation: https://www.vaultproject.io/docs
