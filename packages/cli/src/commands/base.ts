@@ -1,4 +1,4 @@
-import { Command } from 'clipanion';
+import { Command, Option } from 'clipanion';
 import _ from 'lodash';
 import { CfguFile, ConfiguFile, parseJSON, readFile, Registry } from '@configu/common';
 import { EvalCommandOutput } from '@configu/sdk';
