@@ -1,15 +1,13 @@
-# @configu-integrations/etcd-config-store
+# @configu-integrations/etcd
 
-Integrates the Configu Orchestrator with [etcd](https://etcd.io/), a distributed key-value store for configuration management and service discovery.  
+Integrates the Configu Orchestrator with [etcd](https://etcd.io/).
 
-- Name: etcd Config Store  
-- Category: Key-Value Store  
-
----
+- Name: etcd
+- Category: Key-value store
 
 ## Configuration
 
-Configu connects to the etcd cluster to manage configurations through API endpoints. You need to provide connection details, including the host, port, and optional authentication credentials if required.  
+Configu needs to be authorized to access your etcd store. You may pass [options into the etcd client constructor](https://microsoft.github.io/etcd3/interfaces/ioptions.html) to configure how the client connects to etcd.
 
 ## Usage
 
@@ -17,7 +15,7 @@ Configu connects to the etcd cluster to manage configurations through API endpoi
 
 ```yaml
 stores:
-  my-etcd-store:
+  my-store:
     type: etcd
     configuration:
       hosts:
@@ -25,47 +23,46 @@ stores:
         - http://localhost:2380
       username: <your-username> # Optional
       password: <your-password> # Optional
-      timeout: 5000 # in milliseconds
 ```
 
-### CLI Examples
+### CLI examples
 
-#### Upsert Command
+#### Upsert command
 
 ```bash
-configu upsert --store "my-etcd-store" --set "test" --schema "./start.cfgu.json" \
+configu upsert --store "my-store" --set "test" --schema "./start.cfgu.json" \
     -c "APP_MODE=production" \
     -c "RETRY_COUNT=5"
 ```
 
-#### Eval and Export Commands
+#### Eval and export commands
 
 ```bash
-configu eval --store "my-etcd-store" --set "test" --schema "./start.cfgu.json" \
+configu eval --store "my-store" --set "test" --schema "./start.cfgu.json" \
  | configu export
 ```
 
-## Common Errors and Solutions
+## Common errors and solutions
 
-1. Connection Timeout  
+1. Connection timeout  
    - Solution: Ensure the `hosts` URLs are reachable from your application. Increase the `timeout` value if the network latency is high.
 
-2. Authentication Failure  
+2. Authentication failure  
    - Solution: If authentication is enabled, verify the provided `username` and `password`. Test with:
      ```bash
      etcdctl --user <username>:<password> endpoint status
      ```
 
-3. Cluster Unavailability  
+3. Cluster unavailability  
    - Solution: Ensure that all nodes in the etcd cluster are healthy. Use the following command to check cluster health:
      ```bash
      etcdctl endpoint health
      ```
 
-4. Key Collision Issues  
+4. Key collision issues  
    - Solution: Use unique keys or prefixes for different configuration sets to avoid conflicts.
 
 ## References
 
-- Integration documentation:https://etcd.io/docs 
-- CLI tool: https://etcd.io/docs/latest/dev-guide/interacting_v3/
+- Integration documentation: https://etcd.io/docs
+- Integration SDK documentation: https://microsoft.github.io/etcd3/classes/etcd3.html
