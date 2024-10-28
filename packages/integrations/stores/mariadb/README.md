@@ -1,6 +1,7 @@
 # @configu-integrations/mariadb
 
-Integrates the Configu MariaDBConfigStore with [MariaDB](https://mariadb.org/).
+Integrates the Configu Orchestrator with a [MariaDB database](https://mariadb.org/).
+
 - Name: MariaDB
 - Category: Database
 
@@ -34,18 +35,19 @@ configu eval --store "my-store" --set "test" --schema "./start.cfgu.json" \
  | configu export
 ```
 
-## Common Errors and Solutions
-1. **Connection Timeout Troubleshooting**
-   - **Solution:** Increase the `connectTimeout` or `acquireTimeout` in the configuration options to handle long-running connection setups. Make sure the database is reachable from your application.
+## Common errors and solutions
 
-2. **Authentication Failures**
-   - **Solution:** Verify that the provided `username` and `password` are correct, and that the user has the necessary permissions to access the specified database. Use a MariaDB client to manually confirm the credentials.
+1. Connection timeout troubleshooting
+   - Solution: Increase the `connectTimeout` or `acquireTimeout` in the configuration options to handle long-running connection setups. Make sure the database is reachable from your application.
 
-3. **SSL Certificate Issues**
-   - **Solution:** Ensure the correct paths for SSL certificates are provided if `ssl` is enabled. Verify that the certificates match the MariaDB server's configuration.
+2. Authentication failures
+   - Solution: Verify that the provided `username` and `password` are correct, and that the user has the necessary permissions to access the specified database. Use a MariaDB client to manually confirm the credentials.
 
-4. **Database Permissions Problems**
-   - **Solution:** Ensure that the database user has the required `READ` and `WRITE` permissions for the `config_store` table. Use the following SQL command to grant permissions:
+3. SSL Certificate issues
+   - Solution: Ensure the correct paths for SSL certificates are provided if `ssl` is enabled. Verify that the certificates match the MariaDB server's configuration.
+
+4. Database permissions problems
+   - Solution: Ensure that the database user has the required `READ` and `WRITE` permissions for the `config_store` table. Use the following SQL command to grant permissions:
    ```sql
    GRANT ALL PRIVILEGES ON config_store.* TO 'your_user'@'localhost';
    FLUSH PRIVILEGES;
