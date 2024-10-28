@@ -1,6 +1,6 @@
-import * as os from 'os';
-import * as fs from 'fs';
-import path from 'path';
+import * as os from 'node:os';
+import * as fs from 'node:fs';
+import path from 'node:path';
 
 export const { NODE_ENV } = process.env;
 export const isDev = NODE_ENV === 'development';
