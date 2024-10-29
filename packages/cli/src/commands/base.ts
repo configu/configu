@@ -1,8 +1,8 @@
-import { Command, Option } from 'clipanion';
+import { Command } from 'clipanion';
 import _ from 'lodash';
 import { CfguFile, ConfiguFile, parseJSON, readFile, Registry } from '@configu/common';
 import { EvalCommandOutput } from '@configu/sdk';
-import path from 'path';
+import path from 'node:path';
 import { type CustomContext } from '../index';
 import { configuStoreType, getConfigDir } from '../helpers';
 
@@ -24,10 +24,16 @@ export type Context = CustomContext & {
 };
 
 export abstract class BaseCommand extends Command<Context> {
+  debug = Option.Boolean('--debug');
+
+  settings = Option.String('--settings', { description: 'Path to a .configu file' });
+
   public async init(): Promise<void> {
     this.context.UNICODE_NULL = '\u0000';
 
-    const configu = await ConfiguFile.search();
+    let configu: ConfiguFile;
+    if (this.settings) configu = await ConfiguFile.load(this.settings);
+    else configu = await ConfiguFile.search();
     this.context.configu = configu;
 
     const configuCredentialFilePath = path.join(getConfigDir(), 'config.json');
@@ -44,6 +50,8 @@ export abstract class BaseCommand extends Command<Context> {
         data: {},
       };
     }
+
+    if (this.debug) this.context.stdio.level = 4;
   }
 
   getBackupStoreInstanceByFlag(flag?: string) {
