@@ -57,7 +57,7 @@ export function Post() {
   if (process.env.EXPO_PUBLIC_POST_BUTTON_ENABLED !== 'true') return null;
 
   async function onPress() {
-    await fetch(apiUrl, { method: 'POST' });
+    await fetch(apiUrl, { ... });
   }
 
   return <Button onPress={onPress} title="Post" color={process.env.EXPO_PUBLIC_POST_BUTTON_COLOR} />;
