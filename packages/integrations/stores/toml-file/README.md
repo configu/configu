@@ -7,7 +7,7 @@ Integrates the Configu Orchestrator with [TomlFile](https://toml.io/en/).
 
 ## Configuration
 
-Configu needs to be authorized to access your TomlFile configuration.
+Configu needs to be authorized to access your TomlFile configuration. This is so it can access various configurations that are declared there.
 
 ## Usage
 
@@ -18,6 +18,7 @@ stores:
   my-store:
     type: toml-file
     configuration:
+      uri: <path-to-file>
 ```
 
 ### CLI examples
