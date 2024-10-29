@@ -12,6 +12,7 @@ import packageJson from '../package.json' with { type: 'json' };
 // import { HelloCommand } from './commands/hello';
 import { EvalCommand } from './commands/eval';
 import { CliExportCommand } from './commands/export';
+import { InitCommand } from './commands/init';
 import { LoginCommand } from './commands/login';
 import { RunCommand } from './commands/run';
 import { TestCommand } from './commands/test';
@@ -35,6 +36,7 @@ export async function run(argv: string[]) {
 
   cli.register(EvalCommand);
   cli.register(CliExportCommand);
+  cli.register(InitCommand);
   cli.register(LoginCommand);
   cli.register(RunCommand);
   cli.register(TestCommand);
