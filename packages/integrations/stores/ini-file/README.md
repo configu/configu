@@ -1,6 +1,6 @@
 # @configu-integrations/ini-file
 
-Integrates the Configu Orchestrator with [INI files](<https://learn.microsoft.com/en-us/previous-versions/windows/desktop/ms717987(v=vs.85)>).
+Integrates the Configu Orchestrator with [INI files](https://en.wikipedia.org/wiki/INI_file).
 
 - Name: INI File
 - Category: File
@@ -40,4 +40,4 @@ configu eval --store "my-store" --set "test" --schema "./start.cfgu.json" \
 
 ## References
 
-- Integration documentation: https://learn.microsoft.com/en-us/previous-versions/windows/desktop/ms717987(v=vs.85)
+- Integration documentation: https://en.wikipedia.org/wiki/INI_file
