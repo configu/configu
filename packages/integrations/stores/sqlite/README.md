@@ -64,3 +64,4 @@ configu eval --store "my-store" --set "test" --schema "./start.cfgu.json" \
 
 ## References
 - Integration documentation: https://www.sqlite.org/docs.html
+- TypeORM documentation: https://typeorm.io
