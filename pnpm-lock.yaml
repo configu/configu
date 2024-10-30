@@ -632,12 +632,12 @@ importers:
       '@configu/sdk':
         specifier: workspace:*
         version: link:../../../sdk
-      '@configu/ts':
-        specifier: 0.24.0
-        version: 0.24.0
       ini:
         specifier: 5.0.0
         version: 5.0.0
+      lodash-es:
+        specifier: 4.17.21
+        version: 4.17.21
     devDependencies:
       '@types/node':
         specifier: 20.12.12
@@ -1247,9 +1247,6 @@ packages:
   '@babel/runtime@7.25.7':
     resolution: {integrity: sha512-FjoyLe754PMiYsFaN5C94ttGiOmBNYTf6pLr4xXHAT5uctHb092PBszndLDR5XA/jghQvn4n7JMHl7dmTgbm9w==}
     engines: {node: '>=6.9.0'}
-
-  '@configu/ts@0.24.0':
-    resolution: {integrity: sha512-dXfmA+Np6xAwEmBvvwih6dd817DHI3pkGV6g5t9BZpm/J84xevguXiq6ohTl4zmRLpr0ncdAlC5wsdMCIKMwHQ==}
 
   '@cspell/cspell-bundled-dicts@8.15.4':
     resolution: {integrity: sha512-t5b2JwGeUmzmjl319mCuaeKGxTvmzLLRmrpdHr+ZZGRO4nf7L48Lbe9A6uwNUvsZe0cXohiNXsrrsuzRVXswVA==}
@@ -5492,10 +5489,6 @@ packages:
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
 
-  mustache@4.2.0:
-    resolution: {integrity: sha512-71ippSywq5Yb7/tVYyGbkBggbU8H3u5Rz56fH60jGFgr8uHwxs+aSKeqmluIVzM0m0kB7xQjKS6qPfd0b2ZoqQ==}
-    hasBin: true
-
   mute-stream@2.0.0:
     resolution: {integrity: sha512-WWdIxpyjEn+FhQJQQv9aQAYlHoNVdzIzUySNV1gHUPDSdZJ3yZn7pAAbQcV7B56Mvu881q9FZV+0Vx2xC44VWA==}
     engines: {node: ^18.17.0 || >=20.5.0}
@@ -7836,16 +7829,6 @@ snapshots:
   '@babel/runtime@7.25.7':
     dependencies:
       regenerator-runtime: 0.14.1
-
-  '@configu/ts@0.24.0':
-    dependencies:
-      ajv: 8.17.1
-      axios: 1.7.7
-      lodash: 4.17.21
-      mustache: 4.2.0
-      validator: 13.12.0
-    transitivePeerDependencies:
-      - debug
 
   '@cspell/cspell-bundled-dicts@8.15.4':
     dependencies:
@@ -12982,8 +12965,6 @@ snapshots:
   ms@2.0.0: {}
 
   ms@2.1.3: {}
-
-  mustache@4.2.0: {}
 
   mute-stream@2.0.0: {}
 

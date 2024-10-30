@@ -1,6 +1,6 @@
-import _ from 'lodash';
+import _ from 'lodash-es';
 import ini from 'ini';
-import { type Config } from '@configu/ts';
+import { type Config } from '@configu/sdk';
 import { FileConfigStore } from '@configu/integrations/src/utils/File';
 
 export type IniFileConfigStoreConfiguration = { path: string };
