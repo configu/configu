@@ -1,13 +1,13 @@
 # @configu-integrations/toml-file
 
-Integrates the Configu Orchestrator with [TomlFile](https://toml.io/en/).
+Integrates the Configu Orchestrator with [TOML files](https://toml.io/en/).
 
 - Name: Toml File
-- Category: File Format
+- Category: File
 
 ## Configuration
 
-Configu needs to be authorized to access your TomlFile configuration. This is so it can access various configurations that are declared there.
+Configu needs to be directed to your desired file by providing a file path via the `path` parameter.
 
 ## Usage
 
@@ -18,7 +18,7 @@ stores:
   my-store:
     type: toml-file
     configuration:
-      uri: <path-to-file>
+      path: path/to/file.ini
 ```
 
 ### CLI examples
