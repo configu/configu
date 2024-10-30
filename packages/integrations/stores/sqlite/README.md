@@ -7,7 +7,7 @@ Integrates the Configu Orchestrator with [sqlite](https://www.sqlite.org/docs.ht
 
 ## Configuration
 
-Configu needs to be authorized to access your Microsoft SQL Server database. Configu utilizes [TypeORM](https://typeorm.io) under the hood to establish a connection with the database using [data source options](https://typeorm.io/data-source-options#better-sqlite3-data-source-options) you need to supply.
+Configu needs to be authorized to access your SQLite database. Configu utilizes [TypeORM](https://typeorm.io) under the hood to establish a connection with the database using [data source options](https://typeorm.io/data-source-options#better-sqlite3-data-source-options) you need to supply.
 
 ## Usage
 
