@@ -44,4 +44,4 @@ configu eval --store "my-store" --set "test" --schema "./start.cfgu.json" \
 ## References
 
 - Integration documentation: https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html
-- Integration SDK documentation: https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/client/ssm
+- SSM Client documentation: https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/client/ssm
