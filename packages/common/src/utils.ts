@@ -4,6 +4,8 @@ import _ from 'lodash';
 import parseJson from 'parse-json';
 import yaml from 'js-yaml';
 import { ConfigSchema } from '@configu/sdk';
+import * as os from 'os';
+import { existsSync, mkdirSync } from 'fs';
 
 export const { NODE_ENV } = process.env;
 export const isDev = NODE_ENV === 'development';
@@ -64,4 +66,22 @@ export const parseYAML = (filePath: string, fileContent: string): any => {
     error.message = `YAML Error in ${filePath}:\n${error.message}`;
     throw error;
   }
+};
+
+export const getConfiguHomeDir = (): string => {
+  if (process.env.XDG_CONFIG_HOME) return process.env.XDG_CONFIG_HOME;
+
+  const baseDir = process.platform === 'win32' ? (process.env.LOCALAPPDATA ?? os.homedir()) : os.homedir();
+
+  if (!baseDir) {
+    throw new Error('Unable to determine the base directory for config files');
+  }
+
+  const configDir = path.join(baseDir, '.configu');
+
+  if (!existsSync(configDir)) {
+    mkdirSync(configDir, { recursive: true });
+  }
+
+  return configDir;
 };

@@ -4,8 +4,9 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'pathe';
 import { tsImport } from 'tsx/esm/api';
 import { ConfigStore, ConfigStoreConstructor, Expression, ExpressionFunction } from '@configu/sdk';
+import { getConfiguHomeDir } from './utils';
 
-const CONFIGU_HOME = path.join(process.cwd(), '/.configu-cache');
+const CONFIGU_HOME = path.join(getConfiguHomeDir(), '/.cache');
 
 const expressionOptionalSuffix = 'Expression';
 
@@ -68,7 +69,6 @@ export class Registry {
     }
   }
 
-  // todo: handle initialization of $HOME/.configu/.cache
   static async remoteRegisterStore(type: string) {
     await Registry.ensureCacheDir();
 
