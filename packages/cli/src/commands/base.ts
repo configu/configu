@@ -3,14 +3,6 @@ import _ from 'lodash';
 import { CfguFile, ConfiguFile, parseJSON, readFile, Registry } from '@configu/common';
 import { EvalCommandOutput } from '@configu/sdk';
 import path from 'node:path';
-import { CompactJSON } from '@configu-integrations/compact-json';
-import { Dotenv } from '@configu-integrations/dotenv';
-import { HelmValues } from '@configu-integrations/helm-values';
-import { JSONExpression } from '@configu-integrations/json';
-import { jsonToKubernetesConfigMap } from '@configu-integrations/kubernetes-config-map';
-import { jsonToTfvars } from '@configu-integrations/terraform-tf-values';
-import { TOML } from '@configu-integrations/toml';
-import { YAML } from '@configu-integrations/yaml';
 import { type CustomContext } from '../index';
 import { configuStoreType, getConfigDir } from '../helpers';
 
@@ -60,17 +52,6 @@ export abstract class BaseCommand extends Command<Context> {
     }
 
     if (this.debug) this.context.stdio.level = 4;
-
-    Registry.register({
-      CompactJSON,
-      Dotenv,
-      HelmValues,
-      JSON: JSONExpression,
-      KubernetesConfigMap: jsonToKubernetesConfigMap,
-      TerraformTfvars: jsonToTfvars,
-      TOML,
-      YAML,
-    });
   }
 
   getBackupStoreInstanceByFlag(flag?: string) {
