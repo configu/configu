@@ -108,6 +108,9 @@ importers:
       '@configu/sdk':
         specifier: workspace:*
         version: link:../sdk
+      '@inquirer/prompts':
+        specifier: 7.0.1
+        version: 7.0.1(@types/node@22.6.0)
       axios:
         specifier: ^1.7.4
         version: 1.7.7

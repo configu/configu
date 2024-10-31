@@ -1,5 +1,5 @@
 import { Command, Option } from 'clipanion';
-import inquirer from 'inquirer';
+import { input, rawlist } from '@inquirer/prompts';
 import open from 'open';
 import { Issuer, errors } from 'openid-client';
 import axios from 'axios';
@@ -63,13 +63,12 @@ export class LoginCommand extends BaseCommand {
       const handle = await client.deviceAuthorization({ audience: AUTH0_API_IDENTIFIER });
       const { user_code: userCode, verification_uri_complete: verificationUriComplete, expires_in: expiresIn } = handle;
 
-      const { confirmLogin } = await inquirer.prompt({
-        type: 'confirm',
-        name: 'confirmLogin',
+      const confirmLogin = await input({
+        required: true,
         message: `Press any key to open up the browser to login or press ctrl-c to abort.
       You should see the following code: ${userCode}. It expires in ${
         expiresIn % 60 === 0 ? `${expiresIn / 60} minutes` : `${expiresIn} seconds`
-      }. Continue?`,
+      }`,
       });
 
       if (!confirmLogin) return null;
@@ -85,14 +84,10 @@ export class LoginCommand extends BaseCommand {
       const userDataResponse = await this.getDataUser(tokens?.access_token);
 
       const choices = userDataResponse?.data?.orgs.map((org: any) => ({ name: org.name, value: org._id }));
-      const { orgId } = await inquirer.prompt<{ orgId: string }>([
-        {
-          type: 'list',
-          name: 'orgId',
-          message: 'Select default organization',
-          choices,
-        },
-      ]);
+      const orgId = rawlist({
+        message: 'Select default organization',
+        choices,
+      });
 
       return { org: orgId, token: tokens.access_token, type: 'Bearer' } as const;
     } catch (error) {
