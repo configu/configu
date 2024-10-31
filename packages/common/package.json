@@ -46,10 +46,6 @@
   "dependencies": {
     "@configu/sdk": "workspace:*",
     "@configu-integrations/validator": "workspace:*",
-    "@configu-integrations/compact-json": "workspace:*",
-    "@configu-integrations/json": "workspace:*",
-    "@configu-integrations/dotenv": "workspace:*",
-    "@configu-integrations/toml": "workspace:*",
     "@configu-integrations/configu": "workspace:*",
     "@configu-integrations/json-file": "workspace:*",
     "fast-glob": "^3.3.2",

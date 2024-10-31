@@ -22,8 +22,6 @@ export class Registry {
 
   static async register(module: Record<string, unknown>) {
     Object.entries(module).forEach(([key, value]) => {
-      // console.log('Registering:', key, value);
-
       if (key === 'default') {
         return;
       }
@@ -34,12 +32,10 @@ export class Registry {
         } catch {
           type = ConfigStore.getTypeByName(key);
         }
-        console.log('Registering ConfigStore:', type);
         Registry.store.set(type, value);
       } else if (Registry.isExpression(value)) {
         const existingExpressionKeys = Array.from(Expression.functions.keys());
         if (existingExpressionKeys.includes(key)) return;
-        // console.log('Registering Expression:', key);
         try {
           if (key.endsWith(expressionOptionalSuffix)) {
             Expression.register({ key: key.slice(0, -expressionOptionalSuffix.length), fn: value });

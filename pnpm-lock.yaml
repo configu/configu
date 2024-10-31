@@ -102,6 +102,30 @@ importers:
 
   packages/cli:
     dependencies:
+      '@configu-integrations/compact-json':
+        specifier: workspace:*
+        version: link:../integrations/formatters/CompactJSON
+      '@configu-integrations/dotenv':
+        specifier: workspace:*
+        version: link:../integrations/formatters/Dotenv
+      '@configu-integrations/helm-values':
+        specifier: workspace:*
+        version: link:../integrations/formatters/HelmValues
+      '@configu-integrations/json':
+        specifier: workspace:*
+        version: link:../integrations/formatters/JSON
+      '@configu-integrations/kubernetes-config-map':
+        specifier: workspace:*
+        version: link:../integrations/formatters/KubernetesConfigMap
+      '@configu-integrations/terraform-tf-values':
+        specifier: workspace:*
+        version: link:../integrations/formatters/TerraformTfvars
+      '@configu-integrations/toml':
+        specifier: workspace:*
+        version: link:../integrations/formatters/TOML
+      '@configu-integrations/yaml':
+        specifier: workspace:*
+        version: link:../integrations/formatters/YAML
       '@configu/common':
         specifier: workspace:*
         version: link:../common
@@ -147,24 +171,12 @@ importers:
 
   packages/common:
     dependencies:
-      '@configu-integrations/compact-json':
-        specifier: workspace:*
-        version: link:../integrations/formatters/CompactJSON
       '@configu-integrations/configu':
         specifier: workspace:*
         version: link:../integrations/stores/configu
-      '@configu-integrations/dotenv':
-        specifier: workspace:*
-        version: link:../integrations/formatters/Dotenv
-      '@configu-integrations/json':
-        specifier: workspace:*
-        version: link:../integrations/formatters/JSON
       '@configu-integrations/json-file':
         specifier: workspace:*
         version: link:../integrations/stores/json-file
-      '@configu-integrations/toml':
-        specifier: workspace:*
-        version: link:../integrations/formatters/TOML
       '@configu-integrations/validator':
         specifier: workspace:*
         version: link:../integrations/expressions/validator
