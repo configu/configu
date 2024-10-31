@@ -120,6 +120,9 @@ importers:
       consola:
         specifier: ^3.2.3
         version: 3.2.3
+      dotenv:
+        specifier: 16.4.5
+        version: 16.4.5
       inquirer:
         specifier: 12.0.0
         version: 12.0.0(@types/node@22.6.0)
@@ -621,6 +624,31 @@ importers:
         specifier: ^5.4.5
         version: 5.6.3
 
+  packages/integrations/stores/ini-file:
+    dependencies:
+      '@configu/integrations':
+        specifier: workspace:*
+        version: link:../..
+      '@configu/sdk':
+        specifier: workspace:*
+        version: link:../../../sdk
+      ini:
+        specifier: 5.0.0
+        version: 5.0.0
+      lodash-es:
+        specifier: 4.17.21
+        version: 4.17.21
+    devDependencies:
+      '@types/node':
+        specifier: 20.12.12
+        version: 20.12.12
+      tsup:
+        specifier: 8.2.4
+        version: 8.2.4(tsx@4.19.1)(typescript@5.6.3)(yaml@2.6.0)
+      typescript:
+        specifier: ^5.4.5
+        version: 5.6.3
+
   packages/integrations/stores/json-file:
     dependencies:
       '@configu/integrations':
@@ -672,6 +700,37 @@ importers:
         version: 0.20.0
       lodash-es:
         specifier: ^4.17.21
+        version: 4.17.21
+    devDependencies:
+      '@types/node':
+        specifier: 20.12.12
+        version: 20.12.12
+      tsup:
+        specifier: 8.2.4
+        version: 8.2.4(tsx@4.19.1)(typescript@5.6.3)(yaml@2.6.0)
+      typescript:
+        specifier: ^5.4.5
+        version: 5.6.3
+
+  packages/integrations/stores/launch-darkly:
+    dependencies:
+      '@configu/integrations':
+        specifier: workspace:*
+        version: link:../..
+      '@configu/sdk':
+        specifier: workspace:*
+        version: link:../../../sdk
+      '@launchdarkly/node-server-sdk':
+        specifier: ^9.7.0
+        version: 9.7.0
+      '@launchdarkly/openfeature-node-server':
+        specifier: 1.0.0
+        version: 1.0.0(@launchdarkly/node-server-sdk@9.7.0)(@openfeature/server-sdk@1.15.1(@openfeature/core@1.4.0))
+      '@openfeature/server-sdk':
+        specifier: 1.15.1
+        version: 1.15.1(@openfeature/core@1.4.0)
+      lodash-es:
+        specifier: 4.17.21
         version: 4.17.21
     devDependencies:
       '@types/node':
@@ -2002,6 +2061,21 @@ packages:
 
   '@kubernetes/client-node@0.20.0':
     resolution: {integrity: sha512-xxlv5GLX4FVR/dDKEsmi4SPeuB49aRc35stndyxcC73XnUEEwF39vXbROpHOirmDse8WE9vxOjABnSVS+jb7EA==}
+
+  '@launchdarkly/js-sdk-common@2.11.0':
+    resolution: {integrity: sha512-96Jg4QH347w2+rL4Bpykqw28+HHUAW4HapjIkIfM3giELK7BwXUp3BiAVxo2ax78e7A7KqvMzPJUx5r2EGpkMw==}
+
+  '@launchdarkly/js-server-sdk-common@2.9.0':
+    resolution: {integrity: sha512-hf/qkn+NvCkyoLl6fl+4Q737p4Jg3T+RnRqdkJDMxO+8aAI+vpXuD9bbhkgYA9XFHyQ9puhufRGzX1BX26b7Rg==}
+
+  '@launchdarkly/node-server-sdk@9.7.0':
+    resolution: {integrity: sha512-ABOsjcjH9pFdyG1m5++lhP+ngxfx4GMcIfgTp0iSPncuh0dMxCCWSx831gbhxR9M+f2x4EnsQ9HEdwnmwktb9g==}
+
+  '@launchdarkly/openfeature-node-server@1.0.0':
+    resolution: {integrity: sha512-4O4bQSqM+9BUZo8L+rQkxUdrv3sqC8vGcC0U0yBvELXmd9Q8jJZkY+7+idcx/zJsInYwnfmS0TUA4YeOyQw89A==}
+    peerDependencies:
+      '@launchdarkly/node-server-sdk': 9.x
+      '@openfeature/server-sdk': ^1.14.0
 
   '@leichtgewicht/ip-codec@2.0.5':
     resolution: {integrity: sha512-Vo+PSpZG2/fmgmiNzYK9qWRh8h/CHrwD0mo1h1DzL4yzHNSfWYujGTYsWGreD000gcgmZ7K4Ys6Tx9TxtsKdDw==}
@@ -4555,6 +4629,10 @@ packages:
     resolution: {integrity: sha512-QQnnxNyfvmHFIsj7gkPcYymR8Jdw/o7mp5ZFihxn6h8Ci6fh3Dx4E1gPjpQEpIuPo9XVNY/ZUwh4BPMjGyL01g==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
 
+  ini@5.0.0:
+    resolution: {integrity: sha512-+N0ngpO3e7cRUWOJAS7qw0IZIVc6XPrW4MlFBdD066F2L4k1L6ker3hLqSq7iXxU5tgS4WGkIUElWn5vogAEnw==}
+    engines: {node: ^18.17.0 || >=20.5.0}
+
   inline-style-parser@0.1.1:
     resolution: {integrity: sha512-7NXolsK4CAS5+xvdj5OMMbI962hU/wvwoxk+LWR9Ek9bVtyuuYScDN6eS0rUm6TxApFpw7CX1o4uJzcd4AyD3Q==}
 
@@ -4928,6 +5006,10 @@ packages:
   kleur@4.1.5:
     resolution: {integrity: sha512-o+NO+8WrRiQEE4/7nwRJhN1HWpVmJm511pBHUxPLtp0BUISzlBplORYSmTclCnJvQq2tKu/sgl3xVpkc7ZWuQQ==}
     engines: {node: '>=6'}
+
+  launchdarkly-eventsource@2.0.3:
+    resolution: {integrity: sha512-VhFjppK7jXlcEKaS7bxdoibB5j01NKyeDR7a8XfssdDGNWCTsbF0/5IExSmPi44eDncPhkoPNxlSZhEZvrbD5w==}
+    engines: {node: '>=0.12.0'}
 
   lcm@0.0.3:
     resolution: {integrity: sha512-TB+ZjoillV6B26Vspf9l2L/vKaRY/4ep3hahcyVkCGFgsTNRUQdc24bQeNFiZeoxH0vr5+7SfNRMQuPHv/1IrQ==}
@@ -6173,6 +6255,11 @@ packages:
 
   semver@6.3.1:
     resolution: {integrity: sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==}
+    hasBin: true
+
+  semver@7.5.4:
+    resolution: {integrity: sha512-1bCSESV6Pv+i21Hvpxp3Dx+pSD8lIPt8uVjRrxAUt/nbswYc+tK6Y2btiULjd4+fnq15PX+nqQDC7Oft7WkwcA==}
+    engines: {node: '>=10'}
     hasBin: true
 
   semver@7.6.3:
@@ -8464,6 +8551,26 @@ snapshots:
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
+
+  '@launchdarkly/js-sdk-common@2.11.0': {}
+
+  '@launchdarkly/js-server-sdk-common@2.9.0':
+    dependencies:
+      '@launchdarkly/js-sdk-common': 2.11.0
+      semver: 7.5.4
+
+  '@launchdarkly/node-server-sdk@9.7.0':
+    dependencies:
+      '@launchdarkly/js-server-sdk-common': 2.9.0
+      https-proxy-agent: 5.0.1
+      launchdarkly-eventsource: 2.0.3
+    transitivePeerDependencies:
+      - supports-color
+
+  '@launchdarkly/openfeature-node-server@1.0.0(@launchdarkly/node-server-sdk@9.7.0)(@openfeature/server-sdk@1.15.1(@openfeature/core@1.4.0))':
+    dependencies:
+      '@launchdarkly/node-server-sdk': 9.7.0
+      '@openfeature/server-sdk': 1.15.1(@openfeature/core@1.4.0)
 
   '@leichtgewicht/ip-codec@2.0.5': {}
 
@@ -11785,6 +11892,8 @@ snapshots:
 
   ini@4.1.1: {}
 
+  ini@5.0.0: {}
+
   inline-style-parser@0.1.1: {}
 
   inquirer@12.0.0(@types/node@22.6.0):
@@ -12142,6 +12251,8 @@ snapshots:
   kleur@3.0.3: {}
 
   kleur@4.1.5: {}
+
+  launchdarkly-eventsource@2.0.3: {}
 
   lcm@0.0.3:
     dependencies:
@@ -13766,6 +13877,10 @@ snapshots:
   seedrandom@3.0.5: {}
 
   semver@6.3.1: {}
+
+  semver@7.5.4:
+    dependencies:
+      lru-cache: 6.0.0
 
   semver@7.6.3: {}
 

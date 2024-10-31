@@ -32,23 +32,25 @@
   ],
   "scripts": {
     "bundle": "tsup",
+    "compile": "tsx compiler/index.ts",
     "configu": "tsx src/run.ts",
     "start": "pnpm configu"
   },
   "dependencies": {
     "@configu/common": "workspace:*",
     "@configu/sdk": "workspace:*",
-    "change-case": "4.1.2",
     "axios": "^1.7.4",
+    "change-case": "4.1.2",
     "clipanion": "^4.0.0-rc.4",
     "consola": "^3.2.3",
+    "dotenv": "16.4.5",
     "inquirer": "12.0.0",
     "lodash": "^4.17.21",
+    "open": "10.1.0",
+    "openid-client": "5.7.0",
     "std-env": "^3.7.0",
     "tty-table": "4.2.3",
-    "typanion": "3.14.0",
-    "open": "10.1.0",
-    "openid-client": "5.7.0"
+    "typanion": "3.14.0"
   },
   "bundleDependencies": [],
   "devDependencies": {}

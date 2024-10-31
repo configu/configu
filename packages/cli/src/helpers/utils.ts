@@ -1,6 +1,7 @@
 import * as os from 'os';
 import * as fs from 'fs';
 import path from 'path';
+import { cwd } from 'process';
 
 export const { NODE_ENV } = process.env;
 export const isDev = NODE_ENV === 'development';
@@ -24,3 +25,7 @@ export const getConfigDir = (): string => {
 
   return configDir;
 };
+
+// directory: returns the directory name
+// file: return the file name with extension
+export const getPathBasename = (fullPath = cwd()) => path.basename(path.resolve(fullPath));
