@@ -61,7 +61,7 @@ export abstract class BaseCommand extends Command<Context> {
     return this.context.configu.getBackupStoreInstance(flag);
   }
 
-  getStoreInstanceByStoreFlag(flag?: string) {
+  async getStoreInstanceByStoreFlag(flag?: string) {
     if (!flag) {
       throw new Error('--store,--st flag is missing');
     }
@@ -70,7 +70,7 @@ export abstract class BaseCommand extends Command<Context> {
     if (storeType === configuStoreType || flag === configuStoreType) {
       storeConfig = { credentials: this.context.credentials.data.credentials };
     }
-    let store = this.context.configu.getStoreInstance(flag, storeConfig);
+    let store = await this.context.configu.getStoreInstance(flag, storeConfig);
     if (!store) {
       store = Registry.constructStore(flag, storeConfig);
     }

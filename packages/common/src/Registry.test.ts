@@ -69,7 +69,7 @@ describe('Registry', () => {
 
       const existingStore = Registry.store.get('demo');
 
-      await Registry.remoteRegister('demo');
+      await Registry.remoteRegisterStore('demo');
 
       assert.equal(Registry.store.has('demo'), true);
       assert.equal(Registry.store.get('demo'), existingStore);
@@ -97,7 +97,7 @@ export class ${randomStoreClassName}${classSuffix} {
 }`,
       );
 
-      await Registry.remoteRegister(randomStoreClassName);
+      await Registry.remoteRegisterStore(randomStoreClassName);
 
       assert.equal(mockFetch.mock.calls.length, 0);
       assert.equal(Registry.store.has(randomStoreClassName.toLowerCase()), true);
@@ -128,7 +128,7 @@ export class ${randomStoreClassName}${classSuffix} {
         };
       });
 
-      await Registry.remoteRegister(randomStoreClassName);
+      await Registry.remoteRegisterStore(randomStoreClassName);
       assert.equal(mockFetch.mock.calls.length, 1);
       assert.equal(Registry.store.has(randomStoreClassName.toLowerCase()), true);
     });

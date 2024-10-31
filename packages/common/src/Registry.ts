@@ -69,25 +69,28 @@ export class Registry {
   }
 
   // todo: handle initialization of $HOME/.configu/.cache
-  static async remoteRegister(key: string) {
-    if (Registry.store.has(key)) {
-      return;
-    }
+  static async remoteRegisterStore(type: string) {
     await Registry.ensureCacheDir();
 
-    const [KEY, VERSION = 'latest'] = key.split('@');
-    const MODULE_PATH = path.join(CONFIGU_HOME, `/${KEY}-${VERSION}.js`);
+    // TODO: the artifacts should match deterministicType to this work
+    // const normalizedType = ConfigStore.deterministicType(type);
+    // const MODULE_PATH = path.join(CONFIGU_HOME, `/${normalizedType}.js`);
+    const MODULE_PATH = path.join(CONFIGU_HOME, `/${type}.js`);
+
+    // TODO: add sem-ver check for cache invalidation when cached stores are outdated once integration pipeline is reworked
 
     if (!existsSync(MODULE_PATH)) {
-      const res = await fetch(
-        `https://github.com/configu/configu/releases/download/integrations-${VERSION}/${KEY}-${platform()}.js`,
-      );
+      const platformString = platform();
+      const remoteIntegrationUrl = `https://github.com/configu/configu/releases/download/integrations-latest/${type}.os-${platformString}.js`;
+      const res = await fetch(remoteIntegrationUrl);
       if (res.ok) {
         await writeFile(MODULE_PATH, await res.text());
+      } else {
+        throw new Error(`remote integration ${type} not found`);
       }
     }
 
-    Registry.localRegister(MODULE_PATH);
+    await Registry.localRegister(MODULE_PATH);
   }
 
   static constructStore(type: string, configuration = {}): ConfigStore {
