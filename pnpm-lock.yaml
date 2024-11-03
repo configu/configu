@@ -647,10 +647,10 @@ importers:
         version: 20.12.12
       tsup:
         specifier: 8.2.4
-        version: 8.2.4(tsx@4.19.1)(typescript@5.6.3)(yaml@2.6.0)
+        version: 8.2.4(jiti@2.0.0)(tsx@4.19.1)(typescript@5.6.2)(yaml@2.5.1)
       typescript:
         specifier: ^5.4.5
-        version: 5.6.3
+        version: 5.6.2
 
   packages/integrations/stores/json-file:
     dependencies:
