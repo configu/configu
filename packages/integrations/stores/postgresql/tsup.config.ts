@@ -11,7 +11,7 @@ export default defineConfig(async (): Promise<Options | Options[]> => {
   return {
     entry: files.filter((file) => file.endsWith('.ts') && !file.includes('.test.')).map((file) => `src/${file}`),
     target: 'esnext',
-    format: 'esm',
+    format: 'cjs',
     noExternal: [/(.*)/],
     splitting: false,
     outDir: `../../dist`,
