@@ -1,0 +1,60 @@
+---
+title: V1 Migration Guide
+description: 'This guide is intended to help with migration to v1.'
+---
+
+## Breaking Changes
+
+### `.cfgu` file changes
+
+#### File structure changes
+
+The file structure of `.cfgu` files has significantly changed to provide a more robust structure.
+
+Link to new `.cfgu` JSONSchema: https://github.com/configu/configu/blob/main/packages/schema/.cfgu.json
+
+To update a `.cfgu` file to the new structure, the `Cfgu` declarations need to be moved under the `keys` property.
+
+Previous `start.cfgu.yaml`
+Previous `
+
+- all keys-> keys prop
+- no more `type`
+
+### `.configu` file changes
+
+- Any use of `cache` under `.configu` to `backup`
+
+## Upgrading Configu CLI
+
+TODO:
+
+## Upgrading Configu Proxy
+
+TODO:
+
+### Removal of `@configu/node` and `@configu/browser`
+
+Any and all uses of these packages are no longer supported. We encourage all users of these packages to utilize [`@configu/cli`](https://docs.configu.com/interfaces/cli/overview) or [`@configu/proxy`](https://docs.configu.com/interfaces/proxy/overview) depending on your requirements.
+
+## Migration script
+
+TODO: Add in case we provide one
+
+## New Features
+
+TODO:
+
+## Other changes
+
+### Removal of `@configu/lib`
+
+TODO: I think this isn't necessary, this is a pure internal package
+
+### Removal of `@configu/ts`
+
+TODO: I think this isn't necessary, this is a pure internal package
+
+## Contributors
+
+TODO: nice to have

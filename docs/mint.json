@@ -110,7 +110,8 @@
             "interfaces/sdk/browser/overview",
             "interfaces/sdk/lib/overview"
           ]
-        }
+        },
+        "interfaces/v1-migration-guide"
       ]
     },
     {
