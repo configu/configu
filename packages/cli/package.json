@@ -58,7 +58,8 @@
     "openid-client": "5.7.0",
     "std-env": "^3.7.0",
     "tty-table": "4.2.3",
-    "typanion": "3.14.0"
+    "typanion": "3.14.0",
+    "tiged": "2.12.7"
   },
   "bundleDependencies": [],
   "devDependencies": {}

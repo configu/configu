@@ -66,6 +66,7 @@
     }
   ],
   "ignorePatterns": [
-    "generated.ts"
+    "generated.ts",
+    "packages/cli/src/integration_template"
   ]
 }
