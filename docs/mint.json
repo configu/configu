@@ -110,8 +110,7 @@
             "interfaces/sdk/browser/overview",
             "interfaces/sdk/lib/overview"
           ]
-        },
-        "interfaces/v1-migration-guide"
+        }
       ]
     },
     {
@@ -158,7 +157,8 @@
             "guides/platform/slack-webhook",
             "guides/platform/github-actions-webhook"
           ]
-        }
+        },
+        "guides/v1-migration"
       ]
     }
   ]

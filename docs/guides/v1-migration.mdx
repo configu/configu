@@ -1,0 +1,120 @@
+---
+title: V1 Migration Guide
+sidebarTitle: V1 Migration
+description: 'This guide is intended to help with migration to v1.'
+---
+
+## Breaking Changes
+
+### `.cfgu` file changes
+
+The file structure of `.cfgu` files has significantly changed to provide a more robust structure.
+
+To update a `.cfgu` file to the new structure, the `Cfgu` declarations need to be moved under the `keys` property. Additionally, the `type` property has been removed so all `type` declarations need to be removed or converted to the [new `test` property](/interfaces/.cfgu#properties).
+
+We will provide an example of how to migrate the [example `.cfgu` file](/interfaces/.cfgu#example):
+
+{/* TODO: consider adding `test` to replace `type` */}
+
+<CodeGroup>
+
+```yaml example.cfgu.yaml
+$schema: https://json-schema.org/draft/2020-12/schema-cfgu
+keys:
+  NODE_ENV:
+    description: Defines the environment in which the application runs
+    options:
+      - development
+      - production
+      - test
+    default: development
+  LOG_LEVEL:
+    description: Defines the level of logs to be recorded
+    options:
+      - error
+      - warn
+      - info
+      - verbose
+      - debug
+      - silly
+    default: info
+  SERVICE_ENDPOINT:
+    description: Defines the endpoint for the service
+    type: URL
+    required: true
+  AWS_REGION:
+    description: Defines the AWS region for the service
+    default: us-east-1
+```
+
+```json example.cfgu.json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema-cfgu",
+  "keys": {
+    "NODE_ENV": {
+      "description": "Defines the environment in which the application runs",
+      "options": ["development", "production", "test"],
+      "default": "development"
+    },
+    "LOG_LEVEL": {
+      "description": "Defines the level of logs to be recorded",
+      "options": ["error", "warn", "info", "verbose", "debug", "silly"],
+      "default": "info"
+    },
+    "SERVICE_ENDPOINT": {
+      "description": "Defines the endpoint for the service",
+      "required": true
+    },
+    "AWS_REGION": {
+      "description": "Defines the AWS region for the service",
+      "default": "us-east-1"
+    }
+  }
+}
+```
+
+</CodeGroup>
+
+### `.configu` file changes
+
+- The `cache` property has been renamed to `backup` to more accurately reflect its purpose.
+
+## Upgrading Configu CLI
+
+TODO:
+
+## Upgrading Configu Proxy
+
+TODO:
+
+### Removal of `@configu/node` and `@configu/browser`
+
+Any and all uses of these packages are no longer supported. We encourage all users of these packages to utilize [`@configu/cli`](https://docs.configu.com/interfaces/cli/overview) or [`@configu/proxy`](https://docs.configu.com/interfaces/proxy/overview) depending on your requirements.
+
+## New Features
+
+TODO:
+
+### Expressions
+
+TODO:
+
+### New `cfgu` property: `test`
+
+TODO:
+
+## Other changes
+
+### Removal of `@configu/lib`
+
+TODO: I think this isn't necessary, this is a pure internal package
+
+### Removal of `@configu/ts`
+
+TODO: I think this isn't necessary, this is a pure internal package
+
+## Contributors
+
+- JamesL92
+- RS-labhub
+- etc... TODO: add rest of contributors
