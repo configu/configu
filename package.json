@@ -20,7 +20,7 @@
     "prepare:art": "shx cat docs/images/ascii-art.txt",
     "clean": "pnpm -r clean",
     "clean:all": "pnpm clean && shx rm -rf **/node_modules .eslintcache lcov.info",
-    "format": "prettier \"**/*.{js,mjs,ts,md,mdx,json,yml}\" --ignore-path .gitignore",
+    "format": "prettier \"**/*.{js,mjs,ts,md,mdx,json,yml}\" --ignore-path .gitignore,.prettierignore",
     "format:check": "pnpm format --check",
     "format:fix": "pnpm format --write",
     "lint": "eslint \".\" --ignore-path .gitignore --cache",

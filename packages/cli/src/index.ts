@@ -17,6 +17,7 @@ import { LoginCommand } from './commands/login';
 import { RunCommand } from './commands/run';
 import { TestCommand } from './commands/test';
 import { UpsertCommand } from './commands/upsert';
+import { GenerateCommand } from './commands/generate';
 
 export type CustomContext = BaseContext & { stdenv: typeof stdenv; stdio: typeof consola };
 
@@ -41,6 +42,7 @@ export async function run(argv: string[]) {
   cli.register(RunCommand);
   cli.register(TestCommand);
   cli.register(UpsertCommand);
+  cli.register(GenerateCommand);
 
   const context = {
     ...Cli.defaultContext,
