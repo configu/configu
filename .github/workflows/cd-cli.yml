@@ -80,7 +80,7 @@ jobs:
           path: ${{ env.PACKAGE_PATH }}/dist
       - name: Build Docker image
         working-directory: ${{ env.PACKAGE_PATH }}
-        run: docker build -t ${{ env.DOCKER_IMAGE_NAME }}:${{ steps.deployment.outputs.release-version }} .
+        run: docker build -t ${{ env.DOCKER_IMAGE_NAME }}:${{  github.ref_name }} .
       - name: Login to dockerhub
         run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
       - name: Push Docker image
