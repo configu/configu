@@ -61,10 +61,10 @@ jobs:
       - name: Upload artifacts to release
         uses: softprops/action-gh-release@v2
         with:
-          make_latest: true
-          prerelease: true
-          name: cli
-          tag_name: cli-${{ steps.deployment.outputs.release-version }}
+          make_latest: ${{  github.branch == 'main' }}
+          prerelease: ${{  github.branch != 'main' }}
+          name: ${{  github.ref_name }}
+          tag_name: ${{  github.ref_name }}
           files: |
             ${{ env.ARTIFACT_NAME }}/dist/*
 
