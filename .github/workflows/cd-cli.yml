@@ -7,6 +7,7 @@ on:
 
 env:
   PACKAGE_NAME: '@configu/cli'
+  DOCKER_IMAGE_NAME: 'configu/cli'
   ARTIFACT_NAME: 'configu-cli'
   PACKAGE_PATH: 'packages/cli'
 
@@ -47,15 +48,15 @@ jobs:
       - uses: actions/download-artifact@master
         with:
           name: ${{ env.ARTIFACT_NAME }}-ubuntu-latest
-          path: ${{ env.PACKAGE_PATH }}/dist
+          path: ${{ env.ARTIFACT_NAME }}/dist
       - uses: actions/download-artifact@master
         with:
           name: ${{ env.ARTIFACT_NAME }}-macos-latest
-          path: ${{ env.PACKAGE_PATH }}/dist
+          path: ${{ env.ARTIFACT_NAME }}/dist
       - uses: actions/download-artifact@master
         with:
           name: ${{ env.ARTIFACT_NAME }}-windows-latest
-          path: ${{ env.PACKAGE_PATH }}/dist
+          path: ${{ env.ARTIFACT_NAME }}/dist
 
       - name: Upload artifacts to release
         uses: softprops/action-gh-release@v2
@@ -76,10 +77,11 @@ jobs:
       - uses: actions/download-artifact@master
         with:
           name: ${{ env.ARTIFACT_NAME }}-ubuntu-latest
+          path: ${{ env.PACKAGE_PATH }}/dist
       - name: Build Docker image
         working-directory: ${{ env.PACKAGE_PATH }}
-        run: docker build -t ${{ env.PACKAGE_NAME }}:${{ steps.deployment.outputs.release-version }} .
+        run: docker build -t ${{ env.DOCKER_IMAGE_NAME }}:${{ steps.deployment.outputs.release-version }} .
       - name: Login to dockerhub
         run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
       - name: Push Docker image
-        run: docker push ${{ env.PACKAGE_NAME }}:${{ steps.deployment.outputs.release-version }}
+        run: docker push ${{ env.DOCKER_IMAGE_NAME }}:${{ steps.deployment.outputs.release-version }}
