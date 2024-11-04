@@ -15,7 +15,7 @@ else
 	esac
 fi
 
-configu_version="1.0.0-next-1"
+configu_version="1.0.0-next.2"
 
 #configu_uri="./dist/configu-${target}${ext}"
 configu_uri="https://github.com/configu/configu/releases/download/cli%2Fv${configu_version}/configu-${target}${ext}"
