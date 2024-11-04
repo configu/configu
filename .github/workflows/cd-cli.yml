@@ -84,4 +84,4 @@ jobs:
       - name: Login to dockerhub
         run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
       - name: Push Docker image
-        run: docker push ${{ env.DOCKER_IMAGE_NAME }}:${{ steps.deployment.outputs.release-version }}
+        run: docker push ${{ env.DOCKER_IMAGE_NAME }}:${GITHUB_REF#*/}
