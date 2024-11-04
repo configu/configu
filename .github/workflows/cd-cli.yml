@@ -31,10 +31,6 @@ jobs:
 
       - uses: ./.github/actions/ts-env-action
 
-      - name: Windows signtool.exe code sign action
-        if: matrix.os == 'windows-latest'
-        uses: skymatic/code-sign-action@v3.0.0
-
       - name: Compile the CLI into a single executable
         run: pnpm -r compile
 
