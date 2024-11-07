@@ -18,14 +18,6 @@ import * as t from 'typanion';
 import { cwd } from 'process';
 import { readFile, Registry } from '@configu/common';
 import * as os from 'os';
-import { CompactJSON } from '@configu-integrations/compact-json';
-import { Dotenv } from '@configu-integrations/dotenv';
-import { HelmValues } from '@configu-integrations/helm-values';
-import { JSONExpression } from '@configu-integrations/json';
-import { jsonToKubernetesConfigMap } from '@configu-integrations/kubernetes-config-map';
-import { jsonToTfvars } from '@configu-integrations/terraform-tf-values';
-import { TOML } from '@configu-integrations/toml';
-import { YAML } from '@configu-integrations/yaml';
 import { BaseCommand } from './base';
 
 type TemplateContext = { [key: string]: string } | { key: string; value: string }[];
@@ -164,6 +156,15 @@ export class CliExportCommand extends BaseCommand {
   }
 
   async registerFormatterExpressions() {
+    const { CompactJSON } = await import('@configu-integrations/compact-json');
+    const { Dotenv } = await import('@configu-integrations/dotenv');
+    const { HelmValues } = await import('@configu-integrations/helm-values');
+    const { JSONExpression } = await import('@configu-integrations/json');
+    const { jsonToKubernetesConfigMap } = await import('@configu-integrations/kubernetes-config-map');
+    const { jsonToTfvars } = await import('@configu-integrations/terraform-tf-values');
+    const { TOML } = await import('@configu-integrations/toml');
+    const { YAML } = await import('@configu-integrations/yaml');
+
     await Registry.register({
       CompactJSON,
       Dotenv,
