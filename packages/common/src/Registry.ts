@@ -6,7 +6,7 @@ import { tsImport } from 'tsx/esm/api';
 import { ConfigStore, ConfigStoreConstructor, Expression, ExpressionFunction } from '@configu/sdk';
 import { getConfiguHomeDir } from './utils';
 
-const CONFIGU_HOME = path.join(getConfiguHomeDir(), '/.cache');
+const INTEGRATIONS_DIR = path.join(getConfiguHomeDir(), '/.integrations');
 
 const expressionOptionalSuffix = 'Expression';
 
@@ -61,21 +61,21 @@ export class Registry {
     Registry.register(module);
   }
 
-  private static async ensureCacheDir() {
+  private static async ensureIntegrationsDir() {
     try {
-      await mkdir(CONFIGU_HOME, { recursive: true });
+      await mkdir(INTEGRATIONS_DIR, { recursive: true });
     } catch {
       // ignore
     }
   }
 
   static async remoteRegisterStore(type: string) {
-    await Registry.ensureCacheDir();
+    await Registry.ensureIntegrationsDir();
 
     // TODO: the artifacts should match deterministicType to this work
     // const normalizedType = ConfigStore.deterministicType(type);
     // const MODULE_PATH = path.join(CONFIGU_HOME, `/${normalizedType}.js`);
-    const MODULE_PATH = path.join(CONFIGU_HOME, `/${type}.js`);
+    const MODULE_PATH = path.join(INTEGRATIONS_DIR, `/${type}.js`);
 
     // TODO: add sem-ver check for cache invalidation when cached stores are outdated once integration pipeline is reworked
 
