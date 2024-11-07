@@ -36,7 +36,8 @@ export abstract class BaseCommand extends Command<Context> {
     else configu = await ConfiguFile.search();
     this.context.configu = configu;
 
-    const configuCredentialFilePath = path.join(getConfiguHomeDirSafely(), 'config.json');
+    const configuHomeDir = await getConfiguHomeDirSafely();
+    const configuCredentialFilePath = path.join(configuHomeDir, 'config.json');
     try {
       const rawConfiguConfigData = await readFile(configuCredentialFilePath, true);
       const configuConfigData = JSON.parse(rawConfiguConfigData);

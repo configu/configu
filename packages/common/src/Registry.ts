@@ -6,7 +6,8 @@ import { tsImport } from 'tsx/esm/api';
 import { ConfigStore, ConfigStoreConstructor, Expression, ExpressionFunction } from '@configu/sdk';
 import { getConfiguHomeDirSafely } from './utils';
 
-const INTEGRATIONS_DIR = path.join(getConfiguHomeDirSafely(), '/.integrations');
+const CONFIGU_HOME_DIR = await getConfiguHomeDirSafely();
+const INTEGRATIONS_DIR = path.join(CONFIGU_HOME_DIR, '/.integrations');
 
 const expressionOptionalSuffix = 'Expression';
 

@@ -5,7 +5,7 @@ import parseJson from 'parse-json';
 import yaml from 'js-yaml';
 import { ConfigSchema } from '@configu/sdk';
 import * as os from 'node:os';
-import { existsSync, mkdirSync } from 'node:fs';
+import { existsSync } from 'node:fs';
 
 export const { NODE_ENV } = process.env;
 export const isDev = NODE_ENV === 'development';
@@ -68,11 +68,11 @@ export const parseYAML = (filePath: string, fileContent: string): any => {
   }
 };
 
-export const getConfiguHomeDirSafely = (): string => {
+export const getConfiguHomeDirSafely = async (): Promise<string> => {
   const configuHomeDir = path.join(os.homedir(), '.configu');
 
   if (!existsSync(configuHomeDir)) {
-    mkdirSync(configuHomeDir, { recursive: true });
+    await fs.mkdir(configuHomeDir, { recursive: true });
   }
 
   return configuHomeDir;
