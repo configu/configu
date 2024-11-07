@@ -6,15 +6,24 @@ description: 'This guide is intended to help with migration to v1.'
 
 ## Breaking Changes
 
-### `.cfgu` file changes
+### `Cfgu` format changes
+
+V1 introduces several breaking changes to `.cfgu` files. Below is a list of the breaking changes and how to update your `.cfgu` files.
+
+#### `Cfgu` property changes
+
+- The `type` property has been removed and replaced with the [new `test` property](/interfaces/.cfgu#properties).
+- The `enum` property has been renamed to `options` to better reflect its purpose.
+- The `depends` property has been removed. If you need to replicate it, you can use the [new `test` property](/interfaces/.cfgu#properties).
+- The `labels` property has been renamed to `label`.
+
+#### `.cfgu` file structure change
 
 The file structure of `.cfgu` files has significantly changed to provide a more robust structure.
 
-To update a `.cfgu` file to the new structure, the `Cfgu` declarations need to be moved under the `keys` property. Additionally, the `type` property has been removed so all `type` declarations need to be removed or converted to the [new `test` property](/interfaces/.cfgu#properties).
+To update a `.cfgu` file to the new structure, the `Cfgu` declarations need to be moved under the `keys` property.
 
 We will provide an example of how to migrate the [example `.cfgu` file](/interfaces/.cfgu#example):
-
-{/* TODO: consider adding `test` to replace `type` */}
 
 <CodeGroup>
 
@@ -23,14 +32,14 @@ $schema: https://json-schema.org/draft/2020-12/schema-cfgu
 keys:
   NODE_ENV:
     description: Defines the environment in which the application runs
-    options:
+    enum:
       - development
       - production
       - test
     default: development
   LOG_LEVEL:
     description: Defines the level of logs to be recorded
-    options:
+    enum:
       - error
       - warn
       - info
@@ -40,10 +49,36 @@ keys:
     default: info
   SERVICE_ENDPOINT:
     description: Defines the endpoint for the service
-    type: URL
+    test: isURL($.value)
     required: true
   AWS_REGION:
     description: Defines the AWS region for the service
+    enum:
+      - af-south-1
+      - ap-east-1
+      - ap-northeast-1
+      - ap-northeast-2
+      - ap-northeast-3
+      - ap-south-1
+      - ap-southeast-1
+      - ap-southeast-2
+      - ca-central-1
+      - cn-north-1
+      - cn-northwest-1
+      - eu-central-1
+      - eu-north-1
+      - eu-south-1
+      - eu-west-1
+      - eu-west-2
+      - eu-west-3
+      - me-south-1
+      - sa-east-1
+      - us-east-1
+      - us-east-2
+      - us-gov-east-1
+      - us-gov-west-1
+      - us-west-1
+      - us-west-2
     default: us-east-1
 ```
 
@@ -73,48 +108,92 @@ keys:
 }
 ```
 
+#### `type` property removal
+
 </CodeGroup>
 
 ### `.configu` file changes
 
-- The `cache` property has been renamed to `backup` to more accurately reflect its purpose.
+The `cache` property has been renamed to `backup` to more accurately reflect its purpose. Replace all occurrences of `cache` with `backup` to reflect the new naming convention.
 
 ## Upgrading Configu CLI
 
-TODO:
+TODO: get input from Ran
+Install `@configu/cli` version 1.0.0 or later. Add snippet here.
 
 ## Upgrading Configu Proxy
 
-TODO:
-
-### Removal of `@configu/node` and `@configu/browser`
-
-Any and all uses of these packages are no longer supported. We encourage all users of these packages to utilize [`@configu/cli`](https://docs.configu.com/interfaces/cli/overview) or [`@configu/proxy`](https://docs.configu.com/interfaces/proxy/overview) depending on your requirements.
+TODO: get input from Ran
+Install `@configu/proxy` version 1.0.0 or later.
 
 ## New Features
 
-TODO:
+V1 introduces several new features to Configu. Below is a list of the new features and how to use them.
 
 ### Expressions
 
-TODO:
+V1 introduces a new feature called expressions. Expressions allow you to write dynamic values with certain features like string interpolation, arithmetic operations, and more. All features that support expressions have their own injected context that can withing the expressions for evaluation.
 
-### New `cfgu` property: `test`
+The following features support expressions:
 
-TODO:
+- [The new `test` `Cfgu` property](/interfaces/.cfgu#properties)
+- [The new `const` `Cfgu` property](/interfaces/.cfgu#properties)
+- [The `.configu` file](/interfaces/.configu#environment-variables)
+- [The CLI export `filter` flag](http://localhost:3000/interfaces/cli/ref#configu-export)
+- [The CLI export `format` flag](http://localhost:3000/interfaces/cli/ref#configu-export)
+- [The CLI export `template` flag](http://localhost:3000/interfaces/cli/ref#configu-export)
+
+Example usages of expressions:
+
+`test` `Cfgu` property:
+
+```yaml
+keys:
+  UPPERCASE_STRING:
+    test: isString($.value)
+```
+
+The CLI export `filter` flag:
+
+```yaml
+configu eval --store store1 --set '' --schema ./tmp/schemas2/start.cfgu.yaml | configu export --filter 'empty($.value)' --filter 'contains($.cfgu.label,"a")'
+```
+
+The CLI export `format` flag:
+
+```yaml
+configu eval --store my-store --set '' --schema start.cfgu.yaml | configu export --format 'Dotenv({json:{{pipe}},wrap:true})'
+```
+
+The CLI export `template` flag, example template `.env` file:
+
+```.env
+SUBJECT={{SUBJECT}}
+GREETING={{toUpper(GREETING)}}
+```
+
+### New `Cfgu` property `test`
+
+The `test` property is a new property that allows you to write expressions to validate the value of a key. It replaces the `type` property which was removed due to its limited functionality.
+
+### New `Cfgu` property `const`
+
+The `const` property is a new property that allows you to write expressions to set a constant value for a key.
 
 ## Other changes
 
-### Removal of `@configu/lib`
+### `@configu/node` and `@configu/browser` removal
 
-TODO: I think this isn't necessary, this is a pure internal package
+Any and all uses of these packages are no longer supported. We encourage all users of these packages to utilize [`@configu/cli`](https://docs.configu.com/interfaces/cli/overview) or [`@configu/proxy`](https://docs.configu.com/interfaces/proxy/overview) depending on your requirements. All ConfigStore implementations have been moved to `@configu/integrations`.
 
-### Removal of `@configu/ts`
+### `@configu/lib` removal
 
-TODO: I think this isn't necessary, this is a pure internal package
+Superseded by `@configu/common` which is a package that provides shared functionality for the higher-level interfaces.
 
-## Contributors
+### `@configu/ts` removal
 
-- JamesL92
-- RS-labhub
-- etc... TODO: add rest of contributors
+Superseded by `@configu/sdk`.
+
+### Introduction of `@configu/integrations`
+
+A new package that contains all ConfigStore implementations and libraries that extend the expressions functionality which are decoupled from the core `@configu/sdk` package. This package is intended to be used by higher-level configu interfaces such as the CLI and proxy.
