@@ -1,0 +1,186 @@
+---
+title: React Native with Configu
+description: "Learn how to use React Native with `Configu`. We'll use the `Configu CLI` and the `Configu ConfigStore` (Configu Platform) to declare, initialize, and export a simple set of configuration data which you can use in your React Native app."
+---
+
+import CliInstallSnippet from '/snippets/cli-install.mdx';
+
+## 1. The problem
+
+When developing a React Native app, you typically need to manage configurations for various environments, like development, testing, and production. You may also need to adjust configurations for different app features or components, which can be time-consuming and error-prone if done manually. Configu helps streamline environment-based configuration in a React Native app, reducing the potential for manual errors. This guide will demonstrate how to use Configu to manage configurations for your React Native app.
+
+Let's begin by creating a [simple Expo project](https://docs.expo.dev/get-started/create-a-project/) and introduce environment variables to our React Native app by following the ["Environment variables in Expo"](https://docs.expo.dev/guides/environment-variables/) guide.
+
+You should now have the following `.env` file:
+
+```.env
+EXPO_PUBLIC_API_URL=https://staging.example.com
+EXPO_PUBLIC_API_KEY=abc123
+```
+
+And the following component that uses it:
+
+```jsx
+import { Button } from 'react-native';
+
+function Post() {
+  const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+
+  async function onPress() {
+    await fetch(apiUrl, { ... })
+  }
+
+  return <Button onPress={onPress} title="Post" />;
+}
+```
+
+Let's enrich the `.env` file with more environment variables:
+
+```.env
+EXPO_PUBLIC_API_URL=https://staging.api.example.com
+EXPO_PUBLIC_API_KEY=abc123
+EXPO_PUBLIC_POST_BUTTON_ENABLED=true
+EXPO_PUBLIC_POST_BUTTON_COLOR=blue
+```
+
+- `EXPO_PUBLIC_POST_BUTTON_ENABLED`: A feature flag that determines whether the post button is enabled.
+- `EXPO_PUBLIC_POST_BUTTON_COLOR`: The color of the post button.
+
+And use them in our component:
+
+```jsx
+import { Button } from 'react-native';
+
+export function Post() {
+  const apiUrl = process.env.EXPO_PUBLIC_API_URL ?? 'https://example.com/api';
+
+  if (process.env.EXPO_PUBLIC_POST_BUTTON_ENABLED !== 'true') return null;
+
+  async function onPress() {
+    await fetch(apiUrl, { ... });
+  }
+
+  return <Button onPress={onPress} title="Post" color={process.env.EXPO_PUBLIC_POST_BUTTON_COLOR} />;
+}
+```
+
+<Tip>
+  You will need to perform a full reload (for example, shake gesture and then Reload in Expo Go or your development
+  build) to see the updated values.
+</Tip>
+
+Now whenever we want to change the environment variables based on the environment we need we have to manually change the `.env` file. This is not a good practice and can lead to errors. This is where Configu comes in, you can store all your configurations in one place and use the Configu CLI to export the configurations to your `.env` file based on the environment you are working on. In the next steps we will show you how to do this.
+
+## 2. Install Configu CLI
+
+<CliInstallSnippet />
+
+## 3. Create schema declaration
+
+Run the following command which will create a ConfigSchema using the `.env` file you created earlier and set the values as defaults.
+
+```shell
+configu init --import .env --defaults --name expo
+```
+
+Now you should have a `expo.cfgu.json` file in your project directory with the following content:
+
+```json
+{
+  "EXPO_PUBLIC_API_URL": {
+    "default": "https://staging.api.example.com"
+  },
+  "EXPO_PUBLIC_API_KEY": {
+    "default": "abc123"
+  },
+  "EXPO_PUBLIC_POST_BUTTON_ENABLED": {
+    "default": "true"
+  },
+  "EXPO_PUBLIC_POST_BUTTON_COLOR": {
+    "default": "blue"
+  }
+}
+```
+
+## 4. Connect to Configu ConfigStore
+
+You may now choose one of the many ConfigStore integrations that are available as your source of configurations for your React Native app. In this guide, we will use the [Configu ConfigStore](/integrations/store/configu) our chosen ConfigStore.
+
+```shell
+configu login
+```
+
+<Info>
+The [Configu `ConfigStore`](https://app.configu.com/) is a convenient way to get started with Configu, especially for users who are new to the tool. It is a configuration management platform that is easy to use and requires minimal setup, with a free starter plan option.
+
+To get started with [Configu Platform](https://app.configu.com/), you'll need to [register and create a new organization](https://app.configu.com/).
+
+</Info>
+
+## 5. Upsert values
+
+Now that you have connected to the ConfigStore, you can upsert the configuration values for the different environments using the Configu CLI.
+
+You can upsert fallback configurations for each environment by upserting to the root set and adding environment specific configurations by upserting to the environment as such:
+
+```shell
+configu upsert \
+  --store 'configu' --set '' --schema './expo.cfgu.json' \
+  -c "EXPO_PUBLIC_POST_BUTTON_ENABLED=false" -c "EXPO_PUBLIC_API_KEY=abc123" -c "EXPO_PUBLIC_POST_BUTTON_COLOR=blue" \
+&& configu upsert \
+  --store 'configu' --set 'development' --schema './expo.cfgu.json' \
+  -c "EXPO_PUBLIC_API_URL=https://dev.api.example.com" -c "EXPO_PUBLIC_POST_BUTTON_COLOR=red" -c "EXPO_PUBLIC_POST_BUTTON_ENABLED=true" \
+&& configu upsert \
+  --store 'configu' --set 'staging' --schema './expo.cfgu.json' \
+  -c "EXPO_PUBLIC_API_URL=https://staging.api.example.com" -c "EXPO_PUBLIC_POST_BUTTON_ENABLED=true" \
+&& configu upsert \
+  --store 'configu' --set 'production' --schema './expo.cfgu.json' \
+  -c "EXPO_PUBLIC_API_URL=https://api.example.com" -c "EXPO_PUBLIC_API_KEY=prod123" "EXPO_PUBLIC_POST_BUTTON_COLOR=green"
+```
+
+## 6. Export and use values from Configu in your React Native app
+
+```shell
+configu eval \
+  --store 'configu' --set 'development' --schema './expo.cfgu.json' \
+| configu export \
+  --format "Dotenv" \
+> ".env"
+```
+
+As a result, you will get a `.env` file with the configurations declared in the "expo" ConfigSchema and their values from the "development" ConfigSet.
+
+```.env
+EXPO_PUBLIC_API_URL=https://dev.api.example.com
+EXPO_PUBLIC_API_KEY=abc123
+EXPO_PUBLIC_POST_BUTTON_ENABLED=true
+EXPO_PUBLIC_POST_BUTTON_COLOR=red
+```
+
+Evaluating and exporting from the "staging" and "production" ConfigSets will result in `.env` files with the configurations for those environments.
+
+Staging:
+
+```.env
+EXPO_PUBLIC_API_URL=https://staging.api.example.com
+EXPO_PUBLIC_API_KEY=abc123
+EXPO_PUBLIC_POST_BUTTON_ENABLED=true
+EXPO_PUBLIC_POST_BUTTON_COLOR=blue
+```
+
+Production:
+
+```.env
+EXPO_PUBLIC_API_URL=https://api.example.com
+EXPO_PUBLIC_API_KEY=prod123
+EXPO_PUBLIC_POST_BUTTON_ENABLED=false
+EXPO_PUBLIC_POST_BUTTON_COLOR=green
+```
+
+That's it! You can reload your app and see the changes in the `.env` file reflected in your React Native app. If you use a framework other than Expo, you can refer to the documentation of that framework to learn how to use environment variables.
+
+<Tip>
+  To learn more about Configu and how to use it, you can continue to explore the documentation and join the Configu
+  [Discord channel](https://discord.com/invite/cjSBxnB9z8), where you can ask questions and get help from the Configu
+  team and other community members.
+</Tip>
