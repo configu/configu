@@ -4,9 +4,9 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'pathe';
 import { tsImport } from 'tsx/esm/api';
 import { ConfigStore, ConfigStoreConstructor, Expression, ExpressionFunction } from '@configu/sdk';
-import { getConfiguHomeDir } from './utils';
+import { getConfiguHomeDirSafely } from './utils';
 
-const INTEGRATIONS_DIR = path.join(getConfiguHomeDir(), '/.integrations');
+const INTEGRATIONS_DIR = path.join(getConfiguHomeDirSafely(), '/.integrations');
 
 const expressionOptionalSuffix = 'Expression';
 

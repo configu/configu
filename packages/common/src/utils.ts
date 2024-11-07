@@ -68,15 +68,12 @@ export const parseYAML = (filePath: string, fileContent: string): any => {
   }
 };
 
-export const getConfiguHomeDir = (): string => {
-  if (process.env.XDG_CONFIG_HOME) return process.env.XDG_CONFIG_HOME;
+export const getConfiguHomeDirSafely = (): string => {
+  const configuHomeDir = path.join(os.homedir(), '.configu');
 
-  const baseDir = process.platform === 'win32' ? (process.env.LOCALAPPDATA ?? os.homedir()) : os.homedir();
-  const configDir = path.join(baseDir, '.configu');
-
-  if (!existsSync(configDir)) {
-    mkdirSync(configDir, { recursive: true });
+  if (!existsSync(configuHomeDir)) {
+    mkdirSync(configuHomeDir, { recursive: true });
   }
 
-  return configDir;
+  return configuHomeDir;
 };

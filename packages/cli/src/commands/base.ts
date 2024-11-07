@@ -1,6 +1,6 @@
 import { Command, Option } from 'clipanion';
 import _ from 'lodash';
-import { CfguFile, ConfiguFile, getConfiguHomeDir, parseJSON, readFile, Registry } from '@configu/common';
+import { CfguFile, ConfiguFile, getConfiguHomeDirSafely, parseJSON, readFile, Registry } from '@configu/common';
 import { EvalCommandOutput } from '@configu/sdk';
 import path from 'node:path';
 import { type CustomContext } from '../index';
@@ -36,7 +36,7 @@ export abstract class BaseCommand extends Command<Context> {
     else configu = await ConfiguFile.search();
     this.context.configu = configu;
 
-    const configuCredentialFilePath = path.join(getConfiguHomeDir(), 'config.json');
+    const configuCredentialFilePath = path.join(getConfiguHomeDirSafely(), 'config.json');
     try {
       const rawConfiguConfigData = await readFile(configuCredentialFilePath, true);
       const configuConfigData = JSON.parse(rawConfiguConfigData);
