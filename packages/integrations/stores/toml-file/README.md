@@ -18,7 +18,7 @@ stores:
   my-store:
     type: toml-file
     configuration:
-      path: path/to/file.ini
+      path: path/to/file.toml
 ```
 
 ### CLI examples
