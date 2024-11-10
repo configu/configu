@@ -44,52 +44,74 @@ $schema: https://raw.githubusercontent.com/configu/configu/main/packages/schema/
 </ResponseField>
 
 <ResponseField name="test" type="ConfigExpression|ConfigExpression[]">
-  Use this property to validate a `ConfigValue`.\ This property receives a string or an array of strings representing an
-  expression that evaluates to a boolean.\ If an array is provided, all expressions must evaluate to `true` for the
-  value to be considered valid. \ \ `ConfigExpression` context: - `$.value`: The `ConfigValue` to be validated. -
-  `$.cfgu`: The `Cfgu` of the evaluated config. - `$.key`: The `ConfigKey` of the evaluated config. - `$.origin`: The
-  origin of the `ConfigValue`. One of `empty`, `default`, `store`, `override`, or `const`. - `context.store`: The
-  `ConfigStore` provided as input to the command. - `context.set`: The `ConfigSet` provided as input to the command. -
-  `context.schema`: The `ConfigSchema` provided as input to the command. - All other `ConfigKey` values in the
-  `ConfigSchema` are accessible in the context via their key.
+  Use this property to validate a `ConfigValue`.
+  <br />
+  This property receives a string or an array of strings representing an expression that evaluates to a boolean.
+  <br />
+  If an array is provided, all expressions must evaluate to `true` for the value to be considered valid. <br />
+  <br />
+  `ConfigExpression` context: - `$.value`: The `ConfigValue` to be validated. - `$.cfgu`: The `Cfgu` of the evaluated
+  config. - `$.key`: The `ConfigKey` of the evaluated config. - `$.origin`: The origin of the `ConfigValue`. One of
+  `empty`, `default`, `store`, `override`, or `const`. - `context.store`: The `ConfigStore` provided as input to the
+  command. - `context.set`: The `ConfigSet` provided as input to the command. - `context.schema`: The `ConfigSchema`
+  provided as input to the command. - All other `ConfigKey` values in the `ConfigSchema` are accessible in the context
+  via their key.
 </ResponseField>
 
 <ResponseField name="const" type="ConfigExpression">
   Define a constant value for a `ConfigKey` through a `ConfigExpression`, these `ConfigKeys` are never queried through a
-  `ConfigStore`.\ This property cannot be set together with `lazy`, `default`, or `required`.\ \ `ConfigExpression`
-  context: - `$.cfgu`: The `Cfgu` of the evaluated config. - `$.key`: The `ConfigKey` of the evaluated config. -
-  `$.origin`: The origin of the `ConfigValue`. One of `empty`, `default`, `store`, `override`, or `const`. -
-  `context.store`: The `ConfigStore` provided as input to the command. - `context.set`: The `ConfigSet` provided as
-  input to the command. - `context.schema`: The `ConfigSchema` provided as input to the command. TODO: verify with Ran's
-  PR
+  `ConfigStore`.
+  <br />
+  This property cannot be set together with `lazy`, `default`, or `required`.
+  <br />
+  <br />
+  `ConfigExpression` context: - `$.cfgu`: The `Cfgu` of the evaluated config. - `$.key`: The `ConfigKey` of the
+  evaluated config. - `$.origin`: The origin of the `ConfigValue`. One of `empty`, `default`, `store`, `override`, or
+  `const`. - `context.store`: The `ConfigStore` provided as input to the command. - `context.set`: The `ConfigSet`
+  provided as input to the command. - `context.schema`: The `ConfigSchema` provided as input to the command. TODO:
+  verify with Ran's PR
 </ResponseField>
 
 <ResponseField name="pattern" type="String">
-  Define a regular expression a `ConfigValue` must match. \ This property must be provided if the `type` is `RegEx`.
+  Define a regular expression a `ConfigValue` must match.
+  <br />
+  This property must be provided if the `type` is `RegEx`.
 </ResponseField>
 
 <ResponseField name="schema" type="JSON Schema">
-  Specify a JSON schema a `ConigValue` must conform to. \ This property must be provided if the `type` is `JSONSchema`.
+  Specify a JSON schema a `ConigValue` must conform to.
+  <br />
+  This property must be provided if the `type` is `JSONSchema`.
 </ResponseField>
 
 <ResponseField name="enum" type="String[]">
-  Specify a list of allowable `ConigValues` for a `ConfigKey`. \ This property cannot be set together with `template`. \
-  This property cannot be an empty array or contain empty strings. \ Each option must be unique.
+  Specify a list of allowable `ConigValues` for a `ConfigKey`.
+  <br />
+  This property cannot be set together with `template`.
+  <br />
+  This property cannot be an empty array or contain empty strings.
+  <br />
+  Each option must be unique.
 </ResponseField>
 
 <ResponseField name="default" type="String">
-  Set a default `ConfigValue` for a `ConfigKey` if not explicitly provided. \ This property cannot be set together with
-  `required`, `const` or `lazy` properties. \ If `enum` is set, the default value must be one of the options.
+  Set a default `ConfigValue` for a `ConfigKey` if not explicitly provided. <br />
+  This property cannot be set together with `required`, `const` or `lazy` properties. <br />
+  If `enum` is set, the default value must be one of the options.
 </ResponseField>
 
 <ResponseField name="required" type="Boolean">
   Indicate whether a `ConfigKey` is essential for the application's functionality. When set to `true`, a `ConfigValue`
-  must be found on `EvalCommand`. \ This property cannot be set together with `default` or `const`.
+  must be found on `EvalCommand`.
+  <br />
+  This property cannot be set together with `default` or `const`.
 </ResponseField>
 
 <ResponseField name="lazy" type="Boolean">
   Indicate that a `ConfigValue` is set only during `EvalCommand` execution, excluding it from `UpsertCommand`
-  assignments. \ This property cannot be set together with `const` or `default`.
+  assignments.
+  <br />
+  This property cannot be set together with `const` or `default`.
 </ResponseField>
 
 <ResponseField name="hidden" type="Boolean">
