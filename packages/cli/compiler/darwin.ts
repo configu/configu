@@ -11,4 +11,6 @@ export function run(filename = 'configu') {
   );
   execSync('codesign --sign - configu');
   execSync(`mv configu dist/${filename}`);
+
+  return `dist/${filename}`;
 }

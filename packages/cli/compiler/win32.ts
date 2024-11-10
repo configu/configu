@@ -52,4 +52,6 @@ export async function run(filename = 'configu') {
   );
   // execSync(`"${signtool}" sign /fd SHA256 configu.exe`);
   execSync(`move configu.exe dist/${filename}.exe`);
+
+  return `dist/${filename}.exe`;
 }
