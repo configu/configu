@@ -6,6 +6,6 @@ export async function compress(input) {
   console.log('compressing', `${input}.gz`);
   const gzip = createGzip();
   const source = createReadStream(input);
-  const destination = createWriteStream(`${input}.gz`);
+  const destination = createWriteStream(`${input.replace('.exe', '')}.gz`);
   await pipeline(source, gzip, destination);
 }
