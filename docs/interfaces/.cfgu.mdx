@@ -47,24 +47,64 @@ $schema: https://raw.githubusercontent.com/configu/configu/main/packages/schema/
   Use this property to validate a `ConfigValue`. This property receives a string or an array of strings representing an
   expression that evaluates to a boolean. If an array is provided, all expressions must evaluate to `true` for the value
   to be considered valid.
-  <br />
-  `ConfigExpression` context: - `$.value`: The `ConfigValue` to be validated. - `$.cfgu`: The `Cfgu` of the evaluated
-  config. - `$.key`: The `ConfigKey` of the evaluated config. - `$.origin`: The origin of the `ConfigValue`. One of
-  `empty`, `default`, `store`, `override`, or `const`. - `context.store`: The `ConfigStore` provided as input to the
-  command. - `context.set`: The `ConfigSet` provided as input to the command. - `context.schema`: The `ConfigSchema`
-  provided as input to the command. - All other `ConfigKey` values in the `ConfigSchema` are accessible in the context
-  via their key.
+
+  <Accordion title="ConfigExpression context">
+      <ResponseField name="$.value" type="String">
+    The `ConfigValue` to be validated. 
+    </ResponseField>
+      <ResponseField name="$.cfgu" type="Cfgu">
+    The `Cfgu` of the evaluated
+  config.
+    </ResponseField>
+      <ResponseField name="$.key" type="String">
+    The `ConfigKey` of the evaluated config. 
+    </ResponseField>
+      <ResponseField name="$.origin" type="String">
+    The origin of the `ConfigValue`. One of
+  `empty`, `default`, `store`, `override`, or `const`.
+    </ResponseField>
+      <ResponseField name="context.store" type="ConfigStore">
+    The `ConfigStore` provided as input to the
+  command.
+    </ResponseField>
+      <ResponseField name="context.set" type="ConfigSet">
+    The `ConfigSet` provided as input to the command.
+    </ResponseField>
+      <ResponseField name="context.schema" type="ConfigSchema">
+    The `ConfigSchema`
+  provided as input to the command. 
+    </ResponseField>
+       <Info>All other `ConfigKey` values in the `ConfigSchema` are accessible in the context
+  via their key.</Info>
+   </Accordion>
 </ResponseField>
 
 <ResponseField name="const" type="ConfigExpression">
   Define a constant value for a `ConfigKey` through a `ConfigExpression`, these `ConfigKeys` are never queried through a
   `ConfigStore`. This property cannot be set together with `lazy`, `default`, or `required`.
-  <br />
-  `ConfigExpression` context: - `$.cfgu`: The `Cfgu` of the evaluated config. - `$.key`: The `ConfigKey` of the
-  evaluated config. - `$.origin`: The origin of the `ConfigValue`. One of `empty`, `default`, `store`, `override`, or
-  `const`. - `context.store`: The `ConfigStore` provided as input to the command. - `context.set`: The `ConfigSet`
-  provided as input to the command. - `context.schema`: The `ConfigSchema` provided as input to the command. - TODO:
-  verify with Ran's PR
+
+  <Accordion title="ConfigExpression context">
+      <ResponseField name="$.cfgu" type="Cfgu">
+    The `Cfgu` of the evaluated
+  config.
+    </ResponseField>
+      <ResponseField name="$.key" type="String">
+    The `ConfigKey` of the evaluated config. 
+    </ResponseField>
+      <ResponseField name="context.store" type="ConfigStore">
+    The `ConfigStore` provided as input to the
+  command.
+    </ResponseField>
+      <ResponseField name="context.set" type="ConfigSet">
+    The `ConfigSet` provided as input to the command.
+    </ResponseField>
+      <ResponseField name="context.schema" type="ConfigSchema">
+    The `ConfigSchema`
+  provided as input to the command. 
+    </ResponseField>
+       <Info>All other `ConfigKey` values in the `ConfigSchema` are accessible in the context
+  via their key.</Info>
+   </Accordion>
 </ResponseField>
 
 <ResponseField name="pattern" type="String">
