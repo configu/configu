@@ -47,7 +47,7 @@ A generic representation of `software configuration` using three properties: `ke
 
 <img alt="Cfgu" height="32" width="32" align="right" noZoom src="/images/config/Cfgu.svg" />
 
-A generic declaration of a `Config`, characterized by properties like type, description, and constraints, providing a schema for configuration data.
+A generic declaration of a `Config`, characterized by properties like test, description, and constraints, providing a schema for configuration data.
 
 [core/Cfgu](https://github.com/configu/configu/blob/main/packages/sdk/src/core/Cfgu.ts) | [.cfgu $schema](/interfaces/.cfgu#schema)
 
@@ -57,14 +57,14 @@ A generic declaration of a `Config`, characterized by properties like type, desc
 
 A storage engine interface for `Config` records, acting as a repository for configuration data.
 
-[core/ConfigStore](https://github.com/configu/configu/blob/main/packages/sdk/src/core/ConfigStore.ts) | [ConfigStore Collection](/)
+[core/ConfigStore](https://github.com/configu/configu/blob/main/packages/sdk/src/core/ConfigStore.ts) | [core/stores](https://github.com/configu/configu/blob/main/packages/sdk/src/stores) | [integrations/stores](https://github.com/configu/configu/blob/main/packages/integrations/stores)
 
 <Accordion title="Learn more about ConfigStore">
 A `ConfigStore` is a storage system for `Configs` in Configu, serving as a mechanism for storing, retrieving, and managing configuration data. It can be any system or service capable of storing data, including text files, databases, secret managers, and the `Configu Platform`. `ConfigStores` play a crucial role in the configuration management process, enabling the seamless retrieval and management of configuration values at deployments or runtime.
 
-You can choose the most suitable `ConfigStore` based on your specific needs and workflow. Each `ConfigStore` has its own type and can be referenced as instances of their respective class implementation when using Configu's SDK. When using Configu's CLI, `ConfigStores` are referenced using their type, which can also be declared as friendly names in the [.configu file](/).
+You can choose the most suitable `ConfigStore` based on your specific needs and workflow. When using Configu's CLI and Proxy, `ConfigStores` are referenced using their type, which can also be declared as friendly names in the [.configu file](/interfaces/.configu).
 
-Configu's interfaces [support a wide range of `ConfigStores`](/). In case you don't find a `ConfigStore` that meets your requirements, Configu allows you to easily create your own by implementing a simple abstract class with `get` and `set` methods. This flexibility empowers you to extend Configu and tailor it to your specific configuration management needs.
+Configu's interfaces [support a wide range of `ConfigStores`](https://github.com/configu/configu/blob/main/packages/integrations/stores). In case you don't find a `ConfigStore` that meets your requirements, Configu allows you to easily create your own by implementing a simple abstract class with `get` and `set` methods. This flexibility empowers you to extend Configu and tailor it to your specific configuration management needs.
 
 </Accordion>
 
@@ -203,7 +203,7 @@ A file containing binding records that link each unique `ConfigKey` to its corre
 <Accordion title="Learn more about ConfigSchema">
 A `ConfigSchema` in Configu is a file with a <CfguExt /> extension. It is a human-readable format for declaring configurations and their characteristics. It is designed to be stored in your source control alongside the code that uses these configurations, and can be treated as code as it shouldn't contain sensitive data.
 
-The `ConfigSchema` format provides a structured way to tie a `ConfigKey` as it appears in the code to its `Cfgu` properties, such as the type of data it represents (e.g., String, Number, Boolean), whether it is required or optional, and any constraints that should be applied to its value. These bindings help to ensure that configuration data is properly validated and applied, and can help to prevent misconfigurations and errors from reaching production.
+The `ConfigSchema` format provides a structured way to tie a `ConfigKey` as it appears in the code to its `Cfgu` properties, such as whether it is required or optional, and any constraints that should be applied to its value. These bindings help to ensure that configuration data is properly validated and applied, and can help to prevent misconfigurations and errors from reaching production.
 
 `.cfgu` files essentially set the boundaries of different domains in the code relative to the configuration they use. Developers are free to organize and structure their `.cfgu` files in a way that makes sense for their specific needs and workflow. There is no limit on the number of `.cfgu` files that can be created, and they can be spread across different codebases, subfolders in the same project, and different repositories.
 
@@ -214,27 +214,34 @@ Here is an example of a `ConfigSchema` file:
 <CodeGroup>
 
 ```yaml example.cfgu.yaml
-API_KEY:
-  type: 'String'
-  required: true
-  description: 'API key for a 3rd party service'
+keys:
+  API_KEY:
+    required: true
+    description: 'API key for a 3rd party service'
 ```
 
 ```json example.cfgu.json
 {
-  "API_KEY": {
-    "type": "String",
-    "required": true,
-    "description": "API key for a 3rd party service"
+  "keys": {
+    "API_KEY": {
+      "required": true,
+      "description": "API key for a 3rd party service"
+    }
   }
 }
 ```
 
 </CodeGroup>
 
-In this example, the `ConfigSchema` binds a configuration called "API_KEY" with a type of "String". The configuration is marked as required and has a short description.
+In this example, the `ConfigSchema` binds a configuration called "API_KEY". The configuration is marked as required and has a short description.
 
 </Accordion>
+
+### ConfigExpression
+
+TODO:
+
+- Mention Acron and SES
 
 ### UpsertCommand
 
@@ -282,7 +289,7 @@ A variable whose value is set outside the program (dynamic-named value), typical
 
 A piece of sensitive data that should be kept confidential, such as passwords, API keys, and certificates. Secrets are typically stored in a secure location and accessed programmatically.
 
-### Sercert Manager
+### Secret Manager
 
 A tool that securely stores and manages sensitive data. It provides an interface to store, retrieve, and rotate secrets, ensuring secure access to sensitive information. Examples include: [HashiCorp Vault](https://www.vaultproject.io/), [AWS Secrets Manager](https://aws.amazon.com/secrets-manager/), [Azure Key Vault](https://azure.microsoft.com/en-us/services/key-vault/), [Google Secret Manager](https://cloud.google.com/secret-manager), etc.
 
