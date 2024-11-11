@@ -143,19 +143,19 @@ scripts:
 
 ## Environment Variables
 
-The `.configu` file allows you to use environment variables in its different sections. This comes in handy for `store configuration options` or `scripts` when you want to avoid explicitly writing sensitive authentication credentials etc. and you want to inject them from the outside before running Configu. To use an environment variable, you can utilize [mustache templating](https://mustache.github.io/) as such:
+The `.configu` file allows you to use environment variables in its different sections. This comes in handy for `store configuration options` or `scripts` when you want to avoid explicitly writing sensitive authentication credentials etc. and you want to inject them from the outside before running Configu. To use an environment variable, you can utilize [`ConfigExpression`](/introduction/concepts#configexpression) as such:
 
 ```yaml
 $schema: https://json-schema.org/draft/2020-12/schema
 stores:
   store1:
-    type: 'storeType1',
+    type: 'storeType1'
     configuration:
-      option1: 'value1',
-      password: '{{PASSWORD}}',
+      option1: 'value1'
+      password: '{{PASSWORD}}'
 ```
 
-You can then pass the environment variable to the CLI using any method of setting environment variables to replace the mustache template with the environment variable value. Here is an example of passing an environment variable to the CLI by using an operating system specific prefix:
+You can then pass the environment variable to the CLI using any method of setting environment variables to replace the `ConfigExpression` with the environment variable value. Here is an example of passing an environment variable to the CLI by using an operating system specific prefix:
 
 <CodeGroup>
 
