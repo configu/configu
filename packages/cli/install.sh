@@ -4,9 +4,9 @@ set -e
 
 if [ "$OS" = "Windows_NT" ]; then
 	target="win32"
-	ext=".exe"
+	ext="exe"
 else
-  ext=""
+  ext="gz"
 	case $(uname -sm) in
 	"Darwin x86_64") target="darwin" ;;
 	"Darwin arm64") target="darwin" ;;
@@ -15,13 +15,13 @@ else
 	esac
 fi
 
-configu_version="1.0.0-next.2"
+configu_version="1.0.0-next.9"
 
 #configu_uri="./dist/configu-${target}${ext}"
-configu_uri="https://github.com/configu/configu/releases/download/cli%2Fv${configu_version}/configu-${target}${ext}"
+configu_uri="https://github.com/configu/configu/releases/download/cli%2Fv${configu_version}/configu-${target}.${ext}"
 configu_install="${CONFIGU_INSTALL:-$HOME/.configu}"
 bin_dir="$configu_install/bin"
-exe="$bin_dir/configu${ext}"
+exe="$bin_dir/configu"
 
 
 if [ ! -d "$bin_dir" ]; then
@@ -29,7 +29,16 @@ if [ ! -d "$bin_dir" ]; then
 fi
 
 #cp $configu_uri $exe
-curl --fail --location --progress-bar --output "$exe" "$configu_uri"
+curl --fail --location --progress-bar --output "$exe.$ext" "$configu_uri"
+
+if [ "$ext" = "gz" ]; then
+  if command -v gunzip >/dev/null; then
+  	gunzip "$exe.$ext"
+  else
+  	gzip -d "$exe.$ext"
+  fi
+fi
+
 chmod +x "$exe"
 
 # configure global command "configu" to run $exec executable
