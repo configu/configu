@@ -41,32 +41,34 @@ Our schema will look like this:
 
 ```json my-app.cfgu.json
 {
-  "DB_USER": {
-    "type": "string",
-    "default": "user"
-  },
-  "DB_PASSWORD": {
-    "type": "string",
-    "default": "123"
-  },
-  "DB_HOST": {
-    "type": "IPv4",
-    "required": "true",
-    "default": "127.0.0.1"
-  },
-  "DB_PORT": {
-    "type": "Number",
-    "required": "true",
-    "default": "5433"
-  },
-  "DB_NAME": {
-    "type": "string",
-    "default": "database"
-  },
-  "DB_URL": {
-    "type": "String",
-    "template": "psql://{{DB_USER}}:{{DB_PASSWORD}}@{{DB_HOST}}:{{DB_PORT}}/{{DB_NAME}}",
-    "description": "Generates a full PostgreSQL URL connection"
+  "keys": {
+    "DB_USER": {
+      "type": "string",
+      "default": "user"
+    },
+    "DB_PASSWORD": {
+      "type": "string",
+      "default": "123"
+    },
+    "DB_HOST": {
+      "type": "IPv4",
+      "required": "true",
+      "default": "127.0.0.1"
+    },
+    "DB_PORT": {
+      "type": "Number",
+      "required": "true",
+      "default": "5433"
+    },
+    "DB_NAME": {
+      "type": "string",
+      "default": "database"
+    },
+    "DB_URL": {
+      "type": "String",
+      "template": "psql://{{DB_USER}}:{{DB_PASSWORD}}@{{DB_HOST}}:{{DB_PORT}}/{{DB_NAME}}",
+      "description": "Generates a full PostgreSQL URL connection"
+    }
   }
 }
 ```
