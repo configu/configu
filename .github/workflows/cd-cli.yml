@@ -22,7 +22,7 @@ jobs:
         node-version: [22.x]
         exclude:
           - os: windows-latest
-            node: arm64
+            arch: arm64
 
     steps:
       - name: Checkout code
