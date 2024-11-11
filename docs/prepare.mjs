@@ -65,10 +65,9 @@ INTEGRATIONS_NAV.pages = ['integrations/overview', ...integrationsNavArray];
 // --- interfaces ---
 const INTERFACES_TITLE = {
   [TypeDocConfig.name]: 'Overview',
-  '@configu/ts': 'TypeScript SDK',
-  '@configu/node': 'Node.js SDK',
-  '@configu/browser': 'Browser SDK',
-  '@configu/lib': 'Common Library',
+  '@configu/sdk': 'Core SDK',
+  '@configu/integrations': 'Integrations Library',
+  '@configu/common': 'Common Library',
   '@configu/cli': 'Overview',
 };
 const README_FILE = `${TypeDocConfig.entryFileName}${TypeDocConfig.fileExtension}`;
