@@ -22,7 +22,9 @@ jobs:
         node-version: [22.x]
         exclude:
           - os: windows-latest
-            arch: arm64
+            arch: arm
+          - os: macos-latest
+            arch: x64
 
     steps:
       - name: Checkout code
@@ -68,10 +70,6 @@ jobs:
       - uses: actions/download-artifact@master
         with:
           name: ${{ env.ARTIFACT_NAME }}-macos-latest-arm64
-          path: ${{ env.ARTIFACT_NAME }}/dist
-      - uses: actions/download-artifact@master
-        with:
-          name: ${{ env.ARTIFACT_NAME }}-windows-latest-arm64
           path: ${{ env.ARTIFACT_NAME }}/dist
 
       - name: Upload artifacts to release
