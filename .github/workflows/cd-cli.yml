@@ -22,7 +22,7 @@ jobs:
         node-version: [22.x]
         exclude:
           - os: windows-latest
-            arch: arm
+            arch: arm64
           - os: macos-latest
             arch: x64
 
