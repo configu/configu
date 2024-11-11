@@ -23,10 +23,10 @@ configu_install="${CONFIGU_INSTALL:-$HOME/.configu}"
 bin_dir="$configu_install/bin"
 exe="$bin_dir/configu"
 
-
-if [ ! -d "$bin_dir" ]; then
-	mkdir -p "$bin_dir"
+if [ -d "$bin_dir" ]; then
+  rm -rf "$bin_dir"
 fi
+mkdir -p "$bin_dir"
 
 #cp $configu_uri $exe
 curl --fail --location --progress-bar --output "$exe.$ext" "$configu_uri"
