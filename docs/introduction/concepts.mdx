@@ -239,9 +239,50 @@ In this example, the `ConfigSchema` binds a configuration called "API_KEY". The 
 
 ### ConfigExpression
 
-TODO:
+A JavaScript string that is evaluated during runtime. ConfigExpressions are used throughout Configu's features to provide a robust and dynamic configuration management experience.
 
-Under the hood, Configu uses [Acron](https://github.com/acornjs/acorn/tree/master/acorn/) to parse ConfigExpression strings as Javascript and [SES](https://www.npmjs.com/package/ses) to execute it in a secure and strict environment.
+Each `ConfigExpression` also has its own context which can be used for evaluation, that depends on the feature it's used for. This is detailed within the relevant documentation for each feature.
+
+All native JavaScript functions and operators are supported, allowing for complex and powerful expressions to be defined. Additionally, Configu provides a set of built-in functions and utilities to enhance ConfigExpressions which includes:
+
+- [lodash](https://lodash.com) for various utility functions. Use `_` within the `ConfigExpression` to access lodash functions.
+- [validator.js](https://github.com/validatorjs/validator.js) for string validations. Use `validator` within the `ConfigExpression` to access validator.js functions.
+
+<Accordion title="Learn more about ConfigExpression">
+
+Configu uses [Acron](https://github.com/acornjs/acorn/tree/master/acorn/) to parse `ConfigExpressions` and [SES](https://www.npmjs.com/package/ses) to execute them in a secure and strict environment.
+
+Example usage of `ConfigExpressions` in the `test` `Cfgu` property:
+
+<CodeGroup>
+
+```yaml example.cfgu.yaml
+keys:
+  ENABLE_API:
+    test: validator.isBoolean
+    description: 'enables a 3rd party service'
+  API_KEY:
+    test: 'ENABLE_API === true'
+    description: 'API key for a 3rd party service. Only required if ENABLE_API is true'
+```
+
+```json example.cfgu.json
+{
+  "keys": {
+    "ENABLE_API": {
+      "test": "isBoolean",
+      "description": "enables a 3rd party service"
+    },
+    "API_KEY": {
+      "test": "ENABLE_API === true",
+      "description": "API key for a 3rd party service. Only required if ENABLE_API is true"
+  }
+}
+```
+
+</CodeGroup>
+
+</Accordion>
 
 ### UpsertCommand
 
