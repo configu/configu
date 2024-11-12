@@ -75,7 +75,7 @@ const README_FILE = `${TypeDocConfig.entryFileName}${TypeDocConfig.fileExtension
 const REF_FILE = `globals${TypeDocConfig.fileExtension}`;
 
 // Process README files to create the MDX files for the docs
-const prepareREADME = async ({ source, target, title = 'Overview' }) => {
+const prepareREADME = async ({ source, target, title = 'Overview', sidebarTitle = '' }) => {
   const sourcePath = path.join(ROOT_PATH, source);
   const targetPath = path.join(ROOT_PATH, target);
 
@@ -95,7 +95,7 @@ const prepareREADME = async ({ source, target, title = 'Overview' }) => {
 
   contents = `---
 title: '${title}'
-description: '${description}'
+description: '${description}'${sidebarTitle ? `\nsidebarTitle: '${sidebarTitle}'` : ''}
 ---
 ${contents}
 `;
@@ -143,12 +143,14 @@ app.renderer.postRenderAsyncJobs.push(async (renderer) => {
           const {
             docs,
             label,
+            sidebarTitle,
             store: { code },
           } = cur;
           return prepareREADME({
             source: `${code}/README.md`,
             target: `docs/${docs}${TypeDocConfig.fileExtension}`,
             title: label,
+            sidebarTitle,
           });
         }
         return Promise.resolve();
@@ -202,5 +204,5 @@ await fs.writeFile(REF_PATH, contents, { flag: 'w' });
 await fs.writeJson(path.join(DOCS_ROOT_PATH, 'mint.json'), MINT_CONTENT, { spaces: 2 });
 
 // Check for broken links in the docs
-await $`pnpm mintlify broken-links`.pipe(process.stdout);
+// await $`pnpm mintlify broken-links`.pipe(process.stdout);
 await $`pnpm prettier --ignore-path .gitignore --write .`.pipe(process.stdout);

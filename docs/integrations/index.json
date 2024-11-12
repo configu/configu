@@ -2,6 +2,7 @@
   "configu": {
     "enabled": true,
     "label": "Configu Platform",
+    "sidebarTitle": "Overview",
     "icon": "https://raw.githubusercontent.com/configu/configu/main/docs/images/icon/icon.svg",
     "docs": "integrations/store/configu/overview",
     "pages": [
@@ -360,7 +361,7 @@
       "code": "packages/integrations/stores/localforage"
     },
     "links": {
-      "website": "https://localforage.github.io/localForage"
+      "website": "https://localforage.github.io/§ §localForage"
     }
   },
 
