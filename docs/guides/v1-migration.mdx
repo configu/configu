@@ -13,7 +13,7 @@ V1 introduces several breaking changes to `.cfgu` files. Below is a list of the 
 #### `Cfgu` property changes
 
 - The `type` property has been removed and replaced with the [new `test` property](/interfaces/.cfgu#properties).
-- The `enum` property has been renamed to `options` to better reflect its purpose.
+- The `options` property has been renamed to `enum` to better reflect its purpose.
 - The `depends` property has been removed. If you need to replicate it, you can use the [new `test` property](/interfaces/.cfgu#properties).
 - The `labels` property has been renamed to `label`.
 
@@ -88,12 +88,12 @@ keys:
   "keys": {
     "NODE_ENV": {
       "description": "Defines the environment in which the application runs",
-      "options": ["development", "production", "test"],
+      "enum": ["development", "production", "test"],
       "default": "development"
     },
     "LOG_LEVEL": {
       "description": "Defines the level of logs to be recorded",
-      "options": ["error", "warn", "info", "verbose", "debug", "silly"],
+      "enum": ["error", "warn", "info", "verbose", "debug", "silly"],
       "default": "info"
     },
     "SERVICE_ENDPOINT": {
