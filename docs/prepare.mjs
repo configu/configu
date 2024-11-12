@@ -136,6 +136,23 @@ app.renderer.postRenderAsyncJobs.push(async (renderer) => {
       }
       return Promise.resolve();
     }),
+    ..._(INTEGRATIONS_INDEX_CONTENT)
+      .values()
+      .map(async (cur) => {
+        if (cur.enabled) {
+          const {
+            docs,
+            label,
+            store: { code },
+          } = cur;
+          return prepareREADME({
+            source: `${code}/README.md`,
+            target: `docs/${docs}${TypeDocConfig.fileExtension}`,
+            title: label,
+          });
+        }
+        return Promise.resolve();
+      }),
   ]);
 });
 await app.generateDocs(project, TypeDocConfig.out);

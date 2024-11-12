@@ -138,6 +138,49 @@
                 "integrations/store/configu/settings",
                 "integrations/store/configu/billing"
               ]
+            },
+            {
+              "group": "File",
+              "pages": [
+                "integrations/store/file/json-file",
+                "integrations/store/file/csv-file",
+                "integrations/store/file/xml-file",
+                "integrations/store/file/ini-file",
+                "integrations/store/file/toml-file"
+              ]
+            },
+            {
+              "group": "Database",
+              "pages": [
+                "integrations/store/db/sqlite",
+                "integrations/store/db/mysql",
+                "integrations/store/db/mariadb",
+                "integrations/store/db/postgresql",
+                "integrations/store/db/cockroachdb",
+                "integrations/store/db/mssql"
+              ]
+            },
+            {
+              "group": "Secret",
+              "pages": [
+                "integrations/store/secret/hashicorp-vault",
+                "integrations/store/secret/aws-secrets-manager",
+                "integrations/store/secret/azure-key-vault",
+                "integrations/store/secret/gcp-secret-manager",
+                "integrations/store/secret/kubernetes-secret"
+              ]
+            },
+            {
+              "group": "Feature Flag",
+              "pages": [
+                "integrations/store/ff/launchdarkly",
+                "integrations/store/ff/cloudbees-feature-management",
+                "integrations/store/ff/split"
+              ]
+            },
+            {
+              "group": "Other",
+              "pages": ["integrations/store/other/aws-parameter-store", "integrations/store/other/localforage"]
             }
           ]
         }
