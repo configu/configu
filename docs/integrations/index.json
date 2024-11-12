@@ -364,6 +364,21 @@
       "website": "https://localforage.github.io/§ §localForage"
     }
   },
+  "etcd": {
+    "enabled": true,
+    "label": "etcd",
+    "icon": "https://api.iconify.design/logos:etcd.svg?width=24&height=24",
+    "docs": "integrations/store/other/etcd",
+    "group": ["ConfigStore", "Other"],
+    "store": {
+      "base": "KeyValue",
+      "type": "etcd",
+      "code": "packages/integrations/stores/etcd"
+    },
+    "links": {
+      "website": "https://etcd.io"
+    }
+  },
 
   "docker": {
     "label": "Docker",
