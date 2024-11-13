@@ -3,19 +3,19 @@
 set -e
 
 if [ "$OS" = "Windows_NT" ]; then
-	target="win32"
+	target="win32-x64"
 	ext="exe"
 else
   ext="gz"
 	case $(uname -sm) in
-	"Darwin x86_64") target="darwin" ;;
-	"Darwin arm64") target="darwin" ;;
-	"Linux aarch64") target="linux" ;;
-	*) target="linux" ;;
+	"Darwin x86_64") target="darwin-x64" ;;
+	"Darwin arm64") target="darwin-arm64" ;;
+	"Linux aarch64") target="linux-x64" ;;
+	*) target="linux-x64" ;;
 	esac
 fi
 
-configu_version="1.0.0-next.9"
+configu_version="1.0.0-next.16"
 
 #configu_uri="./dist/configu-${target}${ext}"
 configu_uri="https://github.com/configu/configu/releases/download/cli%2Fv${configu_version}/configu-${target}.${ext}"
