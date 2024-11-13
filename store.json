@@ -1,0 +1,12 @@
+[
+  {
+    "key": "UI_CONFIGURATION",
+    "set": "test",
+    "value": "{\"tenantId\":\"quack-helpcenter\",\"isActive\":true,\"appearance\":{\"cta\":\"String\",\"isRtl\":false,\"inputCta\":\"cta\",\"submitBtn\":\"submit\",\"strict\":false,\"loading\":\"please wait...\",\"successMessage\":\"String\"},\"isTransparent\":false,\"isCSIntegrated\":false,\"isTokenMasked\":false,\"isNetworkBodyDisabled\":false,\"chat\":true,\"openChatDefaultList\":[\"\"],\"whiteListUrls\":[\"\"],\"proactiveListUrls\":[\"\"],\"proactiveTime\":20,\"network\":false,\"console\":false,\"events\":false,\"pageViews\":true,\"recordings\":false,\"inject\":true,\"chatSettings\":{\"name\":\"AI search assistant\",\"theme\":{\"iconPrimary\":\"#1A1A1A\",\"background\":\"#FFFFFF\",\"lightBorder\":\"#656665\",\"textPlaceholder\":\"#8F8F8F\",\"borderDefault\":\"#C7C7C7\",\"bgCard\":\"#E6E6E6\",\"bgInverted\":\"#1D1D1D\",\"textPrimary\":\"#1F1F1F\",\"textInverted\":\"#FFFFFF\",\"borderLight\":\"#CBCAC9\",\"bgPrimaryQuack\":\"#FFFFFF\",\"bgSendButton\":\"#2532B7\",\"bgChatWidget\":\"#2532B7\",\"bgInput\":\"#FFFFFF\",\"agentBackground\":\"#F9F3E4\",\"agentText\":\"#313438\",\"userBackground\":\"#2532B7\",\"userText\":\"#EDEDED\"}}}"
+  },
+  {
+    "key": "inject",
+    "set": "test",
+    "value": "true"
+  }
+]

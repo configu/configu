@@ -1,29 +1,29 @@
-import { readFile } from 'node:fs/promises';
 import { basename } from 'pathe';
-import { ConfigSchema, ConfigSchemaKeys, ConfigSchemaKeysSchema, JsonSchema, JsonSchemaType } from '@configu/sdk';
-import { parseJSON, parseYAML } from './utils';
+import { ConfigSchema, ConfigSchemaKeysSchema, JSONSchema, JSONSchemaObject, FromSchema } from '@configu/sdk';
+import { readFile, parseJSON, parseYAML } from './utils';
 
-export interface CfguFileContents {
-  $schema?: string;
-  // extends?: string;
-  keys: ConfigSchemaKeys;
-}
+// interface CfguFileContents {
+//   $schema?: string;
+//   // todo: implement extends for .cfgu files
+//   // extends?: string;
+//   keys: ConfigSchemaKeys;
+// }
 
-const ConfiguFileSchemaDefs = {
-  BooleanProperty: {
-    type: 'boolean',
-    nullable: true,
-  },
-  StringProperty: {
-    type: 'string',
-    minLength: 1,
-    nullable: true,
-  },
-} as const;
+// const ConfiguFileSchemaDefs = {
+//   BooleanProperty: {
+//     type: 'boolean',
+//     nullable: true,
+//   },
+//   StringProperty: {
+//     type: 'string',
+//     minLength: 1,
+//     nullable: true,
+//   },
+// } as const;
 
 const CfguFileSchemaId = 'https://raw.githubusercontent.com/configu/configu/main/packages/schema/.cfgu.json';
 
-export const CfguFileSchema: JsonSchemaType<CfguFileContents> = {
+const CfguFileSchema = {
   $schema: 'http://json-schema.org/draft-07/schema#',
   $id: CfguFileSchemaId,
   $comment: 'https://jsonschema.dev/s/sZY8z',
@@ -37,21 +37,26 @@ export const CfguFileSchema: JsonSchemaType<CfguFileContents> = {
       type: 'string',
       minLength: 1,
       description: 'Url to JSON Schema',
-      default: CfguFileSchemaId,
-      nullable: true,
+      // default: CfguFileSchemaId,
+      // nullable: true,
     },
 
     keys: ConfigSchemaKeysSchema,
   },
-};
+} as const satisfies JSONSchemaObject;
+
+export type CfguFileContents = FromSchema<typeof CfguFileSchema>;
 
 export class CfguFile {
+  public static readonly schema = CfguFileSchema;
   constructor(
     public readonly path: string,
     public readonly contents: CfguFileContents,
   ) {
-    if (!JsonSchema.validate({ schema: CfguFileSchema, path, data: this.contents })) {
-      throw new Error(`CfguFile.contents "${path}" is invalid\n${JsonSchema.getLastValidationError()}`);
+    try {
+      JSONSchema.validate(CfguFile.schema, this.contents);
+    } catch (error) {
+      throw new Error(`CfguFile.contents "${path}" is invalid\n${error.message}`);
     }
   }
 
@@ -64,7 +69,7 @@ export class CfguFile {
       throw new Error(`CfguFile.path "${path}" is not a valid .cfgu file`);
     }
 
-    let parsedContents: CfguFileContents = { keys: {} };
+    let parsedContents: CfguFileContents = {};
 
     if (fileExt === 'yaml' || fileExt === 'yml') {
       parsedContents = parseYAML(path, contents);
@@ -76,7 +81,7 @@ export class CfguFile {
   }
 
   static async load(path: string): Promise<CfguFile> {
-    const contents = await readFile(path, { encoding: 'utf8' });
+    const contents = await readFile(path);
     return CfguFile.init(path, contents);
   }
 

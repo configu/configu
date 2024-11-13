@@ -1,5 +1,5 @@
-import { Config } from '../core/Config';
-import { ConfigStore, ConfigQuery } from '../core/ConfigStore';
+import { Config } from '../Config';
+import { ConfigStore, ConfigQuery } from '../ConfigStore';
 
 export class NoopConfigStore extends ConfigStore {
   override get(queries: ConfigQuery[]): Promise<Config[]> {
@@ -10,3 +10,5 @@ export class NoopConfigStore extends ConfigStore {
     return Promise.resolve();
   }
 }
+
+ConfigStore.register(NoopConfigStore);

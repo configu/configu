@@ -45,12 +45,16 @@
     "bundle": "tsup"
   },
   "dependencies": {
-    "@apideck/better-ajv-errors": "^0.3.6",
-    "adaptive-expressions": "^4.23.1",
+    "@segment/ajv-human-errors": "^2.14.0",
+    "acorn": "^8.14.0",
+    "acorn-walk": "^8.3.4",
     "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "json-schema-to-ts": "^3.1.1",
     "lodash": "^4.17.21",
+    "ses": "^1.9.1",
     "type-fest": "^4.26.1"
   },
-  "bundleDependencies": [],
-  "devDependencies": {}
+  "devDependencies": {},
+  "bundleDependencies": []
 }

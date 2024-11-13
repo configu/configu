@@ -95,7 +95,7 @@ if (config.CONFIGU_DOCS_ENABLED) {
   });
 }
 
-(async () => {
+export async function listen() {
   try {
     // TODO: Pass this ConfiguFile instance to the routes
     await ConfiguFile.load(config.CONFIGU_CONFIG_FILE);
@@ -108,4 +108,8 @@ if (config.CONFIGU_DOCS_ENABLED) {
     server.log.error(err);
     process.exit(1);
   }
+}
+
+(async () => {
+  await listen();
 })();

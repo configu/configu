@@ -1,11 +1,10 @@
 import _ from 'lodash';
-import { Jsonify } from 'type-fest';
-import { ConfigCommand } from './ConfigCommand';
-import { Cfgu } from '../core/Cfgu';
-import { ConfigStore, ConfigQuery } from '../core/ConfigStore';
-import { ConfigSet } from '../core/ConfigSet';
-import { ConfigSchema } from '../core/ConfigSchema';
-import { Expression } from '../utils';
+import { ConfigCommand } from '../ConfigCommand';
+import { ConfigValue, ConfigValueAny, ConfigWithCfgu } from '../ConfigValue';
+import { ConfigStore, ConfigQuery } from '../ConfigStore';
+import { ConfigSet } from '../ConfigSet';
+import { ConfigSchema } from '../ConfigSchema';
+import { ConfigExpression } from '../ConfigExpression';
 
 export enum EvaluatedConfigOrigin {
   Const = 'const',
@@ -15,11 +14,8 @@ export enum EvaluatedConfigOrigin {
   Empty = 'empty',
 }
 
-export type EvaluatedConfig = {
-  key: string;
-  cfgu: Cfgu;
+export type EvaluatedConfig = ConfigWithCfgu & {
   origin: EvaluatedConfigOrigin;
-  value: string;
 };
 
 export type EvalCommandOutput = {
@@ -30,19 +26,9 @@ export type EvalCommandInput = {
   store: ConfigStore;
   set: ConfigSet;
   schema: ConfigSchema;
-  configs?: { [key: string]: string };
+  configs?: { [key: string]: ConfigValueAny };
   pipe?: EvalCommandOutput;
   validate?: boolean;
-};
-
-export type EvalCommandExpressionContext = {
-  context: {
-    store: Jsonify<ConfigStore>;
-    set: Jsonify<ConfigSet>;
-    schema: Jsonify<ConfigSchema>;
-  };
-  $: EvaluatedConfig;
-  // _: EvaluatedConfig;
 };
 
 export class EvalCommand extends ConfigCommand<EvalCommandInput, EvalCommandOutput> {
@@ -73,10 +59,11 @@ export class EvalCommand extends ConfigCommand<EvalCommandInput, EvalCommandOutp
       }
 
       return {
+        set: this.input.set.path,
         key,
+        value: '',
         cfgu,
         origin,
-        value: '',
       };
     });
   }
@@ -99,8 +86,8 @@ export class EvalCommand extends ConfigCommand<EvalCommandInput, EvalCommandOutp
       const overrideValue = configs?.[current.key] ?? '';
       return {
         ...current,
+        value: ConfigValue.stringify(overrideValue),
         origin: EvaluatedConfigOrigin.Override,
-        value: overrideValue,
       };
     });
   }
@@ -125,16 +112,12 @@ export class EvalCommand extends ConfigCommand<EvalCommandInput, EvalCommandOutp
       }
 
       const storeConfig = storeConfigsDict?.[current.key];
-
       if (!storeConfig || !storeConfig.value) {
         return current;
       }
 
-      return _.merge(current, {
-        // todo: add the evaluated set to the context somehow
-        // context: { set: { ...new ConfigSet(storeConfig.set) } },
+      return _.merge(current, storeConfig, {
         origin: EvaluatedConfigOrigin.Store,
-        value: storeConfig.value,
       });
     });
   }
@@ -148,7 +131,7 @@ export class EvalCommand extends ConfigCommand<EvalCommandInput, EvalCommandOutp
       if (current.cfgu.default) {
         return {
           ...current,
-          value: current.cfgu.default,
+          value: ConfigValue.stringify(current.cfgu.default),
           origin: EvaluatedConfigOrigin.Default,
         };
       }
@@ -196,47 +179,50 @@ export class EvalCommand extends ConfigCommand<EvalCommandInput, EvalCommandOutp
       .mapValues((current) => current.cfgu.const as string)
       .value();
 
-    Expression.sort(constExpressionsDict).forEach((key) => {
+    ConfigExpression.sort(constExpressionsDict).forEach((key) => {
       const expression = constExpressionsDict[key] as string;
-      const preEvaluatedConfig = resultWithConstExpressions[key] as EvaluatedConfig;
-      const context: EvalCommandExpressionContext = {
-        context: {
-          store: { ...store },
-          set: { ...set },
-          schema: { ...schema },
-        },
-        $: preEvaluatedConfig,
-        // _: preEvaluatedConfig,
-        ..._.mapValues(resultWithConstExpressions, (current) => current.value),
-      };
-
-      const { value, error } = Expression.parse(expression).tryEvaluate(context);
-      (resultWithConstExpressions[key] as EvaluatedConfig).value = value ?? '';
+      const value =
+        ConfigExpression.evaluate(
+          expression,
+          ConfigValue.createEvaluationContext({
+            store,
+            set,
+            schema,
+            key,
+            configs: resultWithConstExpressions,
+          }),
+        ) ?? '';
+      (resultWithConstExpressions[key] as EvaluatedConfig).value = ConfigValue.stringify(value);
     });
     return resultWithConstExpressions;
   }
 
   private validateResult(result: EvalCommandOutput): void {
-    const { validate = true } = this.input;
+    const { store, set, schema, validate = true } = this.input;
 
     if (!validate) {
       return;
     }
 
-    const evaluatedConfigsDict = _.mapValues(result, (current) => current.value);
+    // const evaluatedConfigsDict = _.mapValues(result, (current) => current.value);
 
     // * validate the eval result against the provided schema
     _.chain(result)
       .values()
-      .forEach(({ key, cfgu, origin, value }) => {
-        // const { key, cfgu } = current;
+      .forEach((current) => {
+        const { cfgu, origin, key } = current;
         // const evaluatedValue = current.value;
 
         try {
           if (origin !== EvaluatedConfigOrigin.Empty) {
-            // todo: validate type, enum, pattern, schema, test
-            // CfguValidator.validateOptions({ ...cfgu, value: evaluatedValue });
-            // CfguValidator.validateType({ ...cfgu, value: evaluatedValue });
+            ConfigValue.validate({
+              store,
+              set,
+              schema,
+              key,
+              configs: result,
+            });
+
             // if (cfgu.depends && cfgu.depends.some((depend) => !evaluatedConfigsDict[depend])) {
             //   throw new Error(`ConfigValue is missing for depends`);
             // }
@@ -244,10 +230,7 @@ export class EvalCommand extends ConfigCommand<EvalCommandInput, EvalCommandOutp
             throw new Error('ConfigValue is required');
           }
         } catch (error) {
-          if (error instanceof Error) {
-            throw new Error(`Validation failed for key: "${key}"\n${error.message}`);
-          }
-          throw new Error(`Validation failed for key: "${key}"`); // code flow should never reach here
+          throw new Error(`Validation failed for Config: "${current.key}"\n${error.message}`);
         }
       });
   }

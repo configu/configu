@@ -2,11 +2,9 @@
   "name": "@configu/schema",
   "version": "0.0.0",
   "license": "Apache-2.0",
-  "description": "Configu Files JSON Schema",
+  "description": "Configu DSL JSON Schema",
   "author": "@configu/dev",
-  "files": [
-    "/*.json"
-  ],
+  "homepage": "https://configu.com",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/configu/configu",
@@ -16,21 +14,24 @@
     "url": "https://github.com/configu/configu/issues",
     "email": "dev@configu.com"
   },
-  "homepage": "https://configu.com",
   "keywords": [
     "cfgu",
     "configu",
     "configu-json-schema",
     "json-schema"
   ],
+  "files": [
+    "/*.json"
+  ],
   "scripts": {
     "test": "pnpm \"/^test:.*/\"",
-    "test:cfgu": "ajv test -s .cfgu.next.json -d \"data/*.cfgu.json\" --valid --verbose",
-    "test:configu": "ajv test -s .configu.json -d \"data/.configu.yml\" --valid --verbose",
-    "build:cfgu": "zx build.mjs"
+    "test:cfgu": "ajv test -s .cfgu.json -d \"data/*.cfgu.*\" --valid --allow-union-types --all-errors --verbose",
+    "test:configu": "ajv test -s .configu.json -d \"data/.configu.*\" --valid --allow-union-types --all-errors --verbose",
+    "build": "tsx build.mjs"
   },
   "dependencies": {
-    "@configu/sdk": "workspace:*"
+    "@configu/sdk": "workspace:*",
+    "@configu/common": "workspace:*"
   },
   "devDependencies": {
     "ajv-cli": "^5.0.0"

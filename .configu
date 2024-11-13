@@ -2,9 +2,9 @@
 stores:
   store1:
     cache: true
-    type: json-file'
+    type: json-file
     configuration:
-      path: ${MY_PATH}
+      path: ./store.json
 #   store2:
 #     type: storeType2
 #     configuration:

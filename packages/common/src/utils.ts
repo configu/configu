@@ -1,9 +1,11 @@
+import os from 'node:os';
 import fs from 'node:fs/promises';
 import path from 'pathe';
+
 import _ from 'lodash';
 import parseJson from 'parse-json';
-import yaml from 'js-yaml';
-import { ConfigSchema } from '@configu/sdk';
+import YAML from 'yaml';
+import { tsImport } from 'tsx/esm/api';
 
 export const { NODE_ENV } = process.env;
 export const isDev = NODE_ENV === 'development';
@@ -30,6 +32,18 @@ export const readFile = async (filePath: string, throwIfEmpty: string | boolean 
 
     throw error;
   }
+};
+
+export const importModule = async (modulePath: string) => {
+  // const module = await import(modulePath);
+  const module = await tsImport(modulePath, import.meta.url);
+  return module;
+};
+
+export const getConfiguHomeDir = async (...paths: string[]): Promise<string> => {
+  const configuHomeDir = path.join(os.homedir(), '.configu', ...paths);
+  await fs.mkdir(configuHomeDir, { recursive: true });
+  return configuHomeDir;
 };
 
 export const readStdin = async () => {
@@ -59,7 +73,7 @@ export const parseJSON = (filePath: string, fileContent: string): any => {
 
 export const parseYAML = (filePath: string, fileContent: string): any => {
   try {
-    return yaml.load(fileContent);
+    return YAML.parse(fileContent);
   } catch (error) {
     error.message = `YAML Error in ${filePath}:\n${error.message}`;
     throw error;

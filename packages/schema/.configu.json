@@ -4,53 +4,59 @@
   "$comment": "https://jsonschema.dev/s/3pOmT",
   "title": "JSON Schema for Configu .configu file",
   "description": "https://docs.configu.com/interfaces/.configu",
-  "$defs": {
-    "StoresProperty": {
+  "type": "object",
+  "required": [],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Url to JSON Schema",
+      "default": "https://raw.githubusercontent.com/configu/configu/main/packages/schema/.configu.json",
+      "nullable": true
+    },
+    "stores": {
       "type": "object",
+      "required": [],
       "additionalProperties": {
         "type": "object",
+        "required": ["type"],
         "properties": {
           "type": {
             "type": "string"
           },
-          "cache": {
-            "type": "boolean"
-          },
           "configuration": {
-            "type": "object"
+            "type": "object",
+            "nullable": true
+          },
+          "backup": {
+            "type": "boolean",
+            "nullable": true
           }
-        },
-        "required": ["type"]
-      }
-    },
-    "StringMapProperty": {
-      "type": "object",
-      "additionalProperties": {
-        "type": "string"
-      }
-    },
-    "ConfiguConfigurationFile": {
-      "type": "object",
-      "minProperties": 1,
-      "properties": {
-        "$schema": {
-          "type": "string"
-        },
-        "stores": {
-          "$ref": "#/$defs/StoresProperty"
-        },
-        "cache": {
-          "type": "string"
-        },
-        "schemas": {
-          "$ref": "#/$defs/StringMapProperty"
-        },
-        "scripts": {
-          "$ref": "#/$defs/StringMapProperty"
         }
       },
-      "additionalProperties": false
+      "nullable": true
+    },
+    "backup": {
+      "type": "string",
+      "minLength": 1,
+      "nullable": true
+    },
+    "schemas": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": {
+        "type": "string"
+      },
+      "nullable": true
+    },
+    "scripts": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": {
+        "type": "string"
+      },
+      "nullable": true
     }
-  },
-  "$ref": "#/$defs/ConfiguConfigurationFile"
+  }
 }

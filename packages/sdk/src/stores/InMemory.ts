@@ -1,6 +1,6 @@
 import _ from 'lodash';
-import { Config } from '../core/Config';
-import { ConfigStore, ConfigQuery } from '../core/ConfigStore';
+import { Config } from '../Config';
+import { ConfigStore, ConfigQuery } from '../ConfigStore';
 
 export class InMemoryConfigStore extends ConfigStore {
   private data: { [ConfigSet: string]: { [ConfigKey: string]: Config } } = {};
@@ -21,3 +21,5 @@ export class InMemoryConfigStore extends ConfigStore {
     });
   }
 }
+
+ConfigStore.register(InMemoryConfigStore);

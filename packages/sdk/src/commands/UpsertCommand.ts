@@ -1,11 +1,12 @@
 import _ from 'lodash';
-import { Jsonify } from 'type-fest';
-import { ConfigCommand } from './ConfigCommand';
-import { Config } from '../core/Config';
-import { ConfigStore, ConfigQuery } from '../core/ConfigStore';
-import { ConfigSet } from '../core/ConfigSet';
-import { ConfigSchema } from '../core/ConfigSchema';
+import { ConfigCommand } from '../ConfigCommand';
+import { Config } from '../Config';
+import { ConfigValue, ConfigValueAny } from '../ConfigValue';
+import { ConfigStore, ConfigQuery } from '../ConfigStore';
+import { ConfigSet } from '../ConfigSet';
+import { ConfigSchema } from '../ConfigSchema';
 import { EvalCommandOutput, EvaluatedConfigOrigin } from './EvalCommand';
+import { Cfgu } from '../Cfgu';
 
 export enum ConfigDiffAction {
   Add = 'add',
@@ -27,7 +28,7 @@ export type UpsertCommandInput = {
   store: ConfigStore;
   set: ConfigSet;
   schema: ConfigSchema;
-  configs?: { [key: string]: string };
+  configs?: { [key: string]: ConfigValueAny };
   pipe?: EvalCommandOutput;
   dry?: boolean;
 };
@@ -38,14 +39,15 @@ export class UpsertCommand extends ConfigCommand<UpsertCommandInput, UpsertComma
 
     await store.init();
 
+    const currentConfigs = await this.getCurrentConfigs(Object.keys(schema.keys));
+
     let result: UpsertCommandOutput = {};
 
     // delete all configs if input is empty
     if (_.isEmpty(configs) && _.isEmpty(pipe)) {
-      const currentConfigs = await this.getCurrentConfigs(Object.keys(schema.keys));
       result = _.chain(schema.keys)
         .mapValues<ConfigDiff>((cfgu, key) => ({
-          prev: currentConfigs[key] ?? '',
+          prev: currentConfigs[key]?.value ?? '',
           next: '',
           action: ConfigDiffAction.Delete,
         }))
@@ -66,8 +68,9 @@ export class UpsertCommand extends ConfigCommand<UpsertCommandInput, UpsertComma
         .mapValues((value) => value.value)
         .value();
 
+      const kvConfigs = _.mapValues(configs, (value) => ConfigValue.stringify(value));
       // validate configs input
-      _.chain(configs)
+      _.chain(kvConfigs)
         .entries()
         .forEach(([key, value]) => {
           const cfgu = schema.keys[key];
@@ -84,29 +87,32 @@ export class UpsertCommand extends ConfigCommand<UpsertCommandInput, UpsertComma
                 throw new Error(`Key declared as "const" cannot be assigned a value`);
               }
 
-              // todo: validate type, enum, pattern, schema, test
-              // CfguValidator.validateOptions({ ...cfgu, value });
-              // CfguValidator.validateType({ ...cfgu, value });
+              ConfigValue.validate({
+                store,
+                set,
+                schema,
+                key,
+                configs: _.mapValues(currentConfigs, (current) => ({
+                  ...current,
+                  cfgu: schema.keys[current.key] as Cfgu,
+                })),
+              });
             }
           } catch (error) {
-            if (error instanceof Error) {
-              throw new Error(`Validation failed for config: "${key}"\n${error.message}`);
-            }
-            throw new Error(`Validation failed for config "${key}"`); // code flow should never reach here
+            throw new Error(`Validation failed for Config: "${key}"\n${error.message}`);
           }
         })
         .value();
 
       // merge pipe and configs, configs will override pipe
-      const upsertConfigsDict = { ...pipeConfigs, ...configs };
-      const currentConfigs = await this.getCurrentConfigs(Object.keys(upsertConfigsDict));
+      const upsertConfigsDict = { ...pipeConfigs, ...kvConfigs };
       result = _.chain(upsertConfigsDict)
         .mapValues((value, key) => {
-          const prev = currentConfigs[key] ?? '';
+          const prev = currentConfigs[key]?.value ?? '';
           const next = value;
           if (prev === next) {
             // no change will be omitted by the pickBy
-            return { prev, next, action: ConfigDiffAction.Add };
+            return { prev, next, action: ConfigDiffAction.Update };
           }
           if (next === '') {
             return { prev, next, action: ConfigDiffAction.Delete };
@@ -143,6 +149,9 @@ export class UpsertCommand extends ConfigCommand<UpsertCommandInput, UpsertComma
       .mapValues((config) => config.value)
       .value();
 
-    return storeConfigsDict;
+    return _.chain(keys)
+      .keyBy()
+      .mapValues((key) => ({ set: set.path, key, value: storeConfigsDict[key] ?? '' }))
+      .value() satisfies { [key: string]: Config };
   }
 }

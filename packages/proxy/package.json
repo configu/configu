@@ -4,22 +4,7 @@
   "license": "Apache-2.0",
   "description": "Configu Proxy Server",
   "author": "@configu/dev",
-  "scripts": {
-    "clean": "shx rm -rf tsconfig.tsbuildinfo build",
-    "build": "tsc --build",
-    "build:docker": "docker build --build-arg NODE_VERSION=22.9.0 --progress plain -t configu/proxy -f ./Dockerfile ../..",
-    "dev": "tsx watch --inspect --clear-screen=false src/index.ts"
-  },
-  "engines": {
-    "node": ">=v20.0.0"
-  },
-  "type": "module",
-  "exports": "./build/index.js",
-  "types": "./build/index.d.ts",
-  "files": [
-    "/bin",
-    "/build/**/*.js"
-  ],
+  "homepage": "https://configu.com",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/configu/configu",
@@ -29,7 +14,6 @@
     "url": "https://github.com/configu/configu/issues",
     "email": "dev@configu.com"
   },
-  "homepage": "https://configu.com",
   "keywords": [
     "cfgu",
     "configu",
@@ -37,6 +21,22 @@
     "configu-proxy-server",
     "configu-server"
   ],
+  "type": "module",
+  "exports": "./build/index.js",
+  "types": "./build/index.d.ts",
+  "files": [
+    "/bin",
+    "/build/**/*.js"
+  ],
+  "engines": {
+    "node": ">=v20.0.0"
+  },
+  "scripts": {
+    "clean": "shx rm -rf tsconfig.tsbuildinfo build",
+    "build": "tsc --build",
+    "build:docker": "docker build --build-arg NODE_VERSION=22.9.0 --progress plain -t configu/proxy -f ./Dockerfile ../..",
+    "dev": "tsx watch --inspect --clear-screen=false src/index.ts"
+  },
   "dependencies": {
     "@configu/common": "workspace:*",
     "@configu/sdk": "workspace:*",

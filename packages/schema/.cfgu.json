@@ -4,213 +4,165 @@
   "$comment": "https://jsonschema.dev/s/sZY8z",
   "title": "JSON Schema for Configu .cfgu files",
   "description": "https://docs.configu.com/interfaces/.cfgu",
-  "$defs": {
-    "CfguStringProperty": {
+  "type": "object",
+  "required": [],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "description": "Url to JSON Schema",
+      "default": "https://raw.githubusercontent.com/configu/configu/main/packages/schema/.cfgu.json",
+      "nullable": true
     },
-    "CfguArrayProperty": {
-      "type": "array",
-      "minItems": 1,
-      "uniqueItems": true,
-      "items": {
-        "type": "string",
-        "minLength": 1
-      }
-    },
-    "ConfigKey": {
-      "type": "string",
-      "pattern": "^[A-Za-z0-9_-]+$",
-      "minLength": 1
-    },
-    "CfguType": {
-      "type": "string",
-      "enum": [
-        "Boolean",
-        "Number",
-        "String",
-        "JSONSchema",
-        "RegEx",
-        "UUID",
-        "SemVer",
-        "IPv4",
-        "IPv6",
-        "Domain",
-        "URL",
-        "Hex",
-        "Base64",
-        "MD5",
-        "SHA",
-        "Color",
-        "Email",
-        "MobilePhone",
-        "Locale",
-        "LatLong",
-        "Country",
-        "Currency",
-        "DockerImage",
-        "MACAddress",
-        "MIMEType",
-        "MongoId",
-        "AWSRegion",
-        "AZRegion",
-        "GCPRegion",
-        "OracleRegion",
-        "IBMRegion",
-        "AlibabaRegion",
-        "Language",
-        "DateTime",
-        "Duration",
-        "DateFormat",
-        "ARN",
-        "DataSize"
-      ]
-    },
-    "Cfgu": {
+    "keys": {
       "type": "object",
-      "properties": {
-        "description": {
-          "$ref": "#/$defs/CfguStringProperty"
-        },
-        "type": {
-          "$ref": "#/$defs/CfguType"
-        },
-        "pattern": {
-          "$ref": "#/$defs/CfguStringProperty"
-        },
-        "schema": {
-          "type": "object",
-          "minProperties": 1
-        },
-        "options": {
-          "$ref": "#/$defs/CfguArrayProperty"
-        },
-        "default": {
-          "$ref": "#/$defs/CfguStringProperty"
-        },
-        "required": {
-          "type": "boolean"
-        },
-        "depends": {
-          "type": "array",
-          "minItems": 1,
-          "uniqueItems": true,
-          "items": {
-            "$ref": "#/$defs/ConfigKey"
-          }
-        },
-        "template": {
-          "$ref": "#/$defs/CfguStringProperty"
-        },
-        "lazy": {
-          "type": "boolean"
-        },
-        "hidden": {
-          "type": "boolean"
-        },
-        "label": {
-          "$ref": "#/$defs/CfguArrayProperty"
-        }
-      },
-      "required": ["type"],
-      "additionalProperties": false,
-      "allOf": [
-        {
-          "if": {
-            "properties": { "type": { "const": "RegEx" } }
-          },
-          "then": {
-            "required": ["pattern"],
-            "properties": {
-              "schema": false,
-              "options": false
-            }
-          },
-          "else": {
-            "properties": {
-              "pattern": false
-            }
-          }
-        },
-        {
-          "if": {
-            "properties": { "type": { "const": "JSONSchema" } }
-          },
-          "then": {
-            "required": ["schema"],
-            "properties": {
-              "pattern": false,
-              "options": false
-            }
-          },
-          "else": {
-            "properties": {
-              "schema": false
-            }
-          }
-        },
-        {
-          "if": {
-            "required": ["options"]
-          },
-          "then": {
-            "properties": {
-              "template": false
-            }
-          }
-        },
-        {
-          "if": {
-            "required": ["default"]
-          },
-          "then": {
-            "properties": {
-              "required": false,
-              "template": false,
-              "lazy": false
-            }
-          }
-        },
-        {
-          "if": {
-            "required": ["template"]
-          },
-          "then": {
-            "properties": {
-              "required": false,
-              "default": false,
-              "lazy": false
-            }
-          }
-        },
-        {
-          "if": {
-            "required": ["lazy"]
-          },
-          "then": {
-            "properties": {
-              "default": false,
-              "template": false
-            }
-          }
-        }
-      ]
-    },
-    "ConfigSchemaContents": {
-      "type": "object",
+      "required": [],
       "minProperties": 1,
-      "properties": {
-        "$schema": {
-          "type": "string"
-        }
-      },
-      "patternProperties": {
-        "^[A-Za-z0-9_-]+$": {
-          "$ref": "#/$defs/Cfgu"
-        }
-      },
-      "additionalProperties": false
+      "additionalProperties": {
+        "type": "object",
+        "required": [],
+        "additionalProperties": false,
+        "properties": {
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "nullable": true
+          },
+          "label": {
+            "type": ["string", "array"],
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "nullable": true
+              },
+              {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "nullable": true
+              }
+            ],
+            "nullable": true
+          },
+          "hidden": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "lazy": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "const": {
+            "type": "string",
+            "minLength": 1,
+            "nullable": true
+          },
+          "default": {
+            "type": "string",
+            "minLength": 1,
+            "nullable": true
+          },
+          "required": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "enum": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "nullable": true
+          },
+          "pattern": {
+            "type": "string",
+            "minLength": 1,
+            "nullable": true
+          },
+          "schema": {
+            "type": "object",
+            "minProperties": 1,
+            "nullable": true
+          },
+          "test": {
+            "type": ["string", "array"],
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "nullable": true
+              },
+              {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "nullable": true
+              }
+            ],
+            "nullable": true
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "required": ["lazy"]
+            },
+            "then": {
+              "properties": {
+                "const": false,
+                "default": false
+              }
+            }
+          },
+          {
+            "if": {
+              "required": ["const"]
+            },
+            "then": {
+              "properties": {
+                "lazy": false,
+                "default": false,
+                "required": false
+              }
+            }
+          },
+          {
+            "if": {
+              "required": ["default"]
+            },
+            "then": {
+              "properties": {
+                "lazy": false,
+                "const": false,
+                "required": false
+              }
+            }
+          },
+          {
+            "if": {
+              "required": ["required"]
+            },
+            "then": {
+              "properties": {
+                "const": false,
+                "default": false
+              }
+            }
+          }
+        ]
+      }
     }
-  },
-  "$ref": "#/$defs/ConfigSchemaContents"
+  }
 }
