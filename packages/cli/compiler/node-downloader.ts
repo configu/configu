@@ -28,13 +28,14 @@ export async function downloadNode(os: 'win' | 'linux' | 'darwin', arch: 'arm64'
   console.log(`Downloaded node to ${nodePath}`);
 
   // extract node using native tools via execSync
-  const extractDir = path.join(process.cwd(), 'dist', `node-${process.version}-${os}-${arch}`);
+  const extractDirParent = path.join(process.cwd(), 'dist');
+  const extractDir = path.join(extractDirParent, `node-${process.version}-${os}-${arch}`);
 
   // Create extraction directory if it doesn't exist
   await fs.promises.mkdir(extractDir, { recursive: true });
 
   if (os === 'win') {
-    execSync(`powershell -command "Expand-Archive -Path '${nodePath}' -DestinationPath '${extractDir}' -Force"`, {
+    execSync(`powershell -command "Expand-Archive -Path '${nodePath}' -DestinationPath '${extractDirParent}' -Force"`, {
       stdio: 'inherit',
     });
   } else {
