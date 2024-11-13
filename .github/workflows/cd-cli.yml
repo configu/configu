@@ -13,18 +13,12 @@ env:
 
 jobs:
   cd-cli:
-    runs-on: ${{ matrix.os }}-${{ matrix.arch }}
+    runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        arch: [x86, arm64]
         node-version: [22.x]
-        exclude:
-          - os: windows-latest
-            arch: arm64
-          - os: macos-latest
-            arch: x86
 
     steps:
       - name: Checkout code
@@ -43,7 +37,7 @@ jobs:
 
       - uses: actions/upload-artifact@master
         with:
-          name: ${{ env.ARTIFACT_NAME }}-${{ matrix.os }}-${{ matrix.arch }}
+          name: ${{ env.ARTIFACT_NAME }}-${{ matrix.os }}
           path: ${{ env.PACKAGE_PATH }}/dist
   end-release:
     runs-on: ubuntu-latest
@@ -53,19 +47,15 @@ jobs:
         uses: actions/checkout@v3
       - uses: actions/download-artifact@master
         with:
-          name: ${{ env.ARTIFACT_NAME }}-ubuntu-latest-x86
+          name: ${{ env.ARTIFACT_NAME }}-ubuntu-latest
           path: ${{ env.ARTIFACT_NAME }}/dist
       - uses: actions/download-artifact@master
         with:
-          name: ${{ env.ARTIFACT_NAME }}-windows-latest-x86
+          name: ${{ env.ARTIFACT_NAME }}-windows-latest
           path: ${{ env.ARTIFACT_NAME }}/dist
       - uses: actions/download-artifact@master
         with:
-          name: ${{ env.ARTIFACT_NAME }}-ubuntu-latest-arm64
-          path: ${{ env.ARTIFACT_NAME }}/dist
-      - uses: actions/download-artifact@master
-        with:
-          name: ${{ env.ARTIFACT_NAME }}-macos-latest-arm64
+          name: ${{ env.ARTIFACT_NAME }}-macos-latest
           path: ${{ env.ARTIFACT_NAME }}/dist
 
       - name: Upload artifacts to release
@@ -86,7 +76,7 @@ jobs:
         uses: actions/checkout@v3
       - uses: actions/download-artifact@master
         with:
-          name: ${{ env.ARTIFACT_NAME }}-ubuntu-latest-x86
+          name: ${{ env.ARTIFACT_NAME }}-ubuntu-latest
           path: ${{ env.PACKAGE_PATH }}/dist
       - name: Build Docker image
         working-directory: ${{ env.PACKAGE_PATH }}
