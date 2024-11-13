@@ -16,7 +16,7 @@ async function compile(selectedArch: 'arm64' | 'x64') {
   const fileName = `configu-${os}-${selectedArch}`;
   const filePath = await run(
     fileName,
-    selectedArch === osArch ? process.execPath : await downloadNode(os, selectedArch),
+    selectedArch === osArch ? process.execPath : await downloadNode(os === 'win32' ? 'win' : os, selectedArch),
   );
 
   console.log('app compiled:', filePath);
