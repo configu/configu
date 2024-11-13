@@ -1,8 +1,8 @@
-import * as https from 'https';
-import * as fs from 'fs';
-import * as path from 'path';
-import { execSync } from 'child_process';
-import { pipeline } from 'stream/promises';
+import * as https from 'node:https';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
+import { execSync } from 'node:child_process';
+import { pipeline } from 'node:stream/promises';
 
 export async function downloadNode(os: 'win' | 'linux' | 'darwin', arch: 'arm64' | 'x64'): Promise<string> {
   const ext = os === 'win' ? 'zip' : 'tar.gz';
@@ -45,6 +45,11 @@ export async function downloadNode(os: 'win' | 'linux' | 'darwin', arch: 'arm64'
 
   // cleanup downloaded archive
   await fs.promises.unlink(nodePath);
+
+  console.log('node extracted to:');
+  console.log(extractDir);
+  console.log('files in extracted directory:');
+  console.log(fs.readdirSync(path.join(extractDir, 'bin')));
 
   // return path to extracted node directory
   return path.join(extractDir, 'bin', os === 'win' ? 'node.exe' : 'node');
