@@ -47,9 +47,5 @@ export async function downloadNode(os: 'win' | 'linux' | 'darwin', arch: 'arm64'
   await fs.promises.unlink(nodePath);
 
   // return path to extracted node directory
-  return path.join(extractDir, 'bin', 'node');
+  return path.join(extractDir, 'bin', os === 'win' ? 'node.exe' : 'node');
 }
-
-downloadNode('linux', 'x64').then((nodePath) => {
-  console.log('Downloaded node to', nodePath);
-});
