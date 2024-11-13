@@ -41,9 +41,12 @@ async function getSigntoolLocation() {
   return fileName;
 }
 
-export async function run(filename = 'configu') {
+export function run(filename: string, nodePath: string) {
+  // eslint-disable-next-line no-param-reassign
+  filename = filename || 'configu';
+
   execSync('node --experimental-sea-config sea-config.json');
-  copyFileSync(process.execPath, 'configu.exe');
+  copyFileSync(nodePath, 'configu.exe');
   // const signtool = await getSigntoolLocation();
   // execSync(`"${signtool}" remove /s configu.exe`);
   execSync(

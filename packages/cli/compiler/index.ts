@@ -1,21 +1,27 @@
 import { arch, platform } from 'node:os';
 import { compress } from './gz';
+import { downloadNode } from './node-downloader';
 
-const os = platform();
+const os = platform() as 'win' | 'linux' | 'darwin';
 const osArch = arch();
 
 console.log('Platform:', os);
 
-async function compile() {
+const archs = ['arm64', 'x64'];
+
+async function compile(selectedArch: 'arm64' | 'x64') {
   // eslint-disable-next-line no-useless-concat
   const { run } = await import('./' + `${os}.ts`);
 
-  const fileName = `configu-${os}-${osArch}`;
-  const filePath = await run(fileName);
+  const fileName = `configu-${os}-${selectedArch}`;
+  const filePath = await run(
+    fileName,
+    selectedArch === osArch ? process.execPath : await downloadNode(os, selectedArch),
+  );
 
   console.log('app compiled:', filePath);
 
   return filePath;
 }
 
-compile().then(compress);
+Promise.all(archs.map(compile)).then((files) => Promise.all(files.map(compress)));
