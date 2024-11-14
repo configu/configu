@@ -182,7 +182,7 @@
               "pages": [
                 "integrations/store/other/aws-parameter-store",
                 "integrations/store/other/localforage",
-                "integrations/store/secret/etcd"
+                "integrations/store/other/etcd"
               ]
             }
           ]
