@@ -76,6 +76,20 @@
       //   "--schema",
       //   "${workspaceFolder}/test.cfgu.yaml"
       // ]
+    },
+    {
+      "name": "run proxy dev",
+      "request": "launch",
+      "cwd": "${workspaceRoot}/packages/proxy/",
+      "command": "fnm use && npm run dev",
+      "type": "node-terminal",
+      "env": {
+        "CONFIGU_CONFIG_FILE": "/path/to/.configu",
+        "CONFIGU_HTTP_ADDR": "localhost",
+        "CONFIGU_HTTP_PORT": "3030",
+        "CONFIGU_AUTH_ENABLED": "false",
+        "CONFIGU_DOCS_ENABLED": "true"
+      }
     }
   ]
 }

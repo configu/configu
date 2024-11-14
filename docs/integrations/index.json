@@ -2,6 +2,7 @@
   "configu": {
     "enabled": true,
     "label": "Configu Platform",
+    "sidebarTitle": "Overview",
     "icon": "https://raw.githubusercontent.com/configu/configu/main/docs/images/icon/icon.svg",
     "docs": "integrations/store/configu/overview",
     "pages": [
@@ -23,7 +24,7 @@
     "store": {
       "base": "Configu",
       "type": "configu",
-      "code": "/packages/ts/src/stores/Configu.ts"
+      "code": "packages/integrations/stores/configu"
     },
     "links": {
       "website": "https://configu.com",
@@ -32,6 +33,7 @@
   },
 
   "json-file": {
+    "enabled": true,
     "label": "JSON File",
     "icon": "https://api.iconify.design/logos:json.svg?width=24&height=24",
     "docs": "integrations/store/file/json-file",
@@ -39,13 +41,14 @@
     "store": {
       "base": "File",
       "type": "json-file",
-      "code": "/packages/node/src/stores/JsonFile.ts"
+      "code": "packages/integrations/stores/json-file"
     },
     "links": {
       "website": "https://www.json.org/json-en.html"
     }
   },
   "csv-file": {
+    "enabled": true,
     "label": "CSV File",
     "icon": "https://api.iconify.design/gala:file-csv.svg?width=24&height=24",
     "docs": "integrations/store/file/csv-file",
@@ -53,13 +56,14 @@
     "store": {
       "base": "File",
       "type": "csv-file",
-      "code": "/packages/node/src/stores/CsvFile.ts"
+      "code": "packages/integrations/stores/csv-file"
     },
     "links": {
       "website": "https://en.wikipedia.org/wiki/Comma-separated_values"
     }
   },
   "xml-file": {
+    "enabled": true,
     "label": "XML File",
     "icon": "https://api.iconify.design/vscode-icons:file-type-xml.svg?width=24&height=24",
     "docs": "integrations/store/file/xml-file",
@@ -67,13 +71,14 @@
     "store": {
       "base": "File",
       "type": "xml-file",
-      "code": "/packages/node/src/stores/XmlFile.ts"
+      "code": "packages/integrations/stores/xml-file"
     },
     "links": {
       "website": "https://en.wikipedia.org/wiki/XML"
     }
   },
   "ini-file": {
+    "enabled": true,
     "label": "INI File",
     "icon": "https://api.iconify.design/vscode-icons:file-type-ini.svg?width=24&height=24",
     "docs": "integrations/store/file/ini-file",
@@ -81,13 +86,14 @@
     "store": {
       "base": "File",
       "type": "ini-file",
-      "code": "/packages/node/src/stores/IniFile.ts"
+      "code": "packages/integrations/stores/ini-file"
     },
     "links": {
       "website": "https://en.wikipedia.org/wiki/INI_file"
     }
   },
   "toml-file": {
+    "enabled": true,
     "label": "TOML File",
     "icon": "https://api.iconify.design/logos:toml.svg?width=24&height=24",
     "docs": "integrations/store/file/toml-file",
@@ -95,7 +101,7 @@
     "store": {
       "base": "File",
       "type": "toml-file",
-      "code": "/packages/node/src/stores/TomlFile.ts"
+      "code": "packages/integrations/stores/toml-file"
     },
     "links": {
       "website": "https://toml.io"
@@ -103,6 +109,7 @@
   },
 
   "sqlite": {
+    "enabled": true,
     "label": "SQLite",
     "icon": "https://api.iconify.design/devicon:sqlite.svg?width=24&height=24",
     "docs": "integrations/store/db/sqlite",
@@ -110,13 +117,14 @@
     "store": {
       "base": "ORM",
       "type": "sqlite",
-      "code": "/packages/node/src/stores/SQLite.ts"
+      "code": "packages/integrations/stores/sqlite"
     },
     "links": {
       "website": "https://www.sqlite.org"
     }
   },
   "mysql": {
+    "enabled": true,
     "label": "MySQL",
     "icon": "https://api.iconify.design/logos:mysql-icon.svg?width=24&height=24",
     "docs": "integrations/store/db/mysql",
@@ -124,13 +132,14 @@
     "store": {
       "base": "ORM",
       "type": "mysql",
-      "code": "/packages/node/src/stores/MySQL.ts"
+      "code": "packages/integrations/stores/my-sql"
     },
     "links": {
       "website": "https://www.mysql.com"
     }
   },
   "mariadb": {
+    "enabled": true,
     "label": "MariaDB",
     "icon": "https://api.iconify.design/logos:mariadb-icon.svg?width=24&height=24",
     "docs": "integrations/store/db/mariadb",
@@ -138,13 +147,14 @@
     "store": {
       "base": "ORM",
       "type": "mariadb",
-      "code": "/packages/node/src/stores/MariaDB.ts"
+      "code": "packages/integrations/stores/mariadb"
     },
     "links": {
       "website": "https://mariadb.org"
     }
   },
   "postgresql": {
+    "enabled": true,
     "label": "PostgreSQL",
     "icon": "https://api.iconify.design/logos:postgresql.svg?width=24&height=24",
     "docs": "integrations/store/db/postgresql",
@@ -152,13 +162,14 @@
     "store": {
       "base": "ORM",
       "type": "postgresql",
-      "code": "/packages/node/src/stores/PostgresSQL.ts"
+      "code": "packages/integrations/stores/postgresql"
     },
     "links": {
       "website": "https://www.postgresql.org"
     }
   },
   "cockroachdb": {
+    "enabled": true,
     "label": "CockroachDB",
     "icon": "https://api.iconify.design/simple-icons:cockroachlabs.svg?width=24&height=24",
     "docs": "integrations/store/db/cockroachdb",
@@ -166,13 +177,14 @@
     "store": {
       "base": "ORM",
       "type": "cockroachdb",
-      "code": "/packages/node/src/stores/CockroachDB.ts"
+      "code": "packages/integrations/stores/cockroach-db"
     },
     "links": {
       "website": "https://www.cockroachlabs.com"
     }
   },
   "mssql": {
+    "enabled": true,
     "label": "Microsoft SQL Server",
     "icon": "https://api.iconify.design/devicon:microsoftsqlserver.svg?width=24&height=24",
     "docs": "integrations/store/db/mssql",
@@ -180,7 +192,7 @@
     "store": {
       "base": "ORM",
       "type": "mssql",
-      "code": "/packages/node/src/stores/MSSQL.ts"
+      "code": "packages/integrations/stores/ms-sql"
     },
     "links": {
       "website": "https://www.microsoft.com/en-us/sql-server"
@@ -188,6 +200,7 @@
   },
 
   "hashicorp-vault": {
+    "enabled": true,
     "label": "HashiCorp Vault",
     "icon": "https://api.iconify.design/logos:vault-icon.svg?width=24&height=24",
     "docs": "integrations/store/secret/hashicorp-vault",
@@ -195,13 +208,14 @@
     "store": {
       "base": "KeyValue",
       "type": "hashicorp-vault",
-      "code": "/packages/node/src/stores/HashiCorpVault.ts"
+      "code": "packages/integrations/stores/hashicorp-vault"
     },
     "links": {
       "website": "https://www.vaultproject.io"
     }
   },
   "aws-secrets-manager": {
+    "enabled": true,
     "label": "AWS Secrets Manager",
     "icon": "https://api.iconify.design/logos:aws-secrets-manager.svg?width=24&height=24",
     "docs": "integrations/store/secret/aws-secrets-manager",
@@ -209,13 +223,14 @@
     "store": {
       "base": "KeyValue",
       "type": "aws-secrets-manager",
-      "code": "/packages/node/src/stores/AWSSecretsManager.ts"
+      "code": "packages/integrations/stores/aws-secrets-manager"
     },
     "links": {
       "website": "https://aws.amazon.com/secrets-manager"
     }
   },
   "azure-key-vault": {
+    "enabled": true,
     "label": "Azure Key Vault",
     "icon": "https://symbols.getvecta.com/stencil_28/41_key-vault.2876abee6f.svg",
     "docs": "integrations/store/secret/azure-key-vault",
@@ -223,13 +238,14 @@
     "store": {
       "base": "KeyValue",
       "type": "azure-key-vault",
-      "code": "/packages/node/src/stores/AzureKeyVault.ts"
+      "code": "packages/integrations/stores/azure-key-vault"
     },
     "links": {
       "website": "https://azure.microsoft.com/en-us/services/key-vault"
     }
   },
   "gcp-secret-manager": {
+    "enabled": true,
     "label": "GCP Secret Manager",
     "icon": "https://www.svgrepo.com/download/375492/secret-manager.svg",
     "docs": "integrations/store/secret/gcp-secret-manager",
@@ -237,13 +253,14 @@
     "store": {
       "base": "KeyValue",
       "type": "gcp-secret-manager",
-      "code": "/packages/node/src/stores/GCPSecretManager.ts"
+      "code": "packages/integrations/stores/gcp-secret-manager-config-store"
     },
     "links": {
       "website": "https://cloud.google.com/secret-manager"
     }
   },
   "kubernetes-secret": {
+    "enabled": true,
     "label": "Kubernetes Secret",
     "icon": "https://api.iconify.design/logos:kubernetes.svg?width=24&height=24",
     "docs": "integrations/store/secret/kubernetes-secret",
@@ -251,7 +268,7 @@
     "store": {
       "base": "KeyValue",
       "type": "kubernetes-secret",
-      "code": "/packages/node/src/stores/KubernetesSecret.ts"
+      "code": "packages/integrations/stores/kubernetes-secret-store"
     },
     "links": {
       "website": "https://kubernetes.io/docs/concepts/configuration/secret"
@@ -259,6 +276,7 @@
   },
 
   "launchdarkly": {
+    "enabled": true,
     "label": "LaunchDarkly",
     "icon": "https://api.iconify.design/logos:launchdarkly-icon.svg?width=24&height=24",
     "docs": "integrations/store/ff/launchdarkly",
@@ -266,13 +284,14 @@
     "store": {
       "base": "OpenFeature",
       "type": "launchdarkly",
-      "code": "/packages/node/src/stores/LaunchDarkly.ts"
+      "code": "packages/integrations/stores/launch-darkly"
     },
     "links": {
       "website": "https://launchdarkly.com"
     }
   },
   "cloudbees-feature-management": {
+    "enabled": true,
     "label": "CloudBees Feature Management",
     "icon": "https://api.iconify.design/simple-icons:cloudbees.svg?width=24&height=24",
     "docs": "integrations/store/ff/cloudbees-feature-management",
@@ -280,13 +299,14 @@
     "store": {
       "base": "OpenFeature",
       "type": "cloudbees-feature-management",
-      "code": "/packages/node/src/stores/CloudBeesFeatureManagement.ts"
+      "code": "packages/integrations/stores/cloud-bees"
     },
     "links": {
       "website": "https://www.cloudbees.com/products/feature-management"
     }
   },
   "split": {
+    "enabled": true,
     "label": "Split",
     "icon": "https://splitsoftware.gallerycdn.vsassets.io/extensions/splitsoftware/splitio/1.0.1/1686315163828/Microsoft.VisualStudio.Services.Icons.Default",
     "docs": "integrations/store/ff/split",
@@ -294,7 +314,7 @@
     "store": {
       "base": "OpenFeature",
       "type": "split",
-      "code": "/packages/node/src/stores/Split.ts"
+      "code": "packages/integrations/stores/split"
     },
     "links": {
       "website": "https://www.split.io"
@@ -315,6 +335,7 @@
     }
   },
   "aws-parameter-store": {
+    "enabled": true,
     "label": "AWS Systems Manager Parameter Store",
     "icon": "https://api.iconify.design/logos:aws-systems-manager.svg?width=24&height=24",
     "docs": "integrations/store/other/aws-parameter-store",
@@ -322,13 +343,14 @@
     "store": {
       "base": "KeyValue",
       "type": "aws-parameter-store",
-      "code": "/packages/node/src/stores/AWSParameterStore.ts"
+      "code": "packages/integrations/stores/aws-parameter-store"
     },
     "links": {
       "website": "https://aws.amazon.com/systems-manager/features/#Parameter_Store"
     }
   },
   "localforage": {
+    "enabled": true,
     "label": "LocalForage",
     "icon": "https://api.iconify.design/iconoir:db.svg?width=24&height=24",
     "docs": "integrations/store/other/localforage",
@@ -336,10 +358,25 @@
     "store": {
       "base": "KeyValue",
       "type": "localforage",
-      "code": "/packages/browser/src/stores/LocalForage.ts"
+      "code": "packages/integrations/stores/localforage"
     },
     "links": {
-      "website": "https://localforage.github.io/localForage"
+      "website": "https://localforage.github.io/§ §localForage"
+    }
+  },
+  "etcd": {
+    "enabled": true,
+    "label": "etcd",
+    "icon": "https://api.iconify.design/logos:etcd.svg?width=24&height=24",
+    "docs": "integrations/store/other/etcd",
+    "group": ["ConfigStore", "Other"],
+    "store": {
+      "base": "KeyValue",
+      "type": "etcd",
+      "code": "packages/integrations/stores/etcd"
+    },
+    "links": {
+      "website": "https://etcd.io"
     }
   },
 
