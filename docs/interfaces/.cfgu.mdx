@@ -49,8 +49,11 @@ $schema: https://raw.githubusercontent.com/configu/configu/main/packages/schema/
   to be considered valid.
 
   <Accordion title="ConfigExpression context">
-      <ResponseField name="$.value" type="String">
-    The `ConfigValue` to be validated. 
+      <ResponseField name="$.value" type="string|number|boolean|object|array">
+    The `ConfigValue` to be validated.
+    </ResponseField>
+      <ResponseField name="$.storedValue" type="String">
+    The `ConfigValue` to be validated as a raw string as it is stored in the `ConfigStore`.
     </ResponseField>
       <ResponseField name="$.cfgu" type="Cfgu">
     The `Cfgu` of the evaluated
@@ -74,8 +77,15 @@ $schema: https://raw.githubusercontent.com/configu/configu/main/packages/schema/
     The `ConfigSchema`
   provided as input to the command. 
     </ResponseField>
-       <Info>All other `ConfigKey` values in the `ConfigSchema` are accessible in the context
-  via their key.</Info>
+      <ResponseField name="configs.{{key}}.cfgu" type="Cfgu">
+    Use this to access the `Cfgu` proprties of another ConfigKey.
+    </ResponseField>
+      <ResponseField name="configs.{{key}}.value" type="string|number|boolean|object|array">
+    Use this to access the `value` of another ConfigKey.
+    </ResponseField>
+      <ResponseField name="configs.{{key}}.storedValue" type="string">
+    Use this to access the `storedValue` of another ConfigKey.
+    </ResponseField>
    </Accordion>
 </ResponseField>
 
@@ -102,8 +112,15 @@ $schema: https://raw.githubusercontent.com/configu/configu/main/packages/schema/
     The `ConfigSchema`
   provided as input to the command. 
     </ResponseField>
-       <Info>All other `ConfigKey` values in the `ConfigSchema` are accessible in the context
-  via their key.</Info>
+      <ResponseField name="configs.{{key}}.cfgu" type="Cfgu">
+    Use this to access the `Cfgu` proprties of another ConfigKey.
+    </ResponseField>
+      <ResponseField name="configs.{{key}}.value" type="string|number|boolean|object|array">
+    Use this to access the `value` of another ConfigKey.
+    </ResponseField>
+      <ResponseField name="configs.{{key}}.storedValue" type="string">
+    Use this to access the `storedValue` of another ConfigKey.
+    </ResponseField>
    </Accordion>
 </ResponseField>
 
