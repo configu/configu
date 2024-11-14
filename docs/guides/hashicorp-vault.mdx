@@ -112,8 +112,8 @@ If not please configure your environment with the required variables (See variab
 
 ```bash
 configu upsert --store "hashicorp-vault" --schema "./my-app.cfgu.json" --set "prod" \
-    --config "DB_USER=user" --config "DB_PASSWORD=123" --config "DB_HOST=localhots" \
-    --config "DB_PORT=5433" --config "DB_NAME=database"
+    --kv "DB_USER=user" --kv "DB_PASSWORD=123" --kv "DB_HOST=localhots" \
+    --kv "DB_PORT=5433" --kv "DB_NAME=database"
 ```
 
 ### Export values
