@@ -97,7 +97,7 @@ $schema: https://json-schema.org/draft/2020-12/schema-cfgu
 keys:
   NODE_ENV:
     description: Defines the environment in which the application runs
-    test: isString
+    test: validator.isString($.value)
     enum:
       - development
       - production
@@ -105,7 +105,7 @@ keys:
     default: development
   LOG_LEVEL:
     description: Defines the level of logs to be recorded
-    test: isString
+    test: validator.isString($.value)
     enum:
       - error
       - warn
@@ -116,7 +116,7 @@ keys:
     default: info
   SERVICE_ENDPOINT:
     description: Defines the endpoint for the service
-    test: isURL
+    test: validator.isURL($.value)
     required: true
   AWS_REGION:
     description: Defines the AWS region for the service
@@ -155,19 +155,19 @@ keys:
   "keys": {
     "NODE_ENV": {
       "description": "Defines the environment in which the application runs",
-      "test": "isString",
+      "test": "validator.isString($.value)",
       "enum": ["development", "production", "test"],
       "default": "development"
     },
     "LOG_LEVEL": {
       "description": "Defines the level of logs to be recorded",
-      "test": "isString",
+      "test": "validator.isString($.value)",
       "enum": ["error", "warn", "info", "verbose", "debug", "silly"],
       "default": "info"
     },
     "SERVICE_ENDPOINT": {
       "description": "Defines the endpoint for the service",
-      "test": "isURL",
+      "test": "validator.isURL($.value)",
       "required": true
     },
     "AWS_REGION": {
