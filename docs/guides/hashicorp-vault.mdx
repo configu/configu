@@ -43,29 +43,29 @@ Our schema will look like this:
 {
   "keys": {
     "DB_USER": {
-      "type": "string",
+      "test": "validator.isString($.value)",
       "default": "user"
     },
     "DB_PASSWORD": {
-      "type": "string",
+      "test": "validator.isString($.value)",
       "default": "123"
     },
     "DB_HOST": {
-      "type": "IPv4",
+      "test": "validator.isIP($.value, 4)",
       "required": "true",
       "default": "127.0.0.1"
     },
     "DB_PORT": {
-      "type": "Number",
+      "test": "validator.isPort($.storedValue)",
       "required": "true",
       "default": "5433"
     },
     "DB_NAME": {
-      "type": "string",
+      "test": "validator.isString($.value)",
       "default": "database"
     },
     "DB_URL": {
-      "type": "String",
+      "test": "validator.isString($.value)",
       "template": "psql://{{DB_USER}}:{{DB_PASSWORD}}@{{DB_HOST}}:{{DB_PORT}}/{{DB_NAME}}",
       "description": "Generates a full PostgreSQL URL connection"
     }

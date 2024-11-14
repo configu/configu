@@ -216,6 +216,7 @@ Here is an example of a `ConfigSchema` file:
 ```yaml example.cfgu.yaml
 keys:
   API_KEY:
+    test: validator.isString($.value)
     required: true
     description: 'API key for a 3rd party service'
 ```
@@ -224,6 +225,7 @@ keys:
 {
   "keys": {
     "API_KEY": {
+      "test": "validator.isString($.value)",
       "required": true,
       "description": "API key for a 3rd party service"
     }
@@ -259,7 +261,7 @@ Example usage of `ConfigExpressions` in the `test` `Cfgu` property:
 ```yaml example.cfgu.yaml
 keys:
   ENABLE_API:
-    test: validator.isBoolean
+    test: validator.isBoolean($.storedValue)
     description: 'enables a 3rd party service'
   API_KEY:
     test: 'ENABLE_API === true'
@@ -270,7 +272,7 @@ keys:
 {
   "keys": {
     "ENABLE_API": {
-      "test": "isBoolean",
+      "test": "validator.isBoolean($.storedValue)",
       "description": "enables a 3rd party service"
     },
     "API_KEY": {
