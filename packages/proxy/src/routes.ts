@@ -11,6 +11,7 @@ import {
 } from '@configu/sdk';
 import _ from 'lodash';
 import { ConfiguFile } from '@configu/common';
+import { NotFoundError } from './error/not-found';
 import { config } from './config';
 
 const body = {
@@ -95,7 +96,7 @@ export const routes: FastifyPluginAsync = async (server, opts): Promise<void> =>
 
           const storeInstance = configuFile.getStoreInstance(store);
           if (!storeInstance) {
-            throw new Error(`store "${store}" not found`);
+            throw new NotFoundError(`store "${store}" not found`);
           }
           const setInstance = new ConfigSet(set);
           const schemaInstance = new ConfigSchema(keys);
