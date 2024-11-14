@@ -41,7 +41,7 @@ Configuration-as-Code (CaC) transforms `software configurations` into code for c
 
 A generic representation of `software configuration` using three properties: `key`, `value`, `set`. It is the core data model that powers Configu's configuration management.
 
-[core/Config](https://github.com/configu/configu/blob/main/packages/sdk/src/core/Config.ts)
+[core/Config](https://github.com/configu/configu/blob/main/packages/sdk/src/Config.ts)
 
 ### Cfgu
 
@@ -49,7 +49,7 @@ A generic representation of `software configuration` using three properties: `ke
 
 A generic declaration of a `Config`, characterized by properties like test, description, and constraints, providing a schema for configuration data.
 
-[core/Cfgu](https://github.com/configu/configu/blob/main/packages/sdk/src/core/Cfgu.ts) | [.cfgu $schema](/interfaces/.cfgu#schema)
+[core/Cfgu](https://github.com/configu/configu/blob/main/packages/sdk/src/Cfgu.ts) | [.cfgu $schema](/interfaces/.cfgu#schema)
 
 ### ConfigStore
 
@@ -57,7 +57,7 @@ A generic declaration of a `Config`, characterized by properties like test, desc
 
 A storage engine interface for `Config` records, acting as a repository for configuration data.
 
-[core/ConfigStore](https://github.com/configu/configu/blob/main/packages/sdk/src/core/ConfigStore.ts) | [core/stores](https://github.com/configu/configu/blob/main/packages/sdk/src/stores) | [integrations/stores](https://github.com/configu/configu/blob/main/packages/integrations/stores)
+[core/ConfigStore](https://github.com/configu/configu/blob/main/packages/sdk/src/ConfigStore.ts) | [core/stores](https://github.com/configu/configu/blob/main/packages/sdk/src/stores) | [integrations/stores](https://github.com/configu/configu/blob/main/packages/integrations/stores)
 
 <Accordion title="Learn more about ConfigStore">
 A `ConfigStore` is a storage system for `Configs` in Configu, serving as a mechanism for storing, retrieving, and managing configuration data. It can be any system or service capable of storing data, including text files, databases, secret managers, and the `Configu Platform`. `ConfigStores` play a crucial role in the configuration management process, enabling the seamless retrieval and management of configuration values at deployments or runtime.
@@ -74,7 +74,7 @@ Configu's interfaces [support a wide range of `ConfigStores`](https://github.com
 
 A unique path within a hierarchical data structure that groups `Config`s contextually, organizing configurations data logically.
 
-[core/ConfigSet](https://github.com/configu/configu/blob/main/packages/sdk/src/core/ConfigSet.ts)
+[core/ConfigSet](https://github.com/configu/configu/blob/main/packages/sdk/src/ConfigSet.ts)
 
 <Accordion title="Learn more about ConfigSet">
 A `ConfigSet` in Configu is a mechanism for **organizing and grouping configurations in a hierarchical structure**. It serves as a path within the configuration tree, enabling you to **associate specific configuration values with different contexts**, such as environments, tenants, or any other use case you require.
@@ -198,7 +198,7 @@ An assignment to a `ConfigKey` in a `ConfigSet`, specifying the actual configura
 
 A file containing binding records that link each unique `ConfigKey` to its corresponding `Cfgu` declaration, ensuring configurations are defined and applied correctly.
 
-[core/ConfigSchema](https://github.com/configu/configu/blob/main/packages/sdk/src/core/ConfigSchema.ts)
+[core/ConfigSchema](https://github.com/configu/configu/blob/main/packages/sdk/src/ConfigSchema.ts)
 
 <Accordion title="Learn more about ConfigSchema">
 A `ConfigSchema` in Configu is a file with a <CfguExt /> extension. It is a human-readable format for declaring configurations and their characteristics. It is designed to be stored in your source control alongside the code that uses these configurations, and can be treated as code as it shouldn't contain sensitive data.
