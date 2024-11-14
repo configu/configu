@@ -191,7 +191,10 @@ import { Related } from '/snippets/callouts.mdx';
 ## Commands
 
 <Tip>
-  Use \`configu -h\` or to get a list of all available commands.<br/>
+  Use \`configu -h\` or to get a list of all available commands.
+  <br/>
+  Use \`configu --config "path/to/.configu"\` to explicitly provide a path to a [\`.configu\`](/interfaces/.configu) file.
+  <br/>
   Use \`configu [COMMAND] -h\` to get help for a specific command.
 </Tip>
 
