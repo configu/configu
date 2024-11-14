@@ -204,5 +204,5 @@ await fs.writeFile(REF_PATH, contents, { flag: 'w' });
 await fs.writeJson(path.join(DOCS_ROOT_PATH, 'mint.json'), MINT_CONTENT, { spaces: 2 });
 
 // Check for broken links in the docs
-// await $`pnpm mintlify broken-links`.pipe(process.stdout);
+await $`pnpm mintlify broken-links`.pipe(process.stdout);
 await $`pnpm prettier --ignore-path .gitignore --write .`.pipe(process.stdout);
