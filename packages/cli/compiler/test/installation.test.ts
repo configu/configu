@@ -2,7 +2,7 @@ import test, { describe } from 'node:test';
 import { execSync } from 'node:child_process';
 import path from 'node:path';
 import assert from 'node:assert';
-import fs from 'fs/promises';
+import fs from 'node:fs/promises';
 
 describe('installation', () => {
   test('should install', async () => {
