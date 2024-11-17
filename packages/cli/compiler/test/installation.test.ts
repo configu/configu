@@ -3,6 +3,7 @@ import { execSync } from 'node:child_process';
 import path from 'node:path';
 import assert from 'node:assert';
 import fs from 'node:fs/promises';
+import * as os from 'node:os';
 
 describe('installation', () => {
   test('should install', async () => {
@@ -13,13 +14,26 @@ describe('installation', () => {
 
     await fs.chmod('./install.sh', 0o755);
 
-    const result = execSync('./install.sh', {
-      cwd: parentDir,
-      env: {
-        CONFIGU_VERSION: process.env.CONFIGU_VERSION,
-        CONFIGU_INSTALL: installationDir,
-      },
-    }).toString();
+    let result;
+    if (os.platform() === 'win32') {
+      result = execSync('./install.sh', {
+        shell: 'C:\\Program Files\\git\\usr\\bin\\bash.exe',
+        cwd: parentDir,
+        env: {
+          PATH: 'C:\\Program Files\\git\\usr\\bin',
+          CONFIGU_VERSION: process.env.CONFIGU_VERSION,
+          CONFIGU_INSTALL: installationDir,
+        },
+      }).toString();
+    } else {
+      result = execSync('./install.sh', {
+        cwd: parentDir,
+        env: {
+          CONFIGU_VERSION: process.env.CONFIGU_VERSION,
+          CONFIGU_INSTALL: installationDir,
+        },
+      }).toString();
+    }
 
     assert.match(result, /Configu was installed successfully to/, 'Installation script failed');
 
