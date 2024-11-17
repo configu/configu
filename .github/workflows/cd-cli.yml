@@ -78,7 +78,7 @@ jobs:
         id: deployment
         with:
           package-name: ${{ env.PACKAGE_NAME }}
-          google-chat-webhook: ${{ secrets.GOOGLE_CHAT_WEBHOOK }}
+          slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
       - uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -97,4 +97,4 @@ jobs:
         with:
           package-name: ${{ env.PACKAGE_NAME }}
           package-version: ${{ steps.deployment.outputs.release-version }}
-          google-chat-webhook: ${{ secrets.GOOGLE_CHAT_WEBHOOK }}
+          slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
