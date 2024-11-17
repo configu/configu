@@ -254,7 +254,7 @@ export class ConfiguFile {
 
     if (!isModuleExists) {
       const res = await fetch(
-        `https://github.com/configu/configu/releases/download/integrations-${version}/${type}-${platform()}.js`,
+        `https://github.com/configu/configu/releases/download/integrations-${version}/${type}.os-${platform()}.js`,
       );
 
       if (res.ok) {
