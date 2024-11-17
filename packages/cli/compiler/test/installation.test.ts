@@ -16,11 +16,10 @@ describe('installation', () => {
 
     let result;
     if (os.platform() === 'win32') {
-      result = execSync('./install.sh', {
-        shell: 'C:\\Program Files\\git\\usr\\bin\\bash.exe',
+      result = execSync('sh ./install.sh', {
+        shell: 'C:\\Windows\\System32\\bash.exe',
         cwd: parentDir,
         env: {
-          PATH: 'C:\\Program Files\\git\\usr\\bin',
           CONFIGU_VERSION: process.env.CONFIGU_VERSION,
           CONFIGU_INSTALL: installationDir,
         },
