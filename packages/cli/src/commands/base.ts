@@ -1,7 +1,7 @@
 import { Command, Option } from 'clipanion';
 import _ from 'lodash';
-import { CfguFile, ConfiguFile, parseJSON, readFile, Registry } from '@configu/common';
-import { EvalCommandOutput } from '@configu/sdk';
+import { CfguFile, ConfiguFile, parseJSON, readFile } from '@configu/common';
+import { ConfigStore, EvalCommandOutput } from '@configu/sdk';
 import path from 'node:path';
 import { type CustomContext } from '../index';
 import { configuStoreType, getConfigDir } from '../helpers';
@@ -72,7 +72,7 @@ export abstract class BaseCommand extends Command<Context> {
     }
     let store = this.context.configu.getStoreInstance(flag, storeConfig);
     if (!store) {
-      store = Registry.constructStore(flag, storeConfig);
+      store = ConfigStore.construct(flag, storeConfig);
     }
     return store;
   }

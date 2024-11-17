@@ -101,6 +101,9 @@ importers:
       '@configu/common':
         specifier: workspace:*
         version: link:../common
+      '@configu/formatters':
+        specifier: workspace:*
+        version: link:../integrations/formatters
       '@configu/sdk':
         specifier: workspace:*
         version: link:../sdk
@@ -146,27 +149,15 @@ importers:
 
   packages/common:
     dependencies:
-      '@configu-integrations/compact-json':
-        specifier: workspace:*
-        version: link:../integrations/formatters/CompactJSON
       '@configu-integrations/configu':
         specifier: workspace:*
         version: link:../integrations/stores/configu
-      '@configu-integrations/dotenv':
-        specifier: workspace:*
-        version: link:../integrations/formatters/Dotenv
-      '@configu-integrations/json':
-        specifier: workspace:*
-        version: link:../integrations/formatters/JSON
       '@configu-integrations/json-file':
         specifier: workspace:*
         version: link:../integrations/stores/json-file
-      '@configu-integrations/toml':
+      '@configu/expressions':
         specifier: workspace:*
-        version: link:../integrations/formatters/TOML
-      '@configu-integrations/validator':
-        specifier: workspace:*
-        version: link:../integrations/expressions/validator
+        version: link:../integrations/expressions
       '@configu/sdk':
         specifier: workspace:*
         version: link:../sdk
@@ -217,175 +208,42 @@ importers:
         specifier: 20.12.12
         version: 20.12.12
 
-  packages/integrations/expressions/validator:
+  packages/integrations/expressions:
     dependencies:
+      '@configu/sdk':
+        specifier: workspace:*
+        version: link:../../sdk
+      change-case:
+        specifier: ^5.4.4
+        version: 5.4.4
       validator:
         specifier: ^13.12.0
         version: 13.12.0
+      yaml:
+        specifier: ^2.6.0
+        version: 2.6.0
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
-      '@types/node':
-        specifier: 20.12.12
-        version: 20.12.12
       '@types/validator':
         specifier: ^13.12.2
         version: 13.12.2
-      tsup:
-        specifier: 8.2.4
-        version: 8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.0)
-      typescript:
-        specifier: ^5.4.5
-        version: 5.6.2
 
-  packages/integrations/formatters/CompactJSON:
+  packages/integrations/formatters:
     dependencies:
+      '@configu/sdk':
+        specifier: workspace:*
+        version: link:../../sdk
       change-case:
-        specifier: 4.1.2
-        version: 4.1.2
-      js-yaml:
-        specifier: ^4.1.0
-        version: 4.1.0
-      lodash-es:
+        specifier: ^5.4.4
+        version: 5.4.4
+      lodash:
         specifier: ^4.17.21
         version: 4.17.21
-    devDependencies:
-      '@types/js-yaml':
-        specifier: ^4.0.9
-        version: 4.0.9
-      '@types/lodash-es':
-        specifier: ^4.17.12
-        version: 4.17.12
-      '@types/node':
-        specifier: 20.12.12
-        version: 20.12.12
-      tsup:
-        specifier: 8.2.4
-        version: 8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.0)
-      typescript:
-        specifier: ^5.4.5
-        version: 5.6.2
-
-  packages/integrations/formatters/Dotenv:
-    dependencies:
-      change-case:
-        specifier: 4.1.2
-        version: 4.1.2
-    devDependencies:
-      '@types/node':
-        specifier: 20.12.12
-        version: 20.12.12
-      tsup:
-        specifier: 8.2.4
-        version: 8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.0)
-      typescript:
-        specifier: ^5.4.5
-        version: 5.6.2
-
-  packages/integrations/formatters/HelmValues:
-    dependencies:
-      change-case:
-        specifier: 4.1.2
-        version: 4.1.2
-      js-yaml:
-        specifier: ^4.1.0
-        version: 4.1.0
-      lodash-es:
-        specifier: ^4.17.21
-        version: 4.17.21
-    devDependencies:
-      '@types/node':
-        specifier: 20.12.12
-        version: 20.12.12
-      tsup:
-        specifier: 8.2.4
-        version: 8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.0)
-      typescript:
-        specifier: ^5.4.5
-        version: 5.6.2
-
-  packages/integrations/formatters/JSON:
-    devDependencies:
-      '@types/node':
-        specifier: 20.12.12
-        version: 20.12.12
-      tsup:
-        specifier: 8.2.4
-        version: 8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.0)
-      typescript:
-        specifier: ^5.4.5
-        version: 5.6.2
-
-  packages/integrations/formatters/KubernetesConfigMap:
-    dependencies:
-      js-yaml:
-        specifier: ^4.1.0
-        version: 4.1.0
-    devDependencies:
-      '@types/js-yaml':
-        specifier: ^4.0.9
-        version: 4.0.9
-      '@types/node':
-        specifier: 20.12.12
-        version: 20.12.12
-      tsup:
-        specifier: 8.2.4
-        version: 8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.0)
-      typescript:
-        specifier: ^5.4.5
-        version: 5.6.2
-
-  packages/integrations/formatters/TOML:
-    dependencies:
-      validator:
-        specifier: ^13.11.0
-        version: 13.12.0
-    devDependencies:
-      '@types/node':
-        specifier: 20.12.12
-        version: 20.12.12
-      '@types/validator':
-        specifier: ^13.11.9
-        version: 13.12.2
-      tsup:
-        specifier: 8.2.4
-        version: 8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.0)
-      typescript:
-        specifier: ^5.4.5
-        version: 5.6.2
-
-  packages/integrations/formatters/TerraformTfvars:
-    dependencies:
-      change-case:
-        specifier: 4.1.2
-        version: 4.1.2
-    devDependencies:
-      '@types/node':
-        specifier: 20.12.12
-        version: 20.12.12
-      tsup:
-        specifier: 8.2.4
-        version: 8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.0)
-      typescript:
-        specifier: ^5.4.5
-        version: 5.6.2
-
-  packages/integrations/formatters/YAML:
-    dependencies:
-      js-yaml:
-        specifier: ^4.1.0
-        version: 4.1.0
-    devDependencies:
-      '@types/js-yaml':
-        specifier: ^4.0.9
-        version: 4.0.9
-      '@types/node':
-        specifier: 20.12.12
-        version: 20.12.12
-      tsup:
-        specifier: 8.2.4
-        version: 8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.0)
-      typescript:
-        specifier: ^5.4.5
-        version: 5.6.2
+      yaml:
+        specifier: ^2.6.0
+        version: 2.6.0
 
   packages/integrations/stores/aws-parameter-store:
     dependencies:
@@ -3284,6 +3142,9 @@ packages:
 
   change-case@4.1.2:
     resolution: {integrity: sha512-bSxY2ws9OtviILG1EiY5K7NNxkqg/JnRnFxLtKQ96JaviiIxi7djMrSd0ECT9AC+lttClmYwKw53BWpOMblo7A==}
+
+  change-case@5.4.4:
+    resolution: {integrity: sha512-HRQyTk2/YPEkt9TnUPbOpr64Uw3KOicFWPVBb+xiHvd6eBx/qPr9xqfBFDT8P2vWsvvz4jbEkfDe71W3VyNu2w==}
 
   character-entities-html4@2.1.0:
     resolution: {integrity: sha512-1v7fgQRj6hnSwFpq1Eu0ynr/CDEw0rXo2B61qXrLNdHZmPKgb7fqS1a2JwF0rISo9q77jDI8VMEHoApn8qDoZA==}
@@ -10511,6 +10372,8 @@ snapshots:
       sentence-case: 3.0.4
       snake-case: 3.0.4
       tslib: 2.7.0
+
+  change-case@5.4.4: {}
 
   character-entities-html4@2.1.0: {}
 

@@ -38,6 +38,7 @@
   },
   "dependencies": {
     "@configu/common": "workspace:*",
+    "@configu/formatters": "workspace:*",
     "@configu/sdk": "workspace:*",
     "axios": "^1.7.4",
     "change-case": "4.1.2",

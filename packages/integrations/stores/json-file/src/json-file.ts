@@ -1,18 +1,18 @@
 import { FileConfigStore } from '@configu/integrations/src/utils/File';
-import { Config, Json } from '@configu/sdk';
+import { Config } from '@configu/sdk';
 
 export type JsonFileConfigStoreConfiguration = { path: string };
 
 export class JsonFileConfigStore extends FileConfigStore {
   constructor({ path }: JsonFileConfigStoreConfiguration) {
-    super({ path, initialFileState: Json.stringify({ data: [], beautify: true }) });
+    super({ path, initialFileState: JSON.stringify([], null, 2) });
   }
 
   parse(fileContent: string) {
-    return Json.parse(fileContent) as Config[];
+    return JSON.parse(fileContent) as Config[];
   }
 
   stringify(nextConfigs: Config[]) {
-    return Json.stringify({ data: nextConfigs, beautify: true });
+    return JSON.stringify(nextConfigs, null, 2);
   }
 }

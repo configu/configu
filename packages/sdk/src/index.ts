@@ -5,7 +5,7 @@ export * from './ConfigKey';
 export * from './ConfigValue';
 
 export * from './ConfigExpression';
-export * from './expressions';
+export * from './expressions/JSONSchema';
 
 export * from './ConfigStore';
 export * from './stores';

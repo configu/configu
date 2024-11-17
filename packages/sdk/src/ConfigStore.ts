@@ -8,7 +8,7 @@ export type ConfigQuery = Pick<Config, 'set' | 'key'>;
 
 export interface ConfigStoreConstructor {
   // eslint-disable-next-line no-use-before-define
-  new (configuration?: Record<string, unknown>): ConfigStore;
+  new (configuration: any): ConfigStore;
   type: string;
 }
 

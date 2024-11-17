@@ -16,9 +16,9 @@ export type ConfigValueString = Config['value'];
 export type ConfigWithCfgu = Config & { cfgu: Cfgu };
 
 type ConfigExpressionContext = {
-  store: ConfigStore;
-  set: ConfigSet;
-  schema: ConfigSchema;
+  store?: ConfigStore;
+  set?: ConfigSet;
+  schema?: ConfigSchema;
   key?: string;
   configs: {
     [key: string]: ConfigWithCfgu;
@@ -35,7 +35,7 @@ type ConfigContext = Merge<
 
 export type ConfigEvaluationContext = {
   $: Partial<ConfigContext> & {
-    input: {
+    input?: {
       store: Jsonify<ConfigStore>;
       set: Jsonify<ConfigSet>;
       schema: Jsonify<ConfigSchema>;
@@ -77,14 +77,19 @@ export class ConfigValue {
     }));
 
     let $ = {
-      input: {
-        store: { ...context.store },
-        set: { ...context.set },
-        schema: { ...context.schema },
-      },
       configs,
-    };
+    } as ConfigEvaluationContext['$'];
 
+    if (context.store && context.set && context.schema) {
+      $ = {
+        input: {
+          store: { ...context.store },
+          set: { ...context.set },
+          schema: { ...context.schema },
+        },
+        ...$,
+      };
+    }
     if (context.key) {
       const currentConfig = configs[context.key];
       if (!currentConfig) {
