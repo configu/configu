@@ -2,7 +2,7 @@ FROM node:22.10.0-alpine
 
 RUN apk --no-cache add curl
 
-ENV CONFIGU_VERSION=latest
+ARG CONFIGU_VERSION=latest
 COPY install.sh /install.sh
 RUN sh /install.sh
 

@@ -101,8 +101,7 @@ jobs:
         with:
           context: ${{ env.PACKAGE_PATH }}
           platforms: linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8
-          build-args: |
-            CONFIGU_VERSION=${{ steps.deployment.outputs.release-version }}
+          build-args: CONFIGU_VERSION=${{ steps.deployment.outputs.release-version }}
           tags: ${{ env.DOCKER_IMAGE_NAME }}:${{ steps.deployment.outputs.release-version }},${{ env.DOCKER_IMAGE_NAME }}:latest
           push: true
 
