@@ -111,3 +111,19 @@ jobs:
           package-name: ${{ env.PACKAGE_NAME }}
           package-version: ${{ steps.deployment.outputs.release-version }}
           slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+  post-release-test:
+    runs-on: ${{ matrix.os }}
+    needs: end-release
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        node-version: [22.x]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - uses: ./.github/actions/ts-env-action
+      - name: Check installation and executable from release
+        working-directory: ${{ env.PACKAGE_PATH }}
+        run: pnpm test:post-release

@@ -34,7 +34,8 @@
     "bundle": "tsup",
     "compile": "tsx compiler/index.ts",
     "configu": "tsx src/run.ts",
-    "start": "pnpm configu"
+    "start": "pnpm configu",
+    "test:post-release": "tsx --test ./compiler/**/*.test.ts"
   },
   "dependencies": {
     "@configu/common": "workspace:*",
