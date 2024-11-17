@@ -8,6 +8,10 @@ inputs:
   slack-webhook:
     description: The Slack webhook URL
     required: true
+  ignore-slack:
+    description: Ignore posting to Slack
+    required: false
+    default: false
 
 outputs:
   release-package:
@@ -75,6 +79,7 @@ runs:
 
     - name: Post Slack message
       id: slack
+      if: ${{ !inputs.ignore-slack }}
       uses: slackapi/slack-github-action@v1.26.0
       with:
         payload: |
