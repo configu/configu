@@ -112,7 +112,6 @@ export class InitCommand extends BaseCommand {
       [constantCase(`some key`)]: {
         description: `For more information about \`ConfigSchema\` and the \`Cfgu\` format, visit https://configu.com/docs/config-schema/`,
         default: paramCase('some value'),
-        required: false,
       },
     };
   }

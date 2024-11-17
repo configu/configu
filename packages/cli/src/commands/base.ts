@@ -1,10 +1,10 @@
 import { Command, Option } from 'clipanion';
 import _ from 'lodash';
-import { CfguFile, ConfiguFile, parseJSON, readFile } from '@configu/common';
+import { CfguFile, ConfiguFile, getConfiguHomeDir, parseJSON, readFile } from '@configu/common';
 import { ConfigStore, EvalCommandOutput } from '@configu/sdk';
 import path from 'node:path';
 import { type CustomContext } from '../index';
-import { configuStoreType, getConfigDir } from '../helpers';
+import { configuStoreType } from '../helpers';
 
 export type Context = CustomContext & {
   configu: ConfiguFile;
@@ -36,7 +36,8 @@ export abstract class BaseCommand extends Command<Context> {
     else configu = await ConfiguFile.search();
     this.context.configu = configu;
 
-    const configuCredentialFilePath = path.join(getConfigDir(), 'config.json');
+    const configuHomeDir = await getConfiguHomeDir();
+    const configuCredentialFilePath = path.join(configuHomeDir, 'config.json');
     try {
       const rawConfiguConfigData = await readFile(configuCredentialFilePath, true);
       const configuConfigData = JSON.parse(rawConfiguConfigData);
@@ -61,7 +62,7 @@ export abstract class BaseCommand extends Command<Context> {
     return this.context.configu.getBackupStoreInstance(flag);
   }
 
-  getStoreInstanceByStoreFlag(flag?: string) {
+  async getStoreInstanceByStoreFlag(flag?: string) {
     if (!flag) {
       throw new Error('--store,--st flag is missing');
     }
@@ -70,7 +71,7 @@ export abstract class BaseCommand extends Command<Context> {
     if (storeType === configuStoreType || flag === configuStoreType) {
       storeConfig = { credentials: this.context.credentials.data.credentials };
     }
-    let store = this.context.configu.getStoreInstance(flag, storeConfig);
+    let store = await this.context.configu.getStoreInstance(flag, storeConfig);
     if (!store) {
       store = ConfigStore.construct(flag, storeConfig);
     }

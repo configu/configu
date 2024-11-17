@@ -154,10 +154,14 @@ export class ConfiguFile {
     return ConfiguFile.load(path);
   }
 
-  getStoreInstance(name: string, configuration?: Record<string, unknown>) {
+  async getStoreInstance(name: string, configuration?: Record<string, unknown>) {
     const storeConfig = this.contents.stores?.[name];
     if (!storeConfig) {
       return undefined;
+    }
+    // todo: remember to mention in docs that integration stores cannot be overriden
+    if (!ConfigStore.has(storeConfig.type)) {
+      await ConfiguFile.registerStore(storeConfig.type);
     }
     return ConfigStore.construct(storeConfig.type, { ...configuration, ...storeConfig.configuration });
   }
@@ -241,7 +245,8 @@ export class ConfiguFile {
   }
 
   static async registerStore(type: string) {
-    const modulePath = await getConfiguHomeDir('cache', `/${type}.js`);
+    const moduleDirPath = await getConfiguHomeDir('cache');
+    const modulePath = join(moduleDirPath, `/${type}.js`);
 
     // todo: add sem-ver check for cache invalidation when cached stores are outdated once integration pipeline is reworked
     // const [KEY, VERSION = 'latest'] = type.split('@');
