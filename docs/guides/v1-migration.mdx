@@ -14,8 +14,9 @@ V1 introduces several breaking changes to `.cfgu` files. Below is a list of the 
 
 - The `type` property has been removed and replaced with the [new `test` property](/interfaces/.cfgu#properties).
 - The `options` property has been renamed to `enum` to better reflect its purpose.
-- The `depends` property has been removed. If you need to replicate it, you can use the [new `test` property](/interfaces/.cfgu#properties).
+- The `depends` property has been removed. If you need to replicate it, you can use the [new `test` property](http://localhost:3000/guides/v1-migration#new-cfgu-property-test).
 - The `labels` property has been renamed to `label`.
+- The `template` property has been removed. If you need to replicate it, you can use the [new `const` property](#new-cfgu-property-const).
 
 #### `.cfgu` file structure change
 
@@ -213,6 +214,28 @@ keys:
 
 The `cache` property has been renamed to `backup` to more accurately reflect its purpose. Replace all occurrences of `cache` with `backup` to reflect the new naming convention.
 
+### CLI upsert command changes
+
+The `--config, -c` flag has been renamed to `--kv` to avoid clashes with the new [`--config` global flag](#cli-global-config-flag). Replace all occurrences of `--config` with `--kv` to align with this updated naming convention.
+
+A new method for declaring key-value pairs has also been introduced using the `-k`/`--key` and `-v`/`--value` flags. These flags must be used in sequence, with each key matched to the corresponding value provided immediately after. Keys without matching values will result in the deletion of their corresponding values.
+
+For example, the following command:
+
+```bash
+configu upsert --store 'my-store' --set '' --schema start.cfgu.yaml \
+    -k GREETING \
+    -k SUBJECT \
+    -v configu
+```
+
+Will:
+
+- Delete the value of `GREETING`.
+- Set the value of `SUBJECT` to `configu`.
+
+These changes aim to improve clarity and prevent naming conflicts while providing flexibility for key-value management.
+
 ## Upgrading Configu CLI
 
 TODO: get input from Ran
@@ -252,13 +275,13 @@ keys:
 
 The CLI export `filter` flag:
 
-```yaml
-configu eval --store store1 --set '' --schema ./tmp/schemas2/start.cfgu.yaml | configu export --filter 'empty($.value)' --filter 'contains($.cfgu.label,"a")'
+```bash
+configu eval --store my-store --set '' --schema ./tmp/schemas2/start.cfgu.yaml | configu export --filter 'empty($.value)' --filter 'contains($.cfgu.label,"a")'
 ```
 
 The CLI export `format` flag:
 
-```yaml
+```bash
 configu eval --store my-store --set '' --schema start.cfgu.yaml | configu export --format 'Dotenv({json:{{pipe}},wrap:true})'
 ```
 
@@ -276,6 +299,10 @@ The `test` property is a new property that allows you to write expressions to va
 ### New `Cfgu` property `const`
 
 The `const` property is a new property that allows you to write expressions to set a constant value for a key.
+
+### CLI global `--config` flag
+
+The `--config` flag is a new global flag that allows you to specify a path to `.configu` file to use for all commands. This flag is useful when you want to use a specific `.configu` file that you want to use for all commands.
 
 ## Other changes
 
