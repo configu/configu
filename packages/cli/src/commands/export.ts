@@ -147,13 +147,9 @@ export class CliExportCommand extends BaseCommand {
       return configs;
     }
 
-    const filteredConfigs = _.omitBy(configs, (config) => {
+    const filteredConfigs = _.pickBy(configs, (config) => {
       const evaluationContext = ConfigValue.createEvaluationContext({ key: config.key, configs });
-      const { value: filterResult, error } = ConfigExpression.evaluate(currentFilter, evaluationContext);
-      if (error) throw new Error(`filter expression evaluation failed\n${error}`);
-
-      if (typeof filterResult !== 'boolean') throw new Error(`filter expression does not evaluate to a boolean}`);
-      return filterResult;
+      return ConfigExpression.evaluateBoolean(currentFilter, evaluationContext);
     });
     return this.filterFromFlag(filteredConfigs, filterExpressions);
   }
