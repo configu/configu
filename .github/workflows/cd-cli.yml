@@ -117,6 +117,9 @@ jobs:
   post-release-test:
     runs-on: ${{ matrix.os }}
     needs: end-release
+    defaults:
+      run:
+        shell: bash
 
     strategy:
       matrix:
@@ -131,10 +134,10 @@ jobs:
         with:
           package-name: ${{ env.PACKAGE_NAME }}
           slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          ignore-slack: true
       - uses: ./.github/actions/ts-env-action
       - name: Check installation and executable from release
         working-directory: ${{ env.PACKAGE_PATH }}
         env:
           CONFIGU_VERSION: ${{ steps.deployment.outputs.release-version }}
         run: pnpm test:post-release
-        shell: bash

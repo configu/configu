@@ -10,7 +10,7 @@ describe('installation', () => {
     const parentDir = path.join(currentDir, '../..').replace('file:', '');
     const installationDir = path.join(parentDir, 'tmp');
 
-    const result = execSync('source install.sh', {
+    const result = execSync('./install.sh', {
       cwd: parentDir,
       env: {
         CONFIGU_VERSION: process.env.CONFIGU_VERSION,
