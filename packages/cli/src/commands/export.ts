@@ -49,9 +49,9 @@ export class CliExportCommand extends BaseCommand {
     description: `Format exported \`Configs\` to common configuration formats. Redirect the output to file, if needed`,
   });
 
-  // eol = Option.Boolean('--eol,--EOL', {
-  //   description: `Adds EOL (\\n on POSIX \\r\\n on Windows) to the end of the stdout`,
-  // });
+  eol = Option.Boolean('--eol,--EOL', {
+    description: `Adds EOL (\\n on POSIX \\r\\n on Windows) to the end of the stdout`,
+  });
 
   template = Option.String('--template', {
     description: `Path to a file containing {{mustache}} templates to render (inject/substitute) the exported \`Configs\` into`,
@@ -194,12 +194,16 @@ export class CliExportCommand extends BaseCommand {
       return;
     }
 
+    const configs = _.chain(result)
+      .keyBy('key')
+      .mapValues(({ value }) => ConfigValue.parse(value))
+      .value();
     if (this.source) {
-      const formattedResult = ConfigFormatter.format('Dotenv', result, evaluationContext);
+      const formattedResult = ConfigFormatter.format('Dotenv', configs, evaluationContext);
       this.printStdout(formattedResult);
       return;
     }
-    const formattedResult = ConfigFormatter.format(this.format as ConfigFormat, result, evaluationContext);
+    const formattedResult = ConfigFormatter.format(this.format as ConfigFormat, configs, evaluationContext);
     this.printStdout(formattedResult);
 
     // // eslint-disable-next-line no-template-curly-in-string
