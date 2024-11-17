@@ -78,18 +78,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - uses: actions/download-artifact@master
-        with:
-          name: ${{ env.ARTIFACT_NAME }}-ubuntu-latest
-          path: ${{ env.ARTIFACT_NAME }}/dist
-      - uses: actions/download-artifact@master
-        with:
-          name: ${{ env.ARTIFACT_NAME }}-windows-latest
-          path: ${{ env.ARTIFACT_NAME }}/dist
-      - uses: actions/download-artifact@master
-        with:
-          name: ${{ env.ARTIFACT_NAME }}-macos-latest
-          path: ${{ env.ARTIFACT_NAME }}/dist
 
       - name: Build docker image and push to Docker Hub
         uses: docker/build-push-action@v3
