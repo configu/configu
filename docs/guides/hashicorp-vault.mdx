@@ -66,7 +66,7 @@ Our schema will look like this:
     },
     "DB_URL": {
       "test": "validator.isString($.value)",
-      "template": "psql://{{DB_USER}}:{{DB_PASSWORD}}@{{DB_HOST}}:{{DB_PORT}}/{{DB_NAME}}",
+      "const": "psql://{{DB_USER}}:{{DB_PASSWORD}}@{{DB_HOST}}:{{DB_PORT}}/{{DB_NAME}}",
       "description": "Generates a full PostgreSQL URL connection"
     }
   }
