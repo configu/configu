@@ -16,7 +16,7 @@ import {
 import Table from 'tty-table';
 import * as t from 'typanion';
 import { cwd } from 'process';
-import { readFile } from '@configu/common';
+import { readFile, Registry } from '@configu/common';
 import * as os from 'os';
 import { BaseCommand } from './base';
 
@@ -155,6 +155,28 @@ export class CliExportCommand extends BaseCommand {
     return this.filterFromFlag(filteredConfigs, filterExpressions);
   }
 
+  async registerFormatterExpressions() {
+    const { CompactJSON } = await import('@configu-integrations/compact-json');
+    const { Dotenv } = await import('@configu-integrations/dotenv');
+    const { HelmValues } = await import('@configu-integrations/helm-values');
+    const { JSONExpression } = await import('@configu-integrations/json');
+    const { jsonToKubernetesConfigMap } = await import('@configu-integrations/kubernetes-config-map');
+    const { jsonToTfvars } = await import('@configu-integrations/terraform-tf-values');
+    const { TOML } = await import('@configu-integrations/toml');
+    const { YAML } = await import('@configu-integrations/yaml');
+
+    await Registry.register({
+      CompactJSON,
+      Dotenv,
+      HelmValues,
+      JSON: JSONExpression,
+      KubernetesConfigMap: jsonToKubernetesConfigMap,
+      TerraformTfvars: jsonToTfvars,
+      TOML,
+      YAML,
+    });
+  }
+
   async exportConfigs(result: Record<string, string>) {
     if (this.template) {
       const templateContent = await readFile(this.template);
@@ -168,6 +190,7 @@ export class CliExportCommand extends BaseCommand {
           }))
           .value();
       }
+      await this.registerFormatterExpressions();
       const { value: templatedContent, error: renderError } = Expression.parse(`\`${templateContent}\``).tryEvaluate(
         templateContext,
       );
@@ -193,6 +216,8 @@ export class CliExportCommand extends BaseCommand {
     let expression = `\`${this.format ?? 'JSON({json:${pipe}})'}\``;
     // eslint-disable-next-line no-template-curly-in-string
     if (this.source) expression = '`Dotenv({json:${pipe},wrap:true})`';
+
+    await this.registerFormatterExpressions();
 
     // Renders the result value in the expression
     const { value: renderedContent, error: renderError } = Expression.parse(expression).tryEvaluate({

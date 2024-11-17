@@ -39,7 +39,7 @@ export class EvalCommand extends BaseCommand {
   async execute() {
     await this.init();
 
-    const store = this.getStoreInstanceByStoreFlag(this.store ?? 'noop');
+    const store = await this.getStoreInstanceByStoreFlag(this.store ?? 'noop');
     const set = new ConfigSet(this.set);
     const schema = await this.getSchemaInstanceByFlag(this.schema);
     const configs = this.reduceConfigFlag(this.config);

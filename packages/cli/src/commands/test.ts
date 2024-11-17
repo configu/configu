@@ -20,7 +20,7 @@ export class TestCommand extends BaseCommand {
 
   async execute() {
     await this.init();
-    const store = this.getStoreInstanceByStoreFlag(this.store);
+    const store = await this.getStoreInstanceByStoreFlag(this.store);
     const set = new ConfigSet();
     const schema = new ConfigSchema({
       CONFIGU_TEST: {},

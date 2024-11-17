@@ -4,6 +4,8 @@ import _ from 'lodash';
 import parseJson from 'parse-json';
 import yaml from 'js-yaml';
 import { ConfigSchema } from '@configu/sdk';
+import * as os from 'node:os';
+import { existsSync } from 'node:fs';
 
 export const { NODE_ENV } = process.env;
 export const isDev = NODE_ENV === 'development';
@@ -64,4 +66,14 @@ export const parseYAML = (filePath: string, fileContent: string): any => {
     error.message = `YAML Error in ${filePath}:\n${error.message}`;
     throw error;
   }
+};
+
+export const getConfiguHomeDirSafely = async (): Promise<string> => {
+  const configuHomeDir = path.join(os.homedir(), '.configu');
+
+  if (!existsSync(configuHomeDir)) {
+    await fs.mkdir(configuHomeDir, { recursive: true });
+  }
+
+  return configuHomeDir;
 };

@@ -122,10 +122,13 @@ export class ConfiguFile {
     return ConfiguFile.load(path);
   }
 
-  getStoreInstance(name: string, configuration?: Record<string, unknown>) {
+  async getStoreInstance(name: string, configuration?: Record<string, unknown>) {
     const storeConfig = this.contents.stores?.[name];
     if (!storeConfig) {
       return undefined;
+    }
+    if (!Registry.store.has(storeConfig.type)) {
+      await Registry.remoteRegisterStore(storeConfig.type);
     }
     return Registry.constructStore(storeConfig.type, { ...configuration, ...storeConfig.configuration });
   }
