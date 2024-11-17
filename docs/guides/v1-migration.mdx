@@ -12,9 +12,9 @@ V1 introduces several breaking changes to `.cfgu` files. Below is a list of the 
 
 #### `Cfgu` property changes
 
-- The `type` property has been removed and replaced with the [new `test` property](/interfaces/.cfgu#properties).
+- The `type` property has been removed and replaced with the [new `test` property](#new-cfgu-property-test).
 - The `options` property has been renamed to `enum` to better reflect its purpose.
-- The `depends` property has been removed. If you need to replicate it, you can use the [new `test` property](http://localhost:3000/guides/v1-migration#new-cfgu-property-test).
+- The `depends` property has been removed. If you need to replicate it, you can use the [new `test` property](#new-cfgu-property-test).
 - The `labels` property has been renamed to `label`.
 - The `template` property has been removed. If you need to replicate it, you can use the [new `const` property](#new-cfgu-property-const).
 
@@ -259,9 +259,9 @@ The following features support expressions:
 - [The new `test` `Cfgu` property](/interfaces/.cfgu#properties)
 - [The new `const` `Cfgu` property](/interfaces/.cfgu#properties)
 - [The `.configu` file](/interfaces/.configu#environment-variables)
-- [The CLI export `filter` flag](http://localhost:3000/interfaces/cli/ref#configu-export)
-- [The CLI export `format` flag](http://localhost:3000/interfaces/cli/ref#configu-export)
-- [The CLI export `template` flag](http://localhost:3000/interfaces/cli/ref#configu-export)
+- [The CLI export `filter` flag](/interfaces/cli/ref#configu-export)
+- [The CLI export `format` flag](/interfaces/cli/ref#configu-export)
+- [The CLI export `template` flag](/interfaces/cli/ref#configu-export)
 
 Example usages of expressions:
 
@@ -308,7 +308,7 @@ The `--config` flag is a new global flag that allows you to specify a path to `.
 
 ### `@configu/node` and `@configu/browser` removal
 
-Any and all uses of these packages are no longer supported. We encourage all users of these packages to utilize [`@configu/cli`](https://docs.configu.com/interfaces/cli/overview) or [`@configu/proxy`](https://docs.configu.com/interfaces/proxy/overview) depending on your requirements. All ConfigStore implementations have been moved to `@configu/integrations`.
+Any and all uses of these packages are no longer supported. We encourage all users of these packages to utilize [`@configu/cli`](/interfaces/cli/overview) or [`@configu/proxy`](/interfaces/proxy/overview) depending on your requirements. All ConfigStore implementations have been moved to `@configu/integrations`.
 
 ### `@configu/lib` removal
 
