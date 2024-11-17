@@ -2,13 +2,16 @@ import test, { describe } from 'node:test';
 import { execSync } from 'node:child_process';
 import path from 'node:path';
 import assert from 'node:assert';
+import fs from 'fs/promises';
 
 describe('installation', () => {
-  test('should install', () => {
+  test('should install', async () => {
     // get current dir path
     const currentDir = path.dirname(import.meta.url);
     const parentDir = path.join(currentDir, '../..').replace('file:', '');
     const installationDir = path.join(parentDir, 'tmp');
+
+    await fs.chmod('./install.sh', 0o755);
 
     const result = execSync('./install.sh', {
       cwd: parentDir,
