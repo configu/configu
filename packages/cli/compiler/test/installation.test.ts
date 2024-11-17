@@ -17,7 +17,6 @@ describe('installation', () => {
     let result;
     if (os.platform() === 'win32') {
       result = execSync('sh ./install.sh', {
-        shell: 'C:\\Windows\\System32\\bash.exe',
         cwd: parentDir,
         env: {
           CONFIGU_VERSION: process.env.CONFIGU_VERSION,
