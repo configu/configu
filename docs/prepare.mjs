@@ -75,7 +75,7 @@ const README_FILE = `${TypeDocConfig.entryFileName}${TypeDocConfig.fileExtension
 const REF_FILE = `globals${TypeDocConfig.fileExtension}`;
 
 // Process README files to create the MDX files for the docs
-const prepareREADME = async ({ source, target, title = 'Overview' }) => {
+const prepareREADME = async ({ source, target, title = 'Overview', sidebarTitle = '' }) => {
   const sourcePath = path.join(ROOT_PATH, source);
   const targetPath = path.join(ROOT_PATH, target);
 
@@ -95,7 +95,7 @@ const prepareREADME = async ({ source, target, title = 'Overview' }) => {
 
   contents = `---
 title: '${title}'
-description: '${description}'
+description: '${description}'${sidebarTitle ? `\nsidebarTitle: '${sidebarTitle}'` : ''}
 ---
 ${contents}
 `;
@@ -136,6 +136,25 @@ app.renderer.postRenderAsyncJobs.push(async (renderer) => {
       }
       return Promise.resolve();
     }),
+    ..._(INTEGRATIONS_INDEX_CONTENT)
+      .values()
+      .map(async (cur) => {
+        if (cur.enabled) {
+          const {
+            docs,
+            label,
+            sidebarTitle,
+            store: { code },
+          } = cur;
+          return prepareREADME({
+            source: `${code}/README.md`,
+            target: `docs/${docs}${TypeDocConfig.fileExtension}`,
+            title: label,
+            sidebarTitle,
+          });
+        }
+        return Promise.resolve();
+      }),
   ]);
 });
 await app.generateDocs(project, TypeDocConfig.out);
