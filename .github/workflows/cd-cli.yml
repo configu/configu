@@ -134,3 +134,4 @@ jobs:
         env:
           CONFIGU_VERSION: ${{ steps.deployment.outputs.release-version }}
         run: pnpm test:post-release
+        shell: bash
