@@ -12,7 +12,7 @@ import BearerAuth from '@fastify/bearer-auth';
 import Swagger, { FastifyDynamicSwaggerOptions } from '@fastify/swagger';
 import SwaggerUI from '@scalar/fastify-api-reference';
 
-import { ConfiguFile, Registry } from '@configu/common';
+import { ConfiguFile } from '@configu/common';
 import { config } from './config';
 import { routes } from './routes';
 

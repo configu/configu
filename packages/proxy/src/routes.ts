@@ -8,9 +8,10 @@ import {
   EvaluatedConfigOrigin,
   UpsertCommand,
   ExportCommand,
+  JSONSchema,
 } from '@configu/sdk';
 import _ from 'lodash';
-import { ConfiguFile } from '@configu/common';
+import { ConfiguFile, CfguFile } from '@configu/common';
 import { config } from './config';
 
 const body = {
@@ -28,35 +29,7 @@ const body = {
       set: {
         type: 'string',
       },
-      schema: {
-        type: 'object',
-        required: ['keys'],
-        additionalProperties: false,
-        properties: {
-          name: {
-            type: 'string',
-            minLength: 1,
-          },
-          // openapi and fastify plugins don't support the full JSON schema spec so the actual deep validations for the schema contents will be done by the ConfigSchema constructor
-          keys: {
-            description: 'https://docs.configu.com/interfaces/.cfgu',
-            type: 'object',
-            minProperties: 1,
-            additionalProperties: {
-              type: 'object',
-              minProperties: 1,
-            },
-          },
-          // contents: ConfigSchemaContents,
-          // contents: {
-          //   description: 'https://docs.configu.com/interfaces/.cfgu',
-          //   type: 'object',
-          //   minProperties: 1,
-          //   additionalProperties: CfguSchema,
-          // },
-          // contents: ConfigSchemaContents,
-        },
-      },
+      schema: CfguFile.schema,
       configs: {
         type: 'object',
         additionalProperties: {
@@ -69,9 +42,7 @@ const body = {
 
 const ok = {
   type: 'object',
-  additionalProperties: {
-    type: 'string',
-  },
+  additionalProperties: JSONSchema.AnyPropertySchema,
 } as const;
 
 export const routes: FastifyPluginAsync = async (server, opts): Promise<void> => {
@@ -132,8 +103,8 @@ export const routes: FastifyPluginAsync = async (server, opts): Promise<void> =>
       const exportCmd = new ExportCommand({ pipe: evalResToExport });
       const exportRes = await exportCmd.run();
       // TODO: consider if this is the right way to parse the result
-      const parsedExportRes = JSON.parse(exportRes.result);
-      return reply.send(parsedExportRes);
+      // const parsedExportRes = JSON.parse(exportRes.result);
+      return reply.send(exportRes);
     },
   );
 };
