@@ -15,7 +15,10 @@ else
 	esac
 fi
 
-configu_version="1.0.0-next.25"
+# get the version from environment variable or use the default value
+configu_version="${CONFIGU_VERSION:-latest}"
+
+echo "Downloading configu version $configu_version"
 
 #configu_uri="./dist/configu-${target}${ext}"
 configu_uri="https://github.com/configu/configu/releases/download/cli%2Fv${configu_version}/configu-${target}.${ext}"
