@@ -199,7 +199,11 @@ export class CliExportCommand extends BaseCommand {
       this.printStdout(formattedResult);
       return;
     }
-    const formattedResult = ConfigFormatter.format(this.format as ConfigFormat, configs, evaluationContext);
+    const formattedResult = ConfigFormatter.format(
+      (this.format ?? 'BeautifiedJSON') as ConfigFormat,
+      configs,
+      evaluationContext,
+    );
     this.printStdout(formattedResult);
 
     // // eslint-disable-next-line no-template-curly-in-string
