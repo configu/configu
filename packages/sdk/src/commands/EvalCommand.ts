@@ -232,6 +232,7 @@ export class EvalCommand extends ConfigCommand<EvalCommandInput, EvalCommandOutp
         } catch (error) {
           throw new Error(`Validation failed for Config: "${current.key}"\n${error.message}`);
         }
-      });
+      })
+      .value();
   }
 }
