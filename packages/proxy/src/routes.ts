@@ -42,7 +42,7 @@ const body = {
 
 const ok = {
   type: 'object',
-  additionalProperties: JSONSchema.AnyPropertySchema,
+  additionalProperties: true,
 } as const;
 
 export const routes: FastifyPluginAsync = async (server, opts): Promise<void> => {
