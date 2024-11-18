@@ -130,7 +130,7 @@ export class ConfigValue {
 
     if (cfgu.pattern) {
       ConfigValue.test({
-        test: `JSONSchema.validate({ "type": "string", "pattern": $.cfgu.pattern }, $.valueString) || true`,
+        test: `JSONSchema.validate({ "type": "string", "pattern": $.cfgu.pattern }, $.storedValue) || true`,
         errorSuffix: 'Cfgu.pattern test',
         context,
       });
