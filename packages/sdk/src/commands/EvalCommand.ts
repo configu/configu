@@ -220,6 +220,7 @@ export class EvalCommand extends ConfigCommand<EvalCommandInput, EvalCommandOutp
               set,
               schema,
               key,
+              label: Array.isArray(current.cfgu.label) ? current.cfgu.label : _.compact([current.cfgu.label]),
               configs: result,
             });
 

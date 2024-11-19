@@ -92,6 +92,7 @@ export class UpsertCommand extends ConfigCommand<UpsertCommandInput, UpsertComma
                 set,
                 schema,
                 key,
+                label: Array.isArray(cfgu.label) ? cfgu.label : _.compact([cfgu.label]),
                 configs: _.mapValues(currentConfigs, (current) => ({
                   ...current,
                   cfgu: schema.keys[current.key] as Cfgu,

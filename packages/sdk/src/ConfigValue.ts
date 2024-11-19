@@ -20,6 +20,7 @@ type ConfigExpressionContext = {
   set?: ConfigSet;
   schema?: ConfigSchema;
   key?: string;
+  label?: string[];
   configs: {
     [key: string]: ConfigWithCfgu;
   };
@@ -74,6 +75,7 @@ export class ConfigValue {
       ...current,
       storedValue: current.value,
       value: ConfigValue.parse(current.value),
+      label: Array.isArray(current.cfgu.label) ? current.cfgu.label : _.compact([current.cfgu.label]),
     }));
 
     let $ = {
