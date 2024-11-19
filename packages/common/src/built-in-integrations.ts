@@ -1,4 +1,4 @@
-import * as validators from '@configu-integrations/validator';
+import validators from '@configu-integrations/validator';
 import { CompactJSON } from '@configu-integrations/compact-json';
 import { JSONExpression } from '@configu-integrations/json';
 import { Dotenv } from '@configu-integrations/dotenv';
@@ -9,8 +9,8 @@ import { NoopConfigStore, InMemoryConfigStore } from '@configu/sdk';
 
 import { Registry } from './Registry';
 
-Registry.register(validators);
 Registry.register({
+  ...validators.default,
   CompactJSON,
   JSONExpression,
   Dotenv,

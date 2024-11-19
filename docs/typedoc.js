@@ -1,7 +1,7 @@
 /** @type {import('typedoc').TypeDocOptions} */
 module.exports = {
   basePath: '../',
-  entryPoints: ['../packages/ts', '../packages/node', '../packages/browser', '../packages/lib'],
+  entryPoints: ['../packages/sdk'],
   entryPointStrategy: 'packages',
   out: 'interfaces/sdk',
 
