@@ -19,6 +19,8 @@ export class ConfiguInterface {
   public static context: { stdenv: typeof stdenv; upperConfigu?: ConfiguFile; localConfigu: ConfiguFile };
 
   static async init({ configuInput }: { configuInput?: string }) {
+    // todo: resolve any casting
+    this.context = {} as any;
     this.context.stdenv = stdenv;
     const homedir = await getConfiguHomeDir();
 

@@ -9,6 +9,14 @@ import { assert, expect, should } from './expressions/Assertion';
 export type ExpressionString = string;
 
 export class ConfigExpression {
+  private static globals = new Map<string, unknown>();
+  private static suffix = 'Expression';
+  private static marker = { start: '${', end: '}' };
+  private static delimiters = [
+    { start: '{{', end: '}}' },
+    { start: '<%', end: '%>' },
+  ];
+
   static {
     // todo: finalize lockdown call with proper error handling
     // lockdown({ consoleTaming: 'unsafe', errorTaming: 'unsafe', errorTrapping: 'none', stackFiltering: 'verbose' });
@@ -23,14 +31,6 @@ export class ConfigExpression {
     ConfigExpression.register('expect', expect);
     ConfigExpression.register('should', should);
   }
-
-  private static globals = new Map<string, unknown>();
-  private static suffix = 'Expression';
-  private static marker = { start: '${', end: '}' };
-  private static delimiters = [
-    { start: '{{', end: '}}' },
-    { start: '<%', end: '%>' },
-  ];
 
   private static escapeRegex(string: string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
