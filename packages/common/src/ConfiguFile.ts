@@ -89,6 +89,7 @@ const ConfiguFileSchema = {
           type: { type: 'string' },
           configuration: { type: 'object' },
           backup: { type: 'boolean' },
+          default: { type: 'boolean' },
         },
       },
       // nullable: true,
@@ -263,8 +264,29 @@ export class ConfiguFile {
     return undefined;
   }
 
-  async getBackupStoreInstance(name: string) {
-    const shouldBackup = this.contents.stores?.[name]?.backup;
+  // async getBackupStoreInstance(name: string) {
+  //   const shouldBackup = this.contents.stores?.[name]?.backup;
+  getDefaultStoreName() {
+    if (!this.contents.stores) {
+      return '';
+    }
+    if (Object.keys(this.contents.stores).length === 1) {
+      return Object.keys(this.contents.stores)[0] as string;
+    }
+    const defaultStoreName = _.findKey(this.contents.stores, (store) => store.default);
+    return defaultStoreName ?? '';
+  }
+
+  // getStoreInstance(name?: string) {
+  //   const storeConfig = this.contents.stores?.[name ?? this.getDefaultStoreName()];
+  //   if (!storeConfig) {
+  //     return undefined;
+  //   }
+  //   return Registry.constructStore(storeConfig.type, storeConfig.configuration);
+  // }
+
+  async getBackupStoreInstance(name?: string) {
+    const shouldBackup = this.contents.stores?.[name || this.getDefaultStoreName()]?.backup;
     if (!shouldBackup) {
       return undefined;
     }
