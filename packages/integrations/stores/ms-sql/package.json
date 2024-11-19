@@ -24,6 +24,7 @@
   "dependencies": {
     "@configu/integrations": "workspace:*",
     "@configu/sdk": "workspace:*",
+    "mssql": "11.0.1",
     "typeorm": "^0.3.17"
   },
   "devDependencies": {

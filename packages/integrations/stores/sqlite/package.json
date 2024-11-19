@@ -22,10 +22,10 @@
     "build": "tsup"
   },
   "dependencies": {
-    "@configu/sdk": "workspace:*",
     "@configu/integrations": "workspace:*",
+    "@configu/sdk": "workspace:*",
     "lodash-es": "^4.17.21",
-    "reflect-metadata": "^0.1.13",
+    "sqlite3": "5.1.7",
     "typeorm": "^0.3.17"
   },
   "devDependencies": {
