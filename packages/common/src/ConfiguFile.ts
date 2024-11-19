@@ -102,6 +102,8 @@ const ConfiguFileSchema = {
 
 export type ConfiguFileContents = FromSchema<typeof ConfiguFileSchema>;
 
+const BACKUP_STORE_TYPE = 'sqlite';
+
 export class ConfiguFile {
   public static readonly schema = ConfiguFileSchema;
   public static readonly flags = ConfiguFileSchemaId;
@@ -261,13 +263,16 @@ export class ConfiguFile {
     return undefined;
   }
 
-  getBackupStoreInstance(name: string) {
+  async getBackupStoreInstance(name: string) {
     const shouldBackup = this.contents.stores?.[name]?.backup;
     if (!shouldBackup) {
       return undefined;
     }
     const database = this.contents.backup ?? join(dirname(this.path), 'config.backup.sqlite');
-    return ConfigStore.construct('sqlite', { database, tableName: name });
+    if (!ConfigStore.has(BACKUP_STORE_TYPE)) {
+      await ConfiguFile.registerStore(BACKUP_STORE_TYPE);
+    }
+    return ConfigStore.construct(BACKUP_STORE_TYPE, { database, tableName: name });
   }
 
   private mergeSchemas(...schemas: ConfigSchema[]): ConfigSchema {

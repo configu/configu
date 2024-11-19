@@ -28,6 +28,7 @@ type ConfigExpressionContext = {
 type ConfigContext = Merge<
   ConfigWithCfgu,
   {
+    labels: string[];
     value: ConfigValueAny;
     storedValue: string;
   }
@@ -69,6 +70,7 @@ export class ConfigValue {
       ...current,
       storedValue: current.value,
       value: ConfigValue.parse(current.value),
+      labels: Array.isArray(current.cfgu.label) ? current.cfgu.label : _.compact([current.cfgu.label]),
     }));
 
     let $ = {
@@ -128,7 +130,7 @@ export class ConfigValue {
 
     if (cfgu.pattern) {
       ConfigValue.test({
-        test: `JSONSchema.validate({ "type": "string", "pattern": $.cfgu.pattern }, $.valueString) || true`,
+        test: `JSONSchema.validate({ "type": "string", "pattern": $.cfgu.pattern }, $.storedValue) || true`,
         errorSuffix: 'Cfgu.pattern test',
         context,
       });

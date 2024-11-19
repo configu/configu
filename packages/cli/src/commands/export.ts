@@ -200,7 +200,11 @@ export class CliExportCommand extends BaseCommand {
       this.printStdout(formattedResult);
       return;
     }
-    const formattedResult = ConfigFormatter.format(this.format as ConfigFormat, configs, evaluationContext);
+    const formattedResult = ConfigFormatter.format(
+      (this.format ?? 'BeautifiedJSON') as ConfigFormat,
+      configs,
+      evaluationContext,
+    );
     this.printStdout(formattedResult);
 
     // // eslint-disable-next-line no-template-curly-in-string
@@ -253,7 +257,9 @@ export class CliExportCommand extends BaseCommand {
     const pipe = keys
       ? _.mapValues(previousEvalCommandOutput, (config, key) => ({ ...config, key: keys(key) }))
       : previousEvalCommandOutput;
-    const filteredPipe = this.filterFromFlag(pipe, this.filter);
+    const filteredPipe = this.filter
+      ? this.filterFromFlag(pipe, this.filter)
+      : _.pickBy(pipe, (config) => !config.cfgu.hidden);
     // const result = this.map(filteredPipe);
     const result = filteredPipe;
     await this.exportConfigs(result);

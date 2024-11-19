@@ -49,7 +49,7 @@ export abstract class BaseCommand extends Command<Context> {
     // }
   }
 
-  getBackupStoreInstanceByFlag(flag?: string) {
+  async getBackupStoreInstanceByFlag(flag?: string) {
     if (!flag) {
       return undefined;
     }

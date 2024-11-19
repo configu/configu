@@ -42,7 +42,7 @@ const body = {
 
 const ok = {
   type: 'object',
-  additionalProperties: JSONSchema.AnyPropertySchema,
+  additionalProperties: true,
 } as const;
 
 export const routes: FastifyPluginAsync = async (server, opts): Promise<void> => {
@@ -81,7 +81,7 @@ export const routes: FastifyPluginAsync = async (server, opts): Promise<void> =>
           const evalRes = await evalCmd.run();
 
           // TODO: move backup logic to common
-          const backupStoreInstance = configuFile.getBackupStoreInstance(store);
+          const backupStoreInstance = await configuFile.getBackupStoreInstance(store);
           if (backupStoreInstance) {
             const backupConfigs = _(evalRes.result)
               .pickBy((entry) => entry.origin === EvaluatedConfigOrigin.Store)
