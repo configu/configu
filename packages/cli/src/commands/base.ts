@@ -55,7 +55,7 @@ export abstract class BaseCommand extends Command<Context> {
     if (this.debug) this.context.stdio.level = 4;
   }
 
-  getBackupStoreInstanceByFlag(flag?: string) {
+  async getBackupStoreInstanceByFlag(flag?: string) {
     if (!flag) {
       return undefined;
     }
