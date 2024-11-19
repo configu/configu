@@ -1,5 +1,14 @@
 import { Command, Option } from 'clipanion';
-import { ConfigSet, EvalCommand as BaseEvalCommand } from '@configu/sdk';
+import {
+  ConfigSet,
+  EvalCommand as BaseEvalCommand,
+  ConfigStore,
+  ConfigSchema,
+  EvalCommandOutput,
+  EvaluatedConfigOrigin,
+  UpsertCommand,
+} from '@configu/sdk';
+import _ from 'lodash';
 import { BaseCommand } from './base';
 
 export class EvalCommand extends BaseCommand {
@@ -36,10 +45,24 @@ export class EvalCommand extends BaseCommand {
     description: `'key=value' pairs to override fetched \`Configs\``,
   });
 
+  async updateBackupStore(
+    backupStore: ConfigStore,
+    set: ConfigSet,
+    schema: ConfigSchema,
+    evalCommandOutput: EvalCommandOutput,
+  ) {
+    const configs = _.mapValues(
+      _.pickBy(evalCommandOutput, (entry) => entry.origin === EvaluatedConfigOrigin.Store),
+      (entry) => entry.value,
+    );
+    await new UpsertCommand({ store: backupStore, set, schema, configs }).run();
+  }
+
   async execute() {
     await this.init();
 
     const store = await this.getStoreInstanceByStoreFlag(this.store ?? 'noop');
+    const backupStore = await this.getBackupStoreInstanceByFlag(this.store);
     const set = new ConfigSet(this.set);
     const schema = await this.getSchemaInstanceByFlag(this.schema);
     const configs = this.reduceConfigFlag(this.config);
@@ -47,6 +70,10 @@ export class EvalCommand extends BaseCommand {
 
     const evalCommand = new BaseEvalCommand({ store, set, schema, configs, pipe });
     const { result } = await evalCommand.run();
+
+    if (backupStore) {
+      await this.updateBackupStore(backupStore, set, schema, result);
+    }
 
     process.stdout.write(JSON.stringify(result));
   }
