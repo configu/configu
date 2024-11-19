@@ -117,13 +117,14 @@ export class LoginCommand extends BaseCommand {
 
   async execute() {
     await this.init();
+
     const credentials = await this.loginWithAuth0();
-    if (!credentials) return;
-    this.context.credentials.data = {
-      credentials,
-      endpoint: this.endpoint ?? CONFIGU_API_URL,
-    };
-    const rawConfiguConfigData = JSON.stringify(this.context.credentials.data);
-    await fs.writeFile(this.context.credentials.file, rawConfiguConfigData);
+    if (!credentials) {
+      return;
+    }
+
+    await this.context.localConfigu.save({
+      stores: { configu: { type: 'configu', credentials, endpoint: this.endpoint ?? CONFIGU_API_URL } },
+    });
   }
 }

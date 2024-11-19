@@ -5,7 +5,6 @@
  */
 
 import { BaseContext, Builtins, Cli } from 'clipanion';
-import * as stdenv from 'std-env';
 import { consola } from 'consola';
 import packageJson from '../package.json' with { type: 'json' };
 
@@ -19,7 +18,7 @@ import { TestCommand } from './commands/test';
 import { UpsertCommand } from './commands/upsert';
 import { GenerateCommand } from './commands/generate';
 
-export type CustomContext = BaseContext & { stdenv: typeof stdenv; stdio: typeof consola };
+export type CustomContext = BaseContext & { stdio: typeof consola };
 
 export async function run(argv: string[]) {
   // consola.wrapAll();
@@ -46,7 +45,6 @@ export async function run(argv: string[]) {
 
   const context = {
     ...Cli.defaultContext,
-    stdenv,
     stdio: consola,
   };
 

@@ -44,7 +44,6 @@
     "@configu/sdk": "../sdk/dist/index.js"
   },
   "dependencies": {
-    "@configu/expressions": "workspace:*",
     "@configu/sdk": "workspace:*",
     "@configu-integrations/configu": "workspace:*",
     "@configu-integrations/json-file": "workspace:*",
@@ -53,6 +52,7 @@
     "lodash": "^4.17.21",
     "parse-json": "8.1.0",
     "pathe": "^1.1.2",
+    "std-env": "^3.7.0",
     "tsx": "^4.19.2",
     "yaml": "^2.6.0"
   },

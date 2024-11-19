@@ -1,6 +1,6 @@
 import { Command, Option } from 'clipanion';
 import _ from 'lodash';
-import { CfguFile, ConfiguFile, getConfiguHomeDir, parseJSON, readFile } from '@configu/common';
+import { CfguFile, ConfiguFile, ConfiguInterface, getConfiguHomeDir, parseJSON, readFile } from '@configu/common';
 import { ConfigStore, EvalCommandOutput } from '@configu/sdk';
 import path from 'node:path';
 import { type CustomContext } from '../index';
@@ -8,51 +8,45 @@ import { configuStoreType } from '../helpers';
 
 export type Context = CustomContext & {
   configu: ConfiguFile;
-  credentials: {
-    file: string; // $HOME/.config/configu/config.json
-    data:
-      | {
-          credentials: { org: string; token: string };
-          endpoint?: string;
-          source?: string;
-          tag?: string;
-        }
-      | Record<string, never>;
-  };
   UNICODE_NULL: '\u0000';
   stdin: NodeJS.ReadStream;
-};
+} & (typeof ConfiguInterface)['context'];
 
 export abstract class BaseCommand extends Command<Context> {
   debug = Option.Boolean('--debug');
 
-  settings = Option.String('--settings', { description: 'Path to a .configu file' });
+  configu = Option.String('--config,--configuration', { description: 'Path, URL or JSON of a .configu file' });
 
   public async init(): Promise<void> {
     this.context.UNICODE_NULL = '\u0000';
-
-    let configu: ConfiguFile;
-    if (this.settings) configu = await ConfiguFile.load(this.settings);
-    else configu = await ConfiguFile.search();
-    this.context.configu = configu;
-
-    const configuHomeDir = await getConfiguHomeDir();
-    const configuCredentialFilePath = path.join(configuHomeDir, 'config.json');
-    try {
-      const rawConfiguConfigData = await readFile(configuCredentialFilePath, true);
-      const configuConfigData = JSON.parse(rawConfiguConfigData);
-      this.context.credentials = {
-        file: configuCredentialFilePath,
-        data: configuConfigData,
-      };
-    } catch {
-      this.context.credentials = {
-        file: configuCredentialFilePath,
-        data: {},
-      };
+    if (this.debug) {
+      this.context.stdio.level = 4;
     }
+    await ConfiguInterface.init({ configuInput: this.configu });
+    this.context.configu = ConfiguInterface.context.upperConfigu ?? ConfiguInterface.context.localConfigu;
 
-    if (this.debug) this.context.stdio.level = 4;
+    this.context = { ...this.context, ...ConfiguInterface.context };
+
+    // let configu: ConfiguFile;
+    // if (this.settings) configu = await ConfiguFile.load(this.settings);
+    // else configu = await ConfiguFile.search();
+    // this.context.configu = configu;
+
+    // const configuHomeDir = await getConfiguHomeDir();
+    // const configuCredentialFilePath = path.join(configuHomeDir, 'config.json');
+    // try {
+    //   const rawConfiguConfigData = await readFile(configuCredentialFilePath, true);
+    //   const configuConfigData = JSON.parse(rawConfiguConfigData);
+    //   this.context.credentials = {
+    //     file: configuCredentialFilePath,
+    //     data: configuConfigData,
+    //   };
+    // } catch {
+    //   this.context.credentials = {
+    //     file: configuCredentialFilePath,
+    //     data: {},
+    //   };
+    // }
   }
 
   getBackupStoreInstanceByFlag(flag?: string) {
@@ -66,14 +60,14 @@ export abstract class BaseCommand extends Command<Context> {
     if (!flag) {
       throw new Error('--store,--st flag is missing');
     }
-    let storeConfig: Record<string, unknown> = {};
-    const storeType = this.context.configu.contents.stores?.[flag]?.type;
-    if (storeType === configuStoreType || flag === configuStoreType) {
-      storeConfig = { credentials: this.context.credentials.data.credentials };
-    }
-    let store = await this.context.configu.getStoreInstance(flag, storeConfig);
+    // let storeConfig: Record<string, unknown> = {};
+    // const storeType = this.context.configu.contents.stores?.[flag]?.type;
+    // if (storeType === configuStoreType || flag === configuStoreType) {
+    //   storeConfig = { credentials: this.context.credentials.data.credentials };
+    // }
+    let store = await this.context.configu.getStoreInstance(flag);
     if (!store) {
-      store = ConfigStore.construct(flag, storeConfig);
+      store = ConfigStore.construct(flag);
     }
     return store;
   }

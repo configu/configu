@@ -1,8 +1,7 @@
 import { ConfigStore } from '@configu/sdk';
+
 import { JsonFileConfigStore } from '@configu-integrations/json-file';
 import { ConfiguConfigStore } from '@configu-integrations/configu';
-
-import '@configu/expressions';
 
 ConfigStore.register(JsonFileConfigStore);
 
@@ -15,3 +14,5 @@ export * from './utils';
 
 export * from './ConfiguFile';
 export * from './CfguFile';
+
+export * from './ConfiguInterface';

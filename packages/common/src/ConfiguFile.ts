@@ -1,8 +1,10 @@
 import { homedir, platform } from 'node:os';
+import { cwd } from 'node:process';
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
 import { join, dirname, resolve } from 'pathe';
-import { findUp } from 'find-up';
+import { findUp, findUpMultiple } from 'find-up';
 import {
   ConfigSchema,
   ConfigStore,
@@ -14,7 +16,7 @@ import {
 } from '@configu/sdk';
 import { glob } from 'glob';
 import _ from 'lodash';
-import { readFile, importModule, getConfiguHomeDir, parseJSON, parseYAML } from './utils';
+import { stdenv, readFile, importModule, getConfiguHomeDir, parseJSON, parseYAML, YAML } from './utils';
 import { CfguFile } from './CfguFile';
 
 // interface ConfiguFileContents {
@@ -101,13 +103,15 @@ const ConfiguFileSchema = {
 export type ConfiguFileContents = FromSchema<typeof ConfiguFileSchema>;
 
 export class ConfiguFile {
+  public static readonly schema = ConfiguFileSchema;
   public static readonly flags = ConfiguFileSchemaId;
   public static readonly envs = ['CONFIGU_CONFIG', 'CONFIGU_CONFIG_CONFIGURATIONS'];
   // public static readonly cacheDirName = '/cache';
-  public static readonly schema = ConfiguFileSchema;
+
   constructor(
     public readonly path: string,
     public readonly contents: ConfiguFileContents,
+    public readonly contentsType: 'json' | 'yaml',
   ) {
     try {
       JSONSchema.validate(ConfiguFile.schema, this.contents);
@@ -121,40 +125,113 @@ export class ConfiguFile {
     let renderedContents: string;
     try {
       // todo: find a way to escape template inside Expression class
-      renderedContents = ConfigExpression.evaluateTemplateString(contents, process.env);
+      renderedContents = ConfigExpression.evaluateTemplateString(contents, stdenv.env);
     } catch (error) {
       throw new Error(`ConfiguFile.contents "${path}" is invalid\n${error}`);
     }
 
     // try parse yaml first and then json
     let parsedContents: ConfiguFileContents;
+    let contentsType: 'json' | 'yaml';
     try {
       parsedContents = parseYAML(path, renderedContents);
+      contentsType = 'yaml';
     } catch (yamlError) {
       try {
         parsedContents = parseJSON(path, renderedContents);
+        contentsType = 'json';
       } catch (jsonError) {
-        throw new Error(`ConfiguFile.contents "${path}" is not a valid JSON or YAML file`);
+        throw new Error(
+          `ConfiguFile.contents "${path}" is not a valid JSON or YAML file\n${yamlError.message}\n${jsonError.message}`,
+        );
       }
     }
 
-    return new ConfiguFile(path, parsedContents);
+    return new ConfiguFile(path, parsedContents, contentsType);
   }
 
   static async load(path: string): Promise<ConfiguFile> {
-    const contents = await readFile(path);
+    if (!path.endsWith('.configu')) {
+      throw new Error(`ConfiguFile.path "${path}" is not a valid .configu file`);
+    }
+
+    let contents: string;
+    try {
+      contents = await readFile(path);
+    } catch (error) {
+      throw new Error(`ConfiguFile.path "${path} is not readable\n${error.message}`);
+    }
+
     return ConfiguFile.init(path, contents);
   }
 
-  static async search(): Promise<ConfiguFile> {
-    const path = await findUp('.configu', { stopAt: homedir() });
-    if (!path) {
-      throw new Error('.configu file not found');
+  static async loadFromInput(input: string) {
+    // Check if the string is a valid URL
+    let url;
+    try {
+      url = new URL(input);
+    } catch {
+      // Not a valid URL
     }
-    return ConfiguFile.load(path);
+    if (url && url.protocol === 'file:') {
+      return ConfiguFile.load(fileURLToPath(url));
+    }
+    if (url) {
+      throw new Error('Only file URLs are supported');
+    }
+
+    // Check if the string is a valid path
+    try {
+      const path = resolve(input);
+      return ConfiguFile.load(path);
+    } catch {
+      // Not a valid path
+    }
+
+    // Check if the string is a valid JSON
+    let json;
+    try {
+      json = JSON.parse(input);
+    } catch {
+      // Not a valid JSON
+    }
+    if (json) {
+      return ConfiguFile.init(cwd(), json);
+    }
+
+    throw new Error('.configu file input is not a valid path, URL, or JSON');
   }
 
-  async getStoreInstance(name: string, configuration?: Record<string, unknown>) {
+  static async searchClosest() {
+    return findUp('.configu', { stopAt: homedir() });
+  }
+
+  static async searchAll() {
+    return findUpMultiple('.configu', { stopAt: homedir() });
+  }
+
+  async save(contents: ConfiguFileContents) {
+    const mergedContents = { ...this.contents, ...contents };
+    let renderedContents: string;
+    if (this.contentsType === 'json') {
+      renderedContents = JSON.stringify(mergedContents, null, 2);
+    } else {
+      renderedContents = YAML.stringify(mergedContents);
+    }
+    await fs.writeFile(this.path, renderedContents);
+  }
+
+  async getStoreInstance(name: string) {
+    // if (!this.contents.stores) {
+    //   return undefined;
+    // }
+    // const storeNames = Object.keys(this.contents.stores);
+    // let storeName = name;
+    // if (!storeName && storeNames.length === 1) {
+    //   storeName = storeNames[0] as string;
+    // }
+    // const defaultStoreName = _.findKey(this.contents.stores, (store) => store.default);
+    // if (!storeName
     const storeConfig = this.contents.stores?.[name];
     if (!storeConfig) {
       return undefined;
@@ -163,7 +240,25 @@ export class ConfiguFile {
     if (!ConfigStore.has(storeConfig.type)) {
       await ConfiguFile.registerStore(storeConfig.type);
     }
-    return ConfigStore.construct(storeConfig.type, { ...configuration, ...storeConfig.configuration });
+    return ConfigStore.construct(storeConfig.type, storeConfig.configuration);
+  }
+
+  async getDefaultsStoreInstance() {
+    if (!this.contents.stores) {
+      return undefined;
+    }
+
+    const storeNames = Object.keys(this.contents.stores);
+    if (storeNames.length === 1) {
+      return this.getStoreInstance(storeNames[0] as string);
+    }
+
+    const defaultStoreName = _.findKey(this.contents.stores, (store) => store.default);
+    if (defaultStoreName) {
+      return this.getStoreInstance(defaultStoreName);
+    }
+
+    return undefined;
   }
 
   getBackupStoreInstance(name: string) {
@@ -214,7 +309,7 @@ export class ConfiguFile {
     spawnSync(script, {
       cwd: scriptRunDir,
       stdio: 'inherit',
-      env: { ...process.env, ...env },
+      env: { ...stdenv.env, ...env },
       shell: true,
       ...restOpts,
     });

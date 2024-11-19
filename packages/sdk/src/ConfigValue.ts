@@ -19,7 +19,7 @@ type ConfigExpressionContext = {
   store?: ConfigStore;
   set?: ConfigSet;
   schema?: ConfigSchema;
-  key?: string;
+  current?: string;
   configs: {
     [key: string]: ConfigWithCfgu;
   };
@@ -47,11 +47,6 @@ export type ConfigEvaluationContext = {
 };
 
 export class ConfigValue {
-  static {
-    ConfigExpression.register('_', _);
-    ConfigExpression.register('JSONSchema', JSONSchema);
-  }
-
   static parse(value: ConfigValueString): ConfigValueAny {
     try {
       // numeric, boolean, object, array
@@ -90,10 +85,11 @@ export class ConfigValue {
         ...$,
       };
     }
-    if (context.key) {
-      const currentConfig = configs[context.key];
+
+    if (context.current) {
+      const currentConfig = configs[context.current];
       if (!currentConfig) {
-        throw new Error(`Failed to create evaluation context for key "${context.key}"`);
+        throw new Error(`Failed to create evaluation context for key "${context.current}"`);
       }
       $ = { ...currentConfig, ...$ };
     }
@@ -121,9 +117,11 @@ export class ConfigValue {
   }
 
   static validate(context: Required<ConfigExpressionContext>) {
-    const currentConfig = context.configs[context.key];
+    // todo: consider optimizing this code by creating a concatenated test string and evaluating it once
+
+    const currentConfig = context.configs[context.current];
     if (!currentConfig) {
-      throw new Error(`Failed to create evaluation context for key "${context.key}"`);
+      throw new Error(`Failed to create evaluation context for key "${context.current}"`);
     }
 
     const { cfgu } = currentConfig;
@@ -164,29 +162,3 @@ export class ConfigValue {
     }
   }
 }
-
-// ConfigValue.validate({
-//   set: 'set',
-//   key: 'key',
-//   value: '{"z": 1}',
-//   cfgu: {
-//     // test: ['$.value.endsWith("com")', 'validator.isEmail($.value)', 'false'],
-//     // schema: {
-//     //   type: 'object',
-//     //   required: ['name'],
-//     //   properties: {
-//     //     name: {
-//     //       type: 'string',
-//     //       minLength: 1,
-//     //     },
-//     //   },
-//     //   additionalProperties: true,
-//     // },
-//     // pattern: '^(hello|hey|welcome|hola|salute|bonjour|shalom|marhabaan)$',
-//     // enum: ['hello', 'hey', 'welcome', 'hola', 'salute', 'bonjour', 'shalom', 'marhabaan'],
-//     // enum: ['{ a: 1 }', '{ a: 2 }', '[1, 2]'],
-//     // pattern: '^[0-9]*$',
-//     // pattern: '^\\{(.|[\\r\\n])*\\}$',
-//     // type: 'object',
-//   },
-// });

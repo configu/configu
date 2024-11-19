@@ -1,7 +1,10 @@
-import _ from 'lodash';
 import * as acorn from 'acorn';
 import * as walk from 'acorn-walk';
 import 'ses';
+
+import { _ } from './expressions/Utils';
+import { validator, JSONSchema, z } from './expressions/Validators';
+import { assert, expect, should } from './expressions/Assertion';
 
 export type ExpressionString = string;
 
@@ -9,6 +12,16 @@ export class ConfigExpression {
   static {
     // todo: finalize lockdown call with proper error handling
     // lockdown({ consoleTaming: 'unsafe', errorTaming: 'unsafe', errorTrapping: 'none', stackFiltering: 'verbose' });
+
+    // register built-in globals
+    ConfigExpression.register('_', _);
+    ConfigExpression.register('validator', validator);
+    ConfigExpression.register('JSONSchema', JSONSchema);
+    ConfigExpression.register('jsonschema', JSONSchema);
+    ConfigExpression.register('z', z);
+    ConfigExpression.register('assert', assert);
+    ConfigExpression.register('expect', expect);
+    ConfigExpression.register('should', should);
   }
 
   private static globals = new Map<string, unknown>();

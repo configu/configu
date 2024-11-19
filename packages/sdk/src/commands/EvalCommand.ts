@@ -188,7 +188,7 @@ export class EvalCommand extends ConfigCommand<EvalCommandInput, EvalCommandOutp
             store,
             set,
             schema,
-            key,
+            current: key,
             configs: resultWithConstExpressions,
           }),
         ) ?? '';
@@ -219,7 +219,7 @@ export class EvalCommand extends ConfigCommand<EvalCommandInput, EvalCommandOutp
               store,
               set,
               schema,
-              key,
+              current: key,
               configs: result,
             });
 

@@ -5,6 +5,10 @@ import validator from 'validator';
 import * as changeCase from 'change-case';
 
 ConfigExpression.register('YAML', YAML);
+ConfigExpression.register('Casing', changeCase);
+
 ConfigExpression.register('z', z);
 ConfigExpression.register('validator', validator);
-ConfigExpression.register('Casing', changeCase);
+
+// export { assert, should } from 'chai'
+// export { chai, globalExpect as expect }

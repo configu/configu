@@ -49,9 +49,11 @@ export type CfguFileContents = FromSchema<typeof CfguFileSchema>;
 
 export class CfguFile {
   public static readonly schema = CfguFileSchema;
+
   constructor(
     public readonly path: string,
     public readonly contents: CfguFileContents,
+    public readonly contentsType: 'json' | 'yaml',
   ) {
     try {
       JSONSchema.validate(CfguFile.schema, this.contents);
@@ -62,27 +64,38 @@ export class CfguFile {
 
   static allowedExtensions = ['json', 'yaml', 'yml'];
 
-  private static async init(path: string, contents: string): Promise<CfguFile> {
+  private static async init(path: string, contents: string, fileExt: string): Promise<CfguFile> {
+    let parsedContents: CfguFileContents = {};
+    let contentsType: 'json' | 'yaml';
+
+    if (fileExt === 'yaml' || fileExt === 'yml') {
+      parsedContents = parseYAML(path, contents);
+      contentsType = 'yaml';
+    } else if (fileExt === 'json') {
+      parsedContents = parseJSON(path, contents);
+      contentsType = 'json';
+    } else {
+      throw new Error(`CfguFile.path "${path}" is not a valid .cfgu file`);
+    }
+
+    return new CfguFile(path, parsedContents, contentsType);
+  }
+
+  static async load(path: string): Promise<CfguFile> {
     const [, cfguExt, fileExt] = basename(path).split('.');
 
     if (cfguExt !== 'cfgu' || !fileExt || !CfguFile.allowedExtensions.includes(fileExt)) {
       throw new Error(`CfguFile.path "${path}" is not a valid .cfgu file`);
     }
 
-    let parsedContents: CfguFileContents = {};
-
-    if (fileExt === 'yaml' || fileExt === 'yml') {
-      parsedContents = parseYAML(path, contents);
-    } else if (fileExt === 'json') {
-      parsedContents = parseJSON(path, contents);
+    let contents: string;
+    try {
+      contents = await readFile(path);
+    } catch (error) {
+      throw new Error(`CfguFile.path "${path} is not readable\n${error.message}`);
     }
 
-    return new CfguFile(path, parsedContents);
-  }
-
-  static async load(path: string): Promise<CfguFile> {
-    const contents = await readFile(path);
-    return CfguFile.init(path, contents);
+    return CfguFile.init(path, contents, fileExt);
   }
 
   static async search(): Promise<CfguFile> {
@@ -93,4 +106,6 @@ export class CfguFile {
   constructSchema(): ConfigSchema {
     return new ConfigSchema(this.contents.keys);
   }
+
+  // getSchemaInstance(path: string): ConfigSchema {
 }

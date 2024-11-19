@@ -6,9 +6,16 @@ import _ from 'lodash';
 import parseJson from 'parse-json';
 import YAML from 'yaml';
 import { tsImport } from 'tsx/esm/api';
+import * as stdenv from 'std-env';
+import { findUp } from 'find-up';
 
-export const { NODE_ENV } = process.env;
-export const isDev = NODE_ENV === 'development';
+export { findUp, stdenv, YAML };
+
+export const getConfiguHomeDir = async (...paths: string[]): Promise<string> => {
+  const directory = path.join(os.homedir(), '.configu', ...paths);
+  await fs.mkdir(directory, { recursive: true });
+  return directory;
+};
 
 export const readFile = async (filePath: string, throwIfEmpty: string | boolean = false) => {
   try {
@@ -40,27 +47,21 @@ export const importModule = async (modulePath: string) => {
   return module;
 };
 
-export const getConfiguHomeDir = async (...paths: string[]): Promise<string> => {
-  const configuHomeDir = path.join(os.homedir(), '.configu', ...paths);
-  await fs.mkdir(configuHomeDir, { recursive: true });
-  return configuHomeDir;
-};
-
-export const readStdin = async () => {
-  const { stdin } = process;
-  if (stdin.isTTY) {
-    return '';
-  }
-  return new Promise<string>((resolve) => {
-    const chunks: Uint8Array[] = [];
-    stdin.on('data', (chunk) => {
-      chunks.push(chunk);
-    });
-    stdin.on('end', () => {
-      resolve(Buffer.concat(chunks).toString('utf8'));
-    });
-  });
-};
+// export const readStdin = async () => {
+//   const { stdin } = process;
+//   if (stdin.isTTY) {
+//     return '';
+//   }
+//   return new Promise<string>((resolve) => {
+//     const chunks: Uint8Array[] = [];
+//     stdin.on('data', (chunk) => {
+//       chunks.push(chunk);
+//     });
+//     stdin.on('end', () => {
+//       resolve(Buffer.concat(chunks).toString('utf8'));
+//     });
+//   });
+// };
 
 export const parseJSON = (filePath: string, fileContent: string): any => {
   try {

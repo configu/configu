@@ -90,6 +90,7 @@ export class CliExportCommand extends BaseCommand {
 
   filter = Option.Array('--filter', {
     description: `Removes config keys by a given expression`,
+    // validator: t.isArray(t.isString()),
   });
 
   static override schema = [
@@ -148,7 +149,7 @@ export class CliExportCommand extends BaseCommand {
     }
 
     const filteredConfigs = _.pickBy(configs, (config) => {
-      const evaluationContext = ConfigValue.createEvaluationContext({ key: config.key, configs });
+      const evaluationContext = ConfigValue.createEvaluationContext({ current: config.key, configs });
       return ConfigExpression.evaluateBoolean(currentFilter, evaluationContext);
     });
     return this.filterFromFlag(filteredConfigs, filterExpressions);
