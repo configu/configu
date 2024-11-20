@@ -39,7 +39,9 @@ jobs:
           architecture: ${{ matrix.architecture }}
 
       - name: Build the integrations
-        run: SELECTED_ARCH=${{ matrix.architecture }} pnpm build:integrations
+        env:
+          SELECTED_ARCH: ${{ matrix.architecture }}
+        run: pnpm build:integrations
 
       - uses: actions/upload-artifact@master
         with:
