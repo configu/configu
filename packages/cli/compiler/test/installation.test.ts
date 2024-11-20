@@ -13,20 +13,15 @@ describe('installation', () => {
     const currentDir = path.dirname(import.meta.url);
     const parentDir = path.join(currentDir, '../..').replace('file:', '');
     const installationDir = path.join(parentDir, 'tmp');
-
     let ext = '';
     let prefix = '';
     let cwd = installationDir;
     if (os.platform() === 'win32') {
-      // download and install configu from URL
-      await downloadFile(
-        `https://github.com/configu/configu/releases/download/cli%2Fv${process.env.CONFIGU_VERSION}/configu-${os.platform()}-${os.arch()}.exe`,
-        path.join(installationDir, 'configu.exe'),
-      );
+      const exeUrl = `https://github.com/configu/configu/releases/download/cli%2Fv${process.env.CONFIGU_VERSION}/configu-${os.platform()}-${os.arch()}.exe`;
+      await downloadFile(exeUrl, path.join(installationDir, 'configu.exe'));
       assert.ok(existsSync(path.join(installationDir, 'configu.exe')), 'Download failed');
       ext = '.exe';
     } else {
-      console.log(parentDir);
       const installScript = path.join(parentDir, 'install.sh');
       await fs.chmod(installScript, 0o755);
       const result = execSync('./install.sh', {

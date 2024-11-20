@@ -7,8 +7,8 @@ export async function downloadFile(url: string, destination: string) {
     await new Promise<NodeJS.ReadableStream>((resolve, reject) => {
       https
         .get(url, (response) => {
-          if (response.statusCode !== 200) {
-            reject(new Error(`Failed to download: ${response.statusCode} ${response.statusMessage}`));
+          if (response.statusCode !== 302 && response.statusCode !== 200) {
+            reject(new Error(`Failed to download: ${response.statusCode} ${response.statusMessage}: ${url}`));
             return;
           }
           resolve(response);
