@@ -243,49 +243,49 @@ The following flags have been removed in favor of the new [`--filter`](/interfac
 - `--pick-label`
 
 ```bash
---filter expect($.labels).to.include('my-label')
+--filter '$.labels.includes("my-label") === true'
 ```
 
 - `--omit-label`
 
 ```bash
---filter expect($.labels).to.not.include('my-label')
+--filter '$.labels.includes("my-label") === false'
 ```
 
 - `--pick-key`
 
 ```bash
---filter expect($.key).to.include('my-key')
+--filter '$.key === "my-key"'
 ```
 
 - `--omit-key`
 
 ```bash
---filter expect($.key).to.not.include('my-key')
+--filter '$.key !== "my-key"'
 ```
 
 - `--pick-hidden`
 
 ```bash
---filter expect($.cfgu.hidden).to.be.true
+--filter '$.cfgu.hidden === true'
 ```
 
 - `--omit-hidden`
 
 ```bash
---filter expect($.cfgu.hidden).to.be.false
+--filter '!$.cfgu.hidden !== true'
 ```
 
 - `--pick-empty`
 
 ```bash
---filter expect($.value).to.be.empty
+--filter '$.origin === "empty"'
 ```
 
 - `--omit-empty`
 
 ```bash
---filter expect($.value).to.not.be.empty
+--filter '$.origin !== "empty"'
 ```
 
 ### `.configu` file changes
