@@ -7,8 +7,6 @@ const osArch = arch();
 
 console.log('Platform:', os);
 
-const archs = ['arm64', 'x64'];
-
 async function compile(selectedArch: 'arm64' | 'x64') {
   // eslint-disable-next-line no-useless-concat
   const { run } = await import('./' + `${os}.ts`);
@@ -24,4 +22,4 @@ async function compile(selectedArch: 'arm64' | 'x64') {
   return filePath;
 }
 
-compile(process.env.SELECTED_ARCH as 'arm64' | 'x64').then((file) => compress(file));
+compile((process.env.SELECTED_ARCH || osArch) as 'arm64' | 'x64').then((file) => compress(file));
