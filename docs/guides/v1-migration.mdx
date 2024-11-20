@@ -327,6 +327,29 @@ The `--config` flag is a new global flag that allows you to specify a path to `.
 
 The CLI now automatically recursively searches for `.configu` files from the current working directory upwards to the home directory and uses the first one found for all commands when the `--config` flag is not provided.
 
+### CLI default store
+
+You can now mark a `ConfigStore` as your default store when omitting `--store` flag is omitted by adding `default`=`true` to the store settings. Additionally, the CLI now detects when there is only a single `ConfigStore` in the `.configu` file and uses it as the default.
+
+Example definition of a default store in a `.configu` file:
+
+```yaml
+stores:
+  json-store:
+    type: json-file
+    configuration:
+      path: path/to/file1.json
+  default-json-store:
+    type: json-file
+    default: true
+    configuration:
+      path: path/to/file2.json
+```
+
+### CLI eval command defaults flag
+
+The new `--defaults` flag can now be used to evaluate default value from a ConfigSchema and skip querying a ConfigStore.
+
 ## Other changes
 
 ### `@configu/node` and `@configu/browser` removal
