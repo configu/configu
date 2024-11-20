@@ -234,6 +234,19 @@ Will:
 
 These changes aim to improve clarity and prevent naming conflicts while providing flexibility for key-value management.
 
+### Introduction of type coercion
+
+V1 introduces type coercion to Configu. During evaluation, Configu will attempt to coerce values from ConfigStores to their expected type. This feature is intended to make Configu more flexible and easier to use.
+
+Type coercion affects:
+
+- All instances of config values in `ConfigExpressions` are coerced to the expected type (`string`, `number`, `boolean`, `object`, `array`). You can access the value as it's stored via `storedValue`.
+- The Configu CLI Eval command returns the coerced value in the output.
+- The Configu CLI Export command receives the coerced value as input from Eval command which affects:
+  - The `--format` flag which will now receive the coerced value as input and appropriately formats it.
+  - All instances of `ConfigExpressions` usages by `--filter`, `--template`, `--map`, `--reduce`, `--sort` flags which will now receive the coerced value as input.
+- The Configu Proxy export route which will now coerce values to the expected type.
+
 ## Upgrading Configu CLI
 
 TODO: get input from Ran
