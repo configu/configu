@@ -208,11 +208,9 @@ keys:
 
 </CodeGroup>
 
-### `.configu` file changes
+### CLI changes
 
-The `cache` property has been renamed to `backup` to more accurately reflect its purpose. Replace all occurrences of `cache` with `backup` to reflect the new naming convention.
-
-### CLI upsert command config assignment flag changes
+#### upsert command config assignment flag changes
 
 The `--config, -c` flag has been renamed to `--kv` to avoid clashes with the new [`--config` global flag](#cli-global-config-flag). Replace all occurrences of `--config` with `--kv` to align with this updated naming convention.
 
@@ -234,22 +232,78 @@ Will:
 
 These changes aim to improve clarity and prevent naming conflicts while providing flexibility for key-value management.
 
-### CLI upsert command import flag removal
+#### Upsert command import flag removal
 
 The `--import` flag has been removed from the CLI upsert command.
 
+#### Export command flags changes
+
+The following flags have been removed in favor of the new [`--filter`](/interfaces/cli/ref#configu-export) flag along with how they can be replaced with `--filter`:
+
+- `--pick-label`
+
+```bash
+--filter expect($.labels).to.include('my-label')
+```
+
+- `--omit-label`
+
+```bash
+--filter expect($.labels).to.not.include('my-label')
+```
+
+- `--pick-key`
+
+```bash
+--filter expect($.key).to.include('my-key')
+```
+
+- `--omit-key`
+
+```bash
+--filter expect($.key).to.not.include('my-key')
+```
+
+- `--pick-hidden`
+
+```bash
+--filter expect($.cfgu.hidden).to.be.true
+```
+
+- `--omit-hidden`
+
+```bash
+--filter expect($.cfgu.hidden).to.be.false
+```
+
+- `--pick-empty`
+
+```bash
+--filter expect($.value).to.be.empty
+```
+
+- `--omit-empty`
+
+```bash
+--filter expect($.value).to.not.be.empty
+```
+
+### `.configu` file changes
+
+The `cache` property has been renamed to `backup` to more accurately reflect its purpose. Replace all occurrences of `cache` with `backup` to reflect the new naming convention.
+
 ### Introduction of type coercion
 
-V1 introduces type coercion to Configu. During evaluation, Configu will attempt to coerce values from ConfigStores to their expected type. This feature is intended to make Configu more flexible and easier to use.
+V1 introduces type coercion to Configu. During evaluation, Configu will attempt to coerce values from ConfigStores to their --filter expected type. This feature is intended to make Configu more flexible and easier to use.
 
 Type coercion affects:
 
-- All instances of config values in `ConfigExpressions` are coerced to the expected type (`string`, `number`, `boolean`, `object`, `array`). You can access the value as it's stored via `storedValue`.
+- All instances of config values in `ConfigExpressions` are coerced to the --filter expected type (`string`, `number`, `boolean`, `object`, `array`). You can access the value as it's stored via `storedValue`.
 - The Configu CLI Eval command returns the coerced value in the output.
 - The Configu CLI Export command receives the coerced value as input from Eval command which affects:
   - The `--format` flag which will now receive the coerced value as input and appropriately formats it.
   - All instances of `ConfigExpressions` usages by `--filter`, `--template`, `--map`, `--reduce`, `--sort` flags which will now receive the coerced value as input.
-- The Configu Proxy export route which will now coerce values to the expected type.
+- The Configu Proxy export route which will now coerce values to the --filter expected type.
 
 ## Upgrading Configu CLI
 
@@ -275,7 +329,7 @@ The `ConfigExpressions` contexts include the following libraries:
 - [validator.js](https://github.com/validatorjs/validator.js) for string validations. Use `validator` within the `ConfigExpression` to access validator.js functions.
 - The [JSONSchema utility class](https://github.com/configu/configu/tree/main/packages/sdk/src/expressions/JSONSchema.ts) for JSON schema validations. Use `JSONSchema` or `jsonschema` within the `ConfigExpression` to access the utility class.
 - [Zod](https://zod.dev/) for schema validations with static type inference. Use `z` within the `ConfigExpression` to access Zod functions.
-- [Chai](https://github.com/chaijs/chai) for assertions functions. Use `assert`, `expect`, and `should` respectively within the `ConfigExpression` to access Chai functions.
+- [Chai](https://github.com/chaijs/chai) for assertions functions. Use `assert`, --filter expect`, and `should`respectively within the`ConfigExpression` to access Chai functions.
 
 The following features support `ConfigExpressions`:
 
