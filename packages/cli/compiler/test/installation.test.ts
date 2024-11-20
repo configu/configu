@@ -20,6 +20,7 @@ describe('installation', () => {
       const exeUrl = `https://github.com/configu/configu/releases/download/cli%2Fv${process.env.CONFIGU_VERSION}/configu-${os.platform()}-${os.arch()}.exe`;
       await downloadFile(exeUrl, path.join(installationDir, 'configu.exe'));
       assert.ok(existsSync(path.join(installationDir, 'configu.exe')), 'Download failed');
+      await fs.chmod(path.join(installationDir, 'configu.exe'), 0o755);
       ext = '.exe';
     } else {
       const installScript = path.join(parentDir, 'install.sh');
