@@ -12,7 +12,7 @@ ConfigStore.register(ConfiguConfigStore);
 
 export * from './utils';
 
-export * from './ConfiguFile';
-export * from './CfguFile';
+// export * from './ConfiguFile';
+// export * from './CfguFile';
 
 export * from './ConfiguInterface';

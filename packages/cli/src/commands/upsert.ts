@@ -1,9 +1,9 @@
 import { Command, Option } from 'clipanion';
-import { UpsertCommand as BaseUpsertCommand, ConfigSet } from '@configu/sdk';
-import { ConfiguConfigStoreApprovalQueueError } from '@configu/common';
+import { UpsertCommand, ConfigSet } from '@configu/sdk';
+import { ConfiguInterface, ConfiguConfigStoreApprovalQueueError } from '@configu/common';
 import { BaseCommand } from './base';
 
-export class UpsertCommand extends BaseCommand {
+export class CliUpsertCommand extends BaseCommand {
   static override paths = [['upsert'], ['up']];
 
   static override usage = Command.Usage({
@@ -12,7 +12,6 @@ export class UpsertCommand extends BaseCommand {
 
   store = Option.String('--store,--st', {
     description: `\`ConfigStore\` (configs data-source) to upsert \`Configs\` to`,
-    required: true,
   });
 
   set = Option.String('--set,--se', {
@@ -21,23 +20,22 @@ export class UpsertCommand extends BaseCommand {
 
   schema = Option.String('--schema,--sc', {
     description: `\`ConfigSchema\` (config-keys declaration) path/to/[schema].cfgu.json file to operate the upsert against. The keys declared in the \`ConfigSchema\` can be assigned a value in the \`ConfigSet\` that will be upserted as a \`Config\` to the \`ConfigStore\``,
-    required: true,
   });
 
-  config = Option.Array('--config,-c', {
+  assign = Option.Array('--assign,--kv', {
     description: `'key=value' pairs to upsert. Use an empty value to delete a \`Config\``,
   });
 
   async execute() {
     await this.init();
-    const store = await this.getStoreInstanceByStoreFlag(this.store ?? 'noop');
+    const store = await ConfiguInterface.getStoreInstance(this.store);
     const set = new ConfigSet(this.set);
-    const schema = await this.getSchemaInstanceByFlag(this.schema);
-    const configs = this.reduceConfigFlag(this.config);
+    const schema = await ConfiguInterface.getSchemaInstance(this.schema);
+    const configs = this.reduceConfigFlag(this.assign);
     const pipe = await this.readPreviousEvalCommandOutput();
 
     try {
-      await new BaseUpsertCommand({
+      await new UpsertCommand({
         store,
         set,
         schema,

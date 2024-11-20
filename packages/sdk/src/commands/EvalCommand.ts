@@ -182,7 +182,7 @@ export class EvalCommand extends ConfigCommand<EvalCommandInput, EvalCommandOutp
     ConfigExpression.sort(constExpressionsDict).forEach((key) => {
       const expression = constExpressionsDict[key] as string;
       const value =
-        ConfigExpression.evaluate(
+        ConfigExpression.evaluateTemplateString(
           expression,
           ConfigValue.createEvaluationContext({
             store,
@@ -192,7 +192,7 @@ export class EvalCommand extends ConfigCommand<EvalCommandInput, EvalCommandOutp
             configs: resultWithConstExpressions,
           }),
         ) ?? '';
-      (resultWithConstExpressions[key] as EvaluatedConfig).value = ConfigValue.stringify(value);
+      (resultWithConstExpressions[key] as EvaluatedConfig).value = value;
     });
     return resultWithConstExpressions;
   }

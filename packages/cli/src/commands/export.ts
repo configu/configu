@@ -1,4 +1,5 @@
 import { Command, Option } from 'clipanion';
+import { spawnSync } from 'node:child_process';
 import { EvalCommandOutput, EvaluatedConfig, ConfigExpression, ConfigKey, ConfigValue } from '@configu/sdk';
 import _ from 'lodash';
 import {
@@ -18,7 +19,6 @@ import * as t from 'typanion';
 import { cwd } from 'process';
 import { readFile } from '@configu/common';
 import { ConfigFormatter, ConfigFormats, ConfigFormat } from '@configu/formatters';
-import * as os from 'os';
 import { BaseCommand } from './base';
 
 // type TemplateContext = { [key: string]: string } | { key: string; value: string }[];
@@ -45,13 +45,18 @@ export class CliExportCommand extends BaseCommand {
     description: `Export \`Configs\` as configuration data in various modes`,
   });
 
-  format = Option.String('--format', {
-    description: `Format exported \`Configs\` to common configuration formats. Redirect the output to file, if needed`,
+  explain = Option.Boolean('--explain,--report', {
+    description: `Outputs metadata on the exported \`Configs\``,
   });
 
-  eol = Option.Boolean('--eol,--EOL', {
-    description: `Adds EOL (\\n on POSIX \\r\\n on Windows) to the end of the stdout`,
+  format = Option.String('--format', {
+    description: `Format exported \`Configs\` to common configuration formats. Redirect the output to file, if needed`,
+    validator: t.isEnum(Object.keys(ConfigFormats)),
   });
+
+  // eol = Option.Boolean('--eol,--EOL', {
+  //   description: `Adds EOL (\\n on POSIX \\r\\n on Windows) to the end of the stdout`,
+  // });
 
   template = Option.String('--template', {
     description: `Path to a file containing {{mustache}} templates to render (inject/substitute) the exported \`Configs\` into`,
@@ -71,10 +76,6 @@ export class CliExportCommand extends BaseCommand {
     description: `Spawns executable as child-process and pass exported \`Configs\` as environment variables`,
   });
 
-  explain = Option.Boolean('--explain,--report', {
-    description: `Outputs metadata on the exported \`Configs\``,
-  });
-
   prefix = Option.String('--prefix', {
     description: `Append a fixed string to the beginning of each Config Key in the export result`,
   });
@@ -89,9 +90,24 @@ export class CliExportCommand extends BaseCommand {
   });
 
   filter = Option.Array('--filter', {
-    description: `Removes config keys by a given expression`,
-    // validator: t.isArray(t.isString()),
+    description: `Picks config keys by a given expression`,
+    validator: t.isArray(t.isString()),
   });
+
+  // sort = Option.Array('--sort', {
+  //   description: `Picks config keys by a given expression`,
+  //   validator: t.isArray(t.isString()),
+  // });
+
+  // map = Option.Array('--map', {
+  //   description: `Picks config keys by a given expression`,
+  //   validator: t.isArray(t.isString()),
+  // });
+
+  // reduce = Option.Array('--reduce', {
+  //   description: `Picks config keys by a given expression`,
+  //   validator: t.isArray(t.isString()),
+  // });
 
   static override schema = [
     t.hasMutuallyExclusiveKeys(['explain', 'format', 'template', 'source', 'run'], { missingIf: 'undefined' }),
@@ -101,12 +117,12 @@ export class CliExportCommand extends BaseCommand {
 
   printStdout(finalConfigData: string) {
     process.stdout.write(finalConfigData);
-    if (this.eol && os.platform() === 'win32') {
-      process.stdout.write('\\r\\n');
-    }
-    if (this.eol && os.platform() !== 'win32') {
-      process.stdout.write('\n');
-    }
+    // if (this.eol && os.platform() === 'win32') {
+    //   process.stdout.write('\\r\\n');
+    // }
+    // if (this.eol && os.platform() !== 'win32') {
+    //   process.stdout.write('\n');
+    // }
   }
 
   explainConfigs(configs: EvalCommandOutput) {
@@ -184,9 +200,17 @@ export class CliExportCommand extends BaseCommand {
 
     if (this.run) {
       const env = _.chain(result).keyBy('key').mapValues('value').value();
-      this.context.configu.runScript(this.run, {
+      // this.context.configu.runScript(this.run, {
+      //   cwd: cwd(),
+      //   env,
+      // });
+      // return;
+
+      spawnSync(this.run, {
         cwd: cwd(),
-        env,
+        stdio: 'inherit',
+        env: { ...env, ...process.env },
+        shell: true,
       });
       return;
     }

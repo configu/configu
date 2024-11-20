@@ -11,7 +11,7 @@ import {
   JSONSchema,
 } from '@configu/sdk';
 import _ from 'lodash';
-import { ConfiguFile, CfguFile } from '@configu/common';
+import { ConfiguInterface } from '@configu/common';
 import { config } from './config';
 
 const body = {
@@ -29,7 +29,14 @@ const body = {
       set: {
         type: 'string',
       },
-      schema: CfguFile.schema,
+      schema: {
+        type: 'object',
+        properties: {
+          keys: {
+            type: 'object',
+          },
+        },
+      },
       configs: {
         type: 'object',
         additionalProperties: {
@@ -57,19 +64,20 @@ export const routes: FastifyPluginAsync = async (server, opts): Promise<void> =>
       },
     },
     async (request, reply) => {
-      // TODO: get the ConfiguFile instance from a shared location
-      const configuFile = await ConfiguFile.load(config.CONFIGU_CONFIG_FILE);
+      // // TODO: get the ConfiguFile instance from a shared location
+      // const configuFile = await ConfiguFile.load(config.CONFIGU_CONFIG_FILE);
 
       const evalResToExport = await request.body.reduce<Promise<EvalCommandOutput>>(
         async (previousResult, { store, set, schema: { keys }, configs }) => {
           const pipe = await previousResult;
 
-          const storeInstance = await configuFile.getStoreInstance(store);
+          const storeInstance = await ConfiguInterface.getStoreInstance(store);
           if (!storeInstance) {
             throw new Error(`store "${store}" not found`);
           }
           const setInstance = new ConfigSet(set);
-          const schemaInstance = new ConfigSchema(keys);
+          // todo: fix this any
+          const schemaInstance = new ConfigSchema(keys as any);
 
           const evalCmd = new EvalCommand({
             store: storeInstance,
@@ -78,24 +86,30 @@ export const routes: FastifyPluginAsync = async (server, opts): Promise<void> =>
             configs,
             pipe,
           });
-          const evalRes = await evalCmd.run();
+          const { result } = await evalCmd.run();
+          await ConfiguInterface.backupEvalOutput({
+            storeName: store,
+            set: setInstance,
+            schema: schemaInstance,
+            evalOutput: result,
+          });
 
-          // TODO: move backup logic to common
-          const backupStoreInstance = await configuFile.getBackupStoreInstance(store);
-          if (backupStoreInstance) {
-            const backupConfigs = _(evalRes.result)
-              .pickBy((entry) => entry.origin === EvaluatedConfigOrigin.Store)
-              .mapValues((entry) => entry.value)
-              .value();
-            await new UpsertCommand({
-              store: backupStoreInstance,
-              set: setInstance,
-              schema: schemaInstance,
-              configs: backupConfigs,
-            }).run();
-          }
+          // // TODO: move backup logic to common
+          // const backupStoreInstance = await configuFile.getBackupStoreInstance(store);
+          // if (backupStoreInstance) {
+          //   const backupConfigs = _(evalRes.result)
+          //     .pickBy((entry) => entry.origin === EvaluatedConfigOrigin.Store)
+          //     .mapValues((entry) => entry.value)
+          //     .value();
+          //   await new UpsertCommand({
+          //     store: backupStoreInstance,
+          //     set: setInstance,
+          //     schema: schemaInstance,
+          //     configs: backupConfigs,
+          //   }).run();
+          // }
 
-          return evalRes.result;
+          return result;
         },
         Promise.resolve({}),
       );

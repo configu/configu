@@ -152,6 +152,8 @@ export const CfguSchema = {
     }),
     JSONSchema.createPropertyExclusiveSchema({
       property: 'const',
+      // todo: consider if its a stupiy but valid pair with required
+      // exclusive: ['lazy', 'default']
       exclusive: ['lazy', 'default', 'required'],
     }),
     JSONSchema.createPropertyExclusiveSchema({

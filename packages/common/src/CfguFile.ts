@@ -1,25 +1,9 @@
-import { basename } from 'pathe';
+import { cwd } from 'node:process';
+import { fileURLToPath } from 'node:url';
+import { join, basename, resolve } from 'pathe';
+import _ from 'lodash';
 import { ConfigSchema, ConfigSchemaKeysSchema, JSONSchema, JSONSchemaObject, FromSchema } from '@configu/sdk';
-import { readFile, parseJSON, parseYAML } from './utils';
-
-// interface CfguFileContents {
-//   $schema?: string;
-//   // todo: implement extends for .cfgu files
-//   // extends?: string;
-//   keys: ConfigSchemaKeys;
-// }
-
-// const ConfiguFileSchemaDefs = {
-//   BooleanProperty: {
-//     type: 'boolean',
-//     nullable: true,
-//   },
-//   StringProperty: {
-//     type: 'string',
-//     minLength: 1,
-//     nullable: true,
-//   },
-// } as const;
+import { readFile, glob, parseJSON, parseYAML } from './utils';
 
 const CfguFileSchemaId = 'https://raw.githubusercontent.com/configu/configu/main/packages/schema/.cfgu.json';
 
@@ -37,10 +21,7 @@ const CfguFileSchema = {
       type: 'string',
       minLength: 1,
       description: 'Url to JSON Schema',
-      // default: CfguFileSchemaId,
-      // nullable: true,
     },
-
     keys: ConfigSchemaKeysSchema,
   },
 } as const satisfies JSONSchemaObject;
@@ -78,6 +59,8 @@ export class CfguFile {
       throw new Error(`CfguFile.path "${path}" is not a valid .cfgu file`);
     }
 
+    // todo: add support for extends keyword
+
     return new CfguFile(path, parsedContents, contentsType);
   }
 
@@ -98,14 +81,68 @@ export class CfguFile {
     return CfguFile.init(path, contents, fileExt);
   }
 
-  static async search(): Promise<CfguFile> {
-    // todo: implement search of one or multi .cfgu file here
-    throw new Error('Not implemented');
+  static async loadFromInput(input: string) {
+    let url: URL | undefined;
+    try {
+      url = new URL(input);
+    } catch {
+      // Not a valid URL
+    }
+    if (url) {
+      if (url.protocol === 'file:') {
+        return CfguFile.load(fileURLToPath(url));
+      }
+      // todo: support http based urls
+      throw new Error('Only file URLs are supported');
+    }
+
+    try {
+      const path = resolve(input);
+      return CfguFile.load(path);
+    } catch {
+      // Not a valid path
+    }
+
+    try {
+      const json = JSON.parse(input);
+      return CfguFile.init(join(cwd(), '.cfgu.json'), json, 'json');
+    } catch {
+      // Not a valid JSON
+    }
+
+    throw new Error('.configu file input is not a valid path, URL, or JSON');
   }
 
-  constructSchema(): ConfigSchema {
+  static async searchNeighbors() {
+    return glob(`*.cfgu.{${CfguFile.allowedExtensions.join(',')}}`, { nodir: true });
+  }
+
+  static async searchAll(path: string) {
+    return glob(path, { nodir: true });
+  }
+
+  getSchemaInstance(): ConfigSchema {
     return new ConfigSchema(this.contents.keys);
   }
 
-  // getSchemaInstance(path: string): ConfigSchema {
+  private static mergeSchemas(...schemas: ConfigSchema[]): ConfigSchema {
+    return new ConfigSchema(_.merge({}, ...schemas.map((schema) => schema.keys)));
+  }
+
+  static async constructSchema(...paths: string[]): Promise<ConfigSchema> {
+    // // todo: try to replace glob lib with the native fs.glob api
+    // const cfguFiles = await glob(path, { nodir: true });
+    // if (cfguFiles.length === 0) {
+    //   throw new Error(`No .cfgu files found in "${path}"`);
+    // }
+
+    // Later schemas take precedence in case of key duplication.
+    const sortedPaths = paths.sort((a, b) => a.split('/').length - b.split('/').length);
+    const configSchemasPromises = sortedPaths.map(async (path) => {
+      const cfgu = await CfguFile.loadFromInput(path);
+      return cfgu.getSchemaInstance();
+    });
+    const configSchemas = await Promise.all(configSchemasPromises);
+    return CfguFile.mergeSchemas(...configSchemas);
+  }
 }

@@ -1,21 +1,12 @@
-import os from 'node:os';
 import fs from 'node:fs/promises';
-import { URL, fileURLToPath } from 'node:url';
 import path from 'pathe';
-
 import _ from 'lodash';
-
-import { ConfigSchema, ConfigSchemaKeysSchema, JSONSchema, JSONSchemaObject, FromSchema } from '@configu/sdk';
-
+import { ConfigSchema, ConfigSet, EvalCommandOutput, EvaluatedConfigOrigin, UpsertCommand } from '@configu/sdk';
 import { ConfiguFile } from './ConfiguFile';
 import { CfguFile } from './CfguFile';
-
-import { stdenv, findUp, getConfiguHomeDir, readFile, parseJSON, parseYAML } from './utils';
+import { stdenv, getConfiguHomeDir } from './utils';
 
 export class ConfiguInterface {
-  // public static readonly localConfig = path.join(ConfiguInterface.homedir, '.configu');
-  // static allowedExtensions = ['json', 'yaml', 'yml'];
-
   public static context: { stdenv: typeof stdenv; upperConfigu?: ConfiguFile; localConfigu: ConfiguFile };
 
   static async init({ configuInput }: { configuInput?: string }) {
@@ -46,20 +37,79 @@ export class ConfiguInterface {
     }
   }
 
-  // static async getStoreInstance(name: string): Promise<ConfigStore> {
-  //   let store = this.context.upperConfigu?.getStoreInstance;
-  //   const store = this.context.localConfigu.contents.stores?.[name];
-  //   if (!store) {
-  //     throw new Error(`store "${name}" not found in local configu`);
-  //   }
+  static async getStoreInstance(nameOrType?: string) {
+    let store =
+      (await this.context.upperConfigu?.getStoreInstance(nameOrType)) ??
+      (await this.context.localConfigu.getStoreInstance(nameOrType));
 
-  //   const storeType = store.type;
-  //   const storeConstructor = await importModule(storeType);
-  //   return new storeConstructor(store.configuration);
-  // }
+    if (!store && nameOrType) {
+      store = await ConfiguFile.constructStore(nameOrType);
+    }
 
-  static async search(): Promise<CfguFile> {
-    // todo: implement search of one or multi .cfgu file here
-    throw new Error('Not implemented');
+    if (!store) {
+      throw new Error(`store "${nameOrType}" is not found`);
+    }
+
+    return store;
+  }
+
+  static async backupEvalOutput({
+    storeName,
+    set,
+    schema,
+    evalOutput,
+  }: {
+    storeName?: string;
+    set: ConfigSet;
+    schema: ConfigSchema;
+    evalOutput: EvalCommandOutput;
+  }) {
+    if (!storeName) {
+      return;
+    }
+
+    const store =
+      (await this.context.upperConfigu?.getBackupStoreInstance(storeName)) ??
+      (await this.context.localConfigu.getBackupStoreInstance(storeName));
+
+    if (!store) {
+      return;
+    }
+
+    const configs = _(evalOutput)
+      .pickBy((entry) => entry.origin === EvaluatedConfigOrigin.Store)
+      .mapValues((entry) => entry.value)
+      .value();
+
+    await new UpsertCommand({
+      store,
+      set,
+      schema,
+      configs,
+    }).run();
+  }
+
+  static async getSchemaInstance(nameOrPath?: string) {
+    if (!nameOrPath) {
+      const paths = await CfguFile.searchNeighbors();
+      if (paths.length === 0) {
+        throw new Error('schema is not found');
+      }
+      return CfguFile.constructSchema(...paths);
+    }
+
+    let schema =
+      (await this.context.upperConfigu?.getSchemaInstance(nameOrPath)) ??
+      (await this.context.localConfigu.getSchemaInstance(nameOrPath));
+
+    if (!schema && nameOrPath) {
+      schema = await CfguFile.constructSchema(nameOrPath);
+    }
+
+    if (!schema) {
+      throw new Error(`schema "${nameOrPath}" is not found`);
+    }
+
+    return schema;
   }
 }

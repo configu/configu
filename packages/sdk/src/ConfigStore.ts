@@ -35,7 +35,8 @@ export abstract class ConfigStore {
   }
 
   static has(type: string) {
-    return ConfigStore.stores.has(type);
+    const normalizedType = ConfigKey.normalize(type);
+    return ConfigStore.stores.has(normalizedType);
   }
 
   static construct(type: string, configuration = {}): ConfigStore {

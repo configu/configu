@@ -9,13 +9,15 @@ import { consola } from 'consola';
 import packageJson from '../package.json' with { type: 'json' };
 
 // import { HelloCommand } from './commands/hello';
-import { EvalCommand } from './commands/eval';
+import { CliEvalCommand } from './commands/eval';
 import { CliExportCommand } from './commands/export';
-import { InitCommand } from './commands/init';
+import { CliUpsertCommand } from './commands/upsert';
+
 import { LoginCommand } from './commands/login';
 import { RunCommand } from './commands/run';
+// todo: finalize those commands
+import { InitCommand } from './commands/init';
 import { TestCommand } from './commands/test';
-import { UpsertCommand } from './commands/upsert';
 import { GenerateCommand } from './commands/generate';
 
 export type CustomContext = BaseContext & { stdio: typeof consola };
@@ -34,14 +36,14 @@ export async function run(argv: string[]) {
   cli.register(Builtins.HelpCommand);
   cli.register(Builtins.VersionCommand);
 
-  cli.register(EvalCommand);
+  cli.register(CliEvalCommand);
   cli.register(CliExportCommand);
-  cli.register(InitCommand);
+  cli.register(CliUpsertCommand);
+  // cli.register(InitCommand);
   cli.register(LoginCommand);
   cli.register(RunCommand);
-  cli.register(TestCommand);
-  cli.register(UpsertCommand);
-  cli.register(GenerateCommand);
+  // cli.register(TestCommand);
+  // cli.register(GenerateCommand);
 
   const context = {
     ...Cli.defaultContext,

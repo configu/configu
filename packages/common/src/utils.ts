@@ -7,9 +7,10 @@ import parseJson from 'parse-json';
 import YAML from 'yaml';
 import { tsImport } from 'tsx/esm/api';
 import * as stdenv from 'std-env';
-import { findUp } from 'find-up';
+import { glob } from 'glob';
+import { findUp, findUpMultiple, pathExists } from 'find-up';
 
-export { findUp, stdenv, YAML };
+export { findUp, findUpMultiple, pathExists, glob, stdenv, YAML };
 
 export const getConfiguHomeDir = async (...paths: string[]): Promise<string> => {
   const directory = path.join(os.homedir(), '.configu', ...paths);
@@ -80,3 +81,9 @@ export const parseYAML = (filePath: string, fileContent: string): any => {
     throw error;
   }
 };
+
+// console.log(process.cwd());
+// console.log(await glob('file://tsconfig.json'));
+// console.log(new URL('file://a/b/c/*.cfgu.json'));
+// console.log(path.resolve('/a/b/c'));
+// console.log(path.resolve('file://a/b/c'));
