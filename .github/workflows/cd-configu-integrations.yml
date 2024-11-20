@@ -41,7 +41,9 @@ jobs:
       - name: Build the integrations
         env:
           SELECTED_ARCH: ${{ matrix.architecture }}
-        run: pnpm build:integrations
+        run: |
+          pnpm build:integrations
+          pnpm bundle:integrations
 
       - uses: actions/upload-artifact@master
         with:
