@@ -24,4 +24,4 @@ async function compile(selectedArch: 'arm64' | 'x64') {
   return filePath;
 }
 
-Promise.all(archs.map(compile)).then((files) => Promise.all(files.map(compress)));
+compile(process.env.SELECTED_ARCH as 'arm64' | 'x64').then((file) => compress(file));

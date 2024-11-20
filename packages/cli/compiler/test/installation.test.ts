@@ -4,6 +4,8 @@ import path from 'node:path';
 import assert from 'node:assert';
 import fs from 'node:fs/promises';
 import * as os from 'node:os';
+import { existsSync } from 'node:fs';
+import { downloadFile } from '../download-file';
 
 describe('installation', () => {
   test('should install', async () => {
@@ -12,32 +14,34 @@ describe('installation', () => {
     const parentDir = path.join(currentDir, '../..').replace('file:', '');
     const installationDir = path.join(parentDir, 'tmp');
 
-    await fs.chmod('./install.sh', 0o755);
-
-    let result;
+    let ext = '';
+    let prefix = '';
+    let cwd = installationDir;
     if (os.platform() === 'win32') {
-      result = execSync('sh ./install.sh', {
-        cwd: parentDir,
-        env: {
-          CONFIGU_VERSION: process.env.CONFIGU_VERSION,
-          CONFIGU_INSTALL: installationDir,
-        },
-      }).toString();
+      // download and install configu from URL
+      await downloadFile(
+        `https://github.com/configu/configu/releases/download/cli%2Fv${process.env.CONFIGU_VERSION}/configu-${os.platform()}-${os.arch()}.exe`,
+        path.join(installationDir, 'configu.exe'),
+      );
+      assert.ok(existsSync(path.join(installationDir, 'configu.exe')), 'Download failed');
+      ext = '.exe';
     } else {
-      result = execSync('./install.sh', {
+      console.log(parentDir);
+      const installScript = path.join(parentDir, 'install.sh');
+      await fs.chmod(installScript, 0o755);
+      const result = execSync('./install.sh', {
         cwd: parentDir,
         env: {
           CONFIGU_VERSION: process.env.CONFIGU_VERSION,
           CONFIGU_INSTALL: installationDir,
         },
       }).toString();
+      assert.match(result, /Configu was installed successfully to/, 'Installation script failed');
+      prefix = './';
+      cwd = path.join(installationDir, 'bin');
     }
 
-    assert.match(result, /Configu was installed successfully to/, 'Installation script failed');
-
-    const configuExec = execSync('./configu --help', {
-      cwd: path.join(installationDir, 'bin'),
-    }).toString();
+    const configuExec = execSync(`${prefix}configu${ext} --help`, { cwd }).toString();
 
     assert.match(configuExec, /@configu\/cli/, 'Configu executable failed to run');
     assert.match(configuExec, /General commands/);

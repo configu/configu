@@ -1,8 +1,7 @@
-import * as https from 'node:https';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { execSync } from 'node:child_process';
-import { pipeline } from 'node:stream/promises';
+import { downloadFile } from './download-file';
 
 export async function downloadNode(os: 'win' | 'linux' | 'darwin', arch: 'arm64' | 'x64'): Promise<string> {
   const ext = os === 'win' ? 'zip' : 'tar.gz';
@@ -11,20 +10,7 @@ export async function downloadNode(os: 'win' | 'linux' | 'darwin', arch: 'arm64'
 
   // download node from url
   const nodePath = `./node-${process.version}-${os}-${arch}.${ext}`;
-  await pipeline(
-    await new Promise<NodeJS.ReadableStream>((resolve, reject) => {
-      https
-        .get(url, (response) => {
-          if (response.statusCode !== 200) {
-            reject(new Error(`Failed to download: ${response.statusCode} ${response.statusMessage}`));
-            return;
-          }
-          resolve(response);
-        })
-        .on('error', reject);
-    }),
-    fs.createWriteStream(nodePath),
-  );
+  await downloadFile(url, nodePath);
   console.log(`Downloaded node to ${nodePath}`);
 
   // extract node using native tools via execSync
