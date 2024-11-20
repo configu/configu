@@ -248,11 +248,19 @@ Install `@configu/proxy` version 1.0.0 or later.
 
 V1 introduces several new features to Configu. Below is a list of the new features and how to use them.
 
-### Expressions
+### `ConfigExpressions`
 
-V1 introduces a new feature called expressions. Expressions allow you to write dynamic values with certain features like string interpolation, arithmetic operations, and more. All features that support expressions have their own injected context that can withing the expressions for evaluation.
+V1 introduces a new feature called `ConfigExpressions`. `ConfigExpressions` allow you to write dynamic values with certain features like string interpolation, arithmetic operations, and more. All features that support `ConfigExpressions` have their own injected context that can withing the `ConfigExpressions` for evaluation.
 
-The following features support expressions:
+The `ConfigExpressions` contexts include the following libraries:
+
+- [lodash](https://lodash.com) for various utility functions. Use `_` within the `ConfigExpression` to access lodash functions.
+- [validator.js](https://github.com/validatorjs/validator.js) for string validations. Use `validator` within the `ConfigExpression` to access validator.js functions.
+- The [JSONSchema utility class](https://github.com/configu/configu/tree/main/packages/sdk/src/expressions/JSONSchema.ts) for JSON schema validations. Use `JSONSchema` or `jsonschema` within the `ConfigExpression` to access the utility class.
+- [Zod](https://zod.dev/) for schema validations with static type inference. Use `z` within the `ConfigExpression` to access Zod functions.
+- [Chai](https://github.com/chaijs/chai) for assertions functions. Use `assert`, `expect`, and `should` respectively within the `ConfigExpression` to access Chai functions.
+
+The following features support `ConfigExpressions`:
 
 - [The new `test` `Cfgu` property](/interfaces/.cfgu#properties)
 - [The new `const` `Cfgu` property](/interfaces/.cfgu#properties)
@@ -261,7 +269,7 @@ The following features support expressions:
 - [The CLI export `format` flag](/interfaces/cli/ref#configu-export)
 - [The CLI export `template` flag](/interfaces/cli/ref#configu-export)
 
-Example usages of expressions:
+Example usages of `ConfigExpressions`:
 
 `test` `Cfgu` property:
 
@@ -292,11 +300,11 @@ GREETING={{toUpper(GREETING)}}
 
 ### New `Cfgu` property `test`
 
-The `test` property is a new property that allows you to write expressions to validate the value of a key. It replaces the `type` property which was removed due to its limited functionality.
+The `test` property is a new property that allows you to write `ConfigExpressions` to validate the value of a key. It replaces the `type` property which was removed due to its limited functionality.
 
 ### New `Cfgu` property `const`
 
-The `const` property is a new property that allows you to write expressions to set a constant value for a key.
+The `const` property is a new property that allows you to write `ConfigExpressions` to set a constant value for a key.
 
 ### CLI global `--config` flag
 
@@ -322,4 +330,4 @@ Superseded by `@configu/sdk`.
 
 ### Introduction of `@configu/integrations`
 
-A new package that contains all ConfigStore implementations and libraries that extend the expressions functionality which are decoupled from the core `@configu/sdk` package. This package is intended to be used by higher-level configu interfaces such as the CLI and proxy.
+A new package that contains all ConfigStore implementations and libraries that extend the `ConfigExpressions` functionality which are decoupled from the core `@configu/sdk` package. This package is intended to be used by higher-level configu interfaces such as the CLI and proxy.
