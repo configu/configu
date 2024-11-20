@@ -302,6 +302,10 @@ The `const` property is a new property that allows you to write expressions to s
 
 The `--config` flag is a new global flag that allows you to specify a path to `.configu` file to use for all commands. This flag is useful when you want to use a specific `.configu` file that you want to use for all commands.
 
+### CLI `.configu` auto-detection
+
+The CLI now automatically recursively searches for `.configu` files from the current working directory upwards to the home directory and uses the first one found for all commands when the `--config` flag is not provided.
+
 ## Other changes
 
 ### `@configu/node` and `@configu/browser` removal
