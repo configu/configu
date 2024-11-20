@@ -236,7 +236,7 @@ These changes aim to improve clarity and prevent naming conflicts while providin
 
 The `--import` flag has been removed from the CLI upsert command.
 
-#### Export command flags changes
+#### Export command filtering flags changes
 
 The following flags have been removed in favor of the new [`--filter`](/interfaces/cli/ref#configu-export) flag along with how they can be replaced with `--filter`:
 
@@ -287,6 +287,10 @@ The following flags have been removed in favor of the new [`--filter`](/interfac
 ```bash
 --filter '$.origin !== "empty"'
 ```
+
+#### Export command template input flag removal
+
+The `--template-input` flag has been removed. You can instead adjust the input as needed via the `ConfigExpression` utilities and mutate the `$.configs` (provided as an object) context input to whatever you need.
 
 ### `.configu` file changes
 
