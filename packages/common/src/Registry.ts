@@ -1,4 +1,4 @@
-import { platform } from 'node:os';
+import { platform, arch } from 'node:os';
 import { existsSync } from 'node:fs';
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'pathe';
@@ -84,7 +84,7 @@ export class Registry {
 
     if (!existsSync(MODULE_PATH)) {
       const res = await fetch(
-        `https://github.com/configu/configu/releases/download/integrations-${VERSION}/${KEY}-${platform()}.js`,
+        `https://github.com/configu/configu/releases/download/integrations-${VERSION}/${KEY}-${platform()}-${arch()}.js`,
       );
       if (res.ok) {
         await writeFile(MODULE_PATH, await res.text());

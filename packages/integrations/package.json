@@ -21,6 +21,7 @@
   ],
   "scripts": {
     "clean": "shx rm -rf tsconfig.tsbuildinfo build",
+    "bundle:integrations": "tsx src/bundler",
     "test": "node --import tsx --test **/**/*.test.ts",
     "test:watch": "node --import tsx --test --watch *.test.ts"
   },
