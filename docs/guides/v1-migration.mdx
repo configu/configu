@@ -212,7 +212,7 @@ keys:
 
 The `cache` property has been renamed to `backup` to more accurately reflect its purpose. Replace all occurrences of `cache` with `backup` to reflect the new naming convention.
 
-### CLI upsert command changes
+### CLI upsert command config assignment flag changes
 
 The `--config, -c` flag has been renamed to `--kv` to avoid clashes with the new [`--config` global flag](#cli-global-config-flag). Replace all occurrences of `--config` with `--kv` to align with this updated naming convention.
 
@@ -233,6 +233,10 @@ Will:
 - Set the value of `SUBJECT` to `configu`.
 
 These changes aim to improve clarity and prevent naming conflicts while providing flexibility for key-value management.
+
+### CLI upsert command import flag removal
+
+The `--import` flag has been removed from the CLI upsert command.
 
 ### Introduction of type coercion
 
