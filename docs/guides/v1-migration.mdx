@@ -12,11 +12,11 @@ V1 introduces several breaking changes to `.cfgu` files. Below is a list of the 
 
 #### `Cfgu` property changes
 
-- The `type` property has been removed and replaced with the [new `test` property](#new-cfgu-property-test).
+- The `type` property has been removed and replaced with the [new `test` property](#new-cfgu-property-test). [View migration examples below](#new-cfgu-property-test).
 - The `options` property has been renamed to `enum` to better reflect its purpose.
 - The `depends` property has been removed. If you need to replicate it, you can use the [new `test` property](#new-cfgu-property-test).
 - The `labels` property has been renamed to `label`.
-- The `template` property has been removed. If you need to replicate it, you can use the [new `const` property](#new-cfgu-property-const).
+- The `template` property has been removed. If you need to replicate it, you can use the [new `const` property](#new-cfgu-property-const). [View migration examples below](#new-cfgu-property-const).
 
 #### `.cfgu` file structure change
 
@@ -370,9 +370,51 @@ GREETING={{toUpper(GREETING)}}
 
 The `test` property is a new property that allows you to write `ConfigExpressions` to validate the value of a key. It replaces the `type` property which was removed due to its limited functionality.
 
+Here are a few examples of how `test` can be used in place of `type`
+
+String type validation via Chai assertion:
+
+```yaml
+keys:
+  MY_KEY:
+    test: expect($.value).to.be.a('string')
+```
+
+Boolean type validation via validator.js
+
+```yaml
+keys:
+  MY_KEY:
+    test: validator.isBoolean($.storedValue)
+```
+
+Example of using `test` in place of `depends`:
+
+```yaml
+keys:
+  ENABLE_FEATURE:
+    test: validator.isBoolean($.storedValue)
+  MY_KEY:
+    test:
+      - "$.configs.ENABLE_FEATURE.value ? expect($.value).to.be.a('string') : true"
+```
+
 ### New `Cfgu` property `const`
 
 The `const` property is a new property that allows you to write `ConfigExpressions` to set a constant value for a key.
+
+Example usage of `const` instead of `template`:
+
+```yaml
+keys:
+  PORT:
+    default: 1234
+  HOST:
+    default: localhost
+  CONNECTION_STRING:
+    const: '`${$.configs.HOST.value}:${$.configs.PORT.value}`'
+    test: 'validator.isURL($.value, {require_host: true, require_port: true})'
+```
 
 ### Default `ConfigStore`
 
