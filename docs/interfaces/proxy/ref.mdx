@@ -8,7 +8,7 @@ description: 'A reference guide for all Configu Proxy Endpoints.'
 
 #### POST /export
 
-Recives an EvalCommand pipeline as body:
+Receives an EvalCommand pipeline as body:
 
 ```json
 [
@@ -30,7 +30,7 @@ Recives an EvalCommand pipeline as body:
 ]
 ```
 
-Exports the requested configuration as an object.
+Exports the requested configuration as key-value object where the value is coerced to expected type (`string`, `number`, `boolean`, `object`, `array`).
 
 ```json
 {
