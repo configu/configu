@@ -139,7 +139,8 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        # todo: restore windows-latest when ready
+        os: [ubuntu-latest, macos-latest]
         node-version: [22.x]
 
     steps:
