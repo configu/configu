@@ -22,7 +22,7 @@
   ],
   "type": "module",
   "bin": {
-    "configu": "./dist/run.cjs"
+    "configu": "./dist/run.js"
   },
   "exports": {
     "./package.json": "./package.json"
