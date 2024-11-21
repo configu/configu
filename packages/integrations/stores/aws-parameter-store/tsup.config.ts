@@ -15,6 +15,7 @@ export default defineConfig(async (): Promise<Options | Options[]> => {
     target: 'esnext',
     format: 'cjs',
     noExternal: [/(.*)/],
+    keepNames: true,
     splitting: false,
     outDir: `../../dist`,
     outExtension: () => ({
