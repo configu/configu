@@ -11,9 +11,7 @@
     "$schema": {
       "type": "string",
       "minLength": 1,
-      "description": "Url to JSON Schema",
-      "default": "https://raw.githubusercontent.com/configu/configu/main/packages/schema/.cfgu.json",
-      "nullable": true
+      "description": "Url to JSON Schema"
     },
     "keys": {
       "type": "object",
@@ -26,16 +24,14 @@
         "properties": {
           "description": {
             "type": "string",
-            "minLength": 1,
-            "nullable": true
+            "minLength": 1
           },
           "label": {
             "type": ["string", "array"],
-            "anyOf": [
+            "oneOf": [
               {
                 "type": "string",
-                "minLength": 1,
-                "nullable": true
+                "minLength": 1
               },
               {
                 "type": "array",
@@ -44,61 +40,81 @@
                 "items": {
                   "type": "string",
                   "minLength": 1
-                },
-                "nullable": true
+                }
               }
-            ],
-            "nullable": true
+            ]
           },
           "hidden": {
-            "type": "boolean",
-            "nullable": true
+            "type": "boolean"
           },
           "lazy": {
-            "type": "boolean",
-            "nullable": true
+            "type": "boolean"
           },
           "const": {
             "type": "string",
-            "minLength": 1,
-            "nullable": true
+            "minLength": 1
           },
           "default": {
-            "type": "string",
-            "minLength": 1,
-            "nullable": true
+            "type": ["string", "number", "boolean", "object", "array"],
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "object"
+              },
+              {
+                "type": "array"
+              }
+            ]
           },
           "required": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "enum": {
-            "type": "array",
-            "minItems": 1,
-            "uniqueItems": true,
-            "items": {
-              "type": "string",
-              "minLength": 1
-            },
-            "nullable": true
+            "type": "boolean"
           },
           "pattern": {
             "type": "string",
-            "minLength": 1,
-            "nullable": true
+            "minLength": 1
+          },
+          "enum": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": ["string", "number", "boolean", "object", "array"],
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "object"
+                },
+                {
+                  "type": "array"
+                }
+              ]
+            }
           },
           "schema": {
             "type": "object",
-            "minProperties": 1,
-            "nullable": true
+            "minProperties": 1
           },
           "test": {
             "type": ["string", "array"],
-            "anyOf": [
+            "oneOf": [
               {
                 "type": "string",
-                "minLength": 1,
-                "nullable": true
+                "minLength": 1
               },
               {
                 "type": "array",
@@ -107,11 +123,9 @@
                 "items": {
                   "type": "string",
                   "minLength": 1
-                },
-                "nullable": true
+                }
               }
-            ],
-            "nullable": true
+            ]
           }
         },
         "allOf": [

@@ -42,7 +42,8 @@
     "dist"
   ],
   "scripts": {
-    "bundle": "tsup"
+    "clean": "shx rm -rf dist",
+    "build": "tsup"
   },
   "dependencies": {
     "@segment/ajv-human-errors": "^2.14.0",

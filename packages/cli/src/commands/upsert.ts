@@ -1,6 +1,7 @@
 import { Command, Option } from 'clipanion';
 import { UpsertCommand, ConfigSet } from '@configu/sdk';
-import { ConfiguInterface, ConfiguConfigStoreApprovalQueueError } from '@configu/common';
+import { ConfiguInterface } from '@configu/common';
+// import { ConfiguConfigStoreApprovalQueueError } from '@configu-integrations/configu';
 import { BaseCommand } from './base';
 
 export class CliUpsertCommand extends BaseCommand {
@@ -44,13 +45,14 @@ export class CliUpsertCommand extends BaseCommand {
       }).run();
       process.stdout.write('Configs upserted successfully');
     } catch (error) {
-      if (error instanceof ConfiguConfigStoreApprovalQueueError) {
-        // * print warning message with queue url highlighted with an underline
-        const warningMessage = error.message.replace(error.queueUrl, `\u001B[4m${error.queueUrl}\u001B[0m`);
-        this.context.stdio.warn(warningMessage);
-      } else {
-        this.context.stdio.error(error.message);
-      }
+      // if (error instanceof ConfiguConfigStoreApprovalQueueError) {
+      //   // * print warning message with queue url highlighted with an underline
+      //   const warningMessage = error.message.replace(error.queueUrl, `\u001B[4m${error.queueUrl}\u001B[0m`);
+      //   this.context.stdio.warn(warningMessage);
+      // } else {
+      //   this.context.stdio.error(error.message);
+      // }
+      this.context.stdio.error(error.message);
     }
   }
 }

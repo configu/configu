@@ -1,18 +1,21 @@
 import { ConfigStore } from '@configu/sdk';
 
-import { JsonFileConfigStore } from '@configu-integrations/json-file';
-import { ConfiguConfigStore } from '@configu-integrations/configu';
+// todo: restore this after fixing integrations
+// import * as yaya from '@configu-integrations/json-file';
+// import { ConfiguConfigStore } from '@configu-integrations/configu';
 
-ConfigStore.register(JsonFileConfigStore);
+// console.log(yaya);
 
-export { ConfiguConfigStoreApprovalQueueError } from '@configu-integrations/configu';
-ConfigStore.register(ConfiguConfigStore);
+// ConfigStore.register(JsonFileConfigStore);
+
+// export { ConfiguConfigStoreApprovalQueueError } from '@configu-integrations/configu';
+// ConfigStore.register(ConfiguConfigStore);
 
 // import './test';
 
 export * from './utils';
 
-// export * from './ConfiguFile';
-// export * from './CfguFile';
+export * from './ConfiguFile';
+export * from './CfguFile';
 
 export * from './ConfiguInterface';

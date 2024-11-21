@@ -11,9 +11,7 @@
     "$schema": {
       "type": "string",
       "minLength": 1,
-      "description": "Url to JSON Schema",
-      "default": "https://raw.githubusercontent.com/configu/configu/main/packages/schema/.configu.json",
-      "nullable": true
+      "description": "Url to JSON Schema"
     },
     "stores": {
       "type": "object",
@@ -26,37 +24,42 @@
             "type": "string"
           },
           "configuration": {
-            "type": "object",
-            "nullable": true
+            "type": "object"
           },
           "backup": {
-            "type": "boolean",
-            "nullable": true
+            "type": "boolean"
+          },
+          "default": {
+            "type": "boolean"
           }
         }
-      },
-      "nullable": true
+      }
     },
     "backup": {
       "type": "string",
-      "minLength": 1,
-      "nullable": true
+      "minLength": 1
     },
     "schemas": {
       "type": "object",
       "required": [],
       "additionalProperties": {
         "type": "string"
-      },
-      "nullable": true
+      }
     },
     "scripts": {
       "type": "object",
       "required": [],
       "additionalProperties": {
         "type": "string"
-      },
-      "nullable": true
+      }
+    },
+    "register": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
     }
   }
 }

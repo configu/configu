@@ -17,15 +17,7 @@
             "loading": { "type": "string" },
             "successMessage": { "type": "string" }
           },
-          "required": [
-            "cta",
-            "isRtl",
-            "inputCta",
-            "submitBtn",
-            "strict",
-            "loading",
-            "successMessage"
-          ]
+          "required": ["cta", "isRtl", "inputCta", "submitBtn", "strict", "loading", "successMessage"]
         },
         "isTransparent": { "type": "boolean" },
         "isCSIntegrated": { "type": "boolean" },

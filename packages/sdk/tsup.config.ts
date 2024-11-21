@@ -1,5 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { defineConfig } from 'tsup';
+import { $ } from 'zx';
 
 export default defineConfig([
   {
@@ -11,8 +12,8 @@ export default defineConfig([
     treeshake: true,
     clean: true,
     keepNames: true,
-    // https://github.com/egoist/tsup/issues/939
-    outExtension: ({ format }) => {
+    outExtension({ format }) {
+      // https://github.com/egoist/tsup/issues/939
       switch (format) {
         case 'cjs': {
           return { js: '.cjs', dts: '.d.cts' };
@@ -24,6 +25,14 @@ export default defineConfig([
           return { js: '.js', dts: '.d.ts' };
         }
       }
+    },
+    async onSuccess() {
+      // todo: try to produce declaration maps
+      // https://tsup.egoist.dev/#generate-typescript-declaration-maps--d-ts-map
+      // await $`pnpm --package=typescript dlx tsc src/*.ts --emitDeclarationOnly --declarationMap --outDir dist`.pipe(
+      //   process.stdout,
+      // );
+      // console.log('TypeScript declaration files generated.');
     },
   },
 ]);

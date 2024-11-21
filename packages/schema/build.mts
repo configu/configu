@@ -3,13 +3,13 @@
 
 import 'zx/globals';
 import { join } from 'node:path';
-import { SchemaObject } from '@configu/sdk';
+import { JSONSchemaObject } from '@configu/sdk';
 import { CfguFile, ConfiguFile } from '@configu/common';
 
 const ROOT_PATH = path.join(import.meta.dirname, '..', '..');
 const SCHEMA_ROOT_PATH = import.meta.dirname;
 
-const buildJSONSchemaFile = async (schema: SchemaObject, path: string) => {
+const buildJSONSchemaFile = async (schema: JSONSchemaObject, path: string) => {
   const contents = JSON.stringify(schema, null, 2);
   await fs.writeFile(path, contents, { flag: 'w' });
 };

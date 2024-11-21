@@ -31,7 +31,9 @@
     "/dist"
   ],
   "scripts": {
-    "bundle": "tsup",
+    "clean": "shx rm -rf dist",
+    "bundle": "pnpm build",
+    "build": "tsup",
     "compile": "tsx compiler/index.ts",
     "configu": "tsx src/run.ts",
     "start": "pnpm configu"

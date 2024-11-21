@@ -107,7 +107,7 @@ flowchart RL
   - [./packages/integrations/stores](https://github.com/configu/configu/tree/main/packages/integrations): Contains all [ConfigStore](https://configu.com/docs/config-store/) integrations
 - [./packages/common](https://github.com/configu/configu/tree/main/packages/common): Shared code for both Configu Proxy and Configu CLI, extends the Configu SDK
 - [./packages/proxy](https://github.com/configu/configu/tree/main/packages/proxy): Configu Proxy, which is built using [fastify](https://fastify.dev/) and the Common package
-- [./packages/cli](https://github.com/configu/configu/tree/main/packages/cli): Configu CLI, which is built using [oclif](https://oclif.io/) and the Common package
+- [./packages/cli](https://github.com/configu/configu/tree/main/packages/cli): Configu CLI, which is built using [Clipanion](https://mael.dev/clipanion/) and the Common package
 
 ### Sending a Pull Request
 

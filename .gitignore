@@ -37,10 +37,8 @@ coverage
 # linter
 .eslintcache
 
-# oclif
-oclif.manifest.json
-
 # pnpm v8-compile-cache dependency
 v8-compile-cache*/
+
+# IDE
 .idea
-.configu-cache
