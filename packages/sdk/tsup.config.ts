@@ -6,12 +6,16 @@ export default defineConfig([
   {
     entry: ['src/index.ts'],
     format: ['esm', 'cjs'],
+    outDir: 'dist',
+    clean: true,
+
     dts: true,
     sourcemap: true,
-    splitting: true,
-    treeshake: true,
-    clean: true,
+
     keepNames: true,
+    treeshake: true,
+    splitting: true,
+
     outExtension({ format }) {
       // https://github.com/egoist/tsup/issues/939
       switch (format) {
@@ -26,6 +30,7 @@ export default defineConfig([
         }
       }
     },
+
     async onSuccess() {
       // todo: try to produce declaration maps
       // https://tsup.egoist.dev/#generate-typescript-declaration-maps--d-ts-map

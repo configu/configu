@@ -5,17 +5,18 @@ export default defineConfig([
   {
     entry: ['src/run.ts'],
     format: 'cjs',
-    // dts: true,
+    outDir: 'dist',
     clean: true,
+
     minify: true,
-    // splitting: true,
-    treeshake: true,
-    noExternal: [/(.*)/],
     keepNames: true,
+    treeshake: true,
     splitting: false,
-    // https://github.com/egoist/tsup/issues/939
-    // outExtension: () => {
-    //   return { js: '.js', dts: '.d.ts' };
-    // },
+
+    noExternal: [/(.*)/],
+    outExtension: () => {
+      // https://github.com/egoist/tsup/issues/939
+      return { js: '.js', dts: '.d.ts' };
+    },
   },
 ]);

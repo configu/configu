@@ -124,7 +124,9 @@ export class LoginCommand extends BaseCommand {
     }
 
     await this.context.localConfigu.save({
-      stores: { configu: { type: 'configu', credentials, endpoint: this.endpoint ?? CONFIGU_API_URL } },
+      stores: {
+        configu: { type: 'configu', configuration: { credentials, endpoint: this.endpoint ?? CONFIGU_API_URL } },
+      },
     });
   }
 }

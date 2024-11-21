@@ -32,6 +32,10 @@ export class ConfiguConfigStore extends ConfigStore {
   }: ConfiguConfigStoreConfiguration) {
     super();
 
+    if (!credentials.org || !credentials.token) {
+      throw new Error('ConfiguConfigStore: credentials.org and credentials.token are required');
+    }
+
     this.client = axios.create({
       baseURL: endpoint,
       headers: {
