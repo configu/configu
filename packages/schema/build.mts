@@ -2,12 +2,16 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
 import 'zx/globals';
-import { join } from 'node:path';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { JSONSchemaObject } from '@configu/sdk';
 import { CfguFile, ConfiguFile } from '@configu/common';
 
-const ROOT_PATH = path.join(import.meta.dirname, '..', '..');
-const SCHEMA_ROOT_PATH = import.meta.dirname;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const ROOT_PATH = path.join(__dirname, '..', '..');
+const SCHEMA_ROOT_PATH = __dirname;
 
 const buildJSONSchemaFile = async (schema: JSONSchemaObject, path: string) => {
   const contents = JSON.stringify(schema, null, 2);

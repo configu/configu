@@ -27,7 +27,7 @@
     "test": "pnpm \"/^test:.*/\"",
     "test:cfgu": "ajv test -s .cfgu.json -d \"data/*.cfgu.*\" --valid --allow-union-types --all-errors --verbose",
     "test:configu": "ajv test -s .configu.json -d \"data/.configu.*\" --valid --allow-union-types --all-errors --verbose",
-    "build:schema": "tsx build.mts"
+    "build": "tsx build.mts"
   },
   "dependencies": {
     "@configu/sdk": "workspace:*",
