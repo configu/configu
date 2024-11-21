@@ -381,19 +381,13 @@ The `test` property is a new property that allows you to write `ConfigExpression
 
 The `const` property is a new property that allows you to write `ConfigExpressions` to set a constant value for a key.
 
-### CLI global `--config` flag
+### Default `ConfigStore`
 
-The `--config` flag is a new global flag that allows you to specify a path to `.configu` file to use for all commands. This flag is useful when you want to use a specific `.configu` file that you want to use for all commands.
+You can now designate a `ConfigStore` as the default by adding the `default` property to its configuration and setting it to `true`. This default will be used whenever a `ConfigStore` is omitted as an input in actions performed using Configu's high-level interfaces.
 
-### CLI `.configu` auto-detection
+If your `.configu` file contains only a single `ConfigStore`, it will be automatically detected and treated as the default.
 
-The CLI now automatically recursively searches for `.configu` files from the current working directory upwards to the home directory and uses the first one found for all commands when the `--config` flag is not provided.
-
-### CLI default store
-
-You can now mark a `ConfigStore` as your default store when omitting `--store` flag is omitted by adding `default`=`true` to the store settings. Additionally, the CLI now detects when there is only a single `ConfigStore` in the `.configu` file and uses it as the default.
-
-Example definition of a default store in a `.configu` file:
+Example definition of a default `ConfigStore` in a `.configu` file:
 
 ```yaml
 stores:
@@ -407,6 +401,14 @@ stores:
     configuration:
       path: path/to/file2.json
 ```
+
+### CLI global `--config` flag
+
+The `--config` flag is a new global flag that allows you to specify a path to `.configu` file to use for all commands. This flag is useful when you want to use a specific `.configu` file that you want to use for all commands.
+
+### CLI `.configu` auto-detection
+
+The CLI now automatically recursively searches for `.configu` files from the current working directory upwards to the home directory and uses the first one found for all commands when the `--config` flag is not provided.
 
 ### CLI eval command defaults flag
 
