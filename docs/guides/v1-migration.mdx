@@ -298,16 +298,16 @@ The `cache` property has been renamed to `backup` to more accurately reflect its
 
 ### Introduction of type coercion
 
-V1 introduces type coercion to Configu. During evaluation, Configu will attempt to coerce values from ConfigStores to their --filter expected type. This feature is intended to make Configu more flexible and easier to use.
+V1 introduces type coercion to Configu. During evaluation, Configu will attempt to coerce values from ConfigStores to their expected type. This feature is intended to make Configu more flexible and easier to use.
 
 Type coercion affects:
 
-- All instances of config values in `ConfigExpressions` are coerced to the --filter expected type (`string`, `number`, `boolean`, `object`, `array`). You can access the value as it's stored via `storedValue`.
+- All instances of config values in `ConfigExpressions` are coerced to the expected type (`string`, `number`, `boolean`, `object`, `array`). You can access the value as it's stored via `storedValue`.
 - The Configu CLI Eval command returns the coerced value in the output.
 - The Configu CLI Export command receives the coerced value as input from Eval command which affects:
   - The `--format` flag which will now receive the coerced value as input and appropriately formats it.
   - All instances of `ConfigExpressions` usages by `--filter`, `--template`, `--map`, `--reduce`, `--sort` flags which will now receive the coerced value as input.
-- The Configu Proxy export route which will now coerce values to the --filter expected type.
+- The Configu Proxy export route which will now coerce values to the expected type.
 
 ## Upgrading Configu CLI
 
@@ -333,7 +333,7 @@ The `ConfigExpressions` contexts include the following libraries:
 - [validator.js](https://github.com/validatorjs/validator.js) for string validations. Use `validator` within the `ConfigExpression` to access validator.js functions.
 - The [JSONSchema utility class](https://github.com/configu/configu/tree/main/packages/sdk/src/expressions/JSONSchema.ts) for JSON schema validations. Use `JSONSchema` or `jsonschema` within the `ConfigExpression` to access the utility class.
 - [Zod](https://zod.dev/) for schema validations with static type inference. Use `z` within the `ConfigExpression` to access Zod functions.
-- [Chai](https://github.com/chaijs/chai) for assertions functions. Use `assert`, --filter expect`, and `should`respectively within the`ConfigExpression` to access Chai functions.
+- [Chai](https://github.com/chaijs/chai) for assertions functions. Use `assert`, `expect`, and `should` respectively within the `ConfigExpression` to access Chai functions.
 
 The following features support `ConfigExpressions`:
 
@@ -341,7 +341,6 @@ The following features support `ConfigExpressions`:
 - [The new `const` `Cfgu` property](/interfaces/.cfgu#properties)
 - [The `.configu` file](/interfaces/.configu#environment-variables)
 - [The CLI export `filter` flag](/interfaces/cli/ref#configu-export)
-- [The CLI export `format` flag](/interfaces/cli/ref#configu-export)
 - [The CLI export `template` flag](/interfaces/cli/ref#configu-export)
 
 Example usages of `ConfigExpressions`:
@@ -357,13 +356,7 @@ keys:
 The CLI export `filter` flag:
 
 ```bash
-configu eval --store my-store --set '' --schema ./tmp/schemas2/start.cfgu.yaml | configu export --filter 'empty($.value)' --filter 'contains($.cfgu.label,"a")'
-```
-
-The CLI export `format` flag:
-
-```bash
-configu eval --store my-store --set '' --schema start.cfgu.yaml | configu export --format 'Dotenv({json:{{pipe}},wrap:true})'
+configu eval --store my-store --set '' --schema ./tmp/schemas2/start.cfgu.yaml | configu export --filter '$.origin === "empty"' --filter '$.labels.includes("my-label") === true'
 ```
 
 The CLI export `template` flag, example template `.env` file:
