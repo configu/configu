@@ -35,6 +35,7 @@
     "test": "tsx --test $npm_package_config_test",
     "test:cov": "tsx --test --experimental-test-coverage --test-reporter=spec --test-reporter=lcov --test-reporter-destination=stdout --test-reporter-destination=lcov.info $npm_package_config_test",
     "test:watch": "tsx --test --watch $npm_package_config_test",
+    "bundle:integrations": "pnpm run --filter \"@configu/integrations\" bundle:integrations",
     "start": "shx echo \"Interactive start script is coming soon <3\""
   },
   "devDependencies": {
