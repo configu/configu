@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { ConfigStore, type ConfigQuery, type Config as IConfig } from '@configu/sdk';
 import { DataSource, type DataSourceOptions, Entity, Index, PrimaryGeneratedColumn, Column } from 'typeorm';
-import _ from 'lodash-es';
+import * as _ from 'lodash-es';
 
 const createEntity = (tableName: string) => {
   @Entity({ name: tableName })

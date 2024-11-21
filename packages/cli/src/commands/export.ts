@@ -51,7 +51,7 @@ export class CliExportCommand extends BaseCommand {
 
   format = Option.String('--format', {
     description: `Format exported \`Configs\` to common configuration formats. Redirect the output to file, if needed`,
-    validator: t.isEnum(Object.keys(ConfigFormats)),
+    // validator: t.isEnum(ConfigFormats),
   });
 
   // eol = Option.Boolean('--eol,--EOL', {

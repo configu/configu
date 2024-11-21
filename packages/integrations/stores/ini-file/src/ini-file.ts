@@ -1,4 +1,4 @@
-import _ from 'lodash-es';
+import * as _ from 'lodash-es';
 import ini from 'ini';
 import { type Config } from '@configu/sdk';
 import { FileConfigStore } from '@configu/integrations/src/utils/File';

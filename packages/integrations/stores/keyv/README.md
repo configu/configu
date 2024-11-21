@@ -3,7 +3,7 @@
 Integrates the Configu Orchestrator with [Key-v](https://keyv.org/).
 
 - Name: Keyv
-- Category: Key-value store  
+- Category: Key-value store
 
 ## Configuration
 

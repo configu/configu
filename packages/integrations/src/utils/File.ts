@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises';
 import { type Config, ConfigStore, type ConfigQuery } from '@configu/sdk';
-import _ from 'lodash-es';
+import * as _ from 'lodash-es';
 
 export type FileConfigStoreConfiguration = { path: string; initialFileState: string };
 

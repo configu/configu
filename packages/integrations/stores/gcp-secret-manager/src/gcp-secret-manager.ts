@@ -10,7 +10,7 @@ export class GCPSecretManagerConfigStore extends KeyValueConfigStore {
   private projectId: string;
 
   constructor({ projectId, ...configuration }: GCPSecretManagerConfigStoreConfiguration) {
-    super('gcp-secret-manager');
+    super();
 
     this.client = new SecretManagerServiceClient(configuration);
     this.projectId = projectId;

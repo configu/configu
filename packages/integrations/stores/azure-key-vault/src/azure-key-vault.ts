@@ -11,8 +11,7 @@ export type AzureKeyVaultConfigStoreConfiguration = {
 export class AzureKeyVaultConfigStore extends KeyValueConfigStore {
   private client: SecretClient;
   constructor({ vaultUrl, credential, options }: AzureKeyVaultConfigStoreConfiguration) {
-    super('azure-key-vault');
-
+    super();
     this.client = new SecretClient(vaultUrl, new DefaultAzureCredential(credential), options);
   }
 

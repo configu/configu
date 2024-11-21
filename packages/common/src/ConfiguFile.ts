@@ -13,6 +13,7 @@ import {
   JSONSchemaObject,
   FromSchema,
   ConfigStoreConstructor,
+  ConfigKey,
 } from '@configu/sdk';
 import {
   stdenv,
@@ -108,7 +109,6 @@ export class ConfiguFile {
     // try expend contents with env vars
     let renderedContents: string;
     try {
-      // todo: find a way to escape template inside Expression class
       renderedContents = ConfigExpression.evaluateTemplateString(contents, stdenv.env);
     } catch (error) {
       throw new Error(`ConfiguFile.contents "${path}" is invalid\n${error}`);
@@ -313,8 +313,10 @@ export class ConfiguFile {
   }
 
   static async registerStore(type: string) {
+    const normalizedType = ConfigKey.normalize(type);
+
     const moduleDirPath = await getConfiguHomeDir('cache');
-    const modulePath = join(moduleDirPath, `/${type}.js`);
+    const modulePath = join(moduleDirPath, `/${normalizedType}.js`);
 
     // todo: add sem-ver check for cache invalidation when cached stores are outdated once integration pipeline is reworked
     // const [KEY, VERSION = 'latest'] = type.split('@');

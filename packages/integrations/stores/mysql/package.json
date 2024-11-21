@@ -1,9 +1,9 @@
 {
-  "name": "@configu-integrations/ms-sql",
+  "name": "@configu-integrations/mysql",
   "version": "0.0.0",
   "license": "Apache-2.0",
   "author": "@configu/dev",
-  "files": [],
+  "homepage": "https://configu.com",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/configu/configu",
@@ -13,10 +13,14 @@
     "url": "https://github.com/configu/configu/issues",
     "email": "dev@configu.com"
   },
-  "homepage": "https://configu.com",
   "keywords": [
     "cfgu",
     "configu"
+  ],
+  "type": "module",
+  "exports": "./src/mysql.ts",
+  "files": [
+    "src"
   ],
   "scripts": {
     "build": "tsup"
@@ -24,8 +28,7 @@
   "dependencies": {
     "@configu/integrations": "workspace:*",
     "@configu/sdk": "workspace:*",
-    "mssql": "11.0.1",
-    "typeorm": "^0.3.17"
+    "mysql": "2.18.1"
   },
   "devDependencies": {
     "@types/node": "20.12.12",

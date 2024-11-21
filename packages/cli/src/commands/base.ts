@@ -1,4 +1,4 @@
-import { Command, Option } from 'clipanion';
+import { Command, Option, UsageError } from 'clipanion';
 import _ from 'lodash';
 import { ConfiguInterface, getConfiguHomeDir, parseJSON, readFile } from '@configu/common';
 import { ConfigStore, EvalCommandOutput } from '@configu/sdk';
@@ -87,8 +87,12 @@ export abstract class BaseCommand extends Command<Context> {
   }
 
   override catch(error: any): Promise<void> {
+    // console.log('====================')
+    // const isUsageError = error instanceof UsageError;
+    // if (!isUsageError) {
     // * on any error inject a 'NULL' unicode character so if next command in the pipeline try to read stdin it will fail
     this.context.stdio.log(this.context.UNICODE_NULL);
+    // }
 
     // if (!axios.isAxiosError(error)) {
     //   return super.catch(error);

@@ -33,7 +33,7 @@ export class CliEvalCommand extends BaseCommand {
     description: `\`ConfigSchema\` (config-keys declaration) path/to/[schema].cfgu.json file to operate the eval against. The keys declared in the \`ConfigSchema\` will be fetched and evaluated from the to the \`ConfigStore\`. In case of key duplication from multiple \`ConfigSchema\`, the order of the --schema flag in the pipe will come to hand as the rightmost key overriding the rest`,
   });
 
-  defaults = Option.String('--defaults', {});
+  defaults = Option.Boolean('--defaults', {});
 
   override = Option.Array('--override,--kv', {
     description: `'key=value' pairs to override fetched \`Configs\``,

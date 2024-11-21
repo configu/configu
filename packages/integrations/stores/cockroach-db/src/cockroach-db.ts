@@ -6,6 +6,6 @@ export type CockroachDBConfigStoreConfiguration = Omit<CockroachConnectionOption
 
 export class CockroachDBConfigStore extends ORMConfigStore {
   constructor(configuration: Omit<CockroachConnectionOptions, 'type'>) {
-    super('cockroachdb', { ...configuration, type: 'cockroachdb' });
+    super({ ...configuration, type: 'cockroachdb' });
   }
 }

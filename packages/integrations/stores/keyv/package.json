@@ -1,9 +1,9 @@
 {
-  "name": "@configu-integrations/gcp-secret-manager",
+  "name": "@configu-integrations/keyv",
   "version": "0.0.0",
   "license": "Apache-2.0",
   "author": "@configu/dev",
-  "files": [],
+  "homepage": "https://configu.com",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/configu/configu",
@@ -13,18 +13,22 @@
     "url": "https://github.com/configu/configu/issues",
     "email": "dev@configu.com"
   },
-  "homepage": "https://configu.com",
   "keywords": [
     "cfgu",
     "configu"
+  ],
+  "type": "module",
+  "exports": "./src/keyv.ts",
+  "files": [
+    "src"
   ],
   "scripts": {
     "build": "tsup"
   },
   "dependencies": {
-    "@configu/integrations": "workspace:*",
+    "keyv": "5.1.0",
     "@configu/sdk": "workspace:*",
-    "@google-cloud/secret-manager": "^5.4.0"
+    "@configu/integrations": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "20.12.12",

@@ -1,6 +1,6 @@
 # @configu-integrations/kubernetes-secret-store
 
-Integrates the Configu Orchestrator with [Kubernetes Secrets](https://kubernetes.io/docs/concepts/configuration/secret/).  
+Integrates the Configu Orchestrator with [Kubernetes Secrets](https://kubernetes.io/docs/concepts/configuration/secret/).
 
 - Name: Kubernetes Secrets
 - Category: Secret manager
@@ -41,25 +41,28 @@ configu eval --store "my-k8s-secret-store" --set "test" --schema "./start.cfgu.j
 
 ## Common errors and solutions
 
-1. Cluster Access Issues  
+1. Cluster Access Issues
+
    - Solution: Ensure that the kubeconfig path is correct and that your user or service account has access to the cluster. Test connectivity with:
      ```bash
      kubectl get nodes
      ```
 
-2. Insufficient Permissions  
+2. Insufficient Permissions
+
    - Solution: Make sure your account has `GET`, `CREATE`, and `UPDATE` permissions for secrets. Use the following command to grant access:
      ```bash
      kubectl create rolebinding configu-access --clusterrole=admin --serviceaccount=default:default
      ```
 
-3. Namespace Not Found  
+3. Namespace Not Found
+
    - Solution: Verify that the specified namespace exists by listing all available namespaces:
      ```bash
      kubectl get namespaces
      ```
 
-4. Secret Access Errors  
+4. Secret Access Errors
    - Solution: Check that the target secret exists and the user has proper access permissions. Use:
      ```bash
      kubectl get secrets -n <namespace>
@@ -69,5 +72,3 @@ configu eval --store "my-k8s-secret-store" --set "test" --schema "./start.cfgu.j
 
 - Integration documentation: https://kubernetes.io/docs/concepts/configuration/secret
 - Kubernetes authentication: https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig
-
-

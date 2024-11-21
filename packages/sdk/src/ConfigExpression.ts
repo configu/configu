@@ -70,6 +70,7 @@ export class ConfigExpression {
 
   static evaluate(expression: ExpressionString, context: Record<string, unknown> = {}): any {
     // try {
+    console.log(expression);
     const parsed = ConfigExpression.parse(expression);
     const compartment = new Compartment({ ...context, ...Object.fromEntries(ConfigExpression.globals) });
     return compartment.evaluate(parsed.expression);

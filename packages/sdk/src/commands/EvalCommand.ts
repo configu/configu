@@ -176,13 +176,13 @@ export class EvalCommand extends ConfigCommand<EvalCommandInput, EvalCommandOutp
 
     const constExpressionsDict = _.chain(result)
       .pickBy((current) => current.origin === EvaluatedConfigOrigin.Const)
-      .mapValues((current) => current.cfgu.const as string)
+      .mapValues((current) => `\`${current.cfgu.const}\``)
       .value();
 
     ConfigExpression.sort(constExpressionsDict).forEach((key) => {
       const expression = constExpressionsDict[key] as string;
       const value =
-        ConfigExpression.evaluateTemplateString(
+        ConfigExpression.evaluate(
           expression,
           ConfigValue.createEvaluationContext({
             store,

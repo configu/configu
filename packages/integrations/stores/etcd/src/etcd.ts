@@ -18,7 +18,7 @@ export class EtcdConfigStore extends KeyValueConfigStore {
   client: Etcd3;
 
   constructor(config: EtcdConfigStoreConfiguration) {
-    super('etcd');
+    super();
     this.client = new Etcd3(config);
   }
 

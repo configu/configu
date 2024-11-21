@@ -22,7 +22,7 @@ export class KeyvConfigStore extends KeyValueConfigStore {
   client: Keyv;
 
   constructor({ keyvInstance }: KeyvConfigStoreConfiguration) {
-    super('keyv');
+    super();
     this.client = keyvInstance;
   }
 

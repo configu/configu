@@ -1,9 +1,9 @@
 {
-  "name": "@configu-integrations/kubernetes-secret-store",
+  "name": "@configu-integrations/mssql",
   "version": "0.0.0",
   "license": "Apache-2.0",
   "author": "@configu/dev",
-  "files": [],
+  "homepage": "https://configu.com",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/configu/configu",
@@ -13,18 +13,23 @@
     "url": "https://github.com/configu/configu/issues",
     "email": "dev@configu.com"
   },
-  "homepage": "https://configu.com",
   "keywords": [
     "cfgu",
     "configu"
+  ],
+  "type": "module",
+  "exports": "./src/mssql.ts",
+  "files": [
+    "src"
   ],
   "scripts": {
     "build": "tsup"
   },
   "dependencies": {
     "@configu/integrations": "workspace:*",
-    "@kubernetes/client-node": "^0.20.0",
-    "lodash-es": "^4.17.21"
+    "@configu/sdk": "workspace:*",
+    "mssql": "11.0.1",
+    "typeorm": "^0.3.17"
   },
   "devDependencies": {
     "@types/node": "20.12.12",

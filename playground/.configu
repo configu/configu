@@ -5,11 +5,12 @@ stores:
     type: sqlite
     configuration:
       path: ./store.sqlite
-#   store2:
-#     type: storeType2
-#     configuration:
-#       option3: value3
-#       option4: value4
+  store2:
+    type: json-file
+    default: true
+    configuration:
+      path: ./store.json
+
 # cache: /path/to/db.sqlite
 # schemas:
 #   schema1: ../path/to/schema1.json

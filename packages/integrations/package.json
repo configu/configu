@@ -2,9 +2,8 @@
   "name": "@configu/integrations",
   "version": "0.0.0",
   "license": "Apache-2.0",
-  "description": "Configu Integrations Index",
   "author": "@configu/dev",
-  "files": [],
+  "homepage": "https://configu.com",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/configu/configu",
@@ -14,10 +13,13 @@
     "url": "https://github.com/configu/configu/issues",
     "email": "dev@configu.com"
   },
-  "homepage": "https://configu.com",
   "keywords": [
     "cfgu",
     "configu"
+  ],
+  "type": "module",
+  "files": [
+    "src"
   ],
   "scripts": {
     "clean": "shx rm -rf tsconfig.tsbuildinfo build",

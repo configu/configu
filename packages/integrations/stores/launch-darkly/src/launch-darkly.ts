@@ -2,7 +2,7 @@ import { type EvaluationContext, OpenFeature } from '@openfeature/server-sdk';
 import { LaunchDarklyProvider } from '@launchdarkly/openfeature-node-server';
 import { type LDOptions } from '@launchdarkly/node-server-sdk';
 import { type ConfigQuery, type Config } from '@configu/sdk';
-import _ from 'lodash-es';
+import * as _ from 'lodash-es';
 import { OpenFeatureConfigStore } from '@configu/integrations/src/utils/OpenFeature';
 
 export type LaunchDarklyConfigStoreConfiguration = {
