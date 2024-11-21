@@ -98,7 +98,7 @@ $schema: https://json-schema.org/draft/2020-12/schema-cfgu
 keys:
   NODE_ENV:
     description: Defines the environment in which the application runs
-    test: validator.isString($.value)
+    test: expect($.value).to.be.a('string')
     enum:
       - development
       - production
@@ -106,7 +106,7 @@ keys:
     default: development
   LOG_LEVEL:
     description: Defines the level of logs to be recorded
-    test: validator.isString($.value)
+    test: expect($.value).to.be.a('string')
     enum:
       - error
       - warn
@@ -156,13 +156,13 @@ keys:
   "keys": {
     "NODE_ENV": {
       "description": "Defines the environment in which the application runs",
-      "test": "validator.isString($.value)",
+      "test": "expect($.value).to.be.a('string')",
       "enum": ["development", "production", "test"],
       "default": "development"
     },
     "LOG_LEVEL": {
       "description": "Defines the level of logs to be recorded",
-      "test": "validator.isString($.value)",
+      "test": "expect($.value).to.be.a('string')",
       "enum": ["error", "warn", "info", "verbose", "debug", "silly"],
       "default": "info"
     },
@@ -350,7 +350,7 @@ Example usages of `ConfigExpressions`:
 ```yaml
 keys:
   MY_STRING:
-    test: validator.isString($.value)
+    test: expect($.value).to.be.a('string')
 ```
 
 The CLI export `filter` flag:
