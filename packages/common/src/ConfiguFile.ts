@@ -1,4 +1,4 @@
-import { homedir, platform } from 'node:os';
+import { arch, homedir, platform } from 'node:os';
 import { cwd } from 'node:process';
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs/promises';
@@ -322,9 +322,9 @@ export class ConfiguFile {
 
     const isModuleExists = await pathExists(modulePath);
     if (!isModuleExists) {
-      const res = await fetch(
-        `https://github.com/configu/configu/releases/download/integrations-${version}/${type}.os-${platform()}.js`,
-      );
+      const remoteUrl = `https://github.com/configu/configu/releases/download/integrations-${version}/${type}.${platform()}-${arch()}.js`;
+      console.log('Downloading:', remoteUrl);
+      const res = await fetch(remoteUrl);
 
       if (res.ok) {
         await fs.writeFile(modulePath, await res.text());

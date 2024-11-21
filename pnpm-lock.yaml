@@ -100,7 +100,7 @@ importers:
         version: link:../common
       '@configu/formatters':
         specifier: workspace:*
-        version: link:../integrations/formatters
+        version: link:../formatters
       '@configu/sdk':
         specifier: workspace:*
         version: link:../sdk
@@ -180,6 +180,21 @@ importers:
         specifier: ^2.6.0
         version: 2.6.0
 
+  packages/formatters:
+    dependencies:
+      '@configu/sdk':
+        specifier: workspace:*
+        version: link:../sdk
+      change-case:
+        specifier: ^5.4.4
+        version: 5.4.4
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
+      yaml:
+        specifier: ^2.6.0
+        version: 2.6.0
+
   packages/integrations:
     dependencies:
       '@configu/sdk':
@@ -204,43 +219,6 @@ importers:
       '@types/node':
         specifier: 20.12.12
         version: 20.12.12
-
-  packages/integrations/expressions:
-    dependencies:
-      '@configu/sdk':
-        specifier: workspace:*
-        version: link:../../sdk
-      change-case:
-        specifier: ^5.4.4
-        version: 5.4.4
-      validator:
-        specifier: ^13.12.0
-        version: 13.12.0
-      yaml:
-        specifier: ^2.6.0
-        version: 2.6.0
-      zod:
-        specifier: ^3.23.8
-        version: 3.23.8
-    devDependencies:
-      '@types/validator':
-        specifier: ^13.12.2
-        version: 13.12.2
-
-  packages/integrations/formatters:
-    dependencies:
-      '@configu/sdk':
-        specifier: workspace:*
-        version: link:../../sdk
-      change-case:
-        specifier: ^5.4.4
-        version: 5.4.4
-      lodash:
-        specifier: ^4.17.21
-        version: 4.17.21
-      yaml:
-        specifier: ^2.6.0
-        version: 2.6.0
 
   packages/integrations/stores/aws-parameter-store:
     dependencies:
