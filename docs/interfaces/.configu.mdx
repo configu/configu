@@ -6,7 +6,9 @@ description: 'The `.configu` file is an optional configuration file used by the 
 
 ## Location
 
-Configu interfaces recursively search for the `.configu` file starting from the current working directory and continuing up to the user's home directory. Once it finds a `.configu` file, it uses it solely and stops searching.
+Configu interfaces recursively search for the `.configu` file starting from the current working directory and continuing up to the user's home directory. Once it finds a `.configu` file, it uses it in conjunction with the locally stored `.configu` file in the user's home directory (`$HOME/.configu/.configu`) and stops searching.
+
+Alternatively, you may provide an explicit `.configu` file by passing a path as an environment variable via `CONFIGU_CONFIG` or `CONFIGU_CONFIGURATION`.
 
 ## Format
 
@@ -45,7 +47,7 @@ To define a `ConfigStore`, add a new key-value pair to the `stores` section of t
 
 Additionally, you can activate backup for a specific store by adding the `backup` property to the store configuration object and set it to `true`.
 
-For detailed information about the available store options, please refer to the relevant store on the [intergrations section](/integrations/overview#configstore).
+For detailed information about the available store options, please refer to the relevant store on the [integrations section](/integrations/overview#configstore).
 
 ### backup
 
