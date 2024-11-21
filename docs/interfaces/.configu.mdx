@@ -45,7 +45,9 @@ The `.configu` file allows you to save `ConfigStore` configurations as friendly 
 
 To define a `ConfigStore`, add a new key-value pair to the `stores` section of the `.configu` file, where the key represents the friendly name, and the value is an object with the `type` and `configuration` properties. The `type` property represents the store type, and the `configuration` property contains the specific configuration options for the store.
 
-Additionally, you can activate backup for a specific store by adding the `backup` property to the store configuration object and set it to `true`.
+You can activate backup for a specific store by adding the `backup` property to the store configuration object and set it to `true`.
+
+If you want to mark a `ConfigStore` as your default store whenever you choose to omit a `ConfigStore` as an input when performing actions with Configu's high-level interfaces, add the `default` property to a store configuration object and set it to `true`. If your `.configu` file only has a single store, it is automatically behaves as your default store.
 
 For detailed information about the available store options, please refer to the relevant store on the [integrations section](/integrations/overview#configstore).
 
