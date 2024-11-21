@@ -323,7 +323,7 @@ export class ConfiguFile {
     const isModuleExists = await pathExists(modulePath);
     if (!isModuleExists) {
       const remoteUrl = `https://github.com/configu/configu/releases/download/integrations-${version}/${type}.${platform()}-${arch()}.js`;
-      console.log('Downloading:', remoteUrl);
+      // console.log('Downloading:', remoteUrl);
       const res = await fetch(remoteUrl);
 
       if (res.ok) {
