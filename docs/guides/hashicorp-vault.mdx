@@ -43,11 +43,11 @@ Our schema will look like this:
 {
   "keys": {
     "DB_USER": {
-      "test": "validator.isString($.value)",
+      "test": "expect($.value).to.be.a('string')",
       "default": "user"
     },
     "DB_PASSWORD": {
-      "test": "validator.isString($.value)",
+      "test": "expect($.value).to.be.a('string')",
       "default": "123"
     },
     "DB_HOST": {
@@ -61,11 +61,11 @@ Our schema will look like this:
       "default": "5433"
     },
     "DB_NAME": {
-      "test": "validator.isString($.value)",
+      "test": "expect($.value).to.be.a('string')",
       "default": "database"
     },
     "DB_URL": {
-      "test": "validator.isString($.value)",
+      "test": "expect($.value).to.be.a('string')",
       "const": "psql://{{DB_USER}}:{{DB_PASSWORD}}@{{DB_HOST}}:{{DB_PORT}}/{{DB_NAME}}",
       "description": "Generates a full PostgreSQL URL connection"
     }
