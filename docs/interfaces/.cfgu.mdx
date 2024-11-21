@@ -90,6 +90,67 @@ $schema: https://raw.githubusercontent.com/configu/configu/main/packages/schema/
     Use this to access the `storedValue` of another ConfigKey.
     </ResponseField>
    </Accordion>
+  
+<Accordion title="ConfigExpression examples">
+<CodeGroup>
+
+```yaml example.cfgu.yaml
+$schema: https://json-schema.org/draft/2020-12/schema-cfgu
+keys:
+  NODE_ENV:
+    description: Defines the environment in which the application runs
+    test: expect($.value).to.be.a('string')
+    enum:
+      - development
+      - production
+      - test
+    default: production
+  ENABLE_FEATURE:
+    description: Enables a feature flag. Needs be enabled in production
+    test:
+      - validator.isBoolean($.storedValue)
+      - '$.configs.NODE_ENV.value === "production" ? expect($.value).to.be.true : true'
+    default: false
+  ENABLE_DEBUG_MODE:
+    description: Enables a debug mode. Must not be enabled in production
+    test:
+      - validator.isBoolean($.storedValue)
+      - '$.configs.NODE_ENV.value === "production" ? expect($.value).to.be.false : true'
+    default: false
+```
+
+```json example.cfgu.json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema-cfgu",
+  "keys": {
+    "NODE_ENV": {
+      "description": "Defines the environment in which the application runs",
+      "test": "expect($.value).to.be.a('string')",
+      "enum": ["development", "production", "test"],
+      "default": "production"
+    },
+    "ENABLE_FEATURE": {
+      "description": "Enables a feature flag. Needs to be enabled in production",
+      "test": [
+        "validator.isBoolean($.storedValue)",
+        "$.configs.NODE_ENV.value === \"production\" ? expect($.value).to.be.true : true"
+      ],
+      "default": false
+    },
+    "ENABLE_DEBUG_MODE": {
+      "description": "Enables a debug mode. Must not be enabled in production",
+      "test": [
+        "validator.isBoolean($.storedValue)",
+        "$.configs.NODE_ENV.value === \"production\" ? expect($.value).to.be.false : true"
+      ],
+      "default": false
+    }
+  }
+}
+```
+
+</CodeGroup>
+</Accordion>
 </ResponseField>
 
 <ResponseField name="const" type="ConfigExpression">
