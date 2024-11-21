@@ -31,7 +31,8 @@
   },
   "dependencies": {
     "@configu/sdk": "workspace:*",
-    "@configu/common": "workspace:*"
+    "@configu/common": "workspace:*",
+    "pathe": "^1.1.2"
   },
   "devDependencies": {
     "ajv-cli": "^5.0.0"

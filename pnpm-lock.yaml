@@ -862,6 +862,9 @@ importers:
       '@configu/sdk':
         specifier: workspace:*
         version: link:../sdk
+      pathe:
+        specifier: ^1.1.2
+        version: 1.1.2
     devDependencies:
       ajv-cli:
         specifier: ^5.0.0
