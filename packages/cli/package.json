@@ -22,7 +22,7 @@
   ],
   "type": "module",
   "bin": {
-    "configu": "./dist/run.js"
+    "configu": "./dist/run.cjs"
   },
   "exports": {
     "./package.json": "./package.json"
@@ -35,7 +35,7 @@
     "bundle": "pnpm build",
     "build": "tsup",
     "compile": "tsx compiler/index.ts",
-    "configu": "tsx src/run.ts",
+    "configu": "tsx dist/run.cjs",
     "start": "pnpm configu",
     "test:post-release": "tsx --test ./compiler/**/*.test.ts"
   },

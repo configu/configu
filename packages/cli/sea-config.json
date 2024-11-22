@@ -1,5 +1,5 @@
 {
-  "main": "dist/run.js",
+  "main": "dist/run.cjs",
   "output": "sea-prep.blob",
   "disableExperimentalSEAWarning": true
 }

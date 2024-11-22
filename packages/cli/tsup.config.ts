@@ -14,9 +14,11 @@ export default defineConfig([
     splitting: false,
 
     noExternal: [/(.*)/],
-    outExtension: () => {
-      // https://github.com/egoist/tsup/issues/939
-      return { js: '.js', dts: '.d.ts' };
+    outExtension: ({ format, pkgType }) => {
+      if (pkgType !== 'module' || format !== 'cjs') {
+        throw new Error('@configu/cli must be an ESM package built as CommonJS bundle');
+      }
+      return { js: '.cjs' };
     },
   },
 ]);
