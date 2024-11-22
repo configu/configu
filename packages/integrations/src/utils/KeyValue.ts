@@ -39,15 +39,11 @@ export abstract class KeyValueConfigStore extends ConfigStore {
       .value();
 
     const kvPromises = keys.map(async (key) => {
-      try {
-        const value = await this.getByKey(key);
-        if (!value) {
-          throw new Error(`key ${key} has no value at ${this.constructor.name}`);
-        }
-        return { key, value };
-      } catch (error) {
+      const value = await this.getByKey(key);
+      if (!value) {
         return { key, value: '' };
       }
+      return { key, value };
     });
     const kvArray = await Promise.all(kvPromises);
     const kvDict = _.chain(kvArray).keyBy('key').mapValues('value').value();
