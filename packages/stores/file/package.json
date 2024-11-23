@@ -1,0 +1,35 @@
+{
+  "name": "@configu/file",
+  "version": "0.0.0",
+  "license": "Apache-2.0",
+  "author": "@configu/dev",
+  "homepage": "https://configu.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/configu/configu",
+    "directory": "packages/stores/file"
+  },
+  "bugs": {
+    "url": "https://github.com/configu/configu/issues",
+    "email": "dev@configu.com"
+  },
+  "keywords": [
+    "config",
+    "configu",
+    "config-store",
+    "file",
+    "configu-file"
+  ],
+  "type": "module",
+  "exports": "./src/index.ts",
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "dependencies": {
+    "@configu/sdk": "workspace:*"
+  },
+  "devDependencies": {}
+}

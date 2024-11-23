@@ -3,7 +3,7 @@
 
 import 'zx/globals';
 import { join } from 'pathe';
-import { JSONSchemaObject } from '@configu/sdk';
+import { JSONSchemaObject } from '@configu/sdk/expressions';
 import { CfguFile, ConfiguFile } from '@configu/common';
 
 const ROOT_PATH = join(import.meta.dirname, '..', '..');

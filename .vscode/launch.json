@@ -93,7 +93,7 @@
       "args": [
         "eval",
         "--store",
-        "configu"
+        "store0"
         // "--schema",
         // "${workspaceFolder}/test.cfgu.yaml"
       ]

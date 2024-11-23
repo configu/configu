@@ -5,16 +5,8 @@ import fs from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { join, dirname, resolve } from 'pathe';
 import _ from 'lodash';
-import {
-  ConfigSchema,
-  ConfigStore,
-  ConfigExpression,
-  JSONSchema,
-  JSONSchemaObject,
-  FromSchema,
-  ConfigStoreConstructor,
-  ConfigKey,
-} from '@configu/sdk';
+import { ConfigSchema, ConfigStore, ConfigExpression, ConfigStoreConstructor, ConfigKey } from '@configu/sdk';
+import { JSONSchema, JSONSchemaObject, FromSchema } from '@configu/sdk/expressions';
 import {
   stdenv,
   findUp,

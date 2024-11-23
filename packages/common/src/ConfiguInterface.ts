@@ -1,7 +1,8 @@
 import fs from 'node:fs/promises';
 import path from 'pathe';
 import _ from 'lodash';
-import { ConfigSchema, ConfigSet, EvalCommandOutput, EvaluatedConfigOrigin, UpsertCommand } from '@configu/sdk';
+import { ConfigSchema, ConfigSet } from '@configu/sdk';
+import { EvalCommandOutput, EvaluatedConfigOrigin, UpsertCommand } from '@configu/sdk/commands';
 import { ConfiguFile } from './ConfiguFile';
 import { CfguFile } from './CfguFile';
 import { stdenv, getConfiguHomeDir } from './utils';

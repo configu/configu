@@ -4,7 +4,7 @@ import { $ } from 'zx';
 
 export default defineConfig([
   {
-    entry: ['src/index.ts'],
+    entry: ['src/index.ts', 'src/expressions/index.ts', 'src/stores/index.ts', 'src/commands/index.ts'],
     format: ['esm', 'cjs'],
     outDir: 'dist',
     clean: true,

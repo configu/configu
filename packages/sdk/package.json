@@ -36,6 +36,36 @@
         "types": "./dist/index.d.cts",
         "default": "./dist/index.cjs"
       }
+    },
+    "./expressions": {
+      "import": {
+        "types": "./dist/expressions/index.d.ts",
+        "default": "./dist/expressions/index.mjs"
+      },
+      "require": {
+        "types": "./dist/expressions/index.d.cts",
+        "default": "./dist/expressions/index.cjs"
+      }
+    },
+    "./stores": {
+      "import": {
+        "types": "./dist/stores/index.d.ts",
+        "default": "./dist/stores/index.mjs"
+      },
+      "require": {
+        "types": "./dist/stores/index.d.cts",
+        "default": "./dist/stores/index.cjs"
+      }
+    },
+    "./commands": {
+      "import": {
+        "types": "./dist/commands/index.d.ts",
+        "default": "./dist/commands/index.mjs"
+      },
+      "require": {
+        "types": "./dist/commands/index.d.cts",
+        "default": "./dist/commands/index.cjs"
+      }
     }
   },
   "files": [
@@ -46,7 +76,7 @@
     "build": "tsup"
   },
   "dependencies": {
-    "@segment/ajv-human-errors": "^2.14.0",
+    "@segment/ajv-human-errors": "^2.14.1",
     "@vitest/expect": "^2.1.5",
     "acorn": "^8.14.0",
     "acorn-walk": "^8.3.4",

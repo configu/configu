@@ -1,7 +1,7 @@
 import { Command, Option, UsageError } from 'clipanion';
 import _ from 'lodash';
 import { ConfiguInterface, getConfiguHomeDir, parseJSON, readFile } from '@configu/common';
-import { ConfigStore, EvalCommandOutput } from '@configu/sdk';
+import { EvalCommandOutput } from '@configu/sdk/commands';
 import path from 'node:path';
 import { type CustomContext } from '../index';
 import { configuStoreType } from '../helpers';

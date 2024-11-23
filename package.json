@@ -23,14 +23,17 @@
     "prepare:build": "pnpm build",
     "prepare:art": "shx cat docs/images/ascii-art.txt",
     "clean": "pnpm -r clean",
-    "clean:all": "pnpm clean && shx rm -rf **/node_modules .eslintcache lcov.info",
+    "clean:cache": "shx rm -rf **/node_modules **/dist .eslintcache lcov.info",
+    "clean:all": "pnpm \"/^clean:.*/\"",
     "format": "prettier --ignore-path .gitignore --ignore-path .prettierignore",
     "format:check": "pnpm format --check $npm_package_config_format",
     "format:fix": "pnpm format --write $npm_package_config_format",
     "lint": "eslint --ignore-path .gitignore --cache",
     "lint:check": "pnpm lint --quiet $npm_package_config_lint",
     "lint:fix": "pnpm lint --fix $npm_package_config_lint",
-    "build": "pnpm -r --filter \"@configu/*\" --filter \"!@configu/docs\" build",
+    "build": "pnpm -r --filter \"@configu/*\" --filter \"!@configu/docs\" --filter \"!./packages/stores/*\" build",
+    "build:docs": "pnpm --filter \"@configu/docs\" build",
+    "build:stores": "pnpm -r --filter \"./packages/stores/*\" build",
     "build:integrations": "pnpm run --filter \"@configu-integrations/*\" build",
     "bundle:integrations": "pnpm run --filter \"@configu/integrations\" bundle:integrations",
     "test": "tsx --test $npm_package_config_test",
@@ -41,7 +44,7 @@
   "devDependencies": {
     "@cspell/eslint-plugin": "^8.16.0",
     "@types/lodash": "^4.17.13",
-    "@types/node": "22.9.1",
+    "@types/node": "22.9.3",
     "@typescript-eslint/eslint-plugin": "^8.15.0",
     "@typescript-eslint/parser": "^8.15.0",
     "esbuild": "^0.24.0",
@@ -59,7 +62,7 @@
     "tslib": "^2.8.1",
     "tsup": "^8.3.5",
     "tsx": "^4.19.2",
-    "typescript": "^5.6.3",
+    "typescript": "^5.7.2",
     "zx": "8.2.2"
   }
 }

@@ -1,0 +1,70 @@
+name: Get release information
+description: Extract release information from the pushed tag
+
+outputs:
+  package:
+    description: Release package
+    value: ${{ steps.release-info.outputs.package }}
+  sha:
+    description: Release sha
+    value: ${{ steps.release-info.outputs.sha }}
+  branch:
+    description: Release branch
+    value: ${{ steps.release-info.outputs.branch }}
+  tag:
+    description: Release tag
+    value: ${{ steps.release-info.outputs.tag }}
+  version:
+    description: Release version
+    value: ${{ steps.release-info.outputs.version }}
+  channel:
+    description: Release channel
+    value: ${{ steps.release-info.outputs.channel }}
+
+runs:
+  using: composite
+  steps:
+    - name: Extract release information
+      id: release-info
+      shell: bash
+      run: |
+        sha=$(git rev-parse --short HEAD)
+
+        ref_tag=${{ github.event.ref }}
+        ref_branch=${{ github.event.base_ref }}
+
+        tag=${ref_tag#refs/tags/}
+        branch=${ref_branch#refs/heads/}
+
+        package=$(echo "$tag" | awk -F '/v' '{print $1}')
+        version=$(echo "$tag" | awk -F '/v' '{print $2}')
+
+        ref_channel=$(echo "$version" | awk -F '-' '{print $2}')
+        if [ "$branch" = "${{ github.event.repository.master_branch }}" ]; then
+          channel=latest
+        elif [ "next" = "${ref_channel%.*}" ]; then
+          channel=next
+        else
+          echo "couldn't resolve release channel based on the pushed tag"
+          echo "use <package>/v<X.Y.Z>          for "latest" channel"
+          echo "use <package>/v<X.Y.Z>-next.<I> for "next"   channel"
+          exit 1
+        fi
+
+        echo "package=$package" >> $GITHUB_OUTPUT
+        echo "package_name=@configu/$package" >> $GITHUB_OUTPUT
+        echo "package_path=packages/$package" >> $GITHUB_OUTPUT
+
+        echo "sha=$sha" >> $GITHUB_OUTPUT
+        echo "branch=$branch" >> $GITHUB_OUTPUT
+        echo "tag=$tag" >> $GITHUB_OUTPUT
+
+        echo "version=$version" >> $GITHUB_OUTPUT
+        echo "channel=$channel" >> $GITHUB_OUTPUT
+
+        echo "package: $package"
+        echo "sha: $sha"
+        echo "branch: $branch"
+        echo "tag: $tag"
+        echo "version: $version"
+        echo "channel: $channel"

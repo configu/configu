@@ -2,7 +2,8 @@ import { cwd } from 'node:process';
 import { fileURLToPath } from 'node:url';
 import { join, basename, resolve } from 'pathe';
 import _ from 'lodash';
-import { ConfigSchema, ConfigSchemaKeysSchema, JSONSchema, JSONSchemaObject, FromSchema } from '@configu/sdk';
+import { ConfigSchema, ConfigSchemaKeysSchema } from '@configu/sdk';
+import { JSONSchema, JSONSchemaObject, FromSchema } from '@configu/sdk/expressions';
 import { readFile, glob, parseJSON, parseYAML } from './utils';
 
 const CfguFileSchemaId = 'https://raw.githubusercontent.com/configu/configu/main/packages/schema/.cfgu.json';

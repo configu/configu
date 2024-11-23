@@ -4,10 +4,6 @@ name: TypeScript environment setup
 description: Setup Node.js and install dependencies
 
 inputs:
-  install-dependencies:
-    description: Runs pnpm install in the dependencies-root directory
-    required: true
-    default: 'true'
   architecture:
     description: Force the architecture of pnpm install
     required: false
@@ -18,10 +14,13 @@ runs:
   steps:
     - name: Setup pnpm
       uses: pnpm/action-setup@v4
+      with:
+        run_install: false
 
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
+        architecture: ${{ inputs.architecture }}
         node-version-file: '.node-version'
         cache: 'pnpm' # todo: currently cache is not working properly, try https://github.com/pnpm/action-setup#use-cache-to-reduce-installation-time
         registry-url: 'https://registry.npmjs.org'

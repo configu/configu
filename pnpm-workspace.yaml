@@ -1,7 +1,7 @@
 packages:
   - 'packages/*'
+  - 'packages/stores/*'
   - 'docs'
-  # - 'packages/integrations/formatters'
-  # - 'packages/integrations/expressions'
-  - 'packages/integrations/stores/*'
   # - 'examples'
+  # todo: rm
+  - 'packages/integrations/stores/*'

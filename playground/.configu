@@ -1,10 +1,16 @@
 # $schema: 'https://raw.githubusercontent.com/configu/configu/main/packages/schema/.configu.json'
 stores:
+  store0:
+    # backup: true
+    type: PostgreSQL
+    configuration:
+      host: localhost
   store1:
     # backup: true
     type: sqlite
     configuration:
-      path: ./store.sqlite
+      # path: ./store.sqlite
+      database: ./store.sqlite
   store2:
     type: json-file
     default: true
@@ -18,3 +24,9 @@ stores:
 # scripts:
 #   script1: 'configu command1 --option1 value1'
 #   script2: 'configu command2 --option2 value2 | configu command3'
+
+
+register:
+  - ../packages/stores/json-file/src/index.ts
+  - ../packages/stores/sqlite/src/index.ts
+  - ../packages/stores/postgres/src/index.ts

@@ -42,7 +42,7 @@
     "@configu/sdk": "workspace:*",
     "change-case": "^5.4.4",
     "lodash": "^4.17.21",
-    "yaml": "^2.6.0"
+    "yaml": "^2.6.1"
   },
   "devDependencies": {}
 }

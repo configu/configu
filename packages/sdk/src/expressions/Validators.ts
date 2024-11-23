@@ -1,5 +1,5 @@
 import validator from 'validator';
-import { JSONSchema } from './JSONSchema';
 
-export { validator, JSONSchema };
+export * from './JSONSchema';
+export { validator };
 export { z } from 'zod';
