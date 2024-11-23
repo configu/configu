@@ -74,10 +74,11 @@ jobs:
         id: package
         run: |
           package=$(echo "${{ steps.release.outputs.package }}" | awk -F '/' '{print $2}')
-          echo "package_name=@configu/$package" >> $GITHUB_OUTPUT
 
           echo "package: $package"
           echo "package_name: $package_name"
+
+          echo "package_name=@configu/$package" >> $GITHUB_OUTPUT
 
       - name: Bump package version
         run: |
@@ -90,9 +91,9 @@ jobs:
           pnpm --filter ${{ steps.package.outputs.package_name }} run \
             build
 
-          dist_path="${{ steps.release.outputs.package_path }}/dist"
-          dist_in="$dist_path/index.cjs"
-          dist_out="$dist_path/index-${{ matrix.dist }}.js"
+          dist_path=${{ steps.release.outputs.package_path }}/dist
+          dist_in=$dist_path/index.cjs
+          dist_out=$dist_path/index-${{ matrix.dist }}.js
 
           echo "dist_path: $dist_path"
           echo "dist_in: $dist_in"
