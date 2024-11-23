@@ -4,28 +4,34 @@ description: Extract release information from the pushed tag
 outputs:
   package:
     description: Release package
-    value: ${{ steps.release-info.outputs.package }}
+    value: ${{ steps.release.outputs.package }}
+  package_name:
+    description: Release package
+    value: ${{ steps.release.outputs.package_name }}
+  package_path:
+    description: Release package
+    value: ${{ steps.release.outputs.package_path }}
   sha:
     description: Release sha
-    value: ${{ steps.release-info.outputs.sha }}
+    value: ${{ steps.release.outputs.sha }}
   branch:
     description: Release branch
-    value: ${{ steps.release-info.outputs.branch }}
+    value: ${{ steps.release.outputs.branch }}
   tag:
     description: Release tag
-    value: ${{ steps.release-info.outputs.tag }}
+    value: ${{ steps.release.outputs.tag }}
   version:
     description: Release version
-    value: ${{ steps.release-info.outputs.version }}
+    value: ${{ steps.release.outputs.version }}
   channel:
     description: Release channel
-    value: ${{ steps.release-info.outputs.channel }}
+    value: ${{ steps.release.outputs.channel }}
 
 runs:
   using: composite
   steps:
     - name: Extract release information
-      id: release-info
+      id: release
       shell: bash
       run: |
         sha=$(git rev-parse --short HEAD)
@@ -66,10 +72,8 @@ runs:
         echo "package=$package" >> $GITHUB_OUTPUT
         echo "package_name=$package_name" >> $GITHUB_OUTPUT
         echo "package_path=$package_path" >> $GITHUB_OUTPUT
-
         echo "sha=$sha" >> $GITHUB_OUTPUT
         echo "branch=$branch" >> $GITHUB_OUTPUT
         echo "tag=$tag" >> $GITHUB_OUTPUT
-
         echo "version=$version" >> $GITHUB_OUTPUT
         echo "channel=$channel" >> $GITHUB_OUTPUT
