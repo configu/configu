@@ -1,10 +1,10 @@
-name: CD/@configu/store
+name: CD/@configu/stores
 
 on:
   workflow_dispatch:
   push:
     tags:
-      - 'store/*/v*'
+      - 'stores/*/v*'
 
 jobs:
   pre-release:
