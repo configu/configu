@@ -54,6 +54,15 @@ runs:
           exit 1
         fi
 
+        echo "package: $package"
+        echo "package_name: $package_name"
+        echo "package_path: $package_path"
+        echo "sha: $sha"
+        echo "branch: $branch"
+        echo "tag: $tag"
+        echo "version: $version"
+        echo "channel: $channel"
+
         echo "package=$package" >> $GITHUB_OUTPUT
         echo "package_name=$package_name" >> $GITHUB_OUTPUT
         echo "package_path=$package_path" >> $GITHUB_OUTPUT
@@ -64,12 +73,3 @@ runs:
 
         echo "version=$version" >> $GITHUB_OUTPUT
         echo "channel=$channel" >> $GITHUB_OUTPUT
-
-        echo "package: $package"
-        echo "package_name: $package_name"
-        echo "package_path: $package_path"
-        echo "sha: $sha"
-        echo "branch: $branch"
-        echo "tag: $tag"
-        echo "version: $version"
-        echo "channel: $channel"

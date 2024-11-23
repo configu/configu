@@ -94,6 +94,10 @@ jobs:
           dist_in="$dist_path/index.cjs"
           dist_out="$dist_path/index-${{ matrix.dist }}.js"
 
+          echo "dist_path: $dist_path"
+          echo "dist_in: $dist_in"
+          echo "dist_out: $dist_out"
+
           echo "dist_path=dist_path" >> $GITHUB_OUTPUT
           echo "dist_in=dist_in" >> $GITHUB_OUTPUT
           echo "dist_out=dist_out" >> $GITHUB_OUTPUT
