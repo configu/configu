@@ -63,6 +63,8 @@ runs:
         echo "channel=$channel" >> $GITHUB_OUTPUT
 
         echo "package: $package"
+        echo "package_name: $package_name"
+        echo "package_path: $package_path"
         echo "sha: $sha"
         echo "branch: $branch"
         echo "tag: $tag"
