@@ -99,6 +99,7 @@ jobs:
 
       - name: Build package code
         id: build
+        shell: bash
         run: |
           pnpm --filter ${{ steps.package.outputs.package_name }} run \
             build
@@ -109,7 +110,7 @@ jobs:
         if: ${{startsWith(github.ref, 'refs/tags/') }}
         with:
           files: |
-            ${{ steps.build.outputs.dist_out }}
+            ${{ steps.package.outputs.dist_out }}
 
       # - uses: actions/upload-artifact@master
       #   with:
