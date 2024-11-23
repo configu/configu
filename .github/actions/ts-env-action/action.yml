@@ -30,6 +30,6 @@ runs:
       shell: bash
       run: |
         pnpm install --config.architecture=${{ inputs.architecture }}
-        pnpm list --recursive --depth 0
+        # pnpm list --recursive --depth 0
       env:
         HUSKY: '0'
