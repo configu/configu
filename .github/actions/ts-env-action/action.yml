@@ -28,7 +28,6 @@ runs:
 
     - name: Install dependencies
       shell: bash
-      if: ${{ inputs.install-dependencies == 'true' }} # * there is a bug in gh-actions causing booleans to be strings in composite actions - see: https://github.com/actions/runner/issues/1483#issuecomment-1042393939
       run: |
         pnpm install --config.architecture=${{ inputs.architecture }}
         pnpm list --recursive --depth 0

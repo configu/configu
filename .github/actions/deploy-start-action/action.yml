@@ -9,13 +9,16 @@ inputs:
 runs:
   using: composite
   steps:
+    - uses: ./.github/actions/get-release-action
+      id: release
+
     - name: Post Slack release notice
       uses: slackapi/slack-github-action@v2.0.0
       with:
         webhook: ${{ inputs.slack-webhook }}
         webhook-type: incoming-webhook
         payload: |
-          text: "*${{ steps.release-info.outputs.tag }}* is now being released\n${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}"
+          text: "*${{ steps.release.outputs.tag }}* is now being released\n${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}"
 
     - name: Create local bin dir
       shell: bash

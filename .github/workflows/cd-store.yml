@@ -10,8 +10,6 @@ jobs:
   pre-release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
       - uses: ./.github/actions/deploy-start-action
         with:
           slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -60,7 +58,6 @@ jobs:
           - dist: win-x64
             os: windows
             arch: x64
-
     steps:
       - uses: actions/checkout@v4
 
@@ -117,8 +114,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: release
     steps:
-      - uses: actions/checkout@v4
-
       - uses: ./.github/actions/deploy-end-action
         if: always()
         with:
