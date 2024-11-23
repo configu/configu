@@ -18,6 +18,7 @@ jobs:
 
   release:
     runs-on: ${{ matrix.os }}-latest
+    needs: pre-release
     strategy:
       matrix:
         os:
@@ -68,7 +69,7 @@ jobs:
         id: package
         run: |
           package=$(echo "${{ steps.release.outputs.package }}" | awk -F '/' '{print $2}')
-          echo "package_name=@configu/$store" >> $GITHUB_OUTPUT
+          echo "package_name=@configu/$package" >> $GITHUB_OUTPUT
 
           echo "package: $package"
           echo "package_name: $package_name"
