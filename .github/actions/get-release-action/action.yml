@@ -37,6 +37,9 @@ runs:
         branch=${ref_branch#refs/heads/}
 
         package=$(echo "$tag" | awk -F '/v' '{print $1}')
+        package_name=@configu/$package
+        package_path=packages/$package
+
         version=$(echo "$tag" | awk -F '/v' '{print $2}')
 
         ref_channel=$(echo "$version" | awk -F '-' '{print $2}')
@@ -52,8 +55,8 @@ runs:
         fi
 
         echo "package=$package" >> $GITHUB_OUTPUT
-        echo "package_name=@configu/$package" >> $GITHUB_OUTPUT
-        echo "package_path=packages/$package" >> $GITHUB_OUTPUT
+        echo "package_name=$package_name" >> $GITHUB_OUTPUT
+        echo "package_path=$package_path" >> $GITHUB_OUTPUT
 
         echo "sha=$sha" >> $GITHUB_OUTPUT
         echo "branch=$branch" >> $GITHUB_OUTPUT
