@@ -30,7 +30,7 @@ jobs:
           - linux-x64
           - darwin-arm64
           - darwin-x64
-          - win-arm64
+          # - win-arm64
           - win-x64
         include:
           - dist: linux-arm64
@@ -54,9 +54,9 @@ jobs:
           - dist: darwin-x64
             os: macos
             arch: x64
-          - dist: win-arm64
-            os: windows
-            arch: arm64
+          # - dist: win-arm64
+          #   os: windows
+          #   arch: arm64
           - dist: win-x64
             os: windows
             arch: x64
