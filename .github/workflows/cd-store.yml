@@ -25,12 +25,12 @@ jobs:
         dist:
           - linux-arm64
           - linux-armv7l
-          # - linux-ppc64le
-          # - linux-s390x
+          - linux-ppc64le
+          - linux-s390x
           - linux-x64
           - darwin-arm64
           - darwin-x64
-          # - win-arm64
+          - win-arm64
           - win-x64
         include:
           - dist: linux-arm64
@@ -39,12 +39,12 @@ jobs:
           - dist: linux-armv7l
             os: ubuntu
             arch: armv7l
-          # - dist: linux-ppc64le
-          #   os: ubuntu
-          #   arch: ppc64le
-          # - dist: linux-s390x
-          #   os: ubuntu
-          #   arch: s390x
+          - dist: linux-ppc64le
+            os: ubuntu
+            arch: ppc64le
+          - dist: linux-s390x
+            os: ubuntu
+            arch: s390x
           - dist: linux-x64
             os: ubuntu
             arch: x64
@@ -54,9 +54,9 @@ jobs:
           - dist: darwin-x64
             os: macos
             arch: x64
-          # - dist: win-arm64
-          #   os: windows
-          #   arch: arm64
+          - dist: win-arm64
+            os: windows
+            arch: arm64
           - dist: win-x64
             os: windows
             arch: x64
@@ -93,6 +93,7 @@ jobs:
           echo "dist_out=$dist_out" >> $GITHUB_OUTPUT
 
       - name: Bump package version
+        shell: bash
         run: |
           pnpm --filter ${{ steps.package.outputs.package_name }} exec \
             npm --no-git-tag-version version ${{ steps.release.outputs.version }}
@@ -112,11 +113,6 @@ jobs:
           files: |
             ${{ steps.package.outputs.dist_out }}
 
-      # - uses: actions/upload-artifact@master
-      #   with:
-      #     name: ${{ env.PACKAGE_NAME }}-${{ matrix.os }}-${{ matrix.architecture }}
-      #     path: ${{ env.PACKAGE_PATH }}/dist
-
   post-release:
     runs-on: ubuntu-latest
     needs: release
@@ -127,45 +123,3 @@ jobs:
         if: always()
         with:
           slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-
-          #   end-release:
-#     runs-on: ubuntu-latest
-#     needs: build
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v3
-#       - uses: actions/download-artifact@master
-#         with:
-#           name: ${{ env.PACKAGE_NAME }}-ubuntu-x64
-#           path: ${{ env.PACKAGE_PATH }}/dist
-#       - uses: actions/download-artifact@master
-#         with:
-#           name: ${{ env.PACKAGE_NAME }}-macos-x64
-#           path: ${{ env.PACKAGE_PATH }}/dist/latest
-#       - uses: actions/download-artifact@master
-#         with:
-#           name: ${{ env.PACKAGE_NAME }}-windows-x64
-#           path: ${{ env.PACKAGE_PATH }}/dist/latest
-#       - uses: actions/download-artifact@master
-#         with:
-#           name: ${{ env.PACKAGE_NAME }}-ubuntu-arm64
-#           path: ${{ env.PACKAGE_PATH }}/dist
-#       - uses: actions/download-artifact@master
-#         with:
-#           name: ${{ env.PACKAGE_NAME }}-macos-arm64
-#           path: ${{ env.PACKAGE_PATH }}/dist/latest
-#       - uses: actions/download-artifact@master
-#         with:
-#           name: ${{ env.PACKAGE_NAME }}-windows-arm64
-#           path: ${{ env.PACKAGE_PATH }}/dist/latest
-
-#       - name: Upload artifacts to release
-#         uses: softprops/action-gh-release@v2
-#         with:
-#           make_latest: true
-#           prerelease: true
-#           name: integrations
-#           tag_name: integrations-${{ env.VERSION }}
-#           files: |
-#             ${{ env.PACKAGE_PATH }}/dist/latest/**/*
-
