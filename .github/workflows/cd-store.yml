@@ -72,13 +72,25 @@ jobs:
 
       - name: Get package name
         id: package
+        shell: bash
         run: |
           package=$(echo "${{ steps.release.outputs.package }}" | awk -F '/' '{print $2}')
+          package_name=@configu/$package
+
+          dist_path=${{ steps.release.outputs.package_path }}/dist
+          dist_in=$dist_path/index.cjs
+          dist_out=$dist_path/index-${{ matrix.dist }}.js
 
           echo "package: $package"
           echo "package_name: $package_name"
+          echo "dist_path: $dist_path"
+          echo "dist_in: $dist_in"
+          echo "dist_out: $dist_out"
 
-          echo "package_name=@configu/$package" >> $GITHUB_OUTPUT
+          echo "package_name=$package_name" >> $GITHUB_OUTPUT
+          echo "dist_path=$dist_path" >> $GITHUB_OUTPUT
+          echo "dist_in=$dist_in" >> $GITHUB_OUTPUT
+          echo "dist_out=$dist_out" >> $GITHUB_OUTPUT
 
       - name: Bump package version
         run: |
@@ -90,20 +102,7 @@ jobs:
         run: |
           pnpm --filter ${{ steps.package.outputs.package_name }} run \
             build
-
-          dist_path=${{ steps.release.outputs.package_path }}/dist
-          dist_in=$dist_path/index.cjs
-          dist_out=$dist_path/index-${{ matrix.dist }}.js
-
-          echo "dist_path: $dist_path"
-          echo "dist_in: $dist_in"
-          echo "dist_out: $dist_out"
-
-          echo "dist_path=$dist_path" >> $GITHUB_OUTPUT
-          echo "dist_in=$dist_in" >> $GITHUB_OUTPUT
-          echo "dist_out=$dist_out" >> $GITHUB_OUTPUT
-
-          pnpx shx cp $dist_in $dist_out
+          pnpx shx cp ${{ steps.package.outputs.dist_in }} ${{ steps.package.outputs.dist_out }}
 
       - name: Upload artifacts to release
         uses: softprops/action-gh-release@v2
