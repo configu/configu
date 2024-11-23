@@ -21,39 +21,45 @@ jobs:
     needs: pre-release
     strategy:
       matrix:
-        os:
-          - ubuntu
-          - macos
-          - windows
         # https://nodejs.org/download/release/latest/
+        dist:
+          - linux-arm64
+          - linux-armv7l
+          # - linux-ppc64le
+          # - linux-s390x
+          - linux-x64
+          - darwin-arm64
+          - darwin-x64
+          - win-arm64
+          - win-x64
         include:
-          - os: ubuntu
+          - dist: linux-arm64
+            os: ubuntu
             arch: arm64
-            dist: linux-arm64
-          - os: ubuntu
+          - dist: linux-armv7l
+            os: ubuntu
             arch: armv7l
-            dist: linux-armv7l
-          # - os: ubuntu
+          # - dist: linux-ppc64le
+          #   os: ubuntu
           #   arch: ppc64le
-          #   dist: linux-ppc64le
-          # - os: ubuntu
+          # - dist: linux-s390x
+          #   os: ubuntu
           #   arch: s390x
-          #   dist: linux-s390x
-          - os: ubuntu
+          - dist: linux-x64
+            os: ubuntu
             arch: x64
-            dist: linux-x64
-          - os: macos
+          - dist: darwin-arm64
+            os: macos
             arch: arm64
-            dist: darwin-arm64
-          - os: macos
+          - dist: darwin-x64
+            os: macos
             arch: x64
-            dist: darwin-x64
-          - os: windows
+          - dist: win-arm64
+            os: windows
             arch: arm64
-            dist: win-arm64
-          - os: windows
+          - dist: win-x64
+            os: windows
             arch: x64
-            dist: win-x64
 
     steps:
       - uses: actions/checkout@v4
