@@ -28,6 +28,8 @@ Write-Output "Installing Configu v${Version} for ${Target}..."
 
 $DownloadUrl = "https://github.com/configu/configu/releases/download/cli%2Fv${Version}/configu-${Target}.exe"
 
+Write-Output "Downloading Configu from: ${DownloadUrl}"
+
 if (!(Test-Path $BinDir)) {
   New-Item $BinDir -ItemType Directory | Out-Null
 }
