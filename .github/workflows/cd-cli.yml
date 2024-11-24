@@ -66,17 +66,18 @@ jobs:
       - uses: ./.github/actions/get-release-action
         id: release
 
-      - uses: crazy-max/ghaction-setup-docker@v3
-        with:
-          daemon-config: |
-            {
-              "debug": true,
-              "features": {
-                "containerd-snapshotter": true
-              }
-            }
-
-      - uses: docker/setup-qemu-action@v3
+      - name: Setup QEMU
+        shell: bash
+        run: |
+          if [[ ${{ matrix.runner }} == ubuntu* ]]; then
+            apt-get install qemu-system
+          fi
+          if [[ ${{ matrix.runner }} == macos* ]]; then
+            brew install qemu
+          fi
+          if [[ ${{ matrix.runner }} == windows* ]]; then
+            choco install qemu
+          fi
 
       - uses: ./.github/actions/ts-env-action
         with:
@@ -125,7 +126,7 @@ jobs:
           dist_path=${{ steps.release.outputs.package_path }}/dist
           ls -la $dist_path
           pnpx shx mv $dist_path/run.cjs $dist_path/${{ matrix.dist }}.js
-          if [[ ${{ matrix.arch }} == win* ]]; then
+          if [[ ${{ matrix.runner }} == windows* ]]; then
             pnpx shx mv $dist_path/configu.exe $dist_path/configu-${{ matrix.dist }}.exe
           else
             pnpx shx mv $dist_path/configu $dist_path/configu-${{ matrix.dist }}
