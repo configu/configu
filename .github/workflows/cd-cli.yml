@@ -66,6 +66,8 @@ jobs:
       - uses: ./.github/actions/get-release-action
         id: release
 
+      - uses: docker/setup-qemu-action@v3
+
       - uses: ./.github/actions/ts-env-action
         with:
           architecture: ${{ matrix.arch }}
