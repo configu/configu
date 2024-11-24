@@ -102,7 +102,7 @@ jobs:
         uses: bryopsida/node-sea-action@v1
         with:
           working-dir: ${{ steps.release.outputs.package_path }}
-          output-dir: dist
+          output-dir: ${{ steps.release.outputs.package_path }}/dist
           executable-name: configu
           sea-config-path: sea-config.json
           node-path: ${{ steps.node.outputs.node_path }}
@@ -111,8 +111,10 @@ jobs:
         shell: bash
         run: |
           dist_path=${{ steps.release.outputs.package_path }}/dist
+          ls -la $dist_path
           pnpx shx mv $dist_path/run.cjs $dist_path/${{ matrix.dist }}.js
           pnpx shx mv $dist_path/configu $dist_path/configu-${{ matrix.dist }}
+          ls -la $dist_path
 
       - uses: actions/upload-artifact@v4
         with:
