@@ -15,7 +15,7 @@ $Version = $env:CONFIGU_VERSION
 $Version = if (!$Version) {
   "latest"
 } else {
-  $Version
+  "v${Version}"
 }
 
 $Target = if ($env:PROCESSOR_ARCHITECTURE -eq "ARM64") {
@@ -26,7 +26,7 @@ $Target = if ($env:PROCESSOR_ARCHITECTURE -eq "ARM64") {
 
 Write-Output "Installing Configu v${Version} for ${Target}..."
 
-$DownloadUrl = "https://github.com/configu/configu/releases/download/cli%2Fv${Version}/configu-win32-${Target}.exe"
+$DownloadUrl = "https://github.com/configu/configu/releases/download/cli%2F${Version}/configu-win32-${Target}.exe"
 
 if (!(Test-Path $BinDir)) {
   New-Item $BinDir -ItemType Directory | Out-Null
