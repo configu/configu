@@ -87,7 +87,7 @@ jobs:
         id: node
         shell: bash
         run: |
-          node_path=$(node -e 'console.log(process.argv[0]);')
+          node_path="$(node -e 'console.log(process.argv[0]);')"
           echo "node_path: $node_path"
           echo "node_path=$node_path" >> GITHUB_OUTPUT
 
