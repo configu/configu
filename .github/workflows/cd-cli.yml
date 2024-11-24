@@ -70,12 +70,6 @@ jobs:
         with:
           architecture: ${{ matrix.arch }}
 
-      - name: Get Node.js path
-        id: node
-        shell: bash
-        run: |
-          echo "node_path=$(node -e 'console.log(process.argv[0]);')" >> GITHUB_OUTPUT
-
       - name: Bump package version
         shell: bash
         run: |
@@ -88,6 +82,19 @@ jobs:
         run: |
           pnpm --filter ${{ steps.release.outputs.package_name }} run \
             build
+
+      - name: Get Node.js path
+        id: node
+        shell: bash
+        run: |
+          node_path=$(node -e 'console.log(process.argv[0]);')
+          echo "node_path: $node_path"
+          echo "node_path=$node_path" >> GITHUB_OUTPUT
+
+          # this is a workaround to fix bryopsida/node-sea-action@v1 issue
+          # try to create a node-sea-action@v2 from configu
+          sea_path=${{ steps.release.outputs.package_path }}/sea-config.json
+          echo "`jq '.main="${{ steps.release.outputs.package_path }}/dist/run.cjs"' $sea_path`" > $sea_path
 
       - name: Compile package code
         id: compile
