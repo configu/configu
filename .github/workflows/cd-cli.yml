@@ -118,7 +118,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: ${{ steps.release.outputs.package }}-${{ matrix.dist }}-${{ steps.release.outputs.version }}.js
+          name: ${{ steps.release.outputs.package }}-${{ matrix.dist }}-${{ steps.release.outputs.version }}
           path: ${{ steps.release.outputs.package_path }}/dist/*
 
       - name: Release package to version-based release
