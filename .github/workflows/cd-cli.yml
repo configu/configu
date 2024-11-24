@@ -70,7 +70,7 @@ jobs:
         shell: bash
         run: |
           if [[ ${{ matrix.runner }} == ubuntu* ]]; then
-            apt-get install qemu-system
+            sudo apt-get install qemu-system
           fi
           if [[ ${{ matrix.runner }} == macos* ]]; then
             brew install qemu
