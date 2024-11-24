@@ -24,6 +24,8 @@ $Target = if ($env:PROCESSOR_ARCHITECTURE -eq "ARM64") {
   "x64"
 }
 
+Write-Output "Installing Configu v${Version} for ${Target}..."
+
 $DownloadUrl = "https://github.com/configu/configu/releases/download/cli%2Fv${Version}/configu-${Target}.exe"
 
 if (!(Test-Path $BinDir)) {
