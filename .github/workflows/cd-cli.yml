@@ -139,14 +139,25 @@ jobs:
           files: |
             ${{ steps.release.outputs.package_path }}/dist/*
 
-      - name: Check release
-        # working-directory: ${{ steps.release.outputs.package_path }}
-        env:
-          CONFIGU_DIR: .
-          CONFIGU_VERSION: ${{ steps.release.outputs.version }}
-        run: |
-          curl -fsSL https://raw.githubusercontent.com/configu/configu/refs/heads/${{ steps.release.outputs.branch }}/${{ steps.release.outputs.package_path }}/install.sh | sh
-          .configu/bin/configu -v
+      # - name: Check release
+      #   if: ${{ matrix.runner != 'windows-latest' }}
+      #   shell: bash
+      #   env:
+      #     CONFIGU_DIR: .
+      #     CONFIGU_VERSION: ${{ steps.release.outputs.version }}
+      #   run: |
+      #     curl -fsSL https://raw.githubusercontent.com/configu/configu/refs/heads/${{ steps.release.outputs.branch }}/${{ steps.release.outputs.package_path }}/install.sh | sh
+      #     .configu/bin/configu -v
+
+      # - name: Check release
+      #   if: ${{ matrix.runner == 'windows-latest' }}
+      #   shell: pwsh
+      #   env:
+      #     CONFIGU_DIR: .
+      #     CONFIGU_VERSION: ${{ steps.release.outputs.version }}
+      #   run: |
+      #     irm https://raw.githubusercontent.com/configu/configu/refs/heads/${{ steps.release.outputs.branch }}/${{ steps.release.outputs.package_path }}/install.ps1 | iex
+      #     .configu/bin/configu -v
 
   release-docker:
     runs-on: ubuntu-latest

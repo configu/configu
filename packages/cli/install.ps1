@@ -10,7 +10,6 @@ $BinDir = if ($ConfiguInstall) {
 }
 $ConfiguExe = "$BinDir\configu.exe"
 
-
 $Version = $env:CONFIGU_VERSION
 $Version = if (!$Version) {
   "latest"
