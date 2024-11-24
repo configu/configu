@@ -5,100 +5,151 @@ on:
     tags:
       - 'cli/v*'
 
-env:
-  PACKAGE_NAME: '@configu/cli'
-  DOCKER_IMAGE_NAME: 'configu/cli'
-  ARTIFACT_NAME: 'configu-cli'
-  PACKAGE_PATH: 'packages/cli'
-
 jobs:
-  cd-cli:
-    runs-on: ${{ matrix.os }}-latest
-
-    strategy:
-      matrix:
-        os: [ubuntu, macos, windows]
-        architecture: [x64, arm64]
-        node-version: [20.x]
-
+  pre-release:
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: ./.github/actions/deploy-start-action
-        id: deployment
         with:
-          package-name: ${{ env.PACKAGE_NAME }}
           slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-          ignore-slack: true
+
+  release-executable:
+    runs-on: ${{ matrix.runner }}
+    needs: pre-release
+    strategy:
+      matrix:
+        # todo: create a dedicated runner to execute the corresponding Node.js distribution
+        # https://nodejs.org/download/release/latest/
+        dist:
+          - linux-arm64
+          - linux-armv7l
+          - linux-ppc64le
+          - linux-s390x
+          - linux-x64
+          - darwin-arm64
+          - darwin-x64
+          # - win-arm64
+          - win-x64
+        include:
+          - dist: linux-arm64
+            runner: ubuntu-latest
+            arch: arm64
+          - dist: linux-armv7l
+            runner: ubuntu-latest
+            arch: armv7l
+          - dist: linux-ppc64le
+            runner: ubuntu-latest
+            arch: ppc64le
+          - dist: linux-s390x
+            runner: ubuntu-latest
+            arch: s390x
+          - dist: linux-x64
+            runner: ubuntu-latest
+            arch: x64
+          - dist: darwin-arm64
+            runner: macos-latest
+            arch: arm64
+          - dist: darwin-x64
+            runner: macos-latest
+            arch: x64
+          # - dist: win-arm64
+          #   runner: windows-latest
+          #   arch: arm64
+          - dist: win-x64
+            runner: windows-latest
+            arch: x64
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/get-release-action
+        id: release
 
       - uses: ./.github/actions/ts-env-action
         with:
-          architecture: ${{ matrix.architecture }}
+          architecture: ${{ matrix.arch }}
 
-      - name: Compile the CLI into a single executable
-        env:
-          SELECTED_ARCH: ${{ matrix.architecture }}
-        run: pnpm -r compile
+      - name: Get Node.js path
+        id: node
+        shell: bash
+        run: |
+          echo "node_path=$(node -e 'console.log(process.argv[0]);')" >> GITHUB_OUTPUT
 
-      - uses: actions/upload-artifact@master
+      - name: Bump package version
+        shell: bash
+        run: |
+          pnpm --filter ${{ steps.release.outputs.package_name }} exec \
+            npm --no-git-tag-version version ${{ steps.release.outputs.version }}
+
+      - name: Build package code
+        id: build
+        shell: bash
+        run: |
+          pnpm --filter ${{ steps.release.outputs.package_name }} run \
+            build
+
+      - name: Compile package code
+        id: compile
+        uses: bryopsida/node-sea-action@v1
         with:
-          name: ${{ env.ARTIFACT_NAME }}-${{ matrix.os }}-${{ matrix.architecture }}
-          path: ${{ env.PACKAGE_PATH }}/dist
-  end-release:
-    runs-on: ubuntu-latest
-    needs: cd-cli
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - uses: actions/download-artifact@master
+          working-dir: ${{ steps.release.outputs.package_path }}
+          output-dir: dist
+          executable-name: configu
+          sea-config-path: sea-config.json
+          node-path: ${{ steps.node.outputs.node_path }}
+
+      - name: Process package distribution
+        shell: bash
+        run: |
+          dist_path=${{ steps.release.outputs.package_path }}/dist
+          pnpx shx mv $dist_path/run.cjs $dist_path/${{ matrix.dist }}.js
+          pnpx shx mv $dist_path/configu $dist_path/configu-${{ matrix.dist }}
+
+      - uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.ARTIFACT_NAME }}-ubuntu-x64
-          path: ${{ env.ARTIFACT_NAME }}/dist
-      - uses: actions/download-artifact@master
-        with:
-          name: ${{ env.ARTIFACT_NAME }}-windows-x64
-          path: ${{ env.ARTIFACT_NAME }}/dist
-      - uses: actions/download-artifact@master
-        with:
-          name: ${{ env.ARTIFACT_NAME }}-macos-x64
-          path: ${{ env.ARTIFACT_NAME }}/dist
-      - uses: actions/download-artifact@master
-        with:
-          name: ${{ env.ARTIFACT_NAME }}-ubuntu-arm64
-          path: ${{ env.ARTIFACT_NAME }}/dist
-      - uses: actions/download-artifact@master
-        with:
-          name: ${{ env.ARTIFACT_NAME }}-windows-arm64
-          path: ${{ env.ARTIFACT_NAME }}/dist
-      - uses: actions/download-artifact@master
-        with:
-          name: ${{ env.ARTIFACT_NAME }}-macos-arm64
-          path: ${{ env.ARTIFACT_NAME }}/dist
-      - name: Upload artifacts to release
+          name: ${{ steps.release.outputs.package }}-${{ matrix.dist }}-${{ steps.release.outputs.version }}.js
+          path: ${{ steps.release.outputs.package_path }}/dist/*
+
+      - name: Release package to version-based release
         uses: softprops/action-gh-release@v2
+        if: ${{startsWith(github.ref, 'refs/tags/') }}
         with:
-          make_latest: ${{  github.branch == 'main' }}
-          prerelease: ${{  github.branch != 'main' }}
-          name: ${{  github.ref_name }}
-          tag_name: ${{  github.ref_name }}
           files: |
-            ${{ env.ARTIFACT_NAME }}/dist/*
+            ${{ steps.release.outputs.package_path }}/dist/*
 
-  docker:
-    runs-on: ubuntu-latest
-    needs: end-release
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - uses: ./.github/actions/deploy-start-action
-        id: deployment
+      - name: Release package to channel-based release
+        uses: softprops/action-gh-release@v2
+        if: ${{ startsWith(github.ref, 'refs/tags/') }}
         with:
-          package-name: ${{ env.PACKAGE_NAME }}
-          slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          tag_name: ${{ steps.release.outputs.package }}/${{ steps.release.outputs.channel }}
+          target_commitish: ${{ github.sha }}
+          files: |
+            ${{ steps.release.outputs.package_path }}/dist/*
 
-      - name: Set up Docker
-        uses: crazy-max/ghaction-setup-docker@v3
+      - name: Check release
+        # working-directory: ${{ steps.release.outputs.package_path }}
+        env:
+          CONFIGU_DIR: .
+          CONFIGU_VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/configu/configu/refs/heads/${{ steps.release.outputs.branch }}/${{ steps.release.outputs.package_path }}/install.sh | sh
+          .configu/bin/configu -v
+
+  release-docker:
+    runs-on: ubuntu-latest
+    needs: release-executable
+    env:
+      DOCKER_IMAGE_NAME: 'configu/cli'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/get-release-action
+        id: release
+
+      # https://github.com/docker/build-push-action/tree/v6/?tab=readme-ov-file#examples
+      # https://docs.docker.com/build/ci/github-actions/multi-platform/
+      - uses: crazy-max/ghaction-setup-docker@v3
         with:
           daemon-config: |
             {
@@ -107,54 +158,36 @@ jobs:
                 "containerd-snapshotter": true
               }
             }
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      - uses: docker/login-action@v2
+
+      - uses: docker/setup-qemu-action@v3
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build docker image and push to Docker Hub
-        uses: docker/build-push-action@v3
+      - name: Release package to Docker Hub
+        uses: docker/build-push-action@v6
         with:
-          context: ${{ env.PACKAGE_PATH }}
-          platforms: linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8
-          build-args: CONFIGU_VERSION=${{ steps.deployment.outputs.release-version }}
-          tags: ${{ env.DOCKER_IMAGE_NAME }}:${{ steps.deployment.outputs.release-version }},${{ env.DOCKER_IMAGE_NAME }}:latest
+          context: ${{ steps.release.outputs.package_path }}
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            ${{ env.DOCKER_IMAGE_NAME }}:${{ steps.release.outputs.version }}
+            ${{ env.DOCKER_IMAGE_NAME }}:${{ steps.release.outputs.channel }}
+          build-args: |
+            NODE_VERSION=$(cat .node-version)
+            CONFIGU_VERSION=${{ steps.release.outputs.version }}
           push: true
+
+  post-release:
+    runs-on: ubuntu-latest
+    needs: release-docker
+    steps:
+      - uses: actions/checkout@v4
 
       - uses: ./.github/actions/deploy-end-action
         if: always()
         with:
-          package-name: ${{ env.PACKAGE_NAME }}
-          package-version: ${{ steps.deployment.outputs.release-version }}
           slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-
-  post-release-test:
-    runs-on: ${{ matrix.os }}
-    needs: end-release
-    defaults:
-      run:
-        shell: bash
-
-    strategy:
-      matrix:
-        # todo: restore windows-latest when ready
-        os: [ubuntu-latest, macos-latest]
-        node-version: [22.x]
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - uses: ./.github/actions/deploy-start-action
-        id: deployment
-        with:
-          package-name: ${{ env.PACKAGE_NAME }}
-          slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-          ignore-slack: true
-      - uses: ./.github/actions/ts-env-action
-      - name: Check installation and executable from release
-        working-directory: ${{ env.PACKAGE_PATH }}
-        env:
-          CONFIGU_VERSION: ${{ steps.deployment.outputs.release-version }}
-        run: pnpm test:post-release

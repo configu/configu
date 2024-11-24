@@ -22,7 +22,8 @@ export class ConfigKey {
   private static readonly normalizedReserved = ConfigKey.reserved.map(ConfigKey.normalize);
 
   static normalize(key: string) {
-    return _.camelCase(key).toLowerCase();
+    // return _.camelCase(key).toLowerCase();
+    return _.chain(key).camelCase().kebabCase().value();
   }
 
   static validate({ key, errorPrefix = 'ConfigKey' }: { key: string; errorPrefix?: string }) {

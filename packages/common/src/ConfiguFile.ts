@@ -331,7 +331,7 @@ export class ConfiguFile {
   }
 
   static async constructStore(type: string, configuration = {}) {
-    // todo: remember to mention in docs that integration stores cannot be overriden
+    // todo: remember to mention in docs that integration stores cannot be overridden
     if (!ConfigStore.has(type)) {
       await ConfiguFile.registerStore(type);
     }

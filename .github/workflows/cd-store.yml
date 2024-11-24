@@ -17,10 +17,11 @@ jobs:
           slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   release:
-    runs-on: ${{ matrix.os }}-latest
+    runs-on: ${{ matrix.runner }}
     needs: pre-release
     strategy:
       matrix:
+        # todo: create a dedicated runner to execute the corresponding Node.js distribution
         # https://nodejs.org/download/release/latest/
         dist:
           - linux-arm64
@@ -34,31 +35,31 @@ jobs:
           - win-x64
         include:
           - dist: linux-arm64
-            os: ubuntu
+            runner: ubuntu-latest
             arch: arm64
           - dist: linux-armv7l
-            os: ubuntu
+            runner: ubuntu-latest
             arch: armv7l
           - dist: linux-ppc64le
-            os: ubuntu
+            runner: ubuntu-latest
             arch: ppc64le
           - dist: linux-s390x
-            os: ubuntu
+            runner: ubuntu-latest
             arch: s390x
           - dist: linux-x64
-            os: ubuntu
+            runner: ubuntu-latest
             arch: x64
           - dist: darwin-arm64
-            os: macos
+            runner: macos-latest
             arch: arm64
           - dist: darwin-x64
-            os: macos
+            runner: macos-latest
             arch: x64
           # - dist: win-arm64
-          #   os: windows
+          #   runner: windows-latest
           #   arch: arm64
           - dist: win-x64
-            os: windows
+            runner: windows-latest
             arch: x64
     steps:
       - uses: actions/checkout@v4
@@ -77,20 +78,11 @@ jobs:
           package=$(echo "${{ steps.release.outputs.package }}" | awk -F '/' '{print $2}')
           package_name=@configu/$package
 
-          dist_path=${{ steps.release.outputs.package_path }}/dist
-          dist_in=$dist_path/index.cjs
-          dist_out=$dist_path/index-${{ matrix.dist }}.js
-
           echo "package: $package"
           echo "package_name: $package_name"
-          echo "dist_path: $dist_path"
-          echo "dist_in: $dist_in"
-          echo "dist_out: $dist_out"
 
+          echo "package=$package" >> $GITHUB_OUTPUT
           echo "package_name=$package_name" >> $GITHUB_OUTPUT
-          echo "dist_path=$dist_path" >> $GITHUB_OUTPUT
-          echo "dist_in=$dist_in" >> $GITHUB_OUTPUT
-          echo "dist_out=$dist_out" >> $GITHUB_OUTPUT
 
       - name: Bump package version
         shell: bash
@@ -104,14 +96,35 @@ jobs:
         run: |
           pnpm --filter ${{ steps.package.outputs.package_name }} run \
             build
-          pnpx shx cp ${{ steps.package.outputs.dist_in }} ${{ steps.package.outputs.dist_out }}
 
-      - name: Upload artifacts to release
+      - name: Process package distribution
+        shell: bash
+        run: |
+          dist_path=${{ steps.release.outputs.package_path }}/dist
+          dist_from=$dist_path/index.cjs
+          dist_to=$dist_path/${{ steps.package.outputs.package }}-${{ matrix.dist }}.js
+          pnpx shx mv $dist_from $dist_to
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.package.outputs.package }}-${{ matrix.dist }}-${{ steps.release.outputs.version }}
+          path: ${{ steps.release.outputs.package_path }}/dist/*
+
+      - name: Release package to version-based release
         uses: softprops/action-gh-release@v2
         if: ${{startsWith(github.ref, 'refs/tags/') }}
         with:
           files: |
-            ${{ steps.package.outputs.dist_out }}
+            ${{ steps.release.outputs.package_path }}/dist/*
+
+      - name: Release package to channel-based release
+        uses: softprops/action-gh-release@v2
+        if: ${{ startsWith(github.ref, 'refs/tags/') }}
+        with:
+          tag_name: ${{ steps.release.outputs.package }}/${{ steps.release.outputs.channel }}
+          target_commitish: ${{ github.sha }}
+          files: |
+            ${{ steps.release.outputs.package_path }}/dist/*
 
   post-release:
     runs-on: ubuntu-latest

@@ -1,0 +1,62 @@
+# https://nodejs.org/download/release/latest/
+# search: .tar.gz
+
+Index of /download/release/v23.3.0/
+../
+docs/                                                             -                   -
+win-arm64/                                                        -                   -
+win-x64/                                                          -                   -
+SHASUMS256.txt.asc                                 20-Nov-2024 23:00               3.8 KB
+SHASUMS256.txt.sig                                 20-Nov-2024 23:00                438 B
+SHASUMS256.txt                                     20-Nov-2024 22:59               3.1 KB
+node-v23.3.0-aix-ppc64.tar.gz                      20-Nov-2024 22:57                72 MB
+node-v23.3.0-arm64.msi                             20-Nov-2024 22:57                27 MB
+node-v23.3.0-darwin-arm64.tar.gz                   20-Nov-2024 22:57                49 MB
+node-v23.3.0-darwin-arm64.tar.xz                   20-Nov-2024 22:57                26 MB
+node-v23.3.0-darwin-x64.tar.gz                     20-Nov-2024 22:57                50 MB
+node-v23.3.0-darwin-x64.tar.xz                     20-Nov-2024 22:57                27 MB
+node-v23.3.0-headers.tar.gz                        20-Nov-2024 22:57               8.8 MB
+node-v23.3.0-headers.tar.xz                        20-Nov-2024 22:57               539 KB
+node-v23.3.0-linux-arm64.tar.gz                    20-Nov-2024 22:57                55 MB
+node-v23.3.0-linux-arm64.tar.xz                    20-Nov-2024 22:57                29 MB
+node-v23.3.0-linux-armv7l.tar.gz                   20-Nov-2024 22:57                50 MB
+node-v23.3.0-linux-armv7l.tar.xz                   20-Nov-2024 22:57                26 MB
+node-v23.3.0-linux-ppc64le.tar.gz                  20-Nov-2024 22:57                58 MB
+node-v23.3.0-linux-ppc64le.tar.xz                  20-Nov-2024 22:57                31 MB
+node-v23.3.0-linux-s390x.tar.gz                    20-Nov-2024 22:57                55 MB
+node-v23.3.0-linux-s390x.tar.xz                    20-Nov-2024 22:57                29 MB
+node-v23.3.0-linux-x64.tar.gz                      20-Nov-2024 22:57                55 MB
+node-v23.3.0-linux-x64.tar.xz                      20-Nov-2024 22:57                31 MB
+node-v23.3.0-win-arm64.7z                          20-Nov-2024 22:57                20 MB
+node-v23.3.0-win-arm64.zip                         20-Nov-2024 22:57                31 MB
+node-v23.3.0-win-x64.7z                            20-Nov-2024 22:57                22 MB
+node-v23.3.0-win-x64.zip                           20-Nov-2024 22:57                35 MB
+node-v23.3.0-x64.msi                               20-Nov-2024 22:57                31 MB
+node-v23.3.0.pkg                                   20-Nov-2024 22:57                89 MB
+node-v23.3.0.tar.gz                                20-Nov-2024 22:57                99 MB
+node-v23.3.0.tar.xz                                20-Nov-2024 22:57                48 MB
+
+# distributions
+darwin-arm64
+darwin-x64
+linux-arm64
+linux-armv7l
+linux-ppc64le
+linux-s390x
+linux-x64
+win-arm64
+win-x64
+
+
+distributions:
+[
+darwin-arm64,
+darwin-x64,
+linux-arm64,
+linux-armv7l,
+linux-ppc64le,
+linux-s390x,
+linux-x64,
+win-arm64,
+win-x64,
+]
