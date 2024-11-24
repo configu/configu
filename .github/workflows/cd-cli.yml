@@ -66,6 +66,16 @@ jobs:
       - uses: ./.github/actions/get-release-action
         id: release
 
+      - uses: crazy-max/ghaction-setup-docker@v3
+        with:
+          daemon-config: |
+            {
+              "debug": true,
+              "features": {
+                "containerd-snapshotter": true
+              }
+            }
+
       - uses: docker/setup-qemu-action@v3
 
       - uses: ./.github/actions/ts-env-action
