@@ -4,9 +4,9 @@ set -e
 
 if [ "$OS" = "Windows_NT" ]; then
   target="win32-x64"
-  ext="exe"
+  ext=".exe"
 else
-  ext="gz"
+  ext=""
   case $(uname -sm) in
   "Darwin x86_64") target="darwin-x64" ;;
   "Darwin arm64") target="darwin-arm64" ;;
@@ -18,7 +18,6 @@ fi
 # get the version from environment variable or use the default value
 configu_version="${CONFIGU_VERSION:-latest}"
 
-echo "Downloading configu version $configu_version"
 
 #configu_uri="./dist/configu-${target}${ext}"
 # todo: fix
@@ -26,6 +25,9 @@ echo "Downloading configu version $configu_version"
 configu_uri="https://github.com/configu/configu/releases/download/cli%2Fv${configu_version}/configu-${target}"
 # https://github.com/configu/configu/releases/download/cli%2Fnext/configu-linux-armv7l
 # https://github.com/configu/configu/releases/download/cli%2Fv1.0.0-next.205/configu-linux-x64
+
+echo "Downloading configu from $configu_uri"
+
 configu_install="${CONFIGU_DIR:-$HOME/.configu}"
 bin_dir="$configu_install/bin"
 exe="$bin_dir/configu"
@@ -36,15 +38,15 @@ fi
 mkdir -p "$bin_dir"
 
 #cp $configu_uri $exe
-curl --fail --location --progress-bar --output "$exe.$ext" "$configu_uri"
+curl --fail --location --progress-bar --output "$exe$ext" "$configu_uri"
 
-if [ "$ext" = "gz" ]; then
-  if command -v gunzip >/dev/null; then
-    gunzip "$exe.$ext"
-  else
-    gzip -d "$exe.$ext"
-  fi
-fi
+# if [ "$ext" = "gz" ]; then
+#   if command -v gunzip >/dev/null; then
+#     gunzip "$exe.$ext"
+#   else
+#     gzip -d "$exe.$ext"
+#   fi
+# fi
 
 chmod +x "$exe"
 
