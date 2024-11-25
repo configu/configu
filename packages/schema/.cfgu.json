@@ -21,6 +21,7 @@
         "type": "object",
         "required": [],
         "additionalProperties": false,
+        "nullable": true,
         "properties": {
           "description": {
             "type": "string",
