@@ -42,7 +42,7 @@ const outputBinary = stdenv.isWindows ? `${binaryName}.exe` : binaryName;
 
   // Step 5: Extract the Node.js distribution
   if (stdenv.isWindows) {
-    await $`powershell -command "Expand-Archive -Path '${path.join(tempDir, 'node.zip')}' -DestinationPath '${tempDir}' -Force"`;
+    await $`powershell -command "Expand-Archive -Path ${tempDir}/node.zip -DestinationPath ${tempDir} -Force"`;
   } else {
     await $`tar -xzf ${tempDir}/node.tar.gz -C ${tempDir}`;
   }
