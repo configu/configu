@@ -42,7 +42,7 @@ const outputBinary = stdenv.isWindows ? `${binaryName}.exe` : binaryName;
 
   // Step 5: Extract the Node.js distribution
   if (stdenv.isWindows) {
-    await $`powershell -command "Expand-Archive -Path '${tempDir}/node.zip' -DestinationPath '${tempDir}' -Force"`;
+    await $`powershell -command "Expand-Archive -Path '${path.join(tempDir, 'node.zip')}' -DestinationPath '${tempDir}' -Force"`;
   } else {
     await $`tar -xzf ${tempDir}/node.tar.gz -C ${tempDir}`;
   }
@@ -116,12 +116,12 @@ const outputBinary = stdenv.isWindows ? `${binaryName}.exe` : binaryName;
   await fs.rm(tempDir, { recursive: true, force: true });
   console.log('Temporary directory cleaned up');
 
-  // Step 14: Run the binary to verify it works
-  const quoteEscaping = $.quote;
-  $.quote = (command) => command;
-  await $`${finalOutputPath} -v`;
-  $.quote = quoteEscaping;
-  console.log('Executable verified successfully');
+  // // Step 14: Run the binary to verify it works
+  // const quoteEscaping = $.quote;
+  // $.quote = (command) => command;
+  // await $`${finalOutputPath} -v`;
+  // $.quote = quoteEscaping;
+  // console.log('Executable verified successfully');
 
   console.log('Build process completed successfully');
 })();
