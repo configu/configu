@@ -38,7 +38,7 @@ if (stdenv.provider === 'github_actions') {
   console.log(`Node.js distribution: ${nodeDist}`);
 
   // Step 3: Create temporary directory
-  const tempDir = await tmpdir('configu-sea');
+  const tempDir = path.resolve(tmpdir('configu-sea-'));
   console.log(`Temporary directory created at ${tempDir}`);
 
   // Step 4: Download the Node.js distribution from the official CDN

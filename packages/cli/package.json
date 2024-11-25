@@ -35,7 +35,7 @@
     "build": "tsup",
     "compile": "tsx compile.mts",
     "dev": "tsx src/run.ts",
-    "start:": "ndoe dist/run.cjs",
+    "start": "node dist/run.cjs",
     "configu": "~/.configu/bin/configu",
     "test:post-release": "tsx --test ./compiler/**/*.test.ts"
   },
