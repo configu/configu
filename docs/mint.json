@@ -205,7 +205,8 @@
             "guides/platform/slack-webhook",
             "guides/platform/github-actions-webhook"
           ]
-        }
+        },
+        "guides/v1-migration"
       ]
     }
   ]
