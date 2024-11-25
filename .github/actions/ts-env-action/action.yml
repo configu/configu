@@ -7,7 +7,6 @@ inputs:
   architecture:
     description: Force the architecture of pnpm install
     required: false
-    default: ''
 
 outputs:
   node_version:
@@ -28,7 +27,7 @@ runs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        architecture: ${{ inputs.architecture }}
+        # architecture: ${{ inputs.architecture }}
         node-version-file: '.node-version'
         cache: 'pnpm' # todo: currently cache is not working properly, try https://github.com/pnpm/action-setup#use-cache-to-reduce-installation-time
         registry-url: 'https://registry.npmjs.org'
@@ -51,5 +50,5 @@ runs:
         node_path=$(node -e 'console.log(process.argv[0]);')
         echo "node_version: $node_version"
         echo "node_path: $node_path"
-        echo "node_version=$node_version" >> $GITHUB_ENV
-        echo "node_path=$node_path" >> $GITHUB_ENV
+        echo "node_version=$node_version" >> $GITHUB_OUTPUT
+        echo "node_path=$node_path" >> $GITHUB_OUTPUT
