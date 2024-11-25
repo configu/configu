@@ -1,3 +1,4 @@
+// https://nodejs.org/api/single-executable-applications.html
 /* eslint-disable no-undef */
 /* eslint-disable import/no-extraneous-dependencies */
 
@@ -26,7 +27,7 @@ const outputBinary = stdenv.isWindows ? `${binaryName}.exe` : binaryName;
   const nodeArch = process.env.NODE_ARCH || os.arch();
   console.log(`Node.js architecture: ${nodeArch}`);
 
-  const nodeDist = `node-v${nodeVersion}-${os.platform()}-${nodeArch}`;
+  const nodeDist = `node-v${nodeVersion}-${stdenv.platform}-${nodeArch}`;
   console.log(`Node.js distribution: ${nodeDist}`);
 
   // Step 3: Create temporary directory
@@ -66,6 +67,9 @@ const outputBinary = stdenv.isWindows ? `${binaryName}.exe` : binaryName;
   await fs.copyFile(nodePath, outputPath);
   console.log(`Node.js executable copied to ${outputPath}`);
 
+  // const files = await fs.readdir(tempDir);
+  // console.log(files);
+
   // Step 9: Remove the signature of the binary (if applicable)
   if (stdenv.isMacOS) {
     await $`codesign --remove-signature ${outputPath}`;
@@ -78,12 +82,18 @@ const outputBinary = stdenv.isWindows ? `${binaryName}.exe` : binaryName;
   }
 
   // Step 10: Inject the blob into the copied binary using postject
-  const postjectCommand = `npx postject ${outputPath} NODE_SEA_BLOB ${path.join(tempDir, 'sea-prep.blob')} --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2`;
+  const postjectArgs = [
+    outputPath,
+    'NODE_SEA_BLOB',
+    path.join(tempDir, 'sea-prep.blob'),
+    '--sentinel-fuse',
+    'NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2',
+  ];
   if (stdenv.isMacOS) {
-    await $`${postjectCommand} --macho-segment-name NODE_SEA`;
-  } else {
-    await $`${postjectCommand}`;
+    postjectArgs.push('--macho-segment-name');
+    postjectArgs.push('NODE_SEA');
   }
+  await $`pnpx postject ${postjectArgs}`;
   console.log('Blob injected into the binary using postject');
 
   // Step 11: Optionally, sign the binary (if applicable)
@@ -107,11 +117,10 @@ const outputBinary = stdenv.isWindows ? `${binaryName}.exe` : binaryName;
   console.log('Temporary directory cleaned up');
 
   // Step 14: Run the binary to verify it works
-  if (stdenv.isWindows) {
-    await $`${finalOutputPath} -v`;
-  } else {
-    await $`./${finalOutputPath} -v`;
-  }
+  const quoteEscaping = $.quote;
+  $.quote = (command) => command;
+  await $`${finalOutputPath} -v`;
+  $.quote = quoteEscaping;
   console.log('Executable verified successfully');
 
   console.log('Build process completed successfully');
