@@ -9,6 +9,14 @@ inputs:
     required: false
     default: ''
 
+outputs:
+  node_version:
+    description: Node.js version
+    value: ${{ steps.release.outputs.node_version }}
+  node_path:
+    description: Node.js installation path
+    value: ${{ steps.release.outputs.node_path }}
+
 runs:
   using: 'composite'
   steps:
@@ -33,3 +41,15 @@ runs:
         # pnpm list --recursive --depth 0
       env:
         HUSKY: '0'
+
+    - name: Set Node.js information
+      id: node
+      shell: bash
+      run: |
+        node -v
+        node_version=$(node -v)
+        node_path=$(node -e 'console.log(process.argv[0]);')
+        echo "node_version: $node_version"
+        echo "node_path: $node_path"
+        echo "node_version=$node_version" >> $GITHUB_ENV
+        echo "node_path=$node_path" >> $GITHUB_ENV

@@ -1,27 +1,27 @@
 /* eslint-disable no-undef */
 /* eslint-disable import/no-extraneous-dependencies */
 
-import 'zx/globals';
-import { join } from 'pathe';
+import { $ } from 'zx';
+import * as fs from 'node:fs/promises';
 import { JSONSchemaObject } from '@configu/sdk/expressions';
-import { CfguFile, ConfiguFile } from '@configu/common';
+import { CfguFile, ConfiguFile, path } from '@configu/common';
 
-const ROOT_PATH = join(import.meta.dirname, '..', '..');
+const ROOT_PATH = path.join(import.meta.dirname, '..', '..');
 const SCHEMA_ROOT_PATH = import.meta.dirname;
 
-const buildJSONSchemaFile = async (schema: JSONSchemaObject, path: string) => {
+const buildJSONSchemaFile = async (schema: JSONSchemaObject, filePath: string) => {
   const contents = JSON.stringify(schema, null, 2);
-  await fs.writeFile(path, contents, { flag: 'w' });
+  await fs.writeFile(filePath, contents, { flag: 'w' });
 };
 
 (async () => {
-  const cfguPath = join(SCHEMA_ROOT_PATH, '.cfgu.json');
+  const cfguPath = path.join(SCHEMA_ROOT_PATH, '.cfgu.json');
   await buildJSONSchemaFile(CfguFile.schema, cfguPath);
 
-  const configuPath = join(SCHEMA_ROOT_PATH, '.configu.json');
+  const configuPath = path.join(SCHEMA_ROOT_PATH, '.configu.json');
   await buildJSONSchemaFile(ConfiguFile.schema, configuPath);
 
-  await $`pnpm prettier --ignore-path ${join(ROOT_PATH, '.gitignore')} --write ${cfguPath} ${configuPath}`.pipe(
+  await $`pnpm prettier --ignore-path ${path.join(ROOT_PATH, '.gitignore')} --write ${cfguPath} ${configuPath}`.pipe(
     process.stdout,
   );
 })();

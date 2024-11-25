@@ -10,7 +10,7 @@ import * as stdenv from 'std-env';
 import { glob } from 'glob';
 import { findUp, findUpMultiple, pathExists } from 'find-up';
 
-export { findUp, findUpMultiple, pathExists, glob, stdenv, YAML };
+export { path, findUp, findUpMultiple, pathExists, glob, stdenv, YAML };
 
 export const getConfiguHomeDir = async (...paths: string[]): Promise<string> => {
   const directory = path.join(os.homedir(), '.configu', ...paths);
