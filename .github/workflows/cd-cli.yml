@@ -23,28 +23,31 @@ jobs:
         # todo: create a dedicated runner to execute the corresponding Node.js distribution
         # https://nodejs.org/download/release/latest/
         dist:
-          - linux-arm64
-          - linux-armv7l
-          - linux-ppc64le
-          - linux-s390x
+          # aarch64
+          # - linux-arm64
+          # armv7
+          # - linux-armv7l
+          # - linux-ppc64le
+          # - linux-s390x
           - linux-x64
+          # aaarch64
           - darwin-arm64
           - darwin-x64
           # - win-arm64
           - win-x64
         include:
-          - dist: linux-arm64
-            runner: ubuntu-latest
-            arch: arm64
-          - dist: linux-armv7l
-            runner: ubuntu-latest
-            arch: armv7l
-          - dist: linux-ppc64le
-            runner: ubuntu-latest
-            arch: ppc64le
-          - dist: linux-s390x
-            runner: ubuntu-latest
-            arch: s390x
+          # - dist: linux-arm64
+          #   runner: ubuntu-latest
+          #   arch: arm64
+          # - dist: linux-armv7l
+          #   runner: ubuntu-latest
+          #   arch: armv7l
+          # - dist: linux-ppc64le
+          #   runner: ubuntu-latest
+          #   arch: ppc64le
+          # - dist: linux-s390x
+          #   runner: ubuntu-latest
+          #   arch: s390x
           - dist: linux-x64
             runner: ubuntu-latest
             arch: x64
@@ -65,19 +68,6 @@ jobs:
 
       - uses: ./.github/actions/get-release-action
         id: release
-
-      - name: Setup QEMU
-        shell: bash
-        run: |
-          if [[ ${{ matrix.runner }} == ubuntu* ]]; then
-            sudo apt-get install qemu-system
-          fi
-          if [[ ${{ matrix.runner }} == macos* ]]; then
-            brew install qemu
-          fi
-          if [[ ${{ matrix.runner }} == windows* ]]; then
-            choco install qemu
-          fi
 
       - uses: ./.github/actions/ts-env-action
         with:
@@ -100,8 +90,9 @@ jobs:
         id: node
         shell: bash
         run: |
-          # node_path=$(node -e 'console.log(process.argv[0]);')
-          node_path=$(which node)
+          node -v
+          node_path=$(node -e 'console.log(process.argv[0]);')
+          # node_path=$(which node)
           echo "node_path: $node_path"
           echo "node_path=$node_path" >> $GITHUB_OUTPUT
 
