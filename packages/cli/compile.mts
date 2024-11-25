@@ -29,7 +29,7 @@ const outputBinary = stdenv.isWindows ? `${binaryName}.exe` : binaryName;
   const nodeArch = process.env.NODE_ARCH || os.arch();
   console.log(`Node.js architecture: ${nodeArch}`);
 
-  const nodeDist = `node-v${nodeVersion}-${stdenv.platform}-${nodeArch}`;
+  const nodeDist = `node-v${nodeVersion}-${stdenv.platform.replace('32', '')}-${nodeArch}`;
   console.log(`Node.js distribution: ${nodeDist}`);
 
   // Step 3: Create temporary directory
