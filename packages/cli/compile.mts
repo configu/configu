@@ -2,7 +2,7 @@
 /* eslint-disable no-undef */
 /* eslint-disable import/no-extraneous-dependencies */
 
-import { $ } from 'zx';
+import { $, tmpdir, which } from 'zx';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import { path, stdenv } from '@configu/common';
@@ -17,6 +17,11 @@ const distDir = path.join(scriptDir, 'dist');
 const seaConfigFile = path.join(scriptDir, 'sea-config.json');
 const binaryName = 'configu';
 const outputBinary = stdenv.isWindows ? `${binaryName}.exe` : binaryName;
+
+let signtool = 'signtool';
+if (stdenv.provider === 'github_actions') {
+  signtool = '%programfiles(x86)%/Windows Kits/10/bin/10.0.17763.0/x86/signtool.exe';
+}
 
 (async () => {
   console.log('Starting the build process...');
@@ -33,7 +38,7 @@ const outputBinary = stdenv.isWindows ? `${binaryName}.exe` : binaryName;
   console.log(`Node.js distribution: ${nodeDist}`);
 
   // Step 3: Create temporary directory
-  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'configu-sea-'));
+  const tempDir = await tmpdir('configu-sea');
   console.log(`Temporary directory created at ${tempDir}`);
 
   // Step 4: Download the Node.js distribution from the official CDN
@@ -59,7 +64,20 @@ const outputBinary = stdenv.isWindows ? `${binaryName}.exe` : binaryName;
   const nodeDistDir = path.join(tempDir, nodeDist);
   // ! this step uses the machine installed node and not the downloaded one on purpose
   // ! when gh-actions arm64 is available, this step will be updated to use the downloaded node
-  await $`cd ${tempDir} && node --experimental-sea-config sea-config.json`;
+  const machineNodePath = await which('node', { nothrow: true });
+  const machineNodeVersion = (await $`node --version`).stdout.trim();
+  const machinePnpmVersion = (await $`pnpm --version`).stdout.trim();
+  const nodeMachine = {
+    machineNodePath,
+    machineNodeVersion,
+    machinePnpmVersion,
+    osPlatform: os.platform(),
+    osArch: os.arch(),
+    stdenvNodeVersion: stdenv.nodeVersion,
+  };
+  console.log(nodeMachine);
+
+  await $`cd ${tempDir} && pnpx tsx --experimental-sea-config sea-config.json`;
   console.log('Blob generated for single executable application');
 
   // Step 8: Create a copy of the Node.js executable
@@ -68,8 +86,8 @@ const outputBinary = stdenv.isWindows ? `${binaryName}.exe` : binaryName;
   await fs.copyFile(nodePath, outputPath);
   console.log(`Node.js executable copied to ${outputPath}`);
 
-  // const files = await fs.readdir(tempDir);
-  // console.log(files);
+  const files = await fs.readdir(tempDir);
+  console.log(files);
 
   // Step 9: Remove the signature of the binary (if applicable)
   if (stdenv.isMacOS) {
@@ -77,24 +95,15 @@ const outputBinary = stdenv.isWindows ? `${binaryName}.exe` : binaryName;
     console.log('Signature removed from the binary (macOS)');
   } else if (stdenv.isWindows) {
     // Optional: Remove signature using signtool if available
-    // const signtool = await getSigntoolLocation();
-    // await $`${signtool} remove /s ${outputPath}`;
-    console.log('Signature removal step skipped (Windows)');
+    await $`${signtool} remove /s ${outputPath}`;
   }
 
   // Step 10: Inject the blob into the copied binary using postject
-  const postjectArgs = [
-    outputPath,
-    'NODE_SEA_BLOB',
-    path.join(tempDir, 'sea-prep.blob'),
-    '--sentinel-fuse',
-    'NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2',
-  ];
+  let postjectCommand = `pnpx postject ${outputPath} NODE_SEA_BLOB ${path.join(tempDir, 'sea-prep.blob')} --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2`;
   if (stdenv.isMacOS) {
-    postjectArgs.push('--macho-segment-name');
-    postjectArgs.push('NODE_SEA');
+    postjectCommand += ' --macho-segment-name NODE_SEA';
   }
-  await $`pnpx postject ${postjectArgs}`;
+  await $`${postjectCommand}`;
   console.log('Blob injected into the binary using postject');
 
   // Step 11: Optionally, sign the binary (if applicable)
@@ -103,9 +112,7 @@ const outputBinary = stdenv.isWindows ? `${binaryName}.exe` : binaryName;
     console.log('Binary signed (macOS)');
   } else if (stdenv.isWindows) {
     // Optional: Sign the binary using signtool if available
-    // const signtool = await getSigntoolLocation();
-    // await $`${signtool} sign /fd SHA256 ${outputPath}`;
-    console.log('Binary signing step skipped (Windows)');
+    await $`${signtool} sign /fd SHA256 ${outputPath}`;
   }
 
   // Step 12: Copy the executable to the working directory's dist directory
