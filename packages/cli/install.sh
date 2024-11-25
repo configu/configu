@@ -10,7 +10,7 @@ else
   case $(uname -sm) in
   "Darwin x86_64") target="darwin-x64" ;;
   "Darwin arm64") target="darwin-arm64" ;;
-  "Linux aarch64") target="linux-x64" ;;
+  "Linux aarch64") target="linux-arm64" ;;
   *) target="linux-x64" ;;
   esac
 fi
