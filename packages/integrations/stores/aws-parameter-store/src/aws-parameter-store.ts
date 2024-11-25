@@ -20,8 +20,15 @@ export class AWSParameterStoreConfigStore extends KeyValueConfigStore {
   // * https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/client/ssm/command/GetParameterCommand/
   async getByKey(key: string): Promise<string> {
     const command = new GetParameterCommand({ Name: key });
-    const res = await this.client.send(command);
-    return res?.Parameter?.Value ?? '';
+    try {
+      const res = await this.client.send(command);
+      return res?.Parameter?.Value ?? '';
+    } catch (error) {
+      if (error.name === 'ParameterNotFound') {
+        return '';
+      }
+      throw error;
+    }
   }
 
   // * https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/client/ssm/command/PutParameterCommand/

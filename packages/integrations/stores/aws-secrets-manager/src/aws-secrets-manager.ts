@@ -20,8 +20,15 @@ export class AWSSecretsManagerConfigStore extends KeyValueConfigStore {
   // * https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/clients/client-secrets-manager/classes/getsecretvaluecommand.html
   async getByKey(key: string): Promise<string> {
     const command = new GetSecretValueCommand({ SecretId: key });
-    const res = await this.client.send(command);
-    return res?.SecretString ?? '';
+    try {
+      const res = await this.client.send(command);
+      return res?.SecretString ?? '';
+    } catch (error) {
+      if (error.name === 'ResourceNotFoundException') {
+        return '';
+      }
+      throw error;
+    }
   }
 
   async upsert(key: string, value: string): Promise<void> {
