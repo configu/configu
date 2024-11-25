@@ -132,6 +132,7 @@ export const CfguSchema = {
   type: 'object',
   required: [],
   additionalProperties: false,
+  nullable: true,
   properties: {
     description: CfguStringProperty,
     label: CfguStringOrStringArrayProperty,

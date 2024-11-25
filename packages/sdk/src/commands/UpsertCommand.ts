@@ -140,10 +140,10 @@ export class UpsertCommand extends ConfigCommand<UpsertCommandInput, UpsertComma
       .forEach(([key, current]) => {
         try {
           if (current.value) {
-            if (current.cfgu.lazy) {
+            if (current.cfgu?.lazy) {
               throw new Error(`Key declared as "lazy" cannot be assigned a value`);
             }
-            if (current.cfgu.const) {
+            if (current.cfgu?.const) {
               throw new Error(`Key declared as "const" cannot be assigned a value`);
             }
 
