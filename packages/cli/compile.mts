@@ -48,14 +48,14 @@ const outputBinary = stdenv.isWindows ? `${binaryName}.exe` : binaryName;
   console.log(`Node.js distribution extracted to ${tempDir}`);
 
   // Step 6: Copy the dist directory and sea-config.json file to the temporary directory
-  await $`cp -r ${distDir} ${tempDir}/dist`;
-  await $`cp ${seaConfigFile} ${tempDir}/sea-config.json`;
+  await fs.cp(distDir, path.join(tempDir, 'dist'), { recursive: true });
+  await fs.copyFile(seaConfigFile, path.join(tempDir, 'sea-config.json'));
   console.log('dist directory and sea-config.json file copied to the temporary directory');
 
   // Step 7: Generate the blob to be injected
   const nodeDistDir = path.join(tempDir, nodeDist);
-  // await $`cd ${tempDir} && ${path.join(nodeDistDir, 'bin', 'node')} --experimental-sea-config sea-config.json`;
-  // Uses machine installed node instead
+  // ! this step uses the machine installed node and not the downloaded one on purpose
+  // ! when gh-actions arm64 is available, this step will be updated to use the downloaded node
   await $`cd ${tempDir} && node --experimental-sea-config sea-config.json`;
   console.log('Blob generated for single executable application');
 
@@ -78,9 +78,7 @@ const outputBinary = stdenv.isWindows ? `${binaryName}.exe` : binaryName;
   }
 
   // Step 10: Inject the blob into the copied binary using postject
-  const npxExecutable = stdenv.isWindows ? 'npx.exe' : 'npx';
-  const npxPath = path.join(nodeDistDir, 'bin', npxExecutable);
-  const postjectCommand = `${npxPath} postject ${outputPath} NODE_SEA_BLOB ${path.join(tempDir, 'sea-prep.blob')} --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2`;
+  const postjectCommand = `npx postject ${outputPath} NODE_SEA_BLOB ${path.join(tempDir, 'sea-prep.blob')} --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2`;
   if (stdenv.isMacOS) {
     await $`${postjectCommand} --macho-segment-name NODE_SEA`;
   } else {
