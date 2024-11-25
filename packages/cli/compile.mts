@@ -63,8 +63,7 @@ const outputBinary = stdenv.isWindows ? `${binaryName}.exe` : binaryName;
   console.log('Blob generated for single executable application');
 
   // Step 8: Create a copy of the Node.js executable
-  const nodeExecutable = stdenv.isWindows ? 'node.exe' : 'node';
-  const nodePath = path.join(nodeDistDir, 'bin', nodeExecutable);
+  const nodePath = stdenv.isWindows ? path.join(nodeDistDir, 'node.exe') : path.join(nodeDistDir, 'bin', 'node');
   const outputPath = path.join(tempDir, outputBinary);
   await fs.copyFile(nodePath, outputPath);
   console.log(`Node.js executable copied to ${outputPath}`);
