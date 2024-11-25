@@ -1,9 +1,9 @@
-FROM node:22.10.0-alpine
+FROM node:22.10.0-bullseye
 
-RUN apk --no-cache add curl
+RUN apt-get update && apt-get install -y curl
 
 ARG CONFIGU_VERSION=latest
 COPY install.sh /install.sh
 RUN sh /install.sh
 
-ENTRYPOINT [ "~/.configu/bin/configu" ]
+ENTRYPOINT [ "/root/.configu/bin/configu" ]
