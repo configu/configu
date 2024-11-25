@@ -108,16 +108,16 @@ jobs:
         shell: bash
         run: |
           dist_path=${{ steps.release.outputs.package_path }}/dist
-          ls -la $dist_path
+          # ls -la $dist_path
           pnpx shx mv $dist_path/run.cjs $dist_path/${{ matrix.dist }}.js
           if [[ ${{ matrix.runner }} == windows* ]]; then
-            $dist_path/configu.exe -v
+            # $dist_path/configu.exe -v
             pnpx shx mv $dist_path/configu.exe $dist_path/configu-${{ matrix.dist }}.exe
           else
-            $dist_path/configu -v
+            # $dist_path/configu -v
             pnpx shx mv $dist_path/configu $dist_path/configu-${{ matrix.dist }}
           fi
-          ls -la $dist_path
+          # ls -la $dist_path
 
       - uses: actions/upload-artifact@v4
         with:
