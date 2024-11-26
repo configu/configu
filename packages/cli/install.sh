@@ -4,8 +4,8 @@ set -e
 
 # Detect OS and architecture
 if [ "$OS" = "Windows_NT" ]; then
-  ext=".exe"
   dist="win32-x64"
+  ext=".exe"
 else
   ext=""
   case $(uname -sm) in
@@ -20,6 +20,7 @@ fi
 
 # Get the version from environment variable or use the default value
 version="${CONFIGU_VERSION:-latest}"
+
 # Adjust version if necessary
 if [ "$version" != "latest" ] && [ "$version" != "next" ] && [ "${version#v}" = "$version" ]; then
   version="v$version"
@@ -27,7 +28,7 @@ fi
 
 # Set the installation path
 dir="${CONFIGU_PATH:-$HOME/.configu}"
-bin="$configu_install/bin"
+bin="$dir/bin"
 exe="$bin/configu$ext"
 
 # Create the installation directory
@@ -42,11 +43,10 @@ curl --fail --location --progress-bar --output "$exe" "$download"
 chmod +x "$exe"
 
 # Try to add to global $PATH
+echo "Configu was installed successfully to $exe"
 if command -v configu >/dev/null; then
-  echo "Configu was installed successfully to $exe"
   echo "Run 'configu --help' to get started"
 else
-  echo "Configu was installed successfully to $exe"
   echo "Manually add the directory to your \$HOME/.bash_profile (or similar)"
   echo "  export PATH=\"\$PATH:$bin\""
   echo "Run '$exe --help' to get started"
