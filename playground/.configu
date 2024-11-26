@@ -16,6 +16,12 @@ stores:
     default: true
     configuration:
       path: ./store.json
+  hc:
+    type: hashi-corp-vault
+    configuration:
+      address: http://127.0.0.1:8200/
+      token: myroot
+      engine: secret
 
 # cache: /path/to/db.sqlite
 # schemas:
@@ -27,6 +33,8 @@ stores:
 
 
 register:
-  - ../packages/stores/json-file/src/index.ts
-  - ../packages/stores/sqlite/src/index.ts
-  - ../packages/stores/postgres/src/index.ts
+  # - ../packages/stores/json-file/src/index.ts
+  # - ../packages/stores/sqlite/src/index.ts
+  # - ../packages/stores/postgres/src/index.ts
+  # - ../packages/integrations/dist/hashicorp-vault.os-darwin.js
+  - '../packages/integrations/stores/hashicorp-vault/src/hashicorp-vault.ts'

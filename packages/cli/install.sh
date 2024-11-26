@@ -2,59 +2,54 @@
 
 set -e
 
+# Detect OS and architecture
 if [ "$OS" = "Windows_NT" ]; then
-  target="win32-x64"
   ext=".exe"
+  dist="win32-x64"
 else
   ext=""
   case $(uname -sm) in
-  "Darwin x86_64") target="darwin-x64" ;;
-  "Darwin arm64") target="darwin-arm64" ;;
-  "Linux aarch64") target="linux-arm64" ;;
-  *) target="linux-x64" ;;
+  "Darwin x86_64") dist="darwin-x64" ;;
+  "Darwin arm64") dist="darwin-arm64" ;;
+  "Linux aarch64") dist="linux-arm64" ;;
+  "Linux armv7l") dist="linux-armv7l" ;;
+  "Linux x86_64") dist="linux-x64" ;;
+  *) echo "Unsupported OS/architecture combination"; exit 1 ;;
   esac
 fi
 
-# get the version from environment variable or use the default value
-configu_version="${CONFIGU_VERSION:-latest}"
-
-
-#configu_uri="./dist/configu-${target}${ext}"
-# todo: fix
-# configu_uri="https://github.com/configu/configu/releases/download/cli%2Fv${configu_version}/configu-${target}.${ext}"
-configu_uri="https://github.com/configu/configu/releases/download/cli%2Fv${configu_version}/configu-${target}"
-# https://github.com/configu/configu/releases/download/cli%2Fnext/configu-linux-armv7l
-# https://github.com/configu/configu/releases/download/cli%2Fv1.0.0-next.205/configu-linux-x64
-
-echo "Downloading configu from $configu_uri"
-
-configu_install="${CONFIGU_DIR:-$HOME/.configu}"
-bin_dir="$configu_install/bin"
-exe="$bin_dir/configu"
-
-if [ -d "$bin_dir" ]; then
-  rm -rf "$bin_dir"
+# Get the version from environment variable or use the default value
+version="${CONFIGU_VERSION:-latest}"
+# Adjust version if necessary
+if [ "$version" != "latest" ] && [ "$version" != "next" ] && [ "${version#v}" = "$version" ]; then
+  version="v$version"
 fi
-mkdir -p "$bin_dir"
 
-#cp $configu_uri $exe
-curl --fail --location --progress-bar --output "$exe$ext" "$configu_uri"
+# Set the installation path
+dir="${CONFIGU_PATH:-$HOME/.configu}"
+bin="$configu_install/bin"
+exe="$bin/configu$ext"
 
-# if [ "$ext" = "gz" ]; then
-#   if command -v gunzip >/dev/null; then
-#     gunzip "$exe.$ext"
-#   else
-#     gzip -d "$exe.$ext"
-#   fi
-# fi
+# Create the installation directory
+mkdir -p "$bin"
 
+# Download the configu binary
+download="https://github.com/configu/configu/releases/download/cli%2F${version}/configu-${dist}${ext}"
+echo "Downloading configu from $download"
+curl --fail --location --progress-bar --output "$exe" "$download"
+
+# Make the binary executable
 chmod +x "$exe"
 
-# configure global command "configu" to run $exec executable
-echo "Configu was installed successfully to $exe"
-
+# Try to add to global $PATH
 if command -v configu >/dev/null; then
+  echo "Configu was installed successfully to $exe"
   echo "Run 'configu --help' to get started"
 else
+  echo "Configu was installed successfully to $exe"
+  echo "Manually add the directory to your \$HOME/.bash_profile (or similar)"
+  echo "  export PATH=\"\$PATH:$bin\""
   echo "Run '$exe --help' to get started"
 fi
+
+echo "Stuck? Join our Discord https://discord.com/invite/cjSBxnB9z8"
