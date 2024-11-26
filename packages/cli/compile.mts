@@ -95,7 +95,7 @@ if (stdenv.provider === 'github_actions') {
     console.log('Signature removed from the binary (macOS)');
   } else if (stdenv.isWindows) {
     // Optional: Remove signature using signtool if available
-    await $`${signtool} remove /s ${outputPath}`;
+    // await $`${signtool} remove /s ${outputPath}`;
   }
 
   // Step 10: Inject the blob into the copied binary using postject
@@ -112,7 +112,7 @@ if (stdenv.provider === 'github_actions') {
     console.log('Binary signed (macOS)');
   } else if (stdenv.isWindows) {
     // Optional: Sign the binary using signtool if available
-    await $`${signtool} sign /fd SHA256 ${outputPath}`;
+    // await $`${signtool} sign /fd SHA256 ${outputPath}`;
   }
 
   // Step 12: Copy the executable to the working directory's dist directory
