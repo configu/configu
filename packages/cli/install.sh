@@ -35,9 +35,9 @@ exe="$bin/configu$ext"
 mkdir -p "$bin"
 
 # Download the configu binary
-download="https://github.com/configu/configu/releases/download/cli%2F${version}/configu-${dist}${ext}"
+download="https://github.com/configu/configu/releases/download/cli/${version}/configu-${dist}${ext}"
 echo "Downloading configu from $download"
-curl --fail --location --progress-bar --output "$exe" "$download"
+curl -fsSL "$download" -o "$exe"
 
 # Make the binary executable
 chmod +x "$exe"
