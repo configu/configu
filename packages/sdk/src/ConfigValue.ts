@@ -1,11 +1,11 @@
 import _ from 'lodash';
 import { Jsonify, Merge } from 'type-fest';
 
-import { Cfgu } from './Cfgu';
-import { Config } from './Config';
-import { ConfigStore } from './ConfigStore';
-import { ConfigSet } from './ConfigSet';
-import { ConfigSchema } from './ConfigSchema';
+import { type Cfgu } from './Cfgu';
+import { type Config } from './Config';
+import { type ConfigStore } from './ConfigStore';
+import { type ConfigSet } from './ConfigSet';
+import { type ConfigSchema } from './ConfigSchema';
 import { ConfigExpression, ExpressionString } from './ConfigExpression';
 import { JSONSchema, FromSchema } from './expressions/JSONSchema';
 
