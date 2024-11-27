@@ -2,6 +2,7 @@ import _ from 'lodash';
 import { CfguSchema } from './Cfgu';
 import { ConfigKey } from './ConfigKey';
 import { JSONSchema, JSONSchemaObject, FromSchema } from './expressions/JSONSchema';
+import { ConfigValue } from './ConfigValue';
 
 // export type ConfigSchemaKeys = { [ConfigKey: string]: Cfgu };
 
@@ -100,15 +101,7 @@ export class ConfigSchema {
           migratedCfgu.test.push(LEGACY_CFGU_VALUE_TYPE_VALIDATORS[type]);
         }
         if (options) {
-          migratedCfgu.enum = options.map((option: string) => {
-            try {
-              // numeric, boolean, object, array
-              return JSON.parse(option);
-            } catch (error) {
-              // string
-              return option;
-            }
-          });
+          migratedCfgu.enum = options.map((option: string) => ConfigValue.parse(option));
         }
         if (labels) {
           migratedCfgu.label = labels;

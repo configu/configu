@@ -32,7 +32,7 @@ export class ConfigExpression {
     ConfigExpression.register('should', should);
   }
 
-  private static escapeRegex(string: string) {
+  public static escapeRegex(string: string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
 
