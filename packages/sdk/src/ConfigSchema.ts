@@ -109,7 +109,7 @@ export class ConfigSchema {
         if (depends) {
           depends.forEach((dependencyKey: string) => {
             migratedCfgu.test.push(
-              `expect($.configs.${dependencyKey}.storedValue, 'Dependency ${dependencyKey} is missing for ${key}').to.exist`,
+              `expect($.configs.${dependencyKey}.storedValue, 'Dependency ${dependencyKey} is missing for ${key}').to.not.be.empty`,
             );
           });
         }
