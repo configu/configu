@@ -3,6 +3,7 @@ import { CfguSchema } from './Cfgu';
 import { ConfigKey } from './ConfigKey';
 import { JSONSchema, JSONSchemaObject, FromSchema } from './expressions/JSONSchema';
 import { ConfigValue } from './ConfigValue';
+import { ConfigExpression } from './ConfigExpression';
 
 // export type ConfigSchemaKeys = { [ConfigKey: string]: Cfgu };
 
@@ -114,23 +115,23 @@ export class ConfigSchema {
           });
         }
         if (template) {
-          migratedCfgu.const = template.replace(/{{\s*([^{}]+?)\s*}}/g, (match: string, templateKey: string) => {
-            if (contents[templateKey]) {
-              return `{{$.configs.${templateKey}.storedValue}}`;
+          migratedCfgu.const = template.replace(ConfigExpression.pattern, (match: string, group: string) => {
+            if (contents[group]) {
+              return `{{$.configs.${group}.storedValue}}`;
             }
-            if (templateKey === 'CONFIGU_STORE.type') {
+            if (group === 'CONFIGU_STORE.type') {
               return `{{$.input.store.type}}`;
             }
-            if (templateKey === 'CONFIGU_SET.path') {
+            if (group === 'CONFIGU_SET.path') {
               return `{{$.input.set.path}}`;
             }
-            if (templateKey === 'CONFIGU_SET.hierarchy') {
+            if (group === 'CONFIGU_SET.hierarchy') {
               return `{{$.input.set.hierarchy}}`;
             }
-            if (templateKey === 'CONFIGU_SET.first') {
+            if (group === 'CONFIGU_SET.first') {
               return `{{_.first($.input.set.hierarchy)}}`;
             }
-            if (templateKey === 'CONFIGU_SET.last') {
+            if (group === 'CONFIGU_SET.last') {
               return `{{_.last($.input.set.hierarchy)}}`;
             }
             return match;

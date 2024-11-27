@@ -32,11 +32,11 @@ export class ConfigExpression {
     ConfigExpression.register('should', should);
   }
 
-  public static escapeRegex(string: string) {
+  private static escapeRegex(string: string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
 
-  private static pattern = new RegExp(
+  public static pattern = new RegExp(
     ConfigExpression.delimiters
       .map(({ start, end }) => `${ConfigExpression.escapeRegex(start)}(.*?)${ConfigExpression.escapeRegex(end)}`)
       .join('|'),
