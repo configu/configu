@@ -34,7 +34,7 @@
   "scripts": {
     "clean": "shx rm -rf tsconfig.tsbuildinfo build",
     "build": "tsc --build",
-    "build:docker": "docker build --build-arg NODE_VERSION=22.9.0 --progress plain -t configu/proxy -f ./Dockerfile ../..",
+    "build:docker": "docker build --build-arg NODE_VERSION=22.11.0 --progress plain -t configu/proxy -f ./Dockerfile ../..",
     "dev": "tsx watch --inspect --clear-screen=false src/index.ts"
   },
   "dependencies": {

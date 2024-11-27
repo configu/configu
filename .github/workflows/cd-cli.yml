@@ -23,31 +23,30 @@ jobs:
         # todo: create a dedicated runner to execute the corresponding Node.js distribution
         # https://nodejs.org/download/release/latest/
         dist:
-          # aarch64
-          # - linux-arm64
-          # armv7
-          # - linux-armv7l
-          # - linux-ppc64le
-          # - linux-s390x
+          # aarch64 = arm64
+          # armv7 = armv7l
+          - linux-arm64
+          - linux-armv7l
+          - linux-ppc64le
+          - linux-s390x
           - linux-x64
-          # aaarch64
           - darwin-arm64
           - darwin-x64
-          # - win-arm64
+          - win-arm64
           - win-x64
         include:
-          # - dist: linux-arm64
-          #   runner: ubuntu-latest
-          #   arch: arm64
-          # - dist: linux-armv7l
-          #   runner: ubuntu-latest
-          #   arch: armv7l
-          # - dist: linux-ppc64le
-          #   runner: ubuntu-latest
-          #   arch: ppc64le
-          # - dist: linux-s390x
-          #   runner: ubuntu-latest
-          #   arch: s390x
+          - dist: linux-arm64
+            runner: ubuntu-latest
+            arch: arm64
+          - dist: linux-armv7l
+            runner: ubuntu-latest
+            arch: armv7l
+          - dist: linux-ppc64le
+            runner: ubuntu-latest
+            arch: ppc64le
+          - dist: linux-s390x
+            runner: ubuntu-latest
+            arch: s390x
           - dist: linux-x64
             runner: ubuntu-latest
             arch: x64
@@ -57,9 +56,9 @@ jobs:
           - dist: darwin-x64
             runner: macos-latest
             arch: x64
-          # - dist: win-arm64
-          #   runner: windows-latest
-          #   arch: arm64
+          - dist: win-arm64
+            runner: windows-latest
+            arch: arm64
           - dist: win-x64
             runner: windows-latest
             arch: x64
@@ -109,16 +108,16 @@ jobs:
         shell: bash
         run: |
           dist_path=${{ steps.release.outputs.package_path }}/dist
-          ls -la $dist_path
+          # ls -la $dist_path
           pnpx shx mv $dist_path/run.cjs $dist_path/${{ matrix.dist }}.js
           if [[ ${{ matrix.runner }} == windows* ]]; then
-            $dist_path/configu.exe -v
+            # $dist_path/configu.exe -v
             pnpx shx mv $dist_path/configu.exe $dist_path/configu-${{ matrix.dist }}.exe
           else
-            $dist_path/configu -v
+            # $dist_path/configu -v
             pnpx shx mv $dist_path/configu $dist_path/configu-${{ matrix.dist }}
           fi
-          ls -la $dist_path
+          # ls -la $dist_path
 
       - uses: actions/upload-artifact@v4
         with:
@@ -180,7 +179,7 @@ jobs:
         run: |
           node_version=$(cat .node-version)
           echo "node_version: $node_version"
-          echo "node_version=$node_version" >> $GITHUB_ENV
+          echo "node_version=$node_version" >> $GITHUB_OUTPUT
 
       # https://github.com/docker/build-push-action/tree/v6/?tab=readme-ov-file#examples
       # https://docs.docker.com/build/ci/github-actions/multi-platform/

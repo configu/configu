@@ -54,7 +54,7 @@ export class EvalCommand extends ConfigCommand<EvalCommandInput, EvalCommandOutp
 
     return _.mapValues<ConfigSchema['keys'], EvaluatedConfig>(schema.keys, (cfgu, key) => {
       let origin = EvaluatedConfigOrigin.Empty;
-      if (cfgu.const) {
+      if (cfgu?.const) {
         origin = EvaluatedConfigOrigin.Const;
       }
 
@@ -77,7 +77,7 @@ export class EvalCommand extends ConfigCommand<EvalCommandInput, EvalCommandOutp
       }
 
       const isOverridden = Object.prototype.hasOwnProperty.call(configs, current.key);
-      const isLazy = Boolean(current.cfgu.lazy);
+      const isLazy = Boolean(current.cfgu?.lazy);
 
       if (!isOverridden && !isLazy) {
         return current;
@@ -128,7 +128,7 @@ export class EvalCommand extends ConfigCommand<EvalCommandInput, EvalCommandOutp
         return current;
       }
 
-      if (current.cfgu.default) {
+      if (current.cfgu?.default) {
         return {
           ...current,
           value: ConfigValue.stringify(current.cfgu.default),
@@ -176,7 +176,7 @@ export class EvalCommand extends ConfigCommand<EvalCommandInput, EvalCommandOutp
 
     const constExpressionsDict = _.chain(result)
       .pickBy((current) => current.origin === EvaluatedConfigOrigin.Const)
-      .mapValues((current) => `\`${current.cfgu.const}\``)
+      .mapValues((current) => (current.cfgu?.const ? `\`${current.cfgu.const}\`` : ''))
       .value();
 
     ConfigExpression.sort(constExpressionsDict).forEach((key) => {
@@ -226,7 +226,7 @@ export class EvalCommand extends ConfigCommand<EvalCommandInput, EvalCommandOutp
             // if (cfgu.depends && cfgu.depends.some((depend) => !evaluatedConfigsDict[depend])) {
             //   throw new Error(`ConfigValue is missing for depends`);
             // }
-          } else if (cfgu.required) {
+          } else if (cfgu?.required) {
             throw new Error('ConfigValue is required');
           }
         } catch (error) {

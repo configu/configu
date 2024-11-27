@@ -34,8 +34,9 @@
     "clean": "shx rm -rf dist",
     "build": "tsup",
     "compile": "tsx compile.mts",
+    "build:docker": "docker build --build-arg NODE_VERSION=22.11.0 --build-arg CONFIGU_VERSION=1.0.0-next.226 --progress plain -t configu/cli -f ./Dockerfile .",
     "dev": "tsx src/run.ts",
-    "start:": "ndoe dist/run.cjs",
+    "start": "node dist/run.cjs",
     "configu": "~/.configu/bin/configu",
     "test:post-release": "tsx --test ./compiler/**/*.test.ts"
   },
@@ -48,15 +49,15 @@
     "clipanion": "^4.0.0-rc.4",
     "consola": "^3.2.3",
     "dotenv": "16.4.5",
-    "inquirer": "12.0.0",
+    "inquirer": "12.0.1",
     "lodash": "^4.17.21",
     "open": "10.1.0",
-    "openid-client": "5.7.0",
-    "std-env": "^3.7.0",
+    "openid-client": "5.7.1",
+    "std-env": "^3.8.0",
     "tty-table": "4.2.3",
     "typanion": "3.14.0",
     "tiged": "2.12.7"
   },
-  "bundleDependencies": [],
-  "devDependencies": {}
+  "devDependencies": {},
+  "bundleDependencies": []
 }

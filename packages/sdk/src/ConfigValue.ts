@@ -70,7 +70,7 @@ export class ConfigValue {
       ...current,
       storedValue: current.value,
       value: ConfigValue.parse(current.value),
-      labels: Array.isArray(current.cfgu.label) ? current.cfgu.label : _.compact([current.cfgu.label]),
+      labels: Array.isArray(current.cfgu?.label) ? current.cfgu.label : _.compact([current.cfgu?.label]),
     }));
 
     let $ = {
@@ -128,7 +128,7 @@ export class ConfigValue {
 
     const { cfgu } = currentConfig;
 
-    if (cfgu.pattern) {
+    if (cfgu?.pattern) {
       ConfigValue.test({
         test: `JSONSchema.validate({ "type": "string", "pattern": $.cfgu.pattern }, $.storedValue) || true`,
         errorSuffix: 'Cfgu.pattern test',
@@ -136,7 +136,7 @@ export class ConfigValue {
       });
     }
 
-    if (cfgu.enum) {
+    if (cfgu?.enum) {
       ConfigValue.test({
         test: `JSONSchema.validate({ "enum": $.cfgu.enum }, $.value) || true`,
         errorSuffix: 'Cfgu.enum test',
@@ -144,7 +144,7 @@ export class ConfigValue {
       });
     }
 
-    if (cfgu.schema) {
+    if (cfgu?.schema) {
       ConfigValue.test({
         test: `JSONSchema.validate($.cfgu.schema, $.value) || true`,
         errorSuffix: 'Cfgu.schema test',
@@ -152,7 +152,7 @@ export class ConfigValue {
       });
     }
 
-    if (cfgu.test) {
+    if (cfgu?.test) {
       const tests = Array.isArray(cfgu.test) ? cfgu.test : [cfgu.test];
       tests.forEach((test, idx) => {
         ConfigValue.test({

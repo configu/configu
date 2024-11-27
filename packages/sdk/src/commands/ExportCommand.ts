@@ -20,7 +20,7 @@ export class ExportCommand extends ConfigCommand<
   async execute() {
     const { pipe } = this.input;
 
-    const filteredPipe = _.pickBy(pipe, (config) => !config.cfgu.hidden);
+    const filteredPipe = _.pickBy(pipe, (config) => !config.cfgu?.hidden);
     this.validatePipe(filteredPipe);
     const mappedPipe = this.kv(filteredPipe);
 
