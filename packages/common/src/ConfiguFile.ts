@@ -292,6 +292,8 @@ export class ConfiguFile {
       }
       // todo: support http based urls
       throw new Error('Only file URLs are supported');
+    } else {
+      return ConfiguFile.registerStore(input);
     }
 
     try {
@@ -305,18 +307,17 @@ export class ConfiguFile {
   }
 
   static async registerStore(type: string) {
-    const normalizedType = ConfigKey.normalize(type);
+    const [TYPE = '', VERSION = 'latest'] = type.split('@');
+    const normalizedType = ConfigKey.normalize(TYPE);
 
     const moduleDirPath = await getConfiguHomeDir('cache');
-    const modulePath = join(moduleDirPath, `/${normalizedType}.js`);
+    const modulePath = join(moduleDirPath, `/${normalizedType}-${VERSION}.js`);
 
     // todo: add sem-ver check for cache invalidation when cached stores are outdated once integration pipeline is reworked
-    // const [KEY, VERSION = 'latest'] = type.split('@');
-    const version = 'latest';
 
     const isModuleExists = await pathExists(modulePath);
     if (!isModuleExists) {
-      const remoteUrl = `https://github.com/configu/configu/releases/download/integrations-${version}/${type}.${platform()}-${arch()}.js`;
+      const remoteUrl = `https://github.com/configu/configu/releases/download/stores%2F${normalizedType}%2F${VERSION}/${normalizedType}-${platform()}-${arch()}.js`;
       // console.log('Downloading:', remoteUrl);
       const res = await fetch(remoteUrl);
 
@@ -327,7 +328,7 @@ export class ConfiguFile {
       }
     }
 
-    await ConfiguFile.registerModuleFile(modulePath);
+    return ConfiguFile.registerModuleFile(modulePath);
   }
 
   static async constructStore(type: string, configuration = {}) {
