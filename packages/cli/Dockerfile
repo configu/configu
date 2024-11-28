@@ -12,9 +12,11 @@ RUN corepack enable
 FROM base AS build
 WORKDIR /src
 COPY --exclude=**/node_modules --exclude=**/*.md --exclude=**/build --exclude=**/dist --exclude=**/tmp . /src
+ARG CONFIGU_VERSION="0.0.0"
+RUN pnpm --filter=@configu/cli exec npm --no-git-tag-version version $CONFIGU_VERSION
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-RUN pnpm run --filter=@configu/cli build
-RUN pnpm deploy --filter=@configu/cli --prod --ignore-scripts /dist
+RUN pnpm --filter=@configu/cli run build
+RUN pnpm --filter=@configu/cli deploy --prod --ignore-scripts /dist
 
 FROM node:$NODE_VERSION-alpine AS dist
 USER node

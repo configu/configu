@@ -2,6 +2,11 @@
 
 $ErrorActionPreference = 'Stop'
 
+if (-not (Test-Path "curl.exe")) {
+  Write-Output echo "Error: curl is required to install configu (see: https://curl.se/)."
+  exit 1
+}
+
 # Detect OS and architecture
 $ext = ""
 $arch = if ($env:PROCESSOR_ARCHITECTURE -eq "ARM64") {
@@ -12,15 +17,22 @@ $arch = if ($env:PROCESSOR_ARCHITECTURE -eq "ARM64") {
   "x64"
 }
 
+$arc = '.tar.gz'
 $os = if ($IsWindows) {
-  "win32"
+  "win"
+  $arc = '.zip'
   $ext = ".exe"
-} elseif ($IsMacOS) {
-  "darwin"
 } elseif ($IsLinux) {
   "linux"
+} elseif ($IsMacOS) {
+  "darwin"
 } else {
   Write-Error "Unsupported OS"; exit 1
+}
+
+if ($arc -eq '.tar.gz' -and -not (Test-Path "tar.exe")) {
+  Write-Output echo "Error: tar is required to install configu (see: https://www.gnu.org/software/tar/)."
+  exit 1
 }
 
 $dist = "${os}-${arch}"
@@ -37,12 +49,12 @@ if ($version -ne "latest" -and $version -ne "next" -and -not $version.StartsWith
 }
 
 # Set the installation path
-$dir = $env:CONFIGU_PATH
+$dir = $env:CONFIGU_HOME
 if (-not $dir) {
   $dir = "${Home}\.configu"
 }
 $bin = "${dir}\bin"
-$exe = "${bin}\configu${ext}"
+$exe = "${bin}\configu"
 
 # Create the installation directory
 if (!(Test-Path $bin)) {
@@ -50,12 +62,22 @@ if (!(Test-Path $bin)) {
 }
 
 # Download the configu binary
-$download = "https://github.com/configu/configu/releases/download/cli%2F${version}/configu-${dist}${ext}"
+$download = "https://github.com/configu/configu/releases/download/cli/$version/configu-$version-$dist$arc"
 Write-Output "Downloading configu from $download"
-curl.exe -Lo $exe $download
+curl.exe -Lo "$exe$arc" $download
+
+# Extract the binary
+if ($arc -eq '.zip') {
+  Expand-Archive -Path "$exe$arc" -Destination $bin -Force
+} else {
+  tar.exe -xf "$exe$arc" -C $bin
+}
 
 # Make the binary executable
 chmod +x $exe
+
+# Remove the downloaded archive
+Remove-Item "$exe$arc"
 
 # Try to add to global $PATH
 $User = [System.EnvironmentVariableTarget]::User
@@ -66,5 +88,9 @@ if (!(";${Path};".ToLower() -like "*;${bin};*".ToLower())) {
 }
 
 Write-Output "Configu was installed successfully to $exe"
-Write-Output "Run 'configu --help' to get started"
+if (-not (Test-Path "configu")) {
+  Write-Output "Run 'configu --help' to get started"
+} else {
+  Write-Output "Run '$exe --help' to get started"
+}
 Write-Output "Stuck? Join our Discord https://discord.com/invite/cjSBxnB9z8"
