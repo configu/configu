@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 /* eslint-disable import/no-extraneous-dependencies */
 
 import { $ } from 'zx';

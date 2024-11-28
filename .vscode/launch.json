@@ -81,7 +81,7 @@
       "name": "cli",
       "type": "node",
       "request": "launch",
-      "program": "${workspaceRoot}/packages/cli/src/run.ts",
+      "program": "${workspaceRoot}/packages/cli/src/configu.ts",
       "runtimeExecutable": "tsx",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",

@@ -22,7 +22,7 @@
   ],
   "type": "module",
   "bin": {
-    "configu": "./dist/run.cjs"
+    "configu": "./dist/configu.cjs"
   },
   "exports": {
     "./package.json": "./package.json"
@@ -33,12 +33,11 @@
   "scripts": {
     "clean": "shx rm -rf dist",
     "build": "tsup",
-    "compile": "tsx compile.mts",
-    "build:docker": "docker build --build-arg NODE_VERSION=22.11.0 --build-arg CONFIGU_VERSION=1.0.0-next.226 --progress plain -t configu/cli -f ./Dockerfile .",
-    "dev": "tsx src/run.ts",
-    "start": "node dist/run.cjs",
-    "configu": "~/.configu/bin/configu",
-    "test:post-release": "tsx --test ./compiler/**/*.test.ts"
+    "build:binary": "tsx build.mts",
+    "build:docker": "docker build --build-arg NODE_VERSION=22.11.0 --progress plain -t configu/cli -f ./Dockerfile ../..",
+    "dev": "tsx src/configu.ts",
+    "start": "node dist/configu.cjs",
+    "configu": "$HOME/.configu/bin/configu"
   },
   "dependencies": {
     "@configu/common": "workspace:*",

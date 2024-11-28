@@ -3,4 +3,8 @@ keys:
     default: 7
   Y:
     const: ${ $.configs.X.value + 3 }
-  Z: {}
+  Z:
+    const: ${ $.configs.Y.value + 3 }
+    test:
+      - $.configs.Z.value > 10
+

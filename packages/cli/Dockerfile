@@ -1,10 +1,24 @@
+# syntax=docker/dockerfile:1.7-labs
+
 ARG NODE_VERSION
-FROM node:$NODE_VERSION-alpine
+FROM node:$NODE_VERSION-slim AS base
 
-ARG CONFIGU_VERSION=latest
+LABEL author "dev@configu.com"
 
-COPY install.cjs /install.cjs
-RUN node /install.cjs
-RUN rm -f /install.cjs
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
 
-ENTRYPOINT [ "node", "/root/.configu/bin/configu.js" ]
+FROM base AS build
+WORKDIR /src
+COPY --exclude=**/node_modules --exclude=**/*.md --exclude=**/build --exclude=**/dist --exclude=**/tmp . /src
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN pnpm run --filter=@configu/cli build
+RUN pnpm deploy --filter=@configu/cli --prod --ignore-scripts /dist
+
+FROM node:$NODE_VERSION-alpine AS dist
+USER node
+WORKDIR /dist
+COPY --from=build --chown=node:node /dist/dist /dist
+ENV NODE_ENV="production"
+ENTRYPOINT [ "node", "configu.cjs" ]
