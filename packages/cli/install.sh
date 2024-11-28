@@ -17,7 +17,6 @@ if [ "$OS" = "Windows_NT" ]; then
     echo "Error: either unzip or 7z is required to install configu (see: )."
     exit 1
   fi
-fi
 else
   case $(uname -sm) in
   "Darwin x86_64") dist="darwin-x64" ;;
