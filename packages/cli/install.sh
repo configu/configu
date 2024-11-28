@@ -18,12 +18,18 @@ if [ "$OS" = "Windows_NT" ]; then
     exit 1
   fi
 else
-  case $(uname -sm) in
+  case "$(uname -sm)" in
   "Darwin x86_64") dist="darwin-x64" ;;
   "Darwin arm64") dist="darwin-arm64" ;;
   "Linux aarch64") dist="linux-arm64" ;;
   "Linux armv7l") dist="linux-armv7l" ;;
-  "Linux x86_64") dist="linux-x64" ;;
+  "Linux x86_64")
+    if [ -f /etc/alpine-release ] || ldd --version 2>&1 | grep -q musl; then
+      dist="linux-musl-x64"
+    else
+      dist="linux-x64"
+    fi
+    ;;
   *) echo "Unsupported OS/architecture combination"; exit 1 ;;
   esac
   arc=".tar.gz"
