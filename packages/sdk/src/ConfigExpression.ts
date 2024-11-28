@@ -36,7 +36,7 @@ export class ConfigExpression {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
 
-  private static pattern = new RegExp(
+  public static pattern = new RegExp(
     ConfigExpression.delimiters
       .map(({ start, end }) => `${ConfigExpression.escapeRegex(start)}(.*?)${ConfigExpression.escapeRegex(end)}`)
       .join('|'),
