@@ -6,7 +6,7 @@ import path from 'node:path';
 import { tmpdir } from 'zx';
 import ignore from 'ignore';
 
-const rootDir = path.dirname(new URL(import.meta.url).pathname);
+const rootDir = path.resolve(path.dirname(new URL(import.meta.url).pathname));
 
 const ignorePatterns = ['**/node_modules', '**/*.md', '**/build', '**/dist', '**/out', '**/tmp'];
 

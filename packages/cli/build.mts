@@ -12,7 +12,7 @@ import { path, stdenv } from '@configu/common';
 
 $.quote = (command) => command;
 
-const scriptDir = path.dirname(new URL(import.meta.url).pathname);
+const scriptDir = path.resolve(path.dirname(new URL(import.meta.url).pathname));
 const distDir = path.join(scriptDir, 'dist');
 const rootDir = path.join(scriptDir, '..', '..');
 const nodeVersionFile = path.join(rootDir, '.node-version');

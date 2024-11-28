@@ -92,8 +92,8 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: ${{ steps.release.outputs.package }}-v${{ steps.release.outputs.version }}-${{ matrix.dist }}
-          path: ${{ steps.release.outputs.package_path }}/dist/${{ steps.release.outputs.package }}-v${{ steps.release.outputs.version }}-${{ matrix.dist }}.{tar.gz,zip}
+          name: configu-v${{ steps.release.outputs.version }}-${{ matrix.dist }}
+          path: ${{ steps.release.outputs.package_path }}/dist/configu-v${{ steps.release.outputs.version }}-${{ matrix.dist }}.{tar.gz,zip}
 
       # - name: Check release
       #   if: ${{ matrix.runner != 'windows-latest' }}
@@ -195,7 +195,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           path: ${{ steps.release.outputs.package_path }}/dist
-          pattern: ${{ steps.release.outputs.package }}-v${{ steps.release.outputs.version }}-*
+          pattern: configu-v${{ steps.release.outputs.version }}-*
           merge-multiple: true
 
       - name: Release package to version-based release
