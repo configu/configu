@@ -89,11 +89,14 @@ jobs:
         run: |
           pnpm --filter ${{ steps.release.outputs.package_name }} run \
             build:binary
+          ls -l ${{ steps.release.outputs.package_path }}/dist
 
       - uses: actions/upload-artifact@v4
         with:
           name: configu-v${{ steps.release.outputs.version }}-${{ matrix.dist }}
-          path: ${{ steps.release.outputs.package_path }}/dist/configu-v${{ steps.release.outputs.version }}-${{ matrix.dist }}.{tar.gz,zip}
+          path: |
+            ${{ steps.release.outputs.package_path }}/dist/configu-v${{ steps.release.outputs.version }}-${{ matrix.dist }}.tar.gz
+            ${{ steps.release.outputs.package_path }}/dist/configu-v${{ steps.release.outputs.version }}-${{ matrix.dist }}.zip
 
       # - name: Check release
       #   if: ${{ matrix.runner != 'windows-latest' }}

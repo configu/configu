@@ -156,7 +156,7 @@ if (stdenv.provider === 'github_actions') {
   } else {
     await $`tar -cJf ${configuArchive} -C ${distDir} ${configuBinary} ${configuJs}`.pipe(process.stdout);
   }
-  console.log(`Executable compressed to ${configuArchive}`);
+  console.log(`Executable compressed to ${path.join(distDir, configuArchive)}`);
 
   // run the binary to verify it works
   if (!stdenv.isCI) {
