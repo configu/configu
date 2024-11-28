@@ -10,8 +10,6 @@ jobs:
   cd-ts:
     name: CD/@configu/ts
     runs-on: ubuntu-latest
-    env:
-      PACKAGE_NAME: '@configu/ts'
     permissions:
       contents: read
       id-token: write
@@ -45,12 +43,13 @@ jobs:
       - name: Build package code
         run: |
           pnpm run build
-          pnpm --filter ${{ steps.release.outputs.package_name }} run build
+          pnpm --filter ${{ steps.release.outputs.package_name }} run \
+            build
 
       - name: Publish to npm
         run: |
           git diff
-          pnpm --filter ${{ env.PACKAGE_NAME }} --filter @configu/node --filter @configu/browser publish \
+          pnpm --filter ${{ steps.release.outputs.package_name }} publish \
             --access public --provenance --no-git-checks --tag ${{ steps.release.outputs.channel }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
