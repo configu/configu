@@ -25,7 +25,7 @@ else
   "Linux armv7l") dist="linux-armv7l" ;;
   "Linux x86_64")
     if [ -f /etc/alpine-release ] || ldd --version 2>&1 | grep -q musl; then
-      dist="linux-musl-x64"
+      dist="linux-x64-musl"
     else
       dist="linux-x64"
     fi
