@@ -57,6 +57,5 @@
     "typanion": "3.14.0",
     "tiged": "2.12.7"
   },
-  "devDependencies": {},
-  "bundleDependencies": []
+  "devDependencies": {}
 }
