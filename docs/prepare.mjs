@@ -65,10 +65,9 @@ INTEGRATIONS_NAV.pages = ['integrations/overview', ...integrationsNavArray];
 // --- interfaces ---
 const INTERFACES_TITLE = {
   [TypeDocConfig.name]: 'Overview',
-  '@configu/ts': 'TypeScript SDK',
-  '@configu/node': 'Node.js SDK',
-  '@configu/browser': 'Browser SDK',
-  '@configu/lib': 'Common Library',
+  '@configu/sdk': 'Core SDK',
+  '@configu/integrations': 'Integrations Library',
+  '@configu/common': 'Common Library',
   '@configu/cli': 'Overview',
 };
 const README_FILE = `${TypeDocConfig.entryFileName}${TypeDocConfig.fileExtension}`;
@@ -192,7 +191,10 @@ import { Related } from '/snippets/callouts.mdx';
 ## Commands
 
 <Tip>
-  Use \`configu -h\` or to get a list of all available commands.<br/>
+  Use \`configu -h\` or to get a list of all available commands.
+  <br/>
+  Use \`configu --config "path/to/.configu"\` to explicitly provide a path to a [\`.configu\`](/interfaces/.configu) file.
+  <br/>
   Use \`configu [COMMAND] -h\` to get help for a specific command.
 </Tip>
 

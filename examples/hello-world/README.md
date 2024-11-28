@@ -11,7 +11,7 @@
   - use `configu login` for `ConfiguConfigStore`
 - Upsert `Config`s
   ```bash
-  configu upsert --store "<STORE>" --set "dev" --schema "start.cfgu.json" --config "GREETING=hey" --config "SUBJECT=<VALUE>"
+  configu upsert --store "<STORE>" --set "dev" --schema "start.cfgu.json" --kv "GREETING=hey" --kv "SUBJECT=<VALUE>"
   configu upsert --store "<STORE>" --set "prod" --schema "start.cfgu.json" -c "SUBJECT=<VALUE>"
   configu upsert --store "<STORE>" --set "prod/region" --schema "start.cfgu.json" -c "GREETING=welcome"
   ```
