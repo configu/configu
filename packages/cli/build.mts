@@ -154,7 +154,7 @@ if (stdenv.provider === 'github_actions') {
   if (stdenv.isWindows) {
     await $`powershell -command "Compress-Archive -Path '${configuBinary}', '${configuJs}' -DestinationPath '${configuArchive}'"`;
   } else {
-    await $`tar -cJf ${configuArchive} -C ${distDir} ${configuBinary} ${configuJs}`.pipe(process.stdout);
+    await $`tar -czf ${configuArchive} -C ${distDir} ${configuBinary} ${configuJs}`.pipe(process.stdout);
   }
   console.log(`Executable compressed to ${path.join(distDir, configuArchive)}`);
 
