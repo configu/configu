@@ -3,7 +3,8 @@ name: CD/@configu/ts
 on:
   push:
     tags:
-      - 'ts/v*'
+      - 'sdk/v*'
+      - 'formatters/v*'
 
 jobs:
   cd-ts:
@@ -18,12 +19,14 @@ jobs:
       - uses: actions/checkout@v4
 
       - uses: ./.github/actions/deploy-start-action
-        id: deployment
         with:
-          package-name: ${{ env.PACKAGE_NAME }}
           slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
 
+      - uses: ./.github/actions/get-release-action
+        id: release
+
       - uses: ./.github/actions/ts-env-action
+        id: env
 
       - uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -34,26 +37,25 @@ jobs:
       # todo: convert npm to pnpm commands and handle docs publishing
       # https://pnpm.io/workspaces#workspace-protocol-workspace
       - name: Bump package version
+        shell: bash
         run: |
-          pnpm --filter ${{ env.PACKAGE_NAME }} --filter @configu/node --filter @configu/browser exec \
-            npm --no-git-tag-version version ${{ steps.deployment.outputs.release-version }}
+          pnpm --filter ${{ steps.release.outputs.package_name }} exec \
+            npm --no-git-tag-version version ${{ steps.release.outputs.version }}
 
       - name: Build package code
         run: |
           pnpm run build
-          pnpm --filter @configu/browser run build:bundle
+          pnpm --filter ${{ steps.release.outputs.package_name }} run build
 
       - name: Publish to npm
         run: |
           git diff
           pnpm --filter ${{ env.PACKAGE_NAME }} --filter @configu/node --filter @configu/browser publish \
-            --access public --provenance --no-git-checks --tag ${{ steps.deployment.outputs.release-channel }}
+            --access public --provenance --no-git-checks --tag ${{ steps.release.outputs.channel }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       # ---
       - uses: ./.github/actions/deploy-end-action
         if: always()
         with:
-          package-name: ${{ env.PACKAGE_NAME }}
-          package-version: ${{ steps.deployment.outputs.release-version }}
           slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
