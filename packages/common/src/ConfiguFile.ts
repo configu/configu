@@ -21,7 +21,6 @@ import {
   pathExists,
 } from './utils';
 import { CfguFile } from './CfguFile';
-import logger from './logger';
 
 const StringPropertySchema = {
   type: 'string',
@@ -264,7 +263,6 @@ export class ConfiguFile {
         return;
       }
       if (typeof value === 'function' && 'type' in value) {
-        logger.log('Register Module property', key);
         // console.log('Registering ConfigStore:', value.type);
         ConfigStore.register(value as ConfigStoreConstructor);
       } else if (typeof value === 'function') {
@@ -277,9 +275,9 @@ export class ConfiguFile {
   }
 
   static async registerModuleFile(filePath: string) {
-    logger.log('Registering module file', filePath);
+    // console.log('Registering module file', filePath);
     const module = await importModule(filePath);
-    logger.log('import module succeeded');
+    // console.log('import module succeeded');
     ConfiguFile.registerModule(module);
   }
 
@@ -296,9 +294,10 @@ export class ConfiguFile {
       }
       // todo: support http based urls
       throw new Error('Only file URLs are supported');
-    } else {
-      return ConfiguFile.registerStore(input);
     }
+    // else {
+    //   return ConfiguFile.registerStore(input);
+    // }
 
     try {
       const path = resolve(input);
@@ -311,7 +310,7 @@ export class ConfiguFile {
   }
 
   static async registerStore(type: string) {
-    logger.log(`Registering store: ${type}`);
+    // console.log(`Registering store: ${type}`);
 
     const [TYPE = '', VERSION = 'latest'] = type.split('@');
     const normalizedType = ConfigKey.normalize(TYPE);
@@ -322,7 +321,7 @@ export class ConfiguFile {
     // todo: add sem-ver check for cache invalidation when cached stores are outdated once integration pipeline is reworked
 
     const isModuleExists = await pathExists(modulePath);
-    logger.log('Store Module exists', modulePath);
+    // console.log('Store Module exists', modulePath);
 
     if (!isModuleExists) {
       const remoteUrl = `https://github.com/configu/configu/releases/download/stores%2F${normalizedType}%2F${VERSION}/${normalizedType}-${platform()}-${arch()}.js`;
@@ -331,13 +330,13 @@ export class ConfiguFile {
 
       if (res.ok) {
         await fs.writeFile(modulePath, await res.text());
-        logger.log('Fetched successfully');
+        // console.log('Fetched successfully');
       } else {
         throw new Error(`remote integration ${type} not found`);
       }
     }
 
-    return ConfiguFile.registerModuleFile(modulePath);
+    await ConfiguFile.registerModuleFile(modulePath);
   }
 
   static async constructStore(type: string, configuration = {}) {

@@ -9,7 +9,6 @@ import { tsImport } from 'tsx/esm/api';
 import * as stdenv from 'std-env';
 import { glob } from 'glob';
 import { findUp, findUpMultiple, pathExists } from 'find-up';
-import logger from './logger';
 
 export { path, findUp, findUpMultiple, pathExists, glob, stdenv, YAML };
 
@@ -47,10 +46,10 @@ export const importModule = async (modulePath: string = '') => {
   // const module = await import(modulePath);
   let module;
   if (modulePath.endsWith('.ts')) {
-    logger.log('Import TS file');
+    // console.log('Import TS file');
     module = await tsImport(modulePath, import.meta.url);
   } else {
-    logger.log('import using native import');
+    // console.log('import using native import');
     module = await import(modulePath);
   }
   return module;
