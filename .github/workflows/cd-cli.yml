@@ -139,7 +139,6 @@ jobs:
       - name: Release package to Docker Hub
         uses: docker/build-push-action@v6
         with:
-          context: ${{ steps.release.outputs.package_path }}
           platforms: linux/amd64,linux/arm64
           tags: |
             ${{ env.DOCKER_IMAGE_NAME }}:${{ steps.release.outputs.version }}
