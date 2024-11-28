@@ -161,7 +161,7 @@ jobs:
 
   release-binary:
     runs-on: ubuntu-latest
-    needs: release-docker
+    needs: build-binary
     env:
       GH_TOKEN: ${{ github.token }}
     steps:
@@ -217,21 +217,21 @@ jobs:
         if: ${{ matrix.runner != 'windows-latest' }}
         shell: bash
         env:
-          CONFIGU_HOME: .
+          CONFIGU_HOME: ./configu
           CONFIGU_VERSION: ${{ steps.release.outputs.version }}
         run: |
           curl -fsSL https://raw.githubusercontent.com/configu/configu/refs/heads/${{ steps.release.outputs.branch }}/${{ steps.release.outputs.package_path }}/install.sh | sh
-          .configu/bin/configu -v
+          ./configu/bin/configu -v
 
       - name: Check release on ${{ matrix.runner }}
         if: ${{ matrix.runner == 'windows-latest' }}
         shell: pwsh
         env:
-          CONFIGU_HOME: .
+          CONFIGU_HOME: ./configu
           CONFIGU_VERSION: ${{ steps.release.outputs.version }}
         run: |
           irm https://raw.githubusercontent.com/configu/configu/refs/heads/${{ steps.release.outputs.branch }}/${{ steps.release.outputs.package_path }}/install.ps1 | iex
-          .configu/bin/configu -v
+          ./configu/bin/configu -v
 
   post-release:
     runs-on: ubuntu-latest

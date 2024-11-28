@@ -2,7 +2,7 @@
 
 $ErrorActionPreference = 'Stop'
 
-if (-not (Test-Path "curl.exe")) {
+if (-not (Get-Command 'curl.exe' -ErrorAction SilentlyContinue)) {
   Write-Output echo "Error: curl is required to install configu (see: https://curl.se/)."
   exit 1
 }
@@ -30,7 +30,7 @@ $os = if ($IsWindows) {
   Write-Error "Unsupported OS"; exit 1
 }
 
-if ($arc -eq '.tar.gz' -and -not (Test-Path "tar.exe")) {
+if ($arc -eq '.tar.gz' -and -not (Get-Command 'tar.exe' -ErrorAction SilentlyContinue)) {
   Write-Output echo "Error: tar is required to install configu (see: https://www.gnu.org/software/tar/)."
   exit 1
 }
