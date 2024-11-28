@@ -11,10 +11,10 @@ inputs:
 outputs:
   node_version:
     description: Node.js version
-    value: ${{ steps.release.outputs.node_version }}
+    value: ${{ steps.node.outputs.node_version }}
   node_path:
     description: Node.js installation path
-    value: ${{ steps.release.outputs.node_path }}
+    value: ${{ steps.node.outputs.node_path }}
 
 runs:
   using: 'composite'
