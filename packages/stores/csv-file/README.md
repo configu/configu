@@ -1,4 +1,4 @@
-# @configu-integrations/csv-file
+# @configu/csv-file
 
 Integrates the Configu Orchestrator with [CSV files](https://en.wikipedia.org/wiki/Comma-separated_values).
 
@@ -24,6 +24,7 @@ stores:
 ### CLI examples
 
 #### Upsert command
+
 ```bash
 configu upsert --store "my-store" --set "test" --schema "./start.cfgu.json" \
     -c "GREETING=hello" \
@@ -38,4 +39,5 @@ configu eval --store "my-store" --set "test" --schema "./start.cfgu.json" \
 ```
 
 ## References
+
 - Integration documentation: https://en.wikipedia.org/wiki/Comma-separated_values

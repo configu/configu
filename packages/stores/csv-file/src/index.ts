@@ -1,6 +1,6 @@
 import { type Config } from '@configu/sdk';
 import { parse, stringify } from 'csv/sync';
-import { FileConfigStore } from '@configu/integrations/src/utils/File';
+import { FileConfigStore } from '@configu/file';
 
 export type CsvFileConfigStoreConfiguration = { path: string };
 
