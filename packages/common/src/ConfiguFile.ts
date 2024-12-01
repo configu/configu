@@ -296,14 +296,22 @@ export class ConfiguFile {
       throw new Error('Only file URLs are supported');
     }
 
+    const isRelative = input.startsWith('.');
+
     try {
-      const path = resolve(input);
-      return ConfiguFile.registerModuleFile(path);
+      if (isRelative) {
+        const path = resolve(input);
+        return ConfiguFile.registerModuleFile(path);
+      }
     } catch {
-      return ConfiguFile.registerStore(input);
+      // Not a valid path
     }
 
-    throw new Error(`failed to register module ${input}`);
+    try {
+      return ConfiguFile.registerStore(input);
+    } catch {
+      throw new Error(`failed to register module ${input}`);
+    }
   }
 
   static async registerStore(type: string) {
