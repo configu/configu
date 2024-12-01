@@ -2,7 +2,7 @@ import { Command, Option } from 'clipanion';
 import { ConfigSet } from '@configu/sdk';
 import { UpsertCommand } from '@configu/sdk/commands';
 import { ConfiguInterface } from '@configu/common';
-// import { ConfiguConfigStoreApprovalQueueError } from '@configu-integrations/configu';
+// import { ConfiguConfigStoreApprovalQueueError } from '@configu/configu';
 import { BaseCommand } from './base';
 
 export class CliUpsertCommand extends BaseCommand {

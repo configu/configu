@@ -1,5 +1,5 @@
 {
-  "name": "@configu-integrations/configu",
+  "name": "@configu/configu",
   "version": "0.0.0",
   "license": "Apache-2.0",
   "author": "@configu/dev",
@@ -7,7 +7,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/configu/configu",
-    "directory": "packages/integrations"
+    "directory": "packages/stores/configu"
   },
   "bugs": {
     "url": "https://github.com/configu/configu/issues",
@@ -18,7 +18,7 @@
     "configu"
   ],
   "type": "module",
-  "exports": "./src/configu.ts",
+  "exports": "./src/index.ts",
   "files": [
     "src"
   ],
@@ -32,8 +32,7 @@
   },
   "devDependencies": {
     "@types/validator": "^13.11.9",
-    "@types/node": "20.12.12",
-    "tsup": "8.2.4",
+    "@types/node": "22.10.0",
     "typescript": "^5.4.5"
   }
 }

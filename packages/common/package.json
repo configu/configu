@@ -45,7 +45,7 @@
   },
   "dependencies": {
     "@configu/sdk": "workspace:*",
-    "@configu-integrations/configu": "workspace:*",
+    "@configu/configu": "workspace:*",
     "@configu/json-file": "workspace:*",
     "find-up": "^7.0.0",
     "glob": "^11.0.0",

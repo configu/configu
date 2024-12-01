@@ -1,4 +1,4 @@
-# @configu-integrations/configu
+# @configu/configu
 
 Integrates the Configu Orchestrator with [Configu platform](https://configu.com).
 

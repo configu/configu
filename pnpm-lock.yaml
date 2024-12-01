@@ -149,9 +149,9 @@ importers:
 
   packages/common:
     dependencies:
-      '@configu-integrations/configu':
+      '@configu/configu':
         specifier: workspace:*
-        version: link:../integrations/stores/configu
+        version: link:../stores/configu
       '@configu/json-file':
         specifier: workspace:*
         version: link:../stores/json-file
@@ -294,31 +294,6 @@ importers:
       '@types/node':
         specifier: 20.12.12
         version: 20.12.12
-      tsup:
-        specifier: 8.2.4
-        version: 8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
-      typescript:
-        specifier: ^5.4.5
-        version: 5.6.2
-
-  packages/integrations/stores/configu:
-    dependencies:
-      '@configu/sdk':
-        specifier: workspace:*
-        version: link:../../../sdk
-      axios:
-        specifier: ^1.7.4
-        version: 1.7.4
-      validator:
-        specifier: ^13.11.0
-        version: 13.12.0
-    devDependencies:
-      '@types/node':
-        specifier: 20.12.12
-        version: 20.12.12
-      '@types/validator':
-        specifier: ^13.11.9
-        version: 13.12.2
       tsup:
         specifier: 8.2.4
         version: 8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
@@ -827,6 +802,28 @@ importers:
       '@types/node':
         specifier: 22.10.0
         version: 22.10.0
+      typescript:
+        specifier: ^5.4.5
+        version: 5.7.2
+
+  packages/stores/configu:
+    dependencies:
+      '@configu/sdk':
+        specifier: workspace:*
+        version: link:../../sdk
+      axios:
+        specifier: ^1.7.4
+        version: 1.7.4
+      validator:
+        specifier: ^13.11.0
+        version: 13.12.0
+    devDependencies:
+      '@types/node':
+        specifier: 22.10.0
+        version: 22.10.0
+      '@types/validator':
+        specifier: ^13.11.9
+        version: 13.12.2
       typescript:
         specifier: ^5.4.5
         version: 5.7.2
