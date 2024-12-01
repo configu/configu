@@ -211,28 +211,6 @@ importers:
         specifier: 20.12.12
         version: 20.12.12
 
-  packages/integrations/stores/localforage:
-    dependencies:
-      '@configu/integrations':
-        specifier: workspace:*
-        version: link:../..
-      '@configu/sdk':
-        specifier: workspace:*
-        version: link:../../../sdk
-      localforage:
-        specifier: ^1.10.0
-        version: 1.10.0
-    devDependencies:
-      '@types/node':
-        specifier: 20.12.12
-        version: 20.12.12
-      tsup:
-        specifier: 8.2.4
-        version: 8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
-      typescript:
-        specifier: ^5.4.5
-        version: 5.6.2
-
   packages/integrations/stores/mariadb:
     dependencies:
       '@configu/integrations':
@@ -824,6 +802,22 @@ importers:
       '@openfeature/server-sdk':
         specifier: 1.15.1
         version: 1.15.1(@openfeature/core@1.4.0)
+    devDependencies:
+      '@types/node':
+        specifier: 22.10.0
+        version: 22.10.0
+      typescript:
+        specifier: ^5.4.5
+        version: 5.7.2
+
+  packages/stores/localforage:
+    dependencies:
+      '@configu/key-value':
+        specifier: workspace:*
+        version: link:../key-value
+      localforage:
+        specifier: ^1.10.0
+        version: 1.10.0
     devDependencies:
       '@types/node':
         specifier: 22.10.0
@@ -2627,9 +2621,6 @@ packages:
 
   '@types/node@22.10.0':
     resolution: {integrity: sha512-XC70cRZVElFHfIUB40FgZOBbgJYFKKMa5nb9lxcwYstFG/Mi+/Y0bGS+rs6Dmhmkpq4pnNiLiuZAbc02YCOnmA==}
-
-  '@types/node@22.9.1':
-    resolution: {integrity: sha512-p8Yy/8sw1caA8CdRIQBG5tiLHmxtQKObCijiAa9Ez+d4+PRffM4054xbju0msf+cvhJpnFEeNjxmVT/0ipktrg==}
 
   '@types/parse5@6.0.3':
     resolution: {integrity: sha512-SuT16Q1K51EAVPz1K29DJ/sXjhSQ0zjvsypYJ6tlwVsRV9jwW5Adq2ch8Dq8kDBCkYnELS7N7VNCSB5nC56t/g==}
@@ -7022,9 +7013,6 @@ packages:
   undici-types@5.26.5:
     resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
 
-  undici-types@6.19.8:
-    resolution: {integrity: sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==}
-
   undici-types@6.20.0:
     resolution: {integrity: sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg==}
 
@@ -9863,10 +9851,6 @@ snapshots:
     dependencies:
       undici-types: 6.20.0
 
-  '@types/node@22.9.1':
-    dependencies:
-      undici-types: 6.19.8
-
   '@types/parse5@6.0.3': {}
 
   '@types/prismjs@1.26.4': {}
@@ -9906,7 +9890,7 @@ snapshots:
 
   '@types/xml2js@0.4.14':
     dependencies:
-      '@types/node': 22.9.1
+      '@types/node': 22.10.0
 
   '@typescript-eslint/eslint-plugin@8.16.0(@typescript-eslint/parser@8.16.0(eslint@8.57.1)(typescript@5.7.2))(eslint@8.57.1)(typescript@5.7.2)':
     dependencies:
@@ -15386,8 +15370,6 @@ snapshots:
       which-boxed-primitive: 1.0.2
 
   undici-types@5.26.5: {}
-
-  undici-types@6.19.8: {}
 
   undici-types@6.20.0: {}
 
