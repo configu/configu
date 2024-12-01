@@ -1,4 +1,4 @@
-# @configu-integrations/gcp-secret-manager
+# @configu/gcp-secret-manager
 
 Integrates the Configu Orchestrator with [Google Cloud Secret Manager](https://cloud.google.com/secret-manager).
 

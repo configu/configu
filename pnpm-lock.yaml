@@ -214,28 +214,6 @@ importers:
         specifier: 20.12.12
         version: 20.12.12
 
-  packages/integrations/stores/gcp-secret-manager:
-    dependencies:
-      '@configu/integrations':
-        specifier: workspace:*
-        version: link:../..
-      '@configu/sdk':
-        specifier: workspace:*
-        version: link:../../../sdk
-      '@google-cloud/secret-manager':
-        specifier: ^5.4.0
-        version: 5.6.0(encoding@0.1.13)
-    devDependencies:
-      '@types/node':
-        specifier: 20.12.12
-        version: 20.12.12
-      tsup:
-        specifier: 8.2.4
-        version: 8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.3)(yaml@2.6.1)
-      typescript:
-        specifier: ^5.4.5
-        version: 5.6.3
-
   packages/integrations/stores/ini-file:
     dependencies:
       '@configu/integrations':
@@ -821,6 +799,25 @@ importers:
       '@configu/sdk':
         specifier: workspace:*
         version: link:../../sdk
+
+  packages/stores/gcp-secret-manager:
+    dependencies:
+      '@configu/key-value':
+        specifier: workspace:*
+        version: link:../key-value
+      '@configu/sdk':
+        specifier: workspace:*
+        version: link:../../sdk
+      '@google-cloud/secret-manager':
+        specifier: ^5.4.0
+        version: 5.6.0(encoding@0.1.13)
+    devDependencies:
+      '@types/node':
+        specifier: 22.10.0
+        version: 22.10.0
+      typescript:
+        specifier: ^5.4.5
+        version: 5.7.2
 
   packages/stores/hashicorp-vault:
     dependencies:
