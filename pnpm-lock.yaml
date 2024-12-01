@@ -203,9 +203,6 @@ importers:
       '@configu/sdk':
         specifier: workspace:*
         version: link:../sdk
-      '@openfeature/server-sdk':
-        specifier: ^1.7.4
-        version: 1.15.1(@openfeature/core@1.4.0)
       lodash-es:
         specifier: ^4.17.21
         version: 4.17.21
@@ -222,34 +219,6 @@ importers:
       '@types/node':
         specifier: 20.12.12
         version: 20.12.12
-
-  packages/integrations/stores/cloud-bees:
-    dependencies:
-      '@configu/integrations':
-        specifier: workspace:*
-        version: link:../..
-      '@configu/sdk':
-        specifier: workspace:*
-        version: link:../../../sdk
-      '@openfeature/server-sdk':
-        specifier: ^1.7.4
-        version: 1.15.1(@openfeature/core@1.4.0)
-      cloudbees-openfeature-provider-node:
-        specifier: ^1.0.0
-        version: 1.0.0(@openfeature/js-sdk@1.6.1)
-    devDependencies:
-      '@types/node':
-        specifier: 20.12.12
-        version: 20.12.12
-      '@types/rox-node':
-        specifier: ^5.0.3
-        version: 5.0.5
-      tsup:
-        specifier: 8.2.4
-        version: 8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
-      typescript:
-        specifier: ^5.4.5
-        version: 5.6.2
 
   packages/integrations/stores/cockroach-db:
     dependencies:
@@ -803,6 +772,31 @@ importers:
         specifier: ^5.4.5
         version: 5.7.2
 
+  packages/stores/cloud-bees:
+    dependencies:
+      '@configu/open-feature':
+        specifier: workspace:*
+        version: link:../open-feature
+      '@configu/sdk':
+        specifier: workspace:*
+        version: link:../../sdk
+      '@openfeature/server-sdk':
+        specifier: ^1.7.4
+        version: 1.15.1(@openfeature/core@1.4.0)
+      cloudbees-openfeature-provider-node:
+        specifier: ^1.0.0
+        version: 1.0.0(@openfeature/js-sdk@1.6.1)
+    devDependencies:
+      '@types/node':
+        specifier: 22.10.0
+        version: 22.10.0
+      '@types/rox-node':
+        specifier: ^5.0.3
+        version: 5.0.5
+      typescript:
+        specifier: ^5.4.5
+        version: 5.7.2
+
   packages/stores/configu:
     dependencies:
       '@configu/sdk':
@@ -879,6 +873,15 @@ importers:
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
+
+  packages/stores/open-feature:
+    dependencies:
+      '@configu/sdk':
+        specifier: workspace:*
+        version: link:../../sdk
+      '@openfeature/server-sdk':
+        specifier: ^1.7.4
+        version: 1.15.1(@openfeature/core@1.4.0)
 
   packages/stores/postgres:
     dependencies:

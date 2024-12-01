@@ -1,7 +1,7 @@
 import { type EvaluationContext } from '@openfeature/server-sdk';
 import { CloudbeesProvider } from 'cloudbees-openfeature-provider-node';
 import { type RoxSetupOptions } from 'rox-node';
-import { OpenFeatureConfigStore } from '@configu/integrations/src/utils/OpenFeature';
+import { OpenFeatureConfigStore } from '@configu/open-feature';
 
 export type CloudBeesConfigStoreConfiguration = {
   appKey: string;
