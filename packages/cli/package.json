@@ -49,7 +49,6 @@
     "consola": "^3.2.3",
     "dotenv": "16.4.5",
     "inquirer": "12.0.1",
-    "lodash": "^4.17.21",
     "open": "10.1.0",
     "openid-client": "5.7.1",
     "std-env": "^3.8.0",

@@ -1,4 +1,4 @@
-# @configu-integrations/launch-darkly
+# @configu/launch-darkly
 
 Integrates the Configu Orchestrator with [LaunchDarkly](https://launchdarkly.com/).
 

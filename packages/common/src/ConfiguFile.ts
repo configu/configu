@@ -4,9 +4,8 @@ import { spawnSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { join, dirname, resolve } from 'pathe';
-import _ from 'lodash';
+import { _, JSONSchema, JSONSchemaObject, FromSchema } from '@configu/sdk/expressions';
 import { ConfigSchema, ConfigStore, ConfigExpression, ConfigStoreConstructor, ConfigKey } from '@configu/sdk';
-import { JSONSchema, JSONSchemaObject, FromSchema } from '@configu/sdk/expressions';
 import {
   commonDebug,
   stdenv,
