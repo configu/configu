@@ -1,4 +1,4 @@
-# @configu-integrations/etcd
+# @configu/etcd
 
 Integrates the Configu Orchestrator with [etcd](https://etcd.io/).
 
@@ -44,22 +44,25 @@ configu eval --store "my-store" --set "test" --schema "./start.cfgu.json" \
 
 ## Common errors and solutions
 
-1. Connection timeout  
+1. Connection timeout
+
    - Solution: Ensure the `hosts` URLs are reachable from your application. Increase the `timeout` value if the network latency is high.
 
-2. Authentication failure  
+2. Authentication failure
+
    - Solution: If authentication is enabled, verify the provided `username` and `password`. Test with:
      ```bash
      etcdctl --user <username>:<password> endpoint status
      ```
 
-3. Cluster unavailability  
+3. Cluster unavailability
+
    - Solution: Ensure that all nodes in the etcd cluster are healthy. Use the following command to check cluster health:
      ```bash
      etcdctl endpoint health
      ```
 
-4. Key collision issues  
+4. Key collision issues
    - Solution: Use unique keys or prefixes for different configuration sets to avoid conflicts.
 
 ## References
