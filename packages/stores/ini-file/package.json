@@ -1,5 +1,5 @@
 {
-  "name": "@configu-integrations/ini-file",
+  "name": "@configu/ini-file",
   "version": "0.0.0",
   "license": "Apache-2.0",
   "author": "@configu/dev",
@@ -7,7 +7,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/configu/configu",
-    "directory": "packages/integrations"
+    "directory": "packages/stores/ini-file"
   },
   "bugs": {
     "url": "https://github.com/configu/configu/issues",
@@ -18,7 +18,7 @@
     "configu"
   ],
   "type": "module",
-  "exports": "./src/ini-file.ts",
+  "exports": "./src/index.ts",
   "files": [
     "src"
   ],
@@ -28,12 +28,11 @@
   "dependencies": {
     "ini": "5.0.0",
     "@configu/sdk": "workspace:*",
-    "@configu/integrations": "workspace:*",
-    "lodash-es": "4.17.21"
+    "@configu/file": "workspace:*",
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
-    "@types/node": "20.12.12",
-    "tsup": "8.2.4",
+    "@types/node": "22.10.0",
     "typescript": "^5.4.5"
   }
 }

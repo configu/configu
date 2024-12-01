@@ -1,4 +1,4 @@
-# @configu-integrations/ini-file
+# @configu/ini-file
 
 Integrates the Configu Orchestrator with [INI files](https://en.wikipedia.org/wiki/INI_file).
 
