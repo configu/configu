@@ -1,5 +1,4 @@
 import { Command, Option } from 'clipanion';
-import _ from 'lodash';
 import { ConfigSet, ConfigStore } from '@configu/sdk';
 import { EvalCommand } from '@configu/sdk/commands';
 import { ConfiguInterface } from '@configu/common';

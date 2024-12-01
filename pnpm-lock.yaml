@@ -125,9 +125,6 @@ importers:
       inquirer:
         specifier: 12.0.1
         version: 12.0.1(@types/node@22.10.0)
-      lodash:
-        specifier: ^4.17.21
-        version: 4.17.21
       open:
         specifier: 10.1.0
         version: 10.1.0
@@ -749,9 +746,6 @@ importers:
       ini:
         specifier: 5.0.0
         version: 5.0.0
-      lodash:
-        specifier: ^4.17.21
-        version: 4.17.21
     devDependencies:
       '@types/node':
         specifier: 22.10.0
@@ -774,9 +768,6 @@ importers:
       '@configu/sdk':
         specifier: workspace:*
         version: link:../../sdk
-      lodash:
-        specifier: ^4.17.21
-        version: 4.17.21
 
   packages/stores/keyv:
     dependencies:

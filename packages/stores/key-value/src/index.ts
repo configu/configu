@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import { _ } from '@configu/sdk/expressions';
 import { Config, ConfigStore, ConfigQuery } from '@configu/sdk';
 
 export abstract class KeyValueConfigStore extends ConfigStore {

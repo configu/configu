@@ -29,8 +29,7 @@
     "build": "tsup"
   },
   "dependencies": {
-    "@configu/sdk": "workspace:*",
-    "lodash": "^4.17.21"
+    "@configu/sdk": "workspace:*"
   },
   "devDependencies": {}
 }

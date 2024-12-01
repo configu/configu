@@ -1,7 +1,7 @@
 import { Command, Option } from 'clipanion';
 import { spawnSync } from 'node:child_process';
 import { EvalCommandOutput, EvaluatedConfig, ConfigExpression, ConfigKey, ConfigValue } from '@configu/sdk';
-import _ from 'lodash';
+import { _ } from '@configu/sdk/expressions';
 import {
   dotCase,
   constantCase,

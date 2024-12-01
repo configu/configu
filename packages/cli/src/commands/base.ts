@@ -1,5 +1,5 @@
 import { Command, Option, UsageError } from 'clipanion';
-import _ from 'lodash';
+import { _ } from '@configu/sdk/expressions';
 import { ConfiguInterface, getConfiguHomeDir, parseJSON, readFile } from '@configu/common';
 import { EvalCommandOutput } from '@configu/sdk/commands';
 import path from 'node:path';

@@ -2,7 +2,7 @@ import os from 'node:os';
 import fs from 'node:fs/promises';
 import path from 'pathe';
 
-import _ from 'lodash';
+import { _ } from '@configu/sdk/expressions';
 import parseJson from 'parse-json';
 import YAML from 'yaml';
 import { tsImport } from 'tsx/esm/api';

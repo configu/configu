@@ -28,8 +28,7 @@
   "dependencies": {
     "ini": "5.0.0",
     "@configu/sdk": "workspace:*",
-    "@configu/file": "workspace:*",
-    "lodash": "^4.17.21"
+    "@configu/file": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "22.10.0",
