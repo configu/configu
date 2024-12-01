@@ -1,4 +1,4 @@
-# @configu-integrations/aws-parameter-store
+# @configu/aws-parameter-store
 
 Integrates the Configu Orchestrator with [AWS Parameter Store](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html).
 
@@ -32,14 +32,14 @@ stores:
 configu upsert --store "my-store" --set "test" --schema "./start.cfgu.json" \
     -c "GREETING=hello" \
     -c "SUBJECT=configu"
-````
+```
 
 #### Eval and export commands
 
 ```bash
 configu eval --store "my-store" --set "test" --schema "./start.cfgu.json" \
  | configu export
- ```
+```
 
 ## References
 

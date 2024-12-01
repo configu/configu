@@ -31,7 +31,7 @@
     "axios": "^1.7.4"
   },
   "devDependencies": {
-    "@types/node": "20.12.12",
+    "@types/node": "22.10.0",
     "typescript": "^5.4.5"
   }
 }

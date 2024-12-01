@@ -1,5 +1,5 @@
 {
-  "name": "@configu-integrations/json-file",
+  "name": "@configu/aws-parameter-store",
   "version": "0.0.0",
   "license": "Apache-2.0",
   "author": "@configu/dev",
@@ -7,7 +7,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/configu/configu",
-    "directory": "packages/integrations"
+    "directory": "packages/stores/aws-parameter-store"
   },
   "bugs": {
     "url": "https://github.com/configu/configu/issues",
@@ -18,7 +18,7 @@
     "configu"
   ],
   "type": "module",
-  "exports": "./src/json-file.ts",
+  "exports": "./src/index.ts",
   "files": [
     "src"
   ],
@@ -26,12 +26,12 @@
     "build": "tsup"
   },
   "dependencies": {
-    "@configu/integrations": "workspace:*",
+    "@aws-sdk/client-ssm": "^3.667.0",
+    "@configu/key-value": "workspace:*",
     "@configu/sdk": "workspace:*"
   },
   "devDependencies": {
-    "@types/node": "20.12.12",
-    "tsup": "8.2.4",
+    "@types/node": "22.10.0",
     "typescript": "^5.4.5"
   }
 }

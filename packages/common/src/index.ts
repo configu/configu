@@ -1,6 +1,6 @@
 import { ConfigStore } from '@configu/sdk';
 
-import { JsonFileConfigStore } from '@configu-integrations/json-file';
+import { JsonFileConfigStore } from '@configu/json-file';
 import { ConfiguConfigStore } from '@configu-integrations/configu';
 
 ConfigStore.register(JsonFileConfigStore);
