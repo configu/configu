@@ -436,28 +436,6 @@ importers:
         specifier: ^5.4.5
         version: 5.6.3
 
-  packages/integrations/stores/hashicorp-vault:
-    dependencies:
-      '@configu/integrations':
-        specifier: workspace:*
-        version: link:../..
-      '@configu/sdk':
-        specifier: workspace:*
-        version: link:../../../sdk
-    devDependencies:
-      '@types/node':
-        specifier: 20.12.12
-        version: 20.12.12
-      axios:
-        specifier: ^1.7.4
-        version: 1.7.4
-      tsup:
-        specifier: 8.2.4
-        version: 8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
-      typescript:
-        specifier: ^5.4.5
-        version: 5.6.2
-
   packages/integrations/stores/ini-file:
     dependencies:
       '@configu/integrations':
@@ -949,6 +927,25 @@ importers:
         specifier: workspace:*
         version: link:../../sdk
 
+  packages/stores/hashicorp-vault:
+    dependencies:
+      '@configu/key-value':
+        specifier: workspace:*
+        version: link:../key-value
+      '@configu/sdk':
+        specifier: workspace:*
+        version: link:../../sdk
+      axios:
+        specifier: ^1.7.4
+        version: 1.7.4
+    devDependencies:
+      '@types/node':
+        specifier: 20.12.12
+        version: 20.12.12
+      typescript:
+        specifier: ^5.4.5
+        version: 5.7.2
+
   packages/stores/json-file:
     dependencies:
       '@configu/file':
@@ -957,6 +954,15 @@ importers:
       '@configu/sdk':
         specifier: workspace:*
         version: link:../../sdk
+
+  packages/stores/key-value:
+    dependencies:
+      '@configu/sdk':
+        specifier: workspace:*
+        version: link:../../sdk
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
 
   packages/stores/postgres:
     dependencies:

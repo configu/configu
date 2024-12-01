@@ -1,14 +1,14 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import axios, { type Axios } from 'axios';
-import { KeyValueConfigStore } from '@configu/integrations/src/utils/KeyValue';
+import { KeyValueConfigStore } from '@configu/key-value';
 
-export type HashiCorpVaultConfigStoreConfiguration = { address?: string; token?: string; engine: string };
+export type HashicorpVaultConfigStoreConfiguration = { address?: string; token?: string; engine: string };
 
 // ! supports K/V2 engine only
-export class HashiCorpVaultConfigStore extends KeyValueConfigStore {
+export class HashicorpVaultConfigStore extends KeyValueConfigStore {
   private client: Axios;
   private engine: string;
-  constructor(configuration: HashiCorpVaultConfigStoreConfiguration) {
+  constructor(configuration: HashicorpVaultConfigStoreConfiguration) {
     super();
 
     const address = configuration.address ?? process.env.VAULT_ADDR;

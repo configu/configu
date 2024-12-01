@@ -1,0 +1,36 @@
+{
+  "name": "@configu/key-value",
+  "version": "0.0.0",
+  "license": "Apache-2.0",
+  "author": "@configu/dev",
+  "homepage": "https://configu.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/configu/configu",
+    "directory": "packages/stores/key-value"
+  },
+  "bugs": {
+    "url": "https://github.com/configu/configu/issues",
+    "email": "dev@configu.com"
+  },
+  "keywords": [
+    "config",
+    "configu",
+    "config-store",
+    "key-value",
+    "configu-key-value"
+  ],
+  "type": "module",
+  "exports": "./src/index.ts",
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "dependencies": {
+    "@configu/sdk": "workspace:*",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {}
+}
