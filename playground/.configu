@@ -17,7 +17,7 @@ stores:
     configuration:
       path: ./store.json
   hc:
-    type: hashi-corp-vault
+    type: hashicorp-vault
     configuration:
       address: http://127.0.0.1:8200
       token: myroot
@@ -38,3 +38,4 @@ register:
   # - ../packages/stores/postgres/src/index.ts
   # - ../packages/integrations/dist/hashicorp-vault.os-darwin.js
    - 'json-file@v0.0.1-next.20'
+   - 'hashicorp-vault@v0.0.1-next.1'
