@@ -1,4 +1,4 @@
-# @configu-integrations/aws-secrets-manager
+# @configu/aws-secrets-manager
 
 Integrates the Configu Orchestrator with [AWS Secrets Manager](https://docs.aws.amazon.com/secretsmanager).
 
