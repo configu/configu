@@ -84,6 +84,7 @@ export type ConfiguFileContents = FromSchema<typeof ConfiguFileSchema>;
 
 export class ConfiguFile {
   public static readonly schema = ConfiguFileSchema;
+  public readonly dir: string;
 
   constructor(
     public readonly path: string,
@@ -91,6 +92,7 @@ export class ConfiguFile {
     public readonly contentsType: 'json' | 'yaml',
   ) {
     try {
+      this.dir = dirname(resolve(this.path));
       JSONSchema.validate(ConfiguFile.schema, this.contents);
     } catch (error) {
       throw new Error(`ConfiguFile.contents "${path}" is invalid\n${error.message}`);
@@ -225,7 +227,7 @@ export class ConfiguFile {
       return undefined;
     }
 
-    const database = this.contents.backup ?? join(dirname(this.path), 'configs_backup.sqlite');
+    const database = this.contents.backup ?? join(this.dir, 'configs_backup.sqlite');
     return ConfiguFile.constructStore('sqlite', { database, tableName: name });
   }
 
@@ -246,9 +248,8 @@ export class ConfiguFile {
     if (!script) {
       throw new Error(`Script "${name}" not found`);
     }
-    const scriptRunDir = options.cwd ?? dirname(resolve(this.path));
     spawnSync(script, {
-      cwd: scriptRunDir,
+      cwd: options.cwd ?? this.dir,
       stdio: 'inherit',
       env: { ...stdenv.env, ...options.env },
       shell: true,
@@ -276,9 +277,10 @@ export class ConfiguFile {
 
   static async registerModuleFile(filePath: string) {
     // console.log('Registering module file', filePath);
+    // const module = await importModule(join(this.dir, filePath));
     const module = await importModule(filePath);
     // console.log('import module succeeded');
-    ConfiguFile.registerModule(module);
+    ConfiguFile.registerModule(module as any);
   }
 
   static async register(input: string) {

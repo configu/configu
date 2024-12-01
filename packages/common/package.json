@@ -47,14 +47,17 @@
     "@configu/sdk": "workspace:*",
     "@configu-integrations/configu": "workspace:*",
     "@configu-integrations/json-file": "workspace:*",
+    "debug": "^4.3.7",
     "find-up": "^7.0.0",
     "glob": "^11.0.0",
+    "jiti": "^2.4.1",
     "lodash": "^4.17.21",
     "parse-json": "8.1.0",
     "pathe": "^1.1.2",
-    "std-env": "^3.7.0",
-    "tsx": "^4.19.2",
-    "yaml": "^2.6.0"
+    "std-env": "^3.8.0",
+    "yaml": "^2.6.1"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/debug": "^4.1.12"
+  }
 }

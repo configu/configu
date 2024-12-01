@@ -1,16 +1,18 @@
 import os from 'node:os';
 import fs from 'node:fs/promises';
 import path from 'pathe';
-
+import debug from 'debug';
 import _ from 'lodash';
 import parseJson from 'parse-json';
 import YAML from 'yaml';
-import { tsImport } from 'tsx/esm/api';
+import { createJiti } from 'jiti';
 import * as stdenv from 'std-env';
 import { glob } from 'glob';
 import { findUp, findUpMultiple, pathExists } from 'find-up';
 
-export { path, findUp, findUpMultiple, pathExists, glob, stdenv, YAML };
+export { path, debug, findUp, findUpMultiple, pathExists, glob, stdenv, YAML };
+
+export const commonDebugger = debug('configu:common');
 
 export const getConfiguHomeDir = async (...paths: string[]): Promise<string> => {
   const directory = path.join(os.homedir(), '.configu', ...paths);
@@ -42,16 +44,33 @@ export const readFile = async (filePath: string, throwIfEmpty: string | boolean 
   }
 };
 
+const jiti = createJiti(import.meta.url, { debug: commonDebugger.enabled });
 export const importModule = async (modulePath: string = '') => {
+  // await import ('tsx');
+
+  // Now you can load TS files
+  // await import('./file.ts')
   // const module = await import(modulePath);
-  let module;
-  if (modulePath.endsWith('.ts')) {
-    // console.log('Import TS file');
-    module = await tsImport(modulePath, import.meta.url);
-  } else {
-    // console.log('import using native import');
-    module = await import(modulePath);
-  }
+  // let module;
+  // if (modulePath.endsWith('.ts')) {
+  //   console.log('Import TS file');
+  //   console.log(modulePath, import.meta.url);
+  //   console.log(path.resolve(modulePath), path.resolve(import.meta.url));
+  //   console.log(path.join(path.resolve(modulePath), path.resolve(import.meta.url)));
+  // module = await tsImport(modulePath, {
+  //   parentURL: import.meta.url,
+  //   onImport: (file: string) => {
+  //       console.log(file)
+  //       // file:///foo.ts
+  //   },
+  // });
+  // } else {
+  //   console.log('import using native import');
+  //   console.log(modulePath);
+  // module = await import(modulePath);
+  // }
+  const module = await jiti.import(modulePath);
+  // const module = await tsx.require(modulePath);
   return module;
 };
 

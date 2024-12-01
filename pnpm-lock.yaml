@@ -67,7 +67,7 @@ importers:
         version: 2.8.1
       tsup:
         specifier: ^8.3.5
-        version: 8.3.5(jiti@2.0.0)(tsx@4.19.2)(typescript@5.7.2)(yaml@2.6.1)
+        version: 8.3.5(jiti@2.4.1)(tsx@4.19.2)(typescript@5.7.2)(yaml@2.6.1)
       tsx:
         specifier: ^4.19.2
         version: 4.19.2
@@ -158,12 +158,18 @@ importers:
       '@configu/sdk':
         specifier: workspace:*
         version: link:../sdk
+      debug:
+        specifier: ^4.3.7
+        version: 4.3.7
       find-up:
         specifier: ^7.0.0
         version: 7.0.0
       glob:
         specifier: ^11.0.0
         version: 11.0.0
+      jiti:
+        specifier: ^2.4.1
+        version: 2.4.1
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -174,14 +180,15 @@ importers:
         specifier: ^1.1.2
         version: 1.1.2
       std-env:
-        specifier: ^3.7.0
-        version: 3.7.0
-      tsx:
-        specifier: ^4.19.2
-        version: 4.19.2
+        specifier: ^3.8.0
+        version: 3.8.0
       yaml:
-        specifier: ^2.6.0
-        version: 2.6.0
+        specifier: ^2.6.1
+        version: 2.6.1
+    devDependencies:
+      '@types/debug':
+        specifier: ^4.1.12
+        version: 4.1.12
 
   packages/formatters:
     dependencies:
@@ -240,7 +247,7 @@ importers:
         version: 20.12.12
       tsup:
         specifier: 8.2.4
-        version: 8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
+        version: 8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
       typescript:
         specifier: ^5.4.5
         version: 5.6.2
@@ -262,7 +269,7 @@ importers:
         version: 20.12.12
       tsup:
         specifier: 8.2.4
-        version: 8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
+        version: 8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
       typescript:
         specifier: ^5.4.5
         version: 5.6.2
@@ -287,7 +294,7 @@ importers:
         version: 20.12.12
       tsup:
         specifier: 8.2.4
-        version: 8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
+        version: 8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
       typescript:
         specifier: ^5.4.5
         version: 5.6.2
@@ -315,7 +322,7 @@ importers:
         version: 5.0.5
       tsup:
         specifier: 8.2.4
-        version: 8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
+        version: 8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
       typescript:
         specifier: ^5.4.5
         version: 5.6.2
@@ -340,7 +347,7 @@ importers:
         version: 20.12.12
       tsup:
         specifier: 8.2.4
-        version: 8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
+        version: 8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
       typescript:
         specifier: ^5.4.5
         version: 5.6.2
@@ -365,7 +372,7 @@ importers:
         version: 13.12.2
       tsup:
         specifier: 8.2.4
-        version: 8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
+        version: 8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
       typescript:
         specifier: ^5.4.5
         version: 5.6.2
@@ -387,7 +394,7 @@ importers:
         version: 20.12.12
       tsup:
         specifier: 8.2.4
-        version: 8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
+        version: 8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
       typescript:
         specifier: ^5.4.5
         version: 5.6.2
@@ -409,7 +416,7 @@ importers:
         version: 20.12.12
       tsup:
         specifier: 8.2.4
-        version: 8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
+        version: 8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
       typescript:
         specifier: ^5.4.5
         version: 5.6.2
@@ -431,7 +438,7 @@ importers:
         version: 20.12.12
       tsup:
         specifier: 8.2.4
-        version: 8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.3)(yaml@2.6.1)
+        version: 8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.6.3)(yaml@2.6.1)
       typescript:
         specifier: ^5.4.5
         version: 5.6.3
@@ -453,7 +460,7 @@ importers:
         version: 1.7.4
       tsup:
         specifier: 8.2.4
-        version: 8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
+        version: 8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
       typescript:
         specifier: ^5.4.5
         version: 5.6.2
@@ -478,7 +485,7 @@ importers:
         version: 20.12.12
       tsup:
         specifier: 8.2.4
-        version: 8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
+        version: 8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
       typescript:
         specifier: ^5.4.5
         version: 5.6.2
@@ -497,7 +504,7 @@ importers:
         version: 20.12.12
       tsup:
         specifier: 8.2.4
-        version: 8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
+        version: 8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
       typescript:
         specifier: ^5.4.5
         version: 5.6.2
@@ -519,7 +526,7 @@ importers:
         version: 20.12.12
       tsup:
         specifier: 8.2.4
-        version: 8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.3)(yaml@2.6.1)
+        version: 8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.6.3)(yaml@2.6.1)
       typescript:
         specifier: ^5.4.5
         version: 5.6.3
@@ -541,7 +548,7 @@ importers:
         version: 20.12.12
       tsup:
         specifier: 8.2.4
-        version: 8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.3)(yaml@2.6.1)
+        version: 8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.6.3)(yaml@2.6.1)
       typescript:
         specifier: ^5.4.5
         version: 5.6.3
@@ -572,7 +579,7 @@ importers:
         version: 20.12.12
       tsup:
         specifier: 8.2.4
-        version: 8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
+        version: 8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
       typescript:
         specifier: ^5.4.5
         version: 5.6.2
@@ -594,7 +601,7 @@ importers:
         version: 20.12.12
       tsup:
         specifier: 8.2.4
-        version: 8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
+        version: 8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
       typescript:
         specifier: ^5.4.5
         version: 5.6.2
@@ -619,7 +626,7 @@ importers:
         version: 20.12.12
       tsup:
         specifier: 8.2.4
-        version: 8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
+        version: 8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
       typescript:
         specifier: ^5.4.5
         version: 5.6.2
@@ -644,7 +651,7 @@ importers:
         version: 20.12.12
       tsup:
         specifier: 8.2.4
-        version: 8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.3)(yaml@2.6.1)
+        version: 8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.6.3)(yaml@2.6.1)
       typescript:
         specifier: ^5.4.5
         version: 5.6.3
@@ -666,7 +673,7 @@ importers:
         version: 20.12.12
       tsup:
         specifier: 8.2.4
-        version: 8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.3)(yaml@2.6.1)
+        version: 8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.6.3)(yaml@2.6.1)
       typescript:
         specifier: ^5.4.5
         version: 5.6.3
@@ -691,7 +698,7 @@ importers:
         version: 20.12.12
       tsup:
         specifier: 8.2.4
-        version: 8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
+        version: 8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
       typescript:
         specifier: ^5.4.5
         version: 5.6.2
@@ -722,7 +729,7 @@ importers:
         version: 5.0.5
       tsup:
         specifier: 8.2.4
-        version: 8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
+        version: 8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
       typescript:
         specifier: ^5.4.5
         version: 5.6.2
@@ -750,7 +757,7 @@ importers:
         version: 20.12.12
       tsup:
         specifier: 8.2.4
-        version: 8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
+        version: 8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
       typescript:
         specifier: ^5.4.5
         version: 5.6.2
@@ -775,7 +782,7 @@ importers:
         version: 20.12.12
       tsup:
         specifier: 8.2.4
-        version: 8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
+        version: 8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
       typescript:
         specifier: ^5.4.5
         version: 5.6.2
@@ -803,7 +810,7 @@ importers:
         version: 0.4.14
       tsup:
         specifier: 8.2.4
-        version: 8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
+        version: 8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
       typescript:
         specifier: ^5.4.5
         version: 5.6.2
@@ -879,8 +886,8 @@ importers:
         specifier: ^2.14.1
         version: 2.14.1(ajv@8.17.1)
       '@vitest/expect':
-        specifier: ^2.1.5
-        version: 2.1.5
+        specifier: ^2.1.6
+        version: 2.1.6
       acorn:
         specifier: ^8.14.0
         version: 8.14.0
@@ -912,8 +919,8 @@ importers:
         specifier: ^1.10.0
         version: 1.10.0
       type-fest:
-        specifier: ^4.27.0
-        version: 4.27.0
+        specifier: ^4.29.0
+        version: 4.29.0
       validator:
         specifier: ^13.12.0
         version: 13.12.0
@@ -2852,17 +2859,17 @@ packages:
   '@ungap/structured-clone@1.2.0':
     resolution: {integrity: sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==}
 
-  '@vitest/expect@2.1.5':
-    resolution: {integrity: sha512-nZSBTW1XIdpZvEJyoP/Sy8fUg0b8od7ZpGDkTUcfJ7wz/VoZAFzFfLyxVxGFhUjJzhYqSbIpfMtl/+k/dpWa3Q==}
+  '@vitest/expect@2.1.6':
+    resolution: {integrity: sha512-9M1UR9CAmrhJOMoSwVnPh2rELPKhYo0m/CSgqw9PyStpxtkwhmdM6XYlXGKeYyERY1N6EIuzkQ7e3Lm1WKCoUg==}
 
-  '@vitest/pretty-format@2.1.5':
-    resolution: {integrity: sha512-4ZOwtk2bqG5Y6xRGHcveZVr+6txkH7M2e+nPFd6guSoN638v/1XQ0K06eOpi0ptVU/2tW/pIU4IoPotY/GZ9fw==}
+  '@vitest/pretty-format@2.1.6':
+    resolution: {integrity: sha512-exZyLcEnHgDMKc54TtHca4McV4sKT+NKAe9ix/yhd/qkYb/TP8HTyXRFDijV19qKqTZM0hPL4753zU/U8L/gAA==}
 
-  '@vitest/spy@2.1.5':
-    resolution: {integrity: sha512-aWZF3P0r3w6DiYTVskOYuhBc7EMc3jvn1TkBg8ttylFFRqNN2XGD7V5a4aQdk6QiUzZQ4klNBSpCLJgWNdIiNw==}
+  '@vitest/spy@2.1.6':
+    resolution: {integrity: sha512-oTFObV8bd4SDdRka5O+mSh5w9irgx5IetrD5i+OsUUsk/shsBoHifwCzy45SAORzAhtNiprUVaK3hSCCzZh1jQ==}
 
-  '@vitest/utils@2.1.5':
-    resolution: {integrity: sha512-yfj6Yrp0Vesw2cwJbP+cl04OC+IHFsuQsrsJBL9pyGeQXE56v1UAOQco+SR55Vf1nQzfV0QJg1Qum7AaWUwwYg==}
+  '@vitest/utils@2.1.6':
+    resolution: {integrity: sha512-ixNkFy3k4vokOUTU2blIUvOgKq/N2PW8vKIjZZYsGJCMX69MRa9J2sKqX5hY/k5O5Gty3YJChepkqZ3KM9LyIQ==}
 
   abbrev@1.1.1:
     resolution: {integrity: sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q==}
@@ -3590,15 +3597,6 @@ packages:
 
   debug@3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
-    peerDependencies:
-      supports-color: '*'
-    peerDependenciesMeta:
-      supports-color:
-        optional: true
-
-  debug@4.3.4:
-    resolution: {integrity: sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==}
-    engines: {node: '>=6.0'}
     peerDependencies:
       supports-color: '*'
     peerDependenciesMeta:
@@ -4948,8 +4946,8 @@ packages:
     resolution: {integrity: sha512-zrteXnqYxfQh7l5FHyL38jL39di8H8rHoecLH3JNxH3BwOrBsNeabdap5e0I23lD4HHI8W5VFBZqG4Eaq5LNcw==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
 
-  jiti@2.0.0:
-    resolution: {integrity: sha512-CJ7e7Abb779OTRv3lomfp7Mns/Sy1+U4pcAx5VbjxCZD5ZM/VJaXPpPjNKjtSvWQy/H86E49REXR34dl1JEz9w==}
+  jiti@2.4.1:
+    resolution: {integrity: sha512-yPBThwecp1wS9DmoA4x4KR2h3QoslacnDR8ypuFM962kI4/456Iy1oHx2RAgh4jfZNdn0bctsdadceiBUgpU1g==}
     hasBin: true
 
   jose@4.15.9:
@@ -5593,9 +5591,6 @@ packages:
 
   ms@2.0.0:
     resolution: {integrity: sha512-Tpp60P6IUJDTuOq/5Z8cdskzJujfwqfOTkrwIwj7IRISpnkJnT6SyJ4PCPnGMoFjC9ddhal5KVIYtAt97ix05A==}
-
-  ms@2.1.2:
-    resolution: {integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==}
 
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
@@ -6657,9 +6652,6 @@ packages:
     resolution: {integrity: sha512-RwNA9Z/7PrK06rYLIzFMlaF+l73iwpzsqRIFgbMLbTcLD6cOao82TaWefPXQvB2fOC4AjuYSEndS7N/mTCbkdQ==}
     engines: {node: '>= 0.8'}
 
-  std-env@3.7.0:
-    resolution: {integrity: sha512-JPbdCEQLj1w5GilpiHAx3qJvFndqybBysA3qUOnznweH4QbNYUsW/ea8QzSrnh0vNsezMMw5bcVool8lM0gwzg==}
-
   std-env@3.8.0:
     resolution: {integrity: sha512-Bc3YwwCB+OzldMxOXJIIvC6cPRWr/LxOp48CdQTOkPyk/t4JWWJbrilwBd7RJzKV8QW7tJkcgAmeuLLJugl5/w==}
 
@@ -7019,8 +7011,8 @@ packages:
     resolution: {integrity: sha512-yOGpmOAL7CkKe/91I5O3gPICmJNLJ1G4zFYVAsRHg7M64biSnPtRj0WNQt++bRkjYOqjWXrhnUw1utzmVErAdg==}
     engines: {node: '>=16'}
 
-  type-fest@4.27.0:
-    resolution: {integrity: sha512-3IMSWgP7C5KSQqmo1wjhKrwsvXAtF33jO3QY+Uy++ia7hqvgSK6iXbbg5PbDBc1P2ZbNEDgejOrN4YooXvhwCw==}
+  type-fest@4.29.0:
+    resolution: {integrity: sha512-RPYt6dKyemXJe7I6oNstcH24myUGSReicxcHTvCLgzm4e0n8y05dGvcGB15/SoPRBmhlMthWQ9pvKyL81ko8nQ==}
     engines: {node: '>=16'}
 
   type-is@1.6.18:
@@ -7434,11 +7426,6 @@ packages:
 
   yaml@2.5.1:
     resolution: {integrity: sha512-bLQOjaX/ADgQ20isPJRvF0iRUHIxVhYvr53Of7wGcWlO2jvtUlH5m87DsmulFVxRpNLOnI4tB6p/oh8D7kpn9Q==}
-    engines: {node: '>= 14'}
-    hasBin: true
-
-  yaml@2.6.0:
-    resolution: {integrity: sha512-a6ae//JvKDEra2kdi1qzCyrJW/WZCgFi8ydDV+eXExl95t+5R+ijnqHJbz9tmMh8FUjx3iv2fCQ4dclAQlO2UQ==}
     engines: {node: '>= 14'}
     hasBin: true
 
@@ -10109,24 +10096,24 @@ snapshots:
 
   '@ungap/structured-clone@1.2.0': {}
 
-  '@vitest/expect@2.1.5':
+  '@vitest/expect@2.1.6':
     dependencies:
-      '@vitest/spy': 2.1.5
-      '@vitest/utils': 2.1.5
+      '@vitest/spy': 2.1.6
+      '@vitest/utils': 2.1.6
       chai: 5.1.2
       tinyrainbow: 1.2.0
 
-  '@vitest/pretty-format@2.1.5':
+  '@vitest/pretty-format@2.1.6':
     dependencies:
       tinyrainbow: 1.2.0
 
-  '@vitest/spy@2.1.5':
+  '@vitest/spy@2.1.6':
     dependencies:
       tinyspy: 3.0.2
 
-  '@vitest/utils@2.1.5':
+  '@vitest/utils@2.1.6':
     dependencies:
-      '@vitest/pretty-format': 2.1.5
+      '@vitest/pretty-format': 2.1.6
       loupe: 3.1.2
       tinyrainbow: 1.2.0
 
@@ -10946,10 +10933,6 @@ snapshots:
     dependencies:
       ms: 2.1.3
 
-  debug@4.3.4:
-    dependencies:
-      ms: 2.1.2
-
   debug@4.3.7:
     dependencies:
       ms: 2.1.3
@@ -11398,7 +11381,7 @@ snapshots:
       ajv: 6.12.6
       chalk: 4.1.2
       cross-spawn: 7.0.3
-      debug: 4.3.4
+      debug: 4.3.7
       doctrine: 3.0.0
       escape-string-regexp: 4.0.0
       eslint-scope: 7.2.2
@@ -12652,8 +12635,7 @@ snapshots:
 
   jest-get-type@29.6.3: {}
 
-  jiti@2.0.0:
-    optional: true
+  jiti@2.4.1: {}
 
   jose@4.15.9: {}
 
@@ -13569,8 +13551,6 @@ snapshots:
 
   ms@2.0.0: {}
 
-  ms@2.1.2: {}
-
   ms@2.1.3: {}
 
   mssql@10.0.2:
@@ -14083,11 +14063,11 @@ snapshots:
 
   possible-typed-array-names@1.0.0: {}
 
-  postcss-load-config@6.0.1(jiti@2.0.0)(tsx@4.19.2)(yaml@2.6.1):
+  postcss-load-config@6.0.1(jiti@2.4.1)(tsx@4.19.2)(yaml@2.6.1):
     dependencies:
       lilconfig: 3.1.2
     optionalDependencies:
-      jiti: 2.0.0
+      jiti: 2.4.1
       tsx: 4.19.2
       yaml: 2.6.1
 
@@ -14861,8 +14841,6 @@ snapshots:
 
   statuses@2.0.1: {}
 
-  std-env@3.7.0: {}
-
   std-env@3.8.0: {}
 
   stdin-discarder@0.1.0:
@@ -15264,7 +15242,7 @@ snapshots:
 
   tslib@2.8.1: {}
 
-  tsup@8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1):
+  tsup@8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1):
     dependencies:
       bundle-require: 5.0.0(esbuild@0.23.1)
       cac: 6.7.14
@@ -15276,7 +15254,7 @@ snapshots:
       globby: 11.1.0
       joycon: 3.1.1
       picocolors: 1.1.1
-      postcss-load-config: 6.0.1(jiti@2.0.0)(tsx@4.19.2)(yaml@2.6.1)
+      postcss-load-config: 6.0.1(jiti@2.4.1)(tsx@4.19.2)(yaml@2.6.1)
       resolve-from: 5.0.0
       rollup: 4.27.3
       source-map: 0.8.0-beta.0
@@ -15290,7 +15268,7 @@ snapshots:
       - tsx
       - yaml
 
-  tsup@8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.3)(yaml@2.6.1):
+  tsup@8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.6.3)(yaml@2.6.1):
     dependencies:
       bundle-require: 5.0.0(esbuild@0.23.1)
       cac: 6.7.14
@@ -15302,7 +15280,7 @@ snapshots:
       globby: 11.1.0
       joycon: 3.1.1
       picocolors: 1.1.1
-      postcss-load-config: 6.0.1(jiti@2.0.0)(tsx@4.19.2)(yaml@2.6.1)
+      postcss-load-config: 6.0.1(jiti@2.4.1)(tsx@4.19.2)(yaml@2.6.1)
       resolve-from: 5.0.0
       rollup: 4.27.3
       source-map: 0.8.0-beta.0
@@ -15316,7 +15294,7 @@ snapshots:
       - tsx
       - yaml
 
-  tsup@8.3.5(jiti@2.0.0)(tsx@4.19.2)(typescript@5.7.2)(yaml@2.6.1):
+  tsup@8.3.5(jiti@2.4.1)(tsx@4.19.2)(typescript@5.7.2)(yaml@2.6.1):
     dependencies:
       bundle-require: 5.0.0(esbuild@0.24.0)
       cac: 6.7.14
@@ -15326,7 +15304,7 @@ snapshots:
       esbuild: 0.24.0
       joycon: 3.1.1
       picocolors: 1.1.1
-      postcss-load-config: 6.0.1(jiti@2.0.0)(tsx@4.19.2)(yaml@2.6.1)
+      postcss-load-config: 6.0.1(jiti@2.4.1)(tsx@4.19.2)(yaml@2.6.1)
       resolve-from: 5.0.0
       rollup: 4.27.3
       source-map: 0.8.0-beta.0
@@ -15377,7 +15355,7 @@ snapshots:
 
   type-fest@4.26.1: {}
 
-  type-fest@4.27.0: {}
+  type-fest@4.29.0: {}
 
   type-is@1.6.18:
     dependencies:
@@ -15875,8 +15853,6 @@ snapshots:
   yaml@2.4.2: {}
 
   yaml@2.5.1: {}
-
-  yaml@2.6.0: {}
 
   yaml@2.6.1: {}
 
