@@ -1,5 +1,5 @@
 {
-  "name": "@configu-integrations/kubernetes-secret",
+  "name": "@configu/kubernetes-secret",
   "version": "0.0.0",
   "license": "Apache-2.0",
   "author": "@configu/dev",
@@ -7,7 +7,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/configu/configu",
-    "directory": "packages/integrations"
+    "directory": "packages/stores/kubernetes-secret"
   },
   "bugs": {
     "url": "https://github.com/configu/configu/issues",
@@ -18,7 +18,7 @@
     "configu"
   ],
   "type": "module",
-  "exports": "./src/kubernetes-secret.ts",
+  "exports": "./src/index.ts",
   "files": [
     "src"
   ],
@@ -26,13 +26,12 @@
     "build": "tsup"
   },
   "dependencies": {
-    "@configu/integrations": "workspace:*",
+    "@configu/key-value": "workspace:*",
     "@kubernetes/client-node": "^0.20.0",
-    "lodash-es": "^4.17.21"
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
-    "@types/node": "20.12.12",
-    "tsup": "8.2.4",
+    "@types/node": "22.10.0",
     "typescript": "^5.4.5"
   }
 }

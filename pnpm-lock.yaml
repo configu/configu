@@ -214,28 +214,6 @@ importers:
         specifier: 20.12.12
         version: 20.12.12
 
-  packages/integrations/stores/kubernetes-secret:
-    dependencies:
-      '@configu/integrations':
-        specifier: workspace:*
-        version: link:../..
-      '@kubernetes/client-node':
-        specifier: ^0.20.0
-        version: 0.20.0
-      lodash-es:
-        specifier: ^4.17.21
-        version: 4.17.21
-    devDependencies:
-      '@types/node':
-        specifier: 20.12.12
-        version: 20.12.12
-      tsup:
-        specifier: 8.2.4
-        version: 8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.3)(yaml@2.6.1)
-      typescript:
-        specifier: ^5.4.5
-        version: 5.6.3
-
   packages/integrations/stores/launch-darkly:
     dependencies:
       '@configu/integrations':
@@ -842,6 +820,25 @@ importers:
       keyv:
         specifier: 5.1.0
         version: 5.1.0
+    devDependencies:
+      '@types/node':
+        specifier: 22.10.0
+        version: 22.10.0
+      typescript:
+        specifier: ^5.4.5
+        version: 5.7.2
+
+  packages/stores/kubernetes-secret:
+    dependencies:
+      '@configu/key-value':
+        specifier: workspace:*
+        version: link:../key-value
+      '@kubernetes/client-node':
+        specifier: ^0.20.0
+        version: 0.20.0
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
     devDependencies:
       '@types/node':
         specifier: 22.10.0
