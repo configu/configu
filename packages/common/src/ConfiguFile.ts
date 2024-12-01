@@ -301,29 +301,30 @@ export class ConfiguFile {
       // Not a valid path
     }
 
-    try {
-      return ConfiguFile.registerStore(input);
-    } catch {
-      throw new Error(`failed to register module ${input}`);
-    }
+    throw new Error(`failed to register module ${input}`);
   }
 
-  static async registerStore(type: string) {
-    commonDebug(`Registering store: ${type}`);
+  static destructStoreInput(typeAndVersion: string) {
+    const [t = '', version = 'latest'] = typeAndVersion.split('@');
+    const type = ConfigKey.normalize(t);
+    return {
+      type,
+      version,
+    };
+  }
 
-    const [TYPE = '', VERSION = 'latest'] = type.split('@');
-    const normalizedType = ConfigKey.normalize(TYPE);
+  static async registerStore(typeAndVersion: string) {
+    commonDebug(`Registering store: ${typeAndVersion}`);
+    const { type, version } = this.destructStoreInput(typeAndVersion);
 
     const moduleDirPath = await getConfiguHomeDir('cache');
-    const modulePath = join(moduleDirPath, `/${normalizedType}-${VERSION}.js`);
+    const modulePath = join(moduleDirPath, `/${type}-${version}.js`);
 
     // todo: add sem-ver check for cache invalidation when cached stores are outdated once integration pipeline is reworked
 
     const isModuleExists = await pathExists(modulePath);
-    commonDebug('Store module already exists', modulePath);
-
     if (!isModuleExists) {
-      const remoteUrl = `https://github.com/configu/configu/releases/download/stores%2F${normalizedType}%2F${VERSION}/${normalizedType}-${platform()}-${arch()}.js`;
+      const remoteUrl = `https://github.com/configu/configu/releases/download/stores%2F${type}%2F${version}/${type}-${platform()}-${arch()}.js`;
       console.log('Downloading store module:', remoteUrl);
       const res = await fetch(remoteUrl);
 
@@ -333,15 +334,18 @@ export class ConfiguFile {
       } else {
         throw new Error(`remote integration ${type} not found`);
       }
+    } else {
+      commonDebug('Store module already exists', modulePath);
     }
 
     return ConfiguFile.registerModuleFile(modulePath);
   }
 
-  static async constructStore(type: string, configuration = {}) {
+  static async constructStore(typeAndVersion: string, configuration = {}) {
     // todo: remember to mention in docs that integration stores cannot be overridden
+    const { type } = this.destructStoreInput(typeAndVersion);
     if (!ConfigStore.has(type)) {
-      await ConfiguFile.registerStore(type);
+      await ConfiguFile.registerStore(typeAndVersion);
     }
     return ConfigStore.construct(type, configuration);
   }
