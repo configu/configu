@@ -17,7 +17,7 @@ stores:
     configuration:
       path: ./store.json
   hc:
-    type: hashicorp-vault
+    type: hashi-corp-vault
     configuration:
       address: http://127.0.0.1:8200
       token: myroot
