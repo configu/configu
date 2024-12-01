@@ -1,4 +1,4 @@
-# @configu-integrations/keyv
+# @configu/keyv
 
 Integrates the Configu Orchestrator with [Key-v](https://keyv.org/).
 
