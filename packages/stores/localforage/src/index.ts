@@ -1,9 +1,9 @@
+import { KeyValueConfigStore } from '@configu/key-value';
 import localForage from 'localforage';
-import { KeyValueConfigStore } from '@configu/integrations/src/utils/KeyValue';
 
 export type LocalForageConfigStoreConfiguration = LocalForageOptions;
 
-export class LocalForageConfigStore extends KeyValueConfigStore {
+export class LocalforageConfigStore extends KeyValueConfigStore {
   private client: LocalForage;
   constructor(configuration: LocalForageConfigStoreConfiguration) {
     super();
