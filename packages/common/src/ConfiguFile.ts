@@ -8,6 +8,7 @@ import _ from 'lodash';
 import { ConfigSchema, ConfigStore, ConfigExpression, ConfigStoreConstructor, ConfigKey } from '@configu/sdk';
 import { JSONSchema, JSONSchemaObject, FromSchema } from '@configu/sdk/expressions';
 import {
+  commonDebug,
   stdenv,
   findUp,
   findUpMultiple,
@@ -258,28 +259,24 @@ export class ConfiguFile {
 
   private static async registerModule(module: Record<string, unknown>) {
     Object.entries(module).forEach(([key, value]) => {
-      // console.log('Registering:', key, value);
-
       if (key === 'default') {
         return;
       }
+      commonDebug('Registering module property', key);
       if (typeof value === 'function' && 'type' in value) {
-        // console.log('Registering ConfigStore:', value.type);
+        commonDebug('Registering ConfigStore:', value.type);
         ConfigStore.register(value as ConfigStoreConstructor);
       } else if (typeof value === 'function') {
-        // console.log('Registering ConfigExpression:', key);
+        commonDebug('Registering ConfigExpression:', key);
         ConfigExpression.register(key, value);
       } else {
-        // console.log('ignore registeree:', key);
+        commonDebug('Ignore registeree:', key);
       }
     });
   }
 
   static async registerModuleFile(filePath: string) {
-    // console.log('Registering module file', filePath);
-    // const module = await importModule(join(this.dir, filePath));
     const module = await importModule(filePath);
-    // console.log('import module succeeded');
     ConfiguFile.registerModule(module as any);
   }
 
@@ -297,9 +294,6 @@ export class ConfiguFile {
       // todo: support http based urls
       throw new Error('Only file URLs are supported');
     }
-    // else {
-    //   return ConfiguFile.registerStore(input);
-    // }
 
     try {
       const path = resolve(input);
@@ -308,11 +302,15 @@ export class ConfiguFile {
       // Not a valid path
     }
 
-    throw new Error(`failed to register module ${input}`);
+    try {
+      return ConfiguFile.registerStore(input);
+    } catch {
+      throw new Error(`failed to register module ${input}`);
+    }
   }
 
   static async registerStore(type: string) {
-    // console.log(`Registering store: ${type}`);
+    commonDebug(`Registering store: ${type}`);
 
     const [TYPE = '', VERSION = 'latest'] = type.split('@');
     const normalizedType = ConfigKey.normalize(TYPE);
@@ -323,22 +321,22 @@ export class ConfiguFile {
     // todo: add sem-ver check for cache invalidation when cached stores are outdated once integration pipeline is reworked
 
     const isModuleExists = await pathExists(modulePath);
-    // console.log('Store Module exists', modulePath);
+    commonDebug('Store module already exists', modulePath);
 
     if (!isModuleExists) {
       const remoteUrl = `https://github.com/configu/configu/releases/download/stores%2F${normalizedType}%2F${VERSION}/${normalizedType}-${platform()}-${arch()}.js`;
-      // console.log('Downloading:', remoteUrl);
+      console.log('Downloading store module:', remoteUrl);
       const res = await fetch(remoteUrl);
 
       if (res.ok) {
         await fs.writeFile(modulePath, await res.text());
-        // console.log('Fetched successfully');
+        commonDebug('Fetched module successfully', modulePath);
       } else {
         throw new Error(`remote integration ${type} not found`);
       }
     }
 
-    await ConfiguFile.registerModuleFile(modulePath);
+    return ConfiguFile.registerModuleFile(modulePath);
   }
 
   static async constructStore(type: string, configuration = {}) {

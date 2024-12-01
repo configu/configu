@@ -1,5 +1,5 @@
 {
-  "name": "@configu/integrations",
+  "name": "@configu-integrations/aws-secrets-manager",
   "version": "0.0.0",
   "license": "Apache-2.0",
   "author": "@configu/dev",
@@ -7,7 +7,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/configu/configu",
-    "directory": "packages/integrations"
+    "directory": "packages/stores/aws-secrets-manager"
   },
   "bugs": {
     "url": "https://github.com/configu/configu/issues",
@@ -18,21 +18,20 @@
     "configu"
   ],
   "type": "module",
+  "exports": "./src/index.ts",
   "files": [
     "src"
   ],
   "scripts": {
-    "clean": "shx rm -rf tsconfig.tsbuildinfo build",
-    "bundle:integrations": "tsx src/bundler",
-    "test": "node --import tsx --test **/**/*.test.ts",
-    "test:watch": "node --import tsx --test --watch *.test.ts"
+    "build": "tsup"
   },
   "dependencies": {
     "@configu/sdk": "workspace:*",
-    "lodash-es": "^4.17.21"
+    "@configu/key-value": "workspace:*",
+    "@aws-sdk/client-secrets-manager": "^3.465.0"
   },
   "devDependencies": {
-    "@types/lodash-es": "^4.17.12",
-    "@types/node": "20.12.12"
+    "@types/node": "22.10.0",
+    "typescript": "^5.4.5"
   }
 }

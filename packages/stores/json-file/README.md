@@ -1,4 +1,4 @@
-# @configu-integrations/json-file
+# @configu/json-file
 
 Integrates the Configu Orchestrator with [JSON files](https://www.json.org/json-en.html).
 

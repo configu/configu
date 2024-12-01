@@ -1,7 +1,6 @@
----
-title: 'HashiCorp Vault'
-description: 'Integrates the Configu Orchestrator with [HashiCorp Vault](https://www.vaultproject.io/).'
----
+# @configu/hashicorp-vault
+
+Integrates the Configu Orchestrator with [HashiCorp Vault](https://www.vaultproject.io/).
 
 - Name: HashiCorp Vault
 - Category: Secret manager
