@@ -223,31 +223,6 @@ importers:
         specifier: 20.12.12
         version: 20.12.12
 
-  packages/integrations/stores/azure-key-vault:
-    dependencies:
-      '@azure/identity':
-        specifier: 4.4.1
-        version: 4.4.1
-      '@azure/keyvault-secrets':
-        specifier: 4.8.0
-        version: 4.8.0
-      '@configu/integrations':
-        specifier: workspace:*
-        version: link:../..
-      '@configu/sdk':
-        specifier: workspace:*
-        version: link:../../../sdk
-    devDependencies:
-      '@types/node':
-        specifier: 20.12.12
-        version: 20.12.12
-      tsup:
-        specifier: 8.2.4
-        version: 8.2.4(jiti@2.0.0)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
-      typescript:
-        specifier: ^5.4.5
-        version: 5.6.2
-
   packages/integrations/stores/cloud-bees:
     dependencies:
       '@configu/integrations':
@@ -792,6 +767,28 @@ importers:
       '@aws-sdk/client-secrets-manager':
         specifier: ^3.465.0
         version: 3.670.0
+      '@configu/key-value':
+        specifier: workspace:*
+        version: link:../key-value
+      '@configu/sdk':
+        specifier: workspace:*
+        version: link:../../sdk
+    devDependencies:
+      '@types/node':
+        specifier: 22.10.0
+        version: 22.10.0
+      typescript:
+        specifier: ^5.4.5
+        version: 5.7.2
+
+  packages/stores/azure-key-vault:
+    dependencies:
+      '@azure/identity':
+        specifier: 4.4.1
+        version: 4.4.1
+      '@azure/keyvault-secrets':
+        specifier: 4.8.0
+        version: 4.8.0
       '@configu/key-value':
         specifier: workspace:*
         version: link:../key-value
@@ -8219,7 +8216,7 @@ snapshots:
       jws: 4.0.0
       open: 8.4.2
       stoppable: 1.1.0
-      tslib: 2.7.0
+      tslib: 2.8.1
     transitivePeerDependencies:
       - supports-color
 
@@ -8251,7 +8248,7 @@ snapshots:
       '@azure/core-tracing': 1.1.2
       '@azure/core-util': 1.9.0
       '@azure/logger': 1.1.2
-      tslib: 2.7.0
+      tslib: 2.8.1
     transitivePeerDependencies:
       - supports-color
 

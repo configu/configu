@@ -1,9 +1,9 @@
-# @configu-integrations/azure-keyvault
+# @configu/azure-keyvault
 
-Integrates the Configu Orchestrator with [Azure Key Vault](https://learn.microsoft.com/en-us/azure/key-vault/).  
+Integrates the Configu Orchestrator with [Azure Key Vault](https://learn.microsoft.com/en-us/azure/key-vault/).
 
-- Name: Azure Key Vault  
-- Category: Secret manager  
+- Name: Azure Key Vault
+- Category: Secret manager
 
 ## Configuration
 
@@ -48,21 +48,24 @@ configu eval --store "my-store" --set "test" --schema "./start.cfgu.json" \
 ## Common errors and solutions
 
 1. Authentication failure
+
    - Solution: Ensure the correct `clientId`, `clientSecret`, and `tenantId` are provided. Verify the service principal's permissions in the Azure portal.
 
 2. Vault not found
+
    - Solution: Ensure the `vaultUrl` is correct and the key vault exists in your Azure subscription. Verify with:
      ```bash
      az keyvault show --name my-vault
      ```
 
-3. Access denied  
+3. Access denied
+
    - Solution: Make sure the service principal has the necessary access policy to manage secrets. Use the following command to grant permissions:
      ```bash
      az keyvault set-policy --name my-vault --spn <your-client-id> --secret-permissions get list set delete
      ```
 
-4. Network connectivity issues 
+4. Network connectivity issues
    - Solution: Verify that your network allows access to the vault endpoint. Test the connectivity with:
      ```bash
      curl -I https://my-vault.vault.azure.net/
@@ -72,4 +75,3 @@ configu eval --store "my-store" --set "test" --schema "./start.cfgu.json" \
 
 - Integration documentation: https://docs.aws.amazon.com/secretsmanager
 - Azure Identity SDK: https://learn.microsoft.com/en-us/azure/active-directory/develop/reference-v2-libraries
-
