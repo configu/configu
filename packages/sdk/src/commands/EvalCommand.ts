@@ -214,21 +214,26 @@ export class EvalCommand extends ConfigCommand<EvalCommandInput, EvalCommandOutp
         // const evaluatedValue = current.value;
 
         try {
-          if (origin !== EvaluatedConfigOrigin.Empty) {
-            ConfigValue.validate({
-              store,
-              set,
-              schema,
-              current: key,
-              configs: result,
-            });
-
-            // if (cfgu.depends && cfgu.depends.some((depend) => !evaluatedConfigsDict[depend])) {
-            //   throw new Error(`ConfigValue is missing for depends`);
-            // }
-          } else if (cfgu?.required) {
+          if (cfgu?.required && origin === EvaluatedConfigOrigin.Empty) {
             throw new Error('ConfigValue is required');
           }
+
+          // todo: think about when should we run the tests
+          ConfigValue.validate({
+            store,
+            set,
+            schema,
+            current: key,
+            configs: result,
+          });
+
+          // if (origin !== EvaluatedConfigOrigin.Empty) {
+          //   // if (cfgu.depends && cfgu.depends.some((depend) => !evaluatedConfigsDict[depend])) {
+          //   //   throw new Error(`ConfigValue is missing for depends`);
+          //   // }
+          // } else if (cfgu?.required) {
+          //   throw new Error('ConfigValue is required');
+          // }
         } catch (error) {
           throw new Error(`Validation failed for Config: "${current.key}"\n${error.message}`);
         }

@@ -1,4 +1,5 @@
-# $schema: 'https://raw.githubusercontent.com/configu/configu/main/packages/schema/.configu.json'
+# yaml-language-server: $schema=https://raw.githubusercontent.com/configu/configu/refs/heads/0-configu-v1/packages/schema/.configu.json
+
 stores:
   store0:
     # backup: true
