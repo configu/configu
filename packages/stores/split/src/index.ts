@@ -1,5 +1,5 @@
 import type { EvaluationContext, Provider } from '@openfeature/server-sdk';
-import { OpenFeatureConfigStore } from '@configu/integrations/src/utils/OpenFeature';
+import { OpenFeatureConfigStore } from '@configu/open-feature';
 import { SplitFactory } from '@splitsoftware/splitio';
 import { OpenFeatureSplitProvider } from '@splitsoftware/openfeature-js-split-provider/src';
 import type { Attributes, IClient, SplitKey, Treatment, Treatments } from '@splitsoftware/splitio/types/splitio';

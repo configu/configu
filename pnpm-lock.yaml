@@ -218,37 +218,6 @@ importers:
         specifier: 20.12.12
         version: 20.12.12
 
-  packages/integrations/stores/split:
-    dependencies:
-      '@configu/integrations':
-        specifier: workspace:*
-        version: link:../..
-      '@configu/sdk':
-        specifier: workspace:*
-        version: link:../../../sdk
-      '@openfeature/server-sdk':
-        specifier: ^1.7.4
-        version: 1.15.1(@openfeature/core@1.4.0)
-      '@splitsoftware/openfeature-js-split-provider':
-        specifier: ^1.0.7
-        version: 1.0.7(@openfeature/js-sdk@1.6.1)(@splitsoftware/splitio@10.28.0(encoding@0.1.13))
-      '@splitsoftware/splitio':
-        specifier: ^10.28.0
-        version: 10.28.0(encoding@0.1.13)
-    devDependencies:
-      '@types/node':
-        specifier: 20.12.12
-        version: 20.12.12
-      '@types/rox-node':
-        specifier: ^5.0.3
-        version: 5.0.5
-      tsup:
-        specifier: 8.2.4
-        version: 8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
-      typescript:
-        specifier: ^5.4.5
-        version: 5.6.2
-
   packages/integrations/stores/toml-file:
     dependencies:
       '@configu/integrations':
@@ -851,6 +820,34 @@ importers:
       typeorm:
         specifier: ^0.3.20
         version: 0.3.20(mssql@10.0.2)(pg@8.13.1)(sqlite3@5.1.7)(ts-node@10.9.2(@types/node@22.10.0)(typescript@5.7.2))
+
+  packages/stores/split:
+    dependencies:
+      '@configu/open-feature':
+        specifier: workspace:*
+        version: link:../open-feature
+      '@configu/sdk':
+        specifier: workspace:*
+        version: link:../../sdk
+      '@openfeature/server-sdk':
+        specifier: ^1.7.4
+        version: 1.15.1(@openfeature/core@1.4.0)
+      '@splitsoftware/openfeature-js-split-provider':
+        specifier: ^1.0.7
+        version: 1.0.7(@openfeature/js-sdk@1.6.1)(@splitsoftware/splitio@10.28.0(encoding@0.1.13))
+      '@splitsoftware/splitio':
+        specifier: ^10.28.0
+        version: 10.28.0(encoding@0.1.13)
+    devDependencies:
+      '@types/node':
+        specifier: 22.10.0
+        version: 22.10.0
+      '@types/rox-node':
+        specifier: ^5.0.3
+        version: 5.0.5
+      typescript:
+        specifier: ^5.4.5
+        version: 5.7.2
 
   packages/stores/sqlite:
     dependencies:
@@ -9701,7 +9698,7 @@ snapshots:
       ioredis: 4.28.5
       js-yaml: 3.14.1
       node-fetch: 2.7.0(encoding@0.1.13)
-      tslib: 2.7.0
+      tslib: 2.8.1
       unfetch: 4.2.0
     transitivePeerDependencies:
       - encoding

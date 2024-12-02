@@ -42,16 +42,19 @@ configu eval --store "my-store" --set "test" --schema "./start.cfgu.json" \
 
 ## Common errors and solutions
 
-1. Invalid API key  
+1. Invalid API key
+
    - Solution: Verify that the provided `apiKey` is correct and active. You can regenerate it in the Split dashboard if needed.
 
-2. Environment or workspace not found  
+2. Environment or workspace not found
+
    - Solution: Ensure that the specified `workspace` and `environment` exist in your Split account. Use the Split dashboard to confirm their names.
 
-3. Permission issues  
+3. Permission issues
+
    - Solution: Verify that the API key has the necessary permissions to read, write, and modify feature flags in the target environment.
 
-4. Rate limit exceeded  
+4. Rate limit exceeded
    - Solution: If the API rate limit is exceeded, consider optimizing the frequency of API requests. Monitor Split’s rate limit policies in the [API documentation](https://help.split.io/hc/en-us/articles/360020218091-API-Rate-Limits).
 
 ## References
