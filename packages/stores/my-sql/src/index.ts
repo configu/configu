@@ -1,5 +1,5 @@
 import { type MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions.js';
-import { ORMConfigStore, type ORMConfigStoreSharedConfiguration } from '@configu/integrations/src/utils/ORM';
+import { ORMConfigStore, type ORMConfigStoreSharedConfiguration } from '@configu/database';
 
 export type MySQLConfigStoreConfiguration = Omit<MysqlConnectionOptions, 'type'> & ORMConfigStoreSharedConfiguration;
 

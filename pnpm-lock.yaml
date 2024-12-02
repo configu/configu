@@ -218,28 +218,6 @@ importers:
         specifier: 20.12.12
         version: 20.12.12
 
-  packages/integrations/stores/mysql:
-    dependencies:
-      '@configu/integrations':
-        specifier: workspace:*
-        version: link:../..
-      '@configu/sdk':
-        specifier: workspace:*
-        version: link:../../../sdk
-      mysql:
-        specifier: 2.18.1
-        version: 2.18.1
-    devDependencies:
-      '@types/node':
-        specifier: 20.12.12
-        version: 20.12.12
-      tsup:
-        specifier: 8.2.4
-        version: 8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.6.3)(yaml@2.6.1)
-      typescript:
-        specifier: ^5.4.5
-        version: 5.6.3
-
   packages/integrations/stores/split:
     dependencies:
       '@configu/integrations':
@@ -823,6 +801,28 @@ importers:
       '@types/node':
         specifier: 22.10.0
         version: 22.10.0
+      typescript:
+        specifier: ^5.4.5
+        version: 5.7.2
+
+  packages/stores/my-sql:
+    dependencies:
+      '@configu/database':
+        specifier: workspace:*
+        version: link:../database
+      '@configu/sdk':
+        specifier: workspace:*
+        version: link:../../sdk
+      mysql:
+        specifier: 2.18.1
+        version: 2.18.1
+    devDependencies:
+      '@types/node':
+        specifier: 20.12.12
+        version: 20.12.12
+      tsup:
+        specifier: 8.2.4
+        version: 8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.7.2)(yaml@2.6.1)
       typescript:
         specifier: ^5.4.5
         version: 5.7.2
@@ -6980,11 +6980,6 @@ packages:
 
   typescript@5.6.2:
     resolution: {integrity: sha512-NW8ByodCSNCwZeghjN3o+JX5OFH0Ojg6sadjEKY4huZ52TqbJTJnDo5+Tw98lSy63NZvi4n+ez5m2u5d4PkZyw==}
-    engines: {node: '>=14.17'}
-    hasBin: true
-
-  typescript@5.6.3:
-    resolution: {integrity: sha512-hjcS1mhfuyi4WW8IWtjP7brDrG2cuDZukyrYrSauoXGNgx0S7zceP07adYkJycEr56BOUTNPzbInooiN3fn1qw==}
     engines: {node: '>=14.17'}
     hasBin: true
 
@@ -15072,7 +15067,7 @@ snapshots:
       - tsx
       - yaml
 
-  tsup@8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.6.3)(yaml@2.6.1):
+  tsup@8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.7.2)(yaml@2.6.1):
     dependencies:
       bundle-require: 5.0.0(esbuild@0.23.1)
       cac: 6.7.14
@@ -15091,7 +15086,7 @@ snapshots:
       sucrase: 3.35.0
       tree-kill: 1.2.2
     optionalDependencies:
-      typescript: 5.6.3
+      typescript: 5.7.2
     transitivePeerDependencies:
       - jiti
       - supports-color
@@ -15266,8 +15261,6 @@ snapshots:
       - supports-color
 
   typescript@5.6.2: {}
-
-  typescript@5.6.3: {}
 
   typescript@5.7.2: {}
 
