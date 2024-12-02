@@ -1,6 +1,6 @@
-import { FileConfigStore } from '@configu/integrations/src/utils/File';
+import { FileConfigStore } from '@configu/file';
 import { Config } from '@configu/sdk';
-import * as _ from 'lodash-es';
+import { _ } from '@configu/sdk/expressions';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import TOML from '@iarna/toml';
 

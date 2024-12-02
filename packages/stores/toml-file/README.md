@@ -1,4 +1,4 @@
-# @configu-integrations/toml-file
+# @configu/toml-file
 
 Integrates the Configu Orchestrator with [TOML files](https://toml.io/en/).
 
