@@ -1,5 +1,5 @@
 {
-  "name": "@configu/aws-secrets-manager",
+  "name": "@configu/xml-file",
   "version": "0.0.0",
   "license": "Apache-2.0",
   "author": "@configu/dev",
@@ -7,7 +7,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/configu/configu",
-    "directory": "packages/stores/aws-secrets-manager"
+    "directory": "packages/stores/xml-file"
   },
   "bugs": {
     "url": "https://github.com/configu/configu/issues",
@@ -26,12 +26,14 @@
     "build": "tsup"
   },
   "dependencies": {
+    "@configu/file": "workspace:*",
     "@configu/sdk": "workspace:*",
-    "@configu/key-value": "workspace:*",
-    "@aws-sdk/client-secrets-manager": "^3.465.0"
+    "csv": "^6.3.8",
+    "xml2js": "0.6.2"
   },
   "devDependencies": {
     "@types/node": "22.10.0",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "@types/xml2js": "^0.4.14"
   }
 }

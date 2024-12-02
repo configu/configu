@@ -218,162 +218,6 @@ importers:
         specifier: 20.12.12
         version: 20.12.12
 
-  packages/integrations/stores/mariadb:
-    dependencies:
-      '@configu/integrations':
-        specifier: workspace:*
-        version: link:../..
-      '@configu/sdk':
-        specifier: workspace:*
-        version: link:../../../sdk
-      mysql:
-        specifier: 2.18.1
-        version: 2.18.1
-      typeorm:
-        specifier: ^0.3.17
-        version: 0.3.20(mssql@10.0.2)(pg@8.13.1)(sqlite3@5.1.7)(ts-node@10.9.2(@types/node@20.12.12)(typescript@5.6.2))
-    devDependencies:
-      '@types/node':
-        specifier: 20.12.12
-        version: 20.12.12
-      tsup:
-        specifier: 8.2.4
-        version: 8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
-      typescript:
-        specifier: ^5.4.5
-        version: 5.6.2
-
-  packages/integrations/stores/mssql:
-    dependencies:
-      '@configu/integrations':
-        specifier: workspace:*
-        version: link:../..
-      '@configu/sdk':
-        specifier: workspace:*
-        version: link:../../../sdk
-      mssql:
-        specifier: 11.0.1
-        version: 11.0.1
-      typeorm:
-        specifier: ^0.3.17
-        version: 0.3.20(mssql@11.0.1)(pg@8.13.1)(sqlite3@5.1.7)(ts-node@10.9.2(@types/node@20.12.12)(typescript@5.6.3))
-    devDependencies:
-      '@types/node':
-        specifier: 20.12.12
-        version: 20.12.12
-      tsup:
-        specifier: 8.2.4
-        version: 8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.6.3)(yaml@2.6.1)
-      typescript:
-        specifier: ^5.4.5
-        version: 5.6.3
-
-  packages/integrations/stores/mysql:
-    dependencies:
-      '@configu/integrations':
-        specifier: workspace:*
-        version: link:../..
-      '@configu/sdk':
-        specifier: workspace:*
-        version: link:../../../sdk
-      mysql:
-        specifier: 2.18.1
-        version: 2.18.1
-    devDependencies:
-      '@types/node':
-        specifier: 20.12.12
-        version: 20.12.12
-      tsup:
-        specifier: 8.2.4
-        version: 8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.6.3)(yaml@2.6.1)
-      typescript:
-        specifier: ^5.4.5
-        version: 5.6.3
-
-  packages/integrations/stores/split:
-    dependencies:
-      '@configu/integrations':
-        specifier: workspace:*
-        version: link:../..
-      '@configu/sdk':
-        specifier: workspace:*
-        version: link:../../../sdk
-      '@openfeature/server-sdk':
-        specifier: ^1.7.4
-        version: 1.15.1(@openfeature/core@1.4.0)
-      '@splitsoftware/openfeature-js-split-provider':
-        specifier: ^1.0.7
-        version: 1.0.7(@openfeature/js-sdk@1.6.1)(@splitsoftware/splitio@10.28.0(encoding@0.1.13))
-      '@splitsoftware/splitio':
-        specifier: ^10.28.0
-        version: 10.28.0(encoding@0.1.13)
-    devDependencies:
-      '@types/node':
-        specifier: 20.12.12
-        version: 20.12.12
-      '@types/rox-node':
-        specifier: ^5.0.3
-        version: 5.0.5
-      tsup:
-        specifier: 8.2.4
-        version: 8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
-      typescript:
-        specifier: ^5.4.5
-        version: 5.6.2
-
-  packages/integrations/stores/toml-file:
-    dependencies:
-      '@configu/integrations':
-        specifier: workspace:*
-        version: link:../..
-      '@configu/sdk':
-        specifier: workspace:*
-        version: link:../../../sdk
-      '@iarna/toml':
-        specifier: ^2.2.5
-        version: 2.2.5
-      lodash-es:
-        specifier: ^4.17.21
-        version: 4.17.21
-    devDependencies:
-      '@types/node':
-        specifier: 20.12.12
-        version: 20.12.12
-      tsup:
-        specifier: 8.2.4
-        version: 8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
-      typescript:
-        specifier: ^5.4.5
-        version: 5.6.2
-
-  packages/integrations/stores/xml-file:
-    dependencies:
-      '@configu/integrations':
-        specifier: workspace:*
-        version: link:../..
-      '@configu/sdk':
-        specifier: workspace:*
-        version: link:../../../sdk
-      csv:
-        specifier: ^6.3.8
-        version: 6.3.9
-      xml2js:
-        specifier: 0.6.2
-        version: 0.6.2
-    devDependencies:
-      '@types/node':
-        specifier: 20.12.12
-        version: 20.12.12
-      '@types/xml2js':
-        specifier: ^0.4.14
-        version: 0.4.14
-      tsup:
-        specifier: 8.2.4
-        version: 8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1)
-      typescript:
-        specifier: ^5.4.5
-        version: 5.6.2
-
   packages/proxy:
     dependencies:
       '@configu/common':
@@ -833,6 +677,72 @@ importers:
         specifier: ^5.4.5
         version: 5.7.2
 
+  packages/stores/maria-db:
+    dependencies:
+      '@configu/database':
+        specifier: workspace:*
+        version: link:../database
+      '@configu/sdk':
+        specifier: workspace:*
+        version: link:../../sdk
+      mysql:
+        specifier: 2.18.1
+        version: 2.18.1
+      typeorm:
+        specifier: ^0.3.17
+        version: 0.3.20(mssql@10.0.2)(pg@8.13.1)(sqlite3@5.1.7)(ts-node@10.9.2(@types/node@22.10.0)(typescript@5.7.2))
+    devDependencies:
+      '@types/node':
+        specifier: 22.10.0
+        version: 22.10.0
+      typescript:
+        specifier: ^5.4.5
+        version: 5.7.2
+
+  packages/stores/ms-sql:
+    dependencies:
+      '@configu/database':
+        specifier: workspace:*
+        version: link:../database
+      '@configu/sdk':
+        specifier: workspace:*
+        version: link:../../sdk
+      mssql:
+        specifier: 11.0.1
+        version: 11.0.1
+      typeorm:
+        specifier: ^0.3.17
+        version: 0.3.20(mssql@11.0.1)(pg@8.13.1)(sqlite3@5.1.7)(ts-node@10.9.2(@types/node@22.10.0)(typescript@5.7.2))
+    devDependencies:
+      '@types/node':
+        specifier: 22.10.0
+        version: 22.10.0
+      typescript:
+        specifier: ^5.4.5
+        version: 5.7.2
+
+  packages/stores/my-sql:
+    dependencies:
+      '@configu/database':
+        specifier: workspace:*
+        version: link:../database
+      '@configu/sdk':
+        specifier: workspace:*
+        version: link:../../sdk
+      mysql:
+        specifier: 2.18.1
+        version: 2.18.1
+    devDependencies:
+      '@types/node':
+        specifier: 20.12.12
+        version: 20.12.12
+      tsup:
+        specifier: 8.2.4
+        version: 8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.7.2)(yaml@2.6.1)
+      typescript:
+        specifier: ^5.4.5
+        version: 5.7.2
+
   packages/stores/open-feature:
     dependencies:
       '@configu/sdk':
@@ -858,6 +768,34 @@ importers:
         specifier: ^0.3.20
         version: 0.3.20(mssql@10.0.2)(pg@8.13.1)(sqlite3@5.1.7)(ts-node@10.9.2(@types/node@22.10.0)(typescript@5.7.2))
 
+  packages/stores/split:
+    dependencies:
+      '@configu/open-feature':
+        specifier: workspace:*
+        version: link:../open-feature
+      '@configu/sdk':
+        specifier: workspace:*
+        version: link:../../sdk
+      '@openfeature/server-sdk':
+        specifier: ^1.7.4
+        version: 1.15.1(@openfeature/core@1.4.0)
+      '@splitsoftware/openfeature-js-split-provider':
+        specifier: ^1.0.7
+        version: 1.0.7(@openfeature/js-sdk@1.6.1)(@splitsoftware/splitio@10.28.0(encoding@0.1.13))
+      '@splitsoftware/splitio':
+        specifier: ^10.28.0
+        version: 10.28.0(encoding@0.1.13)
+    devDependencies:
+      '@types/node':
+        specifier: 22.10.0
+        version: 22.10.0
+      '@types/rox-node':
+        specifier: ^5.0.3
+        version: 5.0.5
+      typescript:
+        specifier: ^5.4.5
+        version: 5.7.2
+
   packages/stores/sqlite:
     dependencies:
       '@configu/database':
@@ -873,6 +811,50 @@ importers:
       typeorm:
         specifier: ^0.3.20
         version: 0.3.20(mssql@10.0.2)(pg@8.13.1)(sqlite3@5.1.7)(ts-node@10.9.2(@types/node@22.10.0)(typescript@5.7.2))
+
+  packages/stores/toml-file:
+    dependencies:
+      '@configu/file':
+        specifier: workspace:*
+        version: link:../file
+      '@configu/sdk':
+        specifier: workspace:*
+        version: link:../../sdk
+      '@iarna/toml':
+        specifier: ^2.2.5
+        version: 2.2.5
+    devDependencies:
+      '@types/node':
+        specifier: 22.10.0
+        version: 22.10.0
+      typescript:
+        specifier: ^5.4.5
+        version: 5.7.2
+
+  packages/stores/xml-file:
+    dependencies:
+      '@configu/file':
+        specifier: workspace:*
+        version: link:../file
+      '@configu/sdk':
+        specifier: workspace:*
+        version: link:../../sdk
+      csv:
+        specifier: ^6.3.8
+        version: 6.3.9
+      xml2js:
+        specifier: 0.6.2
+        version: 0.6.2
+    devDependencies:
+      '@types/node':
+        specifier: 22.10.0
+        version: 22.10.0
+      '@types/xml2js':
+        specifier: ^0.4.14
+        version: 0.4.14
+      typescript:
+        specifier: ^5.4.5
+        version: 5.7.2
 
 packages:
 
@@ -6984,16 +6966,6 @@ packages:
       typeorm-aurora-data-api-driver:
         optional: true
 
-  typescript@5.6.2:
-    resolution: {integrity: sha512-NW8ByodCSNCwZeghjN3o+JX5OFH0Ojg6sadjEKY4huZ52TqbJTJnDo5+Tw98lSy63NZvi4n+ez5m2u5d4PkZyw==}
-    engines: {node: '>=14.17'}
-    hasBin: true
-
-  typescript@5.6.3:
-    resolution: {integrity: sha512-hjcS1mhfuyi4WW8IWtjP7brDrG2cuDZukyrYrSauoXGNgx0S7zceP07adYkJycEr56BOUTNPzbInooiN3fn1qw==}
-    engines: {node: '>=14.17'}
-    hasBin: true
-
   typescript@5.7.2:
     resolution: {integrity: sha512-i5t66RHxDvVN40HfDd1PsEThGNnlMCMT3jMUuoh9/0TaqWevNontacunWyN02LA9/fIbEWlcHZcgTKb9QoaLfg==}
     engines: {node: '>=14.17'}
@@ -9712,7 +9684,7 @@ snapshots:
       ioredis: 4.28.5
       js-yaml: 3.14.1
       node-fetch: 2.7.0(encoding@0.1.13)
-      tslib: 2.7.0
+      tslib: 2.8.1
       unfetch: 4.2.0
     transitivePeerDependencies:
       - encoding
@@ -15021,44 +14993,6 @@ snapshots:
 
   ts-interface-checker@0.1.13: {}
 
-  ts-node@10.9.2(@types/node@20.12.12)(typescript@5.6.2):
-    dependencies:
-      '@cspotcode/source-map-support': 0.8.1
-      '@tsconfig/node10': 1.0.11
-      '@tsconfig/node12': 1.0.11
-      '@tsconfig/node14': 1.0.3
-      '@tsconfig/node16': 1.0.4
-      '@types/node': 20.12.12
-      acorn: 8.14.0
-      acorn-walk: 8.3.4
-      arg: 4.1.3
-      create-require: 1.1.1
-      diff: 4.0.2
-      make-error: 1.3.6
-      typescript: 5.6.2
-      v8-compile-cache-lib: 3.0.1
-      yn: 3.1.1
-    optional: true
-
-  ts-node@10.9.2(@types/node@20.12.12)(typescript@5.6.3):
-    dependencies:
-      '@cspotcode/source-map-support': 0.8.1
-      '@tsconfig/node10': 1.0.11
-      '@tsconfig/node12': 1.0.11
-      '@tsconfig/node14': 1.0.3
-      '@tsconfig/node16': 1.0.4
-      '@types/node': 20.12.12
-      acorn: 8.14.0
-      acorn-walk: 8.3.4
-      arg: 4.1.3
-      create-require: 1.1.1
-      diff: 4.0.2
-      make-error: 1.3.6
-      typescript: 5.6.3
-      v8-compile-cache-lib: 3.0.1
-      yn: 3.1.1
-    optional: true
-
   ts-node@10.9.2(@types/node@22.10.0)(typescript@5.7.2):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
@@ -15090,7 +15024,7 @@ snapshots:
 
   tslib@2.8.1: {}
 
-  tsup@8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.6.2)(yaml@2.6.1):
+  tsup@8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.7.2)(yaml@2.6.1):
     dependencies:
       bundle-require: 5.0.0(esbuild@0.23.1)
       cac: 6.7.14
@@ -15109,33 +15043,7 @@ snapshots:
       sucrase: 3.35.0
       tree-kill: 1.2.2
     optionalDependencies:
-      typescript: 5.6.2
-    transitivePeerDependencies:
-      - jiti
-      - supports-color
-      - tsx
-      - yaml
-
-  tsup@8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.6.3)(yaml@2.6.1):
-    dependencies:
-      bundle-require: 5.0.0(esbuild@0.23.1)
-      cac: 6.7.14
-      chokidar: 3.6.0
-      consola: 3.2.3
-      debug: 4.3.7
-      esbuild: 0.23.1
-      execa: 5.1.1
-      globby: 11.1.0
-      joycon: 3.1.1
-      picocolors: 1.1.1
-      postcss-load-config: 6.0.1(jiti@2.4.1)(tsx@4.19.2)(yaml@2.6.1)
-      resolve-from: 5.0.0
-      rollup: 4.27.3
-      source-map: 0.8.0-beta.0
-      sucrase: 3.35.0
-      tree-kill: 1.2.2
-    optionalDependencies:
-      typescript: 5.6.3
+      typescript: 5.7.2
     transitivePeerDependencies:
       - jiti
       - supports-color
@@ -15259,31 +15167,6 @@ snapshots:
       shiki: 0.14.7
       typescript: 5.7.2
 
-  typeorm@0.3.20(mssql@10.0.2)(pg@8.13.1)(sqlite3@5.1.7)(ts-node@10.9.2(@types/node@20.12.12)(typescript@5.6.2)):
-    dependencies:
-      '@sqltools/formatter': 1.2.5
-      app-root-path: 3.1.0
-      buffer: 6.0.3
-      chalk: 4.1.2
-      cli-highlight: 2.1.11
-      dayjs: 1.11.13
-      debug: 4.3.7
-      dotenv: 16.4.5
-      glob: 10.4.1
-      mkdirp: 2.1.6
-      reflect-metadata: 0.2.2
-      sha.js: 2.4.11
-      tslib: 2.7.0
-      uuid: 9.0.1
-      yargs: 17.7.2
-    optionalDependencies:
-      mssql: 10.0.2
-      pg: 8.13.1
-      sqlite3: 5.1.7
-      ts-node: 10.9.2(@types/node@20.12.12)(typescript@5.6.2)
-    transitivePeerDependencies:
-      - supports-color
-
   typeorm@0.3.20(mssql@10.0.2)(pg@8.13.1)(sqlite3@5.1.7)(ts-node@10.9.2(@types/node@22.10.0)(typescript@5.7.2)):
     dependencies:
       '@sqltools/formatter': 1.2.5
@@ -15309,7 +15192,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  typeorm@0.3.20(mssql@11.0.1)(pg@8.13.1)(sqlite3@5.1.7)(ts-node@10.9.2(@types/node@20.12.12)(typescript@5.6.3)):
+  typeorm@0.3.20(mssql@11.0.1)(pg@8.13.1)(sqlite3@5.1.7)(ts-node@10.9.2(@types/node@22.10.0)(typescript@5.7.2)):
     dependencies:
       '@sqltools/formatter': 1.2.5
       app-root-path: 3.1.0
@@ -15330,13 +15213,9 @@ snapshots:
       mssql: 11.0.1
       pg: 8.13.1
       sqlite3: 5.1.7
-      ts-node: 10.9.2(@types/node@20.12.12)(typescript@5.6.3)
+      ts-node: 10.9.2(@types/node@22.10.0)(typescript@5.7.2)
     transitivePeerDependencies:
       - supports-color
-
-  typescript@5.6.2: {}
-
-  typescript@5.6.3: {}
 
   typescript@5.7.2: {}
 
