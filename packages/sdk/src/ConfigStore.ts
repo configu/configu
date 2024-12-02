@@ -41,8 +41,7 @@ export abstract class ConfigStore {
   }
 
   static construct(type: string, configuration = {}): ConfigStore {
-    const TYPE = type.split('@')[0] || '';
-    const normalizedType = ConfigKey.normalize(TYPE);
+    const normalizedType = ConfigKey.normalize(type);
     const StoreCtor = ConfigStore.stores.get(normalizedType);
     if (!StoreCtor) {
       throw new Error(`unknown store type ${type}`);
