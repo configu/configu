@@ -1,4 +1,4 @@
-# @configu-integrations/mssql
+# @configu-integrations/ms-sql
 
 Integrates the Configu Orchestrator with [Microsoft SQL Server](https://learn.microsoft.com/en-us/sql/sql-server).
 
@@ -14,7 +14,7 @@ Configu needs to be authorized to access your Microsoft SQL Server database. Con
 ```yaml
 stores:
   my-store:
-    type: mssql
+    type: ms-sql
     configuration:
       host: localhost
       username: test

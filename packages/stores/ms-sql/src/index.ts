@@ -1,6 +1,6 @@
 import { type SqlServerConnectionOptions } from 'typeorm/driver/sqlserver/SqlServerConnectionOptions.js';
 
-import { ORMConfigStore, type ORMConfigStoreSharedConfiguration } from '@configu/integrations/src/utils/ORM';
+import { ORMConfigStore, type ORMConfigStoreSharedConfiguration } from '@configu/database';
 
 export type MsSQLConfigStoreConfiguration = Omit<SqlServerConnectionOptions, 'type'> &
   ORMConfigStoreSharedConfiguration;
