@@ -1,5 +1,5 @@
 {
-  "name": "@configu-integrations/mariadb",
+  "name": "@configu/maria-db",
   "version": "0.0.0",
   "license": "Apache-2.0",
   "author": "@configu/dev",
@@ -7,7 +7,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/configu/configu",
-    "directory": "packages/integrations"
+    "directory": "packages/stores/maria-db"
   },
   "bugs": {
     "url": "https://github.com/configu/configu/issues",
@@ -18,7 +18,7 @@
     "configu"
   ],
   "type": "module",
-  "exports": "./src/mariadb.ts",
+  "exports": "./src/index.ts",
   "files": [
     "src"
   ],
@@ -26,14 +26,13 @@
     "build": "tsup"
   },
   "dependencies": {
-    "@configu/integrations": "workspace:*",
+    "@configu/database": "workspace:*",
     "@configu/sdk": "workspace:*",
     "mysql": "2.18.1",
     "typeorm": "^0.3.17"
   },
   "devDependencies": {
-    "@types/node": "20.12.12",
-    "tsup": "8.2.4",
+    "@types/node": "22.10.0",
     "typescript": "^5.4.5"
   }
 }
