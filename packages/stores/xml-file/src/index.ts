@@ -1,6 +1,6 @@
 import xml2js from 'xml2js';
 import { type Config } from '@configu/sdk';
-import { FileConfigStore } from '@configu/integrations/src/utils/File';
+import { FileConfigStore } from '@configu/file';
 
 export type XmlFileConfigStoreConfiguration = { path: string; builderOptions?: xml2js.BuilderOptions };
 
