@@ -1,5 +1,5 @@
 {
-  "name": "@configu-integrations/aws-secrets-manager",
+  "name": "@configu/aws-secrets-manager",
   "version": "0.0.0",
   "license": "Apache-2.0",
   "author": "@configu/dev",
