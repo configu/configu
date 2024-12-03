@@ -39,7 +39,7 @@
   ],
   "scripts": {},
   "dependencies": {
-    "@configu/sdk": "workspace:*",
+    "@configu/sdk": "^1.0.0-next.2",
     "change-case": "^5.4.4",
     "lodash": "^4.17.21",
     "yaml": "^2.6.1"
