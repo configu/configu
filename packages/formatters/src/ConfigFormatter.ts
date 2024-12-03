@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import { ConfigValueAny, ConfigKey } from '@configu/sdk';
 
 export const ConfigFormats = [
   'JSON',
@@ -28,17 +27,15 @@ export const ConfigFormats = [
 
 export type ConfigFormat = (typeof ConfigFormats)[number];
 
-export type FormatterFunction = (
-  configs: { [key: string]: ConfigValueAny },
-  options?: Record<string, unknown>,
-) => string;
+export type FormatterFunction = (configs: { [key: string]: unknown }, options?: Record<string, unknown>) => string;
 
 export class ConfigFormatter {
   private static formats = new Map<string, FormatterFunction>();
 
   static register(format: ConfigFormat, formatter: FormatterFunction) {
     // todo: register as expression also
-    ConfigFormatter.formats.set(ConfigKey.normalize(format), formatter);
+    // todo: find a way to reduce aliases to config formats name
+    ConfigFormatter.formats.set(format, formatter);
   }
 
   static format(
@@ -46,8 +43,7 @@ export class ConfigFormatter {
     configs: Parameters<FormatterFunction>['0'],
     params: Parameters<FormatterFunction>['1'],
   ): string {
-    const normalizedFormat = ConfigKey.normalize(format);
-    const formatter = ConfigFormatter.formats.get(normalizedFormat);
+    const formatter = ConfigFormatter.formats.get(format);
     if (!formatter) {
       throw new Error(`unknown format ${format}`);
     }

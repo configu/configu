@@ -189,9 +189,6 @@ importers:
 
   packages/formatters:
     dependencies:
-      '@configu/sdk':
-        specifier: ^1.0.0-next.2
-        version: 1.0.0-next.2
       change-case:
         specifier: ^5.4.4
         version: 5.4.4
@@ -1130,9 +1127,6 @@ packages:
   '@babel/runtime@7.24.7':
     resolution: {integrity: sha512-UwgBRMjJP+xv857DCngvqXI3Iq6J4v0wXmwc6sapg+zyhbwmQX67LUEFrkK5tbyJ30jGuG3ZvWpBiB9LCy1kWw==}
     engines: {node: '>=6.9.0'}
-
-  '@configu/sdk@1.0.0-next.2':
-    resolution: {integrity: sha512-96pv9YpdQbyiIDDskM+cArjc7ojolO7qBb8j00/0JKf5Zan3mRYaRXtiRJnFRxKn1wXfhtC8E7ZFlXC4E9lKuQ==}
 
   '@cspell/cspell-bundled-dicts@8.16.1':
     resolution: {integrity: sha512-EkbtoYpmiN9YPfcOoPcMnIrJBZh13mun64jPyyaYhrPPToiU5+CisZ7ZKUBGnqNaatuciMUxwIudhanQJ7Yhnw==}
@@ -8198,26 +8192,6 @@ snapshots:
   '@babel/runtime@7.24.7':
     dependencies:
       regenerator-runtime: 0.14.1
-
-  '@configu/sdk@1.0.0-next.2':
-    dependencies:
-      '@segment/ajv-human-errors': 2.14.1(ajv@8.17.1)
-      '@vitest/expect': 2.1.6
-      acorn: 8.14.0
-      acorn-walk: 8.3.4
-      ajv: 8.17.1
-      ajv-formats: 3.0.1(ajv@8.17.1)
-      chai: 5.1.2
-      chai-subset: 1.6.0
-      jest-extended: 4.0.2
-      json-schema-to-ts: 3.1.1
-      lodash: 4.17.21
-      ses: 1.10.0
-      type-fest: 4.29.0
-      validator: 13.12.0
-      zod: 3.23.8
-    transitivePeerDependencies:
-      - jest
 
   '@cspell/cspell-bundled-dicts@8.16.1':
     dependencies:
