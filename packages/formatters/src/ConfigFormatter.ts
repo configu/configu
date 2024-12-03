@@ -30,7 +30,7 @@ export type ConfigFormat = (typeof ConfigFormats)[number];
 
 export type FormatterFunction = (
   configs: { [key: string]: ConfigValueAny },
-  options?: { eof?: boolean } & Record<string, unknown>,
+  options?: Record<string, unknown>,
 ) => string;
 
 export class ConfigFormatter {
