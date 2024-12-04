@@ -10,13 +10,13 @@ import { stdenv, getConfiguHomeDir } from './utils';
 export class ConfiguInterface {
   public static context: { stdenv: typeof stdenv; upperConfigu?: ConfiguFile; localConfigu: ConfiguFile };
 
-  static async init({ configuInput }: { configuInput?: string }) {
+  static async init({ configuInput, configuFilePath }: { configuInput?: string; configuFilePath?: string }) {
     // todo: resolve any casting
     this.context = {} as any;
     this.context.stdenv = stdenv;
     const homedir = await getConfiguHomeDir();
 
-    const localConfiguFilePath = path.join(homedir, '.configu'); // $HOME/.configu/.configu
+    const localConfiguFilePath = configuFilePath || path.join(homedir, '.configu'); // $HOME/.configu/.configu
     try {
       this.context.localConfigu = await ConfiguFile.load(localConfiguFilePath);
     } catch {

@@ -13,6 +13,7 @@ import Swagger, { FastifyDynamicSwaggerOptions } from '@fastify/swagger';
 import SwaggerUI from '@scalar/fastify-api-reference';
 
 import { ConfiguInterface } from '@configu/common';
+import path from 'node:path';
 import { config } from './config';
 import { routes } from './routes';
 
@@ -97,8 +98,16 @@ if (config.CONFIGU_DOCS_ENABLED) {
 
 export async function listen() {
   try {
+    let configuFilePath: string = '';
+    if (config.CONFIGU_CONFIG_FILE) {
+      configuFilePath = path.isAbsolute(config.CONFIGU_CONFIG_FILE)
+        ? config.CONFIGU_CONFIG_FILE
+        : path.join(process.cwd(), config.CONFIGU_CONFIG_FILE);
+    }
     // // TODO: Pass this ConfiguFile instance to the routes
-    await ConfiguInterface.init({});
+    await ConfiguInterface.init({
+      configuFilePath,
+    });
     // await ConfiguFile.load(config.CONFIGU_CONFIG_FILE);
     await server.listen({
       host: config.CONFIGU_HTTP_ADDR,
