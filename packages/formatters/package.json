@@ -23,30 +23,23 @@
     "configu-formatters"
   ],
   "type": "module",
-  "types": "./dist/index.d.ts",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
+  "types": "./src/index.ts",
+  "module": "./src/index.ts",
   "exports": {
     "./package.json": "./package.json",
     ".": {
       "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.mjs"
-      },
-      "require": {
-        "types": "./dist/index.d.cts",
-        "default": "./dist/index.cjs"
+        "types": "./src/index.ts",
+        "default": "./src/index.ts"
       }
     }
   },
   "files": [
-    "dist"
+    "src"
   ],
-  "scripts": {
-    "clean": "shx rm -rf dist",
-    "build": "tsup"
-  },
+  "scripts": {},
   "dependencies": {
+    "@configu/sdk": "^1.0.0-next.2",
     "change-case": "^5.4.4",
     "lodash": "^4.17.21",
     "yaml": "^2.6.1"
