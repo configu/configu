@@ -10,7 +10,7 @@
     "node": ">=20",
     "pnpm": ">=9"
   },
-  "packageManager": "pnpm@9.14.2",
+  "packageManager": "pnpm@9.15.0",
   "config": {
     "format": "**/*.{js,mjs,ts,mts,md,mdx,json,yml,yaml}",
     "lint": ".",

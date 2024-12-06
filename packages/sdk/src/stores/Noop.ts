@@ -10,5 +10,3 @@ export class NoopConfigStore extends ConfigStore {
     return Promise.resolve();
   }
 }
-
-ConfigStore.register(NoopConfigStore);

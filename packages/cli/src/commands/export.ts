@@ -1,6 +1,7 @@
 import { Command, Option } from 'clipanion';
 import { spawnSync } from 'node:child_process';
-import { EvalCommandOutput, EvaluatedConfig, ConfigExpression, ConfigKey, ConfigValue } from '@configu/sdk';
+import { ConfigExpression, ConfigKey, ConfigValue } from '@configu/sdk';
+import { EvalCommandOutput, EvaluatedConfig } from '@configu/sdk/commands';
 import { _ } from '@configu/sdk/expressions';
 import {
   dotCase,
@@ -283,7 +284,7 @@ export class CliExportCommand extends BaseCommand {
       : previousEvalCommandOutput;
     const filteredPipe = this.filter
       ? this.filterFromFlag(pipe, this.filter)
-      : _.pickBy(pipe, (config) => !config.cfgu.hidden);
+      : _.pickBy(pipe, (config) => !config.cfgu?.hidden);
     // const result = this.map(filteredPipe);
     const result = filteredPipe;
     await this.exportConfigs(result);

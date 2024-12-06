@@ -27,11 +27,24 @@ export async function run(argv: string[]) {
 
   // const [firstArg, ...restArgs] = argv;
 
+  const context = {
+    ...Cli.defaultContext,
+    stdio: consola,
+    // stdio: consola.withTag('configu'),
+  };
+
   const cli = new Cli({
     binaryLabel: packageJson.name,
     binaryName: 'configu',
     binaryVersion: packageJson.version,
+    // enableCapture: true,
   });
+  const originalErrorHandle = cli.error.bind(cli);
+  cli.error = (...args) => {
+    // context.stdio.debug(args[0]);
+    context.stdio.log('\u0000');
+    return originalErrorHandle(...args);
+  };
 
   cli.register(Builtins.HelpCommand);
   cli.register(Builtins.VersionCommand);
@@ -45,14 +58,17 @@ export async function run(argv: string[]) {
   // cli.register(TestCommand);
   // cli.register(GenerateCommand);
 
-  const context = {
-    ...Cli.defaultContext,
-    stdio: consola,
-  };
+  // await
 
-  const code = await cli.run(argv, context);
+  await cli.runExit(argv, context);
 
-  if (code !== 0) {
-    process.exitCode ??= code;
-  }
+  // try {
+  //   const code = await cli.run(argv, context);
+
+  //   if (code !== 0) {
+  //     process.exitCode ??= code;
+  //   }
+  // } catch (error) {
+  //   console.log('===== tosic man =====');
+  // }
 }

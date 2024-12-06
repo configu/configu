@@ -1,4 +1,3 @@
-import './stores';
 import { Config } from './Config';
 import { ConfigKey } from './ConfigKey';
 

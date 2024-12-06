@@ -3,6 +3,7 @@ import { _ } from '@configu/sdk/expressions';
 import { ConfiguInterface, getConfiguHomeDir, parseJSON, readFile } from '@configu/common';
 import { EvalCommandOutput } from '@configu/sdk/commands';
 import path from 'node:path';
+import { LogLevels, LogTypes } from 'consola';
 import { type CustomContext } from '../index';
 import { configuStoreType } from '../helpers';
 
@@ -66,7 +67,7 @@ export abstract class BaseCommand extends Command<Context> {
       return undefined;
     }
 
-    if (stdin === this.context.UNICODE_NULL) {
+    if (stdin.includes(this.context.UNICODE_NULL)) {
       process.exit(1);
     }
 
@@ -87,12 +88,25 @@ export abstract class BaseCommand extends Command<Context> {
   }
 
   override catch(error: any): Promise<void> {
+    // this.context.stdio.info("Using consola 3.0.0");
+    // this.context.stdio.start("Building project...");
+    // this.context.stdio.warn("A new version of consola is available: 3.0.1");
+    // this.context.stdio.success("Project built!");
+    // this.context.stdio.error(new Error("This is an example error. Everything is fine!"));
+    // this.context.stdio.box("I am a simple box");
+
     // console.log('====================')
-    // const isUsageError = error instanceof UsageError;
+    // this.context.stdio.level = LogLevels.verbose;
+    // this.context.stdio.debug(error);
+    // this.context.stdio.log(error);
+    // // const isUsageError = error instanceof UsageError;
     // if (!isUsageError) {
     // * on any error inject a 'NULL' unicode character so if next command in the pipeline try to read stdin it will fail
     this.context.stdio.log(this.context.UNICODE_NULL);
     // }
+
+    this.context.stdio.error(error.response?.data?.message ?? error.message ?? error);
+    process.exit(1);
 
     // if (!axios.isAxiosError(error)) {
     //   return super.catch(error);
@@ -113,3 +127,5 @@ export abstract class BaseCommand extends Command<Context> {
     throw error;
   }
 }
+
+// process.on('')

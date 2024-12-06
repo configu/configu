@@ -34,7 +34,7 @@
     "clean": "shx rm -rf dist",
     "build": "tsup",
     "build:binary": "tsx build.mts",
-    "build:docker": "docker build --build-arg NODE_VERSION=22.11.0 --progress plain -t configu/cli -f ./Dockerfile ../..",
+    "build:docker": "docker build --build-arg NODE_VERSION=22.12.0 --progress plain -t configu/cli -f ./Dockerfile ../..",
     "dev": "tsx src/configu.ts",
     "start": "node dist/configu.cjs",
     "configu": "$HOME/.configu/bin/configu"

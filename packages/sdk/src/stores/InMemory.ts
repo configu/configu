@@ -21,5 +21,3 @@ export class InMemoryConfigStore extends ConfigStore {
     });
   }
 }
-
-ConfigStore.register(InMemoryConfigStore);
