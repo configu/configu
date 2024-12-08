@@ -12,7 +12,8 @@ import BearerAuth from '@fastify/bearer-auth';
 import Swagger, { FastifyDynamicSwaggerOptions } from '@fastify/swagger';
 import SwaggerUI from '@scalar/fastify-api-reference';
 
-import { ConfiguFile, Registry } from '@configu/common';
+import { ConfiguInterface } from '@configu/common';
+import path from 'node:path';
 import { config } from './config';
 import { routes } from './routes';
 
@@ -95,10 +96,19 @@ if (config.CONFIGU_DOCS_ENABLED) {
   });
 }
 
-(async () => {
+export async function listen() {
   try {
-    // TODO: Pass this ConfiguFile instance to the routes
-    await ConfiguFile.load(config.CONFIGU_CONFIG_FILE);
+    let configuFilePath: string = '';
+    if (config.CONFIGU_CONFIG_FILE) {
+      configuFilePath = path.isAbsolute(config.CONFIGU_CONFIG_FILE)
+        ? config.CONFIGU_CONFIG_FILE
+        : path.join(process.cwd(), config.CONFIGU_CONFIG_FILE);
+    }
+    // // TODO: Pass this ConfiguFile instance to the routes
+    await ConfiguInterface.init({
+      configuFilePath,
+    });
+    // await ConfiguFile.load(config.CONFIGU_CONFIG_FILE);
     await server.listen({
       host: config.CONFIGU_HTTP_ADDR,
       port: config.CONFIGU_HTTP_PORT,
@@ -108,4 +118,8 @@ if (config.CONFIGU_DOCS_ENABLED) {
     server.log.error(err);
     process.exit(1);
   }
+}
+
+(async () => {
+  await listen();
 })();

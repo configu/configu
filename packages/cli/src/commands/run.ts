@@ -31,6 +31,9 @@ export class RunCommand extends BaseCommand {
 
   async execute() {
     await this.init();
-    this.context.configu.runScript(this.script, { cwd: this.dir });
+
+    // todo: improve fallback script - if script is not found on upperConfigu, also try to on the localConfigu
+    this.context.upperConfigu?.runScript(this.script, { cwd: this.dir }) ??
+      this.context.localConfigu.runScript(this.script);
   }
 }

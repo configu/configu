@@ -4,7 +4,7 @@ import { cwd } from 'process';
 import { Command, Option } from 'clipanion';
 import * as t from 'typanion';
 import { ConfigSchema, ConfigSchemaKeys } from '@configu/sdk';
-import _ from 'lodash';
+import { _ } from '@configu/sdk/expressions';
 import { paramCase, constantCase } from 'change-case';
 import { readFile } from '@configu/common';
 import { BaseCommand } from './base';
@@ -112,7 +112,6 @@ export class InitCommand extends BaseCommand {
       [constantCase(`some key`)]: {
         description: `For more information about \`ConfigSchema\` and the \`Cfgu\` format, visit https://configu.com/docs/config-schema/`,
         default: paramCase('some value'),
-        required: false,
       },
     };
   }

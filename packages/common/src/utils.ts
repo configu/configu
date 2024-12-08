@@ -1,12 +1,24 @@
+import os from 'node:os';
 import fs from 'node:fs/promises';
 import path from 'pathe';
+import debug from 'debug';
 import _ from 'lodash';
 import parseJson from 'parse-json';
-import yaml from 'js-yaml';
-import { ConfigSchema } from '@configu/sdk';
+import YAML from 'yaml';
+import { createJiti } from 'jiti';
+import * as stdenv from 'std-env';
+import { glob } from 'glob';
+import { findUp, findUpMultiple, pathExists } from 'find-up';
 
-export const { NODE_ENV } = process.env;
-export const isDev = NODE_ENV === 'development';
+export { path, debug, findUp, findUpMultiple, pathExists, glob, stdenv, YAML };
+
+export const commonDebug = debug('configu:common');
+
+export const getConfiguHomeDir = async (...paths: string[]): Promise<string> => {
+  const directory = path.join(os.homedir(), '.configu', ...paths);
+  await fs.mkdir(directory, { recursive: true });
+  return directory;
+};
 
 export const readFile = async (filePath: string, throwIfEmpty: string | boolean = false) => {
   try {
@@ -32,21 +44,27 @@ export const readFile = async (filePath: string, throwIfEmpty: string | boolean 
   }
 };
 
-export const readStdin = async () => {
-  const { stdin } = process;
-  if (stdin.isTTY) {
-    return '';
-  }
-  return new Promise<string>((resolve) => {
-    const chunks: Uint8Array[] = [];
-    stdin.on('data', (chunk) => {
-      chunks.push(chunk);
-    });
-    stdin.on('end', () => {
-      resolve(Buffer.concat(chunks).toString('utf8'));
-    });
-  });
+const jiti = createJiti(import.meta.url, { debug: commonDebug.enabled });
+export const importModule = async (modulePath: string = '') => {
+  const module = await jiti.import(modulePath);
+  return module;
 };
+
+// export const readStdin = async () => {
+//   const { stdin } = process;
+//   if (stdin.isTTY) {
+//     return '';
+//   }
+//   return new Promise<string>((resolve) => {
+//     const chunks: Uint8Array[] = [];
+//     stdin.on('data', (chunk) => {
+//       chunks.push(chunk);
+//     });
+//     stdin.on('end', () => {
+//       resolve(Buffer.concat(chunks).toString('utf8'));
+//     });
+//   });
+// };
 
 export const parseJSON = (filePath: string, fileContent: string): any => {
   try {
@@ -59,9 +77,15 @@ export const parseJSON = (filePath: string, fileContent: string): any => {
 
 export const parseYAML = (filePath: string, fileContent: string): any => {
   try {
-    return yaml.load(fileContent);
+    return YAML.parse(fileContent);
   } catch (error) {
     error.message = `YAML Error in ${filePath}:\n${error.message}`;
     throw error;
   }
 };
+
+// console.log(process.cwd());
+// console.log(await glob('file://tsconfig.json'));
+// console.log(new URL('file://a/b/c/*.cfgu.json'));
+// console.log(path.resolve('/a/b/c'));
+// console.log(path.resolve('file://a/b/c'));

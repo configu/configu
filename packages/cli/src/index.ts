@@ -5,54 +5,70 @@
  */
 
 import { BaseContext, Builtins, Cli } from 'clipanion';
-import * as stdenv from 'std-env';
 import { consola } from 'consola';
 import packageJson from '../package.json' with { type: 'json' };
 
 // import { HelloCommand } from './commands/hello';
-import { EvalCommand } from './commands/eval';
+import { CliEvalCommand } from './commands/eval';
 import { CliExportCommand } from './commands/export';
-import { InitCommand } from './commands/init';
+import { CliUpsertCommand } from './commands/upsert';
+
 import { LoginCommand } from './commands/login';
 import { RunCommand } from './commands/run';
+// todo: finalize those commands
+import { InitCommand } from './commands/init';
 import { TestCommand } from './commands/test';
-import { UpsertCommand } from './commands/upsert';
 import { GenerateCommand } from './commands/generate';
 
-export type CustomContext = BaseContext & { stdenv: typeof stdenv; stdio: typeof consola };
+export type CustomContext = BaseContext & { stdio: typeof consola };
 
 export async function run(argv: string[]) {
   // consola.wrapAll();
 
   // const [firstArg, ...restArgs] = argv;
 
+  const context = {
+    ...Cli.defaultContext,
+    stdio: consola,
+    // stdio: consola.withTag('configu'),
+  };
+
   const cli = new Cli({
     binaryLabel: packageJson.name,
     binaryName: 'configu',
     binaryVersion: packageJson.version,
+    // enableCapture: true,
   });
+  const originalErrorHandle = cli.error.bind(cli);
+  cli.error = (...args) => {
+    // context.stdio.debug(args[0]);
+    context.stdio.log('\u0000');
+    return originalErrorHandle(...args);
+  };
 
   cli.register(Builtins.HelpCommand);
   cli.register(Builtins.VersionCommand);
 
-  cli.register(EvalCommand);
+  cli.register(CliEvalCommand);
   cli.register(CliExportCommand);
-  cli.register(InitCommand);
+  cli.register(CliUpsertCommand);
+  // cli.register(InitCommand);
   cli.register(LoginCommand);
   cli.register(RunCommand);
-  cli.register(TestCommand);
-  cli.register(UpsertCommand);
-  cli.register(GenerateCommand);
+  // cli.register(TestCommand);
+  // cli.register(GenerateCommand);
 
-  const context = {
-    ...Cli.defaultContext,
-    stdenv,
-    stdio: consola,
-  };
+  // await
 
-  const code = await cli.run(argv, context);
+  await cli.runExit(argv, context);
 
-  if (code !== 0) {
-    process.exitCode ??= code;
-  }
+  // try {
+  //   const code = await cli.run(argv, context);
+
+  //   if (code !== 0) {
+  //     process.exitCode ??= code;
+  //   }
+  // } catch (error) {
+  //   console.log('===== tosic man =====');
+  // }
 }

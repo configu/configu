@@ -45,22 +45,19 @@
   },
   "dependencies": {
     "@configu/sdk": "workspace:*",
-    "@configu-integrations/validator": "workspace:*",
-    "@configu-integrations/compact-json": "workspace:*",
-    "@configu-integrations/json": "workspace:*",
-    "@configu-integrations/dotenv": "workspace:*",
-    "@configu-integrations/toml": "workspace:*",
-    "@configu-integrations/configu": "workspace:*",
-    "@configu-integrations/json-file": "workspace:*",
-    "fast-glob": "^3.3.2",
+    "@configu/configu": "workspace:*",
+    "@configu/json-file": "workspace:*",
+    "debug": "^4.3.7",
     "find-up": "^7.0.0",
-    "js-yaml": "^4.1.0",
+    "glob": "^11.0.0",
+    "jiti": "^2.4.1",
     "lodash": "^4.17.21",
     "parse-json": "8.1.0",
     "pathe": "^1.1.2",
-    "tsx": "^4.19.1"
+    "std-env": "^3.8.0",
+    "yaml": "^2.6.1"
   },
   "devDependencies": {
-    "@types/js-yaml": "4.0.9"
+    "@types/debug": "^4.1.12"
   }
 }

@@ -1,11 +1,18 @@
-// import './test';
+import { ConfigStore } from '@configu/sdk';
+import { NoopConfigStore, InMemoryConfigStore } from '@configu/sdk/stores';
+import { JsonFileConfigStore } from '@configu/json-file';
+import { ConfiguConfigStore } from '@configu/configu';
 
-import './built-in-integrations';
+ConfigStore.register(NoopConfigStore);
+ConfigStore.register(InMemoryConfigStore);
+ConfigStore.register(JsonFileConfigStore);
+ConfigStore.register(ConfiguConfigStore);
+
+export { ConfiguConfigStoreApprovalQueueError } from '@configu/configu';
 
 export * from './utils';
-export * from './Registry';
 
 export * from './ConfiguFile';
 export * from './CfguFile';
 
-export * from '@configu-integrations/configu';
+export * from './ConfiguInterface';

@@ -1,92 +1,29 @@
-import { Command, Option } from 'clipanion';
-import _ from 'lodash';
-import { CfguFile, ConfiguFile, parseJSON, readFile, Registry } from '@configu/common';
-import { EvalCommandOutput } from '@configu/sdk';
+import { Command, Option, UsageError } from 'clipanion';
+import { _ } from '@configu/sdk/expressions';
+import { ConfiguInterface, getConfiguHomeDir, parseJSON, readFile } from '@configu/common';
+import { EvalCommandOutput } from '@configu/sdk/commands';
 import path from 'node:path';
+import { LogLevels, LogTypes } from 'consola';
 import { type CustomContext } from '../index';
-import { configuStoreType, getConfigDir } from '../helpers';
+import { configuStoreType } from '../helpers';
 
 export type Context = CustomContext & {
-  configu: ConfiguFile;
-  credentials: {
-    file: string; // $HOME/.config/configu/config.json
-    data:
-      | {
-          credentials: { org: string; token: string };
-          endpoint?: string;
-          source?: string;
-          tag?: string;
-        }
-      | Record<string, never>;
-  };
   UNICODE_NULL: '\u0000';
   stdin: NodeJS.ReadStream;
-};
+} & (typeof ConfiguInterface)['context'];
 
 export abstract class BaseCommand extends Command<Context> {
   debug = Option.Boolean('--debug');
 
-  settings = Option.String('--settings', { description: 'Path to a .configu file' });
+  configu = Option.String('--config,--configuration', { description: 'Path, URL or JSON of a .configu file' });
 
   public async init(): Promise<void> {
     this.context.UNICODE_NULL = '\u0000';
-
-    let configu: ConfiguFile;
-    if (this.settings) configu = await ConfiguFile.load(this.settings);
-    else configu = await ConfiguFile.search();
-    this.context.configu = configu;
-
-    const configuCredentialFilePath = path.join(getConfigDir(), 'config.json');
-    try {
-      const rawConfiguConfigData = await readFile(configuCredentialFilePath, true);
-      const configuConfigData = JSON.parse(rawConfiguConfigData);
-      this.context.credentials = {
-        file: configuCredentialFilePath,
-        data: configuConfigData,
-      };
-    } catch {
-      this.context.credentials = {
-        file: configuCredentialFilePath,
-        data: {},
-      };
+    if (this.debug) {
+      this.context.stdio.level = 4;
     }
-
-    if (this.debug) this.context.stdio.level = 4;
-  }
-
-  getBackupStoreInstanceByFlag(flag?: string) {
-    if (!flag) {
-      return undefined;
-    }
-    return this.context.configu.getBackupStoreInstance(flag);
-  }
-
-  getStoreInstanceByStoreFlag(flag?: string) {
-    if (!flag) {
-      throw new Error('--store,--st flag is missing');
-    }
-    let storeConfig: Record<string, unknown> = {};
-    const storeType = this.context.configu.contents.stores?.[flag]?.type;
-    if (storeType === configuStoreType || flag === configuStoreType) {
-      storeConfig = { credentials: this.context.credentials.data.credentials };
-    }
-    let store = this.context.configu.getStoreInstance(flag, storeConfig);
-    if (!store) {
-      store = Registry.constructStore(flag, storeConfig);
-    }
-    return store;
-  }
-
-  async getSchemaInstanceByFlag(flag?: string) {
-    if (!flag) {
-      throw new Error('--schema,--se flag is missing');
-    }
-    let schema = await this.context.configu.getSchemaInstance(flag);
-    if (!schema) {
-      const cfgu = await CfguFile.load(flag);
-      schema = cfgu.constructSchema();
-    }
-    return schema;
+    await ConfiguInterface.init({ configuInput: this.configu });
+    this.context = { ...this.context, ...ConfiguInterface.context };
   }
 
   reduceConfigFlag(configFlag?: string[]) {
@@ -130,7 +67,7 @@ export abstract class BaseCommand extends Command<Context> {
       return undefined;
     }
 
-    if (stdin === this.context.UNICODE_NULL) {
+    if (stdin.includes(this.context.UNICODE_NULL)) {
       process.exit(1);
     }
 
@@ -151,8 +88,25 @@ export abstract class BaseCommand extends Command<Context> {
   }
 
   override catch(error: any): Promise<void> {
+    // this.context.stdio.info("Using consola 3.0.0");
+    // this.context.stdio.start("Building project...");
+    // this.context.stdio.warn("A new version of consola is available: 3.0.1");
+    // this.context.stdio.success("Project built!");
+    // this.context.stdio.error(new Error("This is an example error. Everything is fine!"));
+    // this.context.stdio.box("I am a simple box");
+
+    // console.log('====================')
+    // this.context.stdio.level = LogLevels.verbose;
+    // this.context.stdio.debug(error);
+    // this.context.stdio.log(error);
+    // // const isUsageError = error instanceof UsageError;
+    // if (!isUsageError) {
     // * on any error inject a 'NULL' unicode character so if next command in the pipeline try to read stdin it will fail
     this.context.stdio.log(this.context.UNICODE_NULL);
+    // }
+
+    this.context.stdio.error(error.response?.data?.message ?? error.message ?? error);
+    process.exit(1);
 
     // if (!axios.isAxiosError(error)) {
     //   return super.catch(error);
@@ -173,3 +127,5 @@ export abstract class BaseCommand extends Command<Context> {
     throw error;
   }
 }
+
+// process.on('')
