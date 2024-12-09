@@ -55,6 +55,7 @@ export class ConfiguInterface {
   }
 
   static async getStoreInstance(nameOrType?: string) {
+    console.debug('getStoreInstance', nameOrType);
     let store =
       (await this.context.upperConfigu?.getStoreInstance(nameOrType)) ??
       (await this.context.localConfigu.getStoreInstance(nameOrType));
@@ -64,7 +65,7 @@ export class ConfiguInterface {
     }
 
     if (!store) {
-      throw new Error(`store "${nameOrType}" is not found`);
+      throw new Error(`store is missing`);
     }
 
     return store;
