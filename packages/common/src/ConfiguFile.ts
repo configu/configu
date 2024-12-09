@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { join, dirname, resolve } from 'pathe';
 import { _, JSONSchema, JSONSchemaObject, FromSchema } from '@configu/sdk/expressions';
 import { ConfigSchema, ConfigStore, ConfigExpression, ConfigStoreConstructor, ConfigKey } from '@configu/sdk';
+import { findUpStop } from 'find-up';
 import {
   console,
   environment,
@@ -195,7 +196,19 @@ export class ConfiguFile {
 
   static async searchClosest() {
     console.debug('ConfiguFile searchClosest', homedir());
-    return findUp('.configu', { stopAt: homedir() });
+    return findUp(
+      async (dir) => {
+        console.debug('ConfiguFile search current dir', dir);
+        try {
+          const configuFilePath = join(dir, '.configu');
+          await fs.access(configuFilePath);
+          return findUpStop;
+        } catch {
+          return dir;
+        }
+      },
+      { stopAt: homedir() },
+    );
   }
 
   static async searchAll() {
