@@ -196,6 +196,7 @@ export class ConfiguFile {
 
   static async searchClosest() {
     console.debug('ConfiguFile searchClosest');
+    // todo: think about adding the stopAt option.
     return findUp('.configu', { type: 'file', allowSymlinks: false });
   }
 
