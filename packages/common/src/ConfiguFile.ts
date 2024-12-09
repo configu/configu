@@ -91,6 +91,8 @@ export class ConfiguFile {
     public readonly contents: ConfiguFileContents,
     public readonly contentsType: 'json' | 'yaml',
   ) {
+    console.debug('ConfiguFile.path', path);
+    console.debug('ConfiguFile.contents', contents);
     try {
       this.dir = dirname(resolve(this.path));
       JSONSchema.validate(ConfiguFile.schema, this.contents);
@@ -108,6 +110,7 @@ export class ConfiguFile {
       throw new Error(`ConfiguFile.contents "${path}" is invalid\n${error}`);
     }
 
+    console.debug('renderedContents', contents, renderedContents);
     // try parse yaml first and then json
     let parsedContents: ConfiguFileContents;
     let contentsType: 'json' | 'yaml';
@@ -148,6 +151,14 @@ export class ConfiguFile {
   }
 
   static async loadFromInput(input: string) {
+    // Check if the string is a valid JSON
+    try {
+      JSON.parse(input);
+      return ConfiguFile.init(join(cwd(), '.configu'), input);
+    } catch {
+      // Not a valid JSON
+    }
+
     // Check if the string is a valid URL
     let url: URL | undefined;
     try {
@@ -171,13 +182,13 @@ export class ConfiguFile {
       // Not a valid path
     }
 
-    // Check if the string is a valid JSON
-    try {
-      const json = JSON.parse(input);
-      return ConfiguFile.init(join(cwd(), '.configu'), json);
-    } catch {
-      // Not a valid JSON
-    }
+    // // Check if the string is a valid JSON
+    // try {
+    //   const json = JSON.parse(input);
+    //   return ConfiguFile.init(join(cwd(), '.configu'), json);
+    // } catch {
+    //   // Not a valid JSON
+    // }
 
     throw new Error('.configu file input is not a valid path, URL, or JSON');
   }

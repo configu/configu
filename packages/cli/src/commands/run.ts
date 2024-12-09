@@ -33,6 +33,7 @@ export class RunCommand extends BaseCommand {
     await this.init();
 
     // todo: improve fallback script - if script is not found on upperConfigu, also try to on the localConfigu
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     this.context.upperConfigu?.runScript(this.script, { cwd: this.dir }) ??
       this.context.localConfigu.runScript(this.script);
   }
