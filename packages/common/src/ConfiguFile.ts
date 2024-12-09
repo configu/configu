@@ -195,24 +195,12 @@ export class ConfiguFile {
   }
 
   static async searchClosest() {
-    console.debug('ConfiguFile searchClosest', homedir());
-    return findUp(
-      async (dir) => {
-        console.debug('ConfiguFile search current dir', dir);
-        try {
-          const configuFilePath = join(dir, '.configu');
-          await fs.access(configuFilePath);
-          return findUpStop;
-        } catch {
-          return dir;
-        }
-      },
-      // { stopAt: homedir() },
-    );
+    console.debug('ConfiguFile searchClosest');
+    return findUp('.configu', { type: 'file' });
   }
 
   static async searchAll() {
-    return findUpMultiple('.configu', { stopAt: homedir() });
+    return findUpMultiple('.configu', { type: 'file' });
   }
 
   async save(contents: ConfiguFileContents) {
