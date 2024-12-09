@@ -196,11 +196,11 @@ export class ConfiguFile {
 
   static async searchClosest() {
     console.debug('ConfiguFile searchClosest');
-    return findUp('.configu', { type: 'file' });
+    return findUp('.configu', { type: 'file', allowSymlinks: false });
   }
 
   static async searchAll() {
-    return findUpMultiple('.configu', { type: 'file' });
+    return findUpMultiple('.configu', { type: 'file', allowSymlinks: false });
   }
 
   async save(contents: ConfiguFileContents) {
