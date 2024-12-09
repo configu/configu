@@ -15,5 +15,5 @@ const TfvarsFormatter: FormatterFunction = (configs) => {
     .join('\n');
 };
 
-ConfigFormatter.register('TerraformTfvars', TfvarsFormatter);
-ConfigFormatter.register('Tfvars', TfvarsFormatter);
+ConfigFormatter.register('tfvars', TfvarsFormatter);
+ConfigFormatter.register('terraform-tfvars', TfvarsFormatter);

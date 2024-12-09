@@ -9,7 +9,7 @@ export const ConfigFormats = [
   'yml',
   'yaml',
 
-  // 'ini',
+  'ini',
   'toml',
 
   // dotenv
