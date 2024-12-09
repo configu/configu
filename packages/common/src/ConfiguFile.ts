@@ -207,7 +207,7 @@ export class ConfiguFile {
           return dir;
         }
       },
-      { stopAt: homedir() },
+      // { stopAt: homedir() },
     );
   }
 
