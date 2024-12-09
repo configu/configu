@@ -201,6 +201,9 @@ jobs:
   release-npm:
     runs-on: ubuntu-latest
     needs: build-binary
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - uses: actions/checkout@v4
 
