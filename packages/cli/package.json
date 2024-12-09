@@ -40,6 +40,9 @@
     "configu": "$HOME/.configu/bin/configu"
   },
   "dependencies": {
+    "@configu/common": "workspace:*",
+    "@configu/formatters": "workspace:*",
+    "@configu/sdk": "workspace:*",
     "clipanion": "^4.0.0-rc.4",
     "get-stdin": "^9.0.0",
     "open": "10.1.0",
@@ -48,9 +51,5 @@
     "typanion": "3.14.0",
     "giget": "1.2.3"
   },
-  "devDependencies": {
-    "@configu/common": "workspace:*",
-    "@configu/formatters": "workspace:*",
-    "@configu/sdk": "workspace:*"
-  }
+  "devDependencies": {}
 }

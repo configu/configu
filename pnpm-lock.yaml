@@ -98,6 +98,15 @@ importers:
 
   packages/cli:
     dependencies:
+      '@configu/common':
+        specifier: workspace:*
+        version: link:../common
+      '@configu/formatters':
+        specifier: workspace:*
+        version: link:../formatters
+      '@configu/sdk':
+        specifier: workspace:*
+        version: link:../sdk
       clipanion:
         specifier: ^4.0.0-rc.4
         version: 4.0.0-rc.4(typanion@3.14.0)
@@ -119,16 +128,6 @@ importers:
       typanion:
         specifier: 3.14.0
         version: 3.14.0
-    devDependencies:
-      '@configu/common':
-        specifier: workspace:*
-        version: link:../common
-      '@configu/formatters':
-        specifier: workspace:*
-        version: link:../formatters
-      '@configu/sdk':
-        specifier: workspace:*
-        version: link:../sdk
 
   packages/common:
     dependencies:
