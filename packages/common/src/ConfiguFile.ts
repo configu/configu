@@ -103,7 +103,7 @@ export class ConfiguFile {
     // try expend contents with env vars
     let renderedContents: string;
     try {
-      renderedContents = ConfigExpression.evaluateTemplateString(contents, environment.env);
+      renderedContents = ConfigExpression.evaluateTemplateString(contents, { ...process.env });
     } catch (error) {
       throw new Error(`ConfiguFile.contents "${path}" is invalid\n${error}`);
     }
@@ -251,7 +251,7 @@ export class ConfiguFile {
     spawnSync(script, {
       cwd: options.cwd ?? this.dir,
       stdio: 'inherit',
-      env: { ...environment.env, ...options.env },
+      env: { ...process.env, ...options.env },
       shell: true,
     });
   }

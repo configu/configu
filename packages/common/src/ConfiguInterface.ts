@@ -17,6 +17,8 @@ export class ConfiguInterface {
   };
 
   static async init({ input }: { input?: string }) {
+    this.context.console.debug('initiating interface');
+
     // todo: resolve any casting
     this.context = {} as any;
     this.context.console = console;
@@ -24,8 +26,10 @@ export class ConfiguInterface {
     this.context.homedir = await getConfiguHomeDir();
 
     const localConfiguFilePath = path.join(this.context.homedir, '.configu'); // $HOME/.configu/.configu
+    this.context.console.debug('localConfiguFilePath', localConfiguFilePath);
     try {
       this.context.localConfigu = await ConfiguFile.load(localConfiguFilePath);
+      this.context.console.debug('localConfiguFilePath loaded');
     } catch {
       this.context.localConfigu = new ConfiguFile(localConfiguFilePath, {}, 'yaml');
       try {
@@ -40,8 +44,10 @@ export class ConfiguInterface {
       environment.env.CONFIGU_CONFIG ??
       environment.env.CONFIGU_CONFIGURATION ??
       (await ConfiguFile.searchClosest());
+    this.context.console.debug('upperConfiguInput', upperConfiguInput);
     if (upperConfiguInput) {
       this.context.upperConfigu = await ConfiguFile.loadFromInput(upperConfiguInput);
+      this.context.console.debug('upperConfiguInput loaded');
     }
   }
 

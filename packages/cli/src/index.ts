@@ -27,7 +27,7 @@ export async function run(argv: string[]) {
   });
 
   // enables the BaseCommand catch override functionality
-  const originalErrorMethod = cli.error;
+  const originalErrorMethod = cli.error.bind(cli);
   cli.error = (...args) => {
     if (typeof args[0] === 'number') {
       return '';

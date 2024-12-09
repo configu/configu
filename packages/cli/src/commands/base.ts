@@ -1,6 +1,6 @@
 import { BaseContext, Command, Option, UsageError } from 'clipanion';
 import { _ } from '@configu/sdk/expressions';
-import { ConfiguInterface, parseJSON } from '@configu/common';
+import { console, ConfiguInterface, parseJSON } from '@configu/common';
 import { EvalCommandOutput } from '@configu/sdk/commands';
 import getStdin from 'get-stdin';
 
@@ -82,7 +82,7 @@ export abstract class BaseCommand extends Command<Context> {
     if (error instanceof ExitError) {
       return Promise.reject(error.code);
     }
-    this.context.console.error(error);
+    console.error(error);
     // eslint-disable-next-line prefer-promise-reject-errors
     return Promise.reject(1);
   }
