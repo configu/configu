@@ -23,15 +23,16 @@ export class ConfiguInterface {
     this.context.environment = environment;
     this.context.homedir = await getConfiguHomeDir();
 
-    this.context.console.debug('initiating interface');
+    console.debug('initiating interface');
 
     const localConfiguFilePath = path.join(this.context.homedir, '.configu'); // $HOME/.configu/.configu
-    this.context.console.debug('localConfiguFilePath', localConfiguFilePath);
+    console.debug('localConfiguFilePath', localConfiguFilePath);
     try {
       this.context.localConfigu = await ConfiguFile.load(localConfiguFilePath);
-      this.context.console.debug('localConfiguFilePath loaded');
+      console.debug('localConfiguFilePath loaded');
     } catch {
       this.context.localConfigu = new ConfiguFile(localConfiguFilePath, {}, 'yaml');
+      console.debug('localConfiguFilePath failed to load');
       try {
         await fs.unlink(localConfiguFilePath);
       } catch {
@@ -44,10 +45,10 @@ export class ConfiguInterface {
       environment.env.CONFIGU_CONFIG ??
       environment.env.CONFIGU_CONFIGURATION ??
       (await ConfiguFile.searchClosest());
-    this.context.console.debug('upperConfiguInput', upperConfiguInput);
+    console.debug('upperConfiguInput', upperConfiguInput);
     if (upperConfiguInput) {
       this.context.upperConfigu = await ConfiguFile.loadFromInput(upperConfiguInput);
-      this.context.console.debug('upperConfiguInput loaded');
+      console.debug('upperConfiguInput loaded');
     }
   }
 

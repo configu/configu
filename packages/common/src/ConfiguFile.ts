@@ -183,6 +183,7 @@ export class ConfiguFile {
   }
 
   static async searchClosest() {
+    console.debug('ConfiguFile searchClosest', homedir());
     return findUp('.configu', { stopAt: homedir() });
   }
 

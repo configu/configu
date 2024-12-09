@@ -225,6 +225,12 @@ jobs:
           pnpm --filter ${{ steps.release.outputs.package_name }} run \
             build
 
+      - name: Remove package dependencies
+        shell: bash
+        run: |
+          pnpm --filter ${{ steps.release.outputs.package_name }} exec \
+            npm pkg delete dependencies devDependencies
+
       - name: Publish to npm
         run: |
           git diff
