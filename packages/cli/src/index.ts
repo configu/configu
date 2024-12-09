@@ -49,7 +49,7 @@ export async function run(argv: string[]) {
   });
 
   try {
-    await validateNodejsVersion();
+    // await validateNodejsVersion();
 
     cli.register(Builtins.HelpCommand);
     cli.register(Builtins.VersionCommand);
