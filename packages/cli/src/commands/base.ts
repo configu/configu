@@ -16,6 +16,7 @@ export class ExitError extends Error {
 }
 
 export abstract class BaseCommand extends Command<Context> {
+  // todo: consider verbose to the cli logger
   verbose = Option.Boolean('--verbose');
 
   config = Option.String('--config', { description: 'Path, URL or Stringified JSON of a .configu file' });
