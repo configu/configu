@@ -17,13 +17,13 @@ export class ConfiguInterface {
   };
 
   static async init({ input }: { input?: string }) {
-    this.context.console.debug('initiating interface');
-
     // todo: resolve any casting
     this.context = {} as any;
     this.context.console = console;
     this.context.environment = environment;
     this.context.homedir = await getConfiguHomeDir();
+
+    this.context.console.debug('initiating interface');
 
     const localConfiguFilePath = path.join(this.context.homedir, '.configu'); // $HOME/.configu/.configu
     this.context.console.debug('localConfiguFilePath', localConfiguFilePath);
