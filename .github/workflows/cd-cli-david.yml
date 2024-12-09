@@ -1,0 +1,161 @@
+name: CD/@configu/cli
+
+on:
+  workflow_dispatch:
+  # push:
+  #   tags:
+  #     - 'cli/v*'
+
+env:
+  PACKAGE_NAME: '@configu/cli'
+  DOCKER_IMAGE_NAME: 'configu/cli'
+  ARTIFACT_NAME: 'configu-cli'
+  PACKAGE_PATH: 'packages/cli'
+
+jobs:
+  cd-cli:
+    runs-on: ${{ matrix.os }}-latest
+
+    strategy:
+      matrix:
+        os: [ubuntu, macos, windows]
+        architecture: [x64, arm64]
+        node-version: [20.x]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - uses: ./.github/actions/deploy-start-action
+        id: deployment
+        with:
+          package-name: ${{ env.PACKAGE_NAME }}
+          slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          ignore-slack: true
+
+      - uses: ./.github/actions/ts-env-action
+        with:
+          architecture: ${{ matrix.architecture }}
+
+      - name: Compile the CLI into a single executable
+        env:
+          SELECTED_ARCH: ${{ matrix.architecture }}
+        run: pnpm -r compile
+
+      - uses: actions/upload-artifact@master
+        with:
+          name: ${{ env.ARTIFACT_NAME }}-${{ matrix.os }}-${{ matrix.architecture }}
+          path: ${{ env.PACKAGE_PATH }}/dist
+  end-release:
+    runs-on: ubuntu-latest
+    needs: cd-cli
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - uses: actions/download-artifact@master
+        with:
+          name: ${{ env.ARTIFACT_NAME }}-ubuntu-x64
+          path: ${{ env.ARTIFACT_NAME }}/dist
+      - uses: actions/download-artifact@master
+        with:
+          name: ${{ env.ARTIFACT_NAME }}-windows-x64
+          path: ${{ env.ARTIFACT_NAME }}/dist
+      - uses: actions/download-artifact@master
+        with:
+          name: ${{ env.ARTIFACT_NAME }}-macos-x64
+          path: ${{ env.ARTIFACT_NAME }}/dist
+      - uses: actions/download-artifact@master
+        with:
+          name: ${{ env.ARTIFACT_NAME }}-ubuntu-arm64
+          path: ${{ env.ARTIFACT_NAME }}/dist
+      - uses: actions/download-artifact@master
+        with:
+          name: ${{ env.ARTIFACT_NAME }}-windows-arm64
+          path: ${{ env.ARTIFACT_NAME }}/dist
+      - uses: actions/download-artifact@master
+        with:
+          name: ${{ env.ARTIFACT_NAME }}-macos-arm64
+          path: ${{ env.ARTIFACT_NAME }}/dist
+      - name: Upload artifacts to release
+        uses: softprops/action-gh-release@v2
+        with:
+          make_latest: ${{  github.branch == 'main' }}
+          prerelease: ${{  github.branch != 'main' }}
+          name: ${{  github.ref_name }}
+          tag_name: ${{  github.ref_name }}
+          files: |
+            ${{ env.ARTIFACT_NAME }}/dist/*
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: end-release
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - uses: ./.github/actions/deploy-start-action
+        id: deployment
+        with:
+          package-name: ${{ env.PACKAGE_NAME }}
+          slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Set up Docker
+        uses: crazy-max/ghaction-setup-docker@v3
+        with:
+          daemon-config: |
+            {
+              "debug": true,
+              "features": {
+                "containerd-snapshotter": true
+              }
+            }
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build docker image and push to Docker Hub
+        uses: docker/build-push-action@v3
+        with:
+          context: ${{ env.PACKAGE_PATH }}
+          platforms: linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8
+          build-args: CONFIGU_VERSION=${{ steps.deployment.outputs.release-version }}
+          tags: ${{ env.DOCKER_IMAGE_NAME }}:${{ steps.deployment.outputs.release-version }},${{ env.DOCKER_IMAGE_NAME }}:latest
+          push: true
+
+      - uses: ./.github/actions/deploy-end-action
+        if: always()
+        with:
+          package-name: ${{ env.PACKAGE_NAME }}
+          package-version: ${{ steps.deployment.outputs.release-version }}
+          slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  post-release-test:
+    runs-on: ${{ matrix.os }}
+    needs: end-release
+    defaults:
+      run:
+        shell: bash
+
+    strategy:
+      matrix:
+        # todo: restore windows-latest when ready
+        os: [ubuntu-latest, macos-latest]
+        node-version: [22.x]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - uses: ./.github/actions/deploy-start-action
+        id: deployment
+        with:
+          package-name: ${{ env.PACKAGE_NAME }}
+          slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          ignore-slack: true
+      - uses: ./.github/actions/ts-env-action
+      - name: Check installation and executable from release
+        working-directory: ${{ env.PACKAGE_PATH }}
+        env:
+          CONFIGU_VERSION: ${{ steps.deployment.outputs.release-version }}
+        run: pnpm test:post-release

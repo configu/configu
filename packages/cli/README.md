@@ -52,5 +52,5 @@ pnpm configu <command>
 Breakpoints:
 
 - `cd packages/cli`
-- Open `src/run.ts`
+- Open `src/configu.ts`
 - Hit "Play" / "Debug" with the `tsx` preset

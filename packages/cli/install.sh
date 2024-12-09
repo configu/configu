@@ -2,53 +2,90 @@
 
 set -e
 
+if ! command -v curl >/dev/null; then
+  echo "Error: curl is required to install configu (see: https://curl.se/)."
+  exit 1
+fi
+
+# Detect OS and architecture
 if [ "$OS" = "Windows_NT" ]; then
-	target="win32-x64"
-	ext="exe"
+  dist="win-x64"
+  arc=".zip"
+  ext=".exe"
+
+  if ! command -v unzip >/dev/null && ! command -v 7z >/dev/null; then
+    echo "Error: either unzip or 7z is required to install configu (see: )."
+    exit 1
+  fi
 else
-  ext="gz"
-	case $(uname -sm) in
-	"Darwin x86_64") target="darwin-x64" ;;
-	"Darwin arm64") target="darwin-arm64" ;;
-	"Linux aarch64") target="linux-x64" ;;
-	*) target="linux-x64" ;;
-	esac
-fi
+  case "$(uname -sm)" in
+  "Darwin x86_64") dist="darwin-x64" ;;
+  "Darwin arm64") dist="darwin-arm64" ;;
+  "Linux aarch64") dist="linux-arm64" ;;
+  "Linux armv7l") dist="linux-armv7l" ;;
+  "Linux x86_64")
+    if [ -f /etc/alpine-release ] || ldd --version 2>&1 | grep -q musl; then
+      dist="linux-x64-musl"
+    else
+      dist="linux-x64"
+    fi
+    ;;
+  *) echo "Unsupported OS/architecture combination"; exit 1 ;;
+  esac
+  arc=".tar.gz"
+  ext=""
 
-# get the version from environment variable or use the default value
-configu_version="${CONFIGU_VERSION:-latest}"
-
-echo "Downloading configu version $configu_version"
-
-#configu_uri="./dist/configu-${target}${ext}"
-configu_uri="https://github.com/configu/configu/releases/download/cli%2Fv${configu_version}/configu-${target}.${ext}"
-configu_install="${CONFIGU_INSTALL:-$HOME/.configu}"
-bin_dir="$configu_install/bin"
-exe="$bin_dir/configu"
-
-if [ -d "$bin_dir" ]; then
-  rm -rf "$bin_dir"
-fi
-mkdir -p "$bin_dir"
-
-#cp $configu_uri $exe
-curl --fail --location --progress-bar --output "$exe.$ext" "$configu_uri"
-
-if [ "$ext" = "gz" ]; then
-  if command -v gunzip >/dev/null; then
-  	gunzip "$exe.$ext"
-  else
-  	gzip -d "$exe.$ext"
+  if ! command -v tar >/dev/null; then
+    echo "Error: tar is required to install configu (see: https://www.gnu.org/software/tar/)."
+    exit 1
   fi
 fi
 
+# Get the version from environment variable or use the default value
+version="${CONFIGU_VERSION:-latest}"
+
+# Adjust version if necessary
+if [ "$version" != "latest" ] && [ "$version" != "next" ] && [ "${version#v}" = "$version" ]; then
+  version="v$version"
+fi
+
+# Set the installation path
+dir="${CONFIGU_HOME:-$HOME/.configu}"
+bin="$dir/bin"
+exe="$bin/configu"
+
+# Create the installation directory
+mkdir -p "$bin"
+
+# Download the configu binary
+download="https://github.com/configu/configu/releases/download/cli/$version/configu-$version-$dist$arc"
+echo "Downloading configu from $download"
+curl -fsSL "$download" -o "$exe$arc"
+
+# Extract the binary
+if [ "$arc" = ".tar.gz" ]; then
+  tar -xzf "$exe$arc" -C "$bin"
+else
+  if command -v unzip >/dev/null; then
+    unzip -o "$exe$arc" -d "$bin"
+  else
+    7z x -y "$exe$arc" -o"$bin"
+  fi
+fi
+
+# Make the binary executable
 chmod +x "$exe"
 
-# configure global command "configu" to run $exec executable
-echo "Configu was installed successfully to $exe"
+# Clean up
+rm "$exe$arc"
 
+# Try to add to global $PATH
+echo "Configu was installed successfully to $exe"
 if command -v configu >/dev/null; then
-	echo "Run 'configu --help' to get started"
+  echo "Run 'configu --help' to get started"
 else
-	echo "Run '$exe --help' to get started"
+  echo "Run '$exe --help' to get started"
+  echo "Manually add the directory to your \$HOME/.bash_profile (or similar)"
+  echo "  export PATH=\"\$PATH:$bin\""
 fi
+echo "Stuck? Join our Discord https://discord.com/invite/cjSBxnB9z8"

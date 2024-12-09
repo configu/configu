@@ -1,0 +1,39 @@
+{
+  "name": "@configu/formatters",
+  "version": "0.0.0",
+  "license": "Apache-2.0",
+  "description": "Configu Formatters Extension",
+  "author": "@configu/dev",
+  "homepage": "https://configu.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/configu/configu",
+    "directory": "packages/integrations/formatters"
+  },
+  "bugs": {
+    "url": "https://github.com/configu/configu/issues",
+    "email": "dev@configu.com"
+  },
+  "keywords": [
+    "formatters",
+    "formats",
+    "format",
+    "cfgu",
+    "configu",
+    "configu-formatters"
+  ],
+  "type": "module",
+  "types": "./src/index.ts",
+  "exports": "./src/index.ts",
+  "files": [
+    "src"
+  ],
+  "scripts": {},
+  "dependencies": {
+    "change-case": "^5.4.4",
+    "dotenv": "16.4.7",
+    "lodash": "^4.17.21",
+    "yaml": "^2.6.1"
+  },
+  "devDependencies": {}
+}

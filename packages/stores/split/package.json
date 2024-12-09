@@ -1,0 +1,40 @@
+{
+  "name": "@configu/split",
+  "version": "0.0.0",
+  "license": "Apache-2.0",
+  "author": "@configu/dev",
+  "homepage": "https://configu.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/configu/configu",
+    "directory": "packages/stores/split"
+  },
+  "bugs": {
+    "url": "https://github.com/configu/configu/issues",
+    "email": "dev@configu.com"
+  },
+  "keywords": [
+    "cfgu",
+    "configu"
+  ],
+  "type": "module",
+  "exports": "./src/index.ts",
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "dependencies": {
+    "@configu/sdk": "workspace:*",
+    "@configu/open-feature": "workspace:*",
+    "@splitsoftware/openfeature-js-split-provider": "^1.0.7",
+    "@splitsoftware/splitio": "^10.28.0",
+    "@openfeature/server-sdk": "^1.7.4"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.0",
+    "typescript": "^5.4.5",
+    "@types/rox-node": "^5.0.3"
+  }
+}

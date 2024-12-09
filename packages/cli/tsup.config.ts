@@ -3,18 +3,22 @@ import { defineConfig } from 'tsup';
 
 export default defineConfig([
   {
-    entry: ['src/run.ts'],
+    entry: ['src/configu.ts'],
     format: 'cjs',
-    // dts: true,
+    outDir: 'dist',
     clean: true,
+
     minify: true,
-    // splitting: true,
+    keepNames: true,
     treeshake: true,
-    noExternal: [/(.*)/],
     splitting: false,
-    // https://github.com/egoist/tsup/issues/939
-    // outExtension: () => {
-    //   return { js: '.js', dts: '.d.ts' };
-    // },
+
+    noExternal: [/(.*)/],
+    outExtension: ({ format, pkgType }) => {
+      if (pkgType !== 'module' || format !== 'cjs') {
+        throw new Error('@configu/cli must be an ESM package built as CommonJS bundle');
+      }
+      return { js: '.cjs' };
+    },
   },
 ]);

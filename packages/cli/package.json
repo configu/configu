@@ -22,7 +22,7 @@
   ],
   "type": "module",
   "bin": {
-    "configu": "./dist/run.cjs"
+    "configu": "./dist/configu.cjs"
   },
   "exports": {
     "./package.json": "./package.json"
@@ -31,29 +31,25 @@
     "/dist"
   ],
   "scripts": {
-    "bundle": "tsup",
-    "compile": "tsx compiler/index.ts",
-    "configu": "tsx src/run.ts",
-    "start": "pnpm configu",
-    "test:post-release": "tsx --test ./compiler/**/*.test.ts"
+    "clean": "shx rm -rf dist",
+    "build": "tsup",
+    "build:binary": "tsx build.mts",
+    "build:docker": "docker build --build-arg NODE_VERSION=22.12.0 --progress plain -t configu/cli -f ./Dockerfile ../..",
+    "dev": "tsx src/configu.ts",
+    "start": "node dist/configu.cjs",
+    "configu": "$HOME/.configu/bin/configu"
   },
   "dependencies": {
     "@configu/common": "workspace:*",
+    "@configu/formatters": "workspace:*",
     "@configu/sdk": "workspace:*",
-    "axios": "^1.7.4",
-    "change-case": "4.1.2",
     "clipanion": "^4.0.0-rc.4",
-    "consola": "^3.2.3",
-    "dotenv": "16.4.5",
-    "inquirer": "12.0.0",
-    "lodash": "^4.17.21",
+    "get-stdin": "^9.0.0",
     "open": "10.1.0",
-    "openid-client": "5.7.0",
-    "std-env": "^3.7.0",
-    "tty-table": "4.2.3",
+    "openid-client": "5.7.1",
+    "table": "6.9.0",
     "typanion": "3.14.0",
-    "tiged": "2.12.7"
+    "giget": "1.2.3"
   },
-  "bundleDependencies": [],
   "devDependencies": {}
 }
