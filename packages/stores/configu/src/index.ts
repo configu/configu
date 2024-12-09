@@ -32,23 +32,31 @@ export class ConfiguConfigStore extends ConfigStore {
   }: ConfiguConfigStoreConfiguration) {
     super();
 
-    if (!credentials.org || !credentials.token) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    const { CONFIGU_ORG, CONFIGU_TOKEN, CONFIGU_HOST } = import.meta?.env || (process as any)?.env || {};
+
+    const org = credentials.org || CONFIGU_ORG;
+    const token = credentials.token || CONFIGU_TOKEN;
+    const baseURL = endpoint || CONFIGU_HOST;
+
+    if (!org || !token) {
       throw new Error('ConfiguConfigStore: credentials.org and credentials.token are required');
     }
 
     this.client = axios.create({
-      baseURL: endpoint,
+      baseURL,
       headers: {
-        Org: credentials.org,
+        Org: org,
         Source: source,
       },
       responseType: 'json',
     });
 
-    if (isJWT(credentials.token)) {
-      this.client.defaults.headers.common.Authorization = `Bearer ${credentials.token}`;
+    if (isJWT(token)) {
+      this.client.defaults.headers.common.Authorization = `Bearer ${token}`;
     } else {
-      this.client.defaults.headers.common.Token = credentials.token;
+      this.client.defaults.headers.common.Token = token;
     }
 
     this.tag = tag;
