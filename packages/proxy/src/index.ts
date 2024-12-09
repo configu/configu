@@ -1,9 +1,3 @@
-/* NOTE:
- * @configu/cli is currently work in progress and is not yet released.
- * It expected to be released by the end of October 2024.
- * * Latest released code can be found at: https://github.com/configu/configu/tree/52cee9c41fb03addc4c0983028e37df42945f5b7/packages/proxy
- */
-
 import Fastify, { FastifyInstance } from 'fastify';
 import GracefulServer from '@gquittet/graceful-server';
 import Helmet from '@fastify/helmet';
@@ -13,7 +7,6 @@ import Swagger, { FastifyDynamicSwaggerOptions } from '@fastify/swagger';
 import SwaggerUI from '@scalar/fastify-api-reference';
 
 import { ConfiguInterface } from '@configu/common';
-import path from 'node:path';
 import { config } from './config';
 import { routes } from './routes';
 
@@ -98,17 +91,9 @@ if (config.CONFIGU_DOCS_ENABLED) {
 
 export async function listen() {
   try {
-    let configuFilePath: string = '';
-    if (config.CONFIGU_CONFIG_FILE) {
-      configuFilePath = path.isAbsolute(config.CONFIGU_CONFIG_FILE)
-        ? config.CONFIGU_CONFIG_FILE
-        : path.join(process.cwd(), config.CONFIGU_CONFIG_FILE);
-    }
-    // // TODO: Pass this ConfiguFile instance to the routes
     await ConfiguInterface.init({
-      configuFilePath,
+      input: config.CONFIGU_CONFIG_FILE,
     });
-    // await ConfiguFile.load(config.CONFIGU_CONFIG_FILE);
     await server.listen({
       host: config.CONFIGU_HTTP_ADDR,
       port: config.CONFIGU_HTTP_PORT,

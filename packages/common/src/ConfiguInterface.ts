@@ -5,18 +5,25 @@ import { ConfigSchema, ConfigSet } from '@configu/sdk';
 import { EvalCommandOutput, EvaluatedConfigOrigin, UpsertCommand } from '@configu/sdk/commands';
 import { ConfiguFile } from './ConfiguFile';
 import { CfguFile } from './CfguFile';
-import { stdenv, getConfiguHomeDir } from './utils';
+import { console, environment, getConfiguHomeDir } from './utils';
 
 export class ConfiguInterface {
-  public static context: { stdenv: typeof stdenv; upperConfigu?: ConfiguFile; localConfigu: ConfiguFile };
+  public static context: {
+    console: typeof console;
+    environment: typeof environment;
+    homedir: string;
+    upperConfigu?: ConfiguFile;
+    localConfigu: ConfiguFile;
+  };
 
-  static async init({ configuInput, configuFilePath }: { configuInput?: string; configuFilePath?: string }) {
+  static async init({ input }: { input?: string }) {
     // todo: resolve any casting
     this.context = {} as any;
-    this.context.stdenv = stdenv;
-    const homedir = await getConfiguHomeDir();
+    this.context.console = console;
+    this.context.environment = environment;
+    this.context.homedir = await getConfiguHomeDir();
 
-    const localConfiguFilePath = configuFilePath || path.join(homedir, '.configu'); // $HOME/.configu/.configu
+    const localConfiguFilePath = path.join(this.context.homedir, '.configu'); // $HOME/.configu/.configu
     try {
       this.context.localConfigu = await ConfiguFile.load(localConfiguFilePath);
     } catch {
@@ -29,9 +36,9 @@ export class ConfiguInterface {
     }
 
     const upperConfiguInput =
-      configuInput ??
-      stdenv.env.CONFIGU_CONFIG ??
-      stdenv.env.CONFIGU_CONFIGURATION ??
+      input ??
+      environment.env.CONFIGU_CONFIG ??
+      environment.env.CONFIGU_CONFIGURATION ??
       (await ConfiguFile.searchClosest());
     if (upperConfiguInput) {
       this.context.upperConfigu = await ConfiguFile.loadFromInput(upperConfiguInput);

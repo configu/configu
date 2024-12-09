@@ -22,6 +22,7 @@ export class ConfigKey {
   private static readonly normalizedReserved = ConfigKey.reserved.map(ConfigKey.normalize);
 
   static normalize(key: string) {
+    // flatCase - flatten and lowercase
     // return _.camelCase(key).toLowerCase();
     return _.chain(key).camelCase().kebabCase().value();
   }

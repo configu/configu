@@ -19,6 +19,7 @@ export interface ConfigStoreConstructor {
 export abstract class ConfigStore {
   private static stores = new Map<string, ConfigStoreConstructor>();
 
+  // todo: verify if this is needed except for jsonify
   public readonly type: string = this.constructor.name;
 
   static get type() {

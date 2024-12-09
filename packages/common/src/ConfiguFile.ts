@@ -7,8 +7,8 @@ import { join, dirname, resolve } from 'pathe';
 import { _, JSONSchema, JSONSchemaObject, FromSchema } from '@configu/sdk/expressions';
 import { ConfigSchema, ConfigStore, ConfigExpression, ConfigStoreConstructor, ConfigKey } from '@configu/sdk';
 import {
-  commonDebug,
-  stdenv,
+  console,
+  environment,
   findUp,
   findUpMultiple,
   glob,
@@ -103,7 +103,7 @@ export class ConfiguFile {
     // try expend contents with env vars
     let renderedContents: string;
     try {
-      renderedContents = ConfigExpression.evaluateTemplateString(contents, stdenv.env);
+      renderedContents = ConfigExpression.evaluateTemplateString(contents, environment.env);
     } catch (error) {
       throw new Error(`ConfiguFile.contents "${path}" is invalid\n${error}`);
     }
@@ -251,7 +251,7 @@ export class ConfiguFile {
     spawnSync(script, {
       cwd: options.cwd ?? this.dir,
       stdio: 'inherit',
-      env: { ...stdenv.env, ...options.env },
+      env: { ...environment.env, ...options.env },
       shell: true,
     });
   }
@@ -261,15 +261,15 @@ export class ConfiguFile {
       if (key === 'default') {
         return;
       }
-      commonDebug('Registering module property', key);
+      console.debug('Registering module property', key);
       if (typeof value === 'function' && 'type' in value) {
-        commonDebug('Registering ConfigStore:', value.type);
+        console.debug('Registering ConfigStore:', value.type);
         ConfigStore.register(value as ConfigStoreConstructor);
       } else if (typeof value === 'function') {
-        commonDebug('Registering ConfigExpression:', key);
+        console.debug('Registering ConfigExpression:', key);
         ConfigExpression.register(key, value);
       } else {
-        commonDebug('Ignore registeree:', key);
+        console.debug('Ignore registeree:', key);
       }
     });
   }
@@ -314,7 +314,7 @@ export class ConfiguFile {
   }
 
   static async registerStore(typeAndVersion: string) {
-    commonDebug(`Registering store: ${typeAndVersion}`);
+    console.debug(`Registering store: ${typeAndVersion}`);
     const { type, version } = this.destructStoreInput(typeAndVersion);
 
     const moduleDirPath = await getConfiguHomeDir('cache');
@@ -325,17 +325,17 @@ export class ConfiguFile {
     const isModuleExists = await pathExists(modulePath);
     if (!isModuleExists) {
       const remoteUrl = `https://github.com/configu/configu/releases/download/stores%2F${type}%2F${version}/${type}-${platform()}-${arch()}.js`;
-      console.log('Downloading store module:', remoteUrl);
+      console.debug('Downloading store module:', remoteUrl);
       const res = await fetch(remoteUrl);
 
       if (res.ok) {
         await fs.writeFile(modulePath, await res.text());
-        commonDebug('Fetched module successfully', modulePath);
+        console.debug('Fetched module successfully', modulePath);
       } else {
         throw new Error(`remote integration ${type} not found`);
       }
     } else {
-      commonDebug('Store module already exists', modulePath);
+      console.debug('Store module already exists', modulePath);
     }
 
     return ConfiguFile.registerModuleFile(modulePath);

@@ -1,74 +1,76 @@
-/* NOTE:
- * @configu/cli is currently work in progress and is not yet released.
- * It expected to be released by the end of October 2024.
- * Latest released code can be found at: https://github.com/configu/configu/tree/52cee9c41fb03addc4c0983028e37df42945f5b7/packages/cli
- */
+import { Cli, Builtins } from 'clipanion';
+import { validateNodejsVersion, console } from '@configu/common';
 
-import { BaseContext, Builtins, Cli } from 'clipanion';
-import { consola } from 'consola';
 import packageJson from '../package.json' with { type: 'json' };
 
-// import { HelloCommand } from './commands/hello';
+// Config Management Commands
+import { CliUpsertCommand } from './commands/upsert';
 import { CliEvalCommand } from './commands/eval';
 import { CliExportCommand } from './commands/export';
-import { CliUpsertCommand } from './commands/upsert';
 
+// Misc Commands
+// import { InitCommand } from './commands/init';
+// import { UpdateCommand } from './commands/update';
 import { LoginCommand } from './commands/login';
 import { RunCommand } from './commands/run';
-// todo: finalize those commands
-import { InitCommand } from './commands/init';
-import { TestCommand } from './commands/test';
-import { GenerateCommand } from './commands/generate';
 
-export type CustomContext = BaseContext & { stdio: typeof consola };
-
+// inspired by
+// https://github.com/yarnpkg/berry/blob/master/packages/yarnpkg-cli/sources/lib.ts#L186
+// https://github.com/nodejs/corepack/blob/main/sources/main.ts#L40
 export async function run(argv: string[]) {
-  // consola.wrapAll();
-
-  // const [firstArg, ...restArgs] = argv;
-
-  const context = {
-    ...Cli.defaultContext,
-    stdio: consola,
-    // stdio: consola.withTag('configu'),
-  };
+  console.debug('argv', argv);
 
   const cli = new Cli({
-    binaryLabel: packageJson.name,
     binaryName: 'configu',
+    binaryLabel: packageJson.name,
     binaryVersion: packageJson.version,
-    // enableCapture: true,
   });
-  const originalErrorHandle = cli.error.bind(cli);
+
+  // enables the BaseCommand catch override functionality
+  const originalErrorMethod = cli.error;
   cli.error = (...args) => {
-    // context.stdio.debug(args[0]);
-    context.stdio.log('\u0000');
-    return originalErrorHandle(...args);
+    if (typeof args[0] === 'number') {
+      return '';
+    }
+    return originalErrorMethod(...args);
   };
 
-  cli.register(Builtins.HelpCommand);
-  cli.register(Builtins.VersionCommand);
+  function unexpectedTerminationHandler() {
+    console.error(
+      `${cli.binaryName} is terminating due to an unexpected empty event loop.\nPlease report this issue at https://github.com/configu/configu/issues.`,
+    );
+  }
+  process.once(`beforeExit`, unexpectedTerminationHandler);
+  process.on('exit', (code) => {
+    console.debug(`Exiting with code: ${code}`);
+    if (code !== 0) {
+      console.print(`CONFIGU_EXIT_CODE=${code}`);
+    }
+  });
 
-  cli.register(CliEvalCommand);
-  cli.register(CliExportCommand);
-  cli.register(CliUpsertCommand);
-  // cli.register(InitCommand);
-  cli.register(LoginCommand);
-  cli.register(RunCommand);
-  // cli.register(TestCommand);
-  // cli.register(GenerateCommand);
+  try {
+    await validateNodejsVersion();
 
-  // await
+    cli.register(Builtins.HelpCommand);
+    cli.register(Builtins.VersionCommand);
 
-  await cli.runExit(argv, context);
+    cli.register(CliUpsertCommand);
+    cli.register(CliEvalCommand);
+    cli.register(CliExportCommand);
 
-  // try {
-  //   const code = await cli.run(argv, context);
+    // cli.register(InitCommand);
+    // cli.register(UpdateCommand);
+    cli.register(LoginCommand);
+    cli.register(RunCommand);
 
-  //   if (code !== 0) {
-  //     process.exitCode ??= code;
-  //   }
-  // } catch (error) {
-  //   console.log('===== tosic man =====');
-  // }
+    process.exitCode = 42;
+    // cli.run() never throws
+    // https://github.com/arcanis/clipanion/blob/master/sources/advanced/Cli.ts#L483
+    process.exitCode = await cli.run(argv);
+  } catch (error) {
+    console.error(error);
+    process.exitCode = 1;
+  } finally {
+    process.off(`beforeExit`, unexpectedTerminationHandler);
+  }
 }

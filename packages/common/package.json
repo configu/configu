@@ -47,17 +47,19 @@
     "@configu/sdk": "workspace:*",
     "@configu/configu": "workspace:*",
     "@configu/json-file": "workspace:*",
-    "debug": "^4.3.7",
+    "axios": "^1.7.9",
+    "consola": "^3.2.3",
     "find-up": "^7.0.0",
     "glob": "^11.0.0",
     "jiti": "^2.4.1",
     "lodash": "^4.17.21",
     "parse-json": "8.1.0",
     "pathe": "^1.1.2",
+    "semver": "^7.6.3",
     "std-env": "^3.8.0",
     "yaml": "^2.6.1"
   },
   "devDependencies": {
-    "@types/debug": "^4.1.12"
+    "@types/semver": "^7.5.8"
   }
 }

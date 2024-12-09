@@ -15,6 +15,6 @@ export const DotenvFormatter: FormatterFunction = (configs, { wrap = false }: { 
     .join('\n');
 };
 
-ConfigFormatter.register('Dotenv', DotenvFormatter);
+ConfigFormatter.register('dotenv', DotenvFormatter);
 ConfigFormatter.register('env', DotenvFormatter);
 ConfigFormatter.register('.env', DotenvFormatter);

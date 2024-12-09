@@ -1,32 +1,32 @@
-import { Command, Option, UsageError } from 'clipanion';
+import { BaseContext, Command, Option, UsageError } from 'clipanion';
 import { _ } from '@configu/sdk/expressions';
-import { ConfiguInterface, getConfiguHomeDir, parseJSON, readFile } from '@configu/common';
+import { ConfiguInterface, parseJSON } from '@configu/common';
 import { EvalCommandOutput } from '@configu/sdk/commands';
-import path from 'node:path';
-import { LogLevels, LogTypes } from 'consola';
-import { type CustomContext } from '../index';
-import { configuStoreType } from '../helpers';
+import getStdin from 'get-stdin';
 
-export type Context = CustomContext & {
-  UNICODE_NULL: '\u0000';
-  stdin: NodeJS.ReadStream;
-} & (typeof ConfiguInterface)['context'];
+export type Context = BaseContext & (typeof ConfiguInterface)['context'];
+
+export class ExitError extends Error {
+  code: number;
+
+  constructor(code: number) {
+    super();
+    this.code = code;
+  }
+}
 
 export abstract class BaseCommand extends Command<Context> {
-  debug = Option.Boolean('--debug');
+  verbose = Option.Boolean('--verbose');
 
-  configu = Option.String('--config,--configuration', { description: 'Path, URL or JSON of a .configu file' });
+  config = Option.String('--config', { description: 'Path, URL or Stringified JSON of a .configu file' });
 
   public async init(): Promise<void> {
-    this.context.UNICODE_NULL = '\u0000';
-    if (this.debug) {
-      this.context.stdio.level = 4;
-    }
-    await ConfiguInterface.init({ configuInput: this.configu });
+    // todo: think to wrap with try/catch and throw a UsageError
+    await ConfiguInterface.init({ input: this.config });
     this.context = { ...this.context, ...ConfiguInterface.context };
   }
 
-  reduceConfigFlag(configFlag?: string[]) {
+  reduceKVFlag(configFlag?: string[]) {
     if (!configFlag) {
       return {};
     }
@@ -44,88 +44,46 @@ export abstract class BaseCommand extends Command<Context> {
       .value();
   }
 
-  async readStdin() {
-    const { stdin } = process;
-    if (stdin.isTTY) {
-      return '';
-    }
-    return new Promise<string>((resolve) => {
-      const chunks: Uint8Array[] = [];
-      stdin.on('data', (chunk) => {
-        chunks.push(chunk);
-      });
-      stdin.on('end', () => {
-        resolve(Buffer.concat(chunks).toString('utf8'));
-      });
-    });
-  }
-
   async readPreviousEvalCommandOutput() {
-    const stdin = await this.readStdin();
+    const stdin = await getStdin();
+    this.context.console.debug(`stdin`, stdin);
 
     if (!stdin) {
       return undefined;
     }
 
-    if (stdin.includes(this.context.UNICODE_NULL)) {
-      process.exit(1);
+    const match = stdin.match(/CONFIGU_EXIT_CODE=(\d+)/);
+    if (match) {
+      const exitCode = match[1] ? parseInt(match[1], 10) : 0;
+      if (exitCode !== 0) {
+        this.context.console.debug(`Exiting after piped command failed with exit code: ${exitCode}`);
+        throw new ExitError(exitCode);
+      }
     }
 
     try {
-      const previous = parseJSON('', stdin) as EvalCommandOutput;
+      const pipe = parseJSON('', stdin) as EvalCommandOutput;
+      this.context.console.debug(`pipe`, pipe);
       if (
-        Object.values(previous).some(
+        Object.values(pipe).some(
           (config) =>
             !_.has(config, 'key') || !_.has(config, 'cfgu') || !_.has(config, 'origin') || !_.has(config, 'value'),
         )
       ) {
-        throw new Error('fail');
+        throw new Error();
       }
-      return previous;
+      return pipe;
     } catch {
-      throw new Error(`failed to parse previous eval command return data from stdin`);
+      throw new Error(`Failed to parse previous eval command return data from stdin`);
     }
   }
 
   override catch(error: any): Promise<void> {
-    // this.context.stdio.info("Using consola 3.0.0");
-    // this.context.stdio.start("Building project...");
-    // this.context.stdio.warn("A new version of consola is available: 3.0.1");
-    // this.context.stdio.success("Project built!");
-    // this.context.stdio.error(new Error("This is an example error. Everything is fine!"));
-    // this.context.stdio.box("I am a simple box");
-
-    // console.log('====================')
-    // this.context.stdio.level = LogLevels.verbose;
-    // this.context.stdio.debug(error);
-    // this.context.stdio.log(error);
-    // // const isUsageError = error instanceof UsageError;
-    // if (!isUsageError) {
-    // * on any error inject a 'NULL' unicode character so if next command in the pipeline try to read stdin it will fail
-    this.context.stdio.log(this.context.UNICODE_NULL);
-    // }
-
-    this.context.stdio.error(error.response?.data?.message ?? error.message ?? error);
-    process.exit(1);
-
-    // if (!axios.isAxiosError(error)) {
-    //   return super.catch(error);
-    // }
-    if (error.response?.data?.message) {
-      throw new Error(error.response.data.message);
+    if (error instanceof ExitError) {
+      return Promise.reject(error.code);
     }
-    if (error?.message) {
-      throw new Error(error.message);
-    }
-    // if (error?.request) {
-    //   return super.catch(
-    //     new Errors.CLIError(
-    //       "There seems to be a problem connecting to Configu's servers. Please check your network connection and try again.",
-    //     ),
-    //   );
-    // }
-    throw error;
+    this.context.console.error(error);
+    // eslint-disable-next-line prefer-promise-reject-errors
+    return Promise.reject(1);
   }
 }
-
-// process.on('')

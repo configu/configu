@@ -33,27 +33,27 @@ export class CliUpsertCommand extends BaseCommand {
     const store = await ConfiguInterface.getStoreInstance(this.store);
     const set = new ConfigSet(this.set);
     const schema = await ConfiguInterface.getSchemaInstance(this.schema);
-    const configs = this.reduceConfigFlag(this.assign);
+    const configs = this.reduceKVFlag(this.assign);
     const pipe = await this.readPreviousEvalCommandOutput();
 
-    try {
-      await new UpsertCommand({
-        store,
-        set,
-        schema,
-        configs,
-        pipe,
-      }).run();
-      process.stdout.write('Configs upserted successfully');
-    } catch (error) {
-      // if (error instanceof ConfiguConfigStoreApprovalQueueError) {
-      //   // * print warning message with queue url highlighted with an underline
-      //   const warningMessage = error.message.replace(error.queueUrl, `\u001B[4m${error.queueUrl}\u001B[0m`);
-      //   this.context.stdio.warn(warningMessage);
-      // } else {
-      //   this.context.stdio.error(error.message);
-      // }
-      this.context.stdio.error(error.message);
-    }
+    // try {
+    await new UpsertCommand({
+      store,
+      set,
+      schema,
+      configs,
+      pipe,
+    }).run();
+    this.context.console.success('Configs upserted successfully');
+    // } catch (error) {
+    //   // if (error instanceof ConfiguConfigStoreApprovalQueueError) {
+    //   //   // * print warning message with queue url highlighted with an underline
+    //   //   const warningMessage = error.message.replace(error.queueUrl, `\u001B[4m${error.queueUrl}\u001B[0m`);
+    //   //   this.context.stdio.warn(warningMessage);
+    //   // } else {
+    //   //   this.context.stdio.error(error.message);
+    //   // }
+    //   this.context.stdio.error(error.message);
+    // }
   }
 }

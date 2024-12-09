@@ -45,13 +45,13 @@ export class CliEvalCommand extends BaseCommand {
     const store = this.defaults ? ConfigStore.construct('noop') : await ConfiguInterface.getStoreInstance(this.store);
     const set = new ConfigSet(this.set);
     const schema = await ConfiguInterface.getSchemaInstance(this.schema);
-    const configs = this.reduceConfigFlag(this.override);
+    const configs = this.reduceKVFlag(this.override);
     const pipe = await this.readPreviousEvalCommandOutput();
 
     const evalCommand = new EvalCommand({ store, set, schema, configs, pipe });
     const { result } = await evalCommand.run();
     await ConfiguInterface.backupEvalOutput({ storeName: this.store, set, schema, evalOutput: result });
 
-    process.stdout.write(JSON.stringify(result));
+    this.context.console.print(JSON.stringify(result));
   }
 }

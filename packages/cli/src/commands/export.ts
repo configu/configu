@@ -1,43 +1,20 @@
 import { Command, Option } from 'clipanion';
+import * as t from 'typanion';
 import { spawnSync } from 'node:child_process';
 import { ConfigExpression, ConfigKey, ConfigValue } from '@configu/sdk';
 import { EvalCommandOutput, EvaluatedConfig } from '@configu/sdk/commands';
 import { _ } from '@configu/sdk/expressions';
-import {
-  dotCase,
-  constantCase,
-  noCase,
-  pascalCase,
-  pathCase,
-  sentenceCase,
-  snakeCase,
-  capitalCase,
-  camelCase,
-  paramCase,
-} from 'change-case';
-import Table from 'tty-table';
-import * as t from 'typanion';
-import { cwd } from 'process';
+import { table } from 'table';
 import { readFile } from '@configu/common';
-import { ConfigFormatter, ConfigFormats, ConfigFormat } from '@configu/formatters';
+import { ConfigFormatter, ConfigFormat } from '@configu/formatters';
+
 import { BaseCommand } from './base';
 
 // type TemplateContext = { [key: string]: string } | { key: string; value: string }[];
 
-const casingFormatters: Record<string, (string: string) => string> = {
-  CamelCase: camelCase,
-  CapitalCase: capitalCase,
-  ConstantCase: constantCase,
-  DotCase: dotCase,
-  KebabCase: paramCase,
-  NoCase: noCase,
-  PascalCase: pascalCase,
-  PascalSnakeCase: (string: string) => capitalCase(string).split(' ').join('_'),
-  PathCase: pathCase,
-  SentenceCase: sentenceCase,
-  SnakeCase: snakeCase,
-  TrainCase: (string: string) => capitalCase(string).split(' ').join('-'),
-};
+type ExportCommandFilter = (config: EvaluatedConfig) => boolean;
+type ExportCommandMapper = (config: EvaluatedConfig) => EvaluatedConfig;
+// type ExportCommandReducer = (configs: EvaluatedConfig[]) => string;
 
 export class CliExportCommand extends BaseCommand {
   static override paths = [['export'], ['ex']];
@@ -50,32 +27,19 @@ export class CliExportCommand extends BaseCommand {
     description: `Outputs metadata on the exported \`Configs\``,
   });
 
-  format = Option.String('--format', {
-    description: `Format exported \`Configs\` to common configuration formats. Redirect the output to file, if needed`,
-    // validator: t.isEnum(ConfigFormats),
+  filter = Option.Array('--filter', {
+    description: `Picks config keys by a given expression`,
+    validator: t.isArray(t.isString()),
   });
 
-  // eol = Option.Boolean('--eol,--EOL', {
-  //   description: `Adds EOL (\\n on POSIX \\r\\n on Windows) to the end of the stdout`,
+  // sort = Option.String('--sort', {
+  //   description: `Picks config keys by a given expression`,
   // });
 
-  template = Option.String('--template', {
-    description: `Path to a file containing {{mustache}} templates to render (inject/substitute) the exported \`Configs\` into`,
-  });
-
-  // 'template-input' = Option.String('--template-input', {
-  //   description: `Inject \`Configs\` to template as object or array of \`{key: string, value: string}[]\``,
-  //   validator: t.isEnum(['object', 'array']),
+  // map = Option.Array('--map', {
+  //   description: `Picks config keys by a given expression`,
+  //   validator: t.isArray(t.isString()),
   // });
-
-  // * (set -a; source <(configu export ... --source); set +a && the command)
-  source = Option.Boolean('--source', {
-    description: `Source exported \`Configs\` as environment variables to the current shell`,
-  });
-
-  run = Option.String('--run', {
-    description: `Spawns executable as child-process and pass exported \`Configs\` as environment variables`,
-  });
 
   prefix = Option.String('--prefix', {
     description: `Append a fixed string to the beginning of each Config Key in the export result`,
@@ -87,206 +51,141 @@ export class CliExportCommand extends BaseCommand {
 
   casing = Option.String('--casing', {
     description: `Transforms the casing of Config Keys in the export result to camelCase, PascalCase, Capital Case, snake_case, param-case, CONSTANT_CASE and others`,
-    validator: t.isEnum(Object.keys(casingFormatters)),
+    // validator: t.isEnum(Object.keys(casingFormatters)),
   });
-
-  filter = Option.Array('--filter', {
-    description: `Picks config keys by a given expression`,
-    validator: t.isArray(t.isString()),
-  });
-
-  // sort = Option.Array('--sort', {
-  //   description: `Picks config keys by a given expression`,
-  //   validator: t.isArray(t.isString()),
-  // });
-
-  // map = Option.Array('--map', {
-  //   description: `Picks config keys by a given expression`,
-  //   validator: t.isArray(t.isString()),
-  // });
 
   // reduce = Option.Array('--reduce', {
   //   description: `Picks config keys by a given expression`,
   //   validator: t.isArray(t.isString()),
   // });
 
+  format = Option.String('--format', {
+    description: `Format exported \`Configs\` to common configuration formats. Redirect the output to file, if needed`,
+    // validator: t.isEnum(ConfigFormats),
+  });
+
+  template = Option.String('--template', {
+    description: `Path to a file containing {{mustache}} templates to render (inject/substitute) the exported \`Configs\` into`,
+  });
+
+  // * (set -a; source <(configu export ... --source); set +a && the command)
+  source = Option.Boolean('--source', {
+    description: `Source exported \`Configs\` as environment variables to the current shell`,
+  });
+
+  run = Option.String('--run', {
+    description: `Spawns executable as child-process and pass exported \`Configs\` as environment variables`,
+  });
+
   static override schema = [
     t.hasMutuallyExclusiveKeys(['explain', 'format', 'template', 'source', 'run'], { missingIf: 'undefined' }),
-    // t.hasKeyRelationship('template-input', t.KeyRelationship.Requires, ['template'], { missingIf: 'undefined' }),
-    t.hasKeyRelationship('eol', t.KeyRelationship.Requires, ['format'], { missingIf: 'undefined' }),
   ];
 
-  printStdout(finalConfigData: string) {
-    process.stdout.write(finalConfigData);
-    // if (this.eol && os.platform() === 'win32') {
-    //   process.stdout.write('\\r\\n');
-    // }
-    // if (this.eol && os.platform() !== 'win32') {
-    //   process.stdout.write('\n');
-    // }
-  }
-
-  explainConfigs(configs: EvalCommandOutput) {
-    const data = _.chain(configs)
+  explainConfigs(pipe: EvalCommandOutput) {
+    const data = _.chain(pipe)
       .values()
-      .map(({ key, origin, value }) => ({
-        key,
-        value,
-        origin,
-      }))
+      .map(({ key, origin, value }) => [key, value, origin])
       .value();
-    const table = Table(
-      [
-        { value: 'key', alias: 'Key' },
-        { value: 'value', alias: 'Value' },
-        { value: 'origin', alias: 'Origin' },
-      ],
-      data,
-    ).render();
-    process.stdout.write(table);
+    this.context.console.print(table(data));
   }
 
-  keysMutations() {
-    const hasKeysMutations = [this.prefix, this.suffix, this.casing].some((flag) => flag !== undefined);
-    if (!hasKeysMutations) {
-      return undefined;
-    }
+  async filterConfigs(pipe: EvalCommandOutput) {
+    const hidden: ExportCommandFilter = (config) => !config.cfgu?.hidden;
 
-    return (key: string) => {
-      const caseFunction = casingFormatters[this.casing ?? ''];
-      const keyWithPrefixSuffix = `${this.prefix ?? ''}${key}${this.suffix ?? ''}`;
-      return caseFunction ? caseFunction(keyWithPrefixSuffix) : keyWithPrefixSuffix;
+    const flag: ExportCommandFilter = this.filter
+      ? (config) => {
+          const evaluationContext = ConfigValue.createEvaluationContext({ current: config.key, configs: pipe });
+          const joinedFilter = this.filter?.join(' && ') ?? '';
+          return ConfigExpression.evaluateBoolean(joinedFilter, evaluationContext);
+        }
+      : (config) => true;
+
+    return _.chain(pipe)
+      .pickBy((config) => hidden(config) && flag(config))
+      .value();
+  }
+
+  async mapConfigs(pipe: EvalCommandOutput) {
+    const prefixSuffix: ExportCommandMapper = (config) => {
+      const nextKey = `${this.prefix ?? ''}${config.key}${this.suffix ?? ''}`;
+      return { ...config, key: nextKey };
     };
+
+    const casing: ExportCommandMapper = this.casing
+      ? (config) => {
+          const caseFunction = ConfigFormatter.changeCase(this.casing ?? '', config.key);
+          return { ...config, key: caseFunction };
+        }
+      : (config) => config;
+
+    const validate: ExportCommandMapper = (config) => {
+      ConfigKey.validate({ key: config.key });
+      return config;
+    };
+
+    return _.chain(pipe)
+      .mapValues((config) => _.flow([prefixSuffix, casing, validate])(config))
+      .value();
   }
 
-  filterFromFlag(configs: EvalCommandOutput, filterExpressions?: string[]): EvalCommandOutput {
-    const currentFilter = filterExpressions?.shift();
-    if (!currentFilter) {
-      return configs;
-    }
-
-    const filteredConfigs = _.pickBy(configs, (config) => {
-      const evaluationContext = ConfigValue.createEvaluationContext({ current: config.key, configs });
-      return ConfigExpression.evaluateBoolean(currentFilter, evaluationContext);
+  injectConfigs(pipe: EvalCommandOutput) {
+    const env = _.chain(pipe).keyBy('key').mapValues('value').value();
+    spawnSync(this.run as string, {
+      cwd: process.cwd(),
+      stdio: 'inherit',
+      env: { ...env, ...process.env },
+      shell: true,
     });
-    return this.filterFromFlag(filteredConfigs, filterExpressions);
   }
 
-  async exportConfigs(result: EvalCommandOutput) {
-    const evaluationContext = ConfigValue.createEvaluationContext({ configs: result });
+  async reduceConfigs(pipe: EvalCommandOutput) {
+    const evaluationContext = ConfigValue.createEvaluationContext({ configs: pipe });
 
     if (this.template) {
       const templateContent = await readFile(this.template);
-      // let templateContext: TemplateContext = result;
-      // if (this['template-input'] === 'array') {
-      //   templateContext = _(result)
-      //     .entries()
-      //     .map(([key, value]) => ({
-      //       key,
-      //       value,
-      //     }))
-      //     .value();
-      // }
       try {
-        const templatedContent = ConfigExpression.evaluateTemplateString(templateContent, evaluationContext);
-        // if (typeof templatedContent !== 'string') {
-        //   throw new Error('template expression does not evaluate to a string');
-        // }
-        this.printStdout(templatedContent);
-        return;
+        return ConfigExpression.evaluateTemplateString(templateContent, evaluationContext);
       } catch (error) {
         throw new Error(`template expression evaluation failed: ${error}`);
       }
     }
 
-    if (this.run) {
-      const env = _.chain(result).keyBy('key').mapValues('value').value();
-      // this.context.configu.runScript(this.run, {
-      //   cwd: cwd(),
-      //   env,
-      // });
-      // return;
-
-      spawnSync(this.run, {
-        cwd: cwd(),
-        stdio: 'inherit',
-        env: { ...env, ...process.env },
-        shell: true,
-      });
-      return;
-    }
-
-    const configs = _.chain(result)
+    const configs = _.chain(pipe)
       .keyBy('key')
       .mapValues(({ value }) => ConfigValue.parse(value))
       .value();
+
     if (this.source) {
-      const formattedResult = ConfigFormatter.format('Dotenv', configs, evaluationContext);
-      this.printStdout(formattedResult);
-      return;
+      return ConfigFormatter.format('dotenv', configs, {});
     }
-    const formattedResult = ConfigFormatter.format(
-      (this.format ?? 'BeautifiedJSON') as ConfigFormat,
-      configs,
-      evaluationContext,
-    );
-    this.printStdout(formattedResult);
 
-    // // eslint-disable-next-line no-template-curly-in-string
-    // let expression = `\`${this.format ?? 'JSON({json:${pipe}})'}\``;
-    // if (this.source) {
-    //   // eslint-disable-next-line no-template-curly-in-string
-    //   expression = 'Dotenv({json:${pipe},wrap:true})';
-    // }
-
-    // try {
-    //   const formattedResult = ConfigExpression.evaluateTemplateString(expression, evaluationContext);
-    //   // if (typeof formattedResult !== 'string') {
-    //   //   throw new Error(`format expression evaluation failed\n${formattingError}`);
-    //   // }
-    //   this.printStdout(formattedResult);
-    // } catch (error) {
-    //   throw new Error(`format expression evaluation failed: ${error}`);
-    // }
+    return ConfigFormatter.format(this.format ?? 'beautified-json', configs, {});
   }
-
-  validateKey(config: EvaluatedConfig) {
-    ConfigKey.validate({ key: config.key });
-    return config;
-  }
-
-  // map(pipe: EvalCommandOutput) {
-  //   return _.chain(pipe)
-  //     .mapKeys('key')
-  //     .mapValues((config: EvaluatedConfig) => {
-  //       return this.validateKey(config).value;
-  //     })
-  //     .value();
-  // }
 
   async execute() {
     await this.init();
 
-    const previousEvalCommandOutput = await this.readPreviousEvalCommandOutput();
-    if (!previousEvalCommandOutput) {
-      this.context.stdio.warn('no configuration was fetched');
+    const pipe = await this.readPreviousEvalCommandOutput();
+    if (!pipe) {
+      this.context.console.warn('No configuration received from the previous command');
       return;
     }
 
     if (this.explain) {
-      this.explainConfigs(previousEvalCommandOutput);
+      this.explainConfigs(pipe);
       return;
     }
 
-    const keys = this.keysMutations();
-    const pipe = keys
-      ? _.mapValues(previousEvalCommandOutput, (config, key) => ({ ...config, key: keys(key) }))
-      : previousEvalCommandOutput;
-    const filteredPipe = this.filter
-      ? this.filterFromFlag(pipe, this.filter)
-      : _.pickBy(pipe, (config) => !config.cfgu?.hidden);
-    // const result = this.map(filteredPipe);
-    const result = filteredPipe;
-    await this.exportConfigs(result);
+    const filteredPipe = await this.filterConfigs(pipe);
+    const mappedPipe = await this.mapConfigs(filteredPipe);
+
+    if (this.run) {
+      this.injectConfigs(mappedPipe);
+      return;
+    }
+
+    const reducedPipe = await this.reduceConfigs(mappedPipe);
+
+    this.context.console.print(reducedPipe);
   }
 }

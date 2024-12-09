@@ -43,18 +43,13 @@
     "@configu/common": "workspace:*",
     "@configu/formatters": "workspace:*",
     "@configu/sdk": "workspace:*",
-    "axios": "^1.7.4",
-    "change-case": "4.1.2",
     "clipanion": "^4.0.0-rc.4",
-    "consola": "^3.2.3",
-    "dotenv": "16.4.5",
-    "inquirer": "12.0.1",
+    "get-stdin": "^9.0.0",
     "open": "10.1.0",
     "openid-client": "5.7.1",
-    "std-env": "^3.8.0",
-    "tty-table": "4.2.3",
+    "table": "6.9.0",
     "typanion": "3.14.0",
-    "tiged": "2.12.7"
+    "giget": "1.2.3"
   },
   "devDependencies": {}
 }

@@ -13,4 +13,4 @@ export const TOMLFormatter: FormatterFunction = (configs) => {
     .join('\n');
 };
 
-ConfigFormatter.register('TOML', TOMLFormatter);
+ConfigFormatter.register('toml', TOMLFormatter);

@@ -1,9 +1,43 @@
+import _ from 'lodash';
 import { stringify } from 'yaml';
+import { camelCase } from 'change-case';
 import { ConfigFormatter, FormatterFunction } from './ConfigFormatter';
 
-export const YAMLFormatter: FormatterFunction = (
-  configs,
-  options?: Omit<Parameters<typeof stringify>['2'], string | number>,
-) => stringify(configs, options);
+type YAMLFormatterOptions = Exclude<Parameters<typeof stringify>['2'], string | number>;
+export const YAMLFormatter: FormatterFunction = (configs, options?: YAMLFormatterOptions) =>
+  stringify(configs, options);
 
-ConfigFormatter.register('YAML', YAMLFormatter);
+ConfigFormatter.register('yml', YAMLFormatter);
+ConfigFormatter.register('yaml', YAMLFormatter);
+
+const DEFAULT_API_VERSION = 'v1';
+const DEFAULT_KIND = 'ConfigMap';
+export const KubernetesConfigMapFormatter: FormatterFunction = (
+  configs,
+  options?: YAMLFormatterOptions & { name?: string; metadata?: Record<string, string> },
+) => {
+  const jsonConfigMap = {
+    apiVersion: DEFAULT_API_VERSION,
+    kind: DEFAULT_KIND,
+    metadata: {
+      creationTimestamp: new Date().toISOString(),
+      ...options?.metadata,
+      name: options?.name?.toLowerCase(),
+    },
+    data: configs,
+  };
+
+  return YAMLFormatter(jsonConfigMap);
+};
+
+ConfigFormatter.register('config-map', KubernetesConfigMapFormatter);
+ConfigFormatter.register('k8s-config-map', KubernetesConfigMapFormatter);
+ConfigFormatter.register('kubernetes-config-map', KubernetesConfigMapFormatter);
+
+// * Helm values naming convention is camel case (https://helm.sh/docs/chart_best_practices/values/)
+export const HelmValuesFormatter: FormatterFunction = (configs, options?: YAMLFormatterOptions) => {
+  const camelCaseKeys = _.mapKeys(configs, (v, k) => camelCase(k));
+  return YAMLFormatter(camelCaseKeys, options);
+};
+
+ConfigFormatter.register('helm-values', HelmValuesFormatter);
