@@ -184,6 +184,7 @@ jobs:
             ${{ steps.release.outputs.package_path }}/dist/*
 
       # - name: Delete previous tag and release
+      #   run: |
       #     gh release delete ${{ steps.release.outputs.package }}/${{ steps.release.outputs.channel }} --cleanup-tag --yes || true
 
       # - name: Create updated tag and release
