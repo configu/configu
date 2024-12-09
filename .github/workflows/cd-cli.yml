@@ -276,7 +276,7 @@ jobs:
 
       - name: Check npm on ${{ matrix.runner }}
         run: |
-          npm i -g configu@${{ steps.release.outputs.version }}
+          npm i -g ${{ steps.release.outputs.package_name }}@${{ steps.release.outputs.version }}
           configu -v
 
   post-release:
