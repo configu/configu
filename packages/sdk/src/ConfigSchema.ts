@@ -67,6 +67,8 @@ export const ConfigSchemaKeysSchema = {
 
 export type ConfigSchemaKeys = FromSchema<typeof ConfigSchemaKeysSchema>;
 
+export type V0ConfigSchemaKeys = { [x: string]: any };
+
 /**
  * A file containing binding records linking each unique `ConfigKey` to its corresponding `Cfgu` declaration.
  * https://configu.com/docs/config-schema/
@@ -93,7 +95,7 @@ export class ConfigSchema {
     }
   }
 
-  static fromLegacyConfigSchema(contents: { [key: string]: any }) {
+  static fromLegacyConfigSchema(contents: V0ConfigSchemaKeys) {
     const migratedContents: ConfigSchemaKeys = _(contents)
       .mapValues((value, key) => {
         const { type, options, depends, labels, template, ...restCfguProps } = value;

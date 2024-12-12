@@ -1,14 +1,12 @@
-import { arch, homedir, platform } from 'node:os';
+import { arch, platform } from 'node:os';
 import { cwd } from 'node:process';
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs/promises';
-import { fileURLToPath } from 'node:url';
-import { join, dirname, resolve } from 'pathe';
 import { _, JSONSchema, JSONSchemaObject, FromSchema } from '@configu/sdk/expressions';
-import { ConfigSchema, ConfigStore, ConfigExpression, ConfigStoreConstructor, ConfigKey } from '@configu/sdk';
-import { findUpStop } from 'find-up';
+import { ConfigStore, ConfigExpression, ConfigStoreConstructor, ConfigKey } from '@configu/sdk';
 import {
   console,
+  path as pathe,
   environment,
   findUp,
   findUpMultiple,
@@ -20,8 +18,11 @@ import {
   parseYAML,
   YAML,
   pathExists,
+  normalizeInput,
 } from './utils';
 import { CfguFile } from './CfguFile';
+
+const { join, dirname, resolve } = pathe;
 
 const StringPropertySchema = {
   type: 'string',
@@ -92,8 +93,7 @@ export class ConfiguFile {
     public readonly contents: ConfiguFileContents,
     public readonly contentsType: 'json' | 'yaml',
   ) {
-    console.debug('ConfiguFile.path', path);
-    console.debug('ConfiguFile.contents', contents);
+    console.debug('ConfiguFile.constructor', { path, contents, contentsType });
     try {
       this.dir = dirname(resolve(this.path));
       JSONSchema.validate(ConfiguFile.schema, this.contents);
@@ -103,6 +103,7 @@ export class ConfiguFile {
   }
 
   private static async init(path: string, contents: string): Promise<ConfiguFile> {
+    console.debug('ConfiguFile.init', { path });
     // try expend contents with env vars
     let renderedContents: string;
     try {
@@ -111,7 +112,6 @@ export class ConfiguFile {
       throw new Error(`ConfiguFile.contents "${path}" is invalid\n${error}`);
     }
 
-    console.debug('renderedContents', contents, renderedContents);
     // try parse yaml first and then json
     let parsedContents: ConfiguFileContents;
     let contentsType: 'json' | 'yaml';
@@ -130,13 +130,22 @@ export class ConfiguFile {
     }
 
     // handle register api
-    const registerPromises = (parsedContents.register ?? []).map((module) => ConfiguFile.register(module));
+    const registerPromises = (parsedContents.register ?? []).map((module, index) => {
+      const registeree = `.configu.register[${index}]`;
+      const { type, path: registereePath } = normalizeInput(module, registeree);
+      if (type === 'file') {
+        return ConfiguFile.registerModuleFile(registereePath);
+      }
+      throw new Error(`invalid registeree input at ${registeree} "${module}"`);
+    });
     await Promise.all(registerPromises);
 
     return new ConfiguFile(path, parsedContents, contentsType);
   }
 
   static async load(path: string): Promise<ConfiguFile> {
+    console.debug('ConfiguFile.load', { path });
+
     if (!path.endsWith('.configu')) {
       throw new Error(`ConfiguFile.path "${path}" is not a valid .configu file`);
     }
@@ -152,50 +161,21 @@ export class ConfiguFile {
   }
 
   static async loadFromInput(input: string) {
-    // Check if the string is a valid JSON
-    try {
-      JSON.parse(input);
+    console.debug('ConfiguFile.loadFromInput', { input });
+
+    const { type, path } = normalizeInput(input, '.configu');
+    if (type === 'json') {
       return ConfiguFile.init(join(cwd(), '.configu'), input);
-    } catch {
-      // Not a valid JSON
     }
-
-    // Check if the string is a valid URL
-    let url: URL | undefined;
-    try {
-      url = new URL(input);
-    } catch {
-      // Not a valid URL
-    }
-    if (url) {
-      if (url.protocol === 'file:') {
-        return ConfiguFile.load(fileURLToPath(url));
-      }
-      // todo: support http based urls
-      throw new Error('Only file URLs are supported');
-    }
-
-    // Check if the string is a valid path
-    try {
-      const path = resolve(input);
+    if (type === 'file') {
       return ConfiguFile.load(path);
-    } catch {
-      // Not a valid path
     }
-
-    // // Check if the string is a valid JSON
-    // try {
-    //   const json = JSON.parse(input);
-    //   return ConfiguFile.init(join(cwd(), '.configu'), json);
-    // } catch {
-    //   // Not a valid JSON
-    // }
-
-    throw new Error('.configu file input is not a valid path, URL, or JSON');
+    // todo: support http based urls
+    // code below is unreachable
+    throw new Error('.configu file input is not a valid path or JSON');
   }
 
   static async searchClosest() {
-    console.debug('ConfiguFile searchClosest');
     // todo: think about adding the stopAt option.
     return findUp('.configu', { type: 'file', allowSymlinks: false });
   }
@@ -205,7 +185,7 @@ export class ConfiguFile {
   }
 
   async save(contents: ConfiguFileContents) {
-    const mergedContents = { ...this.contents, ...contents };
+    const mergedContents = _.merge({}, this.contents, contents) satisfies ConfiguFileContents;
     let renderedContents: string;
     if (this.contentsType === 'json') {
       renderedContents = JSON.stringify(mergedContents, null, 2);
@@ -213,6 +193,7 @@ export class ConfiguFile {
       renderedContents = YAML.stringify(mergedContents);
     }
     await fs.writeFile(this.path, renderedContents);
+    return ConfiguFile.load(this.path);
   }
 
   private getDefaultStoreName() {
@@ -225,9 +206,6 @@ export class ConfiguFile {
   }
 
   async getStoreInstance(name?: string) {
-    if (!this.contents.stores) {
-      return undefined;
-    }
     const storeConfig = this.contents.stores?.[name ?? this.getDefaultStoreName()];
     if (!storeConfig) {
       return undefined;
@@ -246,28 +224,25 @@ export class ConfiguFile {
   }
 
   async getSchemaInstance(name: string) {
-    const schemaPath = this.contents.schemas?.[name];
-    if (!schemaPath) {
+    const schemaConfig = this.contents.schemas?.[name];
+    if (!schemaConfig) {
       return undefined;
     }
-    const paths = await glob(name, { nodir: true });
-    if (paths.length > 1) {
-      return CfguFile.constructSchema(...paths);
-    }
-    return CfguFile.constructSchema(schemaPath);
+    return CfguFile.constructSchema(schemaConfig);
   }
 
-  runScript(name: string, options: { cwd?: string; env?: Record<string, string> } = {}): void {
+  runScript(name: string, options: { cwd?: string; env?: Record<string, string> } = {}) {
     const script = this.contents.scripts?.[name];
     if (!script) {
-      throw new Error(`Script "${name}" not found`);
+      return undefined;
     }
-    spawnSync(script, {
+    const result = spawnSync(script, {
       cwd: options.cwd ?? this.dir,
       stdio: 'inherit',
       env: { ...process.env, ...options.env },
       shell: true,
     });
+    return result.status;
   }
 
   private static async registerModule(module: Record<string, unknown>) {
@@ -293,43 +268,8 @@ export class ConfiguFile {
     ConfiguFile.registerModule(module as any);
   }
 
-  static async register(input: string) {
-    let url: URL | undefined;
-    try {
-      url = new URL(input);
-    } catch {
-      // Not a valid URL
-    }
-    if (url) {
-      if (url.protocol === 'file:') {
-        return ConfiguFile.registerModuleFile(fileURLToPath(url));
-      }
-      // todo: support http based urls
-      throw new Error('Only file URLs are supported');
-    }
-
-    try {
-      const path = resolve(input);
-      return ConfiguFile.registerModuleFile(path);
-    } catch {
-      // Not a valid path
-    }
-
-    throw new Error(`failed to register module ${input}`);
-  }
-
-  static destructStoreInput(typeAndVersion: string) {
-    const [t = '', version = 'latest'] = typeAndVersion.split('@');
-    const type = ConfigKey.normalize(t);
-    return {
-      type,
-      version,
-    };
-  }
-
-  static async registerStore(typeAndVersion: string) {
-    console.debug(`Registering store: ${typeAndVersion}`);
-    const { type, version } = this.destructStoreInput(typeAndVersion);
+  static async registerStore(type: string, version: string = 'latest') {
+    console.debug(`Registering store`, { type, version });
 
     const moduleDirPath = await getConfiguHomeDir('cache');
     const modulePath = join(moduleDirPath, `/${type}-${version}.js`);
@@ -346,7 +286,7 @@ export class ConfiguFile {
         await fs.writeFile(modulePath, await res.text());
         console.debug('Fetched module successfully', modulePath);
       } else {
-        throw new Error(`remote integration ${type} not found`);
+        throw new Error(`store ${type} not found`);
       }
     } else {
       console.debug('Store module already exists', modulePath);
@@ -355,11 +295,19 @@ export class ConfiguFile {
     return ConfiguFile.registerModuleFile(modulePath);
   }
 
-  static async constructStore(typeAndVersion: string, configuration = {}) {
-    // todo: remember to mention in docs that integration stores cannot be overridden
-    const { type } = this.destructStoreInput(typeAndVersion);
+  static async constructStore(input: string, configuration = {}) {
+    // input is a "store-type@channel/semver-version" string
+    console.debug('ConfiguFile.constructStore', { input, configuration });
+    const [rawType = '', version] = input.split('@');
+    if (!rawType) {
+      throw new Error('store type is missing');
+    }
+    // normalize the type to ensure that the store is registered correctly
+    const type = ConfigKey.normalize(rawType);
+
+    // todo: remember to mention in docs that store types cannot be overridden
     if (!ConfigStore.has(type)) {
-      await ConfiguFile.registerStore(typeAndVersion);
+      await ConfiguFile.registerStore(type, version);
     }
     return ConfigStore.construct(type, configuration);
   }

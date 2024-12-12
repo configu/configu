@@ -155,9 +155,6 @@ importers:
       jiti:
         specifier: ^2.4.1
         version: 2.4.1
-      lodash:
-        specifier: ^4.17.21
-        version: 4.17.21
       parse-json:
         specifier: 8.1.0
         version: 8.1.0

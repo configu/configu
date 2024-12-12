@@ -56,6 +56,7 @@ export class ConfiguInterface {
 
   static async getStoreInstance(nameOrType?: string) {
     console.debug('getStoreInstance', nameOrType);
+
     let store =
       (await this.context.upperConfigu?.getStoreInstance(nameOrType)) ??
       (await this.context.localConfigu.getStoreInstance(nameOrType));
@@ -108,12 +109,10 @@ export class ConfiguInterface {
   }
 
   static async getSchemaInstance(nameOrPath?: string) {
+    console.debug('getSchemaInstance', nameOrPath);
+
     if (!nameOrPath) {
-      const paths = await CfguFile.searchNeighbors();
-      if (paths.length === 0) {
-        throw new Error('schema is not found');
-      }
-      return CfguFile.constructSchema(...paths);
+      return CfguFile.constructSchema(CfguFile.neighborsGlob);
     }
 
     let schema =
@@ -125,7 +124,7 @@ export class ConfiguInterface {
     }
 
     if (!schema) {
-      throw new Error(`schema "${nameOrPath}" is not found`);
+      throw new Error(`schema is missing`);
     }
 
     return schema;

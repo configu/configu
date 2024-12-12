@@ -1,14 +1,14 @@
-import { validator } from '@configu/sdk/expressions';
 import os from 'node:os';
 import fs from 'node:fs/promises';
+import { fileURLToPath, URL } from 'node:url';
 import path from 'pathe';
-import _ from 'lodash';
+import * as environment from 'std-env';
+import { validator, _ } from '@configu/sdk/expressions';
 import { consola, LogLevels, ConsolaInstance } from 'consola';
 import axios from 'axios';
 import parseJson from 'parse-json';
 import YAML from 'yaml';
 import { createJiti } from 'jiti';
-import * as environment from 'std-env';
 import { glob } from 'glob';
 import semver from 'semver';
 import { findUp, findUpMultiple, pathExists } from 'find-up';
@@ -151,4 +151,44 @@ export const validateNodejsVersion = async () => {
   throw new Error(
     `This tool requires a Node version compatible with ${range} (got ${version}). Upgrade Node, or set \`CONFIGU_IGNORE_NODE=1\` in your environment.`,
   );
+};
+
+// input
+export const normalizeInput = (
+  input: string,
+  source: string,
+): {
+  type: 'json' | 'file' | 'http';
+  path: string;
+} => {
+  // Check if the string is a valid JSON
+  try {
+    JSON.parse(input);
+    return { type: 'json', path: '' };
+  } catch {
+    // Not a JSON string
+  }
+
+  // Check if the string is a valid URL
+  try {
+    const url = new URL(input);
+    if (url.protocol === 'file:') {
+      return { type: 'file', path: fileURLToPath(url) };
+    }
+    if (url.protocol === 'http:' || url.protocol === 'https:') {
+      return { type: 'http', path: input };
+    }
+  } catch {
+    // Not a valid URL
+  }
+
+  // Check if the string is a valid path
+  try {
+    path.resolve(input);
+    return { type: 'file', path: input };
+  } catch {
+    // Not a valid path
+  }
+
+  throw new Error(`${source} input is not a valid path, URL, or JSON`);
 };

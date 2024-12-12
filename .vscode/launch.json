@@ -91,12 +91,15 @@
       //   "MY_PATH": "./db.json"
       // },
       "args": [
+        "run",
+        "--script",
+        "script1"
         // "eval",
-        "upsert",
-        "--store",
-        "hc",
-        "--kv",
-        "Z=8"
+        // "upsert",
+        // "--store",
+        // "hc",
+        // "--kv",
+        // "Z=8"
         // "--schema",
         // "${workspaceFolder}/test.cfgu.yaml"
       ]
