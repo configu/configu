@@ -63,8 +63,8 @@ export class CfguFile {
     }
 
     if (!parsedContents.keys) {
-      const keys = ConfigSchema.fromLegacyConfigSchema(parsedContents);
-      parsedContents = { $schema: CfguFileSchemaId, keys };
+      const legacySchema = ConfigSchema.fromLegacyConfigSchema(parsedContents);
+      parsedContents = { $schema: CfguFileSchemaId, keys: legacySchema.keys };
     }
 
     // todo: add support for extends keyword
