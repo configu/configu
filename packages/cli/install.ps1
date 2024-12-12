@@ -42,9 +42,11 @@ $version = $env:CONFIGU_VERSION
 if (-not $version) {
   $version = "latest"
 }
-
 # Adjust version if necessary
-if ($version -ne "latest" -and $version -ne "next" -and -not $version.StartsWith("v")) {
+if ($version -eq "latest" -or $version -eq "next") {
+  $version = (curl -fsSL "https://registry.npmjs.org/@configu/cli/$version" | ConvertFrom-Json).version
+}
+if (-not $version.StartsWith("v")) {
   $version = "v${version}"
 }
 

@@ -43,9 +43,11 @@ fi
 
 # Get the version from environment variable or use the default value
 version="${CONFIGU_VERSION:-latest}"
-
 # Adjust version if necessary
-if [ "$version" != "latest" ] && [ "$version" != "next" ] && [ "${version#v}" = "$version" ]; then
+if [ "$version" = "latest" ] || [ "$version" = "next" ]; then
+  version=$(curl -fsSL "https://registry.npmjs.org/@configu/cli/$version" | sed -e 's/^.*version":"//' | sed -e 's/".*$//')
+fi
+if [ "${version#v}" = "$version" ]; then
   version="v$version"
 fi
 

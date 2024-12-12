@@ -242,6 +242,7 @@ jobs:
   check-release:
     runs-on: ${{ matrix.runner }}
     needs:
+      - release-docker
       - release-binary
       - release-npm
     strategy:
