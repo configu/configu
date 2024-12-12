@@ -1,19 +1,12 @@
-import { BaseContext, Command, Option, UsageError } from 'clipanion';
+import { Command, Option, UsageError } from 'clipanion';
 import { _ } from '@configu/sdk/expressions';
 import { console, ConfiguInterface, parseJSON } from '@configu/common';
 import { EvalCommandOutput } from '@configu/sdk/commands';
 import getStdin from 'get-stdin';
 
-export type Context = BaseContext & (typeof ConfiguInterface)['context'];
+import { type RunContext } from '..';
 
-export class ExitError extends Error {
-  code: number;
-
-  constructor(code: number) {
-    super();
-    this.code = code;
-  }
-}
+export type Context = RunContext & (typeof ConfiguInterface)['context'];
 
 export abstract class BaseCommand extends Command<Context> {
   // todo: consider verbose to the cli logger
@@ -53,18 +46,8 @@ export abstract class BaseCommand extends Command<Context> {
       return undefined;
     }
 
-    const match = stdin.match(/CONFIGU_EXIT_CODE=(\d+)/);
-    if (match) {
-      const exitCode = match[1] ? parseInt(match[1], 10) : 0;
-      if (exitCode !== 0) {
-        this.context.console.debug(`Exiting after piped command failed with exit code: ${exitCode}`);
-        throw new ExitError(exitCode);
-      }
-    }
-
     try {
       const pipe = parseJSON('', stdin) as EvalCommandOutput;
-      this.context.console.debug(`pipe`, pipe);
       if (
         Object.values(pipe).some(
           (config) =>
@@ -80,9 +63,6 @@ export abstract class BaseCommand extends Command<Context> {
   }
 
   override catch(error: any): Promise<void> {
-    if (error instanceof ExitError) {
-      return Promise.reject(error.code);
-    }
     console.error(error);
     // eslint-disable-next-line prefer-promise-reject-errors
     return Promise.reject(1);

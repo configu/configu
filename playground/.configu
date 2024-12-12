@@ -8,7 +8,7 @@ stores:
       host: localhost
   store1:
     # backup: true
-    type: sqlite
+    type: sqlite@v0.0.1-next.1
     configuration:
       # path: ./store.sqlite
       database: ./store.sqlite

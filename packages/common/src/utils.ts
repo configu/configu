@@ -77,7 +77,16 @@ export const getConfiguHomeDir = async (...paths: string[]): Promise<string> => 
   return directory;
 };
 
-export const readFile = async (filePath: string, throwIfEmpty: string | boolean = false) => {
+export const readFile = async (
+  filePath: string,
+  {
+    throwIfEmpty = false,
+    throwIfNotFound = true,
+  }: {
+    throwIfEmpty?: boolean | string;
+    throwIfNotFound?: boolean;
+  } = {},
+) => {
   try {
     const absolutePath = path.resolve(filePath);
     const content = await fs.readFile(absolutePath, { encoding: 'utf-8' });
@@ -90,13 +99,16 @@ export const readFile = async (filePath: string, throwIfEmpty: string | boolean 
     return content;
   } catch (error) {
     // * https://nodejs.org/api/errors.html#errors_common_system_errors
-    if (error.code === 'ENOENT') {
+    if (throwIfNotFound && error.code === 'ENOENT') {
       throw new Error('no such file or directory');
     }
     if (error.code === 'EISDIR') {
       throw new Error('expected a file, but the given path was a directory');
     }
 
+    if (!throwIfNotFound && error.code === 'ENOENT') {
+      return '';
+    }
     throw error;
   }
 };
@@ -127,7 +139,7 @@ export const parseYAML = (filePath: string, fileContent: string): any => {
 };
 
 // validators
-export const validateNodejsVersion = async () => {
+export const validateNodejsVersion = () => {
   const CONFIGU_IGNORE_NODE = parseBoolean(environment.env.CONFIGU_IGNORE_NODE ?? 'false');
   console.debug('CONFIGU_IGNORE_NODE:', CONFIGU_IGNORE_NODE);
 
@@ -136,13 +148,9 @@ export const validateNodejsVersion = async () => {
   }
 
   const version = process.versions.node;
-
-  const here = path.resolve(path.dirname(new URL(import.meta.url).pathname));
-  const root = path.join(here, '..', '..', '..');
-  const nodeVersionFile = path.join(root, '.node-version');
-  const nodeVersion = (await readFile(nodeVersionFile, true)).trim();
-  console.debug('.node-version:', nodeVersion);
-
+  // todo: find a way to get the repo version smoothly
+  const nodeVersion = '22.12.0';
+  console.debug('Node.js version:', version);
   const range = `>=${nodeVersion}`;
   if (semver.satisfies(version, range)) {
     return true;

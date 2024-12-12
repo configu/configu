@@ -91,9 +91,10 @@
       //   "MY_PATH": "./db.json"
       // },
       "args": [
-        "run",
-        "--script",
-        "script1"
+        // "run",
+        // "--script",
+        // "script1"
+        // ---
         // "eval",
         // "upsert",
         // "--store",
@@ -102,6 +103,10 @@
         // "Z=8"
         // "--schema",
         // "${workspaceFolder}/test.cfgu.yaml"
+        // "--defaults",
+        "export",
+        "<",
+        "${workspaceFolder}/playground/stdin"
       ]
     }
   ]

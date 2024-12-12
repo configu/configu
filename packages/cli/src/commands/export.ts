@@ -168,12 +168,12 @@ export class CliExportCommand extends BaseCommand {
     const pipe = await this.readPreviousEvalCommandOutput();
     if (!pipe) {
       this.context.console.warn('No configuration received from the previous command');
-      return;
+      return 1;
     }
 
     if (this.explain) {
       this.explainConfigs(pipe);
-      return;
+      return 0;
     }
 
     const filteredPipe = await this.filterConfigs(pipe);
@@ -181,11 +181,12 @@ export class CliExportCommand extends BaseCommand {
 
     if (this.run) {
       this.injectConfigs(mappedPipe);
-      return;
+      return 0;
     }
 
     const reducedPipe = await this.reduceConfigs(mappedPipe);
 
     this.context.console.print(reducedPipe);
+    return 0;
   }
 }

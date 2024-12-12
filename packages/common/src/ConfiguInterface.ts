@@ -25,7 +25,7 @@ export class ConfiguInterface {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { process, env, ...rest } = environment;
-    console.debug('initiating interface', rest);
+    console.debug('initiating interface\n', rest);
 
     const localConfiguFilePath = path.join(this.context.homedir, '.configu'); // $HOME/.configu/.configu
     console.debug('localConfiguFilePath', localConfiguFilePath);

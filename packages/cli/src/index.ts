@@ -1,5 +1,6 @@
-import { Cli, Builtins } from 'clipanion';
-import { validateNodejsVersion, console } from '@configu/common';
+import { Cli, Builtins, BaseContext } from 'clipanion';
+import fs from 'node:fs/promises';
+import { console, path, getConfiguHomeDir, validateNodejsVersion, readFile } from '@configu/common';
 
 import packageJson from '../package.json' with { type: 'json' };
 
@@ -17,6 +18,11 @@ import { RunCommand } from './commands/run';
 // inspired by
 // https://github.com/yarnpkg/berry/blob/master/packages/yarnpkg-cli/sources/lib.ts#L186
 // https://github.com/nodejs/corepack/blob/main/sources/main.ts#L40
+
+export type RunContext = BaseContext & {
+  // lastExitCode: number;
+};
+
 export async function run(argv: string[]) {
   console.debug('argv', argv);
 
@@ -41,15 +47,18 @@ export async function run(argv: string[]) {
     );
   }
   process.once(`beforeExit`, unexpectedTerminationHandler);
-  process.on('exit', (code) => {
-    console.debug(`Exiting with code: ${code}`);
-    if (code !== 0) {
-      console.print(`CONFIGU_EXIT_CODE=${code}`);
-    }
-  });
+  // process.on('exit', (code) => {
+  //   console.debug(`Exiting with code: ${code}`);
+  //   if (code !== 0) {
+  //     console.print(`CONFIGU_EXIT_CODE=${code}`);
+  //   }
+  // });
 
+  // const exitCodeFile = path.join(await getConfiguHomeDir(), `code`);
   try {
-    // await validateNodejsVersion();
+    validateNodejsVersion();
+    // const exitCodeFileContents = await readFile(exitCodeFile, { throwIfNotFound: false });
+    // const lastExitCode = exitCodeFileContents ? parseInt(exitCodeFileContents, 10) : 0;
 
     cli.register(Builtins.HelpCommand);
     cli.register(Builtins.VersionCommand);
@@ -63,14 +72,22 @@ export async function run(argv: string[]) {
     cli.register(LoginCommand);
     cli.register(RunCommand);
 
+    // const context = {
+    //   ...Cli.defaultContext,
+    //   lastExitCode,
+    // };
+
     process.exitCode = 42;
     // cli.run() never throws
     // https://github.com/arcanis/clipanion/blob/master/sources/advanced/Cli.ts#L483
+    // process.exitCode = await cli.run(argv, context);
     process.exitCode = await cli.run(argv);
   } catch (error) {
     console.error(error);
     process.exitCode = 1;
   } finally {
     process.off(`beforeExit`, unexpectedTerminationHandler);
+    // await fs.writeFile(exitCodeFile, process.exitCode?.toString() ?? '');
+    console.debug('Exiting with code:', process.exitCode);
   }
 }
