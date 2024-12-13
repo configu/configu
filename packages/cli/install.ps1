@@ -46,12 +46,11 @@ if ($archive_ext -eq '.tar.gz' -and -not (Get-Command 'tar' -ErrorAction Silentl
   exit 1
 }
 
-# Get the version from environment variable or use the default value
+# Resolve the version to install
 $version = $env:CONFIGU_VERSION
 if (-not $version) {
   $version = "latest"
 }
-# Adjust version if necessary
 if ($version -eq "latest" -or $version -eq "next") {
   $version = (Invoke-WebRequest -Uri "https://registry.npmjs.org/@configu/cli/$version" -UseBasicParsing | ConvertFrom-Json).version
 }
@@ -69,7 +68,7 @@ $exec_path = Join-Path -Path $bin_dir -ChildPath "configu"
 
 
 # Create the installation directory
-if (!(Test-Path $bin_dir)) {
+if (-not (Test-Path $bin_dir)) {
   New-Item $bin_dir -ItemType Directory | Out-Null
 }
 
@@ -86,14 +85,14 @@ if ($archive_ext -eq '.zip') {
 }
 
 # Make the binary executable (only needed for non-Windows systems)
-if ($os -notlike '*Windows*') {
+if ($exec_ext -eq '') {
   chmod +x $exec_path
 }
 
-# Remove the downloaded archive
+# Clean up
 Remove-Item "$exec_path$archive_ext"
 
 # Print next steps
-Write-Output "Configu was installed successfully to $exec_path"
-Write-Output "Run '$exec_path --help' to get started"
+Write-Output "Configu was installed successfully to $exec_path$exec_ext"
+Write-Output "Run '$exec_path$exec_ext --help' to get started"
 Write-Output "Stuck? Join our Discord https://discord.com/invite/cjSBxnB9z8"

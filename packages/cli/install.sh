@@ -65,18 +65,14 @@ if [ "$archive_ext" = ".zip" ] && ! command -v unzip >/dev/null && ! command -v 
   exit 1
 fi
 
-# Get the version from environment variable or use the default value
+# Resolve the version to install
 version="${CONFIGU_VERSION:-latest}"
-echo "$version"
-# Adjust version if necessary
 if [ "$version" = "latest" ] || [ "$version" = "next" ]; then
   version=$(curl -fsSL "https://registry.npmjs.org/@configu/cli/$version" | sed -e 's/^.*version":"//' | sed -e 's/".*$//')
 fi
-echo "$version"
 if [ "${version#v}" = "$version" ]; then
   version="v$version"
 fi
-echo "$version"
 
 # Set the installation path
 install_dir="${CONFIGU_HOME:-$HOME/.configu}"
@@ -103,12 +99,14 @@ else
 fi
 
 # Make the binary executable
-chmod +x "$exec_path"
+if [ -z "$exec_ext" ]; then
+  chmod +x "$exec_path"
+fi
 
 # Clean up
 rm "$exec_path$archive_ext"
 
 # Print next steps
-echo "Configu was installed successfully to $exec_path"
-echo "Run '$exec_path --help' to get started"
+echo "Configu was installed successfully to $exec_path$exec_ext"
+echo "Run '$exec_path$exec_ext --help' to get started"
 echo "Stuck? Join our Discord https://discord.com/invite/cjSBxnB9z8"
