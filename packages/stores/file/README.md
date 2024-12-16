@@ -1,0 +1,1 @@
+# @configu/file abstract store

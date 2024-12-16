@@ -1,0 +1,40 @@
+{
+  "name": "@configu/csv-file",
+  "version": "0.0.0",
+  "license": "Apache-2.0",
+  "author": "@configu/dev",
+  "homepage": "https://configu.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/configu/configu",
+    "directory": "packages/stores/csv-file"
+  },
+  "bugs": {
+    "url": "https://github.com/configu/configu/issues",
+    "email": "dev@configu.com"
+  },
+  "keywords": [
+    "cfgu",
+    "configu",
+    "config-store",
+    "config-csv-file",
+    "csv-store"
+  ],
+  "type": "module",
+  "exports": "./src/index.ts",
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "dependencies": {
+    "@configu/file": "workspace:*",
+    "@configu/sdk": "workspace:*",
+    "csv": "^6.3.8"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.0",
+    "typescript": "^5.4.5"
+  }
+}

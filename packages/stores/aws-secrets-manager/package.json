@@ -1,0 +1,37 @@
+{
+  "name": "@configu/aws-secrets-manager",
+  "version": "0.0.0",
+  "license": "Apache-2.0",
+  "author": "@configu/dev",
+  "homepage": "https://configu.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/configu/configu",
+    "directory": "packages/stores/aws-secrets-manager"
+  },
+  "bugs": {
+    "url": "https://github.com/configu/configu/issues",
+    "email": "dev@configu.com"
+  },
+  "keywords": [
+    "cfgu",
+    "configu"
+  ],
+  "type": "module",
+  "exports": "./src/index.ts",
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "dependencies": {
+    "@configu/sdk": "workspace:*",
+    "@configu/key-value": "workspace:*",
+    "@aws-sdk/client-secrets-manager": "^3.465.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.0",
+    "typescript": "^5.4.5"
+  }
+}
