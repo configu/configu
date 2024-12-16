@@ -23,12 +23,29 @@
     "configu-formatters"
   ],
   "type": "module",
-  "types": "./src/index.ts",
-  "exports": "./src/index.ts",
+  "types": "./dist/index.d.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
   "files": [
-    "src"
+    "dist"
   ],
-  "scripts": {},
+  "scripts": {
+    "clean": "shx rm -rf dist",
+    "build": "tsup"
+  },
   "dependencies": {
     "change-case": "^5.4.4",
     "dotenv": "16.4.7",
