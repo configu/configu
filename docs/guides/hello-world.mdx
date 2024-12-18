@@ -40,13 +40,13 @@ To get started with [Configu Platform](https://app.configu.com/), you'll need to
 ```shell
 configu upsert \
   --store 'configu' --set 'development' --schema './start.cfgu.json' \
-  --config "GREETING=hey" --config "SUBJECT=<YOUR_NAME>" \
+  --kv "GREETING=hey" --kv "SUBJECT=<YOUR_NAME>" \
 && configu upsert \
   --store 'configu' --set 'development/qa' --schema './start.cfgu.json' \
-  -c "GREETING=hola" \
+  -kv "GREETING=hola" \
 && configu upsert \
   --store 'configu' --set 'production' --schema './start.cfgu.json' \
-  -c "GREETING=welcome"
+  -kv "GREETING=welcome"
 ```
 
 ### 5. Export the configuration data
