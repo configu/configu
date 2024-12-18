@@ -8,6 +8,10 @@ inputs:
     description: Runs pnpm install in the dependencies-root directory
     required: true
     default: 'true'
+  architecture:
+    description: Force the architecture of pnpm install
+    required: false
+    default: ''
 
 runs:
   using: 'composite'
@@ -27,7 +31,7 @@ runs:
       shell: bash
       if: ${{ inputs.install-dependencies == 'true' }} # * there is a bug in gh-actions causing booleans to be strings in composite actions - see: https://github.com/actions/runner/issues/1483#issuecomment-1042393939
       run: |
-        pnpm install
+        pnpm install --config.architecture=${{ inputs.architecture }}
         pnpm list --recursive --depth 0
       env:
         HUSKY: '0'
