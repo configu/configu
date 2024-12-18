@@ -22,8 +22,9 @@
     "build": "tsup"
   },
   "dependencies": {
-    "@configu/sdk": "workspace:*",
     "@configu/integrations": "workspace:*",
+    "@configu/sdk": "workspace:*",
+    "mysql": "2.18.1",
     "typeorm": "^0.3.17"
   },
   "devDependencies": {

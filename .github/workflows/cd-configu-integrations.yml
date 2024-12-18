@@ -22,11 +22,12 @@ jobs:
   #          slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   build:
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}-latest
 
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu, macos, windows]
+        architecture: [x64, arm64]
         node-version: [20.x]
 
     steps:
@@ -34,13 +35,19 @@ jobs:
         uses: actions/checkout@v3
 
       - uses: ./.github/actions/ts-env-action
+        with:
+          architecture: ${{ matrix.architecture }}
 
       - name: Build the integrations
-        run: pnpm build:integrations
+        env:
+          SELECTED_ARCH: ${{ matrix.architecture }}
+        run: |
+          pnpm build:integrations
+          pnpm bundle:integrations
 
       - uses: actions/upload-artifact@master
         with:
-          name: ${{ env.PACKAGE_NAME }}-${{ matrix.os }}
+          name: ${{ env.PACKAGE_NAME }}-${{ matrix.os }}-${{ matrix.architecture }}
           path: ${{ env.PACKAGE_PATH }}/dist
   end-release:
     runs-on: ubuntu-latest
@@ -50,15 +57,27 @@ jobs:
         uses: actions/checkout@v3
       - uses: actions/download-artifact@master
         with:
-          name: ${{ env.PACKAGE_NAME }}-ubuntu-latest
+          name: ${{ env.PACKAGE_NAME }}-ubuntu-x64
           path: ${{ env.PACKAGE_PATH }}/dist
       - uses: actions/download-artifact@master
         with:
-          name: ${{ env.PACKAGE_NAME }}-macos-latest
+          name: ${{ env.PACKAGE_NAME }}-macos-x64
           path: ${{ env.PACKAGE_PATH }}/dist/latest
       - uses: actions/download-artifact@master
         with:
-          name: ${{ env.PACKAGE_NAME }}-windows-latest
+          name: ${{ env.PACKAGE_NAME }}-windows-x64
+          path: ${{ env.PACKAGE_PATH }}/dist/latest
+      - uses: actions/download-artifact@master
+        with:
+          name: ${{ env.PACKAGE_NAME }}-ubuntu-arm64
+          path: ${{ env.PACKAGE_PATH }}/dist
+      - uses: actions/download-artifact@master
+        with:
+          name: ${{ env.PACKAGE_NAME }}-macos-arm64
+          path: ${{ env.PACKAGE_PATH }}/dist/latest
+      - uses: actions/download-artifact@master
+        with:
+          name: ${{ env.PACKAGE_NAME }}-windows-arm64
           path: ${{ env.PACKAGE_PATH }}/dist/latest
 
       - name: Upload artifacts to release

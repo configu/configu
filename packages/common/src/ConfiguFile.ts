@@ -11,7 +11,10 @@ import { CfguFile } from './CfguFile';
 
 export interface ConfiguFileContents {
   $schema?: string;
-  stores?: Record<string, { type: string; configuration?: Record<string, unknown>; backup?: boolean }>;
+  stores?: Record<
+    string,
+    { type: string; configuration?: Record<string, unknown>; backup?: boolean; default?: boolean }
+  >;
   backup?: string;
   schemas?: Record<string, string>;
   scripts?: Record<string, string>;
@@ -67,6 +70,7 @@ export const ConfiguFileSchema: JsonSchemaType<ConfiguFileContents> = {
           type: { type: 'string' },
           configuration: { type: 'object', nullable: true },
           backup: { type: 'boolean', nullable: true },
+          default: { type: 'boolean', nullable: true },
         },
       },
       nullable: true,
@@ -122,16 +126,27 @@ export class ConfiguFile {
     return ConfiguFile.load(path);
   }
 
-  getStoreInstance(name: string, configuration?: Record<string, unknown>) {
-    const storeConfig = this.contents.stores?.[name];
+  getDefaultStoreName() {
+    if (!this.contents.stores) {
+      return '';
+    }
+    if (Object.keys(this.contents.stores).length === 1) {
+      return Object.keys(this.contents.stores)[0] as string;
+    }
+    const defaultStoreName = _.findKey(this.contents.stores, (store) => store.default);
+    return defaultStoreName ?? '';
+  }
+
+  getStoreInstance(name?: string) {
+    const storeConfig = this.contents.stores?.[name ?? this.getDefaultStoreName()];
     if (!storeConfig) {
       return undefined;
     }
-    return Registry.constructStore(storeConfig.type, { ...configuration, ...storeConfig.configuration });
+    return Registry.constructStore(storeConfig.type, storeConfig.configuration);
   }
 
-  getBackupStoreInstance(name: string) {
-    const shouldBackup = this.contents.stores?.[name]?.backup;
+  getBackupStoreInstance(name?: string) {
+    const shouldBackup = this.contents.stores?.[name || this.getDefaultStoreName()]?.backup;
     if (!shouldBackup) {
       return undefined;
     }
