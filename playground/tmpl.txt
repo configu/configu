@@ -1,6 +1,0 @@
-Config List:
-------------
-${ _.chain($.configs)
-    .values()
-    .map(c => `- ${c.key}: ${c.value}`)
-    .join('\n') }

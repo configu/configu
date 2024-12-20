@@ -1,19 +1,7 @@
 {
   "name": "@configu/sdk",
   "version": "0.0.0",
-  "license": "Apache-2.0",
   "description": "Configu TypeScript SDK",
-  "author": "@configu/dev",
-  "homepage": "https://configu.com",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/configu/configu",
-    "directory": "packages/sdk"
-  },
-  "bugs": {
-    "url": "https://github.com/configu/configu/issues",
-    "email": "dev@configu.com"
-  },
   "keywords": [
     "cfgu",
     "configu",
@@ -21,6 +9,19 @@
     "configu-ts",
     "configu-typescript"
   ],
+  "homepage": "https://configu.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/configu/configu",
+    "directory": "packages/sdk"
+  },
+  "bugs": "https://github.com/configu/configu/issues",
+  "license": "Apache-2.0",
+  "author": {
+    "name": "@configu/dev",
+    "email": "dev@configu.com",
+    "url": "https://configu.com"
+  },
   "type": "module",
   "types": "./dist/index.d.ts",
   "main": "./dist/index.cjs",
@@ -72,8 +73,8 @@
     "dist"
   ],
   "scripts": {
-    "clean": "shx rm -rf dist",
-    "build": "tsup"
+    "build": "tsup",
+    "clean": "shx rm -rf dist"
   },
   "dependencies": {
     "@segment/ajv-human-errors": "^2.14.1",

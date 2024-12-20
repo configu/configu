@@ -1,13 +1,12 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/configu/configu/refs/heads/0-configu-v1/packages/schema/.cfgu.json
-
 keys:
   X:
     default: 7
   Y:
-    const: ${ $.configs.X.value + 3 }
     schema: { type: number }
-  Z:
-    const: ${ $.configs.Y.value + 3 }
     test:
-      - $.value > 10
       - validator.isNumeric($.storedValue)
+      - $.value > 0
+    default: 7
+  XY:
+    const: X*Y=${ $.configs.X.value * $.configs.Y.value }

@@ -1,7 +1,9 @@
-ARG NODE_VERSION="22"
+# syntax=docker/dockerfile:1.7-labs
+
+ARG NODE_VERSION="22.12.0"
 FROM node:${NODE_VERSION}
 
-ARG NVM_VERSION="v0.39.7"
+ARG NVM_VERSION="0.40.1"
 
 LABEL maintainer="dev@configu.com"
 
@@ -17,7 +19,7 @@ COPY [".nvmrc", "package.json", ".npmrc", "pnpm-lock.yaml", "./"]
 
 ENV NVM_DIR="$INSTALL_DIR/.nvm"
 RUN mkdir -p $NVM_DIR
-RUN curl --silent -o- https://raw.githubusercontent.com/nvm-sh/nvm/${NVM_VERSION}/install.sh | bash
+RUN curl --silent -o- https://raw.githubusercontent.com/nvm-sh/nvm/v${NVM_VERSION}/install.sh | bash
 RUN source $NVM_DIR/nvm.sh \
   && nvm install \
   && nvm use $(cat .nvmrc) \

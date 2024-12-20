@@ -1,25 +1,26 @@
 {
   "name": "@configu/database",
   "version": "0.0.0",
-  "license": "Apache-2.0",
-  "author": "@configu/dev",
+  "keywords": [
+    "config",
+    "config-store",
+    "configu",
+    "configu-database",
+    "database"
+  ],
   "homepage": "https://configu.com",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/configu/configu",
     "directory": "packages/stores/database"
   },
-  "bugs": {
-    "url": "https://github.com/configu/configu/issues",
-    "email": "dev@configu.com"
+  "bugs": "https://github.com/configu/configu/issues",
+  "license": "Apache-2.0",
+  "author": {
+    "name": "@configu/dev",
+    "email": "dev@configu.com",
+    "url": "https://configu.com"
   },
-  "keywords": [
-    "config",
-    "configu",
-    "config-store",
-    "database",
-    "configu-database"
-  ],
   "type": "module",
   "exports": "./src/index.ts",
   "files": [

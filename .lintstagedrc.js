@@ -1,4 +1,5 @@
 module.exports = {
+  '**/package.json': () => 'pnpm pkg:fix',
   'packages/**/*.ts': () => 'pnpm build',
   '*.{js,mjs,ts,mts}': (filenames) => [
     `pnpm format --write ${filenames.join(' ')}`,

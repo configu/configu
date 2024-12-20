@@ -1,37 +1,38 @@
 {
   "name": "@configu/schema",
   "version": "0.0.0",
-  "license": "Apache-2.0",
   "description": "Configu DSL JSON Schema",
-  "author": "@configu/dev",
-  "homepage": "https://configu.com",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/configu/configu",
-    "directory": "packages/schema"
-  },
-  "bugs": {
-    "url": "https://github.com/configu/configu/issues",
-    "email": "dev@configu.com"
-  },
   "keywords": [
     "cfgu",
     "configu",
     "configu-json-schema",
     "json-schema"
   ],
+  "homepage": "https://configu.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/configu/configu",
+    "directory": "packages/schema"
+  },
+  "bugs": "https://github.com/configu/configu/issues",
+  "license": "Apache-2.0",
+  "author": {
+    "name": "@configu/dev",
+    "email": "dev@configu.com",
+    "url": "https://configu.com"
+  },
   "files": [
     "/*.json"
   ],
   "scripts": {
+    "build": "tsx build.mts",
     "test": "pnpm \"/^test:.*/\"",
     "test:cfgu": "ajv test -s .cfgu.json -d \"data/*.cfgu.*\" --valid --allow-union-types --all-errors --verbose",
-    "test:configu": "ajv test -s .configu.json -d \"data/.configu.*\" --valid --allow-union-types --all-errors --verbose",
-    "build": "tsx build.mts"
+    "test:configu": "ajv test -s .configu.json -d \"data/.configu.*\" --valid --allow-union-types --all-errors --verbose"
   },
   "dependencies": {
-    "@configu/sdk": "workspace:*",
     "@configu/common": "workspace:*",
+    "@configu/sdk": "workspace:*",
     "pathe": "^1.1.2"
   },
   "devDependencies": {

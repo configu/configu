@@ -1,1 +1,0 @@
-{"X":{"set":"","key":"X","value":"7","cfgu":{"default":7},"origin":"default"},"Y":{"set":"","key":"Y","value":"10","cfgu":{"const":"${ $.configs.X.value + 3 }"},"origin":"const"},"Z":{"set":"","key":"Z","value":"13","cfgu":{"const":"${ $.configs.Y.value + 3 }","test":["$.configs.Z.value > 10"]},"origin":"const"}}

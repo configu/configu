@@ -190,22 +190,6 @@ importers:
         specifier: ^2.6.1
         version: 2.6.1
 
-  packages/integrations:
-    dependencies:
-      '@configu/sdk':
-        specifier: workspace:*
-        version: link:../sdk
-      lodash-es:
-        specifier: ^4.17.21
-        version: 4.17.21
-    devDependencies:
-      '@types/lodash-es':
-        specifier: ^4.17.12
-        version: 4.17.12
-      '@types/node':
-        specifier: 20.12.12
-        version: 20.12.12
-
   packages/proxy:
     dependencies:
       '@configu/common':
@@ -244,9 +228,6 @@ importers:
       fastify-plugin:
         specifier: ^4.5.1
         version: 4.5.1
-      json-schema-to-ts:
-        specifier: ^3.1.0
-        version: 3.1.0
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -340,13 +321,6 @@ importers:
       '@configu/sdk':
         specifier: workspace:*
         version: link:../../sdk
-    devDependencies:
-      '@types/node':
-        specifier: 22.10.0
-        version: 22.10.0
-      typescript:
-        specifier: ^5.4.5
-        version: 5.7.2
 
   packages/stores/aws-secrets-manager:
     dependencies:
@@ -359,13 +333,6 @@ importers:
       '@configu/sdk':
         specifier: workspace:*
         version: link:../../sdk
-    devDependencies:
-      '@types/node':
-        specifier: 22.10.0
-        version: 22.10.0
-      typescript:
-        specifier: ^5.4.5
-        version: 5.7.2
 
   packages/stores/azure-key-vault:
     dependencies:
@@ -381,13 +348,6 @@ importers:
       '@configu/sdk':
         specifier: workspace:*
         version: link:../../sdk
-    devDependencies:
-      '@types/node':
-        specifier: 22.10.0
-        version: 22.10.0
-      typescript:
-        specifier: ^5.4.5
-        version: 5.7.2
 
   packages/stores/cloud-bees:
     dependencies:
@@ -404,15 +364,9 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0(@openfeature/js-sdk@1.6.1)
     devDependencies:
-      '@types/node':
-        specifier: 22.10.0
-        version: 22.10.0
       '@types/rox-node':
         specifier: ^5.0.3
         version: 5.0.5
-      typescript:
-        specifier: ^5.4.5
-        version: 5.7.2
 
   packages/stores/cockroach-db:
     dependencies:
@@ -426,15 +380,8 @@ importers:
         specifier: 8.13.1
         version: 8.13.1
       typeorm:
-        specifier: ^0.3.17
+        specifier: ^0.3.20
         version: 0.3.20(mssql@10.0.2)(pg@8.13.1)(sqlite3@5.1.7)(ts-node@10.9.2(@types/node@22.10.0)(typescript@5.7.2))
-    devDependencies:
-      '@types/node':
-        specifier: 22.10.0
-        version: 22.10.0
-      typescript:
-        specifier: ^5.4.5
-        version: 5.7.2
 
   packages/stores/configu:
     dependencies:
@@ -442,21 +389,8 @@ importers:
         specifier: workspace:*
         version: link:../../sdk
       axios:
-        specifier: ^1.7.4
-        version: 1.7.4
-      validator:
-        specifier: ^13.11.0
-        version: 13.12.0
-    devDependencies:
-      '@types/node':
-        specifier: 22.10.0
-        version: 22.10.0
-      '@types/validator':
-        specifier: ^13.11.9
-        version: 13.12.2
-      typescript:
-        specifier: ^5.4.5
-        version: 5.7.2
+        specifier: ^1.7.9
+        version: 1.7.9
 
   packages/stores/csv-file:
     dependencies:
@@ -469,13 +403,6 @@ importers:
       csv:
         specifier: ^6.3.8
         version: 6.3.9
-    devDependencies:
-      '@types/node':
-        specifier: 22.10.0
-        version: 22.10.0
-      typescript:
-        specifier: ^5.4.5
-        version: 5.7.2
 
   packages/stores/database:
     dependencies:
@@ -500,13 +427,6 @@ importers:
       etcd3:
         specifier: 1.1.2
         version: 1.1.2
-    devDependencies:
-      '@types/node':
-        specifier: 22.10.0
-        version: 22.10.0
-      typescript:
-        specifier: ^5.4.5
-        version: 5.7.2
 
   packages/stores/file:
     dependencies:
@@ -525,13 +445,6 @@ importers:
       '@google-cloud/secret-manager':
         specifier: ^5.4.0
         version: 5.6.0(encoding@0.1.13)
-    devDependencies:
-      '@types/node':
-        specifier: 22.10.0
-        version: 22.10.0
-      typescript:
-        specifier: ^5.4.5
-        version: 5.7.2
 
   packages/stores/hashicorp-vault:
     dependencies:
@@ -542,15 +455,8 @@ importers:
         specifier: workspace:*
         version: link:../../sdk
       axios:
-        specifier: ^1.7.4
-        version: 1.7.4
-    devDependencies:
-      '@types/node':
-        specifier: 22.10.0
-        version: 22.10.0
-      typescript:
-        specifier: ^5.4.5
-        version: 5.7.2
+        specifier: ^1.7.9
+        version: 1.7.9
 
   packages/stores/ini-file:
     dependencies:
@@ -563,13 +469,6 @@ importers:
       ini:
         specifier: 5.0.0
         version: 5.0.0
-    devDependencies:
-      '@types/node':
-        specifier: 22.10.0
-        version: 22.10.0
-      typescript:
-        specifier: ^5.4.5
-        version: 5.7.2
 
   packages/stores/json-file:
     dependencies:
@@ -597,13 +496,6 @@ importers:
       keyv:
         specifier: 5.1.0
         version: 5.1.0
-    devDependencies:
-      '@types/node':
-        specifier: 22.10.0
-        version: 22.10.0
-      typescript:
-        specifier: ^5.4.5
-        version: 5.7.2
 
   packages/stores/kubernetes-secret:
     dependencies:
@@ -616,13 +508,6 @@ importers:
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
-    devDependencies:
-      '@types/node':
-        specifier: 22.10.0
-        version: 22.10.0
-      typescript:
-        specifier: ^5.4.5
-        version: 5.7.2
 
   packages/stores/launch-darkly:
     dependencies:
@@ -639,15 +524,8 @@ importers:
         specifier: 1.0.0
         version: 1.0.0(@launchdarkly/node-server-sdk@9.7.0)(@openfeature/server-sdk@1.15.1(@openfeature/core@1.4.0))
       '@openfeature/server-sdk':
-        specifier: 1.15.1
+        specifier: ^1.7.4
         version: 1.15.1(@openfeature/core@1.4.0)
-    devDependencies:
-      '@types/node':
-        specifier: 22.10.0
-        version: 22.10.0
-      typescript:
-        specifier: ^5.4.5
-        version: 5.7.2
 
   packages/stores/localforage:
     dependencies:
@@ -657,13 +535,6 @@ importers:
       localforage:
         specifier: ^1.10.0
         version: 1.10.0
-    devDependencies:
-      '@types/node':
-        specifier: 22.10.0
-        version: 22.10.0
-      typescript:
-        specifier: ^5.4.5
-        version: 5.7.2
 
   packages/stores/maria-db:
     dependencies:
@@ -677,15 +548,8 @@ importers:
         specifier: 2.18.1
         version: 2.18.1
       typeorm:
-        specifier: ^0.3.17
+        specifier: ^0.3.20
         version: 0.3.20(mssql@10.0.2)(pg@8.13.1)(sqlite3@5.1.7)(ts-node@10.9.2(@types/node@22.10.0)(typescript@5.7.2))
-    devDependencies:
-      '@types/node':
-        specifier: 22.10.0
-        version: 22.10.0
-      typescript:
-        specifier: ^5.4.5
-        version: 5.7.2
 
   packages/stores/ms-sql:
     dependencies:
@@ -699,15 +563,8 @@ importers:
         specifier: 11.0.1
         version: 11.0.1
       typeorm:
-        specifier: ^0.3.17
+        specifier: ^0.3.20
         version: 0.3.20(mssql@11.0.1)(pg@8.13.1)(sqlite3@5.1.7)(ts-node@10.9.2(@types/node@22.10.0)(typescript@5.7.2))
-    devDependencies:
-      '@types/node':
-        specifier: 22.10.0
-        version: 22.10.0
-      typescript:
-        specifier: ^5.4.5
-        version: 5.7.2
 
   packages/stores/my-sql:
     dependencies:
@@ -720,16 +577,6 @@ importers:
       mysql:
         specifier: 2.18.1
         version: 2.18.1
-    devDependencies:
-      '@types/node':
-        specifier: 20.12.12
-        version: 20.12.12
-      tsup:
-        specifier: 8.2.4
-        version: 8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.7.2)(yaml@2.6.1)
-      typescript:
-        specifier: ^5.4.5
-        version: 5.7.2
 
   packages/stores/open-feature:
     dependencies:
@@ -774,15 +621,9 @@ importers:
         specifier: ^10.28.0
         version: 10.28.0(encoding@0.1.13)
     devDependencies:
-      '@types/node':
-        specifier: 22.10.0
-        version: 22.10.0
       '@types/rox-node':
         specifier: ^5.0.3
         version: 5.0.5
-      typescript:
-        specifier: ^5.4.5
-        version: 5.7.2
 
   packages/stores/sqlite:
     dependencies:
@@ -811,13 +652,6 @@ importers:
       '@iarna/toml':
         specifier: ^2.2.5
         version: 2.2.5
-    devDependencies:
-      '@types/node':
-        specifier: 22.10.0
-        version: 22.10.0
-      typescript:
-        specifier: ^5.4.5
-        version: 5.7.2
 
   packages/stores/xml-file:
     dependencies:
@@ -834,15 +668,9 @@ importers:
         specifier: 0.6.2
         version: 0.6.2
     devDependencies:
-      '@types/node':
-        specifier: 22.10.0
-        version: 22.10.0
       '@types/xml2js':
         specifier: ^0.4.14
         version: 0.4.14
-      typescript:
-        specifier: ^5.4.5
-        version: 5.7.2
 
 packages:
 
@@ -2483,14 +2311,8 @@ packages:
   '@types/katex@0.16.7':
     resolution: {integrity: sha512-HMwFiRujE5PjrgwHQ25+bsLJgowjGjm5Z8FVSf0N6PwgJrwxH0QxzHYDcKsTfV3wva0vzrpqMTJS2jXPr5BMEQ==}
 
-  '@types/lodash-es@4.17.12':
-    resolution: {integrity: sha512-0NgftHUcV4v34VhXm8QBSftKVXtbkBG3ViCjs6+eJ5a6y6Mi/jiFGPc1sC7QK+9BFhWrURE3EOggmWaSxL9OzQ==}
-
   '@types/lodash@4.17.13':
     resolution: {integrity: sha512-lfx+dftrEZcdBPczf9d0Qv0x+j/rfNCMuC6OcfXmO8gkfeNAY88PgKUbvG56whcN23gc27yenwF6oJZXGFpYxg==}
-
-  '@types/lodash@4.17.9':
-    resolution: {integrity: sha512-w9iWudx1XWOHW5lQRS9iKpK/XuRhnN+0T7HvdCCd802FYkT1AMTnxndJHGrNJwRoRHkslGr4S29tjm1cT7x/7w==}
 
   '@types/long@4.0.2':
     resolution: {integrity: sha512-MqTGEo5bj5t157U6fA/BiDynNkn0YknVdh48CMPkTSpFTVmvao5UQmm7uEF6xBEo7qIMAlY/JSleYaE6VOdpaA==}
@@ -2806,10 +2628,6 @@ packages:
   array-timsort@1.0.3:
     resolution: {integrity: sha512-/+3GRL7dDAGEfM6TseQk/U+mi18TU2Ms9I3UlLdUMhz2hbvGNTKdj9xniwXfUqgYhHxRx0+8UnKkvlNwVU+cWQ==}
 
-  array-union@2.1.0:
-    resolution: {integrity: sha512-HGyxoOTYUyCM6stUe6EJgnd4EoewAI7zMdfqO+kGjnlZmBDz/cR5pf8r/cR4Wq60sL/p0IkcjUEEPwS3GFrIyw==}
-    engines: {node: '>=8'}
-
   array.prototype.findlastindex@1.2.5:
     resolution: {integrity: sha512-zfETvRFA8o7EiNn++N5f/kaCw221hrpGsDmcpndVupkPzEc1Wuf3VgC0qby1BbHs7f5DVYjgtEU2LLh5bqeGfQ==}
     engines: {node: '>= 0.4'}
@@ -2864,9 +2682,6 @@ packages:
 
   aws4@1.13.2:
     resolution: {integrity: sha512-lHe62zvbTB5eEABUVi/AwVh0ZKY9rMMDhmm+eeyuuUQbQ3+J+fONVQOZyj+DdrvD4BY33uYniyRJ4UJIaSKAfw==}
-
-  axios@1.7.4:
-    resolution: {integrity: sha512-DukmaFRnY6AzAALSH4J2M3k6PkaC+MfaAGdEERRWcC9q3/TWQwLpHR8ZRLKTdQ3aBDL64EdluRDjJqKw+BPZEw==}
 
   axios@1.7.9:
     resolution: {integrity: sha512-LhLcE7Hbiryz8oMDdDptSrWowmB4Bl6RCt6sIJKpRB4XtVf0iEgewX3au/pJqm+Py1kCASkb/FFKjxQaLtxJvw==}
@@ -3448,10 +3263,6 @@ packages:
     resolution: {integrity: sha512-uIFDxqpRZGZ6ThOk84hEfqWoHx2devRFvpTZcTHur85vImfaxUbTW9Ryh4CpCuDnToOP1CEtXKIgytHBPVff5A==}
     engines: {node: '>=0.3.1'}
 
-  dir-glob@3.0.1:
-    resolution: {integrity: sha512-WkrWp9GR4KXfKGYzOLmTuGVi1UWFfws377n9cc55/tb6DuqyF6pcQ5AbiHEshaDpY9v6oaSr2XCDidGmMwdzIA==}
-    engines: {node: '>=8'}
-
   dns-packet@5.6.1:
     resolution: {integrity: sha512-l4gcSouhcgIKRvyy99RNVOgxXiicE+2jZoNmaNmZ6JXiGajBOJAesk1OBlJuM5k2c+eudGdLxDqXuPCKIj6kpw==}
     engines: {node: '>=6'}
@@ -3755,10 +3566,6 @@ packages:
   events@3.3.0:
     resolution: {integrity: sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==}
     engines: {node: '>=0.8.x'}
-
-  execa@5.1.1:
-    resolution: {integrity: sha512-8uSpZZocAZRBAPIEINJj3Lo9HyGitllczc27Eh5YYojjMFMn8yHMDMaUHE2Jqfq05D/wucwI4JGURyXt1vchyg==}
-    engines: {node: '>=10'}
 
   execa@8.0.1:
     resolution: {integrity: sha512-VyhnebXciFV2DESc+p6B+y0LjSm0krU4OgJN44qFAhBY0TJ+1V61tYD2+wHusZ6F9n5K+vl8k0sTy7PEfV4qpg==}
@@ -4092,10 +3899,6 @@ packages:
     resolution: {integrity: sha512-DpLKbNU4WylpxJykQujfCcwYWiV/Jhm50Goo0wrVILAv5jOr9d+H+UR3PhSCD2rCCEIg0uc+G+muBTwD54JhDQ==}
     engines: {node: '>= 0.4'}
 
-  globby@11.1.0:
-    resolution: {integrity: sha512-jhIXaOzy1sb8IyocaruWSn1TjmnBVs8Ayhcy83rmxNJ8q2uWKCAj3CnJY+KpGSXCueAPc0i05kVvVKtP1t9S3g==}
-    engines: {node: '>=10'}
-
   globby@14.0.2:
     resolution: {integrity: sha512-s3Fq41ZVh7vbbe2PN3nrW7yC7U7MFVc5c98/iTl9c2GawNMKx/J648KQRW6WKkuU8GIbbh2IXfIRQjOZnXcTnw==}
     engines: {node: '>=18'}
@@ -4299,10 +4102,6 @@ packages:
   https-proxy-agent@7.0.4:
     resolution: {integrity: sha512-wlwpilI7YdjSkWaQ/7omYBMTliDcmCN8OLihO6I9B86g06lMyAoqgoDpV0XqoaPOKj+0DIdAvnsWfyAAhmimcg==}
     engines: {node: '>= 14'}
-
-  human-signals@2.1.0:
-    resolution: {integrity: sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==}
-    engines: {node: '>=10.17.0'}
 
   human-signals@5.0.0:
     resolution: {integrity: sha512-AXcZb6vzzrFAUE61HnN4mpLqd/cSIwNQjtNWR0euPm6y0iqx3G4gOXaIDdtdDwZmhwe82LA6+zinmW4UBWVePQ==}
@@ -4696,10 +4495,6 @@ packages:
     resolution: {integrity: sha512-pJ4XLQP4Q9HTxl6RVDLJ8Cyh1uitSs0CzDBAz1uoJ4sRD/Bk7cFSXL1FUXDW3zJ7YnfliJx6eu8Jn283bpZ4Yg==}
     engines: {node: '>=10'}
 
-  json-schema-to-ts@3.1.0:
-    resolution: {integrity: sha512-UeVN/ery4/JeXI8h4rM8yZPxsH+KqPi/84qFxHfTGHZnWnK9D0UU9ZGYO+6XAaJLqCWMiks+ARuFOKAiSxJCHA==}
-    engines: {node: '>=16'}
-
   json-schema-to-ts@3.1.1:
     resolution: {integrity: sha512-+DWg8jCJG2TEnpy7kOm/7/AxaYoaRbjVB4LFZLySZlWn8exGs3A4OLJR966cVvU26N7X9TWxl+Jsw7dzAqKT6g==}
     engines: {node: '>=16'}
@@ -4834,9 +4629,6 @@ packages:
   locate-path@7.2.0:
     resolution: {integrity: sha512-gvVijfZvn7R+2qyPX8mAuKcFGDf6Nc61GdvGafQsHL0sBIxfKzA+usWn4GFC/bk+QdwPUD4kWFJLhElipq+0VA==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
-
-  lodash-es@4.17.21:
-    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
 
   lodash.camelcase@4.3.0:
     resolution: {integrity: sha512-TwuEnCnxbc3rAvhf/LbG7tJUDzhqXyFnv3dtzLOPgCG/hODL7WFnsbwktkD7yUV0RrreP/l1PALq/YSg6VvjlA==}
@@ -5368,10 +5160,6 @@ packages:
     resolution: {integrity: sha512-sHGJy8sOC1YraBywpzQlIKBE4pBbGbiF95U6Auspzyem956E0+FtDtsx1ZxlOJkQCZ1AFXAY/yuvtFYrOxF+Bw==}
     engines: {node: ^16.14.0 || >=18.0.0}
 
-  npm-run-path@4.0.1:
-    resolution: {integrity: sha512-S48WzZW777zhNIrn7gxOlISNAqi9ZC/uQFnRdbeIHhZhCA6UqpkOT8T1G7BvfdgP4Er8gF4sUbaS0i7QvIfCWw==}
-    engines: {node: '>=8'}
-
   npm-run-path@5.3.0:
     resolution: {integrity: sha512-ppwTtiJZq0O/ai0z7yfudtBpWIoxM8yE6nHi1X47eFR2EWORqfbu6CnPlNsjeN683eT0qG6H/Pyf9fCcvjnnnQ==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
@@ -5617,10 +5405,6 @@ packages:
 
   path-to-regexp@0.1.7:
     resolution: {integrity: sha512-5DFkuoqlv1uYQKxy8omFBeJPQcdoE07Kv2sferDCrAq1ohOU+MSDswDIbnx3YAM60qIOnYa53wBhXW0EbMonrQ==}
-
-  path-type@4.0.0:
-    resolution: {integrity: sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==}
-    engines: {node: '>=8'}
 
   path-type@5.0.0:
     resolution: {integrity: sha512-5HviZNaZcfqP95rwpv+1HDgUamezbqdSYTyzjTvwtJSnIH+3vnbmWsItli8OFEndS984VT55M3jduxZbX351gg==}
@@ -6215,10 +5999,6 @@ packages:
   sisteransi@1.0.5:
     resolution: {integrity: sha512-bLGGlR1QxBcynn2d5YmDX4MGjlZvy2MRBDRNHLJ8VI6l6+9FUiyTFNJ0IveOSP0bcXgVDPRcfGqA0pjaqUpfVg==}
 
-  slash@3.0.0:
-    resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
-    engines: {node: '>=8'}
-
   slash@5.1.0:
     resolution: {integrity: sha512-ZA6oR3T/pEyuqwMgAKT0/hAv8oAXckzbkmR0UkUosQ+Mc4RxGoJkRmwHgHufaenlyAgE1Mxgpdcrf75y6XcnDg==}
     engines: {node: '>=14.16'}
@@ -6391,10 +6171,6 @@ packages:
   strip-bom@4.0.0:
     resolution: {integrity: sha512-3xurFv5tEgii33Zi8Jtp55wEIILR9eh34FAW00PZf+JnSsTmV/ioewSgQl97JHvgjoRGwPShsWm+IdrxB35d0w==}
     engines: {node: '>=8'}
-
-  strip-final-newline@2.0.0:
-    resolution: {integrity: sha512-BrpvfNAE3dcvq7ll3xVumzjKjZQ5tI1sEUIKr3Uoks0XUl45St3FlatVqef9prk4jRDzhW6WZg+3bk93y6pLjA==}
-    engines: {node: '>=6'}
 
   strip-final-newline@3.0.0:
     resolution: {integrity: sha512-dOESqjYr96iWYylGObzd39EuNTa5VJxyvVAEm5Jnh7KGo75V43Hk1odPQkNDyXNmUR6k+gEiDVXnjB8HJ3crXw==}
@@ -6582,25 +6358,6 @@ packages:
 
   tslib@2.8.1:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
-
-  tsup@8.2.4:
-    resolution: {integrity: sha512-akpCPePnBnC/CXgRrcy72ZSntgIEUa1jN0oJbbvpALWKNOz1B7aM+UVDWGRGIO/T/PZugAESWDJUAb5FD48o8Q==}
-    engines: {node: '>=18'}
-    hasBin: true
-    peerDependencies:
-      '@microsoft/api-extractor': ^7.36.0
-      '@swc/core': ^1
-      postcss: ^8.4.12
-      typescript: '>=4.5.0'
-    peerDependenciesMeta:
-      '@microsoft/api-extractor':
-        optional: true
-      '@swc/core':
-        optional: true
-      postcss:
-        optional: true
-      typescript:
-        optional: true
 
   tsup@8.3.5:
     resolution: {integrity: sha512-Tunf6r6m6tnZsG9GYWndg0z8dEV7fD733VBFzFJ5Vcm1FtlXB8xBD/rtrBi2a3YKEV7hHtxiZtW5EAVADoe1pA==}
@@ -9425,13 +9182,7 @@ snapshots:
 
   '@types/katex@0.16.7': {}
 
-  '@types/lodash-es@4.17.12':
-    dependencies:
-      '@types/lodash': 4.17.9
-
   '@types/lodash@4.17.13': {}
-
-  '@types/lodash@4.17.9': {}
 
   '@types/long@4.0.2': {}
 
@@ -9772,8 +9523,6 @@ snapshots:
 
   array-timsort@1.0.3: {}
 
-  array-union@2.1.0: {}
-
   array.prototype.findlastindex@1.2.5:
     dependencies:
       call-bind: 1.0.7
@@ -9836,14 +9585,6 @@ snapshots:
   aws-sign2@0.7.0: {}
 
   aws4@1.13.2: {}
-
-  axios@1.7.4:
-    dependencies:
-      follow-redirects: 1.15.6
-      form-data: 4.0.0
-      proxy-from-env: 1.1.0
-    transitivePeerDependencies:
-      - debug
 
   axios@1.7.9:
     dependencies:
@@ -9957,11 +9698,6 @@ snapshots:
   bundle-name@4.1.0:
     dependencies:
       run-applescript: 7.0.0
-
-  bundle-require@5.0.0(esbuild@0.23.1):
-    dependencies:
-      esbuild: 0.23.1
-      load-tsconfig: 0.2.5
 
   bundle-require@5.0.0(esbuild@0.24.0):
     dependencies:
@@ -10455,10 +10191,6 @@ snapshots:
 
   diff@5.2.0: {}
 
-  dir-glob@3.0.1:
-    dependencies:
-      path-type: 4.0.0
-
   dns-packet@5.6.1:
     dependencies:
       '@leichtgewicht/ip-codec': 2.0.5
@@ -10914,18 +10646,6 @@ snapshots:
 
   events@3.3.0: {}
 
-  execa@5.1.1:
-    dependencies:
-      cross-spawn: 7.0.3
-      get-stream: 6.0.1
-      human-signals: 2.1.0
-      is-stream: 2.0.1
-      merge-stream: 2.0.0
-      npm-run-path: 4.0.1
-      onetime: 5.1.2
-      signal-exit: 3.0.7
-      strip-final-newline: 2.0.0
-
   execa@8.0.1:
     dependencies:
       cross-spawn: 7.0.3
@@ -11363,15 +11083,6 @@ snapshots:
       define-properties: 1.2.1
       gopd: 1.0.1
 
-  globby@11.1.0:
-    dependencies:
-      array-union: 2.1.0
-      dir-glob: 3.0.1
-      fast-glob: 3.3.2
-      ignore: 5.3.1
-      merge2: 1.4.1
-      slash: 3.0.0
-
   globby@14.0.2:
     dependencies:
       '@sindresorhus/merge-streams': 2.3.0
@@ -11745,8 +11456,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  human-signals@2.1.0: {}
-
   human-signals@5.0.0: {}
 
   humanize-ms@1.2.1:
@@ -12081,11 +11790,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  json-schema-to-ts@3.1.0:
-    dependencies:
-      '@babel/runtime': 7.24.7
-      ts-algebra: 2.0.0
-
   json-schema-to-ts@3.1.1:
     dependencies:
       '@babel/runtime': 7.24.7
@@ -12246,8 +11950,6 @@ snapshots:
   locate-path@7.2.0:
     dependencies:
       p-locate: 6.0.0
-
-  lodash-es@4.17.21: {}
 
   lodash.camelcase@4.3.0: {}
 
@@ -13054,10 +12756,6 @@ snapshots:
       semver: 7.6.3
       validate-npm-package-name: 5.0.1
 
-  npm-run-path@4.0.1:
-    dependencies:
-      path-key: 3.1.1
-
   npm-run-path@5.3.0:
     dependencies:
       path-key: 4.0.0
@@ -13332,8 +13030,6 @@ snapshots:
       minipass: 7.1.2
 
   path-to-regexp@0.1.7: {}
-
-  path-type@4.0.0: {}
 
   path-type@5.0.0: {}
 
@@ -14076,8 +13772,6 @@ snapshots:
 
   sisteransi@1.0.5: {}
 
-  slash@3.0.0: {}
-
   slash@5.1.0: {}
 
   slice-ansi@4.0.0:
@@ -14286,8 +13980,6 @@ snapshots:
   strip-bom@3.0.0: {}
 
   strip-bom@4.0.0: {}
-
-  strip-final-newline@2.0.0: {}
 
   strip-final-newline@3.0.0: {}
 
@@ -14525,32 +14217,6 @@ snapshots:
   tslib@2.7.0: {}
 
   tslib@2.8.1: {}
-
-  tsup@8.2.4(jiti@2.4.1)(tsx@4.19.2)(typescript@5.7.2)(yaml@2.6.1):
-    dependencies:
-      bundle-require: 5.0.0(esbuild@0.23.1)
-      cac: 6.7.14
-      chokidar: 3.6.0
-      consola: 3.2.3
-      debug: 4.4.0
-      esbuild: 0.23.1
-      execa: 5.1.1
-      globby: 11.1.0
-      joycon: 3.1.1
-      picocolors: 1.1.1
-      postcss-load-config: 6.0.1(jiti@2.4.1)(tsx@4.19.2)(yaml@2.6.1)
-      resolve-from: 5.0.0
-      rollup: 4.27.3
-      source-map: 0.8.0-beta.0
-      sucrase: 3.35.0
-      tree-kill: 1.2.2
-    optionalDependencies:
-      typescript: 5.7.2
-    transitivePeerDependencies:
-      - jiti
-      - supports-color
-      - tsx
-      - yaml
 
   tsup@8.3.5(jiti@2.4.1)(tsx@4.19.2)(typescript@5.7.2)(yaml@2.6.1):
     dependencies:

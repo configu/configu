@@ -1,19 +1,7 @@
 {
   "name": "@configu/common",
   "version": "0.0.0",
-  "license": "Apache-2.0",
   "description": "Configu Node.js Common Library",
-  "author": "@configu/dev",
-  "homepage": "https://configu.com",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/configu/configu",
-    "directory": "packages/common"
-  },
-  "bugs": {
-    "url": "https://github.com/configu/configu/issues",
-    "email": "dev@configu.com"
-  },
   "keywords": [
     "cfgu",
     "configu",
@@ -21,6 +9,19 @@
     "configu-lib",
     "configu-node"
   ],
+  "homepage": "https://configu.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/configu/configu",
+    "directory": "packages/common"
+  },
+  "bugs": "https://github.com/configu/configu/issues",
+  "license": "Apache-2.0",
+  "author": {
+    "name": "@configu/dev",
+    "email": "dev@configu.com",
+    "url": "https://configu.com"
+  },
   "type": "module",
   "types": "./src/index.ts",
   "module": "./src/index.ts",
@@ -40,13 +41,10 @@
     "test": "node --import tsx --test src/**/*.test.ts",
     "test:watch": "node --watch --import tsx --test src/**/*.test.ts"
   },
-  "imports": {
-    "@configu/sdk": "../sdk/dist/index.js"
-  },
   "dependencies": {
-    "@configu/sdk": "workspace:*",
     "@configu/configu": "workspace:*",
     "@configu/json-file": "workspace:*",
+    "@configu/sdk": "workspace:*",
     "axios": "^1.7.9",
     "consola": "^3.2.3",
     "find-up": "^7.0.0",
@@ -60,5 +58,8 @@
   },
   "devDependencies": {
     "@types/semver": "^7.5.8"
+  },
+  "imports": {
+    "@configu/sdk": "../sdk/dist/index.js"
   }
 }

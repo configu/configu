@@ -1,22 +1,23 @@
 {
   "name": "@configu/my-sql",
   "version": "0.0.0",
-  "license": "Apache-2.0",
-  "author": "@configu/dev",
+  "keywords": [
+    "cfgu",
+    "configu"
+  ],
   "homepage": "https://configu.com",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/configu/configu",
     "directory": "packages/stores/my-sql"
   },
-  "bugs": {
-    "url": "https://github.com/configu/configu/issues",
-    "email": "dev@configu.com"
+  "bugs": "https://github.com/configu/configu/issues",
+  "license": "Apache-2.0",
+  "author": {
+    "name": "@configu/dev",
+    "email": "dev@configu.com",
+    "url": "https://configu.com"
   },
-  "keywords": [
-    "cfgu",
-    "configu"
-  ],
   "type": "module",
   "exports": "./src/index.ts",
   "files": [
@@ -30,9 +31,5 @@
     "@configu/sdk": "workspace:*",
     "mysql": "2.18.1"
   },
-  "devDependencies": {
-    "@types/node": "20.12.12",
-    "tsup": "8.2.4",
-    "typescript": "^5.4.5"
-  }
+  "devDependencies": {}
 }

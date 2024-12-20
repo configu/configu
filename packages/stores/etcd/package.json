@@ -1,22 +1,23 @@
 {
   "name": "@configu/etcd",
   "version": "0.0.0",
-  "license": "Apache-2.0",
-  "author": "@configu/dev",
+  "keywords": [
+    "cfgu",
+    "configu"
+  ],
   "homepage": "https://configu.com",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/configu/configu",
     "directory": "packages/stores/etcd"
   },
-  "bugs": {
-    "url": "https://github.com/configu/configu/issues",
-    "email": "dev@configu.com"
+  "bugs": "https://github.com/configu/configu/issues",
+  "license": "Apache-2.0",
+  "author": {
+    "name": "@configu/dev",
+    "email": "dev@configu.com",
+    "url": "https://configu.com"
   },
-  "keywords": [
-    "cfgu",
-    "configu"
-  ],
   "type": "module",
   "exports": "./src/index.ts",
   "files": [
@@ -26,12 +27,9 @@
     "build": "tsup"
   },
   "dependencies": {
-    "etcd3": "1.1.2",
+    "@configu/key-value": "workspace:*",
     "@configu/sdk": "workspace:*",
-    "@configu/key-value": "workspace:*"
+    "etcd3": "1.1.2"
   },
-  "devDependencies": {
-    "@types/node": "22.10.0",
-    "typescript": "^5.4.5"
-  }
+  "devDependencies": {}
 }

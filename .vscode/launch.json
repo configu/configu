@@ -1,81 +1,16 @@
 {
   "version": "0.2.0",
   "configurations": [
-    {
-      "name": "play cli",
-      "type": "node",
-      "request": "launch",
-      "console": "integratedTerminal",
-      "program": "${workspaceRoot}/packages/cli/bin/dev.js",
-      "env": {
-        // "VAULT_ADDR": "http://127.0.0.1:8200",
-        // "VAULT_TOKEN": "root",
-        // "CONFIGU_ORG": "playground",
-        // "CONFIGU_TOKEN": ""
-      },
-      "args": [
-        // "test",
-        // "upsert",
-        // "export",
-        // "eval",
-        // "delete",
-        // "run"
-        // "--script",
-        // "test",
-        // "--store",
-        // "json",
-        // "--set",
-        // "",
-        // "--schema",
-        // "${workspaceFolder}/ts/ts.cfgu.json"
-      ],
-      "outFiles": ["${workspaceFolder}/**/*.js", "!**/node_modules/**"],
-      "skipFiles": ["<node_internals>/**", "node_modules/**"]
-    },
-    {
-      "name": "run ts tests",
-      "type": "node",
-      "request": "launch",
-      "cwd": "${workspaceRoot}/ts",
-      "runtimeArgs": ["--inspect", "node_modules/.bin/jest", "--runInBand"],
-      "args": ["ts/src/commands/commands.test.ts"],
-      // "args": ["ts/src/types/types.test.ts"],
-      "outputCapture": "std"
-      // "internalConsoleOptions": "neverOpen",
-    },
     // https://tsx.is/vscode
     {
       "name": "tsx",
       "type": "node",
       "request": "launch",
-      // Debug current file in VSCode
       "program": "${file}",
-      /*
-       * Path to tsx binary
-       * Assuming locally installed
-       */
       "runtimeExecutable": "tsx",
-      /*
-       * Open terminal when debugging starts (Optional)
-       * Useful to see console.logs
-       */
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
-      // Files to exclude from debugger (e.g. call stack)
-      "skipFiles": [
-        // Node.js internal core modules
-        "<node_internals>/**",
-        // Ignore all dependencies (optional)
-        "${workspaceFolder}/node_modules/**"
-      ]
-      // "env": {
-      //   "MY_PATH": "./db.json"
-      // },
-      // "args": [
-      //   "eval",
-      //   "--schema",
-      //   "${workspaceFolder}/test.cfgu.yaml"
-      // ]
+      "skipFiles": ["<node_internals>/**", "${workspaceFolder}/node_modules/**"]
     },
     {
       "name": "cli",
@@ -86,27 +21,26 @@
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "skipFiles": ["<node_internals>/**", "${workspaceFolder}/node_modules/**"],
-      "cwd": "${workspaceFolder}/playground",
-      // "env": {
-      //   "MY_PATH": "./db.json"
-      // },
+      "cwd": "${workspaceFolder}",
+      "env": {},
       "args": [
-        // "run",
-        // "--script",
-        // "script1"
-        // ---
-        // "eval",
+        "eval",
+        "--defaults",
         // "upsert",
         // "--store",
         // "hc",
+        "--schema",
+        "${workspaceFolder}/packages/schema/data/xy.cfgu.yaml"
         // "--kv",
         // "Z=8"
-        // "--schema",
-        // "${workspaceFolder}/test.cfgu.yaml"
-        // "--defaults",
-        "export",
-        "<",
-        "${workspaceFolder}/playground/stdin"
+        // ====================
+        // "export",
+        // "<",
+        // "${workspaceFolder}/stdin"
+        // ====================
+        // "run",
+        // "--script",
+        // "script1"
       ]
     }
   ]

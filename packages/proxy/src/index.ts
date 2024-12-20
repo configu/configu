@@ -35,10 +35,7 @@ const OPENAPI_OPTIONS: FastifyDynamicSwaggerOptions['openapi'] = {
     title: config.CONFIGU_PKG.name,
     description:
       'This site hosts documentation generated from the [Configu](https://github.com/configu/configu) Proxy API OpenAPI specification. Visit our complete [Proxy API docs](https://docs.configu.com/interfaces/proxy) for how to get started, more information about each endpoint, parameter descriptions, and examples.',
-    contact: {
-      name: config.CONFIGU_PKG.author,
-      ...config.CONFIGU_PKG.bugs,
-    },
+    contact: config.CONFIGU_PKG.author,
     license: { name: config.CONFIGU_PKG.license, identifier: config.CONFIGU_PKG.license },
     version: config.CONFIGU_PKG.version,
   },

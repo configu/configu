@@ -1,7 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import axios, { type Axios } from 'axios';
-import isJWT from 'validator/es/lib/isJWT';
 import { Config, ConfigStore, ConfigQuery } from '@configu/sdk';
+import { validator } from '@configu/sdk/expressions';
 
 export type ConfiguConfigStoreConfiguration = {
   credentials: { org: string; token: string };
@@ -53,7 +53,7 @@ export class ConfiguConfigStore extends ConfigStore {
       responseType: 'json',
     });
 
-    if (isJWT(token)) {
+    if (validator.isJWT(token)) {
       this.client.defaults.headers.common.Authorization = `Bearer ${token}`;
     } else {
       this.client.defaults.headers.common.Token = token;

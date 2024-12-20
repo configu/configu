@@ -1,5 +1,4 @@
 import { FastifyPluginAsync } from 'fastify';
-import { FromSchema } from 'json-schema-to-ts';
 import { ConfigSchema, ConfigSet } from '@configu/sdk';
 import {
   EvalCommand,
@@ -8,6 +7,7 @@ import {
   UpsertCommand,
   ExportCommand,
 } from '@configu/sdk/commands';
+import { FromSchema } from '@configu/sdk/expressions';
 import _ from 'lodash';
 import { ConfiguInterface } from '@configu/common';
 import { config } from './config';

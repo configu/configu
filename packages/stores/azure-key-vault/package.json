@@ -1,22 +1,23 @@
 {
   "name": "@configu/azure-keyvault",
   "version": "0.0.0",
-  "license": "Apache-2.0",
-  "author": "@configu/dev",
+  "keywords": [
+    "cfgu",
+    "configu"
+  ],
   "homepage": "https://configu.com",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/configu/configu",
     "directory": "packages/stores/azure-key-vault"
   },
-  "bugs": {
-    "url": "https://github.com/configu/configu/issues",
-    "email": "dev@configu.com"
+  "bugs": "https://github.com/configu/configu/issues",
+  "license": "Apache-2.0",
+  "author": {
+    "name": "@configu/dev",
+    "email": "dev@configu.com",
+    "url": "https://configu.com"
   },
-  "keywords": [
-    "cfgu",
-    "configu"
-  ],
   "type": "module",
   "exports": "./src/index.ts",
   "files": [
@@ -31,8 +32,5 @@
     "@configu/key-value": "workspace:*",
     "@configu/sdk": "workspace:*"
   },
-  "devDependencies": {
-    "@types/node": "22.10.0",
-    "typescript": "^5.4.5"
-  }
+  "devDependencies": {}
 }
