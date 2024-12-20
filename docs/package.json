@@ -1,25 +1,26 @@
 {
   "name": "@configu/docs",
   "version": "0.0.0",
-  "license": "Apache-2.0",
   "description": "Configu documentation portal",
-  "author": "Configu",
+  "keywords": [
+    "configu",
+    "configu-docs",
+    "configu-documentation",
+    "docs"
+  ],
+  "homepage": "https://docs.configu.com",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/configu/configu",
     "directory": "docs"
   },
-  "bugs": {
-    "url": "https://github.com/configu/configu/issues",
-    "email": "dev@configu.com"
+  "bugs": "https://github.com/configu/configu/issues",
+  "license": "Apache-2.0",
+  "author": {
+    "name": "@configu/dev",
+    "email": "dev@configu.com",
+    "url": "https://configu.com"
   },
-  "homepage": "https://configu.com",
-  "keywords": [
-    "docs",
-    "configu",
-    "configu-docs",
-    "configu-documentation"
-  ],
   "scripts": {
     "build": "zx prepare.mjs",
     "dev": "pnpm build && mintlify dev",

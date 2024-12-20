@@ -1,8 +1,10 @@
 import { Command, Option } from 'clipanion';
-import { ConfigSet, EvalCommand as BaseEvalCommand } from '@configu/sdk';
+import { ConfigSet, ConfigStore } from '@configu/sdk';
+import { EvalCommand } from '@configu/sdk/commands';
+import { ConfiguInterface } from '@configu/common';
 import { BaseCommand } from './base';
 
-export class EvalCommand extends BaseCommand {
+export class CliEvalCommand extends BaseCommand {
   static override paths = [['eval'], ['ev']];
 
   static override usage = Command.Usage({
@@ -29,25 +31,27 @@ export class EvalCommand extends BaseCommand {
 
   schema = Option.String('--schema,--sc', {
     description: `\`ConfigSchema\` (config-keys declaration) path/to/[schema].cfgu.json file to operate the eval against. The keys declared in the \`ConfigSchema\` will be fetched and evaluated from the to the \`ConfigStore\`. In case of key duplication from multiple \`ConfigSchema\`, the order of the --schema flag in the pipe will come to hand as the rightmost key overriding the rest`,
-    required: true,
   });
 
-  config = Option.Array('--config,-c', {
+  defaults = Option.Boolean('--defaults', {});
+
+  override = Option.Array('--override,--kv', {
     description: `'key=value' pairs to override fetched \`Configs\``,
   });
 
   async execute() {
     await this.init();
 
-    const store = this.getStoreInstanceByStoreFlag(this.store ?? 'noop');
+    const store = this.defaults ? ConfigStore.construct('noop') : await ConfiguInterface.getStoreInstance(this.store);
     const set = new ConfigSet(this.set);
-    const schema = await this.getSchemaInstanceByFlag(this.schema);
-    const configs = this.reduceConfigFlag(this.config);
+    const schema = await ConfiguInterface.getSchemaInstance(this.schema);
+    const configs = this.reduceKVFlag(this.override);
     const pipe = await this.readPreviousEvalCommandOutput();
 
-    const evalCommand = new BaseEvalCommand({ store, set, schema, configs, pipe });
+    const evalCommand = new EvalCommand({ store, set, schema, configs, pipe });
     const { result } = await evalCommand.run();
+    await ConfiguInterface.backupEvalOutput({ storeName: this.store, set, schema, evalOutput: result });
 
-    process.stdout.write(JSON.stringify(result));
+    this.context.console.print(JSON.stringify(result));
   }
 }

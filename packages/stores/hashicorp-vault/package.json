@@ -1,0 +1,35 @@
+{
+  "name": "@configu/hashicorp-vault",
+  "version": "0.0.0",
+  "keywords": [
+    "cfgu",
+    "configu"
+  ],
+  "homepage": "https://configu.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/configu/configu",
+    "directory": "packages/stores/hashicorp-vault"
+  },
+  "bugs": "https://github.com/configu/configu/issues",
+  "license": "Apache-2.0",
+  "author": {
+    "name": "@configu/dev",
+    "email": "dev@configu.com",
+    "url": "https://configu.com"
+  },
+  "type": "module",
+  "exports": "./src/index.ts",
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "dependencies": {
+    "@configu/key-value": "workspace:*",
+    "@configu/sdk": "workspace:*",
+    "axios": "^1.7.9"
+  },
+  "devDependencies": {}
+}

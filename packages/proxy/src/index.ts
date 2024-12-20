@@ -1,9 +1,3 @@
-/* NOTE:
- * @configu/cli is currently work in progress and is not yet released.
- * It expected to be released by the end of October 2024.
- * * Latest released code can be found at: https://github.com/configu/configu/tree/52cee9c41fb03addc4c0983028e37df42945f5b7/packages/proxy
- */
-
 import Fastify, { FastifyInstance } from 'fastify';
 import GracefulServer from '@gquittet/graceful-server';
 import Helmet from '@fastify/helmet';
@@ -12,7 +6,7 @@ import BearerAuth from '@fastify/bearer-auth';
 import Swagger, { FastifyDynamicSwaggerOptions } from '@fastify/swagger';
 import SwaggerUI from '@scalar/fastify-api-reference';
 
-import { ConfiguFile, Registry } from '@configu/common';
+import { ConfiguInterface } from '@configu/common';
 import { config } from './config';
 import { routes } from './routes';
 
@@ -41,10 +35,7 @@ const OPENAPI_OPTIONS: FastifyDynamicSwaggerOptions['openapi'] = {
     title: config.CONFIGU_PKG.name,
     description:
       'This site hosts documentation generated from the [Configu](https://github.com/configu/configu) Proxy API OpenAPI specification. Visit our complete [Proxy API docs](https://docs.configu.com/interfaces/proxy) for how to get started, more information about each endpoint, parameter descriptions, and examples.',
-    contact: {
-      name: config.CONFIGU_PKG.author,
-      ...config.CONFIGU_PKG.bugs,
-    },
+    contact: config.CONFIGU_PKG.author,
     license: { name: config.CONFIGU_PKG.license, identifier: config.CONFIGU_PKG.license },
     version: config.CONFIGU_PKG.version,
   },
@@ -95,10 +86,11 @@ if (config.CONFIGU_DOCS_ENABLED) {
   });
 }
 
-(async () => {
+export async function listen() {
   try {
-    // TODO: Pass this ConfiguFile instance to the routes
-    await ConfiguFile.load(config.CONFIGU_CONFIG_FILE);
+    await ConfiguInterface.init({
+      input: config.CONFIGU_CONFIG_FILE,
+    });
     await server.listen({
       host: config.CONFIGU_HTTP_ADDR,
       port: config.CONFIGU_HTTP_PORT,
@@ -108,4 +100,8 @@ if (config.CONFIGU_DOCS_ENABLED) {
     server.log.error(err);
     process.exit(1);
   }
+}
+
+(async () => {
+  await listen();
 })();

@@ -1,0 +1,36 @@
+{
+  "name": "@configu/cockroach-db",
+  "version": "0.0.0",
+  "keywords": [
+    "cfgu",
+    "configu"
+  ],
+  "homepage": "https://configu.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/configu/configu",
+    "directory": "packages/stores/cockroach-db"
+  },
+  "bugs": "https://github.com/configu/configu/issues",
+  "license": "Apache-2.0",
+  "author": {
+    "name": "@configu/dev",
+    "email": "dev@configu.com",
+    "url": "https://configu.com"
+  },
+  "type": "module",
+  "exports": "./src/index.ts",
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "dependencies": {
+    "@configu/database": "workspace:*",
+    "@configu/sdk": "workspace:*",
+    "pg": "8.13.1",
+    "typeorm": "^0.3.20"
+  },
+  "devDependencies": {}
+}

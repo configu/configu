@@ -1,0 +1,37 @@
+{
+  "name": "@configu/open-feature",
+  "version": "0.0.0",
+  "keywords": [
+    "config",
+    "config-store",
+    "configu",
+    "configu-open-feature",
+    "open-feature"
+  ],
+  "homepage": "https://configu.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/configu/configu",
+    "directory": "packages/stores/open-feature"
+  },
+  "bugs": "https://github.com/configu/configu/issues",
+  "license": "Apache-2.0",
+  "author": {
+    "name": "@configu/dev",
+    "email": "dev@configu.com",
+    "url": "https://configu.com"
+  },
+  "type": "module",
+  "exports": "./src/index.ts",
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "dependencies": {
+    "@configu/sdk": "workspace:*",
+    "@openfeature/server-sdk": "^1.7.4"
+  },
+  "devDependencies": {}
+}

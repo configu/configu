@@ -4,56 +4,62 @@
   "$comment": "https://jsonschema.dev/s/3pOmT",
   "title": "JSON Schema for Configu .configu file",
   "description": "https://docs.configu.com/interfaces/.configu",
-  "$defs": {
-    "StoresProperty": {
+  "type": "object",
+  "required": [],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Url to JSON Schema"
+    },
+    "stores": {
       "type": "object",
+      "required": [],
       "additionalProperties": {
         "type": "object",
+        "required": ["type"],
         "properties": {
           "type": {
             "type": "string"
           },
-          "default": {
-            "type": "boolean"
-          },
-          "cache": {
-            "type": "boolean"
-          },
           "configuration": {
             "type": "object"
+          },
+          "backup": {
+            "type": "boolean"
+          },
+          "default": {
+            "type": "boolean"
           }
-        },
-        "required": ["type"]
+        }
       }
     },
-    "StringMapProperty": {
+    "backup": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schemas": {
       "type": "object",
+      "required": [],
       "additionalProperties": {
         "type": "string"
       }
     },
-    "ConfiguConfigurationFile": {
+    "scripts": {
       "type": "object",
-      "minProperties": 1,
-      "properties": {
-        "$schema": {
-          "type": "string"
-        },
-        "stores": {
-          "$ref": "#/$defs/StoresProperty"
-        },
-        "cache": {
-          "type": "string"
-        },
-        "schemas": {
-          "$ref": "#/$defs/StringMapProperty"
-        },
-        "scripts": {
-          "$ref": "#/$defs/StringMapProperty"
-        }
-      },
-      "additionalProperties": false
+      "required": [],
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "register": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
     }
-  },
-  "$ref": "#/$defs/ConfiguConfigurationFile"
+  }
 }

@@ -1,28 +1,29 @@
 {
   "name": "@configu/cli",
   "version": "0.0.0",
-  "license": "Apache-2.0",
   "description": "Configu CLI",
-  "author": "@configu/dev",
-  "homepage": "https://configu.com",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/configu/configu",
-    "directory": "packages/cli"
-  },
-  "bugs": {
-    "url": "https://github.com/configu/configu/issues",
-    "email": "dev@configu.com"
-  },
   "keywords": [
     "cfgu",
     "configu",
     "configu-cli",
     "configu-command-line"
   ],
+  "homepage": "https://configu.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/configu/configu",
+    "directory": "packages/cli"
+  },
+  "bugs": "https://github.com/configu/configu/issues",
+  "license": "Apache-2.0",
+  "author": {
+    "name": "@configu/dev",
+    "email": "dev@configu.com",
+    "url": "https://configu.com"
+  },
   "type": "module",
   "bin": {
-    "configu": "./dist/run.cjs"
+    "configu": "./dist/configu.cjs"
   },
   "exports": {
     "./package.json": "./package.json"
@@ -31,29 +32,25 @@
     "/dist"
   ],
   "scripts": {
-    "bundle": "tsup",
-    "compile": "tsx compiler/index.ts",
-    "configu": "tsx src/run.ts",
-    "start": "pnpm configu",
-    "test:post-release": "tsx --test ./compiler/**/*.test.ts"
+    "build": "tsup",
+    "build:binary": "tsx build.mts",
+    "build:docker": "docker build --progress plain -t configu/cli -f ./Dockerfile ../..",
+    "clean": "shx rm -rf dist",
+    "configu": "$HOME/.configu/bin/configu",
+    "dev": "tsx src/configu.ts",
+    "start": "node dist/configu.cjs"
   },
   "dependencies": {
     "@configu/common": "workspace:*",
+    "@configu/formatters": "workspace:*",
     "@configu/sdk": "workspace:*",
-    "axios": "^1.7.4",
-    "change-case": "4.1.2",
     "clipanion": "^4.0.0-rc.4",
-    "consola": "^3.2.3",
-    "dotenv": "16.4.5",
-    "inquirer": "12.0.0",
-    "lodash": "^4.17.21",
+    "get-stdin": "^9.0.0",
+    "giget": "1.2.3",
     "open": "10.1.0",
-    "openid-client": "5.7.0",
-    "std-env": "^3.7.0",
-    "tty-table": "4.2.3",
-    "typanion": "3.14.0",
-    "tiged": "2.12.7"
+    "openid-client": "5.7.1",
+    "table": "6.9.0",
+    "typanion": "3.14.0"
   },
-  "bundleDependencies": [],
   "devDependencies": {}
 }

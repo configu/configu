@@ -25,6 +25,7 @@
     "**/dist": true,
     "**/coverage": true,
     "package-lock.json": true,
+    "pnpm-lock.yaml": true,
     "tsconfig.tsbuildinfo": true
   },
   "yaml.schemas": {}

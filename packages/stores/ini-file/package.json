@@ -1,0 +1,35 @@
+{
+  "name": "@configu/ini-file",
+  "version": "0.0.0",
+  "keywords": [
+    "cfgu",
+    "configu"
+  ],
+  "homepage": "https://configu.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/configu/configu",
+    "directory": "packages/stores/ini-file"
+  },
+  "bugs": "https://github.com/configu/configu/issues",
+  "license": "Apache-2.0",
+  "author": {
+    "name": "@configu/dev",
+    "email": "dev@configu.com",
+    "url": "https://configu.com"
+  },
+  "type": "module",
+  "exports": "./src/index.ts",
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "dependencies": {
+    "@configu/file": "workspace:*",
+    "@configu/sdk": "workspace:*",
+    "ini": "5.0.0"
+  },
+  "devDependencies": {}
+}

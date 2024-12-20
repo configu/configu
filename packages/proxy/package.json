@@ -1,35 +1,7 @@
 {
   "name": "@configu/proxy",
   "version": "0.0.0",
-  "license": "Apache-2.0",
   "description": "Configu Proxy Server",
-  "author": "@configu/dev",
-  "scripts": {
-    "clean": "shx rm -rf tsconfig.tsbuildinfo build",
-    "build": "tsc --build",
-    "build:docker": "docker build --build-arg NODE_VERSION=22.9.0 --progress plain -t configu/proxy -f ./Dockerfile ../..",
-    "dev": "tsx watch --inspect --clear-screen=false src/index.ts"
-  },
-  "engines": {
-    "node": ">=v20.0.0"
-  },
-  "type": "module",
-  "exports": "./build/index.js",
-  "types": "./build/index.d.ts",
-  "files": [
-    "/bin",
-    "/build/**/*.js"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/configu/configu",
-    "directory": "packages/proxy"
-  },
-  "bugs": {
-    "url": "https://github.com/configu/configu/issues",
-    "email": "dev@configu.com"
-  },
-  "homepage": "https://configu.com",
   "keywords": [
     "cfgu",
     "configu",
@@ -37,6 +9,35 @@
     "configu-proxy-server",
     "configu-server"
   ],
+  "homepage": "https://github.com/configu/configu#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/configu/configu",
+    "directory": "packages/proxy"
+  },
+  "bugs": "https://github.com/configu/configu/issues",
+  "license": "Apache-2.0",
+  "author": {
+    "name": "@configu/dev",
+    "email": "dev@configu.com",
+    "url": "https://configu.com"
+  },
+  "engines": {
+    "node": ">=v20.0.0"
+  },
+  "type": "module",
+  "types": "./build/index.d.ts",
+  "exports": "./build/index.js",
+  "files": [
+    "/bin",
+    "/build/**/*.js"
+  ],
+  "scripts": {
+    "build": "tsc --build",
+    "build:docker": "docker build --progress plain -t configu/proxy -f ./Dockerfile ../..",
+    "clean": "shx rm -rf tsconfig.tsbuildinfo build",
+    "dev": "tsx watch --inspect --clear-screen=false src/index.ts"
+  },
   "dependencies": {
     "@configu/common": "workspace:*",
     "@configu/sdk": "workspace:*",
@@ -50,7 +51,6 @@
     "cosmiconfig": "^9.0.0",
     "fastify": "^4.28.1",
     "fastify-plugin": "^4.5.1",
-    "json-schema-to-ts": "^3.1.0",
     "lodash": "^4.17.21"
   },
   "devDependencies": {

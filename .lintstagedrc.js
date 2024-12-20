@@ -1,8 +1,9 @@
 module.exports = {
-  // 'packages/**/*.ts?(x)': () => 'pnpm build --force',
-  '*.{js,mjs,ts}?(x)': (filenames) => [
-    `pnpm prettier ${filenames.join(' ')} --ignore-path .gitignore, --ignore-path .prettierignore --write`,
-    `pnpm eslint ${filenames.join(' ')} --ignore-path .gitignore --cache --fix`,
+  '**/package.json': () => 'pnpm pkg:fix',
+  'packages/**/*.ts': () => 'pnpm build',
+  '*.{js,mjs,ts,mts}': (filenames) => [
+    `pnpm format --write ${filenames.join(' ')}`,
+    `pnpm lint --fix ${filenames.join(' ')}`,
   ],
-  '*.{md,mdx,json,yml}': (filenames) => `pnpm prettier ${filenames.join(' ')} --ignore-path .gitignore --write`,
+  '*.{md,mdx,json,yml}': (filenames) => `pnpm format --write ${filenames.join(' ')}`,
 };
