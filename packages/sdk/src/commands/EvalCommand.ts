@@ -227,10 +227,11 @@ export class EvalCommand extends ConfigCommand<EvalCommandInput, EvalCommandOutp
             configs: result,
           });
 
+          // todo: think about reviving depends on cfgu
           // if (origin !== EvaluatedConfigOrigin.Empty) {
-          //   // if (cfgu.depends && cfgu.depends.some((depend) => !evaluatedConfigsDict[depend])) {
-          //   //   throw new Error(`ConfigValue is missing for depends`);
-          //   // }
+          // if (cfgu.depends && cfgu.depends.some((depend) => !evaluatedConfigsDict[depend])) {
+          //   throw new Error(`ConfigValue is missing for depends`);
+          // }
           // } else if (cfgu?.required) {
           //   throw new Error('ConfigValue is required');
           // }

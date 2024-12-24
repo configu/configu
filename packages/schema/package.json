@@ -3,10 +3,11 @@
   "version": "0.0.0",
   "description": "Configu DSL JSON Schema",
   "keywords": [
-    "cfgu",
-    "configu",
     "configu-json-schema",
-    "json-schema"
+    "configu-schema",
+    "dsl",
+    "json-schema",
+    "schema"
   ],
   "homepage": "https://configu.com",
   "repository": {
@@ -25,6 +26,7 @@
     "/*.json"
   ],
   "scripts": {
+    "clean": "shx rm -f .cfgu.json .configu.json",
     "build": "tsx build.mts",
     "test": "pnpm \"/^test:.*/\"",
     "test:cfgu": "ajv test -s .cfgu.json -d \"data/*.cfgu.*\" --valid --allow-union-types --all-errors --verbose",
@@ -32,8 +34,7 @@
   },
   "dependencies": {
     "@configu/common": "workspace:*",
-    "@configu/sdk": "workspace:*",
-    "pathe": "^1.1.2"
+    "@configu/sdk": "workspace:*"
   },
   "devDependencies": {
     "ajv-cli": "^5.0.0"

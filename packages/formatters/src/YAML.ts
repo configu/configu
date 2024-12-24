@@ -1,14 +1,11 @@
 import _ from 'lodash';
 import { stringify } from 'yaml';
 import { camelCase } from 'change-case';
-import { ConfigFormatter, FormatterFunction } from './ConfigFormatter';
+import { type FormatterFunction } from './ConfigFormatter';
 
 type YAMLFormatterOptions = Exclude<Parameters<typeof stringify>['2'], string | number>;
 export const YAMLFormatter: FormatterFunction = (configs, options?: YAMLFormatterOptions) =>
   stringify(configs, options);
-
-ConfigFormatter.register('yml', YAMLFormatter);
-ConfigFormatter.register('yaml', YAMLFormatter);
 
 const DEFAULT_API_VERSION = 'v1';
 const DEFAULT_KIND = 'ConfigMap';
@@ -30,14 +27,8 @@ export const KubernetesConfigMapFormatter: FormatterFunction = (
   return YAMLFormatter(jsonConfigMap);
 };
 
-ConfigFormatter.register('config-map', KubernetesConfigMapFormatter);
-ConfigFormatter.register('k8s-config-map', KubernetesConfigMapFormatter);
-ConfigFormatter.register('kubernetes-config-map', KubernetesConfigMapFormatter);
-
 // * Helm values naming convention is camel case (https://helm.sh/docs/chart_best_practices/values/)
 export const HelmValuesFormatter: FormatterFunction = (configs, options?: YAMLFormatterOptions) => {
   const camelCaseKeys = _.mapKeys(configs, (v, k) => camelCase(k));
   return YAMLFormatter(camelCaseKeys, options);
 };
-
-ConfigFormatter.register('helm-values', HelmValuesFormatter);
