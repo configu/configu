@@ -105,10 +105,9 @@
           "group": "Internal SDKs",
           "pages": [
             "interfaces/sdk/overview",
-            "interfaces/sdk/ts/overview",
-            "interfaces/sdk/node/overview",
-            "interfaces/sdk/browser/overview",
-            "interfaces/sdk/lib/overview"
+            "interfaces/sdk/sdk/overview",
+            "interfaces/sdk/integrations/overview",
+            "interfaces/sdk/common/overview"
           ]
         }
       ]
@@ -183,7 +182,7 @@
               "pages": [
                 "integrations/store/other/aws-parameter-store",
                 "integrations/store/other/localforage",
-                "integrations/store/secret/etcd"
+                "integrations/store/other/etcd"
               ]
             }
           ]
