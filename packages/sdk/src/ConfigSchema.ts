@@ -5,8 +5,6 @@ import { JSONSchema, JSONSchemaObject, FromSchema } from './expressions/JSONSche
 import { ConfigValue } from './ConfigValue';
 import { ConfigExpression } from './ConfigExpression';
 
-// export type ConfigSchemaKeys = { [ConfigKey: string]: Cfgu };
-
 const LEGACY_CFGU_VALUE_TYPE_VALIDATORS: Record<string, string> = {
   Boolean: 'validator.isBoolean($.storedValue, { loose: true })',
   Number: 'validator.isNumeric($.storedValue)',
@@ -83,6 +81,7 @@ export class ConfigSchema {
       .entries()
       .forEach(([key, cfgu]) => {
         ConfigKey.validate({ key, errorPrefix: 'ConfigSchema.keys' });
+        // todo: consider if validate per key is not better here to provide more detailed error messages
         // if (!JsonSchema.validate({ schema: CfguSchema, data: cfgu })) {
         //   throw new Error(`ConfigSchema.keys "${key}" is invalid\n${JsonSchema.getLastValidationError()}`);
         // }

@@ -1,8 +1,5 @@
-import { ConfigFormatter, FormatterFunction } from './ConfigFormatter';
-
-const hasWhitespace = (str: string) => {
-  return /\s/.test(str);
-};
+import { type FormatterFunction } from './ConfigFormatter';
+import { hasWhitespace } from './utils';
 
 export const DotenvFormatter: FormatterFunction = (configs, { wrap = false }: { wrap?: boolean } = {}) => {
   return Object.entries(configs)
@@ -14,7 +11,3 @@ export const DotenvFormatter: FormatterFunction = (configs, { wrap = false }: { 
     })
     .join('\n');
 };
-
-ConfigFormatter.register('dotenv', DotenvFormatter);
-ConfigFormatter.register('env', DotenvFormatter);
-ConfigFormatter.register('.env', DotenvFormatter);

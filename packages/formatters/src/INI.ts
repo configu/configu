@@ -1,4 +1,4 @@
-import { ConfigFormatter, FormatterFunction } from './ConfigFormatter';
+import { type FormatterFunction } from './ConfigFormatter';
 
 export const INIFormatter: FormatterFunction = (configs) => {
   return Object.entries(configs)
@@ -7,8 +7,6 @@ export const INIFormatter: FormatterFunction = (configs) => {
     })
     .join('\n');
 };
-
-ConfigFormatter.register('ini', INIFormatter);
 
 // * TOML v1.0.0 spec: https://toml.io/en/v1.0.0
 // ! formatter supports flat objects only
@@ -22,5 +20,3 @@ export const TOMLFormatter: FormatterFunction = (configs) => {
     })
     .join('\n');
 };
-
-ConfigFormatter.register('toml', TOMLFormatter);

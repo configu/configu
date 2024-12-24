@@ -3,11 +3,12 @@
   "version": "0.0.0",
   "description": "Configu TypeScript SDK",
   "keywords": [
-    "cfgu",
-    "configu",
     "configu-sdk",
     "configu-ts",
-    "configu-typescript"
+    "configu-typescript",
+    "sdk",
+    "typescript",
+    "typescript-sdk"
   ],
   "homepage": "https://configu.com",
   "repository": {
@@ -73,8 +74,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup",
-    "clean": "shx rm -rf dist"
+    "clean": "shx rm -rf dist",
+    "build": "tsup"
   },
   "dependencies": {
     "@segment/ajv-human-errors": "^2.14.1",
@@ -89,13 +90,13 @@
     "json-schema-to-ts": "^3.1.1",
     "lodash": "^4.17.21",
     "ses": "^1.10.0",
-    "type-fest": "^4.30.0",
     "validator": "^13.12.0",
-    "zod": "^3.23.8"
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@types/chai": "^5.0.1",
     "@types/chai-subset": "^1.3.5",
-    "@types/validator": "^13.12.2"
+    "@types/validator": "^13.12.2",
+    "type-fest": "^4.30.2"
   }
 }

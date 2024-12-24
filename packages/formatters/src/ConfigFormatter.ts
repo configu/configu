@@ -1,6 +1,12 @@
 import _ from 'lodash';
 import * as changeCase from 'change-case';
 
+import { JSONFormatter } from './JSON';
+import { YAMLFormatter, KubernetesConfigMapFormatter, HelmValuesFormatter } from './YAML';
+import { INIFormatter, TOMLFormatter } from './INI';
+import { DotenvFormatter } from './Dotenv';
+import { TfvarsFormatter } from './TerraformTfvars';
+
 export const ConfigFormats = [
   'json',
   'compact-json',
@@ -56,6 +62,33 @@ export type FormatterFunction = (configs: { [key: string]: unknown }, options?: 
 
 export class ConfigFormatter {
   private static formats = new Map<string, FormatterFunction>();
+
+  static {
+    // todo: improve & optimize current formatters
+    // register built-in formatters
+    ConfigFormatter.register('json', JSONFormatter);
+    ConfigFormatter.register('compact-json', (configs) => JSONFormatter(configs));
+    ConfigFormatter.register('beautified-json', (configs) => JSONFormatter(configs, { beautify: true }));
+
+    ConfigFormatter.register('yml', YAMLFormatter);
+    ConfigFormatter.register('yaml', YAMLFormatter);
+
+    ConfigFormatter.register('ini', INIFormatter);
+    ConfigFormatter.register('toml', TOMLFormatter);
+
+    ConfigFormatter.register('dotenv', DotenvFormatter);
+    ConfigFormatter.register('env', DotenvFormatter);
+    ConfigFormatter.register('.env', DotenvFormatter);
+
+    ConfigFormatter.register('config-map', KubernetesConfigMapFormatter);
+    ConfigFormatter.register('k8s-config-map', KubernetesConfigMapFormatter);
+    ConfigFormatter.register('kubernetes-config-map', KubernetesConfigMapFormatter);
+
+    ConfigFormatter.register('helm-values', HelmValuesFormatter);
+
+    ConfigFormatter.register('tfvars', TfvarsFormatter);
+    ConfigFormatter.register('terraform-tfvars', TfvarsFormatter);
+  }
 
   static register(format: ConfigFormat, formatter: FormatterFunction) {
     // todo: register as expression also

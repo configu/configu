@@ -1,7 +1,7 @@
 import { snakeCase } from 'change-case';
-import { ConfigFormatter, FormatterFunction } from './ConfigFormatter';
+import { type FormatterFunction } from './ConfigFormatter';
 
-const TfvarsFormatter: FormatterFunction = (configs) => {
+export const TfvarsFormatter: FormatterFunction = (configs) => {
   return Object.entries(configs)
     .map(([key, value]) => {
       let formattedValue;
@@ -14,6 +14,3 @@ const TfvarsFormatter: FormatterFunction = (configs) => {
     })
     .join('\n');
 };
-
-ConfigFormatter.register('tfvars', TfvarsFormatter);
-ConfigFormatter.register('terraform-tfvars', TfvarsFormatter);

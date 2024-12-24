@@ -3,8 +3,7 @@
   "version": "0.0.0",
   "description": "Configu Formatters Extension",
   "keywords": [
-    "cfgu",
-    "configu",
+    "config-format",
     "configu-formatters",
     "format",
     "formats",
@@ -44,8 +43,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup",
-    "clean": "shx rm -rf dist"
+    "clean": "shx rm -rf dist",
+    "build": "tsup"
   },
   "dependencies": {
     "change-case": "^5.4.4",

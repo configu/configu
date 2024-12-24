@@ -3,9 +3,6 @@ import { ConfigKey } from './ConfigKey';
 
 export type ConfigQuery = Pick<Config, 'set' | 'key'>;
 
-// eslint-disable-next-line no-use-before-define
-// export type ConfigStoreConstructor = Constructor<ConfigStore>;
-
 export interface ConfigStoreConstructor {
   // eslint-disable-next-line no-use-before-define
   new (configuration: any): ConfigStore;

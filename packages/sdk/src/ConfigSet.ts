@@ -36,6 +36,3 @@ export class ConfigSet {
     this.hierarchy.unshift(ConfigSet.root);
   }
 }
-
-// const configSet = new ConfigSet('/a/b/c/');
-// console.log(configSet.path, configSet.hierarchy);

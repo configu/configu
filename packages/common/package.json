@@ -37,19 +37,16 @@
   "files": [
     "src"
   ],
-  "scripts": {
-    "test": "node --import tsx --test src/**/*.test.ts",
-    "test:watch": "node --watch --import tsx --test src/**/*.test.ts"
-  },
+  "scripts": {},
   "dependencies": {
     "@configu/configu": "workspace:*",
     "@configu/json-file": "workspace:*",
     "@configu/sdk": "workspace:*",
     "axios": "^1.7.9",
-    "consola": "^3.2.3",
+    "consola": "^3.3.0",
     "find-up": "^7.0.0",
     "glob": "^11.0.0",
-    "jiti": "^2.4.1",
+    "jiti": "^2.4.2",
     "parse-json": "8.1.0",
     "pathe": "^1.1.2",
     "semver": "^7.6.3",
@@ -58,8 +55,5 @@
   },
   "devDependencies": {
     "@types/semver": "^7.5.8"
-  },
-  "imports": {
-    "@configu/sdk": "../sdk/dist/index.js"
   }
 }
