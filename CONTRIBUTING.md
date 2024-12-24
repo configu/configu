@@ -99,10 +99,10 @@ flowchart RL
 ```
 
 - [./packages/sdk](https://github.com/configu/configu/tree/main/packages/sdk): The core SDK that contains the core Configu logic and interfaces
-  - [./packages/sdk/src/stores](https://github.com/configu/configu/tree/main/packages/ts/src/stores): [ConfigStores](https://configu.com/docs/config-store/) supported shipped together with the core SDK
-  - [./packages/sdk/src/commands](https://github.com/configu/configu/tree/main/packages/ts/src/commands): [Commands](https://configu.com/docs/commands/) supported shipped together with the core SDK
+  - [./packages/sdk/src/stores](https://github.com/configu/configu/tree/main/packages/sdk/src/stores): [ConfigStores](https://configu.com/docs/config-store/) supported shipped together with the core SDK
+  - [./packages/sdk/src/commands](https://github.com/configu/configu/tree/main/packages/sdk/src/commands): [Commands](https://configu.com/docs/commands/) supported shipped together with the core SDK
 - [./packages/integrations](https://github.com/configu/configu/tree/main/packages/integrations): Contains all the packages that extend the SDK interfaces
-  - [./packages/integrations/expressions/validators/src](https://github.com/configu/configu/tree/main/packages/integrations/expressions/validators/src): Contains all validator integrations
+  - [./packages/integrations/expressions](https://github.com/configu/configu/tree/main/packages/integrations/expressions): Contains all expression integrations
   - [./packages/integrations/formatters](https://github.com/configu/configu/tree/main/packages/integrations/formatters): Contains all formatter integrations
   - [./packages/integrations/stores](https://github.com/configu/configu/tree/main/packages/integrations): Contains all [ConfigStore](https://configu.com/docs/config-store/) integrations
 - [./packages/common](https://github.com/configu/configu/tree/main/packages/common): Shared code for both Configu Proxy and Configu CLI, extends the Configu SDK
