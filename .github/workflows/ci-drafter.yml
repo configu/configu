@@ -11,8 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        package: [ts, lib, cli, proxy]
-        # package: [ts, lib, cli, vscode]
+        package: [sdk, formatters, cli, proxy]
     permissions:
       contents: write
       pull-requests: read

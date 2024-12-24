@@ -10,13 +10,11 @@
 '@configu/examples':
   - 'examples/**'
 
-'@configu/ts':
-  - 'packages/ts/**'
-  - 'packages/node/**'
-  - 'packages/browser/**'
+'@configu/sdk':
+  - 'packages/sdk/**'
 
-'@configu/lib':
-  - 'packages/lib/**'
+'@configu/formatters':
+  - 'packages/formatters/**'
 
 '@configu/cli':
   - 'packages/cli/**'
