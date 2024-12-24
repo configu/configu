@@ -40,7 +40,7 @@
     "clean": "pnpm -r clean",
     "clean:all": "pnpm \"/^clean:.*/\"",
     "clean:cache": "shx rm -rf **/node_modules **/dist .eslintcache lcov.info",
-    "format": "prettier --ignore-path .gitignore",
+    "format": "prettier --ignore-path .gitignore --ignore-path .prettierignore",
     "format:check": "pnpm format --check $npm_package_config_format",
     "format:fix": "pnpm format --write $npm_package_config_format",
     "lint": "eslint --ignore-path .gitignore --cache",

@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 
-import { $ } from 'zx';
+import { $, cd } from 'zx';
 import * as fs from 'node:fs/promises';
 import { JSONSchemaObject } from '@configu/sdk/expressions';
 import { CfguFile, ConfiguFile, path } from '@configu/common';
@@ -20,7 +20,6 @@ const buildJSONSchemaFile = async (schema: JSONSchemaObject, filePath: string) =
   const configuPath = path.join(DIST_PATH, '.configu.json');
   await buildJSONSchemaFile(ConfiguFile.schema, configuPath);
 
-  await $`pnpm prettier --ignore-path ${path.join(ROOT_PATH, '.gitignore')} --write ${cfguPath} ${configuPath}`.pipe(
-    process.stdout,
-  );
+  cd(ROOT_PATH);
+  await $`pnpm format --write ${cfguPath} ${configuPath}`.pipe(process.stdout);
 })();
