@@ -19,12 +19,13 @@ This will download and run the installation script, which will check for depende
   safe to execute.
 </Warning>
 
-<Tip>
-  If you want to install the CLI in a standalone mode (without granting it permission to add it to $PATH), you can
-  replace the url in the command with `https://cli.configu.com/install-standalone.sh`. It is important to note that
-  currently, the `install-standalone.sh` script is only available for Unix-based operating systems, such as Linux and
-  macOS.
-</Tip>
+{/\* <Tip>
+If you want to install the CLI in a standalone mode (without granting it permission to add it to $PATH), you can
+replace the url in the command with `https://cli.configu.com/install-standalone.sh`. It is important to note that
+currently, the `install-standalone.sh` script is only available for Unix-based operating systems, such as Linux and
+macOS.
+
+</Tip> */}
 
 ## Install on CI/CD
 
@@ -46,7 +47,7 @@ You can also choose to run the CLI as an isolated Docker container instead.
 docker run --rm configu/cli [COMMAND]
 ```
 
-## Manual install with TAR
+{/\* ## Manual install with TAR
 
 Alternatively, you can manually download the Configu CLI binary from the [releases page](https://github.com/configu/configu/releases?q=cli-&expanded=true) and place it in a location that is included in your `$PATH`. This is useful if you want to install a specific version of the CLI, or if you prefer to manually manage your dependencies.
 
@@ -127,9 +128,9 @@ To use the Configu CLI from the `bin` directory, you can run it directly from th
 
 To update your `$PATH` permanently so that it can be run from any directory, add the appropriate entry to your shell's configuration file. For example, if you use the Bash shell, add this line to your ~/.bashrc or ~/.bash_profile file:
 
-```shell
+````shell
 PATH=<path-to-upacked-directory>/bin:$PATH
-```
+``` */}
 
 ## Verify Installation
 
@@ -137,7 +138,7 @@ Once installed, you can use the Configu CLI by simply running `configu` in your 
 
 ```shell
 configu
-```
+````
 
 If you see the help message of the Configu CLI including the current version of the installation, then your installation was successful.
 

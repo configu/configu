@@ -89,7 +89,7 @@ To define a custom script, add a new key-value pair to the `scripts` section of 
 <CodeGroup>
 
 ```yaml YAML
-$schema: https://json-schema.org/draft/2020-12/schema
+$schema: https://files.configu.com/schema.cfgu.json
 stores:
   store1:
     backup: true
@@ -113,7 +113,7 @@ scripts:
 
 ```json JSON
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$schema": "https://files.configu.com/schema.cfgu.json",
   "stores": {
     "store1": {
       "backup": true,
@@ -150,7 +150,7 @@ scripts:
 The `.configu` file allows you to use environment variables in its different sections. This comes in handy for `store configuration options` or `scripts` when you want to avoid explicitly writing sensitive authentication credentials etc. and you want to inject them from the outside before running Configu. To use an environment variable, you can utilize [`ConfigExpression`](/introduction/concepts#configexpression) as such:
 
 ```yaml
-$schema: https://json-schema.org/draft/2020-12/schema
+$schema: https://files.configu.com/schema.cfgu.json
 stores:
   store1:
     type: 'storeType1'
