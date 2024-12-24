@@ -1,10 +1,12 @@
 {
-  "container_id": {
-    "type": "String",
-    "description": "ID of the Docker container"
-  },
-  "image_id": {
-    "type": "String",
-    "description": "ID of the Docker image"
+  "keys": {
+    "container_id": {
+      "type": "String",
+      "description": "ID of the Docker container"
+    },
+    "image_id": {
+      "type": "String",
+      "description": "ID of the Docker image"
+    }
   }
 }

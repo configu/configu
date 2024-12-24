@@ -1,0 +1,470 @@
+---
+title: V1 Migration Guide
+sidebarTitle: V1 Migration
+description: 'This guide is intended to help with migration to v1.'
+---
+
+import CliInstallSnippet from '/snippets/cli-install.mdx';
+
+## Breaking Changes
+
+### `Cfgu` format changes
+
+V1 introduces several breaking changes to `.cfgu` files. Below is a list of the breaking changes and how to update your `.cfgu` files.
+
+#### `Cfgu` property changes
+
+- The `type` property has been removed and replaced with the [new `test` property](#new-cfgu-property-test). [View migration examples below](#new-cfgu-property-test).
+- The `options` property has been renamed to `enum` to better reflect its purpose.
+- The `depends` property has been removed. If you need to replicate it, you can use the [new `test` property](#new-cfgu-property-test).
+- The `labels` property has been renamed to `label`.
+- The `template` property has been removed. If you need to replicate it, you can use the [new `const` property](#new-cfgu-property-const). [View migration examples below](#new-cfgu-property-const).
+
+#### `.cfgu` file structure change
+
+The file structure of `.cfgu` files has significantly changed to provide a more robust structure.
+
+To update a `.cfgu` file to the new structure, the `Cfgu` declarations need to be moved under the `keys` property.
+
+We will provide an example of how to migrate this example `.cfgu` file:
+
+<CodeGroup>
+
+```yaml example.cfgu.yaml
+$schema: https://files.configu.com/schema.cfgu.json
+NODE_ENV:
+  description: Defines the environment in which the application runs
+  type: String
+  options:
+    - development
+    - production
+    - test
+  default: development
+LOG_LEVEL:
+  description: Defines the level of logs to be recorded
+  type: String
+  options:
+    - error
+    - warn
+    - info
+    - verbose
+    - debug
+    - silly
+  default: info
+SERVICE_ENDPOINT:
+  description: Defines the endpoint for the service
+  type: URL
+  required: true
+AWS_REGION:
+  description: Defines the AWS region for the service
+  type: AWSRegion
+  default: us-east-1
+```
+
+```json example.cfgu.json
+{
+  "$schema": "https://files.configu.com/schema.cfgu.json",
+  "NODE_ENV": {
+    "description": "Defines the environment in which the application runs",
+    "type": "String",
+    "options": ["development", "production", "test"],
+    "default": "development"
+  },
+  "LOG_LEVEL": {
+    "description": "Defines the level of logs to be recorded",
+    "type": "String",
+    "options": ["error", "warn", "info", "verbose", "debug", "silly"],
+    "default": "info"
+  },
+  "SERVICE_ENDPOINT": {
+    "description": "Defines the endpoint for the service",
+    "type": "URL",
+    "required": true
+  },
+  "AWS_REGION": {
+    "description": "Defines the AWS region for the service",
+    "type": "AWSRegion",
+    "default": "us-east-1"
+  }
+}
+```
+
+</CodeGroup>
+
+After migration:
+
+<CodeGroup>
+
+```yaml example.cfgu.yaml
+$schema: https://files.configu.com/schema.cfgu.json
+keys:
+  NODE_ENV:
+    description: Defines the environment in which the application runs
+    test: expect($.value).to.be.a('string')
+    enum:
+      - development
+      - production
+      - test
+    default: development
+  LOG_LEVEL:
+    description: Defines the level of logs to be recorded
+    test: expect($.value).to.be.a('string')
+    enum:
+      - error
+      - warn
+      - info
+      - verbose
+      - debug
+      - silly
+    default: info
+  SERVICE_ENDPOINT:
+    description: Defines the endpoint for the service
+    test: validator.isURL($.value)
+    required: true
+  AWS_REGION:
+    description: Defines the AWS region for the service
+    enum:
+      - af-south-1
+      - ap-east-1
+      - ap-northeast-1
+      - ap-northeast-2
+      - ap-northeast-3
+      - ap-south-1
+      - ap-southeast-1
+      - ap-southeast-2
+      - ca-central-1
+      - cn-north-1
+      - cn-northwest-1
+      - eu-central-1
+      - eu-north-1
+      - eu-south-1
+      - eu-west-1
+      - eu-west-2
+      - eu-west-3
+      - me-south-1
+      - sa-east-1
+      - us-east-1
+      - us-east-2
+      - us-gov-east-1
+      - us-gov-west-1
+      - us-west-1
+      - us-west-2
+    default: us-east-1
+```
+
+```json example.cfgu.json
+{
+  "$schema": "https://files.configu.com/schema.cfgu.json",
+  "keys": {
+    "NODE_ENV": {
+      "description": "Defines the environment in which the application runs",
+      "test": "expect($.value).to.be.a('string')",
+      "enum": ["development", "production", "test"],
+      "default": "development"
+    },
+    "LOG_LEVEL": {
+      "description": "Defines the level of logs to be recorded",
+      "test": "expect($.value).to.be.a('string')",
+      "enum": ["error", "warn", "info", "verbose", "debug", "silly"],
+      "default": "info"
+    },
+    "SERVICE_ENDPOINT": {
+      "description": "Defines the endpoint for the service",
+      "test": "validator.isURL($.value)",
+      "required": true
+    },
+    "AWS_REGION": {
+      "description": "Defines the AWS region for the service",
+      "enum": [
+        "af-south-1",
+        "ap-east-1",
+        "ap-northeast-1",
+        "ap-northeast-2",
+        "ap-northeast-3",
+        "ap-south-1",
+        "ap-southeast-1",
+        "ap-southeast-2",
+        "ca-central-1",
+        "cn-north-1",
+        "cn-northwest-1",
+        "eu-central-1",
+        "eu-north-1",
+        "eu-south-1",
+        "eu-west-1",
+        "eu-west-2",
+        "eu-west-3",
+        "me-south-1",
+        "sa-east-1",
+        "us-east-1",
+        "us-east-2",
+        "us-gov-east-1",
+        "us-gov-west-1",
+        "us-west-1",
+        "us-west-2"
+      ],
+      "default": "us-east-1"
+    }
+  }
+}
+```
+
+</CodeGroup>
+
+### CLI changes
+
+#### upsert command config assignment flag changes
+
+The `--config, -c` flag has been renamed to `--kv` to avoid clashes with the new [`--config` global flag](#cli-global-config-flag). Replace all occurrences of `--config` with `--kv` to align with this updated naming convention.
+
+A new method for declaring key-value pairs has also been introduced using the `-k`/`--key` and `-v`/`--value` flags. These flags must be used in sequence, with each key matched to the corresponding value provided immediately after. Keys without matching values will result in the deletion of their corresponding values.
+
+For example, the following command:
+
+```bash
+configu upsert --store 'my-store' --set '' --schema start.cfgu.yaml \
+    -k GREETING \
+    -k SUBJECT \
+    -v configu
+```
+
+Will:
+
+- Delete the value of `GREETING`.
+- Set the value of `SUBJECT` to `configu`.
+
+These changes aim to improve clarity and prevent naming conflicts while providing flexibility for key-value management.
+
+#### Upsert command import flag removal
+
+The `--import` flag has been removed from the CLI upsert command.
+
+#### Export command filtering flags changes
+
+The following flags have been removed in favor of the new [`--filter`](/interfaces/cli/ref#configu-export) flag along with how they can be replaced with `--filter`:
+
+- `--pick-label`
+
+```bash
+--filter '$.labels.includes("my-label") === true'
+```
+
+- `--omit-label`
+
+```bash
+--filter '$.labels.includes("my-label") === false'
+```
+
+- `--pick-key`
+
+```bash
+--filter '$.key === "my-key"'
+```
+
+- `--omit-key`
+
+```bash
+--filter '$.key !== "my-key"'
+```
+
+- `--pick-hidden`
+
+```bash
+--filter '$.cfgu.hidden === true'
+```
+
+- `--omit-hidden`
+
+```bash
+--filter '!$.cfgu.hidden !== true'
+```
+
+- `--pick-empty`
+
+```bash
+--filter '$.origin === "empty"'
+```
+
+- `--omit-empty`
+
+```bash
+--filter '$.origin !== "empty"'
+```
+
+#### Export command template input flag removal
+
+The `--template-input` flag has been removed. You can instead adjust the input as needed via the `ConfigExpression` utilities and mutate the `$.configs` (provided as an object) context input to whatever you need.
+
+### `.configu` file changes
+
+The `cache` property has been renamed to `backup` to more accurately reflect its purpose. Replace all occurrences of `cache` with `backup` to reflect the new naming convention.
+
+### Introduction of type coercion
+
+V1 introduces type coercion to Configu. During evaluation, Configu will attempt to coerce values from ConfigStores to their expected type. This feature is intended to make Configu more flexible and easier to use.
+
+Type coercion affects:
+
+- All instances of config values in `ConfigExpressions` are coerced to the expected type (`string`, `number`, `boolean`, `object`, `array`). You can access the value as it's stored via `storedValue`.
+- The Configu CLI Eval command returns the coerced value in the output.
+- The Configu CLI Export command receives the coerced value as input from Eval command which affects:
+  - The `--format` flag which will now receive the coerced value as input and appropriately formats it.
+  - All instances of `ConfigExpressions` usages by `--filter`, `--template`, `--map`, `--reduce`, `--sort` flags which will now receive the coerced value as input.
+- The Configu Proxy export route which will now coerce values to the expected type.
+
+## Upgrading Configu CLI
+
+To use the latest Configu CLI, you can use the following command:
+
+<CliInstallSnippet />
+
+## Upgrading Configu Proxy
+
+Install the latest `configu/proxy` docker image.
+
+## New Features
+
+V1 introduces several new features to Configu. Below is a list of the new features and how to use them.
+
+### `ConfigExpressions`
+
+V1 introduces a new feature called `ConfigExpressions`. `ConfigExpressions` allow you to write dynamic values with certain features like string interpolation, arithmetic operations, and more. All features that support `ConfigExpressions` have their own injected context that can withing the `ConfigExpressions` for evaluation.
+
+The `ConfigExpressions` contexts include the following libraries:
+
+- [lodash](https://lodash.com) for various utility functions. Use `_` within the `ConfigExpression` to access lodash functions.
+- [validator.js](https://github.com/validatorjs/validator.js) for string validations. Use `validator` within the `ConfigExpression` to access validator.js functions.
+- The [JSONSchema utility class](https://github.com/configu/configu/tree/main/packages/sdk/src/expressions/JSONSchema.ts) for JSON schema validations. Use `JSONSchema` or `jsonschema` within the `ConfigExpression` to access the utility class.
+- [Zod](https://zod.dev/) for schema validations with static type inference. Use `z` within the `ConfigExpression` to access Zod functions.
+- [Chai](https://github.com/chaijs/chai) for assertions functions. Use `assert`, `expect`, and `should` respectively within the `ConfigExpression` to access Chai functions.
+
+The following features support `ConfigExpressions`:
+
+- [The new `test` `Cfgu` property](/interfaces/.cfgu#properties)
+- [The new `const` `Cfgu` property](/interfaces/.cfgu#properties)
+- [The `.configu` file](/interfaces/.configu#environment-variables)
+- [The CLI export `filter` flag](/interfaces/cli/ref#configu-export)
+- [The CLI export `template` flag](/interfaces/cli/ref#configu-export)
+
+Example usages of `ConfigExpressions`:
+
+`test` `Cfgu` property:
+
+```yaml
+keys:
+  MY_STRING:
+    test: expect($.value).to.be.a('string')
+```
+
+The CLI export `filter` flag:
+
+```bash
+configu eval --store my-store --set '' --schema ./tmp/schemas2/start.cfgu.yaml | configu export --filter '$.origin === "empty"' --filter '$.labels.includes("my-label") === true'
+```
+
+The CLI export `template` flag, example template `.env` file:
+
+```.env
+SUBJECT={{SUBJECT}}
+GREETING={{toUpper(GREETING)}}
+```
+
+### New `Cfgu` property `test`
+
+The `test` property is a new property that allows you to write `ConfigExpressions` to validate the value of a key. It replaces the `type` property which was removed due to its limited functionality.
+
+Here are a few examples of how `test` can be used in place of `type`
+
+String type validation via Chai assertion:
+
+```yaml
+keys:
+  MY_KEY:
+    test: expect($.value).to.be.a('string')
+```
+
+Boolean type validation via validator.js
+
+```yaml
+keys:
+  MY_KEY:
+    test: validator.isBoolean($.storedValue)
+```
+
+Example of using `test` in place of `depends`:
+
+```yaml
+keys:
+  ENABLE_FEATURE:
+    test: validator.isBoolean($.storedValue)
+  MY_KEY:
+    test:
+      - "$.configs.ENABLE_FEATURE.value ? expect($.value).to.be.a('string') : true"
+```
+
+### New `Cfgu` property `const`
+
+The `const` property is a new property that allows you to write `ConfigExpressions` to set a constant value for a key.
+
+Example usage of `const` instead of `template`:
+
+```yaml
+keys:
+  PORT:
+    default: 1234
+  HOST:
+    default: localhost
+  CONNECTION_STRING:
+    const: '`${$.configs.HOST.value}:${$.configs.PORT.value}`'
+    test: 'validator.isURL($.value, {require_host: true, require_port: true})'
+```
+
+### Default `ConfigStore`
+
+You can now designate a `ConfigStore` as the default by adding the `default` property to its configuration and setting it to `true`. This default will be used whenever a `ConfigStore` is omitted as an input in actions performed using Configu's high-level interfaces.
+
+If your `.configu` file contains only a single `ConfigStore`, it will be automatically detected and treated as the default.
+
+Example definition of a default `ConfigStore` in a `.configu` file:
+
+```yaml
+stores:
+  json-store:
+    type: json-file
+    configuration:
+      path: path/to/file1.json
+  default-json-store:
+    type: json-file
+    default: true
+    configuration:
+      path: path/to/file2.json
+```
+
+### CLI global `--config` flag
+
+The `--config` flag is a new global flag that allows you to specify a path to `.configu` file to use for all commands. This flag is useful when you want to use a specific `.configu` file that you want to use for all commands.
+
+### CLI `.configu` auto-detection
+
+The CLI now automatically recursively searches for `.configu` files from the current working directory upwards to the home directory and uses the first one found for all commands when the `--config` flag is not provided.
+
+### CLI eval command defaults flag
+
+The new `--defaults` flag can now be used to evaluate default value from a ConfigSchema and skip querying a ConfigStore.
+
+## Other changes
+
+### `@configu/node` and `@configu/browser` removal
+
+Any and all uses of these packages are no longer supported. We encourage all users of these packages to utilize [`@configu/cli`](/interfaces/cli/overview) or [`@configu/proxy`](/interfaces/proxy/overview) depending on your requirements. All ConfigStore implementations have been moved to `@configu/integrations`.
+
+### `@configu/lib` removal
+
+Superseded by `@configu/common` which is a package that provides shared functionality for the higher-level interfaces.
+
+### `@configu/ts` removal
+
+Superseded by `@configu/sdk`.
+
+### Introduction of `@configu/integrations`
+
+A new package that contains all ConfigStore implementations and libraries that extend the `ConfigExpressions` functionality which are decoupled from the core `@configu/sdk` package. This package is intended to be used by higher-level configu interfaces such as the CLI and proxy.

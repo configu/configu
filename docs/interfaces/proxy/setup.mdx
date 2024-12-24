@@ -9,8 +9,9 @@ import { Construction } from '/snippets/callouts.mdx';
 
 You can configure the Configu Proxy server using environment variables. The following environment variables are available:
 
-<ResponseField name="CONFIGU_CONFIG_FILE" type="string" required>
-  The (absolute) file path of the [`.configu`](/interfaces/.configu) configuration file.
+<ResponseField name="CONFIGU_CONFIG" type="string" required>
+  The (absolute) file path of the [`.configu`](/interfaces/.configu) configuration file. `CONFIGU_CONFIGURATION` can
+  also be used.
 </ResponseField>
 <ResponseField name="CONFIGU_HTTP_PORT" type="number" default="8080">
   The host port to serve the HTTP server on.
@@ -84,7 +85,7 @@ You can run the Configu Proxy server using Docker. The following command starts 
 ```shell
 docker run --rm --init \
   -v /path/to/.configu:/config/.configu \
-  -e CONFIGU_CONFIG_FILE=/config/.configu \
+  -e CONFIGU_CONFIG=/config/.configu \
   -p 8080:8080 \
   configu/proxy
 ```
@@ -100,7 +101,7 @@ docker run --rm --init \
   -e CONFIGU_HTTP_PORT=3000 \
   -e CONFIGU_AUTH_ENABLED=true -e CONFIGU_AUTH_PRESHARED_KEYS=token \
   -e CONFIGU_HTTP_TLS_ENABLED=true -e CONFIGU_HTTP_TLS_CERT=/config/certs/localhost.pem -e CONFIGU_HTTP_TLS_KEY=/config/certs/localhost-key.pem \
-  -e CONFIGU_CONFIG_FILE=/config/.configu \
+  -e CONFIGU_CONFIG=/config/.configu \
   -p 3000:3000 \
   configu/proxy
 ```
@@ -121,7 +122,7 @@ services:
     volumes:
       - /path/to/.configu:/config/.configu
     environment:
-      CONFIGU_CONFIG_FILE: '/config/.configu'
+      CONFIGU_CONFIG: '/config/.configu'
 ```
 
 Replace `/path/to/.configu` with the path to your `.configu` configuration file.
@@ -161,7 +162,7 @@ spec:
               mountPath: /config
               readOnly: true
           env:
-            - name: CONFIGU_CONFIG_FILE
+            - name: CONFIGU_CONFIG
               value: '/config/.configu'
           volumes:
             - name: configu-config

@@ -43,231 +43,188 @@ $schema: https://raw.githubusercontent.com/configu/configu/main/packages/schema/
   Describe a `ConfigKey`'s purpose within the application.
 </ResponseField>
 
-<ResponseField name="type" type="CfguType" required>
-  Define the data type of a `ConfigValue`.
-  - If the type is `RegEx`, a `pattern` property must be provided.
-  - If the type is `JSONSchema`, a `schema` property must be provided.
+<ResponseField name="test" type="ConfigExpression|ConfigExpression[]">
+  Use this property to validate a `ConfigValue`. This property receives a string or an array of strings representing an
+  expression that evaluates to a boolean. If an array is provided, all expressions must evaluate to `true` for the value
+  to be considered valid.
 
-  <Accordion title="CfguType">
-    Configu supports a variety of types to accommodate different data formats.
-
-    <Info>These types cover a wide range of data formats commonly used in configuration settings. You should choose the appropriate type for each configuration value based on your application's requirements. Explore the available types and utilize them to define your configuration values accurately.</Info>
-
-    <ResponseField name="Boolean" type="true | false">
-    Check if the string is a boolean.
+  <Accordion title="ConfigExpression context">
+      <ResponseField name="$.value" type="string|number|boolean|object|array">
+    The `ConfigValue` to be validated.
     </ResponseField>
-
-    <ResponseField name="Number" type="123 | 1.2 | -3">
-    Check if the string contains only numbers.
+      <ResponseField name="$.storedValue" type="String">
+    The `ConfigValue` to be validated as a raw string as it is stored in the `ConfigStore`.
     </ResponseField>
-
-    <ResponseField name="String" type="'Hello, World!'">
-    Any string of characters.
+      <ResponseField name="$.cfgu" type="Cfgu">
+    The `Cfgu` of the evaluated
+  config.
     </ResponseField>
-
-    <ResponseField name="RegEx" type="/abc/">
-    Check if the string matches a regular expression.
+      <ResponseField name="$.key" type="String">
+    The `ConfigKey` of the evaluated config. 
     </ResponseField>
-
-    <ResponseField name="JSONSchema" type='{ "type": "string" }'>
-    A JSON schema.
+      <ResponseField name="$.origin" type="String">
+    The origin of the `ConfigValue`. One of
+  `empty`, `default`, `store`, `override`, or `const`.
     </ResponseField>
-
-    <ResponseField name="IPv4" type="192.0.2.0">
-    Check if the string is an IP (version 4).
+      <ResponseField name="$.labels" type="String[]">
+    An array containing all of the labels of the config. If the config has no labels, then the array will be empty. Acts as syntax sugar for `$.cfgu.label` for expression consistency. 
     </ResponseField>
-
-    <ResponseField name="IPv6" type="2001:0db8:85a3:0000:0000:8a2e:0370:7334">
-    Check if the string is an IP (version 6).
+      <ResponseField name="context.store" type="ConfigStore">
+    The `ConfigStore` provided as input to the
+  command.
     </ResponseField>
-
-    <ResponseField name="FQDN" type="domain.com">
-    Check if the string is a fully qualified domain name.
+      <ResponseField name="context.set" type="ConfigSet">
+    The `ConfigSet` provided as input to the command.
     </ResponseField>
-
-    <ResponseField name="URL" type="http://foo.com">
-    Check if the string is a URL.
+      <ResponseField name="context.schema" type="ConfigSchema">
+    The `ConfigSchema`
+  provided as input to the command. 
     </ResponseField>
-
-
-
-    <ResponseField name="Hex" type="deadBEEF">
-    A hexadecimal number.
+      <ResponseField name="configs.{{key}}.cfgu" type="Cfgu">
+    Use this to access the `Cfgu` properties of another ConfigKey.
     </ResponseField>
-
-    <ResponseField name="Base64" type="Zm9vYmFy">
-    Check if the string is base64 encoded.
+      <ResponseField name="configs.{{key}}.value" type="string|number|boolean|object|array">
+    Use this to access the `value` of another ConfigKey.
     </ResponseField>
-
-
-    <ResponseField name="MD5" type="d41d8cd98f00b204e9800998ecf8427e">
-    Check if the string is a hash of MD5 algorithm.
+      <ResponseField name="configs.{{key}}.storedValue" type="string">
+    Use this to access the `storedValue` of another ConfigKey.
     </ResponseField>
+   </Accordion>
+  
+<Accordion title="ConfigExpression examples">
+<CodeGroup>
 
-    <ResponseField name="SHA" type="5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8">
-    Check if the string is a hash of SHA algorithm (1, 256, 384, 512).
+```yaml example.cfgu.yaml
+$schema: https://files.configu.com/schema.cfgu.json
+keys:
+  NODE_ENV:
+    description: Defines the environment in which the application runs
+    test: expect($.value).to.be.a('string')
+    enum:
+      - development
+      - production
+      - test
+    default: production
+  ENABLE_FEATURE:
+    description: Enables a feature flag. Needs be enabled in production
+    test:
+      - validator.isBoolean($.storedValue)
+      - '$.configs.NODE_ENV.value === "production" ? expect($.value).to.be.true : true'
+    default: false
+  ENABLE_DEBUG_MODE:
+    description: Enables a debug mode. Must not be enabled in production
+    test:
+      - validator.isBoolean($.storedValue)
+      - '$.configs.NODE_ENV.value === "production" ? expect($.value).to.be.false : true'
+    default: false
+```
+
+```json example.cfgu.json
+{
+  "$schema": "https://files.configu.com/schema.cfgu.json",
+  "keys": {
+    "NODE_ENV": {
+      "description": "Defines the environment in which the application runs",
+      "test": "expect($.value).to.be.a('string')",
+      "enum": ["development", "production", "test"],
+      "default": "production"
+    },
+    "ENABLE_FEATURE": {
+      "description": "Enables a feature flag. Needs to be enabled in production",
+      "test": [
+        "validator.isBoolean($.storedValue)",
+        "$.configs.NODE_ENV.value === \"production\" ? expect($.value).to.be.true : true"
+      ],
+      "default": false
+    },
+    "ENABLE_DEBUG_MODE": {
+      "description": "Enables a debug mode. Must not be enabled in production",
+      "test": [
+        "validator.isBoolean($.storedValue)",
+        "$.configs.NODE_ENV.value === \"production\" ? expect($.value).to.be.false : true"
+      ],
+      "default": false
+    }
+  }
+}
+```
+
+</CodeGroup>
+</Accordion>
+</ResponseField>
+
+<ResponseField name="const" type="ConfigExpression">
+  Define a constant value for a `ConfigKey` through a `ConfigExpression`, these `ConfigKeys` are never queried through a
+  `ConfigStore`. This property cannot be set together with `lazy`, `default`, or `required`.
+
+  <Accordion title="ConfigExpression context">
+      <ResponseField name="$.cfgu" type="Cfgu">
+    The `Cfgu` of the evaluated
+  config.
     </ResponseField>
-
-
-    <ResponseField name="Color" type="#FF0000">
-    A color in hexadecimal format.
+      <ResponseField name="$.key" type="String">
+    The `ConfigKey` of the evaluated config. 
     </ResponseField>
-
-
-    <ResponseField name="Email" type="foo@bar.com">
-    An email address.
+      <ResponseField name="$.labels" type="String[]">
+    An array containing all of the labels of the config. If the config has no labels, then the array will be empty. Acts as syntax sugar for `$.cfgu.label` for expression consistency. 
     </ResponseField>
-
-    <ResponseField name="MobilePhone" type="19876543210">
-    A mobile phone number.
+      <ResponseField name="context.store" type="ConfigStore">
+    The `ConfigStore` provided as input to the
+  command.
     </ResponseField>
-
-    <ResponseField name="Locale" type="en-US">
-    A locale.
+      <ResponseField name="context.set" type="ConfigSet">
+    The `ConfigSet` provided as input to the command.
     </ResponseField>
-
-    <ResponseField name="Language" type="en">
-    A language code.
+      <ResponseField name="context.schema" type="ConfigSchema">
+    The `ConfigSchema`
+  provided as input to the command. 
     </ResponseField>
-
-    <ResponseField name="LatLong" type="(-17.738223, 85.605469)">
-    A latitude-longitude pair.
+      <ResponseField name="configs.{{key}}.cfgu" type="Cfgu">
+    Use this to access the `Cfgu` properties of another ConfigKey.
     </ResponseField>
-
-    <ResponseField name="Country" type="US">
-    A country code.
+      <ResponseField name="configs.{{key}}.value" type="string|number|boolean|object|array">
+    Use this to access the `value` of another ConfigKey.
     </ResponseField>
-
-    <ResponseField name="Currency" type="USD">
-    A currency code.
+      <ResponseField name="configs.{{key}}.storedValue" type="string">
+    Use this to access the `storedValue` of another ConfigKey.
     </ResponseField>
-
-
-    <ResponseField name="DateTime" type="'2000-01-01T00:00:00Z'">
-    A date-time string in ISO 8601 format.
-    </ResponseField>
-
-
-    <ResponseField name="UUID" type="A987FBC9-4BED-3078-CF07-9141BA07C9F3">
-    Check if the string is a UUID (version 1, 2, 3, 4 or 5).
-    </ResponseField>
-
-    <ResponseField name="SemVer" type="1.0.0">
-    Check if the string is a Semantic Versioning Specification (SemVer).
-    </ResponseField>
-
-    <ResponseField name="DockerImage" type="nginx:latest">
-    A Docker image.
-    </ResponseField>
-
-    <ResponseField name="MACAddress" type="3D:F2:C9:A6:B3:4F">
-    A MAC address.
-    </ResponseField>
-
-    <ResponseField name="MIMEType" type="application/json">
-    A MIME type.
-    </ResponseField>
-
-    <ResponseField name="MongoId" type="'507f1f77bcf86cd799439011'">
-    A MongoDB ObjectId.
-    </ResponseField>
-
-    <ResponseField name="AWSRegion" type="us-west-2">
-    An AWS region.
-    </ResponseField>
-
-    <ResponseField name="AZRegion" type="westus">
-    An Azure region.
-    </ResponseField>
-
-    <ResponseField name="GCPRegion" type="us-central1">
-    A Google Cloud Platform region.
-    </ResponseField>
-
-    <ResponseField name="OracleRegion" type="us-ashburn-1">
-    An Oracle Cloud region.
-    </ResponseField>
-
-    <ResponseField name="IBMRegion" type="us-south">
-    An IBM Cloud region.
-    </ResponseField>
-
-    <ResponseField name="AlibabaRegion" type="cn-hangzhou">
-    An Alibaba Cloud region.
-    </ResponseField>
-
-    <ResponseField name="ARN" type="arn:aws:cloudformation:us-east-1:123456789012:stack/my-stack-name/1c2fa620-982a-11e3-aff7-50e2416294e0">
-    An Amazon Resource Name (ARN).
-    </ResponseField>
-
-    <Info>Most of the validators are based on the [validator.js](https://github.com/validatorjs/validator.js?tab=readme-ov-file#validators) library. You can refer to the library's documentation for more information on the supported validators.</Info>
-
-    <Tip>Configu is designed to be extensible, allowing you to add custom types as needed. If you require a type that is not currently supported, we encourage you to let us know or consider contributing it yourself. With Configu's flexibility, you can tailor the configuration system to suit your specific requirements.</Tip>
-
-  </Accordion>
+   </Accordion>
 </ResponseField>
 
 <ResponseField name="pattern" type="String">
-  Define a regular expression a `ConigValue` must match.
-  <br />
-  This property must be provided if the `type` is `RegEx`.
+  Define a regular expression a `ConfigValue` must match. This property must be provided if the `type` is `RegEx`.
 </ResponseField>
 
 <ResponseField name="schema" type="JSON Schema">
-  Specify a JSON schema a `ConigValue` must conform to.
-  <br />
-  This property must be provided if the `type` is `JSONSchema`.
+  Specify a JSON schema a `ConfigValue` must conform to. This property must be provided if the `type` is `JSONSchema`.
 </ResponseField>
 
-<ResponseField name="options" type="String[]">
-  Specify a list of allowable `ConigValues` for a `ConfigKey`.
-  <br />
-  This property cannot be set together with `template`.
-  <br />
-  This property cannot be an empty array or contain empty strings.
-  <br />
-  Each option must be unique and according to the `type` of the `ConfigKey`.
+<ResponseField name="enum" type="String[]">
+  Specify a list of allowable `ConfigValues` for a `ConfigKey`. This property cannot be an empty array or contain empty
+  strings. Each option must be unique.
 </ResponseField>
 
 <ResponseField name="default" type="String">
-  Set a default `ConfigValue` for a `ConfigKey` if not explicitly provided.
-  <br />
-  This property cannot be set together with `required` or `template` or `lazy` properties.
-  <br />
-  If `options` is set, the default value must be one of the options.
+  Set a default `ConfigValue` for a `ConfigKey` if not explicitly provided. <br />
+  This property cannot be set together with `required`, `const` or `lazy` properties. <br />
+  If `enum` is set, the default value must be one of the options.
 </ResponseField>
 
 <ResponseField name="required" type="Boolean">
   Indicate whether a `ConfigKey` is essential for the application's functionality. When set to `true`, a `ConfigValue`
-  must be found on `EvalCommand`.
-  <br />
-  This property cannot be set together with `default`.
-</ResponseField>
-
-<ResponseField name="depends" type="String[]">
-  List other `ConfigKeys` this configuration depends on.
-  <br />
-  This property cannot be an empty array or contain reserved words.
-</ResponseField>
-
-<ResponseField name="template" type="String">
-  Define a template for constructing a `ConfigValue` from other `Configs`.
-  <br />
-  This property cannot be set together with `default` or `lazy`.
+  must be found on `EvalCommand`. This property cannot be set together with `default` or `const`.
 </ResponseField>
 
 <ResponseField name="lazy" type="Boolean">
   Indicate that a `ConfigValue` is set only during `EvalCommand` execution, excluding it from `UpsertCommand`
-  assignments.
-  <br />
-  This property cannot be set together with `default` or `template`.
+  assignments. This property cannot be set together with `const` or `default`.
 </ResponseField>
 
 <ResponseField name="hidden" type="Boolean">
   Indicate that this `ConfigKey` will be omitted from `ExportCommand` results.
 </ResponseField>
 
-<ResponseField name="labels" type="String[]">
+<ResponseField name="label" type="String|String[]">
   List labels to categorize `ConfigKeys` for easier filtering on `ExportCommand`.
 </ResponseField>
 
@@ -276,60 +233,114 @@ $schema: https://raw.githubusercontent.com/configu/configu/main/packages/schema/
 <CodeGroup>
 
 ```yaml example.cfgu.yaml
-$schema: https://json-schema.org/draft/2020-12/schema-cfgu
-NODE_ENV:
-  description: Defines the environment in which the application runs
-  type: String
-  options:
-    - development
-    - production
-    - test
-  default: development
-LOG_LEVEL:
-  description: Defines the level of logs to be recorded
-  type: String
-  options:
-    - error
-    - warn
-    - info
-    - verbose
-    - debug
-    - silly
-  default: info
-SERVICE_ENDPOINT:
-  description: Defines the endpoint for the service
-  type: URL
-  required: true
-AWS_REGION:
-  description: Defines the AWS region for the service
-  type: AWSRegion
-  default: us-east-1
+$schema: https://files.configu.com/schema.cfgu.json
+keys:
+  NODE_ENV:
+    description: Defines the environment in which the application runs
+    test: validator.isString($.value)
+    enum:
+      - development
+      - production
+      - test
+    default: development
+  LOG_LEVEL:
+    description: Defines the level of logs to be recorded
+    test: validator.isString($.value)
+    enum:
+      - error
+      - warn
+      - info
+      - verbose
+      - debug
+      - silly
+    default: info
+  SERVICE_ENDPOINT:
+    description: Defines the endpoint for the service
+    test: validator.isURL($.value)
+    required: true
+  AWS_REGION:
+    description: Defines the AWS region for the service
+    enum:
+      - af-south-1
+      - ap-east-1
+      - ap-northeast-1
+      - ap-northeast-2
+      - ap-northeast-3
+      - ap-south-1
+      - ap-southeast-1
+      - ap-southeast-2
+      - ca-central-1
+      - cn-north-1
+      - cn-northwest-1
+      - eu-central-1
+      - eu-north-1
+      - eu-south-1
+      - eu-west-1
+      - eu-west-2
+      - eu-west-3
+      - me-south-1
+      - sa-east-1
+      - us-east-1
+      - us-east-2
+      - us-gov-east-1
+      - us-gov-west-1
+      - us-west-1
+      - us-west-2
+    default: us-east-1
 ```
 
 ```json example.cfgu.json
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema-cfgu",
-  "NODE_ENV": {
-    "description": "Defines the environment in which the application runs",
-    "type": "String",
-    "options": ["development", "production", "test"],
-    "default": "development"
-  },
-  "LOG_LEVEL": {
-    "description": "Defines the level of logs to be recorded",
-    "type": "String",
-    "options": ["error", "warn", "info", "verbose", "debug", "silly"],
-    "default": "info"
-  },
-  "SERVICE_ENDPOINT": {
-    "description": "Defines the endpoint for the service",
-    "type": "URL",
-    "required": true
-  },
-  "AWS_REGION": {
-    "description": "Defines the AWS region for the service",
-    "type": "AWSRegion",
-    "default": "us-east-1"
+  "$schema": "https://files.configu.com/schema.cfgu.json",
+  "keys": {
+    "NODE_ENV": {
+      "description": "Defines the environment in which the application runs",
+      "test": "validator.isString($.value)",
+      "enum": ["development", "production", "test"],
+      "default": "development"
+    },
+    "LOG_LEVEL": {
+      "description": "Defines the level of logs to be recorded",
+      "test": "validator.isString($.value)",
+      "enum": ["error", "warn", "info", "verbose", "debug", "silly"],
+      "default": "info"
+    },
+    "SERVICE_ENDPOINT": {
+      "description": "Defines the endpoint for the service",
+      "test": "validator.isURL($.value)",
+      "required": true
+    },
+    "AWS_REGION": {
+      "description": "Defines the AWS region for the service",
+      "enum": [
+        "af-south-1",
+        "ap-east-1",
+        "ap-northeast-1",
+        "ap-northeast-2",
+        "ap-northeast-3",
+        "ap-south-1",
+        "ap-southeast-1",
+        "ap-southeast-2",
+        "ca-central-1",
+        "cn-north-1",
+        "cn-northwest-1",
+        "eu-central-1",
+        "eu-north-1",
+        "eu-south-1",
+        "eu-west-1",
+        "eu-west-2",
+        "eu-west-3",
+        "me-south-1",
+        "sa-east-1",
+        "us-east-1",
+        "us-east-2",
+        "us-gov-east-1",
+        "us-gov-west-1",
+        "us-west-1",
+        "us-west-2"
+      ],
+      "default": "us-east-1"
+    }
   }
 }
 ```

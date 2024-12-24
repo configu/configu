@@ -132,7 +132,7 @@
     "store": {
       "base": "ORM",
       "type": "mysql",
-      "code": "packages/integrations/stores/my-sql"
+      "code": "packages/integrations/stores/mysql"
     },
     "links": {
       "website": "https://www.mysql.com"
@@ -192,7 +192,7 @@
     "store": {
       "base": "ORM",
       "type": "mssql",
-      "code": "packages/integrations/stores/ms-sql"
+      "code": "packages/integrations/stores/mssql"
     },
     "links": {
       "website": "https://www.microsoft.com/en-us/sql-server"
@@ -253,7 +253,7 @@
     "store": {
       "base": "KeyValue",
       "type": "gcp-secret-manager",
-      "code": "packages/integrations/stores/gcp-secret-manager-config-store"
+      "code": "packages/integrations/stores/gcp-secret-manager"
     },
     "links": {
       "website": "https://cloud.google.com/secret-manager"
@@ -268,7 +268,7 @@
     "store": {
       "base": "KeyValue",
       "type": "kubernetes-secret",
-      "code": "packages/integrations/stores/kubernetes-secret-store"
+      "code": "packages/integrations/stores/kubernetes-secret"
     },
     "links": {
       "website": "https://kubernetes.io/docs/concepts/configuration/secret"
