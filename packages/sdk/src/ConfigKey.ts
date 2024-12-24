@@ -23,7 +23,8 @@ export class ConfigKey {
 
   static normalize(key: string) {
     // flatCase - flatten and lowercase
-    return _.camelCase(key).toLowerCase();
+    // return _.camelCase(key).toLowerCase();
+    return _.chain(key).camelCase().kebabCase().value();
   }
 
   static validate({ key, errorPrefix = 'ConfigKey' }: { key: string; errorPrefix?: string }) {
