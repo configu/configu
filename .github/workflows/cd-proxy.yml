@@ -10,23 +10,43 @@ jobs:
     name: CD/@configu/proxy
     runs-on: ubuntu-latest
     env:
-      PACKAGE_NAME: '@configu/proxy'
-      PACKAGE_PATH: 'packages/proxy'
-      DOCKERHUB_REPOSITORY: 'configu/proxy'
+      DOCKER_IMAGE_NAME: 'configu/proxy'
     steps:
       - uses: actions/checkout@v4
 
       - uses: ./.github/actions/deploy-start-action
         id: deployment
         with:
-          package-name: ${{ env.PACKAGE_NAME }}
           slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
-      # ---
+
+      - uses: ./.github/actions/get-release-action
+        id: release
+
       # todo: consider use this action to set tags
       # - uses: docker/metadata-action@v5
       #   id: meta
       #   with:
       #     images: name/app
+
+      - name: Set Node.js information
+        id: node
+        shell: bash
+        run: |
+          node_version=$(cat .node-version)
+          echo "node_version: $node_version"
+          echo "node_version=$node_version" >> $GITHUB_OUTPUT
+
+      # https://github.com/docker/build-push-action/tree/v6/?tab=readme-ov-file#examples
+      # https://docs.docker.com/build/ci/github-actions/multi-platform/
+      - uses: crazy-max/ghaction-setup-docker@v3
+        with:
+          daemon-config: |
+            {
+              "debug": true,
+              "features": {
+                "containerd-snapshotter": true
+              }
+            }
 
       - uses: docker/setup-qemu-action@v3
 
@@ -37,35 +57,31 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build docker image and push to Docker Hub
+      - name: Release package to Docker Hub
         uses: docker/build-push-action@v6
         with:
-          context: .
-          file: ${{ env.PACKAGE_PATH }}/Dockerfile
-          build-args: |
-            NODE_VERSION=22.12.0
+          file: ${{ steps.release.outputs.package_path }}/Dockerfile
           platforms: linux/amd64,linux/arm64
           tags: |
-            ${{ env.DOCKERHUB_REPOSITORY }}:${{ steps.deployment.outputs.release-version }}
-            ${{ env.DOCKERHUB_REPOSITORY }}:${{ steps.deployment.outputs.release-channel }}
+            ${{ env.DOCKER_IMAGE_NAME }}:${{ steps.release.outputs.version }}
+            ${{ env.DOCKER_IMAGE_NAME }}:${{ steps.release.outputs.channel }}
+          build-args: |
+            NODE_VERSION=${{ steps.node.outputs.node_version }}
           push: true
           provenance: true
           sbom: true
 
-      - name: Docker Hub Description
-        # if: ${{ steps.deployment.outputs.release-channel == 'latest' }}
+      - name: Update Docker Hub Description
         uses: peter-evans/dockerhub-description@v4
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-          repository: ${{ env.DOCKERHUB_REPOSITORY }}
+          repository: ${{ env.DOCKER_IMAGE_NAME }}
           short-description: Containerized Configu Proxy
-          readme-filepath: ${{ env.PACKAGE_PATH }}/README.md
+          readme-filepath: ${{ steps.release.outputs.package_path }}/README.md
           enable-url-completion: true
       # ---
       - uses: ./.github/actions/deploy-end-action
         if: always()
         with:
-          package-name: ${{ env.PACKAGE_NAME }}
-          package-version: ${{ steps.deployment.outputs.release-version }}
           slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}

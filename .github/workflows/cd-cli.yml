@@ -148,6 +148,8 @@ jobs:
             NODE_VERSION=${{ steps.node.outputs.node_version }}
             CONFIGU_VERSION=${{ steps.release.outputs.version }}
           push: true
+          provenance: true
+          sbom: true
 
       - name: Update Docker Hub Description
         uses: peter-evans/dockerhub-description@v4
