@@ -5,6 +5,7 @@ import { console, path as pathe, readFile, glob, parseJSON, parseYAML, normalize
 const { join, basename, dirname, resolve } = pathe;
 
 const CfguFileSchemaId = 'https://raw.githubusercontent.com/configu/configu/main/packages/schema/.cfgu.json';
+// const CfguFileSchemaId = 'https://files.configu.com/schema/.cfgu.json';
 
 const CfguFileSchema = {
   $schema: 'http://json-schema.org/draft-07/schema#',

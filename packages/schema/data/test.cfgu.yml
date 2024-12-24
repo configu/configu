@@ -1,4 +1,5 @@
-$schema: 'https://raw.githubusercontent.com/configu/configu/main/packages/schema/.cfgu.json'
+$schema: https://files.configu.com/schema/.cfgu.json
+
 keys:
   NODE_ENV:
     description: Defines the environment in which the application runs

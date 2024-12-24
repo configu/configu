@@ -31,7 +31,7 @@ We will provide an example of how to migrate this example `.cfgu` file:
 <CodeGroup>
 
 ```yaml example.cfgu.yaml
-$schema: https://files.configu.com/schema.cfgu.json
+$schema: https://files.configu.com/schema/.cfgu.json
 NODE_ENV:
   description: Defines the environment in which the application runs
   type: String
@@ -63,7 +63,7 @@ AWS_REGION:
 
 ```json example.cfgu.json
 {
-  "$schema": "https://files.configu.com/schema.cfgu.json",
+  "$schema": "https://files.configu.com/schema/.cfgu.json",
   "NODE_ENV": {
     "description": "Defines the environment in which the application runs",
     "type": "String",
@@ -96,7 +96,7 @@ After migration:
 <CodeGroup>
 
 ```yaml example.cfgu.yaml
-$schema: https://files.configu.com/schema.cfgu.json
+$schema: https://files.configu.com/schema/.cfgu.json
 keys:
   NODE_ENV:
     description: Defines the environment in which the application runs
@@ -154,7 +154,7 @@ keys:
 
 ```json example.cfgu.json
 {
-  "$schema": "https://files.configu.com/schema.cfgu.json",
+  "$schema": "https://files.configu.com/schema/.cfgu.json",
   "keys": {
     "NODE_ENV": {
       "description": "Defines the environment in which the application runs",

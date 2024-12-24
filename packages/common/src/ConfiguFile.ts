@@ -37,6 +37,7 @@ const StringMapPropertySchema = {
 } as const satisfies JSONSchemaObject;
 
 const ConfiguFileSchemaId = 'https://raw.githubusercontent.com/configu/configu/main/packages/schema/.configu.json';
+// const ConfiguFileSchemaId = 'https://files.configu.com/schema/.configu.json';
 
 const ConfiguFileSchema = {
   $schema: 'http://json-schema.org/draft-07/schema#',

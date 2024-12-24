@@ -22,17 +22,17 @@ Also, most modern editors will use this property to provide IntelliSense and val
 <CodeGroup>
 
 ```yaml example.cfgu.yaml
-$schema: https://raw.githubusercontent.com/configu/configu/main/packages/schema/.cfgu.json
+$schema: https://files.configu.com/schema/.cfgu.json
 ```
 
 ```json example.cfgu.json
 {
-  "$schema": "https://raw.githubusercontent.com/configu/configu/main/packages/schema/.cfgu.json"
+  "$schema": "https://files.configu.com/schema/.cfgu.json"
 }
 ```
 
 ```yaml vscode-yaml
-# yaml-language-server: $schema=https://raw.githubusercontent.com/configu/configu/main/packages/schema/.cfgu.json
+# yaml-language-server: $schema=https://files.configu.com/schema/.cfgu.json
 ```
 
 </CodeGroup>
@@ -48,54 +48,52 @@ $schema: https://raw.githubusercontent.com/configu/configu/main/packages/schema/
   expression that evaluates to a boolean. If an array is provided, all expressions must evaluate to `true` for the value
   to be considered valid.
 
-  <Accordion title="ConfigExpression context">
-      <ResponseField name="$.value" type="string|number|boolean|object|array">
+{' '}
+<Accordion title="ConfigExpression context">
+  <ResponseField name="$.value" type="string|number|boolean|object|array">
     The `ConfigValue` to be validated.
-    </ResponseField>
-      <ResponseField name="$.storedValue" type="String">
+  </ResponseField>
+  <ResponseField name="$.storedValue" type="String">
     The `ConfigValue` to be validated as a raw string as it is stored in the `ConfigStore`.
-    </ResponseField>
-      <ResponseField name="$.cfgu" type="Cfgu">
-    The `Cfgu` of the evaluated
-  config.
-    </ResponseField>
-      <ResponseField name="$.key" type="String">
-    The `ConfigKey` of the evaluated config. 
-    </ResponseField>
-      <ResponseField name="$.origin" type="String">
-    The origin of the `ConfigValue`. One of
-  `empty`, `default`, `store`, `override`, or `const`.
-    </ResponseField>
-      <ResponseField name="$.labels" type="String[]">
-    An array containing all of the labels of the config. If the config has no labels, then the array will be empty. Acts as syntax sugar for `$.cfgu.label` for expression consistency. 
-    </ResponseField>
-      <ResponseField name="context.store" type="ConfigStore">
-    The `ConfigStore` provided as input to the
-  command.
-    </ResponseField>
-      <ResponseField name="context.set" type="ConfigSet">
+  </ResponseField>
+  <ResponseField name="$.cfgu" type="Cfgu">
+    The `Cfgu` of the evaluated config.
+  </ResponseField>
+  <ResponseField name="$.key" type="String">
+    The `ConfigKey` of the evaluated config.
+  </ResponseField>
+  <ResponseField name="$.origin" type="String">
+    The origin of the `ConfigValue`. One of `empty`, `default`, `store`, `override`, or `const`.
+  </ResponseField>
+  <ResponseField name="$.labels" type="String[]">
+    An array containing all of the labels of the config. If the config has no labels, then the array will be empty. Acts
+    as syntax sugar for `$.cfgu.label` for expression consistency.
+  </ResponseField>
+  <ResponseField name="context.store" type="ConfigStore">
+    The `ConfigStore` provided as input to the command.
+  </ResponseField>
+  <ResponseField name="context.set" type="ConfigSet">
     The `ConfigSet` provided as input to the command.
-    </ResponseField>
-      <ResponseField name="context.schema" type="ConfigSchema">
-    The `ConfigSchema`
-  provided as input to the command. 
-    </ResponseField>
-      <ResponseField name="configs.{{key}}.cfgu" type="Cfgu">
+  </ResponseField>
+  <ResponseField name="context.schema" type="ConfigSchema">
+    The `ConfigSchema` provided as input to the command.
+  </ResponseField>
+  <ResponseField name="configs.{{key}}.cfgu" type="Cfgu">
     Use this to access the `Cfgu` properties of another ConfigKey.
-    </ResponseField>
-      <ResponseField name="configs.{{key}}.value" type="string|number|boolean|object|array">
+  </ResponseField>
+  <ResponseField name="configs.{{key}}.value" type="string|number|boolean|object|array">
     Use this to access the `value` of another ConfigKey.
-    </ResponseField>
-      <ResponseField name="configs.{{key}}.storedValue" type="string">
+  </ResponseField>
+  <ResponseField name="configs.{{key}}.storedValue" type="string">
     Use this to access the `storedValue` of another ConfigKey.
-    </ResponseField>
-   </Accordion>
-  
+  </ResponseField>
+</Accordion>
+
 <Accordion title="ConfigExpression examples">
 <CodeGroup>
 
 ```yaml example.cfgu.yaml
-$schema: https://files.configu.com/schema.cfgu.json
+$schema: https://files.configu.com/schema/.cfgu.json
 keys:
   NODE_ENV:
     description: Defines the environment in which the application runs
@@ -121,7 +119,7 @@ keys:
 
 ```json example.cfgu.json
 {
-  "$schema": "https://files.configu.com/schema.cfgu.json",
+  "$schema": "https://files.configu.com/schema/.cfgu.json",
   "keys": {
     "NODE_ENV": {
       "description": "Defines the environment in which the application runs",
@@ -163,10 +161,10 @@ keys:
   config.
     </ResponseField>
       <ResponseField name="$.key" type="String">
-    The `ConfigKey` of the evaluated config. 
+    The `ConfigKey` of the evaluated config.
     </ResponseField>
       <ResponseField name="$.labels" type="String[]">
-    An array containing all of the labels of the config. If the config has no labels, then the array will be empty. Acts as syntax sugar for `$.cfgu.label` for expression consistency. 
+    An array containing all of the labels of the config. If the config has no labels, then the array will be empty. Acts as syntax sugar for `$.cfgu.label` for expression consistency.
     </ResponseField>
       <ResponseField name="context.store" type="ConfigStore">
     The `ConfigStore` provided as input to the
@@ -177,7 +175,7 @@ keys:
     </ResponseField>
       <ResponseField name="context.schema" type="ConfigSchema">
     The `ConfigSchema`
-  provided as input to the command. 
+  provided as input to the command.
     </ResponseField>
       <ResponseField name="configs.{{key}}.cfgu" type="Cfgu">
     Use this to access the `Cfgu` properties of another ConfigKey.
@@ -188,7 +186,7 @@ keys:
       <ResponseField name="configs.{{key}}.storedValue" type="string">
     Use this to access the `storedValue` of another ConfigKey.
     </ResponseField>
-   </Accordion>
+  </Accordion>
 </ResponseField>
 
 <ResponseField name="pattern" type="String">
@@ -233,7 +231,7 @@ keys:
 <CodeGroup>
 
 ```yaml example.cfgu.yaml
-$schema: https://files.configu.com/schema.cfgu.json
+$schema: https://files.configu.com/schema/.cfgu.json
 keys:
   NODE_ENV:
     description: Defines the environment in which the application runs
@@ -291,7 +289,7 @@ keys:
 
 ```json example.cfgu.json
 {
-  "$schema": "https://files.configu.com/schema.cfgu.json",
+  "$schema": "https://files.configu.com/schema/.cfgu.json",
   "keys": {
     "NODE_ENV": {
       "description": "Defines the environment in which the application runs",

@@ -22,17 +22,17 @@ Also, most modern editors will use this property to provide IntelliSense and val
 <CodeGroup>
 
 ```yaml YAML
-$schema: https://raw.githubusercontent.com/configu/configu/main/packages/schema/.configu.json
+$schema: https://files.configu.com/schema/.configu.json
 ```
 
 ```json JSON
 {
-  "$schema": "https://raw.githubusercontent.com/configu/configu/main/packages/schema/.configu.json"
+  "$schema": "https://files.configu.com/schema/.configu.json"
 }
 ```
 
 ```yaml vscode-yaml
-# yaml-language-server: $schema=https://raw.githubusercontent.com/configu/configu/main/packages/schema/.configu.json
+# yaml-language-server: $schema=https://files.configu.com/schema/.configu.json
 ```
 
 </CodeGroup>
@@ -89,7 +89,7 @@ To define a custom script, add a new key-value pair to the `scripts` section of 
 <CodeGroup>
 
 ```yaml YAML
-$schema: https://files.configu.com/schema.cfgu.json
+$schema: https://files.configu.com/schema/.configu.json
 stores:
   store1:
     backup: true
@@ -113,7 +113,7 @@ scripts:
 
 ```json JSON
 {
-  "$schema": "https://files.configu.com/schema.cfgu.json",
+  "$schema": "https://files.configu.com/schema/.configu.json",
   "stores": {
     "store1": {
       "backup": true,
@@ -150,7 +150,7 @@ scripts:
 The `.configu` file allows you to use environment variables in its different sections. This comes in handy for `store configuration options` or `scripts` when you want to avoid explicitly writing sensitive authentication credentials etc. and you want to inject them from the outside before running Configu. To use an environment variable, you can utilize [`ConfigExpression`](/introduction/concepts#configexpression) as such:
 
 ```yaml
-$schema: https://files.configu.com/schema.cfgu.json
+$schema: https://files.configu.com/schema/.configu.json
 stores:
   store1:
     type: 'storeType1'

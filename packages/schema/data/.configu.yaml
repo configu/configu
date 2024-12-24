@@ -1,4 +1,4 @@
-$schema: 'https://raw.githubusercontent.com/configu/configu/main/packages/schema/.configu.json'
+$schema: https://files.configu.com/schema/.configu.json
 
 stores:
   store1:
