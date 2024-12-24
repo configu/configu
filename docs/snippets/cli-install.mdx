@@ -1,15 +1,15 @@
 <CodeGroup>
 
 ```shell Linux
-curl https://cli.configu.com/install.sh | sh
+curl https://files.configu.com/cli/install.sh | sh
 ```
 
 ```shell MacOS
-curl https://cli.configu.com/install.sh | sh
+curl https://files.configu.com/cli/install.sh | sh
 ```
 
 ```powershell Windows
-powershell -Command "Start-Process -FilePath powershell -Verb RunAs -ArgumentList '-NoProfile','-InputFormat None','-ExecutionPolicy Bypass','-Command ""iex (iwr -UseBasicParsing https://cli.configu.com/install.ps1)""'"
+irm https://files.configu.com/cli/install.ps1 | iex
 ```
 
 </CodeGroup>
