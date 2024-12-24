@@ -1,0 +1,1 @@
+# @configu/database abstract store

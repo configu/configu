@@ -1,14 +1,9 @@
 import { Command, Option } from 'clipanion';
-import inquirer from 'inquirer';
-import open from 'open';
 import { Issuer, errors } from 'openid-client';
-import axios from 'axios';
-import fs from 'node:fs/promises';
+import open from 'open';
+import { console, configuApi, CONFIGU_API_URL, CONFIGU_APP_URL } from '@configu/common';
 import { BaseCommand } from './base';
-import { isDev } from '../helpers';
 
-const CONFIGU_API_URL = process.env.CONFIGU_API_URL ?? (isDev ? 'http://localhost:8080' : 'https://api.configu.com');
-const CONFIGU_APP_URL = process.env.CONFIGU_APP_URL ?? (isDev ? 'http://localhost:3000' : 'https://app.configu.com');
 const AUTH0_DOMAIN = 'configu.us.auth0.com';
 /* cspell:disable-next-line */
 const AUTH0_CLIENT_ID = 'qxv0WQpwqApo4BNEYMMb4rfn1Xam9A4D';
@@ -22,18 +17,16 @@ export class LoginCommand extends BaseCommand {
     description: `Initiate interactive login session to Configu \`ConfigStore\``,
   });
 
-  endpoint = Option.String('--endpoint', {
-    env: 'CONFIGU_API_URL',
-    hidden: true,
-  });
+  // endpoint = Option.String('--endpoint', {
+  //   env: 'CONFIGU_API_URL',
+  //   hidden: true,
+  // });
 
   private async getDataUser(token: string) {
     try {
-      const user = await axios({
+      const user = await configuApi({
         method: 'GET',
-        baseURL: CONFIGU_API_URL,
         url: '/user',
-        responseType: 'json',
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -63,16 +56,17 @@ export class LoginCommand extends BaseCommand {
       const handle = await client.deviceAuthorization({ audience: AUTH0_API_IDENTIFIER });
       const { user_code: userCode, verification_uri_complete: verificationUriComplete, expires_in: expiresIn } = handle;
 
-      const { confirmLogin } = await inquirer.prompt({
-        type: 'confirm',
-        name: 'confirmLogin',
-        message: `Press any key to open up the browser to login or press ctrl-c to abort.
+      const confirmLogin = await console.prompt(
+        `Press any key to open up the browser to login or press ctrl-c to abort.
       You should see the following code: ${userCode}. It expires in ${
         expiresIn % 60 === 0 ? `${expiresIn / 60} minutes` : `${expiresIn} seconds`
       }. Continue?`,
-      });
+        { type: 'confirm', initial: true },
+      );
 
-      if (!confirmLogin) return null;
+      if (!confirmLogin) {
+        return null;
+      }
 
       await open(verificationUriComplete);
 
@@ -84,15 +78,15 @@ export class LoginCommand extends BaseCommand {
 
       const userDataResponse = await this.getDataUser(tokens?.access_token);
 
-      const choices = userDataResponse?.data?.orgs.map((org: any) => ({ name: org.name, value: org._id }));
-      const { orgId } = await inquirer.prompt<{ orgId: string }>([
-        {
-          type: 'list',
-          name: 'orgId',
-          message: 'Select default organization',
-          choices,
-        },
-      ]);
+      const current = (
+        this.context.localConfigu.contents.stores?.configu?.configuration?.credentials as { org?: string }
+      )?.org;
+      const options = userDataResponse?.data?.orgs.map((org: any) => ({
+        label: org.name,
+        value: org._id,
+        hint: org._id === current ? 'current' : '',
+      }));
+      const orgId = await console.prompt('Select an organization', { type: 'select', options });
 
       return { org: orgId, token: tokens.access_token, type: 'Bearer' } as const;
     } catch (error) {
@@ -117,13 +111,17 @@ export class LoginCommand extends BaseCommand {
 
   async execute() {
     await this.init();
+
     const credentials = await this.loginWithAuth0();
-    if (!credentials) return;
-    this.context.credentials.data = {
-      credentials,
-      endpoint: this.endpoint ?? CONFIGU_API_URL,
-    };
-    const rawConfiguConfigData = JSON.stringify(this.context.credentials.data);
-    await fs.writeFile(this.context.credentials.file, rawConfiguConfigData);
+    if (!credentials) {
+      return;
+    }
+
+    await this.context.localConfigu.save({
+      stores: {
+        // configu: { type: 'configu', configuration: { credentials, endpoint: this.endpoint ?? CONFIGU_API_URL } },
+        configu: { type: 'configu', configuration: { credentials, endpoint: CONFIGU_API_URL } },
+      },
+    });
   }
 }

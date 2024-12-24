@@ -1,5 +1,6 @@
 import { Command, Option } from 'clipanion';
 import { ConfigSchema, ConfigSet, UpsertCommand } from '@configu/sdk';
+import { ConfiguInterface } from '@configu/common';
 import { BaseCommand } from './base';
 
 export class TestCommand extends BaseCommand {
@@ -20,7 +21,7 @@ export class TestCommand extends BaseCommand {
 
   async execute() {
     await this.init();
-    const store = this.getStoreInstanceByStoreFlag(this.store);
+    const store = await ConfiguInterface.getStoreInstance(this.store);
     const set = new ConfigSet();
     const schema = new ConfigSchema({
       CONFIGU_TEST: {},

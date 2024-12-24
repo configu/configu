@@ -2,6 +2,8 @@ import { Command, Option } from 'clipanion';
 import { readFile, writeFile, rename, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { pascalCase } from 'change-case';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error no @types for tiged
 import tiged from 'tiged';
 import { BaseCommand } from './base';
 
