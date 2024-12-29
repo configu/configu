@@ -6,7 +6,9 @@ description: 'The `.configu` file is an optional configuration file used by the 
 
 ## Location
 
-Configu interfaces recursively search for the `.configu` file starting from the current working directory and continuing up to the user's home directory. Once it finds a `.configu` file, it uses it solely and stops searching.
+Configu interfaces recursively search for the `.configu` file starting from the current working directory and continuing up to the user's home directory. Once it finds a `.configu` file, it uses it in conjunction with the locally stored `.configu` file in the user's home directory (`$HOME/.configu/.configu`) and stops searching.
+
+Alternatively, you may provide an explicit `.configu` file by passing a path as an environment variable via `CONFIGU_CONFIG` or `CONFIGU_CONFIGURATION`.
 
 ## Format
 
@@ -20,17 +22,17 @@ Also, most modern editors will use this property to provide IntelliSense and val
 <CodeGroup>
 
 ```yaml YAML
-$schema: https://raw.githubusercontent.com/configu/configu/main/packages/schema/.configu.json
+$schema: https://files.configu.com/schema/.configu.json
 ```
 
 ```json JSON
 {
-  "$schema": "https://raw.githubusercontent.com/configu/configu/main/packages/schema/.configu.json"
+  "$schema": "https://files.configu.com/schema/.configu.json"
 }
 ```
 
 ```yaml vscode-yaml
-# yaml-language-server: $schema=https://raw.githubusercontent.com/configu/configu/main/packages/schema/.configu.json
+# yaml-language-server: $schema=https://files.configu.com/schema/.configu.json
 ```
 
 </CodeGroup>
@@ -43,17 +45,19 @@ The `.configu` file allows you to save `ConfigStore` configurations as friendly 
 
 To define a `ConfigStore`, add a new key-value pair to the `stores` section of the `.configu` file, where the key represents the friendly name, and the value is an object with the `type` and `configuration` properties. The `type` property represents the store type, and the `configuration` property contains the specific configuration options for the store.
 
-Additionally, you can activate the caching for a specific store by adding the `cache` property to the store configuration object and set it to `true`.
+You can activate backup for a specific store by adding the `backup` property to the store configuration object and set it to `true`.
 
-For detailed information about the available store options, please refer to the relevant store on the [intergrations section](/integrations/overview#configstore).
+If you want to mark a `ConfigStore` as your default store whenever you choose to omit a `ConfigStore` as an input when performing actions with Configu's high-level interfaces, add the `default` property to a store configuration object and set it to `true`. If your `.configu` file only has a single store, it is automatically behaves as your default store.
 
-### cache
+For detailed information about the available store options, please refer to the relevant store on the [integrations section](/integrations/overview#configstore).
 
-The `.configu` file allows you to define the cache file path for the Configu CLI. The cache is used to store the results of the `configu eval` command to provide failsafe and faster access to the results.
+### backup
 
-To define the cache configuration, add a new key-value pair to the `.configu` file, where the key is `cache`, and the value is path to the cache file.
+The `.configu` file allows you to define the backup file path for the Configu CLI. The backup is used to store the results of the `configu eval` command to provide failsafe and faster access to the results.
 
-By default, the cache file is stored in the os cache directory as follows:
+To define the backup configuration, add a new key-value pair to the `.configu` file, where the key is `backup`, and the value is path to the backup file.
+
+By default, the backup file is stored in the os cache directory as follows:
 
 - macOS: `~/Library/Caches/configu/config.sqlite`
 - Unix: `~/.cache/configu/config.sqlite`
@@ -85,10 +89,10 @@ To define a custom script, add a new key-value pair to the `scripts` section of 
 <CodeGroup>
 
 ```yaml YAML
-$schema: https://json-schema.org/draft/2020-12/schema
+$schema: https://files.configu.com/schema/.configu.json
 stores:
   store1:
-    cache: true
+    backup: true
     type: storeType1
     configuration:
       option1: value1
@@ -98,7 +102,7 @@ stores:
     configuration:
       option3: value3
       option4: value4
-cache: /path/to/db.sqlite
+backup: /path/to/db.sqlite
 schemas:
   schema1: ../path/to/schema1.json
   schema2: /path/to/schema2.json
@@ -109,10 +113,10 @@ scripts:
 
 ```json JSON
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$schema": "https://files.configu.com/schema/.configu.json",
   "stores": {
     "store1": {
-      "cache": true,
+      "backup": true,
       "type": "storeType1",
       "configuration": {
         "option1": "value1",
@@ -127,7 +131,7 @@ scripts:
       }
     }
   },
-  "cache": "/path/to/db.sqlite",
+  "backup": "/path/to/db.sqlite",
   "schemas": {
     "schema1": "../path/to/schema1.json",
     "schema2": "/path/to/schema2.json"
@@ -143,19 +147,19 @@ scripts:
 
 ## Environment Variables
 
-The `.configu` file allows you to use environment variables in its different sections. This comes in handy for `store configuration options` or `scripts` when you want to avoid explicitly writing sensitive authentication credentials etc. and you want to inject them from the outside before running Configu. To use an environment variable, you can utilize [mustache templating](https://mustache.github.io/) as such:
+The `.configu` file allows you to use environment variables in its different sections. This comes in handy for `store configuration options` or `scripts` when you want to avoid explicitly writing sensitive authentication credentials etc. and you want to inject them from the outside before running Configu. To use an environment variable, you can utilize [`ConfigExpression`](/introduction/concepts#configexpression) as such:
 
 ```yaml
-$schema: https://json-schema.org/draft/2020-12/schema
+$schema: https://files.configu.com/schema/.configu.json
 stores:
   store1:
-    type: 'storeType1',
+    type: 'storeType1'
     configuration:
-      option1: 'value1',
-      password: '{{PASSWORD}}',
+      option1: 'value1'
+      password: '{{PASSWORD}}'
 ```
 
-You can then pass the environment variable to the CLI using any method of setting environment variables to replace the mustache template with the environment variable value. Here is an example of passing an environment variable to the CLI by using an operating system specific prefix:
+You can then pass the environment variable to the CLI using any method of setting environment variables to replace the `ConfigExpression` with the environment variable value. Here is an example of passing an environment variable to the CLI by using an operating system specific prefix:
 
 <CodeGroup>
 

@@ -1,48 +1,45 @@
-import { homedir } from 'node:os';
+import { arch, platform } from 'node:os';
+import { cwd } from 'node:process';
 import { spawnSync } from 'node:child_process';
-import { join, dirname, resolve } from 'pathe';
-import { findUp } from 'find-up';
-import { ConfigSchema, ConfigStore, Expression, JsonSchema, JsonSchemaType } from '@configu/sdk';
-import FastGlob from 'fast-glob';
-import _ from 'lodash';
-import { readFile, parseJSON, parseYAML } from './utils';
-import { Registry } from './Registry';
+import fs from 'node:fs/promises';
+import { _, JSONSchema, JSONSchemaObject, FromSchema } from '@configu/sdk/expressions';
+import { ConfigStore, ConfigExpression, ConfigStoreConstructor, ConfigKey } from '@configu/sdk';
+import {
+  console,
+  path as pathe,
+  environment,
+  findUp,
+  findUpMultiple,
+  glob,
+  readFile,
+  importModule,
+  getConfiguHomeDir,
+  parseJSON,
+  parseYAML,
+  YAML,
+  pathExists,
+  normalizeInput,
+} from './utils';
 import { CfguFile } from './CfguFile';
 
-export interface ConfiguFileContents {
-  $schema?: string;
-  stores?: Record<
-    string,
-    { type: string; configuration?: Record<string, unknown>; backup?: boolean; default?: boolean }
-  >;
-  backup?: string;
-  schemas?: Record<string, string>;
-  scripts?: Record<string, string>;
-}
+const { join, dirname, resolve } = pathe;
 
-const ConfiguFileSchemaDefs = {
-  BooleanProperty: {
-    type: 'boolean',
-    nullable: true,
-  },
-  StringProperty: {
+const StringPropertySchema = {
+  type: 'string',
+  minLength: 1,
+} as const satisfies JSONSchemaObject;
+const StringMapPropertySchema = {
+  type: 'object',
+  required: [],
+  additionalProperties: {
     type: 'string',
-    minLength: 1,
-    nullable: true,
   },
-  StringMapProperty: {
-    type: 'object',
-    required: [],
-    additionalProperties: {
-      type: 'string',
-    },
-    nullable: true,
-  },
-} as const;
+} as const satisfies JSONSchemaObject;
 
 const ConfiguFileSchemaId = 'https://raw.githubusercontent.com/configu/configu/main/packages/schema/.configu.json';
+// const ConfiguFileSchemaId = 'https://files.configu.com/schema/.configu.json';
 
-export const ConfiguFileSchema: JsonSchemaType<ConfiguFileContents> = {
+const ConfiguFileSchema = {
   $schema: 'http://json-schema.org/draft-07/schema#',
   $id: ConfiguFileSchemaId,
   $comment: 'https://jsonschema.dev/s/3pOmT',
@@ -56,10 +53,7 @@ export const ConfiguFileSchema: JsonSchemaType<ConfiguFileContents> = {
       type: 'string',
       minLength: 1,
       description: 'Url to JSON Schema',
-      default: ConfiguFileSchemaId,
-      nullable: true,
     },
-
     stores: {
       type: 'object',
       required: [],
@@ -68,133 +62,254 @@ export const ConfiguFileSchema: JsonSchemaType<ConfiguFileContents> = {
         required: ['type'],
         properties: {
           type: { type: 'string' },
-          configuration: { type: 'object', nullable: true },
-          backup: { type: 'boolean', nullable: true },
-          default: { type: 'boolean', nullable: true },
+          configuration: { type: 'object' },
+          backup: { type: 'boolean' },
+          default: { type: 'boolean' },
         },
       },
-      nullable: true,
     },
-    backup: ConfiguFileSchemaDefs.StringProperty,
-    schemas: ConfiguFileSchemaDefs.StringMapProperty,
-    scripts: ConfiguFileSchemaDefs.StringMapProperty,
+    backup: StringPropertySchema,
+    schemas: StringMapPropertySchema,
+    scripts: StringMapPropertySchema,
+    // todo: add ticket to support register api
+    register: {
+      type: 'array',
+      uniqueItems: true,
+      items: {
+        type: 'string',
+        minLength: 1,
+      },
+    },
   },
-};
+} as const satisfies JSONSchemaObject;
+
+export type ConfiguFileContents = FromSchema<typeof ConfiguFileSchema>;
 
 export class ConfiguFile {
+  public static readonly schema = ConfiguFileSchema;
+  public readonly dir: string;
+
   constructor(
     public readonly path: string,
     public readonly contents: ConfiguFileContents,
+    public readonly contentsType: 'json' | 'yaml',
   ) {
-    if (!JsonSchema.validate({ schema: ConfiguFileSchema, path, data: this.contents })) {
-      throw new Error(`ConfiguFile.contents "${path}" is invalid\n${JsonSchema.getLastValidationError()}`);
+    console.debug('ConfiguFile.constructor', { path, contents, contentsType });
+    try {
+      this.dir = dirname(resolve(this.path));
+      JSONSchema.validate(ConfiguFile.schema, this.contents);
+    } catch (error) {
+      throw new Error(`ConfiguFile.contents "${path}" is invalid\n${error.message}`);
     }
   }
 
   private static async init(path: string, contents: string): Promise<ConfiguFile> {
-    // expend contents with env vars
-    // todo: find a way to escape template inside Expression class
-    const { value: renderedContents, error } = Expression.parse(`\`${contents}\``).tryEvaluate(process.env);
-    if (error || typeof renderedContents !== 'string') {
+    console.debug('ConfiguFile.init', { path });
+    // try expend contents with env vars
+    let renderedContents: string;
+    try {
+      renderedContents = ConfigExpression.evaluateTemplateString(contents, { ...process.env });
+    } catch (error) {
       throw new Error(`ConfiguFile.contents "${path}" is invalid\n${error}`);
     }
+
     // try parse yaml first and then json
     let parsedContents: ConfiguFileContents;
+    let contentsType: 'json' | 'yaml';
     try {
       parsedContents = parseYAML(path, renderedContents);
+      contentsType = 'yaml';
     } catch (yamlError) {
       try {
         parsedContents = parseJSON(path, renderedContents);
+        contentsType = 'json';
       } catch (jsonError) {
-        throw new Error(`ConfiguFile.contents "${path}" is not a valid JSON or YAML file`);
+        throw new Error(
+          `ConfiguFile.contents "${path}" is not a valid JSON or YAML file\n${yamlError.message}\n${jsonError.message}`,
+        );
       }
     }
 
-    return new ConfiguFile(path, parsedContents);
+    // handle register api
+    const registerPromises = (parsedContents.register ?? []).map((module, index) => {
+      const registeree = `.configu.register[${index}]`;
+      const { type, path: registereePath } = normalizeInput(module, registeree);
+      if (type === 'file') {
+        return ConfiguFile.registerModuleFile(registereePath);
+      }
+      throw new Error(`invalid registeree input at ${registeree} "${module}"`);
+    });
+    await Promise.all(registerPromises);
+
+    return new ConfiguFile(path, parsedContents, contentsType);
   }
 
   static async load(path: string): Promise<ConfiguFile> {
-    const contents = await readFile(path);
+    console.debug('ConfiguFile.load', { path });
+
+    if (!path.endsWith('.configu')) {
+      throw new Error(`ConfiguFile.path "${path}" is not a valid .configu file`);
+    }
+
+    let contents: string;
+    try {
+      contents = await readFile(path);
+    } catch (error) {
+      throw new Error(`ConfiguFile.path "${path} is not readable\n${error.message}`);
+    }
+
     return ConfiguFile.init(path, contents);
   }
 
-  static async search(): Promise<ConfiguFile> {
-    const path = await findUp('.configu', { stopAt: homedir() });
-    if (!path) {
-      throw new Error('.configu file not found');
+  static async loadFromInput(input: string) {
+    console.debug('ConfiguFile.loadFromInput', { input });
+
+    const { type, path } = normalizeInput(input, '.configu');
+    if (type === 'json') {
+      return ConfiguFile.init(join(cwd(), '.configu'), input);
     }
-    return ConfiguFile.load(path);
+    if (type === 'file') {
+      return ConfiguFile.load(path);
+    }
+    // todo: support http based urls
+    // code below is unreachable
+    throw new Error('.configu file input is not a valid path or JSON');
   }
 
-  getDefaultStoreName() {
-    if (!this.contents.stores) {
-      return '';
+  static async searchClosest() {
+    // todo: think about adding the stopAt option.
+    return findUp('.configu', { type: 'file', allowSymlinks: false });
+  }
+
+  static async searchAll() {
+    return findUpMultiple('.configu', { type: 'file', allowSymlinks: false });
+  }
+
+  async save(contents: ConfiguFileContents) {
+    const mergedContents = _.merge({}, this.contents, contents) satisfies ConfiguFileContents;
+    let renderedContents: string;
+    if (this.contentsType === 'json') {
+      renderedContents = JSON.stringify(mergedContents, null, 2);
+    } else {
+      renderedContents = YAML.stringify(mergedContents);
     }
-    if (Object.keys(this.contents.stores).length === 1) {
-      return Object.keys(this.contents.stores)[0] as string;
+    await fs.writeFile(this.path, renderedContents);
+    return ConfiguFile.load(this.path);
+  }
+
+  private getDefaultStoreName() {
+    const storeNames = Object.keys(this.contents.stores ?? {});
+    if (storeNames.length === 1) {
+      return storeNames[0] as string;
     }
     const defaultStoreName = _.findKey(this.contents.stores, (store) => store.default);
     return defaultStoreName ?? '';
   }
 
-  getStoreInstance(name?: string) {
+  async getStoreInstance(name?: string) {
     const storeConfig = this.contents.stores?.[name ?? this.getDefaultStoreName()];
     if (!storeConfig) {
       return undefined;
     }
-    return Registry.constructStore(storeConfig.type, storeConfig.configuration);
+    return ConfiguFile.constructStore(storeConfig.type, storeConfig.configuration);
   }
 
-  getBackupStoreInstance(name?: string) {
-    const shouldBackup = this.contents.stores?.[name || this.getDefaultStoreName()]?.backup;
+  async getBackupStoreInstance(name?: string) {
+    const shouldBackup = this.contents.stores?.[name ?? this.getDefaultStoreName()]?.backup;
     if (!shouldBackup) {
       return undefined;
     }
-    const database = this.contents.backup ?? join(dirname(this.path), 'config.backup.sqlite');
-    return Registry.constructStore('sqlite', { database, tableName: name });
+
+    const database = this.contents.backup ?? join(this.dir, 'configs_backup.sqlite');
+    return ConfiguFile.constructStore('sqlite', { database, tableName: name });
   }
 
   async getSchemaInstance(name: string) {
-    const schemaPath = this.contents.schemas?.[name];
-    if (!schemaPath) {
+    const schemaConfig = this.contents.schemas?.[name];
+    if (!schemaConfig) {
       return undefined;
     }
-    let cfguFiles = FastGlob.sync(schemaPath);
-    if (cfguFiles.length === 0) {
-      return undefined;
-    }
-
-    cfguFiles = cfguFiles.sort((a, b) => a.split('/').length - b.split('/').length);
-    const configSchemas = await Promise.all(
-      cfguFiles.map(async (cfguFile) => {
-        const cfgu = await CfguFile.load(cfguFile);
-        return cfgu.constructSchema();
-      }),
-    );
-
-    return this.mergeSchemas(...configSchemas);
+    return CfguFile.constructSchema(schemaConfig);
   }
 
-  runScript(name: string, options: { cwd?: string; env?: Record<string, string> } = {}): void {
+  runScript(name: string, options: { cwd?: string; env?: Record<string, string> } = {}) {
     const script = this.contents.scripts?.[name];
     if (!script) {
-      throw new Error(`Script "${name}" not found`);
+      return undefined;
     }
-
-    const scriptRunDir = options.cwd ?? dirname(resolve(this.path));
-
-    const { env, ...restOpts } = options;
-    spawnSync(script, {
-      cwd: scriptRunDir,
+    const result = spawnSync(script, {
+      cwd: options.cwd ?? this.dir,
       stdio: 'inherit',
-      env: { ...process.env, ...env },
+      env: { ...process.env, ...options.env },
       shell: true,
-      ...restOpts,
+    });
+    return result.status;
+  }
+
+  private static async registerModule(module: Record<string, unknown>) {
+    Object.entries(module).forEach(([key, value]) => {
+      if (key === 'default') {
+        return;
+      }
+      console.debug('Registering module property', key);
+      if (typeof value === 'function' && 'type' in value) {
+        console.debug('Registering ConfigStore:', value.type);
+        ConfigStore.register(value as ConfigStoreConstructor);
+      } else if (typeof value === 'function') {
+        console.debug('Registering ConfigExpression:', key);
+        ConfigExpression.register(key, value);
+      } else {
+        console.debug('Ignore registeree:', key);
+      }
     });
   }
 
-  private mergeSchemas(...schemas: ConfigSchema[]): ConfigSchema {
-    // Later schemas take precedence in case of key duplication.
-    return new ConfigSchema(_.merge({}, ...schemas.map((schema) => schema.keys)));
+  static async registerModuleFile(filePath: string) {
+    const module = await importModule(filePath);
+    ConfiguFile.registerModule(module as any);
+  }
+
+  static async registerStore(type: string, version: string = 'latest') {
+    console.debug(`Registering store`, { type, version });
+
+    const moduleDirPath = await getConfiguHomeDir('cache');
+    const modulePath = join(moduleDirPath, `/${type}-${version}.js`);
+
+    // todo: add sem-ver check for cache invalidation when cached stores are outdated once integration pipeline is reworked
+
+    const isModuleExists = await pathExists(modulePath);
+    if (!isModuleExists) {
+      const remoteUrl = `https://github.com/configu/configu/releases/download/stores%2F${type}%2F${version}/${type}-${platform()}-${arch()}.js`;
+      console.debug('Downloading store module:', remoteUrl);
+      const res = await fetch(remoteUrl);
+
+      if (res.ok) {
+        await fs.writeFile(modulePath, await res.text());
+        console.debug('Fetched module successfully', modulePath);
+      } else {
+        throw new Error(`store ${type} not found`);
+      }
+    } else {
+      console.debug('Store module already exists', modulePath);
+    }
+
+    return ConfiguFile.registerModuleFile(modulePath);
+  }
+
+  static async constructStore(input: string, configuration = {}) {
+    // input is a "store-type@channel/semver-version" string
+    console.debug('ConfiguFile.constructStore', { input, configuration });
+    const [rawType = '', version] = input.split('@');
+    if (!rawType) {
+      throw new Error('store type is missing');
+    }
+    // normalize the type to ensure that the store is registered correctly
+    const type = ConfigKey.normalize(rawType);
+
+    // todo: remember to mention in docs that store types cannot be overridden
+    if (!ConfigStore.has(type)) {
+      await ConfiguFile.registerStore(type, version);
+    }
+    return ConfigStore.construct(type, configuration);
   }
 }

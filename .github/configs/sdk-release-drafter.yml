@@ -1,0 +1,6 @@
+_extends: configu:.github/configs/release-drafter.yml
+include-paths:
+  - 'packages/sdk/'
+name-template: 'sdk/v$RESOLVED_VERSION'
+tag-template: 'sdk/v$RESOLVED_VERSION'
+tag-prefix: 'sdk/'

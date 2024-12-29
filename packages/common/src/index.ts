@@ -1,11 +1,7 @@
-// import './test';
-
-import './built-in-integrations';
-
 export * from './utils';
-export * from './Registry';
+export * from './builtins';
 
 export * from './ConfiguFile';
 export * from './CfguFile';
 
-export * from '@configu-integrations/configu';
+export * from './ConfiguInterface';
