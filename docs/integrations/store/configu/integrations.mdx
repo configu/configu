@@ -2,6 +2,8 @@
 title: Integrations
 ---
 
+<Info>Only the organization owner and admins can connect an integration to their own organization.</Info>
+
 ## GitHub
 
 Configu lets you connect your GitHub repositories to your organization. Connecting your repositories enables the following features:
@@ -12,14 +14,14 @@ Configu lets you connect your GitHub repositories to your organization. Connecti
 To connect your GitHub repositories:
 
 1. Go to the **Apps** page under the **Integrations** tab
-2. Click the **Authorize** button under the GitHub integration section and you will be navigated to GitHub to continue the process.
+2. Click the **Authorize** button under the GitHub integration section and you will be navigated to GitHub to continue the process
 3. Select where you want to install the [Configu GitHub App](https://github.com/apps/configu)
-4. Select which repositories you want to connect.
+4. Select which repositories you want to connect
 5. You will automatically be returned to the **Apps** page with the installation complete
 
-<Frame>![image](/images-old/integrations/integrations-github-authorize.png)</Frame>
+<Frame>![image](/images/integrations/integrations-github-authorize.png)</Frame>
 
-<Frame>![image](/images-old/integrations/integrations-github-connected.png)</Frame>
+<Frame>![image](/images/integrations/integrations-github-connected.png)</Frame>
 
 <Info>Only the organization owner and admins can connect a GitHub App installation to their own organization.</Info>
 
@@ -27,5 +29,28 @@ To connect your GitHub repositories:
 - Only a single GitHub account or GitHub organization can be connected to a Configu organization. A GitHub account or GitHub organization cannot be connected to more than one organization at a time.
 - GitHub App installations may be suspended at any time directly from GitHub. This disables all features within the Configu Cloud that depend on the installation.
 - Uninstalling the GitHub app directly from GitHub will automatically disconnect the app from your organization.
+
+</Warning>
+
+## GitLab
+
+Configu lets you connect your GitLab repositories to your organization. Connecting your repositories enables the following features:
+
+- Share access to ConfigSchema files directly from your repositories with your entire organization and streamline config management via the [Config Editor](/integrations/store/configu/config-editor).
+
+To connect your GitLab repositories:
+
+1. Go to the **Apps** page under the **Integrations** tab
+2. Click the **Authorize** button under the GitLab integration section and you will be navigated to GitLab to continue the process
+3. Authorize the Configu GitLab App
+4. You will automatically be returned to the **Apps** page with the installation complete
+
+<Frame>![image](/images/integrations/integrations-gitlab-authorize.png)</Frame>
+
+<Frame>![image](/images/integrations/integrations-gitlab-connected.png)</Frame>
+
+<Warning>
+- Only a single GitLab account can be connected to a Configu organization.
+- If you revoke the GitLab app directly from GitLab, the integration will automatically disconnect in Configu when attempting to access integration features.
 
 </Warning>
