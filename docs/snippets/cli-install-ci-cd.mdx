@@ -20,7 +20,7 @@ use-configu-job:
 
 ```yaml Jenkins
 # Add "Execute Shell" build step
-curl https://cli.configu.com/install.sh | sh
+curl https://files.configu.com/cli/install.sh | sh
 configu [COMMAND]
 ```
 
@@ -45,7 +45,7 @@ workflows:
 ```yaml Azure DevOps Pipelines
 steps:
   - script: |
-      (curl https://cli.configu.com/install.sh || wget -qO- https://cli.configu.com/install.sh) | sudo sh
+      (curl https://files.configu.com/cli/install.sh || wget -qO- https://files.configu.com/cli/install.sh) | sudo sh
     displayName: Install Configu CLI
   - script: configu [COMMAND]
     displayName: Use Configu CLI
@@ -57,13 +57,13 @@ image: atlassian/default-image:3
     default:
       - step:
           script:
-            - curl https://cli.configu.com/install.sh | sh
+            - curl https://files.configu.com/cli/install.sh | sh
             - configu [COMMAND]
 ```
 
 ```yaml TeamCity
 # Add "Command Line" build step
-curl https://cli.configu.com/install.sh | sh
+curl https://files.configu.com/cli/install.sh | sh
 configu [COMMAND]
 ```
 

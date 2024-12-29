@@ -1,6 +1,0 @@
-_extends: configu:.github/configs/release-drafter.yml
-include-paths:
-  - 'packages/lib/'
-name-template: 'lib/v$RESOLVED_VERSION'
-tag-template: 'lib/v$RESOLVED_VERSION'
-tag-prefix: 'lib/'
