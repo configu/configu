@@ -83,6 +83,8 @@ Massive thanks 🙏 to all our [contributors](https://github.com/configu/configu
 > [!NOTE]
 > Eager to code? Kickstart your Configu development now:<br/> [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/configu/configu) [![Edit in CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/github/configu/configu/main) [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/configu/configu)
 
+[![Open in Codeanywhere](https://codeanywhere.com/img/open-in-codeanywhere-btn.svg)](https://app.codeanywhere.com/#https://github.com/configu/configu)
+
 <!-- ## 🗺️ Roadmap
 
 For details on our planned features and future direction please refer to our [roadmap](link-to-public-gh-project). -->
