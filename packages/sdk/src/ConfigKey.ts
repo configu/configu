@@ -8,7 +8,6 @@ export class ConfigKey {
     '$',
     'this',
     'Cfgu',
-    'Config',
     'ConfigStore',
     'ConfigSet',
     'ConfigKey',
