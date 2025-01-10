@@ -10766,6 +10766,8 @@ snapshots:
     dependencies:
       '@types/unist': 2.0.10
 
+  '@types/node-cron@3.0.11': {}
+
   '@types/node@20.12.12':
     dependencies:
       undici-types: 5.26.5
@@ -14283,6 +14285,10 @@ snapshots:
     optional: true
 
   node-addon-api@7.1.0: {}
+
+  node-cron@3.0.3:
+    dependencies:
+      uuid: 8.3.2
 
   node-fetch-native@1.6.4: {}
 
