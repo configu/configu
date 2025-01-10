@@ -122,9 +122,10 @@ export const routes: FastifyPluginAsync = async (server, opts): Promise<void> =>
       if (!request.query.cron) {
         const exportRes = await runExportAndGetResult(request.body);
 
-        // Return one-time result
         // TODO: consider if this is the right way to parse the result
         // const parsedExportRes = JSON.parse(exportRes.result);
+
+        // Return one-time result
         return reply.send(exportRes);
       }
 
@@ -140,28 +141,25 @@ export const routes: FastifyPluginAsync = async (server, opts): Promise<void> =>
       // Ensures headers are immediately sent
       reply.raw.flushHeaders();
 
-      let eventId = 0; // for SSE id field
+      let eventId = 0;
 
       // Helper to run existing logic and write to SSE
       const runExportAndWriteSSE = async () => {
         try {
           const exportRes = await runExportAndGetResult(request.body);
 
-          // SSE event
           eventId += 1;
           const data = JSON.stringify(exportRes);
           reply.raw.write(`id: ${eventId}\n`);
           reply.raw.write(`event: export\n`);
           reply.raw.write(`data: ${data}\n\n`);
         } catch (error: any) {
-          // SSE error event
           const errMsg = error?.message || 'Unknown error';
           reply.raw.write(`event: error\n`);
           reply.raw.write(`data: ${errMsg}\n\n`);
         }
       };
 
-      // Use node-cron to schedule
       const task = cron.schedule(request.query.cron, async () => {
         await runExportAndWriteSSE();
       });
@@ -180,8 +178,8 @@ export const routes: FastifyPluginAsync = async (server, opts): Promise<void> =>
         task.stop();
       });
 
-      // Because we’re streaming, never call reply.send(),
-      // just keep the connection open until client disconnects or an error occurs and return the reply
+      // Because we’re streaming, keep the connection open (until client disconnects or an error occurs)
+      // and return the reply
       return reply;
     },
   );
