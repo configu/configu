@@ -5,15 +5,13 @@ import { buildServer } from '../server';
 describe('Server (Mocha + Chai)', function () {
   let server: ReturnType<typeof buildServer>;
 
-  // Mocha's "before" hook runs once before all tests in this suite
   before(async function () {
     server = buildServer();
-    await server.ready(); // If your server needs to be "ready"
+    await server.ready();
   });
 
-  // Mocha's "after" hook runs once after all tests in this suite
   after(async function () {
-    await server.close(); // Clean up resources
+    await server.close();
   });
 
   it('should respond with 200 on GET /docs (if enabled)', async function () {
