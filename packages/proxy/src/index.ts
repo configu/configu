@@ -23,7 +23,7 @@ export async function listen() {
 }
 
 // Only run listen() if this file is the entry point (e.g. run via "node index.js")
-if (require.main === module) {
+if (import.meta.url === process.argv[1]) {
   (async () => {
     await listen();
   })();
