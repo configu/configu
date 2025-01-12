@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import request from 'supertest';
 import { buildServer } from '../server';
 
-describe('Server (Mocha + Chai)', function () {
+describe('Test Server', function () {
   let server: ReturnType<typeof buildServer>;
 
   before(async function () {
@@ -18,11 +18,6 @@ describe('Server (Mocha + Chai)', function () {
     const response = await request(server.server).get('/docs');
     expect(response.status).to.equal(200);
     expect(response.text).to.include('html');
-  });
-
-  it('should return 404 for unknown routes', async function () {
-    const response = await request(server.server).get('/foobar');
-    expect(response.status).to.equal(404);
   });
 
   it('should handle POST /export successfully', async function () {

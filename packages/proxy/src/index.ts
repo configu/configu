@@ -1,4 +1,5 @@
 import { ConfiguInterface } from '@configu/common';
+import { fileURLToPath } from 'url';
 import { buildServer } from './server';
 import { config } from './config';
 
@@ -23,7 +24,8 @@ export async function listen() {
 }
 
 // Only run listen() if this file is the entry point (e.g. run via "node index.js")
-if (import.meta.url === process.argv[1]) {
+const modulePath = fileURLToPath(import.meta.url);
+if (modulePath === process.argv[1]) {
   (async () => {
     await listen();
   })();
