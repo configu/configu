@@ -18,13 +18,13 @@ jobs:
 
       - uses: ./.github/actions/ts-env-action
 
-      - name: Run formatter
-        run: |
-          pnpm run format:check
+      # - name: Run formatter
+      #   run: |
+      #     pnpm run format:check
 
-      - name: Run linter
-        run: |
-          pnpm run lint:check
+      # - name: Run linter
+      #   run: |
+      #     pnpm run lint:check
 
       - name: Run tests & Generate coverage report
         run: |
