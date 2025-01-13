@@ -1,16 +1,15 @@
 import { FastifyPluginAsync } from 'fastify';
-import { FromSchema } from 'json-schema-to-ts';
+import { ConfigSchema, ConfigSet } from '@configu/sdk';
 import {
-  ConfigSchema,
-  ConfigSet,
   EvalCommand,
   EvalCommandOutput,
   EvaluatedConfigOrigin,
   UpsertCommand,
   ExportCommand,
-} from '@configu/sdk';
+} from '@configu/sdk/commands';
+import { FromSchema } from '@configu/sdk/expressions';
 import _ from 'lodash';
-import { ConfiguFile } from '@configu/common';
+import { ConfiguInterface } from '@configu/common';
 import { config } from './config';
 
 const body = {
@@ -30,31 +29,10 @@ const body = {
       },
       schema: {
         type: 'object',
-        required: ['keys'],
-        additionalProperties: false,
         properties: {
-          name: {
-            type: 'string',
-            minLength: 1,
-          },
-          // openapi and fastify plugins don't support the full JSON schema spec so the actual deep validations for the schema contents will be done by the ConfigSchema constructor
           keys: {
-            description: 'https://docs.configu.com/interfaces/.cfgu',
             type: 'object',
-            minProperties: 1,
-            additionalProperties: {
-              type: 'object',
-              minProperties: 1,
-            },
           },
-          // contents: ConfigSchemaContents,
-          // contents: {
-          //   description: 'https://docs.configu.com/interfaces/.cfgu',
-          //   type: 'object',
-          //   minProperties: 1,
-          //   additionalProperties: CfguSchema,
-          // },
-          // contents: ConfigSchemaContents,
         },
       },
       configs: {
@@ -69,9 +47,7 @@ const body = {
 
 const ok = {
   type: 'object',
-  additionalProperties: {
-    type: 'string',
-  },
+  additionalProperties: true,
 } as const;
 
 export const routes: FastifyPluginAsync = async (server, opts): Promise<void> => {
@@ -86,19 +62,20 @@ export const routes: FastifyPluginAsync = async (server, opts): Promise<void> =>
       },
     },
     async (request, reply) => {
-      // TODO: get the ConfiguFile instance from a shared location
-      const configuFile = await ConfiguFile.load(config.CONFIGU_CONFIG_FILE);
+      // // TODO: get the ConfiguFile instance from a shared location
+      // const configuFile = await ConfiguFile.load(config.CONFIGU_CONFIG_FILE);
 
       const evalResToExport = await request.body.reduce<Promise<EvalCommandOutput>>(
         async (previousResult, { store, set, schema: { keys }, configs }) => {
           const pipe = await previousResult;
 
-          const storeInstance = configuFile.getStoreInstance(store);
+          const storeInstance = await ConfiguInterface.getStoreInstance(store);
           if (!storeInstance) {
             throw new Error(`store "${store}" not found`);
           }
           const setInstance = new ConfigSet(set);
-          const schemaInstance = new ConfigSchema(keys);
+          // todo: fix this any
+          const schemaInstance = new ConfigSchema(keys as any);
 
           const evalCmd = new EvalCommand({
             store: storeInstance,
@@ -107,24 +84,30 @@ export const routes: FastifyPluginAsync = async (server, opts): Promise<void> =>
             configs,
             pipe,
           });
-          const evalRes = await evalCmd.run();
+          const { result } = await evalCmd.run();
+          await ConfiguInterface.backupEvalOutput({
+            storeName: store,
+            set: setInstance,
+            schema: schemaInstance,
+            evalOutput: result,
+          });
 
-          // TODO: move backup logic to common
-          const backupStoreInstance = configuFile.getBackupStoreInstance(store);
-          if (backupStoreInstance) {
-            const backupConfigs = _(evalRes.result)
-              .pickBy((entry) => entry.origin === EvaluatedConfigOrigin.Store)
-              .mapValues((entry) => entry.value)
-              .value();
-            await new UpsertCommand({
-              store: backupStoreInstance,
-              set: setInstance,
-              schema: schemaInstance,
-              configs: backupConfigs,
-            }).run();
-          }
+          // // TODO: move backup logic to common
+          // const backupStoreInstance = await configuFile.getBackupStoreInstance(store);
+          // if (backupStoreInstance) {
+          //   const backupConfigs = _(evalRes.result)
+          //     .pickBy((entry) => entry.origin === EvaluatedConfigOrigin.Store)
+          //     .mapValues((entry) => entry.value)
+          //     .value();
+          //   await new UpsertCommand({
+          //     store: backupStoreInstance,
+          //     set: setInstance,
+          //     schema: schemaInstance,
+          //     configs: backupConfigs,
+          //   }).run();
+          // }
 
-          return evalRes.result;
+          return result;
         },
         Promise.resolve({}),
       );
@@ -132,8 +115,8 @@ export const routes: FastifyPluginAsync = async (server, opts): Promise<void> =>
       const exportCmd = new ExportCommand({ pipe: evalResToExport });
       const exportRes = await exportCmd.run();
       // TODO: consider if this is the right way to parse the result
-      const parsedExportRes = JSON.parse(exportRes.result);
-      return reply.send(parsedExportRes);
+      // const parsedExportRes = JSON.parse(exportRes.result);
+      return reply.send(exportRes);
     },
   );
 };

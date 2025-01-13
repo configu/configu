@@ -28,7 +28,7 @@
         "devDependencies": [
           "**/*.test.ts",
           "**/*.test.js",
-          "**/*.mjs"
+          "**/*.mts"
         ]
       }
     ],
