@@ -8,6 +8,7 @@ import Swagger, { FastifyDynamicSwaggerOptions } from '@fastify/swagger';
 import SwaggerUI from '@scalar/fastify-api-reference';
 
 import { ConfiguInterface } from '@configu/common';
+import formbody from '@fastify/formbody';
 import { config } from './config';
 import { routes } from './routes';
 
@@ -19,6 +20,7 @@ export function buildServer(): FastifyInstance {
   });
 
   server.register(Helmet);
+  server.register(formbody);
 
   const CORS_OPTIONS: FastifyCorsOptions = {
     origin: config.CONFIGU_HTTP_ALLOWED_ORIGINS,
