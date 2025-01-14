@@ -23,7 +23,7 @@ export async function listen() {
   }
 }
 
-// Only run listen() if this file is the entry point (e.g. run via "node index.js")
+// Only run listen() if this file is the entry point
 const modulePath = fileURLToPath(import.meta.url);
 if (modulePath === process.argv[1]) {
   (async () => {
