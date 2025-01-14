@@ -154,10 +154,9 @@ export const routes: FastifyPluginAsync = async (server, opts): Promise<void> =>
         try {
           const exportRes = await runExportAndGetResult(request.body);
 
-          eventId = getNextId();
           const data = JSON.stringify(exportRes);
           const replyObj = {
-            id: eventId,
+            id: getNextId(),
             event: 'export',
             data,
           };
