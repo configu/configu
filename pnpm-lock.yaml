@@ -9690,6 +9690,11 @@ snapshots:
     dependencies:
       fast-json-stringify: 5.16.1
 
+  '@fastify/formbody@7.4.0':
+  dependencies:
+    fast-querystring: 1.1.2
+    fastify-plugin: 4.5.1
+
   '@fastify/helmet@11.1.1':
     dependencies:
       fastify-plugin: 4.5.1

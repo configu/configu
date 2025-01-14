@@ -134,25 +134,35 @@ export const routes: FastifyPluginAsync = async (server, opts): Promise<void> =>
         throw new Error(`Invalid cron expression: "${request.query.cron}"`);
       }
 
-      reply.raw.setHeader('Content-Type', 'text/event-stream');
-      reply.raw.setHeader('Cache-Control', 'no-cache');
-      reply.raw.setHeader('Connection', 'keep-alive');
-
-      // Ensures headers are immediately sent
-      reply.raw.flushHeaders();
+      reply.raw.writeHead(200, {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        Connection: 'keep-alive',
+      });
 
       let eventId = 0;
+      function getNextId() {
+        if (eventId === Number.MAX_SAFE_INTEGER) {
+          eventId = 0; // Reset
+        }
+        eventId += 1;
+        return eventId;
+      }
 
       // Helper to run existing logic and write to SSE
       const runExportAndWriteSSE = async () => {
         try {
           const exportRes = await runExportAndGetResult(request.body);
 
-          eventId += 1;
+          eventId = getNextId();
           const data = JSON.stringify(exportRes);
-          reply.raw.write(`id: ${eventId}\n`);
-          reply.raw.write(`event: export\n`);
-          reply.raw.write(`data: ${data}\n\n`);
+          const replyObj = {
+            id: eventId,
+            event: 'export',
+            data,
+          };
+
+          reply.raw.write(JSON.stringify(replyObj));
         } catch (error: any) {
           const errMsg = error?.message || 'Unknown error';
           reply.raw.write(`event: error\n`);
@@ -169,12 +179,15 @@ export const routes: FastifyPluginAsync = async (server, opts): Promise<void> =>
 
       // Clean up if the client disconnects
       request.raw.on('close', () => {
+        reply.raw.end();
         task.stop();
       });
       request.raw.on('end', () => {
+        reply.raw.end();
         task.stop();
       });
       request.raw.on('aborted', () => {
+        reply.raw.end();
         task.stop();
       });
 
