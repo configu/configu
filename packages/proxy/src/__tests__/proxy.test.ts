@@ -153,10 +153,9 @@ test('should handle SSE stream and close connection', async () => {
   const requestBody = JSON.stringify(mockBody);
   const fullUrl = new URL('/export', `http://${config.CONFIGU_HTTP_ADDR}:${config.CONFIGU_HTTP_PORT}`);
   fullUrl.searchParams.append('cron', '* * * * *');
-  const response = await readSSE(fullUrl, requestBody);
-
-  // Make the request and await the response
   const contentType = 'text/event-stream';
+
+  const response = await readSSE(fullUrl, requestBody);
   assert.strictEqual(response.statusCode, 200, 'Expected status code 200');
   assert.strictEqual(
     response.headers.get('content-type'),
