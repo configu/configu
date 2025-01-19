@@ -195,8 +195,8 @@ importers:
         specifier: ^4.17.21
         version: 4.17.21
       yaml:
-        specifier: ^2.6.1
-        version: 2.6.1
+        specifier: ^2.7.0
+        version: 2.7.0
 
   packages/proxy:
     dependencies:

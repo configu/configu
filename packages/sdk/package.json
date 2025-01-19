@@ -44,7 +44,7 @@
     "dist"
   ],
   "config": {
-    "entry": "src/index.ts"
+    "entry": "./src/index.ts"
   },
   "scripts": {
     "clean": "shx rm -rf dist",

@@ -281,9 +281,10 @@ export class ConfiguFile {
   }
 }
 
+// todo: remove - only for debugging
 // (async () => {
 //   process.env.DEBUG = 'true';
 //   // await fetchTemplate('gh:configu/configu/packages/stores/sqlite', await getConfiguHomeDir('cache', 'sqlite'));
 //   // await ConfiguFile.registerRemoteStore('hashicorp-vault');
-//   await ConfiguFile.registerRemoteStore('sqlite');
+//   await ConfiguFile.registerRemoteStore('sqlite', '698-configu-module');
 // })();
