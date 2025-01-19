@@ -87,11 +87,11 @@ export class ConfiguModule {
       throw new Error(`package.json module is invalid in ${dir}\n${error.message}`);
     }
 
-    const packageLockPath = join(dir, 'package-lock.json');
-    const isPackageLockExists = await pathExists(packageLockPath);
-    if (!isPackageLockExists) {
-      throw new Error(`package-lock.json not found in ${dir}`);
-    }
+    // const packageLockPath = join(dir, 'package-lock.json');
+    // const isPackageLockExists = await pathExists(packageLockPath);
+    // if (!isPackageLockExists) {
+    //   throw new Error(`package-lock.json not found in ${dir}`);
+    // }
 
     const nodeModulesPath = join(dir, 'node_modules');
     const isNodeModulesExists = await pathExists(nodeModulesPath);

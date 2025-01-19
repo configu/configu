@@ -153,8 +153,23 @@ export const installPackageDependencies = async (modulePath: string) => {
 
   console.debug('Installing dependencies:', modulePath);
   await npm.load();
+
+  const configuCacheDir = await getConfiguHomeDir('cache');
+  // https://docs.npmjs.com/cli/v7/using-npm/config
   npm.prefix = modulePath;
+  npm.cache = path.join(configuCacheDir, 'npm-cache');
+  npm.config.set('userconfig', path.join(configuCacheDir, 'npmrc'));
+  npm.config.set('yes', true);
+  npm.config.set('heading', 'configu-npm');
+  npm.config.set('color', false);
+  npm.config.set('progress', false);
+  npm.config.set('audit', false);
+  npm.config.set('fund', false);
+  npm.config.set('global', false);
+  npm.config.set('update-notifier', false);
+  npm.config.set('package-lock', false);
   npm.config.set('omit', ['dev', 'optional']);
+
   await npmInstall([]);
   console.debug('Dependencies installed:', modulePath);
 };
