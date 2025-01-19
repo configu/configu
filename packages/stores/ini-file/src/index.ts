@@ -1,6 +1,5 @@
-import { _ } from '@configu/sdk/expressions';
 import ini from 'ini';
-import { type Config } from '@configu/sdk';
+import { _, type Config } from '@configu/sdk';
 import { FileConfigStore } from '@configu/file';
 
 export type IniFileConfigStoreConfiguration = { path: string };

@@ -1,9 +1,11 @@
 import os from 'node:os';
 import fs from 'node:fs/promises';
+import { promisify } from 'node:util';
 import { fileURLToPath, URL } from 'node:url';
 import path from 'pathe';
 import * as environment from 'std-env';
-import { validator, _ } from '@configu/sdk/expressions';
+import { validator, _ } from '@configu/sdk';
+import configuSdkPackageJson from '@configu/sdk/package.json';
 import { consola, LogLevels, ConsolaInstance } from 'consola';
 import axios from 'axios';
 import parseJson from 'parse-json';
@@ -12,6 +14,12 @@ import { createJiti } from 'jiti';
 import { glob } from 'glob';
 import semver from 'semver';
 import { findUp, findUpMultiple, pathExists } from 'find-up';
+import { downloadTemplate } from 'giget';
+import npm from 'npm';
+
+// general
+export const configuRemotePackagesUri = `github:configu/configu`;
+export const configuSdkPackageUri = `${configuRemotePackagesUri}/${configuSdkPackageJson.repository.directory}`;
 
 export { path, findUp, findUpMultiple, pathExists, glob, semver, environment, YAML };
 
@@ -117,6 +125,38 @@ const jiti = createJiti(import.meta.url, { debug: CONFIGU_DEBUG });
 export const importModule = async (modulePath: string = '') => {
   const module = await jiti.import(modulePath);
   return module;
+};
+
+export const fetchTemplate = async (template: string, destination: string, force = false) => {
+  // https://unjs.io/packages/giget#examples
+  console.debug('Downloading template:', template);
+  const { source, dir } = await downloadTemplate(template, {
+    dir: destination,
+    force,
+    // forceClean: force,
+    preferOffline: true,
+    registry: false,
+  });
+  console.debug('Template downloaded:', source, dir);
+};
+export type { GitInfo } from 'giget';
+
+const npmInstall = promisify(npm.commands.install);
+
+export const installPackageDependencies = async (modulePath: string) => {
+  // we use npm v7 to install dependencies as it is the last version that supports npm programmatic API
+  // todo: find a way to install dependencies using the npm version corresponding to the current Node.js version - https://nodejs.org/dist/index.json
+
+  // we use pnpm patch to fix npm v7 compatibility issues - https://pnpm.io/cli/patch
+  // ✘ [ERROR] Legacy octal escape sequences cannot be used in strict mode
+  //    ../../node_modules/.pnpm/npm@7.24.2/node_modules/npm/node_modules/qrcode-terminal/lib/main.js:4:23:
+
+  console.debug('Installing dependencies:', modulePath);
+  await npm.load();
+  npm.prefix = modulePath;
+  npm.config.set('omit', ['dev', 'optional']);
+  await npmInstall([]);
+  console.debug('Dependencies installed:', modulePath);
 };
 
 // parsers

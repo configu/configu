@@ -2,8 +2,16 @@ import { arch, platform } from 'node:os';
 import { cwd } from 'node:process';
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs/promises';
-import { _, JSONSchema, JSONSchemaObject, FromSchema } from '@configu/sdk/expressions';
-import { ConfigStore, ConfigExpression, ConfigStoreConstructor, ConfigKey } from '@configu/sdk';
+import {
+  ConfigStore,
+  ConfigExpression,
+  ConfigStoreConstructor,
+  ConfigKey,
+  _,
+  JSONSchema,
+  JSONSchemaObject,
+  FromSchema,
+} from '@configu/sdk';
 import {
   console,
   path as pathe,
@@ -19,7 +27,11 @@ import {
   YAML,
   pathExists,
   normalizeInput,
+  fetchTemplate,
+  installPackageDependencies,
+  configuRemotePackagesUri,
 } from './utils';
+import { ConfiguModule } from './ConfiguModule';
 import { CfguFile } from './CfguFile';
 
 const { join, dirname, resolve } = pathe;
@@ -71,7 +83,6 @@ const ConfiguFileSchema = {
     backup: StringPropertySchema,
     schemas: StringMapPropertySchema,
     scripts: StringMapPropertySchema,
-    // todo: add ticket to support register api
     register: {
       type: 'array',
       uniqueItems: true,
@@ -135,7 +146,7 @@ export class ConfiguFile {
       const registeree = `.configu.register[${index}]`;
       const { type, path: registereePath } = normalizeInput(module, registeree);
       if (type === 'file') {
-        return ConfiguFile.registerModuleFile(registereePath);
+        return ConfiguModule.registerFile(registereePath);
       }
       throw new Error(`invalid registeree input at ${registeree} "${module}"`);
     });
@@ -246,70 +257,33 @@ export class ConfiguFile {
     return result.status;
   }
 
-  private static async registerModule(module: Record<string, unknown>) {
-    Object.entries(module).forEach(([key, value]) => {
-      if (key === 'default') {
-        return;
-      }
-      console.debug('Registering module property', key);
-      if (typeof value === 'function' && 'type' in value) {
-        console.debug('Registering ConfigStore:', value.type);
-        ConfigStore.register(value as ConfigStoreConstructor);
-      } else if (typeof value === 'function') {
-        console.debug('Registering ConfigExpression:', key);
-        ConfigExpression.register(key, value);
-      } else {
-        console.debug('Ignore registeree:', key);
-      }
-    });
-  }
+  static async registerRemoteStore(type: string, ref?: string) {
+    console.debug(`Registering store`, { type, ref });
 
-  static async registerModuleFile(filePath: string) {
-    const module = await importModule(filePath);
-    ConfiguFile.registerModule(module as any);
-  }
-
-  static async registerStore(type: string, version: string = 'latest') {
-    console.debug(`Registering store`, { type, version });
-
-    const moduleDirPath = await getConfiguHomeDir('cache');
-    const modulePath = join(moduleDirPath, `/${type}-${version}.js`);
-
-    // todo: add sem-ver check for cache invalidation when cached stores are outdated once integration pipeline is reworked
-
-    const isModuleExists = await pathExists(modulePath);
-    if (!isModuleExists) {
-      const remoteUrl = `https://github.com/configu/configu/releases/download/stores%2F${type}%2F${version}/${type}-${platform()}-${arch()}.js`;
-      console.debug('Downloading store module:', remoteUrl);
-      const res = await fetch(remoteUrl);
-
-      if (res.ok) {
-        await fs.writeFile(modulePath, await res.text());
-        console.debug('Fetched module successfully', modulePath);
-      } else {
-        throw new Error(`store ${type} not found`);
-      }
-    } else {
-      console.debug('Store module already exists', modulePath);
-    }
-
-    return ConfiguFile.registerModuleFile(modulePath);
+    const storePackageSubdir = _.chain(type).camelCase().kebabCase().value();
+    const storePackageUri = `${configuRemotePackagesUri}/packages/stores/${storePackageSubdir}${ref ? `#${ref}` : ''}`;
+    return ConfiguModule.registerRemotePackage(storePackageUri);
   }
 
   static async constructStore(input: string, configuration = {}) {
-    // input is a "store-type@channel/semver-version" string
+    // input is a "store-type#git-ref" string
     console.debug('ConfiguFile.constructStore', { input, configuration });
-    const [rawType = '', version] = input.split('@');
+    const [rawType, gitRef] = input.split('#');
     if (!rawType) {
       throw new Error('store type is missing');
     }
-    // normalize the type to ensure that the store is registered correctly
-    const type = ConfigKey.normalize(rawType);
 
     // todo: remember to mention in docs that store types cannot be overridden
-    if (!ConfigStore.has(type)) {
-      await ConfiguFile.registerStore(type, version);
+    if (!ConfigStore.has(rawType)) {
+      await ConfiguFile.registerRemoteStore(rawType, gitRef);
     }
-    return ConfigStore.construct(type, configuration);
+    return ConfigStore.construct(rawType, configuration);
   }
 }
+
+// (async () => {
+//   process.env.DEBUG = 'true';
+//   // await fetchTemplate('gh:configu/configu/packages/stores/sqlite', await getConfiguHomeDir('cache', 'sqlite'));
+//   // await ConfiguFile.registerRemoteStore('hashicorp-vault');
+//   await ConfiguFile.registerRemoteStore('sqlite');
+// })();

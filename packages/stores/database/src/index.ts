@@ -1,8 +1,7 @@
 import 'reflect-metadata';
 import { DataSource, EntitySchema, type DataSourceOptions } from 'typeorm';
 import crypto from 'node:crypto';
-import { ConfigStore, type ConfigQuery, type Config } from '@configu/sdk';
-import { _ } from '@configu/sdk/expressions';
+import { _, ConfigStore, type ConfigQuery, type Config } from '@configu/sdk';
 
 // const createEntity = (tableName: string) => {
 //   @Entity({ name: tableName })
@@ -88,10 +87,7 @@ export abstract class ORMConfigStore extends ConfigStore {
 
   static id({ set, key }: Config): string {
     // MD5 produces a 32-character hexadecimal string
-    return crypto
-      .createHash('md5')
-      .update(set + key)
-      .digest('hex');
+    return crypto.hash('md5', set + key, 'hex');
   }
 
   private async delete(configs: Config[]): Promise<void> {

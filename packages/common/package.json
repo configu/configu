@@ -43,17 +43,20 @@
     "@configu/json-file": "workspace:*",
     "@configu/sdk": "workspace:*",
     "axios": "^1.7.9",
-    "consola": "^3.3.0",
+    "consola": "^3.3.3",
     "find-up": "^7.0.0",
-    "glob": "^11.0.0",
+    "giget": "1.2.3",
+    "glob": "^11.0.1",
     "jiti": "^2.4.2",
+    "npm": "7.24.2",
     "parse-json": "8.1.0",
-    "pathe": "^1.1.2",
+    "pathe": "^2.0.1",
     "semver": "^7.6.3",
     "std-env": "^3.8.0",
-    "yaml": "^2.6.1"
+    "yaml": "^2.7.0"
   },
   "devDependencies": {
+    "@types/npm": "^7.19.3",
     "@types/semver": "^7.5.8"
   }
 }

@@ -1,6 +1,5 @@
 import Dotenv from 'dotenv';
-import { _ } from '@configu/sdk/expressions';
-import { Cfgu, Config } from '@configu/sdk';
+import { Cfgu, Config, _ } from '@configu/sdk';
 
 type ConfigFormat =
   | 'JSON'

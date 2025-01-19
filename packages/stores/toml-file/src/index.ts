@@ -1,6 +1,5 @@
 import { FileConfigStore } from '@configu/file';
-import { Config } from '@configu/sdk';
-import { _ } from '@configu/sdk/expressions';
+import { _, Config } from '@configu/sdk';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import TOML from '@iarna/toml';
 
