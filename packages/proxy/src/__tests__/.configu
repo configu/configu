@@ -1,0 +1,10 @@
+{
+  "stores": {
+    "testStore": {
+      "type": "json-file",
+      "configuration": {
+        "path": "./packages/proxy/src/__tests__/configs.json"
+      }
+    }
+  }
+}
