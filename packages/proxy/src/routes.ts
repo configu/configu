@@ -3,7 +3,6 @@ import cron from 'node-cron';
 import { ConfigSchema, ConfigSet } from '@configu/sdk';
 import { EvalCommand, EvalCommandOutput, ExportCommand } from '@configu/sdk/commands';
 import { FromSchema } from '@configu/sdk/expressions';
-import _ from 'lodash';
 import { ConfiguInterface } from '@configu/common';
 
 const body = {
@@ -126,7 +125,7 @@ export const routes: FastifyPluginAsync = async (server, opts): Promise<void> =>
         // const parsedExportRes = JSON.parse(exportRes.result);
 
         // Return one-time result
-        return reply.send(exportRes);
+        return exportRes;
       }
 
       // Otherwise, we are in SSE mode, triggered by the presence of a "cron" query parameter

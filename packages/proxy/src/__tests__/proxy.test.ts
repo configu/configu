@@ -1,14 +1,60 @@
-import assert from 'assert';
+import assert from 'node:assert';
 import { test, before, after } from 'node:test';
-import path, { dirname } from 'path';
-import { fileURLToPath } from 'url';
+import path, { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { ConfiguInterface } from '@configu/common';
-import http, { IncomingMessage } from 'http';
-import querystring from 'querystring';
 import { config } from '../config';
 import { buildServer } from '../server';
 
 let server: ReturnType<typeof buildServer>;
+interface SSEResponse {
+  statusCode: number;
+  headers: Headers;
+  body: string;
+}
+
+async function readSSE(fullUrl: URL, mockBody: string): Promise<SSEResponse> {
+  const controller = new AbortController(); // Create an AbortController instance
+  const { signal } = controller; // Extract the signal for the fetch request
+
+  const responseSSE = await fetch(fullUrl, {
+    method: 'POST',
+    body: mockBody,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    signal,
+  });
+
+  assert(responseSSE.body, 'Body should return for SSE EP.');
+  const reader = responseSSE.body.getReader();
+  const decoder = new TextDecoder('utf-8');
+  let data = '';
+  try {
+    while (!data.includes('data')) {
+      const result = Promise.resolve();
+      // eslint-disable-next-line no-await-in-loop
+      const { value, done } = await reader.read();
+      if (done) break;
+      data += decoder.decode(value, { stream: true });
+      if (data.includes('data')) {
+        // In SSE  the ReadableStream often doesn't end naturally because the connection remains open for streaming data.
+        assert.ok(true, 'Stream stopped after receiving desired data');
+        break;
+      }
+    }
+  } finally {
+    controller.abort();
+  }
+
+  const response: SSEResponse = {
+    statusCode: responseSSE.status || 0,
+    headers: responseSSE.headers,
+    body: data,
+  };
+
+  return response;
+}
 
 before(async () => {
   const __filename = fileURLToPath(import.meta.url);
@@ -83,8 +129,6 @@ test('should handle POST /export successfully', async () => {
 });
 
 test('should handle SSE stream and close connection', async () => {
-  const query = querystring.stringify({ cron: '* * * * *' });
-  const urlPath = `/export?${query}`;
   const mockBody = [
     {
       store: 'testStore',
@@ -107,59 +151,18 @@ test('should handle SSE stream and close connection', async () => {
   ];
 
   const requestBody = JSON.stringify(mockBody);
-  const httpOptions = {
-    hostname: config.CONFIGU_HTTP_ADDR,
-    port: config.CONFIGU_HTTP_PORT,
-    path: urlPath,
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'text/event-stream',
-      'Content-Length': Buffer.byteLength(requestBody),
-    },
-  };
-
-  const makeRequest = async (options: http.RequestOptions, body: string) => {
-    return new Promise<{ statusCode: number; headers: http.IncomingHttpHeaders; body: string }>((resolve) => {
-      const req = http.request(options, (res: IncomingMessage) => {
-        let data = '';
-
-        res.on('data', (chunk) => {
-          data += chunk.toString();
-
-          if (data.includes('data')) {
-            resolve({
-              statusCode: res.statusCode || 0,
-              headers: res.headers,
-              body: data,
-            });
-
-            res.destroy();
-            req.destroy();
-            assert.ok(true, 'Stream stopped after receiving desired data');
-          }
-        });
-
-        res.on('end', () => {
-          resolve({
-            statusCode: res.statusCode || 0,
-            headers: res.headers,
-            body: data,
-          });
-        });
-      });
-
-      req.on('error', (err: string) => {
-        throw new Error(err);
-      });
-      req.write(body);
-      req.end();
-    });
-  };
+  const fullUrl = new URL('/export', `http://${config.CONFIGU_HTTP_ADDR}:${config.CONFIGU_HTTP_PORT}`);
+  fullUrl.searchParams.append('cron', '* * * * *');
+  const response = await readSSE(fullUrl, requestBody);
 
   // Make the request and await the response
-  const response = await makeRequest(httpOptions, requestBody);
+  const contentType = 'text/event-stream';
   assert.strictEqual(response.statusCode, 200, 'Expected status code 200');
+  assert.strictEqual(
+    response.headers.get('content-type'),
+    contentType,
+    `Content type should be as expected for sse data: ${contentType}`,
+  );
   assert(
     Object.prototype.hasOwnProperty.call(JSON.parse(response.body), 'data'),
     'Expected a data property in the response',
