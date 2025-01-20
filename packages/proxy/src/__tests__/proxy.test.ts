@@ -13,49 +13,6 @@ interface SSEResponse {
   body: string;
 }
 
-async function readSSE(fullUrl: URL, mockBody: string): Promise<SSEResponse> {
-  const controller = new AbortController(); // Create an AbortController instance
-  const { signal } = controller; // Extract the signal for the fetch request
-
-  const responseSSE = await fetch(fullUrl, {
-    method: 'POST',
-    body: mockBody,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    signal,
-  });
-
-  assert(responseSSE.body, 'Body should return for SSE EP.');
-  const reader = responseSSE.body.getReader();
-  const decoder = new TextDecoder('utf-8');
-  let data = '';
-  try {
-    while (!data.includes('data')) {
-      const result = Promise.resolve();
-      // eslint-disable-next-line no-await-in-loop
-      const { value, done } = await reader.read();
-      if (done) break;
-      data += decoder.decode(value, { stream: true });
-      if (data.includes('data')) {
-        // In SSE  the ReadableStream often doesn't end naturally because the connection remains open for streaming data.
-        assert.ok(true, 'Stream stopped after receiving desired data');
-        break;
-      }
-    }
-  } finally {
-    controller.abort();
-  }
-
-  const response: SSEResponse = {
-    statusCode: responseSSE.status || 0,
-    headers: responseSSE.headers,
-    body: data,
-  };
-
-  return response;
-}
-
 before(async () => {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = dirname(__filename);
@@ -127,6 +84,49 @@ test('should handle POST /export successfully', async () => {
   assert.strictEqual(response.statusCode, 200, 'Expected status code 200');
   assert.strictEqual(typeof JSON.parse(response.body), 'object', 'Expected response body to be an object');
 });
+
+async function readSSE(fullUrl: URL, mockBody: string): Promise<SSEResponse> {
+  const controller = new AbortController(); // Create an AbortController instance
+  const { signal } = controller; // Extract the signal for the fetch request
+
+  const responseSSE = await fetch(fullUrl, {
+    method: 'POST',
+    body: mockBody,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    signal,
+  });
+
+  assert(responseSSE.body, 'Body should return for SSE EP.');
+  const reader = responseSSE.body.getReader();
+  const decoder = new TextDecoder('utf-8');
+  let data = '';
+  try {
+    while (!data.includes('data')) {
+      const result = Promise.resolve();
+      // eslint-disable-next-line no-await-in-loop
+      const { value, done } = await reader.read();
+      if (done) break;
+      data += decoder.decode(value, { stream: true });
+      if (data.includes('data')) {
+        // In SSE  the ReadableStream often doesn't end naturally because the connection remains open for streaming data.
+        assert.ok(true, 'Stream stopped after receiving desired data');
+        break;
+      }
+    }
+  } finally {
+    controller.abort();
+  }
+
+  const response: SSEResponse = {
+    statusCode: responseSSE.status || 0,
+    headers: responseSSE.headers,
+    body: data,
+  };
+
+  return response;
+}
 
 test('should handle SSE stream and close connection', async () => {
   const mockBody = [
