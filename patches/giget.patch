@@ -1,0 +1,26 @@
+diff --git a/dist/index.cjs b/dist/index.cjs
+index 3707bf610b885346eb0a20b5a9af1a6354f6fe5f..76aed32338f47a53656859149511aaf165a84637 100644
+--- a/dist/index.cjs
++++ b/dist/index.cjs
+@@ -211,7 +211,7 @@ const sourcehut = (input, options) => {
+     tar: `https://git.sr.ht/~${parsed.repo}/archive/${parsed.ref}.tar.gz`
+   };
+ };
+-const providers = {
++export const providers = {
+   http,
+   https: http,
+   github,
+diff --git a/dist/index.mjs b/dist/index.mjs
+index d8d765a7a46bd4d16288209850e5d6d4ec4546fc..48e30480c08f27e69e54dae29aacbf619bc7de4e 100644
+--- a/dist/index.mjs
++++ b/dist/index.mjs
+@@ -209,7 +209,7 @@ const sourcehut = (input, options) => {
+     tar: `https://git.sr.ht/~${parsed.repo}/archive/${parsed.ref}.tar.gz`
+   };
+ };
+-const providers = {
++export const providers = {
+   http,
+   https: http,
+   github,

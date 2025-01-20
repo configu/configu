@@ -1,14 +1,15 @@
 import { FastifyPluginAsync } from 'fastify';
-import { ConfigSchema, ConfigSet } from '@configu/sdk';
 import {
+  _,
+  ConfigSchema,
+  ConfigSet,
   EvalCommand,
   EvalCommandOutput,
   EvaluatedConfigOrigin,
   UpsertCommand,
   ExportCommand,
-} from '@configu/sdk/commands';
-import { FromSchema } from '@configu/sdk/expressions';
-import _ from 'lodash';
+  FromSchema,
+} from '@configu/sdk';
 import { ConfiguInterface } from '@configu/common';
 import { config } from './config';
 

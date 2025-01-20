@@ -1,10 +1,12 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { defineConfig } from 'tsup';
 import { $ } from 'zx';
+import packageJson from './package.json' with { type: 'json' };
+
+// export const entry = ['src/index.ts', 'src/expressions/index.ts', 'src/stores/index.ts', 'src/commands/index.ts'];
 
 export default defineConfig([
   {
-    entry: ['src/index.ts', 'src/expressions/index.ts', 'src/stores/index.ts', 'src/commands/index.ts'],
     format: ['esm', 'cjs'],
     outDir: 'dist',
     clean: true,

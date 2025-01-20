@@ -13,7 +13,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/configu/configu",
-    "directory": "packages/integrations/formatters"
+    "directory": "packages/formatters"
   },
   "bugs": "https://github.com/configu/configu/issues",
   "license": "Apache-2.0",
@@ -50,7 +50,7 @@
     "change-case": "^5.4.4",
     "dotenv": "16.4.7",
     "lodash": "^4.17.21",
-    "yaml": "^2.6.1"
+    "yaml": "^2.7.0"
   },
   "devDependencies": {}
 }

@@ -46,7 +46,6 @@
     "@configu/sdk": "workspace:*",
     "clipanion": "^4.0.0-rc.4",
     "get-stdin": "^9.0.0",
-    "giget": "1.2.3",
     "open": "10.1.0",
     "openid-client": "5.7.1",
     "table": "6.9.0",
