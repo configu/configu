@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 patchedDependencies:
+  giget:
+    hash: ducondu7hbxpknchrgt53rravq
+    path: patches/giget.patch
   npm:
     hash: xtayuxykmvibjxflxkpmqxl2hm
     path: patches/npm.patch
@@ -141,16 +144,19 @@ importers:
         version: link:../sdk
       axios:
         specifier: ^1.7.9
-        version: 1.7.9
+        version: 1.7.9(debug@4.4.0)
       consola:
-        specifier: ^3.3.3
+        specifier: ^3.4.0
         version: 3.4.0
+      debug:
+        specifier: ^4.4.0
+        version: 4.4.0
       find-up:
         specifier: ^7.0.0
         version: 7.0.0
       giget:
-        specifier: 1.2.3
-        version: 1.2.3
+        specifier: ^1.2.3
+        version: 1.2.3(patch_hash=ducondu7hbxpknchrgt53rravq)
       glob:
         specifier: ^11.0.1
         version: 11.0.1
@@ -164,8 +170,8 @@ importers:
         specifier: 8.1.0
         version: 8.1.0
       pathe:
-        specifier: ^2.0.1
-        version: 2.0.1
+        specifier: ^2.0.2
+        version: 2.0.2
       semver:
         specifier: ^7.6.3
         version: 7.6.3
@@ -176,6 +182,9 @@ importers:
         specifier: ^2.7.0
         version: 2.7.0
     devDependencies:
+      '@types/debug':
+        specifier: ^4.1.12
+        version: 4.1.12
       '@types/npm':
         specifier: ^7.19.3
         version: 7.19.3
@@ -395,7 +404,7 @@ importers:
         version: link:../../sdk
       axios:
         specifier: ^1.7.9
-        version: 1.7.9
+        version: 1.7.9(debug@4.4.0)
 
   packages/stores/csv-file:
     dependencies:
@@ -461,7 +470,7 @@ importers:
         version: link:../../sdk
       axios:
         specifier: ^1.7.9
-        version: 1.7.9
+        version: 1.7.9(debug@4.4.0)
 
   packages/stores/ini-file:
     dependencies:
@@ -5501,8 +5510,8 @@ packages:
   pathe@1.1.2:
     resolution: {integrity: sha512-whLdWMYL2TwI08hn8/ZqAbrVemu0LNaNNJZX73O6qaIdCTfXutsLhMkjdENX0qhsQ9uIimo4/aQOmXkoon2nDQ==}
 
-  pathe@2.0.1:
-    resolution: {integrity: sha512-6jpjMpOth5S9ITVu5clZ7NOgHNsv5vRQdheL9ztp2vZmM6fRbLvyua1tiBIL4lk8SAe3ARzeXEly6siXCjDHDw==}
+  pathe@2.0.2:
+    resolution: {integrity: sha512-15Ztpk+nov8DR524R4BF7uEuzESgzUEAV4Ah7CUMNGXdE5ELuvxElxGXndBl32vMSsWa1jpNf22Z+Er3sKwq+w==}
 
   pathval@2.0.0:
     resolution: {integrity: sha512-vE7JKRyES09KiunauX7nd2Q9/L7lhok4smP9RZTDeD4MVs72Dp2qNFVz39Nz5a0FVEW0BJR6C0DYrq6unoziZA==}
@@ -8605,7 +8614,7 @@ snapshots:
 
   '@mintlify/models@0.0.96':
     dependencies:
-      axios: 1.7.9
+      axios: 1.7.9(debug@4.4.0)
       openapi-types: 12.1.3
     transitivePeerDependencies:
       - debug
@@ -9688,9 +9697,9 @@ snapshots:
 
   aws4@1.13.2: {}
 
-  axios@1.7.9:
+  axios@1.7.9(debug@4.4.0):
     dependencies:
-      follow-redirects: 1.15.6
+      follow-redirects: 1.15.6(debug@4.4.0)
       form-data: 4.0.0
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
@@ -10978,7 +10987,9 @@ snapshots:
 
   flatted@3.3.1: {}
 
-  follow-redirects@1.15.6: {}
+  follow-redirects@1.15.6(debug@4.4.0):
+    optionalDependencies:
+      debug: 4.4.0
 
   for-each@0.3.3:
     dependencies:
@@ -11120,7 +11131,7 @@ snapshots:
     dependencies:
       assert-plus: 1.0.0
 
-  giget@1.2.3:
+  giget@1.2.3(patch_hash=ducondu7hbxpknchrgt53rravq):
     dependencies:
       citty: 0.1.6
       consola: 3.4.0
@@ -13142,7 +13153,7 @@ snapshots:
 
   pathe@1.1.2: {}
 
-  pathe@2.0.1: {}
+  pathe@2.0.2: {}
 
   pathval@2.0.0: {}
 
@@ -13685,7 +13696,7 @@ snapshots:
 
   rox-node@5.4.13:
     dependencies:
-      axios: 1.7.9
+      axios: 1.7.9(debug@4.4.0)
     transitivePeerDependencies:
       - debug
 

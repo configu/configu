@@ -66,6 +66,31 @@ const ConfiguFileSchema = {
       minLength: 1,
       description: 'Url to JSON Schema',
     },
+    configuration: {
+      type: 'object',
+      properties: {
+        // npmRegistry: { type: 'string' },
+        // githubApiUrl: { type: 'string' },
+        // cli: {
+        //   type: 'object',
+        //   required: [],
+        //   properties: {},
+        // },
+        proxy: {
+          type: 'object',
+          required: [],
+          properties: {
+            http: {
+              type: 'object',
+              properties: {
+                addr: { type: 'string' },
+                port: { type: 'number' },
+              },
+            },
+          },
+        },
+      },
+    },
     stores: {
       type: 'object',
       required: [],

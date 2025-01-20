@@ -82,7 +82,8 @@
   },
   "pnpm": {
     "patchedDependencies": {
-      "npm": "patches/npm.patch"
+      "npm": "patches/npm.patch",
+      "giget": "patches/giget.patch"
     }
   }
 }
