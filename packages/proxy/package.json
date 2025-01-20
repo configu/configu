@@ -26,16 +26,16 @@
     "node": ">=v20.0.0"
   },
   "type": "module",
-  "types": "./build/index.d.ts",
-  "exports": "./build/index.js",
+  "types": "./dist/index.d.cts",
+  "exports": "./dist/index.cjs",
   "files": [
-    "/bin",
-    "/build/**/*.js"
+    "src",
+    "dist"
   ],
   "scripts": {
-    "build": "tsc --build",
+    "clean": "shx rm -rf dist",
+    "build": "tsup",
     "build:docker": "docker build --progress plain -t configu/proxy -f ./Dockerfile ../..",
-    "clean": "shx rm -rf tsconfig.tsbuildinfo build",
     "dev": "tsx watch --inspect --clear-screen=false src/index.ts"
   },
   "dependencies": {
