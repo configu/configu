@@ -1,5 +1,4 @@
-import { _ } from '@configu/sdk/expressions';
-import { Config, ConfigStore, ConfigQuery } from '@configu/sdk';
+import { _, Config, ConfigStore, ConfigQuery } from '@configu/sdk';
 
 export abstract class KeyValueConfigStore extends ConfigStore {
   protected abstract getByKey(key: string): Promise<string>;

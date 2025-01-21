@@ -1,6 +1,5 @@
 import { Command, Option } from 'clipanion';
-import { ConfigSet, ConfigStore } from '@configu/sdk';
-import { EvalCommand } from '@configu/sdk/commands';
+import { ConfigSet, ConfigStore, EvalCommand } from '@configu/sdk';
 import { ConfiguInterface } from '@configu/common';
 import { BaseCommand } from './base';
 

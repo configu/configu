@@ -1,6 +1,5 @@
 import { Command, Option } from 'clipanion';
-import { ConfigSet } from '@configu/sdk';
-import { UpsertCommand } from '@configu/sdk/commands';
+import { ConfigSet, UpsertCommand } from '@configu/sdk';
 import { ConfiguInterface } from '@configu/common';
 // import { ConfiguConfigStoreApprovalQueueError } from '@configu/configu';
 import { BaseCommand } from './base';

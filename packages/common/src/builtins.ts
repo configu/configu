@@ -1,5 +1,4 @@
-import { ConfigStore } from '@configu/sdk';
-import { NoopConfigStore, InMemoryConfigStore } from '@configu/sdk/stores';
+import { ConfigStore, NoopConfigStore, InMemoryConfigStore } from '@configu/sdk';
 import { JsonFileConfigStore } from '@configu/json-file';
 import { ConfiguConfigStore } from '@configu/configu';
 

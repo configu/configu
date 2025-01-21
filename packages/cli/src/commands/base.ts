@@ -1,7 +1,6 @@
 import { Command, Option, UsageError } from 'clipanion';
-import { _ } from '@configu/sdk/expressions';
+import { _, EvalCommandOutput } from '@configu/sdk';
 import { console, ConfiguInterface, parseJSON } from '@configu/common';
-import { EvalCommandOutput } from '@configu/sdk/commands';
 import getStdin from 'get-stdin';
 
 import { type RunContext } from '..';

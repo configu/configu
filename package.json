@@ -20,7 +20,7 @@
     "email": "dev@configu.com",
     "url": "https://configu.com"
   },
-  "packageManager": "pnpm@9.15.0",
+  "packageManager": "pnpm@9.15.4",
   "engines": {
     "git": "*",
     "configu": ">=0.17",
@@ -38,8 +38,8 @@
     "prepare:hooks": "husky",
     "prepare:build": "pnpm build",
     "clean": "pnpm -r clean",
-    "clean:all": "pnpm \"/^clean:.*/\"",
     "clean:cache": "shx rm -rf **/node_modules **/dist .eslintcache lcov.info",
+    "clean:all": "pnpm clean && pnpm clean:cache",
     "format": "prettier --ignore-path .gitignore --ignore-path .prettierignore",
     "format:check": "pnpm format --check $npm_package_config_format",
     "format:fix": "pnpm format --write $npm_package_config_format",
@@ -57,19 +57,19 @@
     "start": "pnpm prepare:art"
   },
   "devDependencies": {
-    "@cspell/eslint-plugin": "^8.17.1",
-    "@types/lodash": "^4.17.13",
-    "@types/node": "22.10.2",
-    "@typescript-eslint/eslint-plugin": "^8.18.1",
-    "@typescript-eslint/parser": "^8.18.1",
-    "esbuild": "^0.24.0",
+    "@cspell/eslint-plugin": "^8.17.2",
+    "@types/lodash": "^4.17.14",
+    "@types/node": "22.10.6",
+    "@typescript-eslint/eslint-plugin": "^8.20.0",
+    "@typescript-eslint/parser": "^8.20.0",
+    "esbuild": "^0.24.2",
     "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-prettier": "^9.1.0",
+    "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-prettier": "^5.2.1",
     "husky": "^9.1.7",
-    "lint-staged": "^15.2.11",
+    "lint-staged": "^15.3.0",
     "prettier": "^3.4.2",
     "shx": "^0.3.4",
     "syncpack": "^13.0.0",
@@ -77,7 +77,13 @@
     "tslib": "^2.8.1",
     "tsup": "^8.3.5",
     "tsx": "^4.19.2",
-    "typescript": "^5.7.2",
-    "zx": "8.2.4"
+    "typescript": "^5.7.3",
+    "zx": "8.3.0"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "npm": "patches/npm.patch",
+      "giget": "patches/giget.patch"
+    }
   }
 }

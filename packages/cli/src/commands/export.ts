@@ -1,9 +1,7 @@
 import { Command, Option } from 'clipanion';
 import * as t from 'typanion';
 import { spawnSync } from 'node:child_process';
-import { ConfigExpression, ConfigKey, ConfigValue } from '@configu/sdk';
-import { EvalCommandOutput, EvaluatedConfig } from '@configu/sdk/commands';
-import { _ } from '@configu/sdk/expressions';
+import { ConfigExpression, ConfigKey, ConfigValue, _, EvalCommandOutput, EvaluatedConfig } from '@configu/sdk';
 import { table } from 'table';
 import { readFile } from '@configu/common';
 import { ConfigFormatter, ConfigFormat } from '@configu/formatters';

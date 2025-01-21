@@ -2,7 +2,7 @@
 
 import { $, cd } from 'zx';
 import * as fs from 'node:fs/promises';
-import { JSONSchemaObject } from '@configu/sdk/expressions';
+import { JSONSchemaObject } from '@configu/sdk';
 import { CfguFile, ConfiguFile, path } from '@configu/common';
 
 const ROOT_PATH = path.join(import.meta.dirname, '..', '..');

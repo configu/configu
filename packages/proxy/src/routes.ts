@@ -1,8 +1,16 @@
 import { FastifyPluginAsync } from 'fastify';
 import cron from 'node-cron';
-import { ConfigSchema, ConfigSet } from '@configu/sdk';
-import { EvalCommand, EvalCommandOutput, ExportCommand } from '@configu/sdk/commands';
-import { FromSchema } from '@configu/sdk/expressions';
+import {
+  _,
+  ConfigSchema,
+  ConfigSet,
+  EvalCommand,
+  EvalCommandOutput,
+  EvaluatedConfigOrigin,
+  UpsertCommand,
+  ExportCommand,
+  FromSchema,
+} from '@configu/sdk';
 import { ConfiguInterface } from '@configu/common';
 
 const body = {

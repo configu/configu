@@ -1,5 +1,13 @@
-import { _, JSONSchema, JSONSchemaObject, FromSchema } from '@configu/sdk/expressions';
-import { ConfigSchema, ConfigSchemaKeys, V0ConfigSchemaKeys, ConfigSchemaKeysSchema } from '@configu/sdk';
+import {
+  ConfigSchema,
+  ConfigSchemaKeys,
+  V0ConfigSchemaKeys,
+  ConfigSchemaKeysSchema,
+  _,
+  JSONSchema,
+  JSONSchemaObject,
+  FromSchema,
+} from '@configu/sdk';
 import { console, path as pathe, readFile, glob, parseJSON, parseYAML, normalizeInput } from './utils';
 
 const { join, basename, dirname, resolve } = pathe;

@@ -1,6 +1,5 @@
 import fs from 'node:fs/promises';
-import { type Config, ConfigStore, type ConfigQuery } from '@configu/sdk';
-import { _ } from '@configu/sdk/expressions';
+import { _, type Config, ConfigStore, type ConfigQuery } from '@configu/sdk';
 
 export type FileConfigStoreConfiguration = { path: string; initialFileState: string };
 
