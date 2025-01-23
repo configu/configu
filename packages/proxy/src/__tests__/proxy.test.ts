@@ -162,8 +162,9 @@ test('should handle SSE stream and close connection', async () => {
     contentType,
     `Content type should be as expected for sse data: ${contentType}`,
   );
+  const bodyJson = response.body.replace('data:', ''); // SSE response excpected to start with 'data:'
   assert(
-    Object.prototype.hasOwnProperty.call(JSON.parse(response.body), 'data'),
+    Object.prototype.hasOwnProperty.call(JSON.parse(bodyJson), 'data'),
     'Expected a data property in the response',
   );
 });

@@ -160,15 +160,13 @@ export const routes: FastifyPluginAsync = async (server, opts): Promise<void> =>
       const runExportAndWriteSSE = async () => {
         try {
           const exportRes = await runExportAndGetResult(request.body);
-
-          const data = JSON.stringify(exportRes);
           const replyObj = {
             id: getNextId(),
             event: 'export',
-            data,
+            data: exportRes,
           };
 
-          reply.raw.write(JSON.stringify(replyObj));
+          reply.raw.write(`data: ${JSON.stringify(replyObj)}\n\n`);
         } catch (error: any) {
           const errMsg = error?.message || 'Unknown error';
           reply.raw.write(`event: error\n`);
