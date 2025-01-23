@@ -168,7 +168,7 @@ export const routes: FastifyPluginAsync = async (server, opts): Promise<void> =>
             data,
           };
 
-          reply.raw.write(JSON.stringify(replyObj));
+          reply.raw.write(`data: ${JSON.stringify(replyObj)}\n\n`);
         } catch (error: any) {
           const errMsg = error?.message || 'Unknown error';
           reply.raw.write(`event: error\n`);
