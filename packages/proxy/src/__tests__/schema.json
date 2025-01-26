@@ -1,0 +1,14 @@
+{
+  "keys": {
+    "GREETING": {
+      "pattern": "^(hello|hey|welcome|hola|salute|bonjour|shalom)$",
+      "default": "hello"
+    },
+    "SUBJECT": {
+      "default": "world"
+    },
+    "MESSAGE": {
+      "description": "Generates a full greeting message"
+    }
+  }
+}
