@@ -59,20 +59,9 @@ Some notable actions include:
 
 <Frame>![image](/images/configs-explorer/configs-grid-menus.png)</Frame>
 
-## List View
-
-The List view shows all the [Configs](/introduction/concepts#config) data you have permission for (e.g., set name, key, value, last update).
-Admin can mask the values for security reasons.
-
-<Frame>![image](/images/configs-explorer/platform-configs-explorer-configs.png)</Frame>
-
-You can show masked values, see the history of the config, or delete it (if you have permission).
-
-<Frame>![image](/images/configs-explorer/config-explorer-actions.png)</Frame>
-
 ## Upsert Configs Wizard
 
-The Upsert Configs Wizard is a quick and convenient way to modify configs. You can access the wizard by clicking "Upsert Configs" from the Graph or Grid view.
+The Upsert Configs Wizard is a quick and convenient way to modify configs. You can access the wizard by clicking "Upsert" from the Graph or Grid view.
 
 <Frame>![image](/images/configs-explorer/configs-explorer-upsert-configs-wizard-button.png)</Frame>
 
@@ -87,3 +76,19 @@ Select or create a new set and modify the value. You can upsert to multiple sets
 Review the changes from the previous step and confirm the upsert. Click "Upsert Configs" to complete the process.
 
 <Frame>![image](/images/configs-explorer/configs-explorer-upsert-configs-wizard-summary.png)</Frame>
+
+## Config Set Exporter
+
+The Eval Configs modal is a quick and convenient way to evaluate configs. You can access the modal by clicking "Eval" from the Graph or Grid view or by clicking "Eval Set" from the context menu of a ConfigSet header cell or a ConfigSet node in the Graph view.
+
+<Frame>![image](/images/configs-explorer/configs-explorer-eval-configs-cta.png)</Frame>
+<Frame>![image](/images/configs-explorer/configs-explorer-eval-configs-graph-eval-set.png)</Frame>
+<Frame>![image](/images/configs-explorer/configs-explorer-eval-configs-grid-eval-set.png)</Frame>
+
+Select the set you want to evaluate. If you opened the modal via the "Eval Set" action, the set will be pre-selected. Select your preferred format and toggle whether you want to see empty config values. The formatted evaluation result is displayed in the "Config File" input which you can copy or download by clicking the respective buttons.
+
+<Frame>![image](/images/configs-explorer/configs-explorer-eval-configs.png)</Frame>
+
+<Info>
+  Your "Formatting Type" and "Hide empty values" selections are stored and used as defaults for future evaluations.
+</Info>
