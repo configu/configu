@@ -1,14 +1,15 @@
 import { Command, Option } from 'clipanion';
 import { Issuer, errors } from 'openid-client';
+import { log, isCancel, cancel, confirm, select } from '@clack/prompts';
 import open from 'open';
-import { console, configuApi, CONFIGU_API_URL, CONFIGU_APP_URL } from '@configu/common';
+import { configuPlatformApi, CONFIGU_DEFAULT_API_URL, CONFIGU_DEFAULT_APP_URL } from '@configu/common';
 import { BaseCommand } from './base';
 
 const AUTH0_DOMAIN = 'configu.us.auth0.com';
 /* cspell:disable-next-line */
 const AUTH0_CLIENT_ID = 'qxv0WQpwqApo4BNEYMMb4rfn1Xam9A4D';
 const AUTH0_API_IDENTIFIER = 'https://api.configu.com';
-const SETUP_ERROR_MESSAGE = `Initial setup in not completed. Go to ${CONFIGU_APP_URL} activate your user and create your first organization`;
+const SETUP_ERROR_MESSAGE = `Initial setup in not completed. Go to ${CONFIGU_DEFAULT_APP_URL} activate your user and create your first organization`;
 
 export class LoginCommand extends BaseCommand {
   static override paths = [['login']];
@@ -24,7 +25,7 @@ export class LoginCommand extends BaseCommand {
 
   private async getDataUser(token: string) {
     try {
-      const user = await configuApi({
+      const user = await configuPlatformApi({
         method: 'GET',
         url: '/user',
         headers: {
@@ -56,15 +57,15 @@ export class LoginCommand extends BaseCommand {
       const handle = await client.deviceAuthorization({ audience: AUTH0_API_IDENTIFIER });
       const { user_code: userCode, verification_uri_complete: verificationUriComplete, expires_in: expiresIn } = handle;
 
-      const confirmLogin = await console.prompt(
-        `Press any key to open up the browser to login or press ctrl-c to abort.
-      You should see the following code: ${userCode}. It expires in ${
-        expiresIn % 60 === 0 ? `${expiresIn / 60} minutes` : `${expiresIn} seconds`
-      }. Continue?`,
-        { type: 'confirm', initial: true },
-      );
+      const confirmLogin = await confirm({
+        message: `Press any key to open up the browser to login or press ctrl-c to abort.
+        You should see the following code: ${userCode}. It expires in ${
+          expiresIn % 60 === 0 ? `${expiresIn / 60} minutes` : `${expiresIn} seconds`
+        }. Continue?`,
+        initialValue: true,
+      });
 
-      if (!confirmLogin) {
+      if (isCancel(confirmLogin) || !confirmLogin) {
         return null;
       }
 
@@ -79,14 +80,18 @@ export class LoginCommand extends BaseCommand {
       const userDataResponse = await this.getDataUser(tokens?.access_token);
 
       const current = (
-        this.context.localConfigu.contents.stores?.configu?.configuration?.credentials as { org?: string }
+        this.context.configu.local.contents.stores?.configu?.configuration?.credentials as { org?: string }
       )?.org;
       const options = userDataResponse?.data?.orgs.map((org: any) => ({
         label: org.name,
         value: org._id,
         hint: org._id === current ? 'current' : '',
       }));
-      const orgId = await console.prompt('Select an organization', { type: 'select', options });
+      const orgId = await select({ message: 'Select an organization', options });
+
+      if (isCancel(orgId)) {
+        return null;
+      }
 
       return { org: orgId, token: tokens.access_token, type: 'Bearer' } as const;
     } catch (error) {
@@ -117,10 +122,10 @@ export class LoginCommand extends BaseCommand {
       return;
     }
 
-    await this.context.localConfigu.save({
+    await this.context.configu.local.save({
       stores: {
         // configu: { type: 'configu', configuration: { credentials, endpoint: this.endpoint ?? CONFIGU_API_URL } },
-        configu: { type: 'configu', configuration: { credentials, endpoint: CONFIGU_API_URL } },
+        configu: { type: 'configu', configuration: { credentials, endpoint: CONFIGU_DEFAULT_API_URL } },
       },
     });
   }

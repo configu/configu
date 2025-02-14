@@ -1,66 +1,162 @@
 import fs from 'node:fs/promises';
-import path from 'pathe';
-import { ConfigSchema, ConfigSet, _, EvalCommandOutput, EvaluatedConfigOrigin, UpsertCommand } from '@configu/sdk';
-import { ConfiguFile } from './ConfiguFile';
+import {
+  ConfigSchema,
+  ConfigSet,
+  _,
+  EvalCommandOutput,
+  EvaluatedConfigOrigin,
+  UpsertCommand,
+  JSONSchemaObject,
+} from '@configu/sdk';
+import { ConfiguFile, ConfiguFileInterfaceConfig } from './ConfiguFile';
 import { CfguFile } from './CfguFile';
-import { console, environment, getConfiguHomeDir } from './utils';
+import { debug, path, stdenv, inspect, CONFIGU_PATHS, validateEngineVersion } from './utils';
 
 export class ConfiguInterface {
   public static context: {
-    console: typeof console;
-    environment: typeof environment;
-    homedir: string;
-    upperConfigu?: ConfiguFile;
-    localConfigu: ConfiguFile;
+    environment: Omit<typeof stdenv, 'process' | 'env'>;
+    isGlobal: boolean;
+    paths: {
+      home: string;
+      cache: string;
+      bin: string;
+    };
+    configu: {
+      input?: ConfiguFile;
+      local: ConfiguFile;
+    };
+    interface: ConfiguFileInterfaceConfig;
   };
 
-  static async init({ input }: { input?: string }) {
-    // todo: resolve any casting
-    this.context = {} as any;
-    this.context.console = console;
-    this.context.environment = environment;
-    this.context.homedir = await getConfiguHomeDir();
+  static async initEnvironment() {
+    const { process: _process, env: _env, ...environment } = stdenv;
+    debug('Interface Environment', inspect(environment));
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { process, env, ...rest } = environment;
-    console.debug('initiating interface\n', rest);
+    const paths = CONFIGU_PATHS;
+    debug('Interface Home', paths.home);
 
-    const localConfiguFilePath = path.join(this.context.homedir, '.configu'); // $HOME/.configu/.configu
-    console.debug('localConfiguFilePath', localConfiguFilePath);
+    // make sure deployments of all interfaces compatible with this assertion
+    const homeIsSet = !!stdenv.env.CONFIGU_HOME;
+    let execFromHome = false;
+    if (process.execPath.endsWith('configu')) {
+      execFromHome = process.execPath.startsWith(paths.bin);
+    } else if (process.execPath.endsWith('node')) {
+      execFromHome = process.argv[1]?.startsWith?.(paths.bin) ?? false;
+    } else {
+      throw new Error('Unsupported execution of Configu');
+    }
+    const isGlobal = homeIsSet && execFromHome;
+
+    validateEngineVersion();
+
+    this.context = {
+      environment,
+      paths,
+      isGlobal,
+      configu: {
+        input: undefined,
+        local: new ConfiguFile('', {}, 'yaml'),
+      },
+      interface: {},
+    };
+
+    process.env.CONFIGU_HOME = this.context.paths.home;
+    process.env.XDG_CACHE_HOME = this.context.paths.cache;
+  }
+
+  static async initConfig(input?: string) {
+    if (!this.context.paths.home) {
+      throw new Error('Interface is not initialized');
+    }
+
+    const localFilePath = path.join(this.context.paths.home, '.configu');
     try {
-      this.context.localConfigu = await ConfiguFile.load(localConfiguFilePath);
-      console.debug('localConfiguFilePath loaded');
+      this.context.configu.local = await ConfiguFile.load(localFilePath);
+      debug('Local .configu loaded', localFilePath);
     } catch {
-      this.context.localConfigu = new ConfiguFile(localConfiguFilePath, {}, 'yaml');
-      console.debug('localConfiguFilePath failed to load');
+      debug('Local .configu failed to load');
       try {
-        await fs.unlink(localConfiguFilePath);
+        await fs.unlink(localFilePath);
       } catch {
         // ignore
       }
     }
 
-    const upperConfiguInput =
-      input ??
-      environment.env.CONFIGU_CONFIG ??
-      environment.env.CONFIGU_CONFIGURATION ??
-      (await ConfiguFile.searchClosest());
-    console.debug('upperConfiguInput', upperConfiguInput);
-    if (upperConfiguInput) {
-      this.context.upperConfigu = await ConfiguFile.loadFromInput(upperConfiguInput);
-      console.debug('upperConfiguInput loaded');
+    const configInput =
+      input ?? stdenv.env.CONFIGU_CONFIG ?? stdenv.env.CONFIGU_CONFIGURATION ?? (await ConfiguFile.searchClosest());
+    debug('Input .configu located', configInput);
+    if (configInput) {
+      this.context.configu.input = await ConfiguFile.loadFromInput(configInput);
+      debug('Input .configu loaded');
     }
+
+    this.context.interface = _.merge(
+      {},
+      this.getInterfaceConfigFromEnv(),
+      this.context.configu.local.contents.interface,
+      this.context.configu.input?.contents?.interface,
+    );
+    debug('Interface Config', this.context.interface);
+
+    if (this.context.interface.debug) {
+      debug.enabled = true;
+    }
+    // todo: handle global interface configuration here
+    // if (this.context.interface.repository) {
+    //   ConfiguTemplateProvider.repository = this.context.interface.repository;
+    // }
+    // if (this.context.interface.registry) {
+    //   installPackage.registry = this.context.interface.registry;
+    // }
+    // todo: handle configuPlatformApi here
+  }
+
+  private static getInterfaceConfigFromEnv(
+    schema: Exclude<JSONSchemaObject, boolean> = ConfiguFile.schema.properties.interface,
+    keyPath: string[] = [],
+  ): ConfiguFileInterfaceConfig {
+    return _.mapValues(schema.properties, (value, key) => {
+      if (typeof value === 'boolean') {
+        return undefined;
+      }
+
+      if (value.type === 'object') {
+        return this.getInterfaceConfigFromEnv(value, [...keyPath, key]);
+      }
+
+      const valueFromEnv = stdenv.env[`CONFIGU_${[...keyPath, key].join('_').toUpperCase()}`];
+      if (valueFromEnv) {
+        if (value.type === 'string') {
+          return valueFromEnv;
+        }
+        if (value.type === 'boolean') {
+          return valueFromEnv === 'true';
+        }
+        if (value.type === 'number' || value.type === 'integer') {
+          return Number(valueFromEnv);
+        }
+        if (value.type === 'array') {
+          if (_.isPlainObject(value.items) && (value.items as any)?.type === 'string') {
+            return valueFromEnv.split(',');
+          }
+          return undefined;
+        }
+        return undefined;
+      }
+
+      return undefined;
+    });
   }
 
   static async getStoreInstance(nameOrType?: string) {
-    console.debug('getStoreInstance', nameOrType);
+    debug('getStoreInstance', nameOrType);
 
     let store =
-      (await this.context.upperConfigu?.getStoreInstance(nameOrType)) ??
-      (await this.context.localConfigu.getStoreInstance(nameOrType));
+      (await this.context.configu.input?.getStoreInstance(nameOrType)) ??
+      (await this.context.configu.local.getStoreInstance(nameOrType));
 
     if (!store && nameOrType) {
-      store = await ConfiguFile.constructStore(nameOrType);
+      store = await ConfiguFile.constructStore({ type: nameOrType });
     }
 
     if (!store) {
@@ -86,8 +182,8 @@ export class ConfiguInterface {
     }
 
     const store =
-      (await this.context.upperConfigu?.getBackupStoreInstance(storeName)) ??
-      (await this.context.localConfigu.getBackupStoreInstance(storeName));
+      (await this.context.configu.input?.getBackupStoreInstance(storeName)) ??
+      (await this.context.configu.local.getBackupStoreInstance(storeName));
 
     if (!store) {
       return;
@@ -107,15 +203,15 @@ export class ConfiguInterface {
   }
 
   static async getSchemaInstance(nameOrPath?: string) {
-    console.debug('getSchemaInstance', nameOrPath);
+    debug('getSchemaInstance', nameOrPath);
 
     if (!nameOrPath) {
       return CfguFile.constructSchema(CfguFile.neighborsGlob);
     }
 
     let schema =
-      (await this.context.upperConfigu?.getSchemaInstance(nameOrPath)) ??
-      (await this.context.localConfigu.getSchemaInstance(nameOrPath));
+      (await this.context.configu.input?.getSchemaInstance(nameOrPath)) ??
+      (await this.context.configu.local.getSchemaInstance(nameOrPath));
 
     if (!schema && nameOrPath) {
       schema = await CfguFile.constructSchema(nameOrPath);

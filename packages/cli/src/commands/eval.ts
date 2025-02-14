@@ -1,6 +1,6 @@
 import { Command, Option } from 'clipanion';
 import { ConfigSet, ConfigStore, EvalCommand } from '@configu/sdk';
-import { ConfiguInterface } from '@configu/common';
+import { print, ConfiguInterface } from '@configu/common';
 import { BaseCommand } from './base';
 
 export class CliEvalCommand extends BaseCommand {
@@ -51,6 +51,6 @@ export class CliEvalCommand extends BaseCommand {
     const { result } = await evalCommand.run();
     await ConfiguInterface.backupEvalOutput({ storeName: this.store, set, schema, evalOutput: result });
 
-    this.context.console.print(JSON.stringify(result));
+    print(JSON.stringify(result));
   }
 }

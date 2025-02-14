@@ -9,6 +9,10 @@ export type ConfiguConfigStoreConfiguration = {
   tag?: string;
 };
 
+export const CONFIGU_DEFAULT_DOMAIN = 'configu.com';
+export const CONFIGU_DEFAULT_API_URL = `https://api.${CONFIGU_DEFAULT_DOMAIN}`;
+export const CONFIGU_DEFAULT_APP_URL = `https://app.${CONFIGU_DEFAULT_DOMAIN}`;
+
 export class ConfiguConfigStoreApprovalQueueError extends Error {
   readonly queueUrl: string;
   constructor(protectedSet: string, queueUrl: string) {
@@ -21,11 +25,11 @@ export class ConfiguConfigStoreApprovalQueueError extends Error {
 }
 
 export class ConfiguConfigStore extends ConfigStore {
-  private client: Axios;
-  public tag?: string;
+  public readonly client: Axios;
+  public readonly tag?: string;
   constructor({
     credentials,
-    endpoint = `https://api.configu.com`,
+    endpoint = CONFIGU_DEFAULT_API_URL,
     source = 'sdk',
     tag,
   }: ConfiguConfigStoreConfiguration) {
@@ -59,6 +63,10 @@ export class ConfiguConfigStore extends ConfigStore {
     }
 
     this.tag = tag;
+  }
+
+  get appUrl(): string {
+    return this.client.defaults.baseURL?.replace('api.', 'app.') ?? CONFIGU_DEFAULT_APP_URL;
   }
 
   async get(queries: ConfigQuery[]): Promise<Config[]> {

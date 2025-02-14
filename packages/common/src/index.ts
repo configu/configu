@@ -1,7 +1,8 @@
-export * from './utils';
-export * from './builtins';
+import './builtins';
 
-export * from './ConfiguFile';
+export * from './utils';
+
 export * from './CfguFile';
+export * from './ConfiguFile';
 
 export * from './ConfiguInterface';

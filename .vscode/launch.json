@@ -11,7 +11,7 @@
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "env": {
-        "DEBUG": "1"
+        "DEBUG": "configu"
       },
       "skipFiles": ["<node_internals>/**", "${workspaceFolder}/node_modules/**"]
     },

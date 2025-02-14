@@ -1,35 +1,18 @@
-import { arch, platform } from 'node:os';
 import { cwd } from 'node:process';
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs/promises';
+import { ConfigStore, ConfigExpression, _, JSONSchema, JSONSchemaObject, FromSchema } from '@configu/sdk';
 import {
-  ConfigStore,
-  ConfigExpression,
-  ConfigStoreConstructor,
-  ConfigKey,
-  _,
-  JSONSchema,
-  JSONSchemaObject,
-  FromSchema,
-} from '@configu/sdk';
-import {
-  console,
+  debug,
   path as pathe,
-  environment,
   findUp,
   findUpMultiple,
-  glob,
   readFile,
-  importModule,
-  getConfiguHomeDir,
-  parseJSON,
-  parseYAML,
+  parseJsonFile,
+  parseYamlFile,
   YAML,
-  pathExists,
   normalizeInput,
-  fetchTemplate,
-  installPackageDependencies,
-  configuRemotePackagesUri,
+  configuFilesApi,
 } from './utils';
 import { ConfiguModule } from './ConfiguModule';
 import { CfguFile } from './CfguFile';
@@ -48,8 +31,172 @@ const StringMapPropertySchema = {
   },
 } as const satisfies JSONSchemaObject;
 
-const ConfiguFileSchemaId = 'https://raw.githubusercontent.com/configu/configu/main/packages/schema/.configu.json';
-// const ConfiguFileSchemaId = 'https://files.configu.com/schema/.configu.json';
+// https://raw.githubusercontent.com/configu/configu/main/packages/schema/.configu.json
+const ConfiguFileSchemaId = `${configuFilesApi.defaults.baseURL}/schema/.configu.json`;
+
+const ConfiguFileVersionPropertiesSchema = (subject: string) =>
+  ({
+    version: {
+      description: `The version of the ${subject} to use.`,
+      type: 'string',
+      default: 'latest',
+    },
+    'version-policy': {
+      description: `The version policy of the ${subject} to enforce.`,
+      type: 'string',
+      enum: ['ignore', 'warn', 'error'],
+      default: 'warn',
+    },
+  }) as const;
+
+const ConfiguFileInterfacePropertySchema = {
+  description: 'Global configuration for a Configu interface.',
+  type: 'object',
+  required: [],
+  additionalProperties: false,
+  properties: {
+    debug: {
+      description: 'Enables or disables debug mode.',
+      type: 'boolean',
+    },
+    // todo: add repository for configu to determine template source
+    // repository: {
+    //   description: '',
+    //   type: 'string',
+    //   format: 'uri',
+    // },
+    // todo: add registry for npm to determine js package source
+    // registry: {
+    //   description: '',
+    //   type: 'string',
+    //   format: 'uri',
+    // },
+    // todo: add platform-api to determine `configu login` source
+    // configuPlatformApi: {
+    //   description: '',
+    //   type: 'string',
+    //   format: 'uri',
+    // },
+    // todo: add version props for engine, cli, proxy.
+    // engine: {
+    //   description: 'Configuration for Node.js engine.',
+    //   type: 'object',
+    //   required: [],
+    //   additionalProperties: false,
+    //   properties: {
+    //     ...ConfiguFileVersionPropertiesSchema('engine'),
+    //   },
+    // },
+    // cli: {
+    //   description: 'Configuration for the Configu CLI.',
+    //   type: 'object',
+    //   required: [],
+    //   additionalProperties: false,
+    //   properties: {
+    //     ...ConfiguFileVersionPropertiesSchema('cli'),
+    //   },
+    // },
+    proxy: {
+      description: 'Configuration for the Configu proxy server.',
+      type: 'object',
+      required: [],
+      additionalProperties: false,
+      properties: {
+        // ...ConfiguFileVersionPropertiesSchema('proxy'),
+        host: {
+          description: 'The host address of the proxy server.',
+          type: 'string',
+          // default: '0.0.0.0',
+        },
+        domain: {
+          description: 'The domain of the proxy server.',
+          type: 'string',
+          // default: 'localhost',
+        },
+        // trust: {
+        //   description: 'Enables or disables X-Forwarded-* headers.',
+        //   type: 'boolean',
+        //   // default: false,
+        // },
+        tls: {
+          type: 'object',
+          required: ['enabled', 'cert', 'key'],
+          additionalProperties: false,
+          properties: {
+            enabled: {
+              description: 'Enables or disables transport layer security (TLS).',
+              type: 'boolean',
+              default: false,
+            },
+            cert: {
+              description: 'The (absolute) file path of the certificate to use for the TLS connection.',
+              type: 'string',
+            },
+            key: {
+              description: 'The (absolute) file path of the TLS key that should be used for the TLS connection.',
+              type: 'string',
+            },
+          },
+        },
+        auth: {
+          type: 'object',
+          required: [],
+          additionalProperties: false,
+          properties: {
+            // method: {
+            //   description: 'The authentication method to use.',
+            //   type: 'string',
+            //   enum: ['none', 'basic', 'bearer'],
+            //   default: 'none',
+            // },
+            // basic: {},
+            bearer: {
+              description: 'Enables or disables preshared key authentication.',
+              type: 'object',
+              required: ['keys'],
+              additionalProperties: false,
+              properties: {
+                keys: {
+                  description: 'List of preshared keys that are allowed to access the server.',
+                  type: 'array',
+                  items: {
+                    type: 'string',
+                  },
+                  minItems: 1,
+                },
+              },
+            },
+            // oidc: {
+            //   description: "The OIDC provider specific settings. This must be set if 'authn.method=oidc'.",
+            //   $ref: '#/definitions/oidc',
+            // },
+          },
+        },
+        http: {
+          type: 'object',
+          required: [],
+          additionalProperties: false,
+          properties: {
+            enabled: {
+              description: 'Enables or disables the HTTP server.',
+              type: 'boolean',
+              // default: true,
+            },
+            port: {
+              description: 'The host port to serve the HTTP server on.',
+              type: 'number',
+              // default: 8080,
+            },
+          },
+        },
+        // sse: {},
+        // grpc: {},
+        // ws: {},
+        // graphql: {},
+      },
+    },
+  },
+} as const satisfies JSONSchemaObject;
 
 const ConfiguFileSchema = {
   $schema: 'http://json-schema.org/draft-07/schema#',
@@ -66,39 +213,17 @@ const ConfiguFileSchema = {
       minLength: 1,
       description: 'Url to JSON Schema',
     },
-    configuration: {
-      type: 'object',
-      properties: {
-        // npmRegistry: { type: 'string' },
-        // githubApiUrl: { type: 'string' },
-        // cli: {
-        //   type: 'object',
-        //   required: [],
-        //   properties: {},
-        // },
-        proxy: {
-          type: 'object',
-          required: [],
-          properties: {
-            http: {
-              type: 'object',
-              properties: {
-                addr: { type: 'string' },
-                port: { type: 'number' },
-              },
-            },
-          },
-        },
-      },
-    },
+    interface: ConfiguFileInterfacePropertySchema,
     stores: {
       type: 'object',
       required: [],
       additionalProperties: {
         type: 'object',
         required: ['type'],
+        additionalProperties: false,
         properties: {
           type: { type: 'string' },
+          version: { type: 'string' },
           configuration: { type: 'object' },
           backup: { type: 'boolean' },
           default: { type: 'boolean' },
@@ -107,7 +232,6 @@ const ConfiguFileSchema = {
     },
     backup: StringPropertySchema,
     schemas: StringMapPropertySchema,
-    scripts: StringMapPropertySchema,
     register: {
       type: 'array',
       uniqueItems: true,
@@ -116,10 +240,14 @@ const ConfiguFileSchema = {
         minLength: 1,
       },
     },
+    scripts: StringMapPropertySchema,
   },
 } as const satisfies JSONSchemaObject;
 
 export type ConfiguFileContents = FromSchema<typeof ConfiguFileSchema>;
+export type ConfiguFileInterfaceConfig = FromSchema<typeof ConfiguFileInterfacePropertySchema>;
+
+type StoreConfig = FromSchema<typeof ConfiguFileSchema.properties.stores.additionalProperties>;
 
 export class ConfiguFile {
   public static readonly schema = ConfiguFileSchema;
@@ -130,7 +258,7 @@ export class ConfiguFile {
     public readonly contents: ConfiguFileContents,
     public readonly contentsType: 'json' | 'yaml',
   ) {
-    console.debug('ConfiguFile.constructor', { path, contents, contentsType });
+    debug('ConfiguFile.constructor', { path, contents, contentsType });
     try {
       this.dir = dirname(resolve(this.path));
       JSONSchema.validate(ConfiguFile.schema, this.contents);
@@ -140,7 +268,7 @@ export class ConfiguFile {
   }
 
   private static async init(path: string, contents: string): Promise<ConfiguFile> {
-    console.debug('ConfiguFile.init', { path });
+    debug('ConfiguFile.init', { path });
     // try expend contents with env vars
     let renderedContents: string;
     try {
@@ -153,11 +281,11 @@ export class ConfiguFile {
     let parsedContents: ConfiguFileContents;
     let contentsType: 'json' | 'yaml';
     try {
-      parsedContents = parseYAML(path, renderedContents);
+      parsedContents = parseYamlFile(path, renderedContents);
       contentsType = 'yaml';
     } catch (yamlError) {
       try {
-        parsedContents = parseJSON(path, renderedContents);
+        parsedContents = parseJsonFile(path, renderedContents);
         contentsType = 'json';
       } catch (jsonError) {
         throw new Error(
@@ -180,8 +308,8 @@ export class ConfiguFile {
     return new ConfiguFile(path, parsedContents, contentsType);
   }
 
-  static async load(path: string): Promise<ConfiguFile> {
-    console.debug('ConfiguFile.load', { path });
+  public static async load(path: string): Promise<ConfiguFile> {
+    debug('ConfiguFile.load', { path });
 
     if (!path.endsWith('.configu')) {
       throw new Error(`ConfiguFile.path "${path}" is not a valid .configu file`);
@@ -197,8 +325,8 @@ export class ConfiguFile {
     return ConfiguFile.init(path, contents);
   }
 
-  static async loadFromInput(input: string) {
-    console.debug('ConfiguFile.loadFromInput', { input });
+  public static async loadFromInput(input: string) {
+    debug('ConfiguFile.loadFromInput', { input });
 
     const { type, path } = normalizeInput(input, '.configu');
     if (type === 'json') {
@@ -212,16 +340,16 @@ export class ConfiguFile {
     throw new Error('.configu file input is not a valid path or JSON');
   }
 
-  static async searchClosest() {
+  public static async searchClosest() {
     // todo: think about adding the stopAt option.
     return findUp('.configu', { type: 'file', allowSymlinks: false });
   }
 
-  static async searchAll() {
+  public static async searchAll() {
     return findUpMultiple('.configu', { type: 'file', allowSymlinks: false });
   }
 
-  async save(contents: ConfiguFileContents) {
+  public async save(contents: ConfiguFileContents) {
     const mergedContents = _.merge({}, this.contents, contents) satisfies ConfiguFileContents;
     let renderedContents: string;
     if (this.contentsType === 'json') {
@@ -247,7 +375,7 @@ export class ConfiguFile {
     if (!storeConfig) {
       return undefined;
     }
-    return ConfiguFile.constructStore(storeConfig.type, storeConfig.configuration);
+    return ConfiguFile.constructStore(storeConfig);
   }
 
   async getBackupStoreInstance(name?: string) {
@@ -255,9 +383,11 @@ export class ConfiguFile {
     if (!shouldBackup) {
       return undefined;
     }
-
     const database = this.contents.backup ?? join(this.dir, 'configs_backup.sqlite');
-    return ConfiguFile.constructStore('sqlite', { database, tableName: name });
+    return ConfiguFile.constructStore({
+      type: 'sqlite',
+      configuration: { database, tableName: name },
+    });
   }
 
   async getSchemaInstance(name: string) {
@@ -282,34 +412,16 @@ export class ConfiguFile {
     return result.status;
   }
 
-  static async registerRemoteStore(type: string, ref?: string) {
-    console.debug(`Registering store`, { type, ref });
-
-    const storePackageSubdir = _.chain(type).camelCase().kebabCase().value();
-    const storePackageUri = `${configuRemotePackagesUri}/packages/stores/${storePackageSubdir}${ref ? `#${ref}` : ''}`;
-    return ConfiguModule.registerRemotePackage(storePackageUri);
-  }
-
-  static async constructStore(input: string, configuration = {}) {
-    // input is a "store-type#git-ref" string
-    console.debug('ConfiguFile.constructStore', { input, configuration });
-    const [rawType, gitRef] = input.split('#');
-    if (!rawType) {
-      throw new Error('store type is missing');
-    }
+  static async constructStore(storeConfig: StoreConfig) {
+    debug('ConfiguFile.constructStore', storeConfig);
 
     // todo: remember to mention in docs that store types cannot be overridden
-    if (!ConfigStore.has(rawType)) {
-      await ConfiguFile.registerRemoteStore(rawType, gitRef);
+    if (!ConfigStore.has(storeConfig.type)) {
+      debug(`Registering store`, storeConfig);
+      const storePackageSubdir = _.chain(storeConfig.type).camelCase().kebabCase().value();
+      const storePackageUri = `configu:packages/stores/${storePackageSubdir}${storeConfig.version ? `#${storeConfig.version}` : ''}`;
+      return ConfiguModule.registerRemotePackage(storePackageUri);
     }
-    return ConfigStore.construct(rawType, configuration);
+    return ConfigStore.construct(storeConfig.type, storeConfig.configuration);
   }
 }
-
-// todo: remove - only for debugging
-// (async () => {
-//   process.env.DEBUG = 'true';
-//   // await fetchTemplate('gh:configu/configu/packages/stores/sqlite', await getConfiguHomeDir('cache', 'sqlite'));
-//   // await ConfiguFile.registerRemoteStore('hashicorp-vault');
-//   await ConfiguFile.registerRemoteStore('sqlite', '698-configu-module');
-// })();

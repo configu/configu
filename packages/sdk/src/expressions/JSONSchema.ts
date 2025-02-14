@@ -7,6 +7,7 @@ import type { FromSchema, JSONSchema as JSONSchemaObject } from 'json-schema-to-
 
 export { JSONSchemaObject, FromSchema };
 
+// todo: consider adding https://github.com/fastify/fluent-json-schema as builtin expression
 export class JSONSchema {
   private static ajv = addFormats(
     new Ajv({ allErrors: true, verbose: true, allowUnionTypes: true, useDefaults: 'empty' }),
