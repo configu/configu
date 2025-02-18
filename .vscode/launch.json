@@ -24,16 +24,18 @@
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "skipFiles": ["<node_internals>/**", "${workspaceFolder}/node_modules/**"],
-      "cwd": "${workspaceFolder}",
-      "env": {},
+      "cwd": "${workspaceFolder}/examples/playground",
+      "env": {
+        "DEBUG": "configu"
+      },
       "args": [
-        "eval",
-        "--defaults",
+        "eval"
+        // "--defaults",
         // "upsert",
         // "--store",
         // "hc",
-        "--schema",
-        "${workspaceFolder}/packages/schema/data/xy.cfgu.yaml"
+        // "--schema",
+        // "${workspaceFolder}/packages/schema/data/xy.cfgu.yaml"
         // "--kv",
         // "Z=8"
         // ====================

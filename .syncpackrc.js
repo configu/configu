@@ -15,6 +15,7 @@ const config = {
     'author',
     'packageManager',
     'engines',
+    'devEngines',
     'type',
     'bin',
     'types',

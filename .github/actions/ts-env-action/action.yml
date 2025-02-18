@@ -29,7 +29,7 @@ runs:
       with:
         # architecture: ${{ inputs.architecture }}
         node-version-file: '.node-version'
-        cache: 'pnpm' # todo: currently cache is not working properly, try https://github.com/pnpm/action-setup#use-cache-to-reduce-installation-time
+        cache: 'pnpm' # todo: https://github.com/pnpm/action-setup#use-cache-to-reduce-installation-time
         registry-url: 'https://registry.npmjs.org'
         scope: '@configu'
 
@@ -37,7 +37,7 @@ runs:
       shell: bash
       run: |
         pnpm install --config.architecture=${{ inputs.architecture }}
-        # pnpm list --recursive --depth 0
+        pnpm list --recursive --depth 0
       env:
         HUSKY: '0'
 

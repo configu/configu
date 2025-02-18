@@ -420,7 +420,7 @@ export class ConfiguFile {
       debug(`Registering store`, storeConfig);
       const storePackageSubdir = _.chain(storeConfig.type).camelCase().kebabCase().value();
       const storePackageUri = `configu:packages/stores/${storePackageSubdir}${storeConfig.version ? `#${storeConfig.version}` : ''}`;
-      return ConfiguModule.registerRemotePackage(storePackageUri);
+      await ConfiguModule.registerRemotePackage(storePackageUri);
     }
     return ConfigStore.construct(storeConfig.type, storeConfig.configuration);
   }
