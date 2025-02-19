@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { CONFIGU_DEFAULT_API_URL, CONFIGU_DEFAULT_DOMAIN } from '@configu/configu';
+import { CONFIGU_DEFAULT_API_URL, CONFIGU_DEFAULT_DOMAIN } from '@configu/configu-platform';
 import { debug } from './OutputStreams';
 
 export { axios as httpClient };
@@ -11,10 +11,10 @@ export const configuFilesApi = axios.create({
 });
 
 export {
-  ConfiguConfigStoreApprovalQueueError,
+  ConfiguPlatformConfigStoreApprovalQueueError,
   CONFIGU_DEFAULT_API_URL,
   CONFIGU_DEFAULT_APP_URL,
-} from '@configu/configu';
+} from '@configu/configu-platform';
 
 export const configuPlatformApi = axios.create({
   baseURL: CONFIGU_DEFAULT_API_URL,

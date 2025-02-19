@@ -39,7 +39,7 @@
   ],
   "scripts": {},
   "dependencies": {
-    "@configu/configu": "workspace:*",
+    "@configu/configu-platform": "workspace:*",
     "@configu/json-file": "workspace:*",
     "@configu/sdk": "workspace:*",
     "@npmcli/arborist": "^9.0.0",

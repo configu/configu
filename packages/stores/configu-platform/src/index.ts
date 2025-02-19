@@ -2,7 +2,7 @@
 import axios, { type Axios } from 'axios';
 import { Config, ConfigStore, ConfigQuery, validator } from '@configu/sdk';
 
-export type ConfiguConfigStoreConfiguration = {
+export type ConfiguPlatformConfigStoreConfiguration = {
   credentials: { org: string; token: string };
   endpoint?: string;
   source?: string;
@@ -13,18 +13,18 @@ export const CONFIGU_DEFAULT_DOMAIN = 'configu.com';
 export const CONFIGU_DEFAULT_API_URL = `https://api.${CONFIGU_DEFAULT_DOMAIN}`;
 export const CONFIGU_DEFAULT_APP_URL = `https://app.${CONFIGU_DEFAULT_DOMAIN}`;
 
-export class ConfiguConfigStoreApprovalQueueError extends Error {
+export class ConfiguPlatformConfigStoreApprovalQueueError extends Error {
   readonly queueUrl: string;
   constructor(protectedSet: string, queueUrl: string) {
     super(
       `Your recent upsert to the ${protectedSet} ConfigSet is currently pending in its approval queue, as ${protectedSet} is a "protected set". To proceed with these changes, please review and approve them at ${queueUrl}. If you lack the necessary permissions, reach out to an authorized org member.`,
     );
     this.queueUrl = queueUrl;
-    this.name = 'ConfiguConfigStoreApprovalQueueError';
+    this.name = 'ConfiguPlatformConfigStoreApprovalQueueError';
   }
 }
 
-export class ConfiguConfigStore extends ConfigStore {
+export class ConfiguPlatformConfigStore extends ConfigStore {
   public readonly client: Axios;
   public readonly tag?: string;
   constructor({
@@ -32,7 +32,7 @@ export class ConfiguConfigStore extends ConfigStore {
     endpoint = CONFIGU_DEFAULT_API_URL,
     source = 'sdk',
     tag,
-  }: ConfiguConfigStoreConfiguration) {
+  }: ConfiguPlatformConfigStoreConfiguration) {
     super();
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -44,7 +44,7 @@ export class ConfiguConfigStore extends ConfigStore {
     const baseURL = endpoint || CONFIGU_HOST;
 
     if (!org || !token) {
-      throw new Error('ConfiguConfigStore: credentials.org and credentials.token are required');
+      throw new Error('ConfiguPlatformConfigStore: credentials.org and credentials.token are required');
     }
 
     this.client = axios.create({
@@ -79,7 +79,7 @@ export class ConfiguConfigStore extends ConfigStore {
     if (response.status === 202) {
       const protectedSet = response.data.diff.pending[0].set;
       const queueUrl = `${response.data.queueUrl}?set=${protectedSet}`;
-      throw new ConfiguConfigStoreApprovalQueueError(protectedSet, queueUrl);
+      throw new ConfiguPlatformConfigStoreApprovalQueueError(protectedSet, queueUrl);
     }
   }
 }

@@ -68,7 +68,8 @@ fi
 # Resolve the version to install
 version="${CONFIGU_VERSION:-latest}"
 if [ "$version" = "latest" ] || [ "$version" = "next" ]; then
-  version=$(curl -fsSL "https://registry.npmjs.org/@configu/cli/$version" | sed -e 's/^.*version":"//' | sed -e 's/".*$//')
+  # version=$(curl -fsSL "https://registry.npmjs.org/@configu/cli/$version" | sed -e 's/^.*version":"//' | sed -e 's/".*$//')
+  version=$(curl -fsSL "https://files.configu.com/cli/channels/$version")
 fi
 if [ "${version#v}" = "$version" ]; then
   version="v$version"
@@ -83,7 +84,8 @@ exec_path="$bin_dir/configu"
 mkdir -p "$bin_dir"
 
 # Download the Configu binary
-download_url="https://github.com/configu/configu/releases/download/cli/$version/configu-$version-$dist$archive_ext"
+# download_url="https://github.com/configu/configu/releases/download/cli/$version/configu-$version-$dist$archive_ext"
+download_url="https://files.configu.com/cli/versions/$version/configu-$version-$dist$archive_ext"
 echo "Downloading Configu from $download_url"
 curl -fsSL "$download_url" -o "$exec_path$archive_ext"
 

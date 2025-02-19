@@ -8,7 +8,7 @@
   configu init --get-started
   ```
 - Setup a `ConfigStore` at the [.configu](.configu) file
-  - use `configu login` for `ConfiguConfigStore`
+  - use `configu login` for `ConfiguPlatformConfigStore`
 - Upsert `Config`s
   ```bash
   configu upsert --store "<STORE>" --set "dev" --schema "start.cfgu.json" --kv "GREETING=hey" --kv "SUBJECT=<VALUE>"

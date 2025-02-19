@@ -54,7 +54,8 @@ if (-not $version) {
   $version = "latest"
 }
 if ($version -eq "latest" -or $version -eq "next") {
-  $version = (Invoke-WebRequest -Uri "https://registry.npmjs.org/@configu/cli/$version" -UseBasicParsing | ConvertFrom-Json).version
+  # $version = (Invoke-WebRequest -Uri "https://registry.npmjs.org/@configu/cli/$version" -UseBasicParsing | ConvertFrom-Json).version
+  $version = (Invoke-WebRequest -Uri "https://files.configu.com/cli/channels/$version" -UseBasicParsing).content
 }
 if (-not $version.StartsWith("v")) {
   $version = "v${version}"
@@ -75,7 +76,8 @@ if (-not (Test-Path $bin_dir)) {
 }
 
 # Download the Configu binary
-$download_url = "https://github.com/configu/configu/releases/download/cli/$version/configu-$version-$dist$archive_ext"
+# $download_url = "https://github.com/configu/configu/releases/download/cli/$version/configu-$version-$dist$archive_ext"
+$download_url = "https://files.configu.com/cli/versions/$version/configu-$version-$dist$archive_ext"
 Write-Output "Downloading Configu from $download_url"
 Invoke-WebRequest -Uri $download_url -OutFile "$exec_path$archive_ext" -UseBasicParsing
 

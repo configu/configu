@@ -144,9 +144,9 @@ importers:
 
   packages/common:
     dependencies:
-      '@configu/configu':
+      '@configu/configu-platform':
         specifier: workspace:*
-        version: file:packages/stores/configu(debug@4.4.0)
+        version: file:packages/stores/configu-platform(debug@4.4.0)
       '@configu/json-file':
         specifier: workspace:*
         version: link:../stores/json-file
@@ -420,7 +420,7 @@ importers:
         specifier: ^0.3.20
         version: 0.3.20(mssql@10.0.2)(pg@8.13.1)(sqlite3@5.1.7)(ts-node@10.9.2(@types/node@22.10.10)(typescript@5.7.3))
 
-  packages/stores/configu:
+  packages/stores/configu-platform:
     dependencies:
       '@configu/sdk':
         specifier: workspace:*
@@ -990,8 +990,8 @@ packages:
   '@clack/prompts@0.10.0':
     resolution: {integrity: sha512-H3rCl6CwW1NdQt9rE3n373t7o5cthPv7yUoxF2ytZvyvlJv89C5RYMJu83Hed8ODgys5vpBU0GKxIRG83jd8NQ==}
 
-  '@configu/configu@file:packages/stores/configu':
-    resolution: {directory: packages/stores/configu, type: directory}
+  '@configu/configu-platform@file:packages/stores/configu-platform':
+    resolution: {directory: packages/stores/configu-platform, type: directory}
 
   '@configu/database@file:packages/stores/database':
     resolution: {directory: packages/stores/database, type: directory}
@@ -8324,7 +8324,7 @@ snapshots:
       picocolors: 1.1.1
       sisteransi: 1.0.5
 
-  '@configu/configu@file:packages/stores/configu(debug@4.4.0)':
+  '@configu/configu-platform@file:packages/stores/configu-platform(debug@4.4.0)':
     dependencies:
       '@configu/sdk': file:packages/sdk
       axios: 1.7.9(debug@4.4.0)
