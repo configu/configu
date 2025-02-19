@@ -26,17 +26,24 @@
     "node": ">=v20.0.0"
   },
   "type": "module",
-  "types": "./dist/index.d.cts",
-  "exports": "./dist/index.cjs",
+  "types": "./src/index.ts",
+  "module": "./src/index.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": {
+        "types": "./src/index.ts",
+        "default": "./src/index.ts"
+      }
+    }
+  },
   "files": [
-    "src",
-    "dist"
+    "src"
   ],
   "scripts": {
-    "clean": "shx rm -rf dist",
-    "build": "tsup",
     "build:docker": "docker build --progress plain -t configu/proxy -f ./Dockerfile ../..",
-    "dev": "tsx watch --inspect --clear-screen=false src/index.ts"
+    "dev": "tsx watch --inspect --clear-screen=false src/index.ts",
+    "start": "tsx src/index.ts"
   },
   "dependencies": {
     "@configu/common": "workspace:*",

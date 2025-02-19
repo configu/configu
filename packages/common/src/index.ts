@@ -1,5 +1,3 @@
-import './builtins';
-
 export * from './utils';
 
 export * from './CfguFile';

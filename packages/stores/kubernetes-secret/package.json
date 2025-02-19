@@ -23,9 +23,6 @@
   "files": [
     "src"
   ],
-  "scripts": {
-    "build": "tsup"
-  },
   "dependencies": {
     "@configu/key-value": "workspace:*",
     "@kubernetes/client-node": "^0.20.0",

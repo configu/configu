@@ -47,6 +47,7 @@
     "entry": "./src/index.ts"
   },
   "scripts": {
+    "prepublish": "attw --pack .",
     "clean": "shx rm -rf dist",
     "build": "tsup $npm_package_config_entry"
   },

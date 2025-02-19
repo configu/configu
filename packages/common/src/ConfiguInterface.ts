@@ -7,10 +7,16 @@ import {
   EvaluatedConfigOrigin,
   UpsertCommand,
   JSONSchemaObject,
+  ConfigStore,
+  NoopConfigStore,
+  InMemoryConfigStore,
 } from '@configu/sdk';
+import { JsonFileConfigStore } from '@configu/json-file';
+import { ConfiguPlatformConfigStore } from '@configu/configu-platform';
+
+import { debug, path, stdenv, inspect, CONFIGU_PATHS, validateEngineVersion } from './utils';
 import { ConfiguFile, ConfiguFileInterfaceConfig } from './ConfiguFile';
 import { CfguFile } from './CfguFile';
-import { debug, path, stdenv, inspect, CONFIGU_PATHS, validateEngineVersion } from './utils';
 
 export class ConfiguInterface {
   public static context: {
@@ -27,6 +33,13 @@ export class ConfiguInterface {
     };
     interface: ConfiguFileInterfaceConfig;
   };
+
+  static {
+    ConfigStore.register(NoopConfigStore);
+    ConfigStore.register(InMemoryConfigStore);
+    ConfigStore.register(JsonFileConfigStore);
+    ConfigStore.register(ConfiguPlatformConfigStore);
+  }
 
   static async initEnvironment() {
     const { process: _process, env: _env, ...environment } = stdenv;

@@ -26,9 +26,6 @@
   "files": [
     "src"
   ],
-  "scripts": {
-    "build": "tsup"
-  },
   "dependencies": {
     "@configu/sdk": "workspace:*",
     "reflect-metadata": "^0.2.2",
