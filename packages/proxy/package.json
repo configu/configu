@@ -42,7 +42,7 @@
   ],
   "scripts": {
     "build:docker": "docker build --progress plain -t configu/proxy -f ./Dockerfile ../..",
-    "dev": "tsx watch --inspect --clear-screen=false src/index.ts",
+    "dev": "DEBUG=configu tsx watch --inspect --clear-screen=false src/index.ts",
     "start": "tsx src/index.ts"
   },
   "dependencies": {

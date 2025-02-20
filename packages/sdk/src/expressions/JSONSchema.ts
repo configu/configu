@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import Ajv, { ErrorObject } from 'ajv';
+import Ajv, { ErrorObject, Options } from 'ajv';
 import addFormats from 'ajv-formats';
 // https://npmtrends.com/@apideck/better-ajv-errors-vs-@readme/better-ajv-errors-vs-@segment/ajv-human-errors-vs-@stoplight/better-ajv-errors-vs-ajv-error-messages-vs-ajv-errors-vs-better-ajv-errors
 import { AggregateAjvError } from '@segment/ajv-human-errors';
@@ -9,9 +9,14 @@ export { JSONSchemaObject, FromSchema };
 
 // todo: consider adding https://github.com/fastify/fluent-json-schema as builtin expression
 export class JSONSchema {
-  private static ajv = addFormats(
-    new Ajv({ allErrors: true, verbose: true, allowUnionTypes: true, useDefaults: 'empty' }),
-  );
+  static readonly ajvOptions: Options = {
+    allErrors: true,
+    verbose: true,
+    allowUnionTypes: true,
+    useDefaults: 'empty',
+  };
+
+  static readonly ajv = addFormats(new Ajv(JSONSchema.ajvOptions));
 
   static validate(schema: JSONSchemaObject, data: unknown) {
     const isValid = JSONSchema.ajv.validate(schema, data);

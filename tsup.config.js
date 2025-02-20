@@ -12,8 +12,8 @@ export default defineConfig([
     metafile: true,
 
     // https://tsup.egoist.dev/#generate-declaration-file
-    // dts: true,
-    experimentalDts: true,
+    dts: true,
+    // experimentalDts: true,
     sourcemap: true,
 
     shims: true,

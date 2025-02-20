@@ -36,7 +36,7 @@
     "build:binary": "tsx build.mts",
     "build:docker": "docker build --progress plain -t configu/cli -f ./Dockerfile ../..",
     "clean": "shx rm -rf dist",
-    "dev": "tsx src/configu.ts",
+    "dev": "DEBUG=configu tsx src/configu.ts",
     "prestart": "pnpm build",
     "start": "node dist/configu.cjs"
   },

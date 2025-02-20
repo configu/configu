@@ -36,10 +36,12 @@ export class SetupCommand extends BaseCommand {
 
   async execute() {
     const isExecutable = sea.isSea() && process.execPath.endsWith('configu');
-    const isGlobalOrVersionFlag = this.global || Boolean(this.version);
+    const isGlobalOrVersionFlag = Boolean(this.global) || Boolean(this.version);
     if (!isExecutable && isGlobalOrVersionFlag) {
       prompts.log.error('Setup is only supported for executable');
     }
+
+    debug(this.global, this.version, isExecutable, isGlobalOrVersionFlag);
 
     prompts.intro(`${color.inverse(' Configu Setup ')}`);
     await prompts.tasks([
@@ -51,7 +53,7 @@ export class SetupCommand extends BaseCommand {
         },
       },
       {
-        enabled: this.global,
+        enabled: Boolean(this.global),
         title: 'Copying bin to home directory',
         task: async (message) => {
           const binDir = path.join(this.context.paths.bin, this.cli.binaryVersion as string);
@@ -173,9 +175,9 @@ export class SetupCommand extends BaseCommand {
 
     const outro = [
       `Problems? Open an issue ${color.underline('https://github.com/configu/configu/issues/new/choose')}`,
-      `Stuck? Join our Discord ${color.underline('https://discord.com/invite/cjSBxnB9z8')}`,
+      `Stuck?    Join our Discord ${color.underline('https://discord.com/invite/cjSBxnB9z8')}`,
     ];
-    prompts.outro(outro.join('\n'));
+    prompts.outro(outro.join('\n   '));
 
     await setTimeout(505);
   }

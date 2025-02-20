@@ -103,9 +103,10 @@ export class ConfiguInterface {
       debug('Input .configu loaded');
     }
 
+    const envInterfaceConfig = this.getInterfaceConfigFromEnv();
     this.context.interface = _.merge(
       {},
-      this.getInterfaceConfigFromEnv(),
+      envInterfaceConfig,
       this.context.configu.local.contents.interface,
       this.context.configu.input?.contents?.interface,
     );
@@ -128,37 +129,38 @@ export class ConfiguInterface {
     schema: Exclude<JSONSchemaObject, boolean> = ConfiguFile.schema.properties.interface,
     keyPath: string[] = [],
   ): ConfiguFileInterfaceConfig {
-    return _.mapValues(schema.properties, (value, key) => {
-      if (typeof value === 'boolean') {
-        return undefined;
-      }
+    return _.reduce(
+      schema.properties,
+      (result, value, key) => {
+        if (typeof value === 'boolean') {
+          return result;
+        }
 
-      if (value.type === 'object') {
-        return this.getInterfaceConfigFromEnv(value, [...keyPath, key]);
-      }
+        if (value.type === 'object') {
+          return this.getInterfaceConfigFromEnv(value, [...keyPath, key]);
+        }
 
-      const valueFromEnv = stdenv.env[`CONFIGU_${[...keyPath, key].join('_').toUpperCase()}`];
-      if (valueFromEnv) {
-        if (value.type === 'string') {
-          return valueFromEnv;
-        }
-        if (value.type === 'boolean') {
-          return valueFromEnv === 'true';
-        }
-        if (value.type === 'number' || value.type === 'integer') {
-          return Number(valueFromEnv);
-        }
-        if (value.type === 'array') {
-          if (_.isPlainObject(value.items) && (value.items as any)?.type === 'string') {
-            return valueFromEnv.split(',');
+        const valueFromEnv = stdenv.env[`CONFIGU_${[...keyPath, key].join('_').toUpperCase()}`];
+        if (valueFromEnv) {
+          if (value.type === 'string') {
+            _.set(result, [...keyPath, key], valueFromEnv);
           }
-          return undefined;
+          if (value.type === 'boolean') {
+            _.set(result, [...keyPath, key], valueFromEnv === 'true');
+          }
+          if (value.type === 'number' || value.type === 'integer') {
+            _.set(result, [...keyPath, key], Number(valueFromEnv));
+          }
+          if (value.type === 'array') {
+            if (_.isPlainObject(value.items) && (value.items as any)?.type === 'string') {
+              _.set(result, [...keyPath, key], valueFromEnv.split(','));
+            }
+          }
         }
-        return undefined;
-      }
-
-      return undefined;
-    });
+        return result;
+      },
+      {},
+    );
   }
 
   static async getStoreInstance(nameOrType?: string) {

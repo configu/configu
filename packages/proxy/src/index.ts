@@ -9,6 +9,7 @@ import BearerAuth from '@fastify/bearer-auth';
 import Swagger, { FastifyDynamicSwaggerOptions } from '@fastify/swagger';
 import SwaggerUI from '@scalar/fastify-api-reference';
 
+import { JSONSchema } from '@configu/sdk';
 import { ConfiguInterface, ConfiguFileInterfaceConfig, configuFilesApi } from '@configu/common';
 
 import packageJson from '../package.json' with { type: 'json' };
@@ -33,6 +34,9 @@ export async function listen(config: ConfiguFileInterfaceConfig) {
     },
     https,
     // trustProxy: config.CONFIGU_HTTP_TRUST_PROXY,
+    ajv: {
+      customOptions: JSONSchema.ajvOptions,
+    },
   });
   const gracefulServer = GracefulServer(server.server);
 
