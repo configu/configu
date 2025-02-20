@@ -102,7 +102,7 @@ jobs:
     needs: build-binary
     env:
       GH_TOKEN: ${{ github.token }}
-      S3_BUCKET: 'configu-public-files/cli'
+      S3_BUCKET: 's3://public-file-browser-files-0eff4c2890a7/cli'
       CLOUDFRONT_DISTRIBUTION: 'E7C5AL5O299SC'
     steps:
       - uses: actions/checkout@v4
@@ -134,7 +134,7 @@ jobs:
           cd ${{ steps.release.outputs.package_path }}/dist
 
           achieves_pattern="configu-v${{ steps.release.outputs.version }}-*"
-          version_path="s3://${{ env.S3_BUCKET }}/versions/${{ steps.release.outputs.version }}"
+          version_path="${{ env.S3_BUCKET }}/versions/${{ steps.release.outputs.version }}"
 
           # generate package.json
           jq '.version = "${{ steps.release.outputs.version }}"' ../package.json > package.json
@@ -160,7 +160,7 @@ jobs:
           aws s3 cp sha256sum.txt $version_path --acl public-read
 
           # copy channel file
-          aws s3 cp ${{ steps.release.outputs.channel }} s3://${{ env.S3_BUCKET }}/channels --acl public-read
+          aws s3 cp ${{ steps.release.outputs.channel }} ${{ env.S3_BUCKET }}/channels --acl public-read
 
       - name: Release install to public S3 bucket
         if: ${{ steps.release.outputs.channel == 'latest' }}
@@ -168,8 +168,8 @@ jobs:
           cd ${{ steps.release.outputs.package_path }}
 
           # copy scripts
-          aws s3 cp install.sh s3://${{ env.S3_BUCKET }}/install.sh --acl public-read
-          aws s3 cp install.ps1 s3://${{ env.S3_BUCKET }}/install.ps1 --acl public-read
+          aws s3 cp install.sh ${{ env.S3_BUCKET }}/install.sh --acl public-read
+          aws s3 cp install.ps1 ${{ env.S3_BUCKET }}/install.ps1 --acl public-read
 
       # todo: verify if needed with the https://github.com/aws-samples/public-file-browser-for-amazon-s3
       - name: Invalidate CloudFront cache

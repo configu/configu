@@ -42,8 +42,8 @@ runs:
       shell: bash
       run: |
         node -v
-        node_version=$(node -v)
-        node_path=$(node -e 'console.log(process.argv[0]);')
+        node_version=$(node -e 'console.log(process.versions.node)')
+        node_path=$(node -e 'console.log(process.argv[0])')
         echo "node_version: $node_version"
         echo "node_path: $node_path"
         echo "node_version=$node_version" >> $GITHUB_OUTPUT
