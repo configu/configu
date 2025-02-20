@@ -21,8 +21,10 @@ RUN pnpm --filter=@configu/proxy deploy --prod --ignore-scripts /dist
 
 FROM node:$NODE_VERSION-alpine AS dist
 USER node
-COPY --from=build --chown=node:node /dist /dist
-WORKDIR /dist
+
+ENV CONFIGU_HOME="$HOME/.configu"
+COPY --from=build --chown=node:node /dist $CONFIGU_HOME
+WORKDIR $CONFIGU_HOME
 
 ENV NODE_ENV="production"
 CMD [ "pnpm", "start" ]

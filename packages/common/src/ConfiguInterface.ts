@@ -43,10 +43,10 @@ export class ConfiguInterface {
 
   static async initEnvironment() {
     const { process: _process, env: _env, ...environment } = stdenv;
-    debug('Interface Environment', inspect(environment));
+    debug('Interface Environment', environment);
 
     const paths = CONFIGU_PATHS;
-    debug('Interface Home', paths.home);
+    debug('Interface Paths', paths);
 
     // make sure deployments of all interfaces compatible with this assertion
     const homeIsSet = !!stdenv.env.CONFIGU_HOME;
@@ -59,6 +59,7 @@ export class ConfiguInterface {
       throw new Error('Unsupported execution of Configu');
     }
     const isGlobal = homeIsSet && execFromHome;
+    debug('Interface Execution', { execPath: process.execPath, argv: process.argv, homeIsSet, execFromHome, isGlobal });
 
     validateEngineVersion();
 
