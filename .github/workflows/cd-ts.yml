@@ -39,7 +39,7 @@ jobs:
         run: |
           pnpm --filter ${{ steps.release.outputs.package_name }} exec \
             npm --no-git-tag-version version ${{ steps.release.outputs.version }}
-          pnpm install
+          pnpm install --ignore-scripts
 
       - name: Build package code
         run: |
