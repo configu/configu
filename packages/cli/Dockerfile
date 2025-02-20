@@ -4,10 +4,14 @@ ARG NODE_VERSION=22.12.0
 FROM node:$NODE_VERSION AS base
 
 LABEL author "dev@configu.com"
+
 # https://pnpm.io/docker#example-2-build-multiple-docker-images-in-a-monorepo
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
+# https://vercel.com/guides/corepack-errors-github-actions
+RUN npm install -g corepack@latest
 RUN corepack enable
+RUN pnpm --version
 
 FROM base AS build
 COPY --exclude=**/node_modules --exclude=**/*.md --exclude=**/build --exclude=**/dist --exclude=**/tmp . /src
@@ -17,7 +21,7 @@ ARG CONFIGU_VERSION="0.0.0"
 RUN pnpm --filter=@configu/cli exec npm --no-git-tag-version version $CONFIGU_VERSION
 
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-RUN pnpm --filter=@configu/cli run build
+RUN pnpm --filter=@configu/cli --if-present run build
 RUN pnpm --filter=@configu/cli deploy --prod --ignore-scripts /dist
 
 FROM node:$NODE_VERSION-alpine AS dist
