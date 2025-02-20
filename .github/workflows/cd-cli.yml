@@ -154,7 +154,7 @@ jobs:
           aws s3 cp package.json $version_path/package.json
 
           # copy binaries
-          aws s3 cp ./ $version_path/ --exclude "*" --include $achieves_pattern
+          aws s3 cp ./ $version_path/ --exclude "*" --include "$achieves_pattern"
 
           # copy checksums
           aws s3 cp sha256sum.txt $version_path/sha256sum.txt
