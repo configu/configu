@@ -17,10 +17,13 @@ FROM base AS build
 COPY --exclude=**/node_modules --exclude=**/*.md --exclude=**/build --exclude=**/dist --exclude=**/tmp . /src
 WORKDIR /src
 
-ARG CONFIGU_VERSION="0.0.0"
-RUN pnpm --filter=@configu/cli exec npm --no-git-tag-version version $CONFIGU_VERSION
-
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+
+ARG CONFIGU_VERSION="0.0.0"
+RUN pnpm --filter=@configu/cli exec \
+  npm --no-git-tag-version --allow-same-version version $CONFIGU_VERSION \
+  && pnpm install --ignore-scripts
+
 RUN pnpm --filter=@configu/cli --if-present run build
 RUN pnpm --filter=@configu/cli deploy --prod --ignore-scripts /dist
 
@@ -28,8 +31,9 @@ FROM node:$NODE_VERSION-alpine AS dist
 USER node
 
 ENV CONFIGU_HOME="$HOME/.configu"
-COPY --from=build --chown=node:node /dist $CONFIGU_HOME
-WORKDIR $CONFIGU_HOME
+ENV CONFIGU_BIN="$CONFIGU_HOME/bin"
+COPY --from=build --chown=node:node /dist $CONFIGU_BIN
+WORKDIR $CONFIGU_BIN
 
 ENV NODE_ENV="production"
-ENTRYPOINT [ "node", "configu.cjs" ]
+ENTRYPOINT [ "node", "dist/configu.cjs" ]

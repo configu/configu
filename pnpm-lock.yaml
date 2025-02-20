@@ -6,6 +6,9 @@ settings:
   injectWorkspacePackages: true
 
 patchedDependencies:
+  '@npmcli/run-script':
+    hash: 40442df2ae90bec02e8fe8131413e23437162a47d213d91e73ae827a01a23b3a
+    path: patches/@npmcli__run-script.patch
   giget:
     hash: 98e0db581b3c68d96afc9b666d3596671083ffa2be78b57105c20264a65c87d5
     path: patches/giget.patch
@@ -156,9 +159,6 @@ importers:
       '@npmcli/package-json':
         specifier: ^6.1.1
         version: 6.1.1
-      '@npmcli/run-script':
-        specifier: ^9.0.2
-        version: 9.0.2
       axios:
         specifier: ^1.7.9
         version: 1.7.9(debug@4.4.0)
@@ -9440,7 +9440,7 @@ snapshots:
       '@npmcli/package-json': 6.1.1
       '@npmcli/query': 4.0.0
       '@npmcli/redact': 3.1.1
-      '@npmcli/run-script': 9.0.2
+      '@npmcli/run-script': 9.0.2(patch_hash=40442df2ae90bec02e8fe8131413e23437162a47d213d91e73ae827a01a23b3a)
       bin-links: 5.0.0
       cacache: 19.0.1
       common-ancestor-path: 1.0.1
@@ -9540,7 +9540,7 @@ snapshots:
 
   '@npmcli/redact@3.1.1': {}
 
-  '@npmcli/run-script@9.0.2':
+  '@npmcli/run-script@9.0.2(patch_hash=40442df2ae90bec02e8fe8131413e23437162a47d213d91e73ae827a01a23b3a)':
     dependencies:
       '@npmcli/node-gyp': 4.0.0
       '@npmcli/package-json': 6.1.1
@@ -14435,7 +14435,7 @@ snapshots:
       '@npmcli/installed-package-contents': 3.0.0
       '@npmcli/package-json': 6.1.1
       '@npmcli/promise-spawn': 8.0.2
-      '@npmcli/run-script': 9.0.2
+      '@npmcli/run-script': 9.0.2(patch_hash=40442df2ae90bec02e8fe8131413e23437162a47d213d91e73ae827a01a23b3a)
       cacache: 19.0.1
       fs-minipass: 3.0.3
       minipass: 7.1.2

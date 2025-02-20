@@ -90,7 +90,7 @@ jobs:
         run: |
           pnpm --filter ${{ steps.release.outputs.package_name }} run \
             build:binary
-          ls -l ${{ steps.release.outputs.package_path }}/dist
+          ls -la ${{ steps.release.outputs.package_path }}/dist
 
       - uses: actions/upload-artifact@v4
         with:

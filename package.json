@@ -87,7 +87,8 @@
   },
   "pnpm": {
     "patchedDependencies": {
-      "giget": "patches/giget.patch"
+      "giget": "patches/giget.patch",
+      "@npmcli/run-script": "patches/@npmcli__run-script.patch"
     },
     "neverBuiltDependencies": []
   }
