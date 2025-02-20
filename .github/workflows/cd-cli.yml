@@ -151,16 +151,16 @@ jobs:
           ls -la .
 
           # copy package.json
-          aws s3 cp package.json $version_path
+          aws s3 cp package.json $version_path/package.json
 
           # copy binaries
-          aws s3 cp $achieves_pattern $version_path
+          aws s3 cp ./ $version_path/ --exclude "*" --include $achieves_pattern
 
           # copy checksums
-          aws s3 cp sha256sum.txt $version_path
+          aws s3 cp sha256sum.txt $version_path/sha256sum.txt
 
           # copy channel file
-          aws s3 cp ${{ steps.release.outputs.channel }} ${{ env.S3_BUCKET }}/channels
+          aws s3 cp ${{ steps.release.outputs.channel }} ${{ env.S3_BUCKET }}/channels/${{ steps.release.outputs.channel }}
 
       - name: Release install to public S3 bucket
         if: ${{ steps.release.outputs.channel == 'latest' }}
