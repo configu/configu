@@ -145,22 +145,22 @@ jobs:
           cat sha256sum.txt
 
           # generate channel
-          echo "${{ steps.release.outputs.version }}" > ${{ steps.release.outputs.channel }}
+          echo "${{ steps.release.outputs.version }}" > ${{ steps.release.outputs.channel }}.txt
           cat ${{ steps.release.outputs.channel }}
 
           ls -la .
 
           # copy package.json
-          aws s3 cp package.json $version_path/package.json
+          aws s3 cp package.json $version_path/
 
           # copy binaries
-          aws s3 cp ./ $version_path/ --exclude "*" --include "$achieves_pattern"
+          aws s3 cp ./ $version_path/ --recursive --exclude "*" --include "$achieves_pattern"
 
           # copy checksums
-          aws s3 cp sha256sum.txt $version_path/sha256sum.txt
+          aws s3 cp sha256sum.txt $version_path/
 
           # copy channel file
-          aws s3 cp ${{ steps.release.outputs.channel }} ${{ env.S3_BUCKET }}/channels/${{ steps.release.outputs.channel }}
+          aws s3 cp ${{ steps.release.outputs.channel }}.txt ${{ env.S3_BUCKET }}/channels/
 
       - name: Release install to public S3 bucket
         if: ${{ steps.release.outputs.channel == 'latest' }}
@@ -168,8 +168,8 @@ jobs:
           cd ${{ steps.release.outputs.package_path }}
 
           # copy scripts
-          aws s3 cp install.sh ${{ env.S3_BUCKET }}/install.sh
-          aws s3 cp install.ps1 ${{ env.S3_BUCKET }}/install.ps1
+          aws s3 cp install.sh ${{ env.S3_BUCKET }}/
+          aws s3 cp install.ps1 ${{ env.S3_BUCKET }}/
 
       # todo: verify if needed with the https://github.com/aws-samples/public-file-browser-for-amazon-s3
       - name: Invalidate CloudFront cache
