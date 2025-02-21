@@ -146,7 +146,7 @@ jobs:
 
           # generate channel
           echo "${{ steps.release.outputs.version }}" > ${{ steps.release.outputs.channel }}.txt
-          cat ${{ steps.release.outputs.channel }}
+          cat ${{ steps.release.outputs.channel }}.txt
 
           ls -la .
 
