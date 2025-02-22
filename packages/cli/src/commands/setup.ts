@@ -9,7 +9,7 @@ import { addDirToEnvPath } from '@pnpm/os.env.path-extender';
 import * as tar from 'tar';
 import Zip from 'adm-zip';
 import * as prompts from '@clack/prompts';
-import { debug, path, stdenv, semver, color, configuFilesApi, pathExists } from '@configu/common';
+import { debug, path, stdenv, semver, color, configuFilesApi, pathExists, glob } from '@configu/common';
 import { BaseCommand } from './base';
 
 export class SetupCommand extends BaseCommand {
@@ -37,19 +37,33 @@ export class SetupCommand extends BaseCommand {
   async execute() {
     const isExecutable = sea.isSea() && process.execPath.endsWith('configu');
     const isGlobalOrVersionFlag = Boolean(this.global) || Boolean(this.version);
+    debug('SetupCommand', { global: this.global, version: this.version, purge: this.purge, isExecutable });
+
     if (!isExecutable && isGlobalOrVersionFlag) {
-      prompts.log.error('Setup is only supported for executable');
+      throw new Error('Setup is only supported for executable');
     }
 
-    debug(this.global, this.version, isExecutable, isGlobalOrVersionFlag);
-
-    prompts.intro(`${color.inverse(' Configu Setup ')}`);
+    const output = [];
+    prompts.intro(`Configu Setup`);
     await prompts.tasks([
       {
         title: 'Initializing setup',
         task: async (message) => {
+          if (!isGlobalOrVersionFlag && !this.purge) {
+            return 'Setup skipped';
+          }
           await this.init();
           return 'Setup initialized';
+        },
+      },
+      {
+        enabled: Boolean(this.purge),
+        title: 'Purging cache directory',
+        task: async (message) => {
+          await fs.rm(this.context.paths.cache, { recursive: true, force: true });
+          // todo: cleanup the bin directory also
+          // await fs.rm(this.context.paths.bin, { recursive: true, force: true });
+          return 'Cache directory purged';
         },
       },
       {
@@ -83,9 +97,7 @@ export class SetupCommand extends BaseCommand {
             }
             version = channelVersion.data;
           }
-          if (!version.startsWith('v')) {
-            version = `v${version}`;
-          }
+          version = version.replace('v', '');
           if (!semver.valid(version)) {
             throw new Error(`Invalid version ${version}`);
           }
@@ -103,7 +115,7 @@ export class SetupCommand extends BaseCommand {
           const archiveExt = !stdenv.isWindows ? 'tar.gz' : 'zip';
           const remoteArchive = await configuFilesApi({
             method: 'GET',
-            url: `/cli/versions/${version}/configu-${version}-${hostDist}.${archiveExt}`,
+            url: `/cli/versions/${version}/configu-v${version}-${hostDist}.${archiveExt}`,
             responseType: 'stream',
           });
           const archivePath = path.join(binDir, `configu.${archiveExt}`);
@@ -150,24 +162,15 @@ export class SetupCommand extends BaseCommand {
             configSectionName: 'configu',
           });
           debug('addDirToEnvPath', binEnvPath);
+          if (binEnvPath.configFile?.changeType !== 'skipped') {
+            output.push(`Open a new terminal to apply the changes.`);
+          }
           return 'Bin added to PATH';
-        },
-      },
-      {
-        enabled: isGlobalOrVersionFlag,
-        title: 'Purging cache directory',
-        task: async (message) => {
-          await fs.rm(this.context.paths.cache, { recursive: true, force: true });
-          return 'Cache directory purged';
         },
       },
     ]);
 
     if (isGlobalOrVersionFlag) {
-      const output = [];
-      if (this.global) {
-        output.unshift('Open a new terminal to apply the changes.');
-      }
       output.push(`Run \`configu --help\` to see the available commands.`);
       output.push(`Run \`configu init\` to get started.`);
       prompts.note(output.join('\n'), 'Next steps');

@@ -57,9 +57,8 @@ if ($version -eq "latest" -or $version -eq "next") {
   # $version = (Invoke-WebRequest -Uri "https://registry.npmjs.org/@configu/cli/$version" -UseBasicParsing | ConvertFrom-Json).version
   $version = (Invoke-WebRequest -Uri "https://files.configu.com/cli/channels/$version" -UseBasicParsing).content
 }
-if (-not $version.StartsWith("v")) {
-  $version = "v${version}"
-}
+# Remove leading 'v' if present
+version = version.TrimStart('v')
 
 # Set the installation path
 $install_dir = $env:CONFIGU_HOME
@@ -69,15 +68,14 @@ if (-not $install_dir) {
 $bin_dir = Join-Path -Path $install_dir -ChildPath "bin"
 $exec_path = Join-Path -Path $bin_dir -ChildPath "configu"
 
-
 # Create the installation directory
 if (-not (Test-Path $bin_dir)) {
   New-Item $bin_dir -ItemType Directory | Out-Null
 }
 
 # Download the Configu binary
-# $download_url = "https://github.com/configu/configu/releases/download/cli/$version/configu-$version-$dist$archive_ext"
-$download_url = "https://files.configu.com/cli/versions/$version/configu-$version-$dist$archive_ext"
+# $download_url = "https://github.com/configu/configu/releases/download/cli/v$version/configu-v$version-$dist$archive_ext"
+$download_url = "https://files.configu.com/cli/versions/$version/configu-v$version-$dist$archive_ext"
 Write-Output "Downloading Configu from $download_url"
 Invoke-WebRequest -Uri $download_url -OutFile "$exec_path$archive_ext" -UseBasicParsing
 
@@ -96,7 +94,5 @@ if ($exec_ext -eq '') {
 # Clean up
 Remove-Item "$exec_path$archive_ext"
 
-# Print next steps
-Write-Output "Configu was installed successfully to $exec_path$exec_ext"
-Write-Output "Run '$exec_path$exec_ext --help' to get started"
-Write-Output "Stuck? Join our Discord https://discord.com/invite/cjSBxnB9z8"
+# Run setup command
+& $exec_path$exec_ext setup --global --purge

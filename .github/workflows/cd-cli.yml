@@ -141,12 +141,12 @@ jobs:
           cat package.json
 
           # generate checksums
-          shasum -a 256 $achieves_pattern > sha256sum.txt
-          cat sha256sum.txt
+          shasum -a 256 $achieves_pattern > sha256sum
+          cat sha256sum
 
           # generate channel
-          echo "${{ steps.release.outputs.version }}" > ${{ steps.release.outputs.channel }}.txt
-          cat ${{ steps.release.outputs.channel }}.txt
+          echo "${{ steps.release.outputs.version }}" > ${{ steps.release.outputs.channel }}
+          cat ${{ steps.release.outputs.channel }}
 
           ls -la .
 
@@ -157,10 +157,10 @@ jobs:
           aws s3 cp ./ $version_path/ --recursive --exclude "*" --include "$achieves_pattern"
 
           # copy checksums
-          aws s3 cp sha256sum.txt $version_path/
+          aws s3 cp sha256sum $version_path/ --content-type "text/plain"
 
           # copy channel file
-          aws s3 cp ${{ steps.release.outputs.channel }}.txt ${{ env.S3_BUCKET }}/channels/
+          aws s3 cp ${{ steps.release.outputs.channel }} ${{ env.S3_BUCKET }}/channels/ --content-type "text/plain"
 
       - name: Release install to public S3 bucket
         if: ${{ steps.release.outputs.channel == 'latest' }}

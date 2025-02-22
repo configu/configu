@@ -6,9 +6,8 @@ import * as stdenv from 'std-env';
 import semver from 'semver';
 import parseJson from 'parse-json';
 import YAML from 'yaml';
-import { debug } from './OutputStreams';
-// eslint-disable-next-line import/no-relative-packages
-import RootWorkspacePkg from '../../../../package.json' with { type: 'json' };
+import { box, debug } from './OutputStreams';
+import packageJson from '../../package.json' with { type: 'json' };
 
 const JSON = {
   parse: parseJson,
@@ -58,15 +57,17 @@ export const normalizeInput = (
 
 export const validateEngineVersion = () => {
   // todo: find a way to get the repo version smoothly
-  const expectedVersion = RootWorkspacePkg.devEngines.runtime.version;
+  const expectedVersion = packageJson.engines.node;
   const expectedRange = `>=${expectedVersion}`;
   const usedVersion = stdenv.nodeVersion ?? process.versions.node;
   debug('Node.js version:', usedVersion);
   if (semver.satisfies(usedVersion, expectedRange)) {
-    return true;
+    return;
   }
-  throw new Error(
+  box(
     `Configu requires a Node.js version compatible with ${expectedRange} (got ${usedVersion}).
-Upgrade Node.js, or set \`CONFIGU_IGNORE_NODE=1\` in your environment.`,
+    Update your Node.js version and try again.`,
+    'error',
   );
+  throw new Error('Incompatible Node.js version');
 };

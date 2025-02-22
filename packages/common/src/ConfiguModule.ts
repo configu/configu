@@ -186,7 +186,7 @@ export class ConfiguModule {
     } catch (ignoredError) {
       debug(`Package ${packageUri} is reinstalled due:\n${ignoredError.message}`);
       try {
-        await ConfiguModule.installPackage(packageUri, packageLocalDir);
+        await ConfiguModule.installPackage(packageAbsoluteUri, packageLocalDir);
         await ConfiguModule.registerLocalPackage(packageLocalDir);
         debug(`Package ${packageAbsoluteUri} installed to ${packageLocalDir}`);
       } catch (error) {

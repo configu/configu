@@ -70,6 +70,7 @@ export abstract class BaseCommand extends Command<Context> {
 
   override catch(error: any): Promise<void> {
     log.error(error.message);
+    debug(error);
     // eslint-disable-next-line prefer-promise-reject-errors
     return Promise.reject(1);
   }

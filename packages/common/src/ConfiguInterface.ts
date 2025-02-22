@@ -48,7 +48,7 @@ export class ConfiguInterface {
     const paths = CONFIGU_PATHS;
     debug('Interface Paths', paths);
 
-    // make sure deployments of all interfaces compatible with this assertion
+    // ! deployments of all interfaces must be compatible with the below logic
     const homeIsSet = !!stdenv.env.CONFIGU_HOME;
     let execFromHome = false;
     if (process.execPath.endsWith('configu')) {
@@ -71,7 +71,9 @@ export class ConfiguInterface {
         input: undefined,
         local: new ConfiguFile('', {}, 'yaml'),
       },
-      interface: {},
+      interface: {
+        debug: debug.enabled,
+      },
     };
 
     process.env.CONFIGU_HOME = this.context.paths.home;
@@ -107,6 +109,7 @@ export class ConfiguInterface {
     const envInterfaceConfig = this.getInterfaceConfigFromEnv();
     this.context.interface = _.merge(
       {},
+      this.context.interface,
       envInterfaceConfig,
       this.context.configu.local.contents.interface,
       this.context.configu.input?.contents?.interface,

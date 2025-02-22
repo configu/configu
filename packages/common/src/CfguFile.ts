@@ -120,7 +120,7 @@ export class CfguFile {
 
   public static async searchGlob(path: string) {
     // todo: try to replace glob lib with the native fs.glob api
-    return glob(path, { nodir: true });
+    return glob(path, { nodir: true, dot: true });
   }
 
   public getSchemaInstance(): ConfigSchema {

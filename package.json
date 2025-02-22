@@ -24,23 +24,19 @@
   "devEngines": {
     "runtime": {
       "name": "node",
-      "version": "22.12.0"
-    },
-    "packageManager": {
-      "name": "pnpm",
-      "version": "10.4.1"
+      "version": "22.12.0",
+      "onFail": "error"
     }
   },
   "config": {
     "format": "**/*.{js,mjs,ts,mts,md,mdx,json,yml,yaml}",
     "lint": ".",
-    "test": "packages/**/src/**/*.test.ts"
+    "test": "packages/**/src/**/*.test.ts",
+    "node": "22.12.0",
+    "pnpm": "10.4.1"
   },
   "scripts": {
-    "prepare": "pnpm \"/^prepare:.*/\"",
-    "prepare:art": "shx cat docs/images/ascii-art.txt",
-    "prepare:hooks": "husky",
-    "prepare:build": "pnpm build",
+    "prepare": "pnpm pkg:art && pnpm pkg:hooks && pnpm pkg:config && pnpm build",
     "clean": "pnpm -r clean",
     "clean:cache": "shx rm -rf **/node_modules **/dist .eslintcache lcov.info",
     "clean:all": "pnpm clean && pnpm clean:cache",
@@ -50,6 +46,9 @@
     "lint": "eslint --ignore-path .gitignore --cache",
     "lint:check": "pnpm lint --quiet $npm_package_config_lint",
     "lint:fix": "pnpm lint --fix $npm_package_config_lint",
+    "pkg:art": "shx cat docs/images/ascii-art.txt",
+    "pkg:hooks": "husky",
+    "pkg:config": "tsx prepare.mts",
     "pkg:check": "syncpack lint",
     "pkg:fix": "syncpack format && syncpack fix-mismatches",
     "test": "tsx --test $npm_package_config_test",

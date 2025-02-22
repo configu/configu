@@ -71,9 +71,8 @@ if [ "$version" = "latest" ] || [ "$version" = "next" ]; then
   # version=$(curl -fsSL "https://registry.npmjs.org/@configu/cli/$version" | sed -e 's/^.*version":"//' | sed -e 's/".*$//')
   version=$(curl -fsSL "https://files.configu.com/cli/channels/$version")
 fi
-if [ "${version#v}" = "$version" ]; then
-  version="v$version"
-fi
+# Remove leading 'v' if present
+version="${version#v}"
 
 # Set the installation path
 install_dir="${CONFIGU_HOME:-$HOME/.configu}"
@@ -84,8 +83,8 @@ exec_path="$bin_dir/configu"
 mkdir -p "$bin_dir"
 
 # Download the Configu binary
-# download_url="https://github.com/configu/configu/releases/download/cli/$version/configu-$version-$dist$archive_ext"
-download_url="https://files.configu.com/cli/versions/$version/configu-$version-$dist$archive_ext"
+# download_url="https://github.com/configu/configu/releases/download/cli/v$version/configu-v$version-$dist$archive_ext"
+download_url="https://files.configu.com/cli/versions/$version/configu-v$version-$dist$archive_ext"
 echo "Downloading Configu from $download_url"
 curl -fsSL "$download_url" -o "$exec_path$archive_ext"
 
@@ -108,7 +107,5 @@ fi
 # Clean up
 rm "$exec_path$archive_ext"
 
-# Print next steps
-echo "Configu was installed successfully to $exec_path$exec_ext"
-echo "Run '$exec_path$exec_ext --help' to get started"
-echo "Stuck? Join our Discord https://discord.com/invite/cjSBxnB9z8"
+# Run setup command
+$exec_path$exec_ext setup --global --purge

@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.7-labs
 
-ARG NODE_VERSION=22.12.0
+ARG NODE_VERSION="22.12.0"
 FROM node:$NODE_VERSION AS base
 
 LABEL author "dev@configu.com"
