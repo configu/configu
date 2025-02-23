@@ -95,4 +95,4 @@ if ($exec_ext -eq '') {
 Remove-Item "$exec_path$archive_ext"
 
 # Run setup command
-$exec_path$exec_ext setup --version $version --global --purge
+& "$exec_path$exec_ext" setup --version $version --global --purge
