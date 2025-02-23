@@ -6,7 +6,7 @@ export { axios as httpClient };
 
 export const CONFIGU_DEFAULT_FILES_URL = `https://files.${CONFIGU_DEFAULT_DOMAIN}`;
 export const configuFilesApi = axios.create({
-  baseURL: CONFIGU_DEFAULT_API_URL,
+  baseURL: CONFIGU_DEFAULT_FILES_URL,
   responseType: 'text',
 });
 

@@ -183,7 +183,7 @@ export class SetupCommand extends BaseCommand {
 
     if (isGlobalOrVersionFlag) {
       output.push(`Run \`${this.cli.binaryName} --help\` to see the available commands.`);
-      output.push(`Run \`${this.cli.binaryName} init\` to get started.`);
+      // output.push(`Run \`${this.cli.binaryName} init\` to get started.`);
       prompts.note(output.join('\n'), 'Next steps');
     }
 
