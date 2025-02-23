@@ -305,6 +305,7 @@ jobs:
         shell: bash
         env:
           SHELL: bash # https://bit.cloud/pnpm/os/env/path-extender-posix/~code/path-extender-posix.ts#l49
+          DEBUG: 'configu'
           CONFIGU_HOME: ./configu
           CONFIGU_VERSION: 1.1.1-next.15
         run: |
@@ -323,6 +324,7 @@ jobs:
         shell: pwsh
         env:
           SHELL: pwsh
+          DEBUG: 'configu'
           CONFIGU_HOME: ./configu
           CONFIGU_VERSION: 1.1.1-next.15
         run: |
