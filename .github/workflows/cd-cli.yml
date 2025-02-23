@@ -315,7 +315,7 @@ jobs:
         if: ${{ matrix.runner != 'windows-latest' }}
         shell: bash
         run: |
-          which configu
+          # which configu
           echo $CONFIGU_HOME
           configu -v
 
@@ -334,7 +334,7 @@ jobs:
         if: ${{ matrix.runner == 'windows-latest' }}
         shell: pwsh
         run: |
-          Get-Command configu
+          # Get-Command configu
           echo $env:CONFIGU_HOME
           configu -v
 
