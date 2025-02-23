@@ -15,276 +15,277 @@ jobs:
         with:
           slack-webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-  build-binary:
-    runs-on: ${{ matrix.runner }}
-    needs: pre-release
-    strategy:
-      matrix:
-        # todo: create a dedicated runner to execute the corresponding Node.js distribution
-        # https://nodejs.org/download/release/latest/
-        dist:
-          - linux-arm64 # aarch64
-          - linux-armv7l # armv7
-          - linux-ppc64le
-          - linux-s390x
-          - linux-x64
-          - linux-x64-musl
-          - darwin-arm64
-          - darwin-x64
-          - win-arm64
-          - win-x64
-        include:
-          - dist: linux-arm64
-            runner: ubuntu-latest
-            arch: arm64
-          - dist: linux-armv7l
-            runner: ubuntu-latest
-            arch: armv7l
-          - dist: linux-ppc64le
-            runner: ubuntu-latest
-            arch: ppc64le
-          - dist: linux-s390x
-            runner: ubuntu-latest
-            arch: s390x
-          - dist: linux-x64
-            runner: ubuntu-latest
-            arch: x64
-          - dist: linux-x64-musl
-            runner: ubuntu-latest
-            arch: x64
-          - dist: darwin-arm64
-            runner: macos-latest
-            arch: arm64
-          - dist: darwin-x64
-            runner: macos-latest
-            arch: x64
-          - dist: win-arm64
-            runner: windows-latest
-            arch: arm64
-          - dist: win-x64
-            runner: windows-latest
-            arch: x64
-    steps:
-      - uses: actions/checkout@v4
+  # build-binary:
+  #   runs-on: ${{ matrix.runner }}
+  #   needs: pre-release
+  #   strategy:
+  #     matrix:
+  #       # todo: create a dedicated runner to execute the corresponding Node.js distribution
+  #       # https://nodejs.org/download/release/latest/
+  #       dist:
+  #         - linux-arm64 # aarch64
+  #         - linux-armv7l # armv7
+  #         - linux-ppc64le
+  #         - linux-s390x
+  #         - linux-x64
+  #         - linux-x64-musl
+  #         - darwin-arm64
+  #         - darwin-x64
+  #         - win-arm64
+  #         - win-x64
+  #       include:
+  #         - dist: linux-arm64
+  #           runner: ubuntu-latest
+  #           arch: arm64
+  #         - dist: linux-armv7l
+  #           runner: ubuntu-latest
+  #           arch: armv7l
+  #         - dist: linux-ppc64le
+  #           runner: ubuntu-latest
+  #           arch: ppc64le
+  #         - dist: linux-s390x
+  #           runner: ubuntu-latest
+  #           arch: s390x
+  #         - dist: linux-x64
+  #           runner: ubuntu-latest
+  #           arch: x64
+  #         - dist: linux-x64-musl
+  #           runner: ubuntu-latest
+  #           arch: x64
+  #         - dist: darwin-arm64
+  #           runner: macos-latest
+  #           arch: arm64
+  #         - dist: darwin-x64
+  #           runner: macos-latest
+  #           arch: x64
+  #         - dist: win-arm64
+  #           runner: windows-latest
+  #           arch: arm64
+  #         - dist: win-x64
+  #           runner: windows-latest
+  #           arch: x64
+  #   steps:
+  #     - uses: actions/checkout@v4
 
-      - uses: ./.github/actions/get-release-action
-        id: release
+  #     - uses: ./.github/actions/get-release-action
+  #       id: release
 
-      - uses: ./.github/actions/ts-env-action
-        id: env
-        with:
-          architecture: ${{ matrix.arch }}
+  #     - uses: ./.github/actions/ts-env-action
+  #       id: env
+  #       with:
+  #         architecture: ${{ matrix.arch }}
 
-      - name: Bump package version
-        shell: bash
-        run: |
-          pnpm --filter ${{ steps.release.outputs.package_name }} exec \
-            npm --no-git-tag-version version ${{ steps.release.outputs.version }}
-          pnpm install --ignore-scripts
+  #     - name: Bump package version
+  #       shell: bash
+  #       run: |
+  #         pnpm --filter ${{ steps.release.outputs.package_name }} exec \
+  #           npm --no-git-tag-version version ${{ steps.release.outputs.version }}
+  #         pnpm install --ignore-scripts
 
-      - name: Build package code
-        shell: bash
-        env:
-          NODE_VERSION: ${{ steps.env.outputs.node_version }}
-          NODE_DIST: ${{ matrix.dist }}
-        run: |
-          pnpm --filter ${{ steps.release.outputs.package_name }} run \
-            build:binary
-          ls -la ${{ steps.release.outputs.package_path }}/dist
+  #     - name: Build package code
+  #       shell: bash
+  #       env:
+  #         NODE_VERSION: ${{ steps.env.outputs.node_version }}
+  #         NODE_DIST: ${{ matrix.dist }}
+  #       run: |
+  #         pnpm --filter ${{ steps.release.outputs.package_name }} run \
+  #           build:binary
+  #         ls -la ${{ steps.release.outputs.package_path }}/dist
 
-      - uses: actions/upload-artifact@v4
-        with:
-          name: configu-v${{ steps.release.outputs.version }}-${{ matrix.dist }}
-          path: ${{ steps.release.outputs.package_path }}/dist/configu-v${{ steps.release.outputs.version }}-${{ matrix.dist }}.*
+  #     - uses: actions/upload-artifact@v4
+  #       with:
+  #         name: configu-v${{ steps.release.outputs.version }}-${{ matrix.dist }}
+  #         path: ${{ steps.release.outputs.package_path }}/dist/configu-v${{ steps.release.outputs.version }}-${{ matrix.dist }}.*
 
-  release-binary:
-    runs-on: ubuntu-latest
-    needs: build-binary
-    env:
-      GH_TOKEN: ${{ github.token }}
-      S3_BUCKET: 's3://public-file-browser-files-0eff4c2890a7/cli'
-      CLOUDFRONT_DISTRIBUTION: 'E7C5AL5O299SC'
-    steps:
-      - uses: actions/checkout@v4
+  # release-binary:
+  #   runs-on: ubuntu-latest
+  #   needs: build-binary
+  #   env:
+  #     GH_TOKEN: ${{ github.token }}
+  #     S3_BUCKET: 's3://public-file-browser-files-0eff4c2890a7/cli'
+  #     CLOUDFRONT_DISTRIBUTION: 'E7C5AL5O299SC'
+  #   steps:
+  #     - uses: actions/checkout@v4
 
-      - uses: ./.github/actions/get-release-action
-        id: release
+  #     - uses: ./.github/actions/get-release-action
+  #       id: release
 
-      - uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+  #     - uses: aws-actions/configure-aws-credentials@v4
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         aws-region: ${{ secrets.AWS_REGION }}
 
-      - uses: actions/download-artifact@v4
-        with:
-          path: ${{ steps.release.outputs.package_path }}/dist
-          pattern: configu-v${{ steps.release.outputs.version }}-*
-          merge-multiple: true
+  #     - uses: actions/download-artifact@v4
+  #       with:
+  #         path: ${{ steps.release.outputs.package_path }}/dist
+  #         pattern: configu-v${{ steps.release.outputs.version }}-*
+  #         merge-multiple: true
 
-      - name: Release package to GitHub release
-        uses: softprops/action-gh-release@v2
-        if: ${{ startsWith(github.ref, 'refs/tags/') }}
-        with:
-          files: |
-            ${{ steps.release.outputs.package_path }}/dist/*
+  #     - name: Release package to GitHub release
+  #       uses: softprops/action-gh-release@v2
+  #       if: ${{ startsWith(github.ref, 'refs/tags/') }}
+  #       with:
+  #         files: |
+  #           ${{ steps.release.outputs.package_path }}/dist/*
 
-      - name: Release package to public S3 bucket
-        run: |
-          cd ${{ steps.release.outputs.package_path }}/dist
+  #     - name: Release package to public S3 bucket
+  #       run: |
+  #         cd ${{ steps.release.outputs.package_path }}/dist
 
-          achieves_pattern="configu-v${{ steps.release.outputs.version }}-*"
-          version_path="${{ env.S3_BUCKET }}/versions/${{ steps.release.outputs.version }}"
+  #         achieves_pattern="configu-v${{ steps.release.outputs.version }}-*"
+  #         version_path="${{ env.S3_BUCKET }}/versions/${{ steps.release.outputs.version }}"
 
-          # generate package.json
-          jq '.version = "${{ steps.release.outputs.version }}"' ../package.json > package.json
-          cat package.json
+  #         # generate package.json
+  #         jq '.version = "${{ steps.release.outputs.version }}"' ../package.json > package.json
+  #         cat package.json
 
-          # generate checksums
-          shasum -a 256 $achieves_pattern > sha256sum
-          cat sha256sum
+  #         # generate checksums
+  #         shasum -a 256 $achieves_pattern > sha256sum
+  #         cat sha256sum
 
-          # generate channel
-          echo "${{ steps.release.outputs.version }}" > ${{ steps.release.outputs.channel }}
-          cat ${{ steps.release.outputs.channel }}
+  #         # generate channel
+  #         echo "${{ steps.release.outputs.version }}" > ${{ steps.release.outputs.channel }}
+  #         cat ${{ steps.release.outputs.channel }}
 
-          ls -la .
+  #         ls -la .
 
-          # copy package.json
-          aws s3 cp package.json $version_path/
+  #         # copy package.json
+  #         aws s3 cp package.json $version_path/
 
-          # copy binaries
-          aws s3 cp ./ $version_path/ --recursive --exclude "*" --include "$achieves_pattern"
+  #         # copy binaries
+  #         aws s3 cp ./ $version_path/ --recursive --exclude "*" --include "$achieves_pattern"
 
-          # copy checksums
-          aws s3 cp sha256sum $version_path/ --content-type "text/plain"
+  #         # copy checksums
+  #         aws s3 cp sha256sum $version_path/ --content-type "text/plain"
 
-          # copy channel file
-          aws s3 cp ${{ steps.release.outputs.channel }} ${{ env.S3_BUCKET }}/channels/ --content-type "text/plain"
+  #         # copy channel file
+  #         aws s3 cp ${{ steps.release.outputs.channel }} ${{ env.S3_BUCKET }}/channels/ --content-type "text/plain"
 
-      - name: Release install to public S3 bucket
-        if: ${{ steps.release.outputs.channel == 'latest' }}
-        run: |
-          cd ${{ steps.release.outputs.package_path }}
+  #     - name: Release install to public S3 bucket
+  #       if: ${{ steps.release.outputs.channel == 'latest' }}
+  #       run: |
+  #         cd ${{ steps.release.outputs.package_path }}
 
-          # copy scripts
-          aws s3 cp install.sh ${{ env.S3_BUCKET }}/
-          aws s3 cp install.ps1 ${{ env.S3_BUCKET }}/
+  #         # copy scripts
+  #         aws s3 cp install.sh ${{ env.S3_BUCKET }}/
+  #         aws s3 cp install.ps1 ${{ env.S3_BUCKET }}/
 
-      # todo: verify if needed with the https://github.com/aws-samples/public-file-browser-for-amazon-s3
-      - name: Invalidate CloudFront cache
-        run: |
-          aws cloudfront create-invalidation --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION }} --paths "/*"
+  #     # todo: verify if needed with the https://github.com/aws-samples/public-file-browser-for-amazon-s3
+  #     - name: Invalidate CloudFront cache
+  #       run: |
+  #         aws cloudfront create-invalidation --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION }} --paths "/*"
 
-  release-docker:
-    runs-on: ubuntu-latest
-    needs: build-binary
-    env:
-      DOCKER_IMAGE_NAME: 'configu/cli'
-    steps:
-      - uses: actions/checkout@v4
+  # release-docker:
+  #   runs-on: ubuntu-latest
+  #   needs: build-binary
+  #   env:
+  #     DOCKER_IMAGE_NAME: 'configu/cli'
+  #   steps:
+  #     - uses: actions/checkout@v4
 
-      - uses: ./.github/actions/get-release-action
-        id: release
+  #     - uses: ./.github/actions/get-release-action
+  #       id: release
 
-      - uses: ./.github/actions/ts-env-action
-        id: env
-        with:
-          dependencies: false
+  #     - uses: ./.github/actions/ts-env-action
+  #       id: env
+  #       with:
+  #         dependencies: false
 
-      # https://github.com/docker/build-push-action/tree/v6/?tab=readme-ov-file#examples
-      # https://docs.docker.com/build/ci/github-actions/multi-platform/
-      - uses: docker/setup-docker-action@v4
-        with:
-          daemon-config: |
-            {
-              "debug": true,
-              "features": {
-                "containerd-snapshotter": true
-              }
-            }
+  #     # https://github.com/docker/build-push-action/tree/v6/?tab=readme-ov-file#examples
+  #     # https://docs.docker.com/build/ci/github-actions/multi-platform/
+  #     - uses: docker/setup-docker-action@v4
+  #       with:
+  #         daemon-config: |
+  #           {
+  #             "debug": true,
+  #             "features": {
+  #               "containerd-snapshotter": true
+  #             }
+  #           }
 
-      - uses: docker/setup-qemu-action@v3
+  #     - uses: docker/setup-qemu-action@v3
 
-      - uses: docker/setup-buildx-action@v3
+  #     - uses: docker/setup-buildx-action@v3
 
-      - uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+  #     - uses: docker/login-action@v3
+  #       with:
+  #         username: ${{ secrets.DOCKERHUB_USERNAME }}
+  #         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Release package to Docker Hub
-        uses: docker/build-push-action@v6
-        with:
-          file: ${{ steps.release.outputs.package_path }}/Dockerfile
-          platforms: linux/amd64,linux/arm64
-          tags: |
-            ${{ env.DOCKER_IMAGE_NAME }}:${{ steps.release.outputs.version }}
-            ${{ env.DOCKER_IMAGE_NAME }}:${{ steps.release.outputs.channel }}
-          build-args: |
-            NODE_VERSION=${{ steps.env.outputs.node_version }}
-            CONFIGU_VERSION=${{ steps.release.outputs.version }}
-          push: true
-          provenance: true
-          sbom: true
+  #     - name: Release package to Docker Hub
+  #       uses: docker/build-push-action@v6
+  #       with:
+  #         file: ${{ steps.release.outputs.package_path }}/Dockerfile
+  #         platforms: linux/amd64,linux/arm64
+  #         tags: |
+  #           ${{ env.DOCKER_IMAGE_NAME }}:${{ steps.release.outputs.version }}
+  #           ${{ env.DOCKER_IMAGE_NAME }}:${{ steps.release.outputs.channel }}
+  #         build-args: |
+  #           NODE_VERSION=${{ steps.env.outputs.node_version }}
+  #           CONFIGU_VERSION=${{ steps.release.outputs.version }}
+  #         push: true
+  #         provenance: true
+  #         sbom: true
 
-      - name: Update Docker Hub Description
-        uses: peter-evans/dockerhub-description@v4
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-          repository: ${{ env.DOCKER_IMAGE_NAME }}
-          short-description: 'Containerized Configu CLI'
-          readme-filepath: ${{ steps.release.outputs.package_path }}/README.md
-          enable-url-completion: true
+  #     - name: Update Docker Hub Description
+  #       uses: peter-evans/dockerhub-description@v4
+  #       with:
+  #         username: ${{ secrets.DOCKERHUB_USERNAME }}
+  #         password: ${{ secrets.DOCKERHUB_TOKEN }}
+  #         repository: ${{ env.DOCKER_IMAGE_NAME }}
+  #         short-description: 'Containerized Configu CLI'
+  #         readme-filepath: ${{ steps.release.outputs.package_path }}/README.md
+  #         enable-url-completion: true
 
-  release-npm:
-    runs-on: ubuntu-latest
-    needs: build-binary
-    permissions:
-      contents: read
-      id-token: write
-    steps:
-      - uses: actions/checkout@v4
+  # release-npm:
+  #   runs-on: ubuntu-latest
+  #   needs: build-binary
+  #   permissions:
+  #     contents: read
+  #     id-token: write
+  #   steps:
+  #     - uses: actions/checkout@v4
 
-      - uses: ./.github/actions/get-release-action
-        id: release
+  #     - uses: ./.github/actions/get-release-action
+  #       id: release
 
-      - uses: ./.github/actions/ts-env-action
-        id: env
+  #     - uses: ./.github/actions/ts-env-action
+  #       id: env
 
-      - name: Bump package version
-        shell: bash
-        run: |
-          pnpm --filter ${{ steps.release.outputs.package_name }} exec \
-            npm --no-git-tag-version version ${{ steps.release.outputs.version }}
-          pnpm install --ignore-scripts
+  #     - name: Bump package version
+  #       shell: bash
+  #       run: |
+  #         pnpm --filter ${{ steps.release.outputs.package_name }} exec \
+  #           npm --no-git-tag-version version ${{ steps.release.outputs.version }}
+  #         pnpm install --ignore-scripts
 
-      - name: Build package code
-        run: |
-          pnpm --filter ${{ steps.release.outputs.package_name }} run \
-            build
+  #     - name: Build package code
+  #       run: |
+  #         pnpm --filter ${{ steps.release.outputs.package_name }} run \
+  #           build
 
-      - name: Remove package dependencies
-        shell: bash
-        run: |
-          pnpm --filter ${{ steps.release.outputs.package_name }} exec \
-            npm pkg delete dependencies devDependencies
+  #     - name: Remove package dependencies
+  #       shell: bash
+  #       run: |
+  #         pnpm --filter ${{ steps.release.outputs.package_name }} exec \
+  #           npm pkg delete dependencies devDependencies
 
-      - name: Publish to npm
-        run: |
-          git diff
-          pnpm --filter ${{ steps.release.outputs.package_name }} publish \
-            --access public --provenance --no-git-checks --tag ${{ steps.release.outputs.channel }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+  #     - name: Publish to npm
+  #       run: |
+  #         git diff
+  #         pnpm --filter ${{ steps.release.outputs.package_name }} publish \
+  #           --access public --provenance --no-git-checks --tag ${{ steps.release.outputs.channel }}
+  #       env:
+  #         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   test-release:
     runs-on: ${{ matrix.runner }}
     needs:
-      - release-docker
-      - release-binary
-      - release-npm
+      # - release-docker
+      # - release-binary
+      # - release-npm
+      - pre-release
     strategy:
       matrix:
         runner:
@@ -303,25 +304,29 @@ jobs:
         if: ${{ matrix.runner != 'windows-latest' }}
         shell: bash
         env:
+          SHELL: bash # https://bit.cloud/pnpm/os/env/path-extender-posix/~code/path-extender-posix.ts#l49
           CONFIGU_HOME: ./configu
-          CONFIGU_VERSION: ${{ steps.release.outputs.version }}
+          CONFIGU_VERSION: 1.1.1-next.15
         run: |
           curl -fsSL https://raw.githubusercontent.com/configu/configu/refs/heads/${{ steps.release.outputs.branch }}/${{ steps.release.outputs.package_path }}/install.sh | sh
           configu -v
+          which configu
 
       - name: Test binary on ${{ matrix.runner }}
         if: ${{ matrix.runner == 'windows-latest' }}
         shell: pwsh
         env:
+          SHELL: pwsh
           CONFIGU_HOME: ./configu
-          CONFIGU_VERSION: ${{ steps.release.outputs.version }}
+          CONFIGU_VERSION: 1.1.1-next.15
         run: |
           irm https://raw.githubusercontent.com/configu/configu/refs/heads/${{ steps.release.outputs.branch }}/${{ steps.release.outputs.package_path }}/install.ps1 | iex
           configu -v
+          which configu
 
       - name: Test Docker on ${{ matrix.runner }}
         run: |
-          docker run --rm ${{ env.DOCKER_IMAGE_NAME }}:${{ steps.release.outputs.version }} -v
+          docker run --rm ${{ env.DOCKER_IMAGE_NAME }}:1.1.1-next.15 -v
 
       - uses: actions/setup-node@v4
         with:
@@ -329,7 +334,7 @@ jobs:
 
       - name: Test npm on ${{ matrix.runner }}
         run: |
-          npm i -g ${{ steps.release.outputs.package_name }}@${{ steps.release.outputs.version }}
+          npm i -g ${{ steps.release.outputs.package_name }}@1.1.1-next.15
           configu -v
 
   post-release:
