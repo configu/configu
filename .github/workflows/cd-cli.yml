@@ -310,12 +310,14 @@ jobs:
           CONFIGU_VERSION: 1.1.1-next.15
         run: |
           curl -fsSL https://raw.githubusercontent.com/configu/configu/refs/heads/${{ steps.release.outputs.branch }}/${{ steps.release.outputs.package_path }}/install.sh | sh
+          echo "CONFIGU_HOME=$CONFIGU_HOME" >> $GITHUB_ENV
+          echo "$CONFIGU_HOME" >> $GITHUB_PATH
 
       - name: Test binary on ${{ matrix.runner }}
         if: ${{ matrix.runner != 'windows-latest' }}
         shell: bash
         run: |
-          # which configu
+          which configu
           echo $CONFIGU_HOME
           configu -v
 
@@ -329,12 +331,14 @@ jobs:
           CONFIGU_VERSION: 1.1.1-next.15
         run: |
           irm https://raw.githubusercontent.com/configu/configu/refs/heads/${{ steps.release.outputs.branch }}/${{ steps.release.outputs.package_path }}/install.ps1 | iex
+          echo "CONFIGU_HOME=$env:CONFIGU_HOME" >> $env:GITHUB_ENV
+          "$env:CONFIGU_HOME" | Out-File -FilePath "$env:GITHUB_PATH" -Append # https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/workflow-commands-for-github-actions?tool=powershell#adding-a-system-path
 
       - name: Test binary on ${{ matrix.runner }}
         if: ${{ matrix.runner == 'windows-latest' }}
         shell: pwsh
         run: |
-          # Get-Command configu
+          Get-Command configu
           echo $env:CONFIGU_HOME
           configu -v
 
