@@ -65,7 +65,7 @@ $install_dir = $env:CONFIGU_HOME
 if (-not $install_dir) {
   $install_dir = Join-Path -Path $Home -ChildPath ".configu"
 }
-$bin_dir = Join-Path -Path $install_dir -ChildPath "bin"
+$bin_dir = Join-Path -Path $install_dir -ChildPath "bin" -AdditionalChildPath $version
 $exec_path = Join-Path -Path $bin_dir -ChildPath "configu"
 
 # Create the installation directory
@@ -95,4 +95,4 @@ if ($exec_ext -eq '') {
 Remove-Item "$exec_path$archive_ext"
 
 # Run setup command
-& $exec_path$exec_ext setup --global --purge
+$exec_path$exec_ext setup --version $version --global --purge

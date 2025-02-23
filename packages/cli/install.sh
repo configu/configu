@@ -76,7 +76,7 @@ version="${version#v}"
 
 # Set the installation path
 install_dir="${CONFIGU_HOME:-$HOME/.configu}"
-bin_dir="$install_dir/bin"
+bin_dir="$install_dir/bin/$version"
 exec_path="$bin_dir/configu"
 
 # Create the installation directory
@@ -108,4 +108,4 @@ fi
 rm "$exec_path$archive_ext"
 
 # Run setup command
-$exec_path$exec_ext setup --global --purge
+$exec_path$exec_ext setup --version $version --global --purge

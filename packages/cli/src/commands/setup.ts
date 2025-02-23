@@ -11,6 +11,7 @@ import Zip from 'adm-zip';
 import * as prompts from '@clack/prompts';
 import { debug, path, stdenv, semver, color, configuFilesApi, pathExists, glob } from '@configu/common';
 import { BaseCommand } from './base';
+import { tasks } from '../utils';
 
 export class SetupCommand extends BaseCommand {
   static override paths = [['setup']];
@@ -18,11 +19,11 @@ export class SetupCommand extends BaseCommand {
   static override usage = undefined;
 
   global = Option.Boolean('--global', {
-    description: `Add the CONFIGU_HOME directory to the PATH environment variable`,
+    description: `Install the binary globally on the system`,
   });
 
   version = Option.String('--version', {
-    description: `The version to install`,
+    description: `Install a specific version of the binary globally on the system`,
     env: 'CONFIGU_VERSION',
   });
 
@@ -30,23 +31,22 @@ export class SetupCommand extends BaseCommand {
     description: `Purge the cache directory`,
   });
 
-  static override schema = [t.hasMutuallyExclusiveKeys(['global', 'version'], { missingIf: 'undefined' })];
-
-  private nextExecPath = '';
-
   async execute() {
-    const isExecutable = sea.isSea() && process.execPath.endsWith('configu');
-    const isGlobalOrVersionFlag = Boolean(this.global) || Boolean(this.version);
+    const isExecutable = sea.isSea() && process.execPath.endsWith(this.cli.binaryName);
     debug('SetupCommand', { global: this.global, version: this.version, purge: this.purge, isExecutable });
 
-    if (!isExecutable && isGlobalOrVersionFlag) {
+    const isGlobalOrVersionFlag = Boolean(this.global) || Boolean(this.version);
+    if (isGlobalOrVersionFlag && !isExecutable) {
       throw new Error('Setup is only supported for executable');
     }
 
     const output = [];
+    let nextExecPath = '';
+
     prompts.intro(`Configu Setup`);
-    await prompts.tasks([
+    await tasks([
       {
+        enabled: true,
         title: 'Initializing setup',
         task: async (message) => {
           if (!isGlobalOrVersionFlag && !this.purge) {
@@ -57,33 +57,10 @@ export class SetupCommand extends BaseCommand {
         },
       },
       {
-        enabled: Boolean(this.purge),
-        title: 'Purging cache directory',
-        task: async (message) => {
-          await fs.rm(this.context.paths.cache, { recursive: true, force: true });
-          // todo: cleanup the bin directory also
-          // await fs.rm(this.context.paths.bin, { recursive: true, force: true });
-          return 'Cache directory purged';
-        },
-      },
-      {
-        enabled: Boolean(this.global),
-        title: 'Copying bin to home directory',
-        task: async (message) => {
-          const binDir = path.join(this.context.paths.bin, this.cli.binaryVersion as string);
-          await fs.mkdir(binDir, { recursive: true });
-          this.nextExecPath = path.join(binDir, this.cli.binaryName);
-
-          await fs.cp(process.execPath, this.nextExecPath, { force: true });
-          return 'Bin copied to home directory';
-        },
-      },
-      {
         enabled: Boolean(this.version),
         title: `Installing ${this.version} version`,
         task: async (message) => {
-          const canUpdate = this.context.isGlobal;
-          if (!canUpdate) {
+          if (!this.context.isGlobal && !this.global) {
             throw new Error('Version flag is only supported for global setup');
           }
 
@@ -103,10 +80,9 @@ export class SetupCommand extends BaseCommand {
           }
 
           const binDir = path.join(this.context.paths.bin, version);
-          await fs.mkdir(binDir, { recursive: true });
-          this.nextExecPath = path.join(binDir, 'configu');
+          nextExecPath = path.join(binDir, this.cli.binaryName);
 
-          const isExecExists = await pathExists(this.nextExecPath);
+          const isExecExists = await pathExists(nextExecPath);
           if (isExecExists) {
             return 'Version already installed';
           }
@@ -115,10 +91,11 @@ export class SetupCommand extends BaseCommand {
           const archiveExt = !stdenv.isWindows ? 'tar.gz' : 'zip';
           const remoteArchive = await configuFilesApi({
             method: 'GET',
-            url: `/cli/versions/${version}/configu-v${version}-${hostDist}.${archiveExt}`,
+            url: `/cli/versions/${version}/${this.cli.binaryName}-v${version}-${hostDist}.${archiveExt}`,
             responseType: 'stream',
           });
-          const archivePath = path.join(binDir, `configu.${archiveExt}`);
+          await fs.mkdir(binDir, { recursive: true });
+          const archivePath = path.join(binDir, `${this.cli.binaryName}.${archiveExt}`);
           const localArchive = await fs.open(archivePath);
           const writer = localArchive.createWriteStream();
           remoteArchive.data.pipe(writer);
@@ -133,20 +110,44 @@ export class SetupCommand extends BaseCommand {
         },
       },
       {
+        enabled: Boolean(this.global) && !this.version,
+        title: 'Copying bin to home directory',
+        task: async (message) => {
+          if (this.context.isGlobal) {
+            return 'Bin is already in home directory';
+          }
+
+          const binDir = path.join(this.context.paths.bin, this.cli.binaryVersion as string);
+          nextExecPath = path.join(binDir, this.cli.binaryName);
+
+          if (process.execPath === nextExecPath) {
+            return 'Bin is already in home directory';
+          }
+
+          await fs.mkdir(binDir, { recursive: true });
+          await fs.cp(process.execPath, nextExecPath, { force: true });
+          return 'Bin copied to home directory';
+        },
+      },
+      {
         enabled: isGlobalOrVersionFlag,
         title: 'Creating bin shims',
         // https://github.com/pnpm/pnpm/blob/main/packages/plugin-commands-setup/src/setup.ts#L67
         task: async (message) => {
           // windows can also use shell script via mingw or cygwin so no filter
-          const shellScript = ['#!/bin/sh', `exec ${this.nextExecPath} "$@"`].join('\n');
-          await fs.writeFile(path.join(this.context.paths.home, 'configu'), shellScript, { mode: 0o755 });
+          const shellScript = ['#!/bin/sh', `exec ${nextExecPath} "$@"`].join('\n');
+          await fs.writeFile(path.join(this.context.paths.home, this.cli.binaryName), shellScript, { mode: 0o755 });
 
           if (stdenv.isWindows) {
-            const batchScript = ['@echo off', `${this.nextExecPath} %*`].join('\n');
-            await fs.writeFile(path.join(this.context.paths.home, 'configu.cmd'), batchScript, { mode: 0o755 });
+            const batchScript = ['@echo off', `${nextExecPath} %*`].join('\n');
+            await fs.writeFile(path.join(this.context.paths.home, `${this.cli.binaryName}.cmd`), batchScript, {
+              mode: 0o755,
+            });
 
-            const powershellScript = `${this.nextExecPath} $args`;
-            await fs.writeFile(path.join(this.context.paths.home, 'configu.ps1'), powershellScript, { mode: 0o755 });
+            const powershellScript = `${nextExecPath} $args`;
+            await fs.writeFile(path.join(this.context.paths.home, `${this.cli.binaryName}.ps1`), powershellScript, {
+              mode: 0o755,
+            });
           }
           return 'Bin shims created';
         },
@@ -159,7 +160,7 @@ export class SetupCommand extends BaseCommand {
             position: 'start',
             proxyVarName: 'CONFIGU_HOME',
             overwrite: true,
-            configSectionName: 'configu',
+            configSectionName: this.cli.binaryName,
           });
           debug('addDirToEnvPath', binEnvPath);
           if (binEnvPath.configFile?.changeType !== 'skipped') {
@@ -168,11 +169,21 @@ export class SetupCommand extends BaseCommand {
           return 'Bin added to PATH';
         },
       },
+      {
+        enabled: Boolean(this.purge),
+        title: 'Purging cache directory',
+        task: async (message) => {
+          await fs.rm(this.context.paths.cache, { recursive: true, force: true });
+          // todo: cleanup the bin directory also
+          // await fs.rm(this.context.paths.bin, { recursive: true, force: true });
+          return 'Cache directory purged';
+        },
+      },
     ]);
 
     if (isGlobalOrVersionFlag) {
-      output.push(`Run \`configu --help\` to see the available commands.`);
-      output.push(`Run \`configu init\` to get started.`);
+      output.push(`Run \`${this.cli.binaryName} --help\` to see the available commands.`);
+      output.push(`Run \`${this.cli.binaryName} init\` to get started.`);
       prompts.note(output.join('\n'), 'Next steps');
     }
 
