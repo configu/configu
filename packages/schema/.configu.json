@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://api.configu.com/schema/.configu.json",
+  "$id": "https://files.configu.com/schema/.configu.json",
   "$comment": "https://jsonschema.dev/s/3pOmT",
   "title": "JSON Schema for Configu .configu file",
   "description": "https://docs.configu.com/interfaces/.configu",
