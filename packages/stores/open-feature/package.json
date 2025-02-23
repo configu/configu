@@ -26,9 +26,6 @@
   "files": [
     "src"
   ],
-  "scripts": {
-    "build": "tsup"
-  },
   "dependencies": {
     "@configu/sdk": "workspace:*",
     "@openfeature/server-sdk": "^1.7.4"

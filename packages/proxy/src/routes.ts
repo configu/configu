@@ -1,24 +1,13 @@
 import { FastifyPluginAsync } from 'fastify';
-import {
-  _,
-  ConfigSchema,
-  ConfigSet,
-  EvalCommand,
-  EvalCommandOutput,
-  EvaluatedConfigOrigin,
-  UpsertCommand,
-  ExportCommand,
-  FromSchema,
-} from '@configu/sdk';
-import { ConfiguInterface } from '@configu/common';
-import { config } from './config';
+import { ConfigSchema, ConfigSet, EvalCommand, EvalCommandOutput, ExportCommand, FromSchema } from '@configu/sdk';
+import { CfguFile, ConfiguInterface } from '@configu/common';
 
 const body = {
   type: 'array',
   minItems: 1,
   items: {
     type: 'object',
-    required: ['store', 'set', 'schema'],
+    required: ['store', 'schema'],
     additionalProperties: false,
     properties: {
       store: {
@@ -29,14 +18,16 @@ const body = {
         type: 'string',
       },
       schema: {
-        type: 'object',
-        properties: {
-          keys: {
-            type: 'object',
+        type: ['string', 'object'],
+        oneOf: [
+          {
+            type: 'string',
+            minLength: 1,
           },
-        },
+          CfguFile.schema,
+        ],
       },
-      configs: {
+      override: {
         type: 'object',
         additionalProperties: {
           type: 'string',
@@ -63,61 +54,27 @@ export const routes: FastifyPluginAsync = async (server, opts): Promise<void> =>
       },
     },
     async (request, reply) => {
-      // // TODO: get the ConfiguFile instance from a shared location
-      // const configuFile = await ConfiguFile.load(config.CONFIGU_CONFIG_FILE);
+      const evalResToExport = await request.body.reduce<Promise<EvalCommandOutput>>(async (previousResult, input) => {
+        const store = await ConfiguInterface.getStoreInstance(input.store);
+        const set = new ConfigSet(input.set);
+        const schema =
+          typeof input.schema === 'string'
+            ? await ConfiguInterface.getSchemaInstance(input.schema)
+            : new ConfigSchema(input.schema.keys);
+        const configs = input.override;
+        const pipe = await previousResult;
 
-      const evalResToExport = await request.body.reduce<Promise<EvalCommandOutput>>(
-        async (previousResult, { store, set, schema: { keys }, configs }) => {
-          const pipe = await previousResult;
+        const evalCommand = new EvalCommand({ store, set, schema, configs, pipe });
+        const { result } = await evalCommand.run();
+        await ConfiguInterface.backupEvalOutput({ storeName: input.store, set, schema, evalOutput: result });
 
-          const storeInstance = await ConfiguInterface.getStoreInstance(store);
-          if (!storeInstance) {
-            throw new Error(`store "${store}" not found`);
-          }
-          const setInstance = new ConfigSet(set);
-          // todo: fix this any
-          const schemaInstance = new ConfigSchema(keys as any);
+        return result;
+      }, Promise.resolve({}));
 
-          const evalCmd = new EvalCommand({
-            store: storeInstance,
-            set: setInstance,
-            schema: schemaInstance,
-            configs,
-            pipe,
-          });
-          const { result } = await evalCmd.run();
-          await ConfiguInterface.backupEvalOutput({
-            storeName: store,
-            set: setInstance,
-            schema: schemaInstance,
-            evalOutput: result,
-          });
+      const exportCommand = new ExportCommand({ pipe: evalResToExport });
+      const { result } = await exportCommand.run();
 
-          // // TODO: move backup logic to common
-          // const backupStoreInstance = await configuFile.getBackupStoreInstance(store);
-          // if (backupStoreInstance) {
-          //   const backupConfigs = _(evalRes.result)
-          //     .pickBy((entry) => entry.origin === EvaluatedConfigOrigin.Store)
-          //     .mapValues((entry) => entry.value)
-          //     .value();
-          //   await new UpsertCommand({
-          //     store: backupStoreInstance,
-          //     set: setInstance,
-          //     schema: schemaInstance,
-          //     configs: backupConfigs,
-          //   }).run();
-          // }
-
-          return result;
-        },
-        Promise.resolve({}),
-      );
-
-      const exportCmd = new ExportCommand({ pipe: evalResToExport });
-      const exportRes = await exportCmd.run();
-      // TODO: consider if this is the right way to parse the result
-      // const parsedExportRes = JSON.parse(exportRes.result);
-      return reply.send(exportRes);
+      return reply.send(result);
     },
   );
 };

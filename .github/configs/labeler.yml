@@ -16,11 +16,17 @@
 '@configu/formatters':
   - 'packages/formatters/**'
 
+'@configu/common':
+  - 'packages/common/**'
+
 '@configu/cli':
   - 'packages/cli/**'
 
 '@configu/proxy':
   - 'packages/proxy/**'
+
+'@configu/stores':
+  - 'packages/stores/**'
 
 '@configu/vscode':
   - 'packages/vscode/**'

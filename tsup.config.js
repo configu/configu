@@ -1,9 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { defineConfig } from 'tsup';
 import { $ } from 'zx';
-import packageJson from './package.json' with { type: 'json' };
-
-// export const entry = ['src/index.ts', 'src/expressions/index.ts', 'src/stores/index.ts', 'src/commands/index.ts'];
 
 export default defineConfig([
   {
@@ -11,12 +8,18 @@ export default defineConfig([
     outDir: 'dist',
     clean: true,
 
+    // https://www.bundle-buddy.com/esbuild
+    metafile: true,
+
+    // https://tsup.egoist.dev/#generate-declaration-file
     dts: true,
+    // experimentalDts: true,
     sourcemap: true,
 
-    keepNames: true,
+    shims: true,
     treeshake: true,
-    splitting: true,
+    splitting: false,
+    keepNames: true,
 
     outExtension({ format }) {
       // https://github.com/egoist/tsup/issues/939

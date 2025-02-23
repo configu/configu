@@ -23,9 +23,6 @@
   "files": [
     "src"
   ],
-  "scripts": {
-    "build": "tsup"
-  },
   "dependencies": {
     "@aws-sdk/client-ssm": "^3.667.0",
     "@configu/key-value": "workspace:*",

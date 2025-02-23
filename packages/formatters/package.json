@@ -43,8 +43,9 @@
     "dist"
   ],
   "scripts": {
+    "prepublish": "attw --pack .",
     "clean": "shx rm -rf dist",
-    "build": "tsup"
+    "build": "tsup ./src/index.ts"
   },
   "dependencies": {
     "change-case": "^5.4.4",

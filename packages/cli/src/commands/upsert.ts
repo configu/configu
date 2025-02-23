@@ -1,7 +1,8 @@
 import { Command, Option } from 'clipanion';
+import { log } from '@clack/prompts';
 import { ConfigSet, UpsertCommand } from '@configu/sdk';
-import { ConfiguInterface } from '@configu/common';
-// import { ConfiguConfigStoreApprovalQueueError } from '@configu/configu';
+import { print, ConfiguInterface } from '@configu/common';
+// import { ConfiguPlatformConfigStoreApprovalQueueError } from '@configu/configu';
 import { BaseCommand } from './base';
 
 export class CliUpsertCommand extends BaseCommand {
@@ -43,9 +44,9 @@ export class CliUpsertCommand extends BaseCommand {
       configs,
       pipe,
     }).run();
-    this.context.console.success('Configs upserted successfully');
+    log.success('Configs upserted successfully');
     // } catch (error) {
-    //   // if (error instanceof ConfiguConfigStoreApprovalQueueError) {
+    //   // if (error instanceof ConfiguPlatformConfigStoreApprovalQueueError) {
     //   //   // * print warning message with queue url highlighted with an underline
     //   //   const warningMessage = error.message.replace(error.queueUrl, `\u001B[4m${error.queueUrl}\u001B[0m`);
     //   //   this.context.stdio.warn(warningMessage);

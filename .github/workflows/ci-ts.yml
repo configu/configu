@@ -5,9 +5,7 @@ on:
     branches:
       - 'main'
     paths:
-      - 'packages/ts/**'
-      - 'packages/node/**'
-      - 'packages/browser/**'
+      - 'packages/**'
 
 jobs:
   ci-typescript:

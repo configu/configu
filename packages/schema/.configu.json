@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://raw.githubusercontent.com/configu/configu/main/packages/schema/.configu.json",
+  "$id": "https://files.configu.com/schema/.configu.json",
   "$comment": "https://jsonschema.dev/s/3pOmT",
   "title": "JSON Schema for Configu .configu file",
   "description": "https://docs.configu.com/interfaces/.configu",
@@ -13,14 +13,104 @@
       "minLength": 1,
       "description": "Url to JSON Schema"
     },
+    "interface": {
+      "description": "Global configuration for a Configu interface.",
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {
+        "debug": {
+          "description": "Enables or disables debug mode.",
+          "type": "boolean"
+        },
+        "proxy": {
+          "description": "Configuration for the Configu proxy server.",
+          "type": "object",
+          "required": [],
+          "additionalProperties": false,
+          "properties": {
+            "host": {
+              "description": "The host address of the proxy server.",
+              "type": "string"
+            },
+            "domain": {
+              "description": "The domain of the proxy server.",
+              "type": "string"
+            },
+            "tls": {
+              "type": "object",
+              "required": ["enabled", "cert", "key"],
+              "additionalProperties": false,
+              "properties": {
+                "enabled": {
+                  "description": "Enables or disables transport layer security (TLS).",
+                  "type": "boolean",
+                  "default": false
+                },
+                "cert": {
+                  "description": "The (absolute) file path of the certificate to use for the TLS connection.",
+                  "type": "string"
+                },
+                "key": {
+                  "description": "The (absolute) file path of the TLS key that should be used for the TLS connection.",
+                  "type": "string"
+                }
+              }
+            },
+            "auth": {
+              "type": "object",
+              "required": [],
+              "additionalProperties": false,
+              "properties": {
+                "bearer": {
+                  "description": "Enables or disables preshared key authentication.",
+                  "type": "object",
+                  "required": ["keys"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "keys": {
+                      "description": "List of preshared keys that are allowed to access the server.",
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "minItems": 1
+                    }
+                  }
+                }
+              }
+            },
+            "http": {
+              "type": "object",
+              "required": [],
+              "additionalProperties": false,
+              "properties": {
+                "enabled": {
+                  "description": "Enables or disables the HTTP server.",
+                  "type": "boolean"
+                },
+                "port": {
+                  "description": "The host port to serve the HTTP server on.",
+                  "type": "number"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "stores": {
       "type": "object",
       "required": [],
       "additionalProperties": {
         "type": "object",
         "required": ["type"],
+        "additionalProperties": false,
         "properties": {
           "type": {
+            "type": "string"
+          },
+          "version": {
             "type": "string"
           },
           "configuration": {
@@ -46,19 +136,19 @@
         "type": "string"
       }
     },
-    "scripts": {
-      "type": "object",
-      "required": [],
-      "additionalProperties": {
-        "type": "string"
-      }
-    },
     "register": {
       "type": "array",
       "uniqueItems": true,
       "items": {
         "type": "string",
         "minLength": 1
+      }
+    },
+    "scripts": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": {
+        "type": "string"
       }
     }
   }

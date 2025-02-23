@@ -5,7 +5,7 @@
 import process from 'node:process';
 import fs from 'node:fs/promises';
 import { $, which, cd } from 'zx';
-import { console, path, environment } from '@configu/common';
+import { path, stdenv } from '@configu/common';
 
 // input: NODE_VERSION, NODE_DIST
 // output: dist/configu, dist/configu-v$NODE_VERSION-$NODE_DIST.{tar.gz,zip}
@@ -17,9 +17,9 @@ const distDir = path.join(scriptDir, 'dist');
 const rootDir = path.join(scriptDir, '..', '..');
 const nodeVersionFile = path.join(rootDir, '.node-version');
 
-const archiveExt = !environment.isWindows ? 'tar.gz' : 'zip';
+const archiveExt = !stdenv.isWindows ? 'tar.gz' : 'zip';
 const binaryName = 'configu';
-const configuBinary = environment.isWindows ? `${binaryName}.exe` : binaryName;
+const configuBinary = stdenv.isWindows ? `${binaryName}.exe` : binaryName;
 const configuJs = `${binaryName}.cjs`;
 
 const supportedDist = [
@@ -39,7 +39,7 @@ type NodeDist = (typeof supportedDist)[number];
 
 // todo: complete signtoll on windows builds
 let signtool = 'signtool';
-if (environment.provider === 'github_actions') {
+if (stdenv.provider === 'github_actions') {
   signtool = '%programfiles(x86)%/Windows Kits/10/bin/10.0.17763.0/x86/signtool.exe';
 }
 
@@ -83,7 +83,7 @@ if (environment.provider === 'github_actions') {
     throw new Error(`Unsupported platform/architecture: ${targetNode.dist}`);
   }
   targetNode.build = `node-v${targetNode.version}-${targetNode.dist}`;
-  targetNode.exe = !environment.isWindows
+  targetNode.exe = !stdenv.isWindows
     ? path.join(distDir, targetNode.build, 'bin', 'node')
     : path.join(distDir, targetNode.build, 'node.exe');
 
@@ -103,7 +103,7 @@ if (environment.provider === 'github_actions') {
   console.log(`Node.js distribution downloaded from ${nodeDistUrl}`);
 
   // extract the node distribution
-  if (environment.isWindows) {
+  if (stdenv.isWindows) {
     await $`powershell -command "Expand-Archive -Path '${nodeArchive}' -DestinationPath '${distDir}'"`;
   } else {
     await $`tar -xzf ${nodeArchive} -C ${distDir}`;
@@ -123,27 +123,27 @@ if (environment.provider === 'github_actions') {
   console.log(`Node.js executable copied to ${configuBinary}`);
 
   // remove the signature of the binary (if applicable)
-  if (environment.isMacOS) {
+  if (stdenv.isMacOS) {
     await $`codesign --remove-signature ${configuBinary}`.pipe(process.stdout);
     console.log('Signature removed from the binary (macOS)');
-  } else if (environment.isWindows) {
+  } else if (stdenv.isWindows) {
     // Optional: Remove signature using signtool if available
     // await $`${signtool} remove /s ${outputPath}`.pipe(process.stdout);
   }
 
   // inject the blob into the copied binary using postject
   let postjectCommand = `pnpx postject ${configuBinary} NODE_SEA_BLOB sea-prep.blob --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2`;
-  if (environment.isMacOS) {
+  if (stdenv.isMacOS) {
     postjectCommand += ' --macho-segment-name NODE_SEA';
   }
   await $`${postjectCommand}`.pipe(process.stdout);
   console.log('Blob injected into the binary using postject');
 
   // optionally, sign the binary (if applicable)
-  if (environment.isMacOS) {
+  if (stdenv.isMacOS) {
     await $`codesign --sign - ${configuBinary}`.pipe(process.stdout);
     console.log('Binary signed (macOS)');
-  } else if (environment.isWindows) {
+  } else if (stdenv.isWindows) {
     // Optional: Sign the binary using signtool if available
     // await $`${signtool} sign /fd SHA256 ${outputPath}`.pipe(process.stdout);
   }
@@ -151,7 +151,7 @@ if (environment.provider === 'github_actions') {
   // compress the executable
   const { version } = await fs.readFile(path.join(scriptDir, 'package.json'), 'utf-8').then((data) => JSON.parse(data));
   const configuArchive = `${binaryName}-v${version}-${targetNode.dist}.${archiveExt}`;
-  if (environment.isWindows) {
+  if (stdenv.isWindows) {
     await $`powershell -command "Compress-Archive -Path '${configuBinary}', '${configuJs}' -DestinationPath '${configuArchive}'"`;
   } else {
     await $`tar -czf ${configuArchive} -C ${distDir} ${configuBinary} ${configuJs}`.pipe(process.stdout);
@@ -159,7 +159,7 @@ if (environment.provider === 'github_actions') {
   console.log(`Executable compressed to ${path.join(distDir, configuArchive)}`);
 
   // run the binary to verify it works
-  if (!environment.isCI) {
+  if (!stdenv.isCI) {
     await $`${configuBinary} -v`.pipe(process.stdout);
     console.log('Executable verified successfully');
   }

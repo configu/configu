@@ -7,11 +7,12 @@ export default defineConfig([
     format: 'cjs',
     outDir: 'dist',
     clean: true,
-
+    metafile: true,
     minify: true,
     keepNames: true,
     treeshake: true,
     splitting: false,
+    removeNodeProtocol: false,
 
     noExternal: [/(.*)/],
     outExtension: ({ format, pkgType }) => {

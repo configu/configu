@@ -1,9 +1,9 @@
 import { Command, Option } from 'clipanion';
 import * as t from 'typanion';
 import { spawnSync } from 'node:child_process';
+import { log } from '@clack/prompts';
 import { ConfigExpression, ConfigKey, ConfigValue, _, EvalCommandOutput, EvaluatedConfig } from '@configu/sdk';
-import { table } from 'table';
-import { readFile } from '@configu/common';
+import { print, table, readFile } from '@configu/common';
 import { ConfigFormatter, ConfigFormat } from '@configu/formatters';
 
 import { BaseCommand } from './base';
@@ -84,7 +84,7 @@ export class CliExportCommand extends BaseCommand {
       .values()
       .map(({ key, origin, value }) => [key, value, origin])
       .value();
-    this.context.console.print(table(data));
+    print(table(data));
   }
 
   async filterConfigs(pipe: EvalCommandOutput) {
@@ -165,7 +165,7 @@ export class CliExportCommand extends BaseCommand {
 
     const pipe = await this.readPreviousEvalCommandOutput();
     if (!pipe) {
-      this.context.console.warn('No configuration received from the previous command');
+      log.warn('No configuration received from the previous command');
       return 1;
     }
 
@@ -184,7 +184,7 @@ export class CliExportCommand extends BaseCommand {
 
     const reducedPipe = await this.reduceConfigs(mappedPipe);
 
-    this.context.console.print(reducedPipe);
+    print(reducedPipe);
     return 0;
   }
 }

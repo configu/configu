@@ -31,8 +31,9 @@ ENV PNPM_HOME="$INSTALL_DIR/.pnpm"
 RUN mkdir -p $PNPM_HOME
 ENV PATH="$PNPM_HOME:$PATH"
 ENV COREPACK_ENABLE_DOWNLOAD_PROMPT="0"
-RUN corepack enable \
-  && pnpm -v
+RUN npm install -g corepack@latest
+RUN corepack enable
+RUN pnpm --version
 RUN pnpm fetch
 
 RUN curl https://cli.configu.com/install.sh | sh

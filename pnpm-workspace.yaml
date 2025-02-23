@@ -2,6 +2,3 @@ packages:
   - 'packages/*'
   - 'packages/stores/*'
   - 'docs'
-  # - 'examples'
-  # todo: rm
-  - 'packages/integrations/stores/*'

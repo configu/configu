@@ -4,19 +4,16 @@ import { EvalCommandOutput } from './EvalCommand';
 import { ConfigKey } from '../ConfigKey';
 import { ConfigValue, ConfigValueAny } from '../ConfigValue';
 
-export type ExportCommandOutput<T> = T;
+export type ExportCommandOutput = {
+  [key: string]: ConfigValueAny;
+};
 
 export type ExportCommandInput = {
   pipe: EvalCommandOutput;
   coerce?: boolean;
 };
 
-export class ExportCommand extends ConfigCommand<
-  ExportCommandInput,
-  ExportCommandOutput<{
-    [key: string]: ConfigValueAny;
-  }>
-> {
+export class ExportCommand extends ConfigCommand<ExportCommandInput, ExportCommandOutput> {
   async execute() {
     const { pipe } = this.input;
 
