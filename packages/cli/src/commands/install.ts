@@ -1,6 +1,7 @@
 import { Option } from 'clipanion';
 import * as t from 'typanion';
 import process from 'node:process';
+import Fs from 'node:fs';
 import fs from 'node:fs/promises';
 import { setTimeout } from 'node:timers/promises';
 import stream from 'node:stream/promises';
@@ -51,7 +52,7 @@ export class InstallCommand extends BaseCommand {
       spinner.message(`Installing ${version} version`);
 
       const binDir = path.join(this.context.paths.bin, version);
-      const nextExecPath = path.join(binDir, this.cli.binaryName);
+      const nextExecPath = path.join(binDir, this.cli.binaryName, this.context.execExt);
 
       const isExecExists = await pathExists(nextExecPath);
       if (isExecExists) {
@@ -69,10 +70,12 @@ export class InstallCommand extends BaseCommand {
 
         await fs.mkdir(binDir, { recursive: true });
         const archivePath = path.join(binDir, `${this.cli.binaryName}${archiveExt}`);
-        const localArchive = await fs.open(archivePath);
-        const writer = localArchive.createWriteStream();
-        remoteArchive.data.pipe(writer);
-        await stream.finished(writer);
+        const localArchive = Fs.createWriteStream(archivePath);
+        remoteArchive.data.pipe(localArchive);
+        await stream.finished(localArchive);
+
+        const files = await fs.readdir(binDir);
+        debug('binDir', files);
 
         if (archiveExt === '.tar.gz') {
           await tar.x({ file: archivePath, gzip: true, cwd: binDir });

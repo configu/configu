@@ -82,7 +82,10 @@ export class InitCommand extends BaseCommand {
           common: './common.cfgu.yaml',
           service: './service.cfgu.yaml',
         },
-        scripts: {},
+        scripts: {
+          local:
+            "configu eval --schema 'common' --defaults | configu eval --schema 'service' --defaults | configu export --format 'env' > .env",
+        },
       };
       const configu = new ConfiguFile(path.join(process.cwd(), `./.configu`), ProjectConfigu, format);
 
