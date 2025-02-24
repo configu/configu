@@ -318,7 +318,7 @@ jobs:
         shell: bash
         run: |
           echo $CONFIGU_HOME
-          which configu
+          command -v configu
           configu -v
 
       - name: Install binary on ${{ matrix.runner }}
