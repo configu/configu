@@ -1,3 +1,4 @@
+import fs from 'node:fs/promises';
 import {
   ConfigSchema,
   ConfigSchemaKeys,
@@ -15,6 +16,7 @@ import {
   glob,
   parseJsonFile,
   parseYamlFile,
+  YAML,
   normalizeInput,
   configuFilesApi,
   AllowedExtensions,
@@ -122,6 +124,18 @@ export class CfguFile {
   public static async searchGlob(path: string) {
     // todo: try to replace glob lib with the native fs.glob api
     return glob(path, { nodir: true, dot: true });
+  }
+
+  public async save(contents: CfguFileContents) {
+    const mergedContents = _.merge({}, this.contents, contents) satisfies CfguFileContents;
+    let renderedContents: string;
+    if (this.contentsType === 'json') {
+      renderedContents = JSON.stringify(mergedContents, null, 2);
+    } else {
+      renderedContents = YAML.stringify(mergedContents);
+    }
+    await fs.writeFile(this.path, renderedContents);
+    return CfguFile.load(this.path);
   }
 
   public getSchemaInstance(): ConfigSchema {

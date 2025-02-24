@@ -1,25 +1,9 @@
 import { Command, Option } from 'clipanion';
 import * as t from 'typanion';
-import fs from 'node:fs/promises';
 import { setTimeout } from 'node:timers/promises';
 import * as prompts from '@clack/prompts';
-import { ConfigSchemaKeys } from '@configu/sdk';
-import { AllowedExtensions, CfguFile, ConfiguFile, path } from '@configu/common';
+import { path, AllowedExtensions, CfguFile, ConfiguFile } from '@configu/common';
 import { BaseCommand } from './base';
-
-export const GreetSchema: ConfigSchemaKeys = {
-  GREETING: {
-    enum: ['hello', 'hey', 'welcome', 'hola', 'salute', 'bonjour', 'shalom', 'marhabaan'],
-    default: 'hello',
-  },
-  SUBJECT: { default: 'world' },
-  MESSAGE: {
-    description: 'A full greeting message',
-    const: '{{ $.configs.GREETING.value }}, {{ $.configs.SUBJECT.value }}!',
-  },
-};
-
-export const FeaturesSchema: ConfigSchemaKeys = {};
 
 export class InitCommand extends BaseCommand {
   static override paths = [['init']];
@@ -46,7 +30,7 @@ export class InitCommand extends BaseCommand {
     const preset = await prompts.select({
       message: 'Pick a preset.',
       options: [
-        { value: 'greet', label: 'Hello, World!', hint: `./greet.cfgu.${format}` },
+        { value: 'greet', label: 'Hello, World! Schema', hint: `./greet.cfgu.${format}` },
         { value: 'features', label: 'Fully Featured Schema', hint: `./features.cfgu.${format}` },
         {
           value: 'project',
@@ -60,16 +44,52 @@ export class InitCommand extends BaseCommand {
     spinner.start(`Generating assets from ${preset.toString()} preset`);
 
     if (preset === 'greet') {
-      const file = new CfguFile(path.join(process.cwd(), `./greet.cfgu.${format}`), GreetSchema, format);
-      // await file.save();
+      const file = new CfguFile(
+        path.join(process.cwd(), `./greet.cfgu.${format}`),
+        {
+          $schema: CfguFile.schema.$id,
+          keys: {
+            GREETING: {
+              enum: ['hello', 'hey', 'welcome', 'hola', 'salute', 'bonjour', 'shalom', 'marhabaan'],
+              default: 'hello',
+            },
+            SUBJECT: { default: 'world' },
+            MESSAGE: {
+              description: 'A full greeting message',
+              const: '{{ $.configs.GREETING.value }}, {{ $.configs.SUBJECT.value }}!',
+            },
+          },
+        },
+        format,
+      );
+      await file.save({});
     } else if (preset === 'features') {
-      const file = new CfguFile(path.join(process.cwd(), `./features.cfgu.${format}`), FeaturesSchema, format);
-      // await file.save();
+      const file = new CfguFile(
+        path.join(process.cwd(), `./features.cfgu.${format}`),
+        {
+          $schema: CfguFile.schema.$id,
+          keys: {},
+        },
+        format,
+      );
+      await file.save({});
     } else if (preset === 'project') {
-      const configu = new ConfiguFile(path.join(process.cwd(), `./.configu`), {}, format);
-      const common = new CfguFile(path.join(process.cwd(), `./common.cfgu.${format}`), GreetSchema, format);
-      const service = new CfguFile(path.join(process.cwd(), `./service.cfgu.${format}`), FeaturesSchema, format);
-      // await Promise.all([configu.save({}), common.save(), service.save()]);
+      const configu = new ConfiguFile(
+        path.join(process.cwd(), `./.configu`),
+        {
+          $schema: ConfiguFile.schema.$id,
+          stores: {},
+          schemas: {
+            common: './common.cfgu.yaml',
+            service: './service.cfgu.yaml',
+          },
+          scripts: {},
+        },
+        format,
+      );
+      const common = new CfguFile(path.join(process.cwd(), `./common.cfgu.${format}`), {}, format);
+      const service = new CfguFile(path.join(process.cwd(), `./service.cfgu.${format}`), {}, format);
+      await Promise.all([configu.save({}), common.save({}), service.save({})]);
     }
 
     spinner.stop(`Assets generated`, 0);
