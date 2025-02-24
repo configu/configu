@@ -65,8 +65,7 @@ $install_dir = $env:CONFIGU_HOME
 if (-not $install_dir) {
   $install_dir = Join-Path -Path $Home -ChildPath ".configu"
 }
-$bin_dir = Join-Path -Path $install_dir -ChildPath "bin"
-$bin_dir = Join-Path -Path $bin_dir -ChildPath "$version"
+$bin_dir = Join-Path -Path $install_dir -ChildPath "bin" | Join-Path -ChildPath "$version"
 $exec_path = Join-Path -Path $bin_dir -ChildPath "configu"
 
 # Create the installation directory
