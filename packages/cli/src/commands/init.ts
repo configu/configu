@@ -44,51 +44,53 @@ export class InitCommand extends BaseCommand {
     spinner.start(`Generating assets from ${preset.toString()} preset`);
 
     if (preset === 'greet') {
-      const file = new CfguFile(
-        path.join(process.cwd(), `./greet.cfgu.${format}`),
-        {
-          $schema: CfguFile.schema.$id,
-          keys: {
-            GREETING: {
-              enum: ['hello', 'hey', 'welcome', 'hola', 'salute', 'bonjour', 'shalom', 'marhabaan'],
-              default: 'hello',
-            },
-            SUBJECT: { default: 'world' },
-            MESSAGE: {
-              description: 'A full greeting message',
-              const: '{{ $.configs.GREETING.value }}, {{ $.configs.SUBJECT.value }}!',
-            },
+      const GreetSchema = {
+        $schema: CfguFile.schema.$id,
+        keys: {
+          GREETING: {
+            enum: ['hello', 'hey', 'welcome', 'hola', 'salute', 'bonjour', 'shalom', 'marhabaan'],
+            default: 'hello',
+          },
+          SUBJECT: { default: 'world' },
+          MESSAGE: {
+            description: 'A full greeting message',
+            const: '{{ $.configs.GREETING.value }}, {{ $.configs.SUBJECT.value }}!',
           },
         },
-        format,
-      );
-      await file.save({});
+      };
+      const greet = new CfguFile(path.join(process.cwd(), `./greet.cfgu.${format}`), GreetSchema, format);
+      await greet.save({});
     } else if (preset === 'features') {
-      const file = new CfguFile(
-        path.join(process.cwd(), `./features.cfgu.${format}`),
-        {
-          $schema: CfguFile.schema.$id,
-          keys: {},
-        },
-        format,
-      );
-      await file.save({});
+      const FeaturesSchema = {
+        $schema: CfguFile.schema.$id,
+        keys: {},
+      };
+      const features = new CfguFile(path.join(process.cwd(), `./features.cfgu.${format}`), FeaturesSchema, format);
+      await features.save({});
     } else if (preset === 'project') {
-      const configu = new ConfiguFile(
-        path.join(process.cwd(), `./.configu`),
-        {
-          $schema: ConfiguFile.schema.$id,
-          stores: {},
-          schemas: {
-            common: './common.cfgu.yaml',
-            service: './service.cfgu.yaml',
-          },
-          scripts: {},
+      const ProjectConfigu = {
+        $schema: ConfiguFile.schema.$id,
+        stores: {},
+        schemas: {
+          common: './common.cfgu.yaml',
+          service: './service.cfgu.yaml',
         },
-        format,
-      );
-      const common = new CfguFile(path.join(process.cwd(), `./common.cfgu.${format}`), {}, format);
-      const service = new CfguFile(path.join(process.cwd(), `./service.cfgu.${format}`), {}, format);
+        scripts: {},
+      };
+      const configu = new ConfiguFile(path.join(process.cwd(), `./.configu`), ProjectConfigu, format);
+
+      const CommonSchema = {
+        $schema: CfguFile.schema.$id,
+        keys: {},
+      };
+      const common = new CfguFile(path.join(process.cwd(), `./common.cfgu.${format}`), CommonSchema, format);
+
+      const ServiceSchema = {
+        $schema: CfguFile.schema.$id,
+        keys: {},
+      };
+      const service = new CfguFile(path.join(process.cwd(), `./service.cfgu.${format}`), ServiceSchema, format);
+
       await Promise.all([configu.save({}), common.save({}), service.save({})]);
     }
 

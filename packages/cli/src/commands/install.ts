@@ -59,22 +59,22 @@ export class InstallCommand extends BaseCommand {
       } else {
         spinner.message(`Downloading ${version} version`);
         const hostDist = `${process.platform.replace('32', '')}-${process.arch}`;
-        const archiveExt = !stdenv.isWindows ? 'tar.gz' : 'zip';
+        const archiveExt = !stdenv.isWindows ? '.tar.gz' : '.zip';
 
         const remoteArchive = await configuFilesApi({
           method: 'GET',
-          url: `/cli/versions/${version}/${this.cli.binaryName}-v${version}-${hostDist}.${archiveExt}`,
+          url: `/cli/versions/${version}/${this.cli.binaryName}-v${version}-${hostDist}${archiveExt}`,
           responseType: 'stream',
         });
 
         await fs.mkdir(binDir, { recursive: true });
-        const archivePath = path.join(binDir, `${this.cli.binaryName}.${archiveExt}`);
+        const archivePath = path.join(binDir, `${this.cli.binaryName}${archiveExt}`);
         const localArchive = await fs.open(archivePath);
         const writer = localArchive.createWriteStream();
         remoteArchive.data.pipe(writer);
         await stream.finished(writer);
 
-        if (archiveExt === 'tar.gz') {
+        if (archiveExt === '.tar.gz') {
           await tar.x({ file: archivePath, gzip: true, cwd: binDir });
         } else {
           const zip = new Zip(archivePath);

@@ -28,7 +28,8 @@ export abstract class BaseCommand extends Command<Context> {
     this.context = {
       ...this.context,
       ...ConfiguInterface.context,
-      isExecutable: sea.isSea() && process.execPath.endsWith(this.cli.binaryName),
+      isExecutable:
+        sea.isSea() && process.execPath.endsWith(`${this.cli.binaryName}${ConfiguInterface.context.execExt}`),
     };
     debug('BaseCommand', this.context);
   }

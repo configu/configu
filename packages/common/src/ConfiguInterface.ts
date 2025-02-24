@@ -27,6 +27,7 @@ export class ConfiguInterface {
       bin: string;
     };
     isHomeEnvSet: boolean;
+    execExt: string;
     isExecFromHome: boolean;
     configu: {
       input?: ConfiguFile;
@@ -50,16 +51,18 @@ export class ConfiguInterface {
     debug('Interface Paths', paths);
 
     // ! deployments of all interfaces must be compatible with the below logic
+    debug('Interface Execution', { execPath: process.execPath, argv: process.argv });
     const isHomeEnvSet = !!stdenv.env.CONFIGU_HOME;
+    const execExt = stdenv.isWindows ? '.exe' : '';
     let isExecFromHome = false;
-    if (process.execPath.endsWith('configu')) {
+    if (process.execPath.endsWith(`configu${execExt}`)) {
       isExecFromHome = process.execPath.startsWith(paths.bin);
-    } else if (process.execPath.endsWith('node')) {
+    } else if (process.execPath.endsWith(`node${execExt}`)) {
       isExecFromHome = process.argv[1]?.startsWith?.(paths.bin) ?? false;
     } else {
       throw new Error('Unsupported execution of Configu');
     }
-    debug('Interface Execution', { execPath: process.execPath, argv: process.argv, isHomeEnvSet, isExecFromHome });
+    debug('Interface Execution', { isHomeEnvSet, isExecFromHome });
 
     validateEngineVersion();
 
@@ -67,6 +70,7 @@ export class ConfiguInterface {
       environment,
       paths,
       isHomeEnvSet,
+      execExt,
       isExecFromHome,
       configu: {
         input: undefined,

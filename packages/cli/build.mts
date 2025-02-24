@@ -17,7 +17,7 @@ const distDir = path.join(scriptDir, 'dist');
 const rootDir = path.join(scriptDir, '..', '..');
 const nodeVersionFile = path.join(rootDir, '.node-version');
 
-const archiveExt = !stdenv.isWindows ? 'tar.gz' : 'zip';
+const archiveExt = !stdenv.isWindows ? '.tar.gz' : '.zip';
 const binaryName = 'configu';
 const configuBinary = stdenv.isWindows ? `${binaryName}.exe` : binaryName;
 const configuJs = `${binaryName}.cjs`;
@@ -97,8 +97,8 @@ if (stdenv.provider === 'github_actions') {
   if (targetNode.dist === 'linux-x64-musl') {
     nodeDistHost = 'https://unofficial-builds.nodejs.org';
   }
-  const nodeDistUrl = `${nodeDistHost}/download/release/v${targetNode.version}/${targetNode.build}.${archiveExt}`;
-  const nodeArchive = path.join(distDir, `${targetNode.build}.${archiveExt}`);
+  const nodeDistUrl = `${nodeDistHost}/download/release/v${targetNode.version}/${targetNode.build}${archiveExt}`;
+  const nodeArchive = path.join(distDir, `${targetNode.build}${archiveExt}`);
   await $`curl -o ${nodeArchive} ${nodeDistUrl}`.pipe(process.stdout);
   console.log(`Node.js distribution downloaded from ${nodeDistUrl}`);
 
@@ -150,7 +150,7 @@ if (stdenv.provider === 'github_actions') {
 
   // compress the executable
   const { version } = await fs.readFile(path.join(scriptDir, 'package.json'), 'utf-8').then((data) => JSON.parse(data));
-  const configuArchive = `${binaryName}-v${version}-${targetNode.dist}.${archiveExt}`;
+  const configuArchive = `${binaryName}-v${version}-${targetNode.dist}${archiveExt}`;
   if (stdenv.isWindows) {
     await $`powershell -command "Compress-Archive -Path '${configuBinary}', '${configuJs}' -DestinationPath '${configuArchive}'"`;
   } else {
