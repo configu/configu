@@ -1,4 +1,5 @@
 import { Command, Option } from 'clipanion';
+import * as prompts from '@clack/prompts';
 import { ConfigSet, ConfigStore, EvalCommand } from '@configu/sdk';
 import { print, ConfiguInterface } from '@configu/common';
 import { BaseCommand } from './base';
@@ -39,18 +40,39 @@ export class CliEvalCommand extends BaseCommand {
   });
 
   async execute() {
-    await this.init();
+    const spinner = prompts.spinner();
 
-    const store = this.defaults ? ConfigStore.construct('noop') : await ConfiguInterface.getStoreInstance(this.store);
-    const set = new ConfigSet(this.set);
-    const schema = await ConfiguInterface.getSchemaInstance(this.schema);
-    const configs = this.reduceKVFlag(this.override);
-    const pipe = await this.readPreviousEvalCommandOutput();
+    try {
+      spinner.start(`Initializing Eval`);
+      await this.init();
 
-    const evalCommand = new EvalCommand({ store, set, schema, configs, pipe });
-    const { result } = await evalCommand.run();
-    await ConfiguInterface.backupEvalOutput({ storeName: this.store, set, schema, evalOutput: result });
+      spinner.message(`Constructing Store ${this.store}`);
+      const store = this.defaults ? ConfigStore.construct('noop') : await ConfiguInterface.getStoreInstance(this.store);
 
-    print(JSON.stringify(result));
+      spinner.message(`Constructing Set ${this.set}`);
+      const set = new ConfigSet(this.set);
+
+      spinner.message(`Constructing Schema ${this.schema}`);
+      const schema = await ConfiguInterface.getSchemaInstance(this.schema);
+
+      spinner.message(`Parsing overrides`);
+      const configs = this.reduceKVFlag(this.override);
+
+      spinner.message(`Reading previous eval command output`);
+      const pipe = await this.readPreviousEvalCommandOutput();
+
+      spinner.message(`Evaluating Configs`);
+      const evalCommand = new EvalCommand({ store, set, schema, configs, pipe });
+      const { result } = await evalCommand.run();
+
+      spinner.message(`Backing up output`);
+      await ConfiguInterface.backupEvalOutput({ storeName: this.store, set, schema, evalOutput: result });
+
+      print(JSON.stringify(result));
+      spinner.stop(`Configs evaluated successfully`, 0);
+    } catch (error) {
+      spinner.stop(`Configs eval failed`, 1);
+      throw error;
+    }
   }
 }

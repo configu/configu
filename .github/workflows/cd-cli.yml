@@ -282,8 +282,8 @@ jobs:
   test-release:
     runs-on: ${{ matrix.runner }}
     needs:
-      # - release-docker
       - release-binary
+      - release-docker
       - release-npm
       # - pre-release
     strategy:
