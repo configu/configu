@@ -35,7 +35,7 @@ export class InitCommand extends BaseCommand {
         {
           value: 'project',
           label: 'Project Skeleton',
-          hint: `./.configu + ./common.cfgu.${format} + ./service.cfgu.${format}`,
+          hint: `./.configu + ./service.cfgu.${format}`,
         },
       ],
     });
@@ -79,12 +79,11 @@ export class InitCommand extends BaseCommand {
           },
         },
         schemas: {
-          common: './common.cfgu.yaml',
           service: './service.cfgu.yaml',
         },
         scripts: {
-          local:
-            "configu eval --schema 'common' --defaults | configu eval --schema 'service' --defaults | configu export --format 'env' > .env",
+          local: "configu eval --defaults --schema 'service' | configu export --format 'env' > .env",
+          deploy: "configu eval --set '$CONFIGU_SET' --schema 'service' | configu export --format 'env' > .env",
         },
       };
       const configu = new ConfiguFile(path.join(process.cwd(), `./.configu`), ProjectConfigu, format);

@@ -52,7 +52,7 @@ export class InstallCommand extends BaseCommand {
       spinner.message(`Installing ${version} version`);
 
       const binDir = path.join(this.context.paths.bin, version);
-      const nextExecPath = path.join(binDir, this.cli.binaryName, this.context.execExt);
+      const nextExecPath = path.join(binDir, `${this.cli.binaryName}${this.context.execExt}`);
 
       const isExecExists = await pathExists(nextExecPath);
       if (isExecExists) {
