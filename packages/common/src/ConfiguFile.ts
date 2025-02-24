@@ -13,6 +13,7 @@ import {
   YAML,
   normalizeInput,
   configuFilesApi,
+  AllowedExtension,
 } from './utils';
 import { ConfiguModule } from './ConfiguModule';
 import { CfguFile } from './CfguFile';
@@ -251,12 +252,13 @@ type StoreConfig = FromSchema<typeof ConfiguFileSchema.properties.stores.additio
 
 export class ConfiguFile {
   public static readonly schema = ConfiguFileSchema;
-  public readonly dir: string;
+  public static readonly lookupName = `.configu`;
 
+  public readonly dir: string;
   constructor(
     public readonly path: string,
     public readonly contents: ConfiguFileContents,
-    public readonly contentsType: 'json' | 'yaml',
+    public readonly contentsType: Exclude<AllowedExtension, 'yml'>,
   ) {
     debug('ConfiguFile.constructor', { path, contents, contentsType });
     try {
@@ -279,7 +281,7 @@ export class ConfiguFile {
 
     // try parse yaml first and then json
     let parsedContents: ConfiguFileContents;
-    let contentsType: 'json' | 'yaml';
+    let contentsType: typeof ConfiguFile.prototype.contentsType;
     try {
       parsedContents = parseYamlFile(path, renderedContents);
       contentsType = 'yaml';
@@ -342,11 +344,11 @@ export class ConfiguFile {
 
   public static async searchClosest() {
     // todo: think about adding the stopAt option.
-    return findUp('.configu', { type: 'file', allowSymlinks: false });
+    return findUp(ConfiguFile.lookupName, { type: 'file', allowSymlinks: false });
   }
 
   public static async searchAll() {
-    return findUpMultiple('.configu', { type: 'file', allowSymlinks: false });
+    return findUpMultiple(ConfiguFile.lookupName, { type: 'file', allowSymlinks: false });
   }
 
   public async save(contents: ConfiguFileContents) {

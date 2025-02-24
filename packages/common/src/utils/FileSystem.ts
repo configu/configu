@@ -77,3 +77,6 @@ export const parseYamlFile = (filePath: string, fileContent: string): any => {
     throw error;
   }
 };
+
+export const AllowedExtensions = ['json', 'yaml', 'yml'] as const;
+export type AllowedExtension = (typeof AllowedExtensions)[number];

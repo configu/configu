@@ -4,7 +4,7 @@ import fs from 'node:fs/promises';
 import { setTimeout } from 'node:timers/promises';
 import * as prompts from '@clack/prompts';
 import { ConfigSchemaKeys } from '@configu/sdk';
-import { CfguFile, ConfiguFile, path } from '@configu/common';
+import { AllowedExtensions, CfguFile, ConfiguFile, path } from '@configu/common';
 import { BaseCommand } from './base';
 
 export const GreetSchema: ConfigSchemaKeys = {
@@ -34,7 +34,7 @@ export class InitCommand extends BaseCommand {
 
   format = Option.String('--format', 'yaml', {
     description: `Assets output format`,
-    validator: t.isEnum(CfguFile.allowedExtensions),
+    validator: t.isEnum(AllowedExtensions),
   });
 
   async execute() {

@@ -17,6 +17,8 @@ import {
   parseYamlFile,
   normalizeInput,
   configuFilesApi,
+  AllowedExtensions,
+  AllowedExtension,
 } from './utils';
 
 const { basename, dirname, resolve } = pathe;
@@ -47,13 +49,13 @@ export type CfguFileContents = FromSchema<typeof CfguFileSchema>;
 
 export class CfguFile {
   public static readonly schema = CfguFileSchema;
-  public static readonly allowedExtensions = ['json', 'yaml', 'yml'];
-  public static readonly neighborsGlob = `*.cfgu.{${CfguFile.allowedExtensions.join(',')}}`;
+  public static readonly neighborsGlob = `*.cfgu.{${AllowedExtensions.join(',')}}`;
+
   public readonly dir: string;
   constructor(
     public readonly path: string,
     public readonly contents: CfguFileContents,
-    public readonly contentsType: 'json' | 'yaml',
+    public readonly contentsType: Exclude<AllowedExtension, 'yml'>,
   ) {
     debug('CfguFile.constructor', { path, contents, contentsType });
     try {
@@ -68,8 +70,7 @@ export class CfguFile {
     debug('CfguFile.init', { path, contents, fileExt });
 
     let parsedContents: CfguFileContents | V0ConfigSchemaKeys = {};
-    let contentsType: 'json' | 'yaml';
-
+    let contentsType: typeof CfguFile.prototype.contentsType;
     if (fileExt === 'yaml' || fileExt === 'yml') {
       parsedContents = parseYamlFile(path, contents);
       contentsType = 'yaml';
@@ -92,7 +93,7 @@ export class CfguFile {
   public static getPathInfo(path: string) {
     const fileName = basename(path);
     const [cfguName, cfguExt, fileExt] = fileName.split('.');
-    if (cfguExt !== 'cfgu' || !fileExt || !CfguFile.allowedExtensions.includes(fileExt)) {
+    if (cfguExt !== 'cfgu' || !fileExt || !AllowedExtensions.includes(fileExt as AllowedExtension)) {
       throw new Error(`CfguFile.path "${path}" is not a valid .cfgu file`);
     }
     const depth = path.split(pathe.sep).length;
