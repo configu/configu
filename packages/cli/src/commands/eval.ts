@@ -46,13 +46,13 @@ export class CliEvalCommand extends BaseCommand {
       spinner.start(`Initializing Eval`);
       await this.init();
 
-      spinner.message(`Constructing Store ${this.store}`);
+      spinner.message(`Constructing store`);
       const store = this.defaults ? ConfigStore.construct('noop') : await ConfiguInterface.getStoreInstance(this.store);
 
-      spinner.message(`Constructing Set ${this.set}`);
+      spinner.message(`Constructing set`);
       const set = new ConfigSet(this.set);
 
-      spinner.message(`Constructing Schema ${this.schema}`);
+      spinner.message(`Constructing schema`);
       const schema = await ConfiguInterface.getSchemaInstance(this.schema);
 
       spinner.message(`Parsing overrides`);
@@ -61,7 +61,7 @@ export class CliEvalCommand extends BaseCommand {
       spinner.message(`Reading previous eval command output`);
       const pipe = await this.readPreviousEvalCommandOutput();
 
-      spinner.message(`Evaluating Configs`);
+      spinner.message(`Evaluating configs`);
       const evalCommand = new EvalCommand({ store, set, schema, configs, pipe });
       const { result } = await evalCommand.run();
 

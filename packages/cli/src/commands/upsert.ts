@@ -35,13 +35,13 @@ export class CliUpsertCommand extends BaseCommand {
       spinner.start(`Initializing Upsert`);
       await this.init();
 
-      spinner.message(`Constructing Store ${this.store}`);
+      spinner.message(`Constructing store`);
       const store = await ConfiguInterface.getStoreInstance(this.store);
 
-      spinner.message(`Constructing Set ${this.set}`);
+      spinner.message(`Constructing set`);
       const set = new ConfigSet(this.set);
 
-      spinner.message(`Constructing Schema ${this.schema}`);
+      spinner.message(`Constructing schema`);
       const schema = await ConfiguInterface.getSchemaInstance(this.schema);
 
       spinner.message(`Parsing assignments`);

@@ -349,6 +349,7 @@ jobs:
           configu -v
 
       - uses: docker/setup-docker-action@v4
+        if: ${{ matrix.runner != 'windows-latest' }}
         with:
           daemon-config: |
             {
@@ -359,6 +360,7 @@ jobs:
             }
 
       - name: Test Docker on ${{ matrix.runner }}
+        if: ${{ matrix.runner != 'windows-latest' }}
         run: |
           docker run --rm ${{ env.DOCKER_IMAGE_NAME }}:${{ steps.release.outputs.version }} -v
 
