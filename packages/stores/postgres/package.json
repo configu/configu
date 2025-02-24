@@ -26,9 +26,6 @@
   "files": [
     "src"
   ],
-  "scripts": {
-    "build": "tsup"
-  },
   "dependencies": {
     "@configu/database": "workspace:*",
     "@configu/sdk": "workspace:*",

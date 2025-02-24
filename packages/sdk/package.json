@@ -47,24 +47,25 @@
     "entry": "./src/index.ts"
   },
   "scripts": {
+    "prepublish": "attw --pack .",
     "clean": "shx rm -rf dist",
     "build": "tsup $npm_package_config_entry"
   },
   "dependencies": {
     "@segment/ajv-human-errors": "^2.14.1",
-    "@vitest/expect": "^2.1.8",
+    "@vitest/expect": "^3.0.5",
     "acorn": "^8.14.0",
     "acorn-walk": "^8.3.4",
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
-    "chai": "^5.1.2",
+    "chai": "^5.2.0",
     "chai-subset": "^1.6.0",
     "jest-extended": "^4.0.2",
     "json-schema-to-ts": "^3.1.1",
     "lodash": "^4.17.21",
-    "ses": "^1.10.0",
+    "ses": "^1.11.0",
     "validator": "^13.12.0",
-    "zod": "^3.24.1"
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@types/chai": "^5.0.1",

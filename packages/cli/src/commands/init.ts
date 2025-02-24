@@ -1,131 +1,141 @@
-import fs from 'fs/promises';
-import path from 'path';
-import { cwd } from 'process';
 import { Command, Option } from 'clipanion';
 import * as t from 'typanion';
-import { ConfigSchema, ConfigSchemaKeys, _ } from '@configu/sdk';
-import { paramCase, constantCase } from 'change-case';
-import { readFile } from '@configu/common';
+import { setTimeout } from 'node:timers/promises';
+import * as prompts from '@clack/prompts';
+import { path, AllowedExtensions, CfguFile, ConfiguFile, CfguFileContents, ConfiguFileContents } from '@configu/common';
 import { BaseCommand } from './base';
-import { extractConfigs, getPathBasename } from '../helpers';
-
-export const GET_STARTED: ConfigSchemaKeys = {
-  GREETING: {
-    pattern: '^(hello|hey|welcome|hola|salute|bonjour|shalom|marhabaan)$',
-    default: 'hello',
-  },
-  SUBJECT: { default: 'world' },
-  MESSAGE: {
-    // template: '{{GREETING}}, {{SUBJECT}}!',
-    description: 'Generates a full greeting message',
-  },
-};
-
-export const FOO: ConfigSchemaKeys = {
-  FOO: { default: 'foo', description: 'string example variable' },
-  BAR: { pattern: '^(foo|bar|baz)$', description: 'regex example variable' },
-  BAZ: {
-    // template: '{{FOO}} - {{BAR}}',
-    description: 'template example variable',
-  },
-};
-
-const NAME_FLAG_DEFAULT = paramCase(getPathBasename(cwd()));
-const DIR_FLAG_DEFAULT = cwd();
 
 export class InitCommand extends BaseCommand {
   static override paths = [['init']];
 
   static override usage = Command.Usage({
-    description: `Create a \`ConfigSchema\` .cfgu file in the current working dir`,
+    description: `Initialize Configu assets from a variety of presets`,
   });
 
-  name = Option.String('--name,--id,--uid', {
-    description: `Set the name of the new .cfgu file. The default is the current directory name in parameter-case`,
+  // start = Option.Boolean('--start,--quick-start,--get-started,--getting-started,--hello-world', {
+  //   description: `Generate a \`Getting Started\` .cfgu file`,
+  // });
+
+  format = Option.String('--format', 'yaml', {
+    description: `Assets output format`,
+    validator: t.isEnum(AllowedExtensions),
   });
-
-  dir = Option.String('--dir,--cwd', {
-    description: `Set the directory that will contain the new .cfgu file. The default is the current directory`,
-  });
-
-  force = Option.Boolean('--force,--f', {
-    description: `Override the .cfgu file in case it already exists`,
-  });
-
-  start = Option.Boolean('--start,--get-started,--quick-start,--getting-started,--hello-world', {
-    description: `Generate a 'Getting Started' .cfgu file`,
-  });
-
-  example = Option.Boolean('--example,--examples,--foo,--foo-bar,--foo-bar-baz', {
-    description: `Fills the new .cfgu file with a variety of detailed examples`,
-  });
-
-  import = Option.String('--import', {
-    description: `Import an existing .env or flat .json file and create a new .cfgu file from its records`,
-  });
-
-  defaults = Option.Boolean('--defaults', {
-    description: `Assign the values from the imported file as the default value for the keys that will be created in the .cfgu file`,
-  });
-
-  static override schema = [
-    t.hasMutuallyExclusiveKeys(['import', 'start', 'example'], { missingIf: 'undefined' }),
-    t.hasKeyRelationship('defaults', t.KeyRelationship.Requires, ['import'], { missingIf: 'undefined' }),
-  ];
-
-  async getSchemaName() {
-    const isOverrideName = this.name !== NAME_FLAG_DEFAULT;
-    if (isOverrideName) {
-      return this.name ?? NAME_FLAG_DEFAULT;
-    }
-
-    if (this.start) {
-      return 'start';
-    }
-    if (this.example) {
-      return 'example';
-    }
-
-    return paramCase(getPathBasename(this.dir ?? DIR_FLAG_DEFAULT));
-  }
-
-  async getSchemaContents(): Promise<ConfigSchemaKeys> {
-    if (this.start) {
-      return GET_STARTED;
-    }
-    if (this.example) {
-      return FOO;
-    }
-
-    if (this.import) {
-      const fileContent = await readFile(this.import);
-      const extractedConfigs = extractConfigs({
-        filePath: this.import,
-        fileContent,
-        options: { useValuesAsDefaults: this.defaults },
-      });
-      return _.mapValues(extractedConfigs, 'cfgu');
-    }
-
-    return {
-      [constantCase(`some key`)]: {
-        description: `For more information about \`ConfigSchema\` and the \`Cfgu\` format, visit https://configu.com/docs/config-schema/`,
-        default: paramCase('some value'),
-      },
-    };
-  }
 
   async execute() {
-    const schemaName = await this.getSchemaName();
-    const schemaContents = await this.getSchemaContents();
-    const schema = new ConfigSchema(schemaContents);
+    prompts.intro(`Configu Initializer`);
+    await this.init();
 
-    const fileName = `${schemaName}.cfgu.json`;
-    const filePath = path.resolve(this.dir ?? DIR_FLAG_DEFAULT, fileName);
-    const fileContent = JSON.stringify({ keys: schemaContents }, null, 2);
-    await fs.writeFile(filePath, fileContent, { flag: this.force ? 'w' : 'wx' }); // * https://nodejs.org/api/fs.html#file-system-flags
+    const format: CfguFile['contentsType'] = this.format === 'json' ? 'json' : 'yaml';
 
-    const recordsCount = _.keys(schemaContents).length;
-    process.stdout.write(`${filePath} generated with ${recordsCount} records`);
+    const preset = await prompts.select({
+      message: 'Pick a preset.',
+      options: [
+        { value: 'greet', label: 'Hello, World! Schema', hint: `greet.cfgu.${format}` },
+        { value: 'features', label: 'Fully Featured Schema', hint: `features.cfgu.${format}` },
+        {
+          value: 'starter',
+          label: 'Starter Pack',
+          hint: `.configu + starter.cfgu.${format}`,
+        },
+        {
+          value: 'complete',
+          label: 'Complete Pack',
+          hint: `.configu + {common,api,worker}.cfgu.${format} + ./module.ts`,
+        },
+        {
+          value: 'module',
+          label: 'Configu Module',
+          hint: `./module.ts + ./package.json`,
+        },
+      ],
+    });
+
+    const spinner = prompts.spinner();
+    spinner.start(`Generating assets from ${preset.toString()} preset`);
+
+    if (preset === 'greet') {
+      const GreetSchema: CfguFileContents = {
+        $schema: CfguFile.schema.$id,
+        keys: {
+          GREETING: {
+            enum: ['hello', 'hey', 'welcome', 'hola', 'salute', 'bonjour', 'shalom', 'marhabaan'],
+            default: 'hello',
+          },
+          SUBJECT: {
+            test: 'validator.isLength($.value, { min: 1, max: 100 })',
+            default: 'world',
+          },
+          MESSAGE: {
+            description: 'A full greeting message',
+            const: '{{ $.configs.GREETING.value }}, {{ $.configs.SUBJECT.value }}!',
+          },
+        },
+      };
+      const greet = new CfguFile(path.join(process.cwd(), `./greet.cfgu.${format}`), GreetSchema, format);
+      await greet.save({});
+    } else if (preset === 'features') {
+      const FeaturesSchema: CfguFileContents = {
+        $schema: CfguFile.schema.$id,
+        keys: {},
+      };
+      const features = new CfguFile(path.join(process.cwd(), `./features.cfgu.${format}`), FeaturesSchema, format);
+      await features.save({});
+    } else if (preset === 'starter') {
+      const ProjectConfigu: ConfiguFileContents = {
+        $schema: ConfiguFile.schema.$id,
+        stores: {
+          csv: {
+            type: 'csv-file',
+            configuration: {
+              path: './configs.csv',
+            },
+          },
+        },
+        schemas: {
+          app: './app.cfgu.yaml',
+        },
+        scripts: {
+          local: "configu eval --defaults --schema 'app' | configu export --format 'env' > .env",
+          deploy: "configu eval --set '$CONFIGU_SET' --schema 'app'",
+          'deploy:explain': "configu run --script 'deploy' | configu export --explain",
+          'deploy:k8s':
+            "configu run --script 'deploy' | configu export --format 'k8s-config-map' > k8s-config-map.yaml",
+        },
+      };
+      const configu = new ConfiguFile(path.join(process.cwd(), `./.configu`), ProjectConfigu, format);
+      const AppSchema: CfguFileContents = {
+        $schema: CfguFile.schema.$id,
+        keys: {
+          APP_ENV: {
+            description: 'Defines the environment in which the application runs',
+            enum: ['development', 'production', 'test'],
+            default: 'development',
+          },
+          APP_LOG_LEVEL: {
+            description: 'Defines the level of logs to be recorded',
+            enum: ['error', 'warn', 'info', 'verbose', 'debug', 'silly'],
+            default: 'info',
+          },
+          APP_PORT: {
+            description: 'Defines the port on which the application listens',
+            test: 'validator.isPort($.value)',
+            default: 3000,
+          },
+          SERVICE_ENDPOINT: {
+            description: 'Defines the endpoint for the service',
+            test: 'validator.isURL($.value)',
+            required: true,
+          },
+        },
+      };
+      const service = new CfguFile(path.join(process.cwd(), `./service.cfgu.${format}`), AppSchema, format);
+
+      await Promise.all([configu.save({}), service.save({})]);
+    }
+
+    spinner.stop(`Assets generated`, 0);
+
+    prompts.outro("You're all set!");
+    await setTimeout(505);
   }
 }

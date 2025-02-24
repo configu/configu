@@ -1,3 +1,4 @@
+import fs from 'node:fs/promises';
 import {
   ConfigSchema,
   ConfigSchemaKeys,
@@ -8,12 +9,24 @@ import {
   JSONSchemaObject,
   FromSchema,
 } from '@configu/sdk';
-import { console, path as pathe, readFile, glob, parseJSON, parseYAML, normalizeInput } from './utils';
+import {
+  debug,
+  path as pathe,
+  readFile,
+  glob,
+  parseJsonFile,
+  parseYamlFile,
+  YAML,
+  normalizeInput,
+  configuFilesApi,
+  AllowedExtensions,
+  AllowedExtension,
+} from './utils';
 
-const { join, basename, dirname, resolve } = pathe;
+const { basename, dirname, resolve } = pathe;
 
-const CfguFileSchemaId = 'https://raw.githubusercontent.com/configu/configu/main/packages/schema/.cfgu.json';
-// const CfguFileSchemaId = 'https://files.configu.com/schema/.cfgu.json';
+// https://raw.githubusercontent.com/configu/configu/main/packages/schema/.cfgu.json
+const CfguFileSchemaId = `${configuFilesApi.defaults.baseURL}/schema/.cfgu.json`;
 
 const CfguFileSchema = {
   $schema: 'http://json-schema.org/draft-07/schema#',
@@ -38,15 +51,15 @@ export type CfguFileContents = FromSchema<typeof CfguFileSchema>;
 
 export class CfguFile {
   public static readonly schema = CfguFileSchema;
-  public static readonly allowedExtensions = ['json', 'yaml', 'yml'];
-  public static readonly neighborsGlob = `*.cfgu.{${CfguFile.allowedExtensions.join(',')}}`;
+  public static readonly neighborsGlob = `*.cfgu.{${AllowedExtensions.join(',')}}`;
+
   public readonly dir: string;
   constructor(
     public readonly path: string,
     public readonly contents: CfguFileContents,
-    public readonly contentsType: 'json' | 'yaml',
+    public readonly contentsType: Exclude<AllowedExtension, 'yml'>,
   ) {
-    console.debug('CfguFile.constructor', { path, contents, contentsType });
+    debug('CfguFile.constructor', { path, contents, contentsType });
     try {
       this.dir = dirname(resolve(this.path));
       JSONSchema.validate(CfguFile.schema, this.contents);
@@ -56,16 +69,15 @@ export class CfguFile {
   }
 
   private static async init(path: string, contents: string, fileExt: string): Promise<CfguFile> {
-    console.debug('CfguFile.init', { path, contents, fileExt });
+    debug('CfguFile.init', { path, contents, fileExt });
 
     let parsedContents: CfguFileContents | V0ConfigSchemaKeys = {};
-    let contentsType: 'json' | 'yaml';
-
+    let contentsType: typeof CfguFile.prototype.contentsType;
     if (fileExt === 'yaml' || fileExt === 'yml') {
-      parsedContents = parseYAML(path, contents);
+      parsedContents = parseYamlFile(path, contents);
       contentsType = 'yaml';
     } else if (fileExt === 'json') {
-      parsedContents = parseJSON(path, contents);
+      parsedContents = parseJsonFile(path, contents);
       contentsType = 'json';
     } else {
       throw new Error(`CfguFile.path "${path}" is not a valid .cfgu file`);
@@ -80,18 +92,18 @@ export class CfguFile {
     return new CfguFile(path, parsedContents, contentsType);
   }
 
-  static getPathInfo(path: string) {
+  public static getPathInfo(path: string) {
     const fileName = basename(path);
     const [cfguName, cfguExt, fileExt] = fileName.split('.');
-    if (cfguExt !== 'cfgu' || !fileExt || !CfguFile.allowedExtensions.includes(fileExt)) {
+    if (cfguExt !== 'cfgu' || !fileExt || !AllowedExtensions.includes(fileExt as AllowedExtension)) {
       throw new Error(`CfguFile.path "${path}" is not a valid .cfgu file`);
     }
     const depth = path.split(pathe.sep).length;
     return { path, depth, fileName, cfguName, fileExt };
   }
 
-  static async load(path: string): Promise<CfguFile> {
-    console.debug('CfguFile.load', { path });
+  public static async load(path: string): Promise<CfguFile> {
+    debug('CfguFile.load', { path });
 
     const { fileExt } = CfguFile.getPathInfo(path);
 
@@ -105,22 +117,34 @@ export class CfguFile {
     return CfguFile.init(path, contents, fileExt);
   }
 
-  static sortPaths(paths: string[]): string[] {
+  public static sortPaths(paths: string[]): string[] {
     return _.chain(paths).map(CfguFile.getPathInfo).orderBy(['depth', 'cfguName'], ['desc', 'asc']).map('path').value();
   }
 
-  static async searchGlob(path: string) {
+  public static async searchGlob(path: string) {
     // todo: try to replace glob lib with the native fs.glob api
-    return glob(path, { nodir: true });
+    return glob(path, { nodir: true, dot: true });
   }
 
-  getSchemaInstance(): ConfigSchema {
+  public async save(contents: CfguFileContents) {
+    const mergedContents = _.merge({}, this.contents, contents) satisfies CfguFileContents;
+    let renderedContents: string;
+    if (this.contentsType === 'json') {
+      renderedContents = JSON.stringify(mergedContents, null, 2);
+    } else {
+      renderedContents = YAML.stringify(mergedContents);
+    }
+    await fs.writeFile(this.path, renderedContents);
+    return CfguFile.load(this.path);
+  }
+
+  public getSchemaInstance(): ConfigSchema {
     return new ConfigSchema(this.contents.keys);
   }
 
-  static async constructSchema(input: string) {
+  public static async constructSchema(input: string) {
     // input is a path file://url json or glob string
-    console.debug('CfguFile.constructSchema', { input });
+    debug('CfguFile.constructSchema', { input });
     const { type, path } = normalizeInput(input, '.cfgu');
     if (type === 'json') {
       const cfguFile = await CfguFile.init('.cfgu.json', input, 'json');

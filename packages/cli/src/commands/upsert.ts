@@ -1,7 +1,8 @@
 import { Command, Option } from 'clipanion';
+import * as prompts from '@clack/prompts';
 import { ConfigSet, UpsertCommand } from '@configu/sdk';
-import { ConfiguInterface } from '@configu/common';
-// import { ConfiguConfigStoreApprovalQueueError } from '@configu/configu';
+import { print, ConfiguInterface } from '@configu/common';
+// import { ConfiguPlatformConfigStoreApprovalQueueError } from '@configu/configu';
 import { BaseCommand } from './base';
 
 export class CliUpsertCommand extends BaseCommand {
@@ -28,31 +29,48 @@ export class CliUpsertCommand extends BaseCommand {
   });
 
   async execute() {
-    await this.init();
-    const store = await ConfiguInterface.getStoreInstance(this.store);
-    const set = new ConfigSet(this.set);
-    const schema = await ConfiguInterface.getSchemaInstance(this.schema);
-    const configs = this.reduceKVFlag(this.assign);
-    const pipe = await this.readPreviousEvalCommandOutput();
+    const spinner = prompts.spinner();
 
-    // try {
-    await new UpsertCommand({
-      store,
-      set,
-      schema,
-      configs,
-      pipe,
-    }).run();
-    this.context.console.success('Configs upserted successfully');
-    // } catch (error) {
-    //   // if (error instanceof ConfiguConfigStoreApprovalQueueError) {
-    //   //   // * print warning message with queue url highlighted with an underline
-    //   //   const warningMessage = error.message.replace(error.queueUrl, `\u001B[4m${error.queueUrl}\u001B[0m`);
-    //   //   this.context.stdio.warn(warningMessage);
-    //   // } else {
-    //   //   this.context.stdio.error(error.message);
-    //   // }
-    //   this.context.stdio.error(error.message);
-    // }
+    try {
+      spinner.start(`Initializing Upsert`);
+      await this.init();
+
+      spinner.message(`Constructing store`);
+      const store = await ConfiguInterface.getStoreInstance(this.store);
+
+      spinner.message(`Constructing set`);
+      const set = new ConfigSet(this.set);
+
+      spinner.message(`Constructing schema`);
+      const schema = await ConfiguInterface.getSchemaInstance(this.schema);
+
+      spinner.message(`Parsing assignments`);
+      const configs = this.reduceKVFlag(this.assign);
+
+      spinner.message(`Reading previous eval command output`);
+      const pipe = await this.readPreviousEvalCommandOutput();
+
+      spinner.message(`Upserting Configs`);
+      await new UpsertCommand({
+        store,
+        set,
+        schema,
+        configs,
+        pipe,
+      }).run();
+      spinner.stop(`Configs upserted successfully`, 0);
+      // prompts.log.success('Configs upserted successfully');
+    } catch (error) {
+      //   // if (error instanceof ConfiguPlatformConfigStoreApprovalQueueError) {
+      //   //   // * print warning message with queue url highlighted with an underline
+      //   //   const warningMessage = error.message.replace(error.queueUrl, `\u001B[4m${error.queueUrl}\u001B[0m`);
+      //   //   this.context.stdio.warn(warningMessage);
+      //   // } else {
+      //   //   this.context.stdio.error(error.message);
+      //   // }
+      // this.context.stdio.error(error.message);
+      spinner.stop(`Configs upsert failed`, 1);
+      throw error;
+    }
   }
 }

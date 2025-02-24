@@ -16,7 +16,7 @@
   "[typescript]": {
     "editor.formatOnSave": false
   },
-  "typescript.tsdk": "ts/node_modules/typescript/lib",
+  "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.referencesCodeLens.enabled": true,
   "eslint.validate": ["javascript", "typescript"],
   "search.exclude": {
@@ -28,5 +28,8 @@
     "pnpm-lock.yaml": true,
     "tsconfig.tsbuildinfo": true
   },
-  "yaml.schemas": {}
+  "yaml.schemas": {
+    "../packages/schema/.cfgu.json": ["*.cfgu.yaml", "*.cfgu.yml"],
+    "../packages/schema/.configu.json": ["*.configu.yaml", "*.configu.yml"]
+  }
 }

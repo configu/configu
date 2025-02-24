@@ -23,9 +23,6 @@
   "files": [
     "src"
   ],
-  "scripts": {
-    "build": "tsup"
-  },
   "dependencies": {
     "@aws-sdk/client-secrets-manager": "^3.465.0",
     "@configu/key-value": "workspace:*",

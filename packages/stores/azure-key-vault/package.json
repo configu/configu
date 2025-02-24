@@ -23,9 +23,6 @@
   "files": [
     "src"
   ],
-  "scripts": {
-    "build": "tsup"
-  },
   "dependencies": {
     "@azure/identity": "4.4.1",
     "@azure/keyvault-secrets": "4.8.0",

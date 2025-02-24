@@ -80,6 +80,7 @@ jobs:
         run: |
           pnpm --filter ${{ steps.release.outputs.package_name }} exec \
             npm --no-git-tag-version version ${{ steps.release.outputs.version }}
+          pnpm install --ignore-scripts
 
       - name: Build package code
         shell: bash
@@ -89,12 +90,91 @@ jobs:
         run: |
           pnpm --filter ${{ steps.release.outputs.package_name }} run \
             build:binary
-          ls -l ${{ steps.release.outputs.package_path }}/dist
+          ls -la ${{ steps.release.outputs.package_path }}/dist
 
       - uses: actions/upload-artifact@v4
         with:
           name: configu-v${{ steps.release.outputs.version }}-${{ matrix.dist }}
           path: ${{ steps.release.outputs.package_path }}/dist/configu-v${{ steps.release.outputs.version }}-${{ matrix.dist }}.*
+
+  release-binary:
+    runs-on: ubuntu-latest
+    needs: build-binary
+    env:
+      GH_TOKEN: ${{ github.token }}
+      S3_BUCKET: 's3://public-file-browser-files-0eff4c2890a7/cli'
+      CLOUDFRONT_DISTRIBUTION: 'EV0BWKNB8L53Y'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/get-release-action
+        id: release
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: ${{ steps.release.outputs.package_path }}/dist
+          pattern: configu-v${{ steps.release.outputs.version }}-*
+          merge-multiple: true
+
+      - name: Release package to GitHub release
+        uses: softprops/action-gh-release@v2
+        if: ${{ startsWith(github.ref, 'refs/tags/') }}
+        with:
+          files: |
+            ${{ steps.release.outputs.package_path }}/dist/*
+
+      - name: Release package to public S3 bucket
+        run: |
+          cd ${{ steps.release.outputs.package_path }}/dist
+
+          achieves_pattern="configu-v${{ steps.release.outputs.version }}-*"
+          version_path="${{ env.S3_BUCKET }}/versions/${{ steps.release.outputs.version }}"
+
+          # generate package.json
+          jq '.version = "${{ steps.release.outputs.version }}"' ../package.json > package.json
+          cat package.json
+
+          # generate checksums
+          shasum -a 256 $achieves_pattern > sha256sum
+          cat sha256sum
+
+          # generate channel
+          echo "${{ steps.release.outputs.version }}" > ${{ steps.release.outputs.channel }}
+          cat ${{ steps.release.outputs.channel }}
+
+          ls -la .
+
+          # copy package.json
+          aws s3 cp package.json $version_path/
+
+          # copy binaries
+          aws s3 cp ./ $version_path/ --recursive --exclude "*" --include "$achieves_pattern"
+
+          # copy checksums
+          aws s3 cp sha256sum $version_path/ --content-type "text/plain"
+
+          # copy channel file
+          aws s3 cp ${{ steps.release.outputs.channel }} ${{ env.S3_BUCKET }}/channels/ --content-type "text/plain"
+
+      - name: Release install to public S3 bucket
+        if: ${{ steps.release.outputs.channel == 'latest' }}
+        run: |
+          cd ${{ steps.release.outputs.package_path }}
+
+          # copy scripts
+          aws s3 cp install.sh ${{ env.S3_BUCKET }}/
+          aws s3 cp install.ps1 ${{ env.S3_BUCKET }}/
+
+      # todo: verify if needed with the https://github.com/aws-samples/public-file-browser-for-amazon-s3
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION }} --paths "/*"
 
   release-docker:
     runs-on: ubuntu-latest
@@ -107,17 +187,14 @@ jobs:
       - uses: ./.github/actions/get-release-action
         id: release
 
-      - name: Set Node.js information
-        id: node
-        shell: bash
-        run: |
-          node_version=$(cat .node-version)
-          echo "node_version: $node_version"
-          echo "node_version=$node_version" >> $GITHUB_OUTPUT
+      - uses: ./.github/actions/ts-env-action
+        id: env
+        with:
+          dependencies: false
 
       # https://github.com/docker/build-push-action/tree/v6/?tab=readme-ov-file#examples
       # https://docs.docker.com/build/ci/github-actions/multi-platform/
-      - uses: crazy-max/ghaction-setup-docker@v3
+      - uses: docker/setup-docker-action@v4
         with:
           daemon-config: |
             {
@@ -145,7 +222,7 @@ jobs:
             ${{ env.DOCKER_IMAGE_NAME }}:${{ steps.release.outputs.version }}
             ${{ env.DOCKER_IMAGE_NAME }}:${{ steps.release.outputs.channel }}
           build-args: |
-            NODE_VERSION=${{ steps.node.outputs.node_version }}
+            NODE_VERSION=${{ steps.env.outputs.node_version }}
             CONFIGU_VERSION=${{ steps.release.outputs.version }}
           push: true
           provenance: true
@@ -160,45 +237,6 @@ jobs:
           short-description: 'Containerized Configu CLI'
           readme-filepath: ${{ steps.release.outputs.package_path }}/README.md
           enable-url-completion: true
-
-  release-binary:
-    runs-on: ubuntu-latest
-    needs: build-binary
-    env:
-      GH_TOKEN: ${{ github.token }}
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: ./.github/actions/get-release-action
-        id: release
-
-      - uses: actions/download-artifact@v4
-        with:
-          path: ${{ steps.release.outputs.package_path }}/dist
-          pattern: configu-v${{ steps.release.outputs.version }}-*
-          merge-multiple: true
-
-      - name: Release package to version-based release
-        uses: softprops/action-gh-release@v2
-        if: ${{ startsWith(github.ref, 'refs/tags/') }}
-        with:
-          files: |
-            ${{ steps.release.outputs.package_path }}/dist/*
-
-      # - name: Delete previous tag and release
-      #   run: |
-      #     gh release delete ${{ steps.release.outputs.package }}/${{ steps.release.outputs.channel }} --cleanup-tag --yes || true
-
-      # - name: Create updated tag and release
-      #   uses: softprops/action-gh-release@v2
-      #   if: ${{ startsWith(github.ref, 'refs/tags/') }}
-      #   with:
-      #     tag_name: ${{ steps.release.outputs.package }}/${{ steps.release.outputs.channel }}
-      #     make_latest: ${{ steps.release.outputs.channel == 'latest' }}
-      #     prerelease: ${{ steps.release.outputs.channel != 'latest' }}
-      #     files: |
-      #       # todo: handle latest and next releases
-      #       ${{ steps.release.outputs.package_path }}/dist/*
 
   release-npm:
     runs-on: ubuntu-latest
@@ -220,10 +258,10 @@ jobs:
         run: |
           pnpm --filter ${{ steps.release.outputs.package_name }} exec \
             npm --no-git-tag-version version ${{ steps.release.outputs.version }}
+          pnpm install --ignore-scripts
 
       - name: Build package code
         run: |
-          pnpm run build
           pnpm --filter ${{ steps.release.outputs.package_name }} run \
             build
 
@@ -241,56 +279,103 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-  check-release:
+  test-release:
     runs-on: ${{ matrix.runner }}
     needs:
-      - release-docker
       - release-binary
+      - release-docker
       - release-npm
+      # - pre-release
     strategy:
       matrix:
         runner:
           - ubuntu-latest
           - macos-latest
           - windows-latest
+    env:
+      DOCKER_IMAGE_NAME: 'configu/cli'
     steps:
       - uses: actions/checkout@v4
 
       - uses: ./.github/actions/get-release-action
         id: release
 
-      - name: Check binary on ${{ matrix.runner }}
+      - name: Install binary on ${{ matrix.runner }}
         if: ${{ matrix.runner != 'windows-latest' }}
         shell: bash
         env:
-          CONFIGU_HOME: ./configu
+          SHELL: bash # https://bit.cloud/pnpm/os/env/path-extender-posix/~code/path-extender-posix.ts#l49
+          DEBUG: 'configu'
           CONFIGU_VERSION: ${{ steps.release.outputs.version }}
         run: |
           curl -fsSL https://raw.githubusercontent.com/configu/configu/refs/heads/${{ steps.release.outputs.branch }}/${{ steps.release.outputs.package_path }}/install.sh | sh
-          ./configu/bin/configu -v
 
-      - name: Check binary on ${{ matrix.runner }}
+          install_dir="${CONFIGU_HOME:-$HOME/.configu}"
+          echo "CONFIGU_HOME=$install_dir" >> $GITHUB_ENV
+          echo "$install_dir" >> $GITHUB_PATH
+
+      - name: Test binary on ${{ matrix.runner }}
+        if: ${{ matrix.runner != 'windows-latest' }}
+        shell: bash
+        run: |
+          echo $CONFIGU_HOME
+          command -v configu
+          configu -v
+
+      - name: Install binary on ${{ matrix.runner }}
         if: ${{ matrix.runner == 'windows-latest' }}
         shell: pwsh
         env:
-          CONFIGU_HOME: ./configu
+          SHELL: pwsh
+          DEBUG: 'configu'
           CONFIGU_VERSION: ${{ steps.release.outputs.version }}
         run: |
           irm https://raw.githubusercontent.com/configu/configu/refs/heads/${{ steps.release.outputs.branch }}/${{ steps.release.outputs.package_path }}/install.ps1 | iex
-          ./configu/bin/configu -v
+
+          $install_dir = $env:CONFIGU_HOME
+          if (-not $install_dir) {
+            $install_dir = Join-Path -Path $Home -ChildPath ".configu"
+          }
+          # https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/workflow-commands-for-github-actions?tool=powershell#adding-a-system-path
+          "CONFIGU_HOME=$install_dir" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "$install_dir" | Out-File -FilePath "$env:GITHUB_PATH" -Encoding utf8 -Append
+
+      - name: Test binary on ${{ matrix.runner }}
+        if: ${{ matrix.runner == 'windows-latest' }}
+        shell: pwsh
+        run: |
+          echo $env:CONFIGU_HOME
+          Get-Command configu
+          configu -v
+
+      - uses: docker/setup-docker-action@v4
+        if: ${{ matrix.runner != 'windows-latest' }}
+        with:
+          daemon-config: |
+            {
+              "debug": true,
+              "features": {
+                "containerd-snapshotter": true
+              }
+            }
+
+      - name: Test Docker on ${{ matrix.runner }}
+        if: ${{ matrix.runner != 'windows-latest' }}
+        run: |
+          docker run --rm ${{ env.DOCKER_IMAGE_NAME }}:${{ steps.release.outputs.version }} -v
 
       - uses: actions/setup-node@v4
         with:
           node-version-file: '.node-version'
 
-      - name: Check npm on ${{ matrix.runner }}
+      - name: Test npm on ${{ matrix.runner }}
         run: |
           npm i -g ${{ steps.release.outputs.package_name }}@${{ steps.release.outputs.version }}
           configu -v
 
   post-release:
     runs-on: ubuntu-latest
-    needs: check-release
+    needs: test-release
     steps:
       - uses: actions/checkout@v4
 

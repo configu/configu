@@ -23,9 +23,6 @@
   "files": [
     "src"
   ],
-  "scripts": {
-    "build": "tsup"
-  },
   "dependencies": {
     "@configu/open-feature": "workspace:*",
     "@configu/sdk": "workspace:*",

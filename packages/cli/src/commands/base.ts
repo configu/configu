@@ -1,22 +1,37 @@
 import { Command, Option, UsageError } from 'clipanion';
-import { _, EvalCommandOutput } from '@configu/sdk';
-import { console, ConfiguInterface, parseJSON } from '@configu/common';
+import sea from 'node:sea';
+import { log } from '@clack/prompts';
 import getStdin from 'get-stdin';
+import { _, EvalCommandOutput } from '@configu/sdk';
+import { debug, ConfiguInterface, parseJsonFile } from '@configu/common';
 
 import { type RunContext } from '..';
 
-export type Context = RunContext & (typeof ConfiguInterface)['context'];
+export type Context = RunContext & (typeof ConfiguInterface)['context'] & { isExecutable: boolean };
 
 export abstract class BaseCommand extends Command<Context> {
   // todo: consider verbose to the cli logger
-  verbose = Option.Boolean('--verbose');
+  debug = Option.Boolean('--debug,--verbose', {
+    description: 'Enable debug mode',
+    hidden: true,
+  });
 
-  config = Option.String('--config', { description: 'Path, URL or Stringified JSON of a .configu file' });
+  config = Option.String('--config', {
+    description: 'Path, URL or Stringified JSON of a .configu file',
+    hidden: true,
+  });
 
   public async init(): Promise<void> {
     // todo: think to wrap with try/catch and throw a UsageError
-    await ConfiguInterface.init({ input: this.config });
-    this.context = { ...this.context, ...ConfiguInterface.context };
+    await ConfiguInterface.initConfig(this.config);
+
+    this.context = {
+      ...this.context,
+      ...ConfiguInterface.context,
+      isExecutable:
+        sea.isSea() && process.execPath.endsWith(`${this.cli.binaryName}${ConfiguInterface.context.execExt}`),
+    };
+    debug('BaseCommand', this.context);
   }
 
   reduceKVFlag(configFlag?: string[]) {
@@ -39,14 +54,14 @@ export abstract class BaseCommand extends Command<Context> {
 
   async readPreviousEvalCommandOutput() {
     const stdin = await getStdin();
-    this.context.console.debug(`stdin`, stdin);
+    debug(`<-- stdin`, stdin);
 
     if (!stdin) {
       return undefined;
     }
 
     try {
-      const pipe = parseJSON('', stdin) as EvalCommandOutput;
+      const pipe = parseJsonFile('', stdin) as EvalCommandOutput;
       if (
         Object.values(pipe).some(
           (config) =>
@@ -62,7 +77,8 @@ export abstract class BaseCommand extends Command<Context> {
   }
 
   override catch(error: any): Promise<void> {
-    console.error(error);
+    log.error(error.message);
+    debug(error);
     // eslint-disable-next-line prefer-promise-reject-errors
     return Promise.reject(1);
   }

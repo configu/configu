@@ -20,23 +20,23 @@
     "email": "dev@configu.com",
     "url": "https://configu.com"
   },
-  "packageManager": "pnpm@9.15.4",
-  "engines": {
-    "git": "*",
-    "configu": ">=0.17",
-    "node": ">=20",
-    "pnpm": ">=9"
+  "packageManager": "pnpm@10.4.1",
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "22.12.0",
+      "onFail": "error"
+    }
   },
   "config": {
     "format": "**/*.{js,mjs,ts,mts,md,mdx,json,yml,yaml}",
     "lint": ".",
-    "test": "packages/**/src/**/*.test.ts"
+    "test": "packages/**/src/**/*.test.ts",
+    "node": "22.12.0",
+    "pnpm": "10.4.1"
   },
   "scripts": {
-    "prepare": "pnpm \"/^prepare:.*/\"",
-    "prepare:art": "shx cat docs/images/ascii-art.txt",
-    "prepare:hooks": "husky",
-    "prepare:build": "pnpm build",
+    "prepare": "pnpm pkg:art && pnpm pkg:hooks && pnpm pkg:config && pnpm build",
     "clean": "pnpm -r clean",
     "clean:cache": "shx rm -rf **/node_modules **/dist .eslintcache lcov.info",
     "clean:all": "pnpm clean && pnpm clean:cache",
@@ -46,44 +46,49 @@
     "lint": "eslint --ignore-path .gitignore --cache",
     "lint:check": "pnpm lint --quiet $npm_package_config_lint",
     "lint:fix": "pnpm lint --fix $npm_package_config_lint",
+    "pkg:art": "shx cat docs/images/ascii-art.txt",
+    "pkg:hooks": "husky",
+    "pkg:config": "tsx prepare.mts",
     "pkg:check": "syncpack lint",
     "pkg:fix": "syncpack format && syncpack fix-mismatches",
     "test": "tsx --test $npm_package_config_test",
     "test:cov": "tsx --test --experimental-test-coverage --test-reporter=spec --test-reporter=lcov --test-reporter-destination=stdout --test-reporter-destination=lcov.info $npm_package_config_test",
     "test:watch": "tsx --test --watch $npm_package_config_test",
-    "build": "pnpm -r --filter \"@configu/*\" --filter \"!@configu/docs\" --filter \"!./packages/stores/*\" build",
-    "build:docs": "pnpm --filter \"@configu/docs\" build",
+    "build": "pnpm build:libs && pnpm install --ignore-scripts && pnpm build:interfaces",
+    "build:libs": "pnpm --filter \"@configu/sdk\" --filter \"@configu/formatters\" build",
+    "build:interfaces": "pnpm --filter \"@configu/schema\" --filter \"@configu/cli\" --filter \"@configu/proxy\" build",
     "build:stores": "pnpm -r --filter \"./packages/stores/*\" build",
+    "build:docs": "pnpm --filter \"@configu/docs\" build",
     "start": "pnpm prepare:art"
   },
   "devDependencies": {
-    "@cspell/eslint-plugin": "^8.17.2",
-    "@types/lodash": "^4.17.14",
-    "@types/node": "22.10.6",
-    "@typescript-eslint/eslint-plugin": "^8.20.0",
-    "@typescript-eslint/parser": "^8.20.0",
-    "esbuild": "^0.24.2",
+    "@arethetypeswrong/cli": "^0.17.3",
+    "@cspell/eslint-plugin": "^8.17.3",
+    "@microsoft/api-extractor": "^7.50.0",
+    "@types/lodash": "^4.17.15",
+    "@types/node": "22.10.10",
+    "@typescript-eslint/eslint-plugin": "^8.24.1",
+    "@typescript-eslint/parser": "^8.24.1",
     "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-prettier": "^5.2.3",
     "husky": "^9.1.7",
-    "lint-staged": "^15.3.0",
-    "prettier": "^3.4.2",
+    "lint-staged": "^15.4.3",
+    "prettier": "^3.5.1",
     "shx": "^0.3.4",
-    "syncpack": "^13.0.0",
-    "ts-node": "^10.9.2",
-    "tslib": "^2.8.1",
-    "tsup": "^8.3.5",
-    "tsx": "^4.19.2",
+    "syncpack": "^13.0.2",
+    "tsup": "^8.3.6",
+    "tsx": "^4.19.3",
     "typescript": "^5.7.3",
-    "zx": "8.3.0"
+    "zx": "8.3.2"
   },
   "pnpm": {
     "patchedDependencies": {
-      "npm": "patches/npm.patch",
-      "giget": "patches/giget.patch"
-    }
+      "giget": "patches/giget.patch",
+      "@npmcli/run-script": "patches/@npmcli__run-script.patch"
+    },
+    "neverBuiltDependencies": []
   }
 }

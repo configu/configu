@@ -4,6 +4,10 @@ name: TypeScript environment setup
 description: Setup Node.js and install dependencies
 
 inputs:
+  dependencies:
+    description: Whether to run pnpm install
+    required: true
+    default: 'true'
   architecture:
     description: Force the architecture of pnpm install
     required: false
@@ -29,26 +33,27 @@ runs:
       with:
         # architecture: ${{ inputs.architecture }}
         node-version-file: '.node-version'
-        cache: 'pnpm' # todo: currently cache is not working properly, try https://github.com/pnpm/action-setup#use-cache-to-reduce-installation-time
+        cache: 'pnpm' # todo: https://github.com/pnpm/action-setup#use-cache-to-reduce-installation-time
         registry-url: 'https://registry.npmjs.org'
         scope: '@configu'
-
-    - name: Install dependencies
-      shell: bash
-      run: |
-        pnpm install --config.architecture=${{ inputs.architecture }}
-        # pnpm list --recursive --depth 0
-      env:
-        HUSKY: '0'
 
     - name: Set Node.js information
       id: node
       shell: bash
       run: |
         node -v
-        node_version=$(node -v)
-        node_path=$(node -e 'console.log(process.argv[0]);')
+        node_version=$(node -e 'console.log(process.versions.node)')
+        node_path=$(node -e 'console.log(process.argv[0])')
         echo "node_version: $node_version"
         echo "node_path: $node_path"
         echo "node_version=$node_version" >> $GITHUB_OUTPUT
         echo "node_path=$node_path" >> $GITHUB_OUTPUT
+
+    - name: Install dependencies
+      if: ${{ inputs.dependencies == 'true' }} # * there is a bug in gh-actions causing booleans to be strings in composite actions - see: https://github.com/actions/runner/issues/1483#issuecomment-1042393939
+      shell: bash
+      run: |
+        pnpm install --config.architecture=${{ inputs.architecture }}
+        pnpm list --recursive --depth 0
+      env:
+        HUSKY: '0'
