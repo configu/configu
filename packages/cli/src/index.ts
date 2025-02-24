@@ -6,7 +6,8 @@ import { debug, ConfiguInterface, ConfiguFileInterfaceConfig } from '@configu/co
 import packageJson from '../package.json' with { type: 'json' };
 
 // CLI interface Commands
-import { SetupCommand } from './commands/setup';
+import { InstallCommand } from './commands/install';
+import { PurgeCommand } from './commands/purge';
 
 // Config Management Commands
 import { CliUpsertCommand } from './commands/upsert';
@@ -59,14 +60,15 @@ export async function run(argv: string[]) {
 
   try {
     await ConfiguInterface.initEnvironment();
-    if (ConfiguInterface.context.isGlobal) {
+    if (ConfiguInterface.context.isExecFromHome) {
       await checkForUpdates(ConfiguInterface.context.interface);
     }
 
     cli.register(Builtins.HelpCommand);
     cli.register(Builtins.VersionCommand);
 
-    cli.register(SetupCommand);
+    cli.register(InstallCommand);
+    cli.register(PurgeCommand);
 
     cli.register(CliUpsertCommand);
     cli.register(CliEvalCommand);

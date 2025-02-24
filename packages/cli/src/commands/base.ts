@@ -1,4 +1,5 @@
 import { Command, Option, UsageError } from 'clipanion';
+import sea from 'node:sea';
 import { log } from '@clack/prompts';
 import getStdin from 'get-stdin';
 import { _, EvalCommandOutput } from '@configu/sdk';
@@ -6,7 +7,7 @@ import { debug, ConfiguInterface, parseJsonFile } from '@configu/common';
 
 import { type RunContext } from '..';
 
-export type Context = RunContext & (typeof ConfiguInterface)['context'];
+export type Context = RunContext & (typeof ConfiguInterface)['context'] & { isExecutable: boolean };
 
 export abstract class BaseCommand extends Command<Context> {
   // todo: consider verbose to the cli logger
@@ -23,7 +24,13 @@ export abstract class BaseCommand extends Command<Context> {
   public async init(): Promise<void> {
     // todo: think to wrap with try/catch and throw a UsageError
     await ConfiguInterface.initConfig(this.config);
-    this.context = { ...this.context, ...ConfiguInterface.context };
+
+    this.context = {
+      ...this.context,
+      ...ConfiguInterface.context,
+      isExecutable: sea.isSea() && process.execPath.endsWith(this.cli.binaryName),
+    };
+    debug('BaseCommand', this.context);
   }
 
   reduceKVFlag(configFlag?: string[]) {

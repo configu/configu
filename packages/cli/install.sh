@@ -107,5 +107,5 @@ fi
 # Clean up
 rm "$exec_path$archive_ext"
 
-# Run setup command
-exec "$exec_path$exec_ext" setup --version $version --global --purge
+# Run install command
+exec "$exec_path$exec_ext" install --version $version

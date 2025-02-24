@@ -21,12 +21,13 @@ import { CfguFile } from './CfguFile';
 export class ConfiguInterface {
   public static context: {
     environment: Omit<typeof stdenv, 'process' | 'env'>;
-    isGlobal: boolean;
     paths: {
       home: string;
       cache: string;
       bin: string;
     };
+    isHomeEnvSet: boolean;
+    isExecFromHome: boolean;
     configu: {
       input?: ConfiguFile;
       local: ConfiguFile;
@@ -49,24 +50,24 @@ export class ConfiguInterface {
     debug('Interface Paths', paths);
 
     // ! deployments of all interfaces must be compatible with the below logic
-    const homeIsSet = !!stdenv.env.CONFIGU_HOME;
-    let execFromHome = false;
+    const isHomeEnvSet = !!stdenv.env.CONFIGU_HOME;
+    let isExecFromHome = false;
     if (process.execPath.endsWith('configu')) {
-      execFromHome = process.execPath.startsWith(paths.bin);
+      isExecFromHome = process.execPath.startsWith(paths.bin);
     } else if (process.execPath.endsWith('node')) {
-      execFromHome = process.argv[1]?.startsWith?.(paths.bin) ?? false;
+      isExecFromHome = process.argv[1]?.startsWith?.(paths.bin) ?? false;
     } else {
       throw new Error('Unsupported execution of Configu');
     }
-    const isGlobal = homeIsSet && execFromHome;
-    debug('Interface Execution', { execPath: process.execPath, argv: process.argv, homeIsSet, execFromHome, isGlobal });
+    debug('Interface Execution', { execPath: process.execPath, argv: process.argv, isHomeEnvSet, isExecFromHome });
 
     validateEngineVersion();
 
     this.context = {
       environment,
       paths,
-      isGlobal,
+      isHomeEnvSet,
+      isExecFromHome,
       configu: {
         input: undefined,
         local: new ConfiguFile('', {}, 'yaml'),

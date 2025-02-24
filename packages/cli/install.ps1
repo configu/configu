@@ -94,5 +94,5 @@ if ($exec_ext -eq '') {
 # Clean up
 Remove-Item "$exec_path$archive_ext"
 
-# Run setup command
-& "$exec_path$exec_ext" setup --version "$version" --global --purge
+# Run install command
+& "$exec_path$exec_ext" 'install','--version',"$version"
