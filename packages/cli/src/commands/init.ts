@@ -30,12 +30,22 @@ export class InitCommand extends BaseCommand {
     const preset = await prompts.select({
       message: 'Pick a preset.',
       options: [
-        { value: 'greet', label: 'Hello, World! Schema', hint: `./greet.cfgu.${format}` },
-        { value: 'features', label: 'Fully Featured Schema', hint: `./features.cfgu.${format}` },
+        { value: 'greet', label: 'Hello, World! Schema', hint: `greet.cfgu.${format}` },
+        { value: 'features', label: 'Fully Featured Schema', hint: `features.cfgu.${format}` },
         {
-          value: 'project',
-          label: 'Project Skeleton',
-          hint: `./.configu + ./service.cfgu.${format}`,
+          value: 'starter',
+          label: 'Starter Pack',
+          hint: `.configu + starter.cfgu.${format}`,
+        },
+        {
+          value: 'complete',
+          label: 'Complete Pack',
+          hint: `.configu + {common,api,worker}.cfgu.${format} + ./module.ts`,
+        },
+        {
+          value: 'module',
+          label: 'Configu Module',
+          hint: `./module.ts + ./package.json`,
         },
       ],
     });
@@ -51,7 +61,10 @@ export class InitCommand extends BaseCommand {
             enum: ['hello', 'hey', 'welcome', 'hola', 'salute', 'bonjour', 'shalom', 'marhabaan'],
             default: 'hello',
           },
-          SUBJECT: { default: 'world' },
+          SUBJECT: {
+            test: 'validator.isLength($.value, { min: 1, max: 100 })',
+            default: 'world',
+          },
           MESSAGE: {
             description: 'A full greeting message',
             const: '{{ $.configs.GREETING.value }}, {{ $.configs.SUBJECT.value }}!',
@@ -67,7 +80,7 @@ export class InitCommand extends BaseCommand {
       };
       const features = new CfguFile(path.join(process.cwd(), `./features.cfgu.${format}`), FeaturesSchema, format);
       await features.save({});
-    } else if (preset === 'project') {
+    } else if (preset === 'starter') {
       const ProjectConfigu: ConfiguFileContents = {
         $schema: ConfiguFile.schema.$id,
         stores: {
@@ -79,28 +92,45 @@ export class InitCommand extends BaseCommand {
           },
         },
         schemas: {
-          service: './service.cfgu.yaml',
+          app: './app.cfgu.yaml',
         },
         scripts: {
-          local: "configu eval --defaults --schema 'service' | configu export --format 'env' > .env",
-          deploy: "configu eval --set '$CONFIGU_SET' --schema 'service' | configu export --format 'env' > .env",
+          local: "configu eval --defaults --schema 'app' | configu export --format 'env' > .env",
+          deploy: "configu eval --set '$CONFIGU_SET' --schema 'app'",
+          'deploy:explain': "configu run --script 'deploy' | configu export --explain",
+          'deploy:k8s':
+            "configu run --script 'deploy' | configu export --format 'k8s-config-map' > k8s-config-map.yaml",
         },
       };
       const configu = new ConfiguFile(path.join(process.cwd(), `./.configu`), ProjectConfigu, format);
-
-      const CommonSchema: CfguFileContents = {
+      const AppSchema: CfguFileContents = {
         $schema: CfguFile.schema.$id,
-        keys: {},
+        keys: {
+          APP_ENV: {
+            description: 'Defines the environment in which the application runs',
+            enum: ['development', 'production', 'test'],
+            default: 'development',
+          },
+          APP_LOG_LEVEL: {
+            description: 'Defines the level of logs to be recorded',
+            enum: ['error', 'warn', 'info', 'verbose', 'debug', 'silly'],
+            default: 'info',
+          },
+          APP_PORT: {
+            description: 'Defines the port on which the application listens',
+            test: 'validator.isPort($.value)',
+            default: 3000,
+          },
+          SERVICE_ENDPOINT: {
+            description: 'Defines the endpoint for the service',
+            test: 'validator.isURL($.value)',
+            required: true,
+          },
+        },
       };
-      const common = new CfguFile(path.join(process.cwd(), `./common.cfgu.${format}`), CommonSchema, format);
+      const service = new CfguFile(path.join(process.cwd(), `./service.cfgu.${format}`), AppSchema, format);
 
-      const ServiceSchema: CfguFileContents = {
-        $schema: CfguFile.schema.$id,
-        keys: {},
-      };
-      const service = new CfguFile(path.join(process.cwd(), `./service.cfgu.${format}`), ServiceSchema, format);
-
-      await Promise.all([configu.save({}), common.save({}), service.save({})]);
+      await Promise.all([configu.save({}), service.save({})]);
     }
 
     spinner.stop(`Assets generated`, 0);

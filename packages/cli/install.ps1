@@ -3,7 +3,7 @@
 $ErrorActionPreference = 'Stop'
 
 # Detect OS and architecture
-$os = [System.Runtime.InteropServices.RuntimeInformation]::OSDescription
+$os = [System.Runtime.InteropServices.RuntimeInformation,mscorlib]::OSDescription
 # https://learn.microsoft.com/en-us/dotnet/api/system.runtime.interopservices.architecture
 # https://blog.nerdbank.net/2023/02/how-to-get-os-architecture-in-windows-powershell
 $arch = [System.Runtime.InteropServices.RuntimeInformation,mscorlib]::OSArchitecture
