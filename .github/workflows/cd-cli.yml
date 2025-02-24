@@ -103,7 +103,7 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
       S3_BUCKET: 's3://public-file-browser-files-0eff4c2890a7/cli'
-      CLOUDFRONT_DISTRIBUTION: 'E7C5AL5O299SC'
+      CLOUDFRONT_DISTRIBUTION: 'EV0BWKNB8L53Y'
     steps:
       - uses: actions/checkout@v4
 
