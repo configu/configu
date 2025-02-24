@@ -16,21 +16,12 @@ export class InstallCommand extends BaseCommand {
   // hide the command from the help menu
   static override usage = undefined;
 
-  version = Option.String('--version', {
+  version = Option.String('--version,-v', {
     description: `Install a specific version of the binary globally on the system`,
     env: 'CONFIGU_VERSION',
   });
 
-  private canRun() {
-    if (this.context.isExecutable && this.context.isExecFromHome) {
-      return;
-    }
-    throw new Error(`${this.constructor.name} is only supported for executable running from home directory`);
-  }
-
   async execute() {
-    this.canRun();
-
     const output = [];
     prompts.intro(`Configu Installer`);
     const spinner = prompts.spinner();
@@ -38,6 +29,9 @@ export class InstallCommand extends BaseCommand {
 
     try {
       await this.init();
+      if (!this.context.isExecutable || !this.context.isExecFromHome) {
+        throw new Error(`${this.constructor.name} is only supported running as an executable from the home directory`);
+      }
 
       spinner.message(`Resolving version`);
       // default to latest version

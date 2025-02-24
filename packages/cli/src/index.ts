@@ -15,8 +15,7 @@ import { CliEvalCommand } from './commands/eval';
 import { CliExportCommand } from './commands/export';
 
 // Misc Commands
-// import { InitCommand } from './commands/init';
-// import { UpdateCommand } from './commands/update';
+import { InitCommand } from './commands/init';
 import { LoginCommand } from './commands/login';
 import { RunCommand } from './commands/run';
 
@@ -74,8 +73,7 @@ export async function run(argv: string[]) {
     cli.register(CliEvalCommand);
     cli.register(CliExportCommand);
 
-    // cli.register(InitCommand);
-    // cli.register(UpdateCommand);
+    cli.register(InitCommand);
     cli.register(LoginCommand);
     cli.register(RunCommand);
 

@@ -20,12 +20,12 @@ export class RunCommand extends BaseCommand {
 
   // name = Option.String(''
 
-  script = Option.String('--script,--s', {
+  script = Option.String('--script,-s', {
     description: `The script property from the scripts section in the .<%= config.bin %> file`,
     required: true,
   });
 
-  dir = Option.String('--dir,--d,--cwd', {
+  dir = Option.String('--dir,--cwd,-d', {
     description: `Set the directory where the script is being executed. The default is the location of the .<%= config.bin %> file`,
   });
 
