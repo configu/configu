@@ -95,4 +95,4 @@ if ($exec_ext -eq '') {
 Remove-Item "$exec_path$archive_ext"
 
 # Run install command
-& "$exec_path$exec_ext" 'install','--version',"$version"
+& "$exec_path$exec_ext" install --version $version
