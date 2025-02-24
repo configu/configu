@@ -2,7 +2,7 @@ import { Command, Option } from 'clipanion';
 import * as t from 'typanion';
 import { setTimeout } from 'node:timers/promises';
 import * as prompts from '@clack/prompts';
-import { path, AllowedExtensions, CfguFile, ConfiguFile } from '@configu/common';
+import { path, AllowedExtensions, CfguFile, ConfiguFile, CfguFileContents, ConfiguFileContents } from '@configu/common';
 import { BaseCommand } from './base';
 
 export class InitCommand extends BaseCommand {
@@ -44,7 +44,7 @@ export class InitCommand extends BaseCommand {
     spinner.start(`Generating assets from ${preset.toString()} preset`);
 
     if (preset === 'greet') {
-      const GreetSchema = {
+      const GreetSchema: CfguFileContents = {
         $schema: CfguFile.schema.$id,
         keys: {
           GREETING: {
@@ -61,16 +61,23 @@ export class InitCommand extends BaseCommand {
       const greet = new CfguFile(path.join(process.cwd(), `./greet.cfgu.${format}`), GreetSchema, format);
       await greet.save({});
     } else if (preset === 'features') {
-      const FeaturesSchema = {
+      const FeaturesSchema: CfguFileContents = {
         $schema: CfguFile.schema.$id,
         keys: {},
       };
       const features = new CfguFile(path.join(process.cwd(), `./features.cfgu.${format}`), FeaturesSchema, format);
       await features.save({});
     } else if (preset === 'project') {
-      const ProjectConfigu = {
+      const ProjectConfigu: ConfiguFileContents = {
         $schema: ConfiguFile.schema.$id,
-        stores: {},
+        stores: {
+          csv: {
+            type: 'csv-file',
+            configuration: {
+              path: './configs.csv',
+            },
+          },
+        },
         schemas: {
           common: './common.cfgu.yaml',
           service: './service.cfgu.yaml',
@@ -79,13 +86,13 @@ export class InitCommand extends BaseCommand {
       };
       const configu = new ConfiguFile(path.join(process.cwd(), `./.configu`), ProjectConfigu, format);
 
-      const CommonSchema = {
+      const CommonSchema: CfguFileContents = {
         $schema: CfguFile.schema.$id,
         keys: {},
       };
       const common = new CfguFile(path.join(process.cwd(), `./common.cfgu.${format}`), CommonSchema, format);
 
-      const ServiceSchema = {
+      const ServiceSchema: CfguFileContents = {
         $schema: CfguFile.schema.$id,
         keys: {},
       };
