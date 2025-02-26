@@ -151,6 +151,10 @@ export class CfguFile {
       return cfguFile.getSchemaInstance();
     }
     if (type === 'file') {
+      const cfguFile = await CfguFile.load(path);
+      return cfguFile.getSchemaInstance();
+    }
+    if (type === 'glob') {
       const paths = await CfguFile.searchGlob(path);
       if (paths.length === 0) {
         throw new Error(`No .cfgu files found in "${input}"`);
@@ -165,6 +169,6 @@ export class CfguFile {
     }
     // todo: support http based urls
     // code below is unreachable
-    throw new Error('.cfgu file input is not a valid path or JSON');
+    throw new Error('.cfgu file input is not a valid file path, glob, or JSON string');
   }
 }

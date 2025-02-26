@@ -1,9 +1,18 @@
 import { Command, Option } from 'clipanion';
 import * as t from 'typanion';
+import * as prompts from '@clack/prompts';
 import { spawnSync } from 'node:child_process';
 import { log } from '@clack/prompts';
-import { ConfigExpression, ConfigKey, ConfigValue, _, EvalCommandOutput, EvaluatedConfig } from '@configu/sdk';
-import { print, table, readFile } from '@configu/common';
+import {
+  ConfigExpression,
+  ConfigKey,
+  ConfigValue,
+  _,
+  EvalCommandOutput,
+  EvaluatedConfig,
+  EvaluatedConfigOrigin,
+} from '@configu/sdk';
+import { print, table, readFile, color } from '@configu/common';
 import { ConfigFormatter, ConfigFormat } from '@configu/formatters';
 
 import { BaseCommand } from './base';
@@ -80,11 +89,30 @@ export class CliExportCommand extends BaseCommand {
   ];
 
   explainConfigs(pipe: EvalCommandOutput) {
+    const orderedOrigins = [
+      EvaluatedConfigOrigin.Const,
+      EvaluatedConfigOrigin.Override,
+      EvaluatedConfigOrigin.Store,
+      EvaluatedConfigOrigin.Default,
+      EvaluatedConfigOrigin.Empty,
+    ];
     const data = _.chain(pipe)
       .values()
-      .map(({ key, origin, value }) => [key, value, origin])
+      .sortBy([({ origin }) => orderedOrigins.indexOf(origin), 'key'])
+      .map((output) => {
+        let origin = `${output.origin}`;
+        const { key, value, set } = output;
+        if (origin === EvaluatedConfigOrigin.Store) {
+          origin = `${origin} ${color.dim(`(${set})`)}`;
+        }
+        return [origin, key, value];
+      })
       .value();
-    print(table(data));
+    const dataWithHeaders = [['Origin', 'Key', 'Value'], ...data];
+    prompts.note(
+      table(dataWithHeaders, { columns: [{}, {}, { width: 20, wrapWord: true }] }),
+      `Export Report ${color.dim(`(${data.length})`)}`,
+    );
   }
 
   async filterConfigs(pipe: EvalCommandOutput) {
@@ -163,10 +191,10 @@ export class CliExportCommand extends BaseCommand {
   async execute() {
     await this.init();
 
-    const pipe = await this.readPreviousEvalCommandOutput();
+    const { pipe } = this.context;
     if (!pipe) {
       log.warn('No configuration received from the previous command');
-      return 1;
+      return 0;
     }
 
     if (this.explain) {

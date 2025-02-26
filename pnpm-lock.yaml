@@ -10,7 +10,7 @@ patchedDependencies:
     hash: 40442df2ae90bec02e8fe8131413e23437162a47d213d91e73ae827a01a23b3a
     path: patches/@npmcli__run-script.patch
   giget:
-    hash: 98e0db581b3c68d96afc9b666d3596671083ffa2be78b57105c20264a65c87d5
+    hash: 66fe9802649c4d81e077519e19e606b746c33915a510440ccfa5d7bc3163e67e
     path: patches/giget.patch
 
 importers:
@@ -169,11 +169,14 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       giget:
-        specifier: ^1.2.4
-        version: 1.2.4(patch_hash=98e0db581b3c68d96afc9b666d3596671083ffa2be78b57105c20264a65c87d5)
+        specifier: ^1.2.5
+        version: 1.2.5(patch_hash=66fe9802649c4d81e077519e19e606b746c33915a510440ccfa5d7bc3163e67e)
       glob:
         specifier: ^11.0.1
         version: 11.0.1
+      is-glob:
+        specifier: ^4.0.3
+        version: 4.0.3
       jiti:
         specifier: ^2.4.2
         version: 2.4.2
@@ -202,6 +205,9 @@ importers:
       '@types/debug':
         specifier: ^4.1.12
         version: 4.1.12
+      '@types/is-glob':
+        specifier: ^4.0.4
+        version: 4.0.4
       '@types/npmcli__arborist':
         specifier: ^6.3.0
         version: 6.3.0
@@ -2552,6 +2558,9 @@ packages:
   '@types/ioredis@4.28.10':
     resolution: {integrity: sha512-69LyhUgrXdgcNDv7ogs1qXZomnfOEnSmrmMFqKgt1XMJxmoOSG/u3wYy13yACIfKuMJ8IhKgHafDO3sx19zVQQ==}
 
+  '@types/is-glob@4.0.4':
+    resolution: {integrity: sha512-3mFBtIPQ0TQetKRDe94g8YrxJZxdMillMGegyv6zRBXvq4peRRhf2wLZ/Dl53emtTsC29dQQBwYvovS20yXpiQ==}
+
   '@types/js-yaml@4.0.9':
     resolution: {integrity: sha512-k4MGaQl5TGo/iipqb2UDG2UwjXziSWkh0uysQelTlJpX1qGlpUZYm8PnO4DxG1qBomtJUdYJ6qR6xdIah10JLg==}
 
@@ -4282,8 +4291,8 @@ packages:
   getpass@0.1.7:
     resolution: {integrity: sha512-0fzj9JxOLfJ+XGLhR8ze3unN0KZCgZwiSSDz168VERjK8Wl8kVSdcu2kspd4s4wtAa1y/qrVRiAA0WclVsu0ng==}
 
-  giget@1.2.4:
-    resolution: {integrity: sha512-Wv+daGyispVoA31TrWAVR+aAdP7roubTPEM/8JzRnqXhLbdJH0T9eQyXVFF8fjk3WKTsctII6QcyxILYgNp2DA==}
+  giget@1.2.5:
+    resolution: {integrity: sha512-r1ekGw/Bgpi3HLV3h1MRBIlSAdHoIMklpaQ3OQLFcRw9PwAj2rqigvIbg+dBUI51OxVI2jsEtDywDBjSiuf7Ug==}
     hasBin: true
 
   github-from-package@0.0.0:
@@ -5729,8 +5738,8 @@ packages:
     engines: {node: ^12.13.0 || ^14.15.0 || >=16.0.0}
     deprecated: This package is no longer supported.
 
-  nypm@0.5.2:
-    resolution: {integrity: sha512-AHzvnyUJYSrrphPhRWWZNcoZfArGNp3Vrc4pm/ZurO74tYNTgAPrEyBQEKy+qioqmWlPXwvMZCG2wOaHlPG0Pw==}
+  nypm@0.5.4:
+    resolution: {integrity: sha512-X0SNNrZiGU8/e/zAB7sCTtdxWTMSIO73q+xuKgglm2Yvzwlo8UoC5FNySQFCvl84uPaeADkqHUZUkWy4aH4xOA==}
     engines: {node: ^14.16.0 || >=16.10.0}
     hasBin: true
 
@@ -5779,9 +5788,6 @@ packages:
 
   obliterator@2.0.5:
     resolution: {integrity: sha512-42CPE9AhahZRsMNslczq0ctAEtqk8Eka26QofnqC346BZdHDySk3LWka23LI7ULIw11NmltpiLagIq8gBozxTw==}
-
-  ohash@1.1.4:
-    resolution: {integrity: sha512-FlDryZAahJmEF3VR3w1KogSEdWX3WhA5GPakFx4J81kEAiHyLMpdLLElS8n8dfNadMgAne/MywcvmogzscVt4g==}
 
   oidc-token-hash@5.0.3:
     resolution: {integrity: sha512-IF4PcGgzAr6XXSff26Sk/+P4KZFJVuHAJZj3wgO3vX2bMdNVp/QXTP3P7CEm9V1IdG8lDLY3HhiqpsE/nOwpPw==}
@@ -10177,6 +10183,8 @@ snapshots:
     dependencies:
       '@types/node': 22.10.10
 
+  '@types/is-glob@4.0.4': {}
+
   '@types/js-yaml@4.0.9': {}
 
   '@types/json5@0.0.29': {}
@@ -12259,14 +12267,13 @@ snapshots:
     dependencies:
       assert-plus: 1.0.0
 
-  giget@1.2.4(patch_hash=98e0db581b3c68d96afc9b666d3596671083ffa2be78b57105c20264a65c87d5):
+  giget@1.2.5(patch_hash=66fe9802649c4d81e077519e19e606b746c33915a510440ccfa5d7bc3163e67e):
     dependencies:
       citty: 0.1.6
       consola: 3.4.0
       defu: 6.1.4
       node-fetch-native: 1.6.6
-      nypm: 0.5.2
-      ohash: 1.1.4
+      nypm: 0.5.4
       pathe: 2.0.3
       tar: 6.2.1
 
@@ -14213,7 +14220,7 @@ snapshots:
       set-blocking: 2.0.0
     optional: true
 
-  nypm@0.5.2:
+  nypm@0.5.4:
     dependencies:
       citty: 0.1.6
       consola: 3.4.0
@@ -14270,8 +14277,6 @@ snapshots:
       es-object-atoms: 1.1.1
 
   obliterator@2.0.5: {}
-
-  ohash@1.1.4: {}
 
   oidc-token-hash@5.0.3: {}
 

@@ -54,8 +54,8 @@ if (-not $version) {
   $version = "latest"
 }
 if ($version -eq "latest" -or $version -eq "next") {
-  # $version = (Invoke-WebRequest -Uri "https://registry.npmjs.org/@configu/cli/$version" -UseBasicParsing | ConvertFrom-Json).version
-  $version = (Invoke-WebRequest -Uri "https://files.configu.com/cli/channels/$version" -UseBasicParsing).content
+  # $version = (Invoke-RestMethod -Uri "https://registry.npmjs.org/@configu/cli/$version").version
+  $version = Invoke-RestMethod -Uri "https://files.configu.com/cli/channels/$version"
 }
 # Remove leading 'v' if present
 $version = $version.TrimStart('v')
@@ -77,7 +77,7 @@ if (-not (Test-Path $bin_dir)) {
 # $download_url = "https://github.com/configu/configu/releases/download/cli/v$version/configu-v$version-$dist$archive_ext"
 $download_url = "https://files.configu.com/cli/versions/$version/configu-v$version-$dist$archive_ext"
 Write-Output "Downloading Configu from $download_url"
-Invoke-WebRequest -Uri $download_url -OutFile "$exec_path$archive_ext" -UseBasicParsing
+Invoke-RestMethod -Uri $download_url -OutFile "$exec_path$archive_ext"
 
 # Extract the binary
 if ($archive_ext -eq '.zip') {

@@ -10,11 +10,11 @@ export class PurgeCommand extends BaseCommand {
   static override usage = undefined;
 
   async execute() {
+    await this.init();
+
     const spinner = prompts.spinner();
     spinner.start(`Purging cache directory`);
-
     try {
-      await this.init();
       if (!this.context.isExecutable || !this.context.isExecFromHome) {
         throw new Error(`${this.constructor.name} is only supported running as an executable from the home directory`);
       }

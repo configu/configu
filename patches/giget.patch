@@ -1,5 +1,5 @@
 diff --git a/dist/index.cjs b/dist/index.cjs
-index fd9f0a679be478a02ecd440ba0df1dc875f7fbe5..ef12bcb146f09639dd8bb6564565da667f3ca265 100644
+index 1e18807627a4d25c7f4fec01a93c47ebcddaf14c..773832c5b3e62dd1423493387a482ebffb406924 100644
 --- a/dist/index.cjs
 +++ b/dist/index.cjs
 @@ -18,3 +18,4 @@ require('node-fetch-native/proxy');
@@ -8,29 +8,29 @@ index fd9f0a679be478a02ecd440ba0df1dc875f7fbe5..ef12bcb146f09639dd8bb6564565da66
  exports.startShell = giget.startShell;
 +exports.providers = giget.providers;
 diff --git a/dist/index.mjs b/dist/index.mjs
-index 45c703fdfc1d20f1e7ba08d4177262512b667021..6514e299fc14598729ac8127929f549c1f0300d0 100644
+index 53dcd7d8dd1b1c556885790170eb38eb5c77b36b..76b5964fff75af648fb8ed76966ee150d8d3cef5 100644
 --- a/dist/index.mjs
 +++ b/dist/index.mjs
 @@ -1,4 +1,4 @@
--export { d as downloadTemplate, r as registryProvider, s as startShell } from './shared/giget.D-_6aM9e.mjs';
-+export { d as downloadTemplate, r as registryProvider, s as startShell, p as providers } from './shared/giget.D-_6aM9e.mjs';
+-export { d as downloadTemplate, r as registryProvider, s as startShell } from './shared/giget.BgKdRmJH.mjs';
++export { d as downloadTemplate, r as registryProvider, s as startShell, p as providers } from './shared/giget.BgKdRmJH.mjs';
  import 'node:fs/promises';
  import 'node:fs';
  import 'tar';
-diff --git a/dist/shared/giget.D-_6aM9e.mjs b/dist/shared/giget.D-_6aM9e.mjs
-index c3b4bffece8ad7182614b6ae96a74e4842b0e772..535017138959c953b8bc701ccc3b585b2cd460d2 100644
---- a/dist/shared/giget.D-_6aM9e.mjs
-+++ b/dist/shared/giget.D-_6aM9e.mjs
+diff --git a/dist/shared/giget.BgKdRmJH.mjs b/dist/shared/giget.BgKdRmJH.mjs
+index 53ae5ab5ef5777e91801a7ce8a0b2ddaa59e1327..16930ea2dace1ae47e3462a0054d22ff18f886b7 100644
+--- a/dist/shared/giget.BgKdRmJH.mjs
++++ b/dist/shared/giget.BgKdRmJH.mjs
 @@ -358,4 +358,4 @@ async function downloadTemplate(input, options = {}) {
    };
  }
  
 -export { downloadTemplate as d, registryProvider as r, startShell as s };
 +export { downloadTemplate as d, registryProvider as r, startShell as s, providers as p };
-diff --git a/dist/shared/giget.ooq4UIqH.cjs b/dist/shared/giget.ooq4UIqH.cjs
-index 4bb6905b361eabf9ce3d13019880d167cc535e99..fe3459cfe0bfeff1480be2f2f68fbf20e21c3ad5 100644
---- a/dist/shared/giget.ooq4UIqH.cjs
-+++ b/dist/shared/giget.ooq4UIqH.cjs
+diff --git a/dist/shared/giget.C0XVJdqO.cjs b/dist/shared/giget.C0XVJdqO.cjs
+index 905a320ce87f2c8bbd447ed82773df272d939f37..ff59fff36e9c6a8d525f6bf2912e8b873534af37 100644
+--- a/dist/shared/giget.C0XVJdqO.cjs
++++ b/dist/shared/giget.C0XVJdqO.cjs
 @@ -363,3 +363,4 @@ async function downloadTemplate(input, options = {}) {
  exports.downloadTemplate = downloadTemplate;
  exports.registryProvider = registryProvider;

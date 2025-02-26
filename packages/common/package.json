@@ -50,8 +50,9 @@
     "axios": "^1.7.9",
     "debug": "^4.4.0",
     "find-up": "^7.0.0",
-    "giget": "^1.2.4",
+    "giget": "^1.2.5",
     "glob": "^11.0.1",
+    "is-glob": "^4.0.3",
     "jiti": "^2.4.2",
     "parse-json": "8.1.0",
     "pathe": "^2.0.3",
@@ -63,6 +64,7 @@
   },
   "devDependencies": {
     "@types/debug": "^4.1.12",
+    "@types/is-glob": "^4.0.4",
     "@types/npmcli__arborist": "^6.3.0",
     "@types/npmcli__package-json": "^4.0.4",
     "@types/semver": "^7.5.8"

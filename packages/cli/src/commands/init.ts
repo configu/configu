@@ -22,8 +22,9 @@ export class InitCommand extends BaseCommand {
   });
 
   async execute() {
-    prompts.intro(`Configu Initializer`);
     await this.init();
+
+    prompts.intro(`Configu Initializer`);
 
     const format: CfguFile['contentsType'] = this.format === 'json' ? 'json' : 'yaml';
 

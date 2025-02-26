@@ -9,9 +9,10 @@ export default defineConfig([
     clean: true,
     metafile: true,
     minify: true,
-    keepNames: true,
+    shims: true,
     treeshake: true,
     splitting: false,
+    keepNames: true,
     removeNodeProtocol: false,
 
     noExternal: [/(.*)/],
