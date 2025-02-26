@@ -1,7 +1,7 @@
 import { Command, Option } from 'clipanion';
 import * as prompts from '@clack/prompts';
-import { ConfigSet, UpsertCommand } from '@configu/sdk';
-import { print, ConfiguInterface } from '@configu/common';
+import { ConfigDiffAction, ConfigSet, UpsertCommand, _ } from '@configu/sdk';
+import { ConfiguInterface, table, color } from '@configu/common';
 // import { ConfiguPlatformConfigStoreApprovalQueueError } from '@configu/configu';
 import { BaseCommand } from './base';
 
@@ -29,12 +29,11 @@ export class CliUpsertCommand extends BaseCommand {
   });
 
   async execute() {
+    await this.init();
+
     const spinner = prompts.spinner();
-
+    spinner.start(`Initializing ${this.constructor.name}`);
     try {
-      spinner.start(`Initializing Upsert`);
-      await this.init();
-
       spinner.message(`Constructing store`);
       const store = await ConfiguInterface.getStoreInstance(this.store);
 
@@ -47,19 +46,37 @@ export class CliUpsertCommand extends BaseCommand {
       spinner.message(`Parsing assignments`);
       const configs = this.reduceKVFlag(this.assign);
 
-      spinner.message(`Reading previous eval command output`);
-      const pipe = await this.readPreviousEvalCommandOutput();
-
       spinner.message(`Upserting Configs`);
-      await new UpsertCommand({
-        store,
-        set,
-        schema,
-        configs,
-        pipe,
-      }).run();
+      const upsertCommand = new UpsertCommand({ store, set, schema, configs, pipe: this.context.pipe });
+      const { result } = await upsertCommand.run();
+
       spinner.stop(`Configs upserted successfully`, 0);
-      // prompts.log.success('Configs upserted successfully');
+
+      const orderedActions = [ConfigDiffAction.Add, ConfigDiffAction.Update, ConfigDiffAction.Delete];
+      const data = _.chain(result)
+        .values()
+        .sortBy([({ action }) => orderedActions.indexOf(action), 'key'])
+        .map((output) => {
+          const { action, key } = output;
+          let { prev, next } = output;
+          if (action === ConfigDiffAction.Add) {
+            next = color.green(next);
+          }
+          if (action === ConfigDiffAction.Update) {
+            prev = color.yellow(prev);
+            next = color.green(next);
+          }
+          if (action === ConfigDiffAction.Delete) {
+            prev = color.red(prev);
+          }
+          return [action, key, prev, next];
+        })
+        .value();
+      const dataWithHeaders = [['Action', 'Key', 'Previous Value', 'Next Value'], ...data];
+      prompts.note(
+        table(dataWithHeaders, { columns: [{}, {}, { width: 20, wrapWord: true }, { width: 20, wrapWord: true }] }),
+        `Upsert Report ${color.dim(`(${data.length})`)}:`,
+      );
     } catch (error) {
       //   // if (error instanceof ConfiguPlatformConfigStoreApprovalQueueError) {
       //   //   // * print warning message with queue url highlighted with an underline

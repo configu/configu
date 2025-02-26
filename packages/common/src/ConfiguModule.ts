@@ -13,7 +13,7 @@ import {
   CONFIGU_PATHS,
 } from './utils';
 
-const { join } = pathe;
+const { join, basename } = pathe;
 
 export class ConfiguModule {
   private static register(module: Record<string, unknown>) {
@@ -39,11 +39,11 @@ export class ConfiguModule {
     ConfiguModule.register(module as any);
   }
 
-  private static getLocalPackageDirName(packageUri: string) {
+  private static getDirnameByUri(packageUri: string) {
     return crypto.hash('md5', packageUri, 'hex');
   }
 
-  private static getAbsolutePackageUri(packageUri: string) {
+  private static getAbsoluteUri(packageUri: string) {
     const uri = new URL(packageUri);
     if (!uri.hash) {
       uri.hash = 'HEAD';
@@ -59,7 +59,7 @@ export class ConfiguModule {
     throw new Error(`Invalid package uri: ${packageUri}`);
   }
 
-  private static async tryGetLocalPackage(dirPath: string) {
+  private static async getPackageJson(dirPath: string) {
     try {
       return loadPackage(dirPath);
     } catch {
@@ -67,24 +67,25 @@ export class ConfiguModule {
     }
   }
 
-  private static async registerLocalPackage(dirPath: string) {
-    const localPackage = await ConfiguModule.tryGetLocalPackage(dirPath);
+  static async registerLocal(modulePath: string) {
+    debug(`registerLocal`, { modulePath });
+
+    const stats = await fs.stat(modulePath);
+    let packageLocalDir = '';
+    if (stats.isDirectory()) {
+      packageLocalDir = modulePath;
+    } else if (basename(modulePath) === 'package.json') {
+      packageLocalDir = pathe.dirname(modulePath);
+    } else {
+      await ConfiguModule.registerFile(modulePath);
+      return;
+    }
+
+    const localPackage = await ConfiguModule.getPackageJson(packageLocalDir);
     const { path, content } = localPackage;
 
     if (content.name === `@configu/sdk`) {
       return;
-    }
-
-    const packageLockPath = join(dirPath, 'package-lock.json');
-    const isPackageLockExists = await pathExists(packageLockPath);
-    if (!isPackageLockExists) {
-      throw new Error(`package-lock.json not found in ${dirPath}`);
-    }
-
-    const nodeModulesPath = join(dirPath, 'node_modules');
-    const isNodeModulesExists = await pathExists(nodeModulesPath);
-    if (!isNodeModulesExists) {
-      throw new Error(`node_modules not found in ${dirPath}`);
     }
 
     if (!content.exports) {
@@ -97,23 +98,44 @@ export class ConfiguModule {
       throw new Error(`module is invalid in ${path}\n${error.message}`);
     }
 
+    // todoL rethink if needed as installPackage will reify the package incrementally
+    // const packageLockPath = join(packageLocalDir, 'package-lock.json');
+    // const isPackageLockExists = await pathExists(packageLockPath);
+    // const nodeModulesPath = join(packageLocalDir, 'node_modules');
+    // const isNodeModulesExists = await pathExists(nodeModulesPath);
+
+    await installPackage(packageLocalDir);
+
     const packageEntries = (Array.isArray(content.exports) ? content.exports : [content.exports]) as string[];
     await Promise.all(
       packageEntries.map((subdir) => {
-        const packageEntryFilePath = join(dirPath, subdir);
+        const packageEntryFilePath = join(packageLocalDir, subdir);
         return ConfiguModule.registerFile(packageEntryFilePath);
       }),
     );
   }
 
-  private static async installPackage(packageUri: string, dirPath: string) {
-    debug(`Installing package`, { packageUri, dirPath });
+  static async registerRemote(packageUri: string) {
+    // todo: allow to cleanup the cache via a command `configu setup --clean-cache` / `configu purge`
+    debug(`registerRemote`, { packageUri });
 
-    await fs.mkdir(dirPath, { recursive: true });
-    const template = await downloadRepositoryTemplate(packageUri, dirPath, true);
+    const packagesLocalDir = join(CONFIGU_PATHS.cache, 'packages');
+    const packageAbsoluteUri = ConfiguModule.getAbsoluteUri(packageUri);
+    const packageLocalDirName = ConfiguModule.getDirnameByUri(packageAbsoluteUri);
+    const packageLocalDir = join(packagesLocalDir, packageLocalDirName);
+
+    await fs.mkdir(packageLocalDir, { recursive: true });
+    const template = await downloadRepositoryTemplate(packageUri, packageLocalDir, true);
     const { version } = template;
-    const localPackage = await ConfiguModule.tryGetLocalPackage(dirPath);
+    const localPackage = await ConfiguModule.getPackageJson(packageLocalDir);
     const { content } = localPackage;
+
+    debug(`registerRemote`, {
+      name: content.name,
+      version: content.version,
+      packageAbsoluteUri,
+      packageLocalDir,
+    });
 
     if (content.name === `@configu/sdk` && content.config?.entry) {
       localPackage.update({
@@ -139,7 +161,6 @@ export class ConfiguModule {
           configuDependencies.unshift(configuDependencyUri);
           debug(`Installing @configu/sdk`, configuDependencyUri);
         } else {
-          debug(`====`, { key, packageUri });
           // configu dependency which is not sdk must be in the same git uri subdir as the package
           const packageRawName = (content.name as string).replace('@configu/', '');
           const configuDependencyRawName = key.replace('@configu/', '');
@@ -148,9 +169,9 @@ export class ConfiguModule {
           debug(`Installing @configu/package`, configuDependencyUri);
         }
 
-        const configuDependencyAbsoluteUri = ConfiguModule.getAbsolutePackageUri(configuDependencyUri);
-        const configuDependencyLocalDirName = ConfiguModule.getLocalPackageDirName(configuDependencyAbsoluteUri);
-        return `file:../${configuDependencyLocalDirName}`;
+        const configuDependencyAbsoluteUri = ConfiguModule.getAbsoluteUri(configuDependencyUri);
+        const configuDependencyLocalDirName = ConfiguModule.getDirnameByUri(configuDependencyAbsoluteUri);
+        return `file:${join(packagesLocalDir, configuDependencyLocalDirName)}`;
       })
       .value();
 
@@ -163,35 +184,10 @@ export class ConfiguModule {
       // eslint-disable-next-line no-restricted-syntax
       for (const uri of configuDependencies) {
         // eslint-disable-next-line no-await-in-loop
-        await ConfiguModule.registerRemotePackage(uri);
+        await ConfiguModule.registerRemote(uri);
       }
     }
 
-    await installPackage(dirPath);
-  }
-
-  static async registerRemotePackage(packageUri: string) {
-    // todo: allow to cleanup the cache via a command `configu setup --clean-cache`
-    debug(`Registering package`, { packageUri });
-
-    const packagesLocalDir = join(CONFIGU_PATHS.cache, 'packages');
-    const packageAbsoluteUri = ConfiguModule.getAbsolutePackageUri(packageUri);
-    const packageLocalDirName = ConfiguModule.getLocalPackageDirName(packageAbsoluteUri);
-    const packageLocalDir = join(packagesLocalDir, packageLocalDirName);
-    debug(`Package details`, { packageAbsoluteUri, packageLocalDir });
-
-    try {
-      await ConfiguModule.registerLocalPackage(packageLocalDir);
-      debug(`Package ${packageAbsoluteUri} registered locally`);
-    } catch (ignoredError) {
-      debug(`Package ${packageUri} is reinstalled due:\n${ignoredError.message}`);
-      try {
-        await ConfiguModule.installPackage(packageAbsoluteUri, packageLocalDir);
-        await ConfiguModule.registerLocalPackage(packageLocalDir);
-        debug(`Package ${packageAbsoluteUri} installed to ${packageLocalDir}`);
-      } catch (error) {
-        throw new Error(`Failed to install package ${packageUri}\n${error.message}`);
-      }
-    }
+    await ConfiguModule.registerLocal(packageLocalDir);
   }
 }

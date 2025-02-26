@@ -296,18 +296,24 @@ export class ConfiguFile {
       }
     }
 
+    const configuFile = new ConfiguFile(path, parsedContents, contentsType);
+
     // handle register api
     const registerPromises = (parsedContents.register ?? []).map((module, index) => {
       const registeree = `.configu.register[${index}]`;
-      const { type, path: registereePath } = normalizeInput(module, registeree);
+      const { type, path: modulePath } = normalizeInput(module, registeree);
       if (type === 'file') {
-        return ConfiguModule.registerFile(registereePath);
+        const resolvedPath = join(configuFile.dir, modulePath);
+        return ConfiguModule.registerLocal(resolvedPath);
+      }
+      if (type === 'template') {
+        return ConfiguModule.registerRemote(modulePath);
       }
       throw new Error(`invalid registeree input at ${registeree} "${module}"`);
     });
     await Promise.all(registerPromises);
 
-    return new ConfiguFile(path, parsedContents, contentsType);
+    return configuFile;
   }
 
   public static async load(path: string): Promise<ConfiguFile> {
@@ -422,7 +428,7 @@ export class ConfiguFile {
       debug(`Registering store`, storeConfig);
       const storePackageSubdir = _.chain(storeConfig.type).camelCase().kebabCase().value();
       const storePackageUri = `configu:packages/stores/${storePackageSubdir}${storeConfig.version ? `#${storeConfig.version}` : ''}`;
-      await ConfiguModule.registerRemotePackage(storePackageUri);
+      await ConfiguModule.registerRemote(storePackageUri);
     }
     return ConfigStore.construct(storeConfig.type, storeConfig.configuration);
   }

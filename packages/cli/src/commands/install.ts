@@ -22,21 +22,42 @@ export class InstallCommand extends BaseCommand {
     env: 'CONFIGU_VERSION',
   });
 
+  global = Option.Boolean('--global', {
+    description: `Install the binary globally on the system`,
+  });
+
+  static override schema = [t.hasMutuallyExclusiveKeys(['version', 'global'], { missingIf: 'undefined' })];
+
   async execute() {
+    await this.init();
+
     const output = [];
+    let version = this.version ?? 'latest';
+
     prompts.intro(`Configu Installer`);
     const spinner = prompts.spinner();
     spinner.start(`Installing ${this.cli.binaryName}`);
-
     try {
-      await this.init();
-      if (!this.context.isExecutable || !this.context.isExecFromHome) {
-        throw new Error(`${this.constructor.name} is only supported running as an executable from the home directory`);
+      if (!this.context.isExecutable) {
+        throw new Error(`${this.constructor.name} is only available for executable binaries`);
+      }
+
+      if (this.global) {
+        spinner.message(`Copying ${this.cli.binaryName} to home directory`);
+        version = this.cli.binaryVersion as string;
+        const binDir = path.join(this.context.paths.bin, version);
+        const nextExecPath = path.join(binDir, `${this.cli.binaryName}${this.context.execExt}`);
+
+        if (process.execPath !== nextExecPath) {
+          await fs.mkdir(binDir, { recursive: true });
+          await fs.cp(process.execPath, nextExecPath, { force: true });
+          spinner.message('Binary copied to home directory');
+        } else {
+          spinner.message('Binary is already in home directory');
+        }
       }
 
       spinner.message(`Resolving version`);
-      // default to latest version
-      let version = this.version ?? 'latest';
       // handle channel based version
       if (['latest', 'next'].includes(version)) {
         const channelVersion = await configuFilesApi(`/cli/channels/${version}`);
@@ -49,8 +70,8 @@ export class InstallCommand extends BaseCommand {
       if (!semver.valid(version)) {
         throw new Error(`Invalid version ${version}`);
       }
-      spinner.message(`Installing ${version} version`);
 
+      spinner.message(`Installing ${version} version`);
       const binDir = path.join(this.context.paths.bin, version);
       const nextExecPath = path.join(binDir, `${this.cli.binaryName}${this.context.execExt}`);
 
@@ -119,7 +140,7 @@ export class InstallCommand extends BaseCommand {
 
       spinner.stop(`${this.cli.binaryName} installed`, 0);
       output.push(`Run \`${this.cli.binaryName} --help\` to see the available commands.`);
-      // output.push(`Run \`${this.cli.binaryName} init\` to get started.`);
+      output.push(`Run \`${this.cli.binaryName} init\` to get started.`);
       prompts.note(output.join('\n'), 'Next steps');
 
       const outro = [

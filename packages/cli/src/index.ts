@@ -1,7 +1,7 @@
 import { Cli, Builtins, BaseContext } from 'clipanion';
 import process from 'node:process';
 import { log } from '@clack/prompts';
-import { debug, ConfiguInterface, ConfiguFileInterfaceConfig } from '@configu/common';
+import { debug, print, ConfiguInterface, ConfiguFileInterfaceConfig } from '@configu/common';
 
 import packageJson from '../package.json' with { type: 'json' };
 
@@ -38,9 +38,14 @@ export async function run(argv: string[]) {
     binaryVersion: packageJson.version,
   });
 
-  // Enables the BaseCommand catch override functionality
+  // enables the BaseCommand catch override functionality
   const originalErrorMethod = cli.error.bind(cli);
   cli.error = (...args) => {
+    // skip running piped commands
+    if (process.stdout.writable) {
+      print('\u0000');
+    }
+    // bypass clipanion error handling
     if (typeof args[0] === 'number') {
       return '';
     }
