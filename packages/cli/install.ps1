@@ -55,7 +55,7 @@ if (-not $version) {
 }
 if ($version -eq "latest" -or $version -eq "next") {
   # $version = (Invoke-RestMethod -Uri "https://registry.npmjs.org/@configu/cli/$version").version
-  $version = Invoke-RestMethod -Uri "https://files.configu.com/cli/channels/$version"
+  $version = (Invoke-RestMethod -Uri "https://files.configu.com/cli/channels/$version").Trim()
 }
 # Remove leading 'v' if present
 $version = $version.TrimStart('v')
