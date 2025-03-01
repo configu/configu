@@ -5,7 +5,6 @@ import PackageJson from '@npmcli/package-json';
 import Arborist from '@npmcli/arborist';
 import { debug } from './OutputStreams';
 import { CONFIGU_PATHS } from './FileSystem';
-import { path } from './Misc';
 
 // todo: think of a way to check if local package is outdated and needs to be updated
 // todo: potentially contribute to giget providers - https://github.com/unjs/giget/blob/main/src/providers.ts
@@ -27,9 +26,13 @@ export const ConfiguTemplateProvider: TemplateProvider & { repository: string } 
 ConfiguTemplateProvider.repository = CONFIGU_DEFAULT_REPOSITORY;
 providers.configu = ConfiguTemplateProvider;
 
-// todo: rethink as it is already set in ConfiguInterface.init
-process.env.XDG_CACHE_HOME = CONFIGU_PATHS.cache;
+export const TemplateProviders = providers;
+
 export const downloadRepositoryTemplate = async (template: string, destination: string, force = false) => {
+  debug('XDG_CACHE_HOME:', process.env.XDG_CACHE_HOME);
+  const originalXdgCacheHome = process.env.XDG_CACHE_HOME;
+  process.env.XDG_CACHE_HOME = CONFIGU_PATHS.cache;
+
   // https://unjs.io/packages/giget#examples
   debug('Downloading repository template:', template);
   const resp = await downloadTemplate(template, {
@@ -42,6 +45,8 @@ export const downloadRepositoryTemplate = async (template: string, destination: 
     silent: !debug.enabled,
   });
   debug('Repository template downloaded:', resp);
+
+  process.env.XDG_CACHE_HOME = originalXdgCacheHome;
   return resp;
 };
 

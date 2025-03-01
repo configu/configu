@@ -117,9 +117,6 @@ export class ConfigSchema {
         }
         if (template) {
           migratedCfgu.const = template.replace(ConfigExpression.pattern, (match: string, group: string) => {
-            if (contents[group]) {
-              return `{{$.configs.${group}.storedValue}}`;
-            }
             if (group === 'CONFIGU_STORE.type') {
               return `{{$.input.store.type}}`;
             }
@@ -135,7 +132,7 @@ export class ConfigSchema {
             if (group === 'CONFIGU_SET.last') {
               return `{{_.last($.input.set.hierarchy)}}`;
             }
-            return match;
+            return `{{$.configs.${group}.storedValue}}`;
           });
         }
         return migratedCfgu;

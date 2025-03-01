@@ -1,7 +1,7 @@
 import { Command, Option } from 'clipanion';
 import * as prompts from '@clack/prompts';
 import { ConfigSet, ConfigStore, EvalCommand } from '@configu/sdk';
-import { print, ConfiguInterface } from '@configu/common';
+import { print, debug, ConfiguInterface } from '@configu/common';
 import { BaseCommand } from './base';
 
 export class CliEvalCommand extends BaseCommand {
@@ -40,12 +40,11 @@ export class CliEvalCommand extends BaseCommand {
   });
 
   async execute() {
+    await this.init();
+
     const spinner = prompts.spinner();
-
+    spinner.start(`Initializing ${this.constructor.name}`);
     try {
-      spinner.start(`Initializing Eval`);
-      await this.init();
-
       spinner.message(`Constructing store`);
       const store = this.defaults ? ConfigStore.construct('noop') : await ConfiguInterface.getStoreInstance(this.store);
 
@@ -58,18 +57,15 @@ export class CliEvalCommand extends BaseCommand {
       spinner.message(`Parsing overrides`);
       const configs = this.reduceKVFlag(this.override);
 
-      spinner.message(`Reading previous eval command output`);
-      const pipe = await this.readPreviousEvalCommandOutput();
-
       spinner.message(`Evaluating configs`);
-      const evalCommand = new EvalCommand({ store, set, schema, configs, pipe });
+      const evalCommand = new EvalCommand({ store, set, schema, configs, pipe: this.context.pipe });
       const { result } = await evalCommand.run();
 
       spinner.message(`Backing up output`);
       await ConfiguInterface.backupEvalOutput({ storeName: this.store, set, schema, evalOutput: result });
 
-      print(JSON.stringify(result));
       spinner.stop(`Configs evaluated successfully`, 0);
+      print(JSON.stringify(result));
     } catch (error) {
       spinner.stop(`Configs eval failed`, 1);
       throw error;

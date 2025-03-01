@@ -26,12 +26,14 @@
       "skipFiles": ["<node_internals>/**", "${workspaceFolder}/node_modules/**"],
       "cwd": "${workspaceFolder}/examples/playground",
       "env": {
-        "DEBUG": "configu"
+        // "DEBUG": "configu"
       },
       "args": [
-        "eval"
-        // "--defaults",
+        "eval",
+        "--defaults"
+        // ====================
         // "upsert",
+        // ====================
         // "--store",
         // "hc",
         // "--schema",
@@ -40,12 +42,14 @@
         // "Z=8"
         // ====================
         // "export",
-        // "<",
-        // "${workspaceFolder}/stdin"
+        // "--format json",
         // ====================
         // "run",
         // "--script",
-        // "script1"
+        // "script1",
+        // ====================
+        // "<",
+        // "${cwd}/stdin"
       ]
     }
   ]

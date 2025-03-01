@@ -147,7 +147,11 @@ export class EvalCommand extends ConfigCommand<EvalCommandInput, EvalCommandOutp
       return result;
     }
 
-    const mergedResults = _.assignWith(result, pipe, (current, piped) => {
+    return _.assignWith(result, pipe, (current, piped) => {
+      if (_.isUndefined(current)) {
+        return piped;
+      }
+
       if (piped.origin === EvaluatedConfigOrigin.Empty) {
         return current;
       }
@@ -165,8 +169,6 @@ export class EvalCommand extends ConfigCommand<EvalCommandInput, EvalCommandOutp
 
       return current;
     });
-
-    return mergedResults;
   }
 
   private evalConst(result: EvalCommandOutput): EvalCommandOutput {

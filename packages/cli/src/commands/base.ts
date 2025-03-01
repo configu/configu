@@ -3,11 +3,12 @@ import sea from 'node:sea';
 import { log } from '@clack/prompts';
 import getStdin from 'get-stdin';
 import { _, EvalCommandOutput } from '@configu/sdk';
-import { debug, ConfiguInterface, parseJsonFile } from '@configu/common';
+import { debug, inspect, ConfiguInterface, parseJsonFile } from '@configu/common';
 
 import { type RunContext } from '..';
 
-export type Context = RunContext & (typeof ConfiguInterface)['context'] & { isExecutable: boolean };
+export type Context = RunContext &
+  (typeof ConfiguInterface)['context'] & { isExecutable: boolean; pipe?: EvalCommandOutput };
 
 export abstract class BaseCommand extends Command<Context> {
   // todo: consider verbose to the cli logger
@@ -22,6 +23,8 @@ export abstract class BaseCommand extends Command<Context> {
   });
 
   public async init(): Promise<void> {
+    const pipe = await this.readPreviousEvalCommandOutput();
+
     // todo: think to wrap with try/catch and throw a UsageError
     await ConfiguInterface.initConfig(this.config);
 
@@ -30,11 +33,12 @@ export abstract class BaseCommand extends Command<Context> {
       ...ConfiguInterface.context,
       isExecutable:
         sea.isSea() && process.execPath.endsWith(`${this.cli.binaryName}${ConfiguInterface.context.execExt}`),
+      pipe,
     };
-    debug('BaseCommand', this.context);
+    // debug('BaseCommand', this.context);
   }
 
-  reduceKVFlag(configFlag?: string[]) {
+  public reduceKVFlag(configFlag?: string[]) {
     if (!configFlag) {
       return {};
     }
@@ -52,9 +56,9 @@ export abstract class BaseCommand extends Command<Context> {
       .value();
   }
 
-  async readPreviousEvalCommandOutput() {
+  private async readPreviousEvalCommandOutput() {
     const stdin = await getStdin();
-    debug(`<-- stdin`, stdin);
+    debug.extend('cli')(`<-- stdin`, stdin.length);
 
     if (!stdin) {
       return undefined;
@@ -72,13 +76,20 @@ export abstract class BaseCommand extends Command<Context> {
       }
       return pipe;
     } catch {
-      throw new Error(`Failed to parse previous eval command return data from stdin`);
+      debug('Invalid input from stdin', stdin);
+      throw new Error(`Failed to parse previous eval command result from stdin`, { cause: { silent: true } });
     }
   }
 
   override catch(error: any): Promise<void> {
-    log.error(error.message);
-    debug(error);
+    debug.extend('cli')(`--> catch`, inspect(error));
+
+    // print the error message if it's not silent
+    if (!error?.cause?.silent) {
+      log.error(error.message);
+    }
+
+    // bypass clipanion error handling
     // eslint-disable-next-line prefer-promise-reject-errors
     return Promise.reject(1);
   }

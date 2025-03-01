@@ -141,8 +141,8 @@ jobs:
           cat package.json
 
           # generate checksums
-          shasum -a 256 $achieves_pattern > sha256sum
-          cat sha256sum
+          shasum -a 256 $achieves_pattern > sha256sum.txt
+          cat sha256sum.txt
 
           # generate channel
           echo "${{ steps.release.outputs.version }}" > ${{ steps.release.outputs.channel }}
@@ -150,17 +150,17 @@ jobs:
 
           ls -la .
 
-          # copy package.json
-          aws s3 cp package.json $version_path/
-
           # copy binaries
           aws s3 cp ./ $version_path/ --recursive --exclude "*" --include "$achieves_pattern"
 
+          # copy package.json
+          aws s3 cp package.json $version_path/
+
           # copy checksums
-          aws s3 cp sha256sum $version_path/ --content-type "text/plain"
+          aws s3 cp sha256sum.txt $version_path/
 
           # copy channel file
-          aws s3 cp ${{ steps.release.outputs.channel }} ${{ env.S3_BUCKET }}/channels/ --content-type "text/plain"
+          aws s3 cp ${{ steps.release.outputs.channel }} ${{ env.S3_BUCKET }}/channels/ --content-type "binary/octet-stream"
 
       - name: Release install to public S3 bucket
         if: ${{ steps.release.outputs.channel == 'latest' }}
@@ -168,8 +168,8 @@ jobs:
           cd ${{ steps.release.outputs.package_path }}
 
           # copy scripts
-          aws s3 cp install.sh ${{ env.S3_BUCKET }}/
-          aws s3 cp install.ps1 ${{ env.S3_BUCKET }}/
+          aws s3 cp install.sh ${{ env.S3_BUCKET }}/ --content-type "binary/octet-stream"
+          aws s3 cp install.ps1 ${{ env.S3_BUCKET }}/ --content-type "binary/octet-stream"
 
       # todo: verify if needed with the https://github.com/aws-samples/public-file-browser-for-amazon-s3
       - name: Invalidate CloudFront cache
@@ -279,28 +279,22 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-  test-release:
+  test-binary:
     runs-on: ${{ matrix.runner }}
-    needs:
-      - release-binary
-      - release-docker
-      - release-npm
-      # - pre-release
+    needs: release-binary
     strategy:
       matrix:
         runner:
           - ubuntu-latest
           - macos-latest
           - windows-latest
-    env:
-      DOCKER_IMAGE_NAME: 'configu/cli'
     steps:
       - uses: actions/checkout@v4
 
       - uses: ./.github/actions/get-release-action
         id: release
 
-      - name: Install binary on ${{ matrix.runner }}
+      - name: Install binary on bash
         if: ${{ matrix.runner != 'windows-latest' }}
         shell: bash
         env:
@@ -314,7 +308,7 @@ jobs:
           echo "CONFIGU_HOME=$install_dir" >> $GITHUB_ENV
           echo "$install_dir" >> $GITHUB_PATH
 
-      - name: Test binary on ${{ matrix.runner }}
+      - name: Test binary on bash
         if: ${{ matrix.runner != 'windows-latest' }}
         shell: bash
         run: |
@@ -322,7 +316,7 @@ jobs:
           command -v configu
           configu -v
 
-      - name: Install binary on ${{ matrix.runner }}
+      - name: Install binary on pwsh
         if: ${{ matrix.runner == 'windows-latest' }}
         shell: pwsh
         env:
@@ -340,7 +334,7 @@ jobs:
           "CONFIGU_HOME=$install_dir" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           "$install_dir" | Out-File -FilePath "$env:GITHUB_PATH" -Encoding utf8 -Append
 
-      - name: Test binary on ${{ matrix.runner }}
+      - name: Test binary on pwsh
         if: ${{ matrix.runner == 'windows-latest' }}
         shell: pwsh
         run: |
@@ -348,8 +342,18 @@ jobs:
           Get-Command configu
           configu -v
 
+  test-docker:
+    runs-on: ubuntu-latest
+    needs: release-docker
+    env:
+      DOCKER_IMAGE_NAME: 'configu/cli'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/get-release-action
+        id: release
+
       - uses: docker/setup-docker-action@v4
-        if: ${{ matrix.runner != 'windows-latest' }}
         with:
           daemon-config: |
             {
@@ -359,10 +363,24 @@ jobs:
               }
             }
 
-      - name: Test Docker on ${{ matrix.runner }}
-        if: ${{ matrix.runner != 'windows-latest' }}
+      - name: Test Docker on ${{ runner.os }}
         run: |
           docker run --rm ${{ env.DOCKER_IMAGE_NAME }}:${{ steps.release.outputs.version }} -v
+
+  test-npm:
+    runs-on: ${{ matrix.runner }}
+    needs: release-npm
+    strategy:
+      matrix:
+        runner:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/get-release-action
+        id: release
 
       - uses: actions/setup-node@v4
         with:
@@ -375,7 +393,10 @@ jobs:
 
   post-release:
     runs-on: ubuntu-latest
-    needs: test-release
+    needs:
+      - test-binary
+      - test-docker
+      - test-npm
     steps:
       - uses: actions/checkout@v4
 

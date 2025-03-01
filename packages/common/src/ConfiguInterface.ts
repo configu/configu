@@ -66,8 +66,6 @@ export class ConfiguInterface {
     }
     debug('Interface Execution', { isHomeEnvSet, isExecFromHome });
 
-    validateEngineVersion();
-
     this.context = {
       environment,
       paths,
@@ -84,13 +82,14 @@ export class ConfiguInterface {
     };
 
     process.env.CONFIGU_HOME = this.context.paths.home;
-    process.env.XDG_CACHE_HOME = this.context.paths.cache;
   }
 
   static async initConfig(input?: string) {
     if (!this.context.paths.home) {
       throw new Error('Interface is not initialized');
     }
+
+    validateEngineVersion();
 
     const localFilePath = path.join(this.context.paths.home, '.configu');
     try {
