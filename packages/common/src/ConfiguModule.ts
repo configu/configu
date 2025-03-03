@@ -59,7 +59,7 @@ export class ConfiguModule {
     throw new Error(`Invalid package uri: ${packageUri}`);
   }
 
-  private static async getPackageJson(dirPath: string) {
+  static async getPackageJson(dirPath: string) {
     try {
       return loadPackage(dirPath);
     } catch {
@@ -67,26 +67,22 @@ export class ConfiguModule {
     }
   }
 
-  static async registerLocal(modulePath: string) {
-    debug(`registerLocal`, { modulePath });
+  static async registerLocal(packagePath: string) {
+    debug(`registerLocal`, { packagePath });
 
-    const stats = await fs.stat(modulePath);
+    const stats = await fs.stat(packagePath);
     let packageLocalDir = '';
     if (stats.isDirectory()) {
-      packageLocalDir = modulePath;
-    } else if (basename(modulePath) === 'package.json') {
-      packageLocalDir = pathe.dirname(modulePath);
+      packageLocalDir = packagePath;
+    } else if (basename(packagePath) === 'package.json') {
+      packageLocalDir = pathe.dirname(packagePath);
     } else {
-      await ConfiguModule.registerFile(modulePath);
+      await ConfiguModule.registerFile(packagePath);
       return;
     }
 
     const localPackage = await ConfiguModule.getPackageJson(packageLocalDir);
     const { path, content } = localPackage;
-
-    if (content.name === `@configu/sdk`) {
-      return;
-    }
 
     if (!content.exports) {
       throw new Error(`module not found in ${path}`);
@@ -106,6 +102,10 @@ export class ConfiguModule {
 
     await installPackage(packageLocalDir);
 
+    if (content.name === `@configu/sdk`) {
+      return;
+    }
+
     const packageEntries = (Array.isArray(content.exports) ? content.exports : [content.exports]) as string[];
     await Promise.all(
       packageEntries.map((subdir) => {
@@ -123,6 +123,17 @@ export class ConfiguModule {
     const packageAbsoluteUri = ConfiguModule.getAbsoluteUri(packageUri);
     const packageLocalDirName = ConfiguModule.getDirnameByUri(packageAbsoluteUri);
     const packageLocalDir = join(packagesLocalDir, packageLocalDirName);
+
+    const isPackageExists = await pathExists(packageLocalDir);
+    if (isPackageExists) {
+      debug(`package exists locally, trying to register...`);
+      try {
+        await ConfiguModule.registerLocal(packageLocalDir);
+        return;
+      } catch (error) {
+        debug(`Failed to register local package, trying to reinstall...`, error);
+      }
+    }
 
     await fs.mkdir(packageLocalDir, { recursive: true });
     const template = await downloadRepositoryTemplate(packageUri, packageLocalDir, true);
@@ -147,8 +158,7 @@ export class ConfiguModule {
     const dependencies = _.chain(content.dependencies)
       .mapValues((value, key) => {
         if (!value) {
-          // code should not reach here
-          return '';
+          throw new Error(`package is invalid, missing dependency value: ${key}`);
         }
 
         if (!key.startsWith('@configu/') || !value.startsWith('workspace:')) {
