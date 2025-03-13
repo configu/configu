@@ -3,27 +3,6 @@ import { DataSource, EntitySchema, type DataSourceOptions } from 'typeorm';
 import crypto from 'node:crypto';
 import { _, ConfigStore, type ConfigQuery, type Config } from '@configu/sdk';
 
-// const createEntity = (tableName: string) => {
-//   @Entity({ name: tableName })
-//   @Index(['set', 'key'], { unique: true })
-//   class Config {
-//     @PrimaryGeneratedColumn('uuid')
-//     id: string;
-
-//     @Index()
-//     @Column('text')
-//     set: string;
-
-//     @Column('text')
-//     key: string;
-
-//     @Column('text')
-//     value: string;
-//   }
-
-//   return Config;
-// };
-
 export type ORMConfigStoreSharedConfiguration = {
   tableName?: string;
 };
@@ -32,12 +11,10 @@ type ORMConfigStoreConfiguration = DataSourceOptions & ORMConfigStoreSharedConfi
 
 export abstract class ORMConfigStore extends ConfigStore {
   readonly dataSource: DataSource;
-  // private readonly configEntity: ReturnType<typeof createEntity>;
   private readonly configEntity: EntitySchema;
 
   protected constructor({ tableName = 'config', ...dataSourceOptions }: ORMConfigStoreConfiguration) {
     super();
-    // this.configEntity = createEntity(tableName);
     this.configEntity = new EntitySchema({
       name: 'Config',
       tableName,
@@ -59,12 +36,12 @@ export abstract class ORMConfigStore extends ConfigStore {
       },
       indices: [
         {
-          name: 'set_key',
+          name: `set_key_${tableName}`,
           unique: true,
           columns: ['set', 'key'],
         },
         {
-          name: 'set',
+          name: `set_${tableName}`,
           columns: ['set'],
         },
       ],
