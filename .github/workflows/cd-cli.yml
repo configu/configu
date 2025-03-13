@@ -227,6 +227,8 @@ jobs:
           push: true
           provenance: true
           sbom: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Update Docker Hub Description
         uses: peter-evans/dockerhub-description@v4

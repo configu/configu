@@ -1,0 +1,6 @@
+.dockerignore
+.git
+.github
+**/Dockerfile
+examples
+.vscode
