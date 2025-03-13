@@ -36,7 +36,7 @@ RUN corepack enable
 RUN pnpm --version
 RUN pnpm fetch
 
-RUN curl https://cli.configu.com/install.sh | sh
+RUN curl https://files.configu.com/cli/install.sh | sh
 RUN configu -v
 
 CMD ["/bin/bash"]
