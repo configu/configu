@@ -15,7 +15,7 @@ export class PurgeCommand extends BaseCommand {
     const spinner = prompts.spinner();
     spinner.start(`Purging cache directory`);
     try {
-      if (!this.context.isExecutable || !this.context.isExecFromHome) {
+      if (!this.context.isExecutable || !this.context.exec.isExecFromHome) {
         throw new Error(`${this.constructor.name} is only supported running as an executable from the home directory`);
       }
 

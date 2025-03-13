@@ -127,6 +127,9 @@ export class CfguFile {
   }
 
   public async save(contents: CfguFileContents) {
+    if (!this.path) {
+      throw new Error('CfguFile.path is not defined');
+    }
     const mergedContents = _.merge({}, this.contents, contents) satisfies CfguFileContents;
     let renderedContents: string;
     if (this.contentsType === 'json') {

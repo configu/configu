@@ -1,7 +1,7 @@
 import { Cli, Builtins, BaseContext } from 'clipanion';
 import process from 'node:process';
 import { log } from '@clack/prompts';
-import { debug, print, ConfiguInterface, ConfiguFileInterfaceConfig } from '@configu/common';
+import { debug, print } from '@configu/common';
 
 import packageJson from '../package.json' with { type: 'json' };
 
@@ -24,10 +24,6 @@ import { RunCommand } from './commands/run';
 // https://github.com/nodejs/corepack/blob/main/sources/main.ts#L40
 
 export type RunContext = BaseContext;
-
-export const checkForUpdates = async (config: ConfiguFileInterfaceConfig) => {
-  // todo: implement update check using packageJson and configuFilesApi
-};
 
 export async function run(argv: string[]) {
   debug('argv', argv);
@@ -63,11 +59,6 @@ export async function run(argv: string[]) {
   });
 
   try {
-    await ConfiguInterface.initEnvironment();
-    if (ConfiguInterface.context.isExecFromHome) {
-      await checkForUpdates(ConfiguInterface.context.interface);
-    }
-
     cli.register(Builtins.HelpCommand);
     cli.register(Builtins.VersionCommand);
 

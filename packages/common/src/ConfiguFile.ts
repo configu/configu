@@ -358,6 +358,9 @@ export class ConfiguFile {
   }
 
   public async save(contents: ConfiguFileContents) {
+    if (!this.path) {
+      throw new Error('ConfiguFile.path is not defined');
+    }
     const mergedContents = _.merge({}, this.contents, contents) satisfies ConfiguFileContents;
     let renderedContents: string;
     if (this.contentsType === 'json') {

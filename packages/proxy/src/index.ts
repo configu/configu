@@ -127,10 +127,9 @@ export const checkForUpdates = async (config: ConfiguFileInterfaceConfig) => {
 (async () => {
   try {
     // Initiating Proxy interface
-    await ConfiguInterface.initEnvironment();
-    await ConfiguInterface.initConfig();
+    await ConfiguInterface.init();
 
-    if (ConfiguInterface.context.isGlobal) {
+    if (ConfiguInterface.context.exec.isExecFromHome) {
       await checkForUpdates(ConfiguInterface.context.interface);
     }
 
