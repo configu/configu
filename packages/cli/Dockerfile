@@ -41,12 +41,11 @@ ENV CONFIGU_BIN="$CONFIGU_HOME/bin"
 ENV PATH="$CONFIGU_BIN:$PATH"
 COPY --from=build --chown=node:node /dist/dist/configu.cjs $CONFIGU_BIN/configu
 
-WORKDIR /app
 ENV NODE_ENV="production"
 ENTRYPOINT [ "configu" ]
 
 # Usage:
-# docker run --rm -v $(pwd):/app configu/cli:latest --help
+# docker run --rm -w /app -v $(pwd):/app configu/cli:latest --help
 
 # With cached stores:
-# docker run --rm -v $(pwd):/app -v $HOME/.configu/cache:/.configu/cache configu/cli:latest --help
+# docker run --rm -w /app -v /app $(pwd):/app -v $HOME/.configu/cache:/.configu/cache configu/cli:latest --help
