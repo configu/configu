@@ -1,24 +1,21 @@
 {
+  "terminal.integrated.defaultProfile.windows": "Git Bash",
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.referencesCodeLens.enabled": true,
   "editor.tabSize": 2,
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
-  "[markdown]": {
+  "[javascript][typescript]": {
     "editor.formatOnSave": false
   },
-  "[mdx]": {
+  "[markdown][mdx]": {
     "editor.formatOnSave": false
   },
-  "[javascript]": {
+  "[json][yaml]": {
     "editor.formatOnSave": false
   },
-  "[typescript]": {
-    "editor.formatOnSave": false
-  },
-  "typescript.tsdk": "node_modules/typescript/lib",
-  "typescript.referencesCodeLens.enabled": true,
-  "eslint.validate": ["javascript", "typescript"],
   "search.exclude": {
     "**/node_modules": true,
     "**/build": true,
@@ -28,6 +25,7 @@
     "pnpm-lock.yaml": true,
     "tsconfig.tsbuildinfo": true
   },
+  "eslint.validate": ["javascript", "typescript"],
   "yaml.schemas": {
     "../packages/schema/.cfgu.json": ["*.cfgu.yaml", "*.cfgu.yml"],
     "../packages/schema/.configu.json": ["*.configu.yaml", "*.configu.yml"]
