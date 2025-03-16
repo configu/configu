@@ -47,6 +47,9 @@ export class ConfiguInterface {
   }
 
   static async init(input?: string) {
+    // context will be fully initialized after this method is called
+    this.context = {} as any;
+
     const { process: _process, env: _env, ...environment } = stdenv;
     this.context.environment = environment;
     debug('Interface Environment', this.context.environment);
@@ -57,7 +60,7 @@ export class ConfiguInterface {
     this.initExecution();
     validateEngineVersion();
 
-    this.initConfig();
+    this.initConfig(input);
     process.env.CONFIGU_HOME = this.context.paths.home;
   }
 
