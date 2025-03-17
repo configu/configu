@@ -93,9 +93,10 @@ export class ConfiguInterface {
     }
 
     const localFilePath = path.join(this.context.paths.home, '.configu');
+    let localConfiguFile: ConfiguFile;
     try {
-      this.context.configu.local = await ConfiguFile.load(localFilePath);
-      debug('Local .configu loaded from', this.context.configu.local.path);
+      localConfiguFile = await ConfiguFile.load(localFilePath);
+      debug('Local .configu loaded from', localConfiguFile.path);
     } catch {
       debug('Local .configu failed to load, creating new ...');
       try {
@@ -103,18 +104,21 @@ export class ConfiguInterface {
       } catch {
         // ignore
       }
-      this.context.configu.local = new ConfiguFile(localFilePath, {}, 'yaml');
+      localConfiguFile = new ConfiguFile(localFilePath, {}, 'yaml');
     }
 
+    let inputConfiguFile: ConfiguFile | undefined;
     const configInput =
       input ?? stdenv.env.CONFIGU_CONFIG ?? stdenv.env.CONFIGU_CONFIGURATION ?? (await ConfiguFile.searchClosest());
     if (configInput) {
       debug('Input .configu located at', configInput);
-      this.context.configu.input = await ConfiguFile.loadFromInput(configInput);
+      inputConfiguFile = await ConfiguFile.loadFromInput(configInput);
       debug('Input .configu loaded');
     } else {
       debug('Input .configu not found');
     }
+
+    this.context.configu = { local: localConfiguFile, input: inputConfiguFile };
 
     const envInterfaceConfig = this.getInterfaceConfigFromEnv();
     this.context.interface = _.merge(
