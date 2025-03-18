@@ -29,28 +29,28 @@
         // "DEBUG": "configu"
       },
       "args": [
-        // "eval",
-        // "--defaults",
+        "eval",
+        "--defaults"
         // ====================
         // "upsert",
         // ====================
         // "--store",
         // "hc",
         // "--schema",
-        // "${workspaceFolder}/packages/schema/data/xy.cfgu.yaml"
+        // "${workspaceFolder}/packages/schema/data/xy.cfgu.yaml",
         // "--kv",
-        // "Z=8"
+        // "Z=8",
         // ====================
-        "export",
-        "--format",
-        "json"
+        // "export",
+        // "--format",
+        // "json",
         // ====================
         // "run",
         // "--script",
         // "script1",
         // ====================
         // "<",
-        // "./stdin"
+        // "./stdin",
       ]
     }
   ]

@@ -60,7 +60,7 @@ export class ConfiguInterface {
     this.initExecution();
     validateEngineVersion();
 
-    this.initConfig(input);
+    await this.initConfig(input);
     process.env.CONFIGU_HOME = this.context.paths.home;
   }
 
