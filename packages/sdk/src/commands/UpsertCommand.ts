@@ -164,7 +164,7 @@ export class UpsertCommand extends ConfigCommand<UpsertCommandInput, UpsertComma
     if (!this.input.dry) {
       const upsertConfigsArray = _.chain(result)
         .entries()
-        .map<Config>(([key, diff]) => ({ set: set.path, key, value: diff.next }))
+        .map<Config>(([key, diff]) => ({ set: set.path, key, value: diff.next, cfgu: diff.cfgu }))
         .value();
       await store.set(upsertConfigsArray);
     }
