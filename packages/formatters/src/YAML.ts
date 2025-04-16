@@ -7,6 +7,20 @@ type YAMLFormatterOptions = Exclude<Parameters<typeof stringify>['2'], string | 
 export const YAMLFormatter: FormatterFunction = (configs, options?: YAMLFormatterOptions) =>
   stringify(configs, options);
 
+const ensureStringValue = (config: { [key: string]: unknown }) =>
+  Object.fromEntries(
+    Object.entries(config).map(([key, value]) => {
+      switch (typeof value) {
+        case 'number':
+          return [key, value.toString()];
+        case 'boolean':
+          return [key, value.toString()];
+        default:
+          return [key, value];
+      }
+    }),
+  );
+
 const DEFAULT_API_VERSION = 'v1';
 const DEFAULT_KIND = 'ConfigMap';
 export const KubernetesConfigMapFormatter: FormatterFunction = (
@@ -21,7 +35,7 @@ export const KubernetesConfigMapFormatter: FormatterFunction = (
       ...options?.metadata,
       name: options?.name?.toLowerCase(),
     },
-    data: configs,
+    data: ensureStringValue(configs),
   };
 
   return YAMLFormatter(jsonConfigMap);
