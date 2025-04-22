@@ -106,7 +106,7 @@ importers:
         version: 0.10.0
       '@configu/common':
         specifier: workspace:*
-        version: file:packages/common
+        version: link:../common
       '@configu/formatters':
         specifier: workspace:*
         version: link:../formatters
@@ -160,8 +160,8 @@ importers:
         specifier: ^6.1.1
         version: 6.1.1
       axios:
-        specifier: ^1.7.9
-        version: 1.7.9(debug@4.4.0)
+        specifier: ^1.8.4
+        version: 1.8.4(debug@4.4.0)
       debug:
         specifier: ^4.4.0
         version: 4.4.0
@@ -237,7 +237,7 @@ importers:
     dependencies:
       '@configu/common':
         specifier: workspace:*
-        version: file:packages/common
+        version: link:../common
       '@configu/sdk':
         specifier: workspace:*
         version: link:../sdk
@@ -283,7 +283,7 @@ importers:
     dependencies:
       '@configu/common':
         specifier: workspace:*
-        version: file:packages/common
+        version: link:../common
       '@configu/sdk':
         specifier: workspace:*
         version: link:../sdk
@@ -429,8 +429,8 @@ importers:
         specifier: workspace:*
         version: link:../../sdk
       axios:
-        specifier: ^1.7.9
-        version: 1.7.9(debug@4.4.0)
+        specifier: ^1.8.4
+        version: 1.8.4(debug@4.4.0)
 
   packages/stores/csv-file:
     dependencies:
@@ -495,8 +495,8 @@ importers:
         specifier: workspace:*
         version: link:../../sdk
       axios:
-        specifier: ^1.7.9
-        version: 1.7.9(debug@4.4.0)
+        specifier: ^1.8.4
+        version: 1.8.4(debug@4.4.0)
 
   packages/stores/hcp-vault-secrets:
     dependencies:
@@ -941,21 +941,11 @@ packages:
     resolution: {integrity: sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==}
     engines: {node: '>=0.1.90'}
 
-  '@configu/common@file:packages/common':
-    resolution: {directory: packages/common, type: directory}
-    engines: {node: 22.12.0}
-
   '@configu/configu-platform@file:packages/stores/configu-platform':
     resolution: {directory: packages/stores/configu-platform, type: directory}
 
   '@configu/database@file:packages/stores/database':
     resolution: {directory: packages/stores/database, type: directory}
-
-  '@configu/file@file:packages/stores/file':
-    resolution: {directory: packages/stores/file, type: directory}
-
-  '@configu/json-file@file:packages/stores/json-file':
-    resolution: {directory: packages/stores/json-file, type: directory}
 
   '@configu/sdk@file:packages/sdk':
     resolution: {directory: packages/sdk, type: directory}
@@ -3005,9 +2995,6 @@ packages:
 
   aws4@1.13.2:
     resolution: {integrity: sha512-lHe62zvbTB5eEABUVi/AwVh0ZKY9rMMDhmm+eeyuuUQbQ3+J+fONVQOZyj+DdrvD4BY33uYniyRJ4UJIaSKAfw==}
-
-  axios@1.7.9:
-    resolution: {integrity: sha512-LhLcE7Hbiryz8oMDdDptSrWowmB4Bl6RCt6sIJKpRB4XtVf0iEgewX3au/pJqm+Py1kCASkb/FFKjxQaLtxJvw==}
 
   axios@1.8.4:
     resolution: {integrity: sha512-eBSYY4Y68NNlHbHBMdeDmKNtDgXWhQsJcGqzO3iLUM0GraQFSS9cVgPX5I9b3lbdFKyYoAEGAZF1DwhTaljNAw==}
@@ -8286,35 +8273,10 @@ snapshots:
   '@colors/colors@1.5.0':
     optional: true
 
-  '@configu/common@file:packages/common':
-    dependencies:
-      '@configu/configu-platform': file:packages/stores/configu-platform(debug@4.4.0)
-      '@configu/json-file': file:packages/stores/json-file
-      '@configu/sdk': file:packages/sdk
-      '@npmcli/arborist': 9.0.0
-      '@npmcli/package-json': 6.1.1
-      axios: 1.8.4(debug@4.4.0)
-      debug: 4.4.0
-      find-up: 7.0.0
-      giget: 1.2.5(patch_hash=66fe9802649c4d81e077519e19e606b746c33915a510440ccfa5d7bc3163e67e)
-      glob: 11.0.1
-      is-glob: 4.0.3
-      jiti: 2.4.2
-      parse-json: 8.1.0
-      pathe: 2.0.3
-      picocolors: 1.1.1
-      semver: 7.7.1
-      std-env: 3.8.0
-      table: 6.9.0
-      yaml: 2.7.0
-    transitivePeerDependencies:
-      - jest
-      - supports-color
-
   '@configu/configu-platform@file:packages/stores/configu-platform(debug@4.4.0)':
     dependencies:
       '@configu/sdk': file:packages/sdk
-      axios: 1.7.9(debug@4.4.0)
+      axios: 1.8.4(debug@4.4.0)
     transitivePeerDependencies:
       - debug
       - jest
@@ -8344,19 +8306,6 @@ snapshots:
       - supports-color
       - ts-node
       - typeorm-aurora-data-api-driver
-
-  '@configu/file@file:packages/stores/file':
-    dependencies:
-      '@configu/sdk': file:packages/sdk
-    transitivePeerDependencies:
-      - jest
-
-  '@configu/json-file@file:packages/stores/json-file':
-    dependencies:
-      '@configu/file': file:packages/stores/file
-      '@configu/sdk': file:packages/sdk
-    transitivePeerDependencies:
-      - jest
 
   '@configu/sdk@file:packages/sdk':
     dependencies:
@@ -10731,14 +10680,6 @@ snapshots:
   aws-sign2@0.7.0: {}
 
   aws4@1.13.2: {}
-
-  axios@1.7.9(debug@4.4.0):
-    dependencies:
-      follow-redirects: 1.15.9(debug@4.4.0)
-      form-data: 4.0.2
-      proxy-from-env: 1.1.0
-    transitivePeerDependencies:
-      - debug
 
   axios@1.8.4(debug@4.4.0):
     dependencies:

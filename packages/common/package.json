@@ -47,7 +47,7 @@
     "@configu/sdk": "workspace:*",
     "@npmcli/arborist": "^9.0.0",
     "@npmcli/package-json": "^6.1.1",
-    "axios": "^1.7.9",
+    "axios": "^1.8.4",
     "debug": "^4.4.0",
     "find-up": "^7.0.0",
     "giget": "^1.2.5",
