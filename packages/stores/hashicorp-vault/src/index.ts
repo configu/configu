@@ -7,7 +7,6 @@ export type HashicorpVaultConfigStoreConfiguration = { address?: string; token?:
 // ! supports K/V2 engine only
 export class HashicorpVaultConfigStore extends KeyValueConfigStore {
   private client: Axios;
-  private engine: string;
   constructor(configuration: HashicorpVaultConfigStoreConfiguration) {
     super();
 
@@ -15,17 +14,16 @@ export class HashicorpVaultConfigStore extends KeyValueConfigStore {
     const token = configuration.token ?? process.env.VAULT_TOKEN;
 
     this.client = axios.create({
-      baseURL: `${address}/v1`,
+      baseURL: `${address}/v1/${configuration.engine}`,
       headers: {
         'X-Vault-Token': token,
       },
       responseType: 'json',
     });
-    this.engine = configuration.engine;
   }
 
   private formatKey(key: string): string {
-    return `${this.engine}/data/${key}`;
+    return `/data/${key}`;
   }
 
   // * K/V2 Read Secret Version - https://www.vaultproject.io/api-docs/secret/kv/kv-v2#read-secret-version

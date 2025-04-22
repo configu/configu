@@ -1,0 +1,1 @@
+{{ _.chain($.configs).filter('value').map(({ key, value }) => { const transformedKey = _.chain(key).replace(/\_(\d+)$/, '[$1]').replace(/_/g, '.').value(); return `${transformedKey}=${value}`; }).join('\n').value() }}
