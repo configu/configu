@@ -48,10 +48,11 @@ export abstract class FileConfigStore extends ConfigStore {
   }
 
   async set(configs: Config[]): Promise<void> {
+    const configsToUpsert = configs.map((config) => _.pick(config, ['set', 'key', 'value']));
     const fileContents = await this.read();
     const storedConfigs = this.parse(fileContents);
 
-    const nextConfigs = _.chain([...configs, ...storedConfigs])
+    const nextConfigs = _.chain([...configsToUpsert, ...storedConfigs])
       .uniqBy((config) => `${config.set}.${config.key}`)
       .filter((config) => Boolean(config.value))
       .value();
