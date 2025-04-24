@@ -51,10 +51,10 @@ runs:
         version=$(echo "$tag" | awk -F '/v' '{print $2}')
 
         ref_channel=$(echo "$version" | awk -F '-' '{print $2}')
-        if [ "$branch" = "${{ github.event.repository.master_branch }}" ]; then
-          channel=latest
-        elif [ "next" = "${ref_channel%.*}" ]; then
+        if [ "next" = "${ref_channel%.*}" ]; then
           channel=next
+        elif [ "$branch" = "${{ github.event.repository.master_branch }}" ]; then
+          channel=latest
         else
           echo "couldn't resolve release channel based on the pushed tag"
           echo "use <package>/v<X.Y.Z>          for "latest" channel"

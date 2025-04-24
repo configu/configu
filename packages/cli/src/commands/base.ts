@@ -26,16 +26,18 @@ export abstract class BaseCommand extends Command<Context> {
     const pipe = await this.readPreviousEvalCommandOutput();
 
     // todo: think to wrap with try/catch and throw a UsageError
-    await ConfiguInterface.initConfig(this.config);
+    await ConfiguInterface.init(this.config);
+    if (ConfiguInterface.context.exec.isExecFromHome) {
+      await this.checkForUpdates();
+    }
 
     this.context = {
       ...this.context,
       ...ConfiguInterface.context,
       isExecutable:
-        sea.isSea() && process.execPath.endsWith(`${this.cli.binaryName}${ConfiguInterface.context.execExt}`),
+        sea.isSea() && process.execPath.endsWith(`${this.cli.binaryName}${ConfiguInterface.context.exec.ext}`),
       pipe,
     };
-    // debug('BaseCommand', this.context);
   }
 
   public reduceKVFlag(configFlag?: string[]) {
@@ -79,6 +81,11 @@ export abstract class BaseCommand extends Command<Context> {
       debug('Invalid input from stdin', stdin);
       throw new Error(`Failed to parse previous eval command result from stdin`, { cause: { silent: true } });
     }
+  }
+
+  private async checkForUpdates() {
+    // todo: implement update check using packageJson and configuFilesApi
+    // ConfiguInterface.context.interface
   }
 
   override catch(error: any): Promise<void> {

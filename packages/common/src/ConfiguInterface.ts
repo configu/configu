@@ -14,7 +14,7 @@ import {
 import { JsonFileConfigStore } from '@configu/json-file';
 import { ConfiguPlatformConfigStore } from '@configu/configu-platform';
 
-import { debug, path, stdenv, inspect, CONFIGU_PATHS, validateEngineVersion } from './utils';
+import { debug, path, stdenv, CONFIGU_PATHS, validateEngineVersion } from './utils';
 import { ConfiguFile, ConfiguFileInterfaceConfig } from './ConfiguFile';
 import { CfguFile } from './CfguFile';
 
@@ -26,9 +26,12 @@ export class ConfiguInterface {
       cache: string;
       bin: string;
     };
-    isHomeEnvSet: boolean;
-    execExt: string;
-    isExecFromHome: boolean;
+    exec: {
+      path: string;
+      ext: string;
+      isHomeEnvSet: boolean;
+      isExecFromHome: boolean;
+    };
     configu: {
       input?: ConfiguFile;
       local: ConfiguFile;
@@ -43,12 +46,28 @@ export class ConfiguInterface {
     ConfigStore.register(ConfiguPlatformConfigStore);
   }
 
-  static async initEnvironment() {
-    const { process: _process, env: _env, ...environment } = stdenv;
-    debug('Interface Environment', environment);
+  static async init(input?: string) {
+    // context will be fully initialized after this method is called
+    this.context = {} as any;
 
-    const paths = CONFIGU_PATHS;
-    debug('Interface Paths', paths);
+    const { process: _process, env: _env, ...environment } = stdenv;
+    this.context.environment = environment;
+    debug('Interface Environment', this.context.environment);
+
+    this.context.paths = CONFIGU_PATHS;
+    debug('Interface Paths', this.context.paths);
+
+    this.initExecution();
+    validateEngineVersion();
+
+    await this.initConfig(input);
+    process.env.CONFIGU_HOME = this.context.paths.home;
+  }
+
+  private static initExecution() {
+    if (!this.context.paths.bin) {
+      throw new Error('Interface is not initialized');
+    }
 
     // ! deployments of all interfaces must be compatible with the below logic
     const execPath = path.resolve(process.execPath);
@@ -57,64 +76,55 @@ export class ConfiguInterface {
     const execExt = stdenv.isWindows ? '.exe' : '';
     let isExecFromHome = false;
     if (execPath.endsWith(`configu${execExt}`)) {
-      isExecFromHome = execPath.startsWith(paths.bin);
+      isExecFromHome = execPath.startsWith(this.context.paths.bin);
     } else if (execPath.endsWith(`node${execExt}`) && process.argv[1]) {
       const argv1 = path.resolve(process.argv[1]);
-      isExecFromHome = argv1.startsWith(paths.bin);
+      isExecFromHome = argv1.startsWith(this.context.paths.bin);
     } else {
       throw new Error('Unsupported execution of Configu');
     }
-    debug('Interface Execution', { isHomeEnvSet, isExecFromHome });
-
-    this.context = {
-      environment,
-      paths,
-      isHomeEnvSet,
-      execExt,
-      isExecFromHome,
-      configu: {
-        input: undefined,
-        local: new ConfiguFile('', {}, 'yaml'),
-      },
-      interface: {
-        debug: debug.enabled,
-      },
-    };
-
-    process.env.CONFIGU_HOME = this.context.paths.home;
+    this.context.exec = { path: execExt, ext: execExt, isHomeEnvSet, isExecFromHome };
+    debug('Interface Execution', this.context.exec);
   }
 
-  static async initConfig(input?: string) {
+  private static async initConfig(input?: string) {
     if (!this.context.paths.home) {
       throw new Error('Interface is not initialized');
     }
 
-    validateEngineVersion();
-
     const localFilePath = path.join(this.context.paths.home, '.configu');
+    let localConfiguFile: ConfiguFile;
     try {
-      this.context.configu.local = await ConfiguFile.load(localFilePath);
-      debug('Local .configu loaded', localFilePath);
+      localConfiguFile = await ConfiguFile.load(localFilePath);
+      debug('Local .configu loaded from', localConfiguFile.path);
     } catch {
-      debug('Local .configu failed to load');
+      debug('Local .configu failed to load, creating new ...');
       try {
         await fs.unlink(localFilePath);
       } catch {
         // ignore
       }
+      localConfiguFile = new ConfiguFile(localFilePath, {}, 'yaml');
     }
 
+    let inputConfiguFile: ConfiguFile | undefined;
     const configInput =
       input ?? stdenv.env.CONFIGU_CONFIG ?? stdenv.env.CONFIGU_CONFIGURATION ?? (await ConfiguFile.searchClosest());
-    debug('Input .configu located', configInput);
     if (configInput) {
-      this.context.configu.input = await ConfiguFile.loadFromInput(configInput);
+      debug('Input .configu located at', configInput);
+      inputConfiguFile = await ConfiguFile.loadFromInput(configInput);
       debug('Input .configu loaded');
+    } else {
+      debug('Input .configu not found');
     }
+
+    this.context.configu = { local: localConfiguFile, input: inputConfiguFile };
 
     const envInterfaceConfig = this.getInterfaceConfigFromEnv();
     this.context.interface = _.merge(
-      {},
+      {
+        debug: debug.enabled,
+      },
       this.context.interface,
       envInterfaceConfig,
       this.context.configu.local.contents.interface,
