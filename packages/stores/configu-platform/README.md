@@ -25,7 +25,7 @@ You may optionally a tag to evaluate your configs with a [specific snapshot of a
 ```yaml
 stores:
   my-store:
-    type: configu
+    type: configu-platform
     configuration:
       credentials:
         org: my-org

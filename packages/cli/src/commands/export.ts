@@ -182,7 +182,7 @@ export class CliExportCommand extends BaseCommand {
       .value();
 
     if (this.source) {
-      return ConfigFormatter.format('dotenv', configs, {});
+      return ConfigFormatter.format('dotenv', configs, { wrap: true });
     }
 
     return ConfigFormatter.format(this.format ?? 'beautified-json', configs, {});
