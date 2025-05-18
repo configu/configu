@@ -85,7 +85,8 @@ export class ConfigSchema {
         // if (!JsonSchema.validate({ schema: CfguSchema, data: cfgu })) {
         //   throw new Error(`ConfigSchema.keys "${key}" is invalid\n${JsonSchema.getLastValidationError()}`);
         // }
-      });
+      })
+      .value();
 
     try {
       JSONSchema.validate(ConfigSchemaKeysSchema, this.keys);
