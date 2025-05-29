@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://files.configu.com/schema/.cfgu.json
+# yaml-language-server: $schema=../.cfgu.json
 
 keys:
   X:

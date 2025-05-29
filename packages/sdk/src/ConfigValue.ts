@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { Jsonify, Merge } from 'type-fest';
 
 import { type Cfgu } from './Cfgu';
@@ -7,7 +6,7 @@ import { type ConfigStore } from './ConfigStore';
 import { type ConfigSet } from './ConfigSet';
 import { type ConfigSchema } from './ConfigSchema';
 import { ConfigExpression, ExpressionString } from './ConfigExpression';
-import { JSONSchema, FromSchema } from './expressions/JSONSchema';
+import { _, JSONSchema, FromSchema } from './expressions';
 
 export type ConfigValueAny = FromSchema<typeof JSONSchema.AnyPropertySchema>;
 

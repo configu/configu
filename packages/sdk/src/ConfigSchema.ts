@@ -1,9 +1,8 @@
-import _ from 'lodash';
 import { CfguSchema } from './Cfgu';
 import { ConfigKey } from './ConfigKey';
-import { JSONSchema, JSONSchemaObject, FromSchema } from './expressions/JSONSchema';
 import { ConfigValue } from './ConfigValue';
 import { ConfigExpression } from './ConfigExpression';
+import { _, JSONSchema, JSONSchemaObject, FromSchema } from './expressions';
 
 const LEGACY_CFGU_VALUE_TYPE_VALIDATORS: Record<string, string> = {
   Boolean: 'validator.isBoolean($.storedValue, { loose: true })',
@@ -60,7 +59,14 @@ export const ConfigSchemaKeysSchema = {
   // patternProperties: {
   //   [Naming.pattern]: CfguSchema,
   // },
-  additionalProperties: CfguSchema,
+  additionalProperties: {
+    oneOf: [
+      CfguSchema,
+      {
+        type: 'null',
+      },
+    ],
+  },
 } as const satisfies JSONSchemaObject;
 
 export type ConfigSchemaKeys = FromSchema<typeof ConfigSchemaKeysSchema>;

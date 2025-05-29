@@ -1,5 +1,5 @@
-import _ from 'lodash';
 import { ConfigKey } from './ConfigKey';
+import { _ } from './expressions';
 
 /**
  * A unique, case-sensitive path within a tree-like data structure that groups `Config`s contextually.

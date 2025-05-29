@@ -18,163 +18,169 @@
       "required": [],
       "minProperties": 1,
       "additionalProperties": {
-        "type": "object",
-        "required": [],
-        "additionalProperties": false,
-        "nullable": true,
-        "properties": {
-          "description": {
-            "type": "string",
-            "minLength": 1
-          },
-          "label": {
-            "type": ["string", "array"],
-            "oneOf": [
-              {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": [],
+            "additionalProperties": false,
+            "nullable": true,
+            "properties": {
+              "description": {
                 "type": "string",
                 "minLength": 1
               },
-              {
-                "type": "array",
-                "minItems": 1,
-                "uniqueItems": true,
-                "items": {
-                  "type": "string",
-                  "minLength": 1
-                }
-              }
-            ]
-          },
-          "hidden": {
-            "type": "boolean"
-          },
-          "lazy": {
-            "type": "boolean"
-          },
-          "const": {
-            "type": "string",
-            "minLength": 1
-          },
-          "default": {
-            "type": ["string", "number", "boolean", "object", "array"],
-            "oneOf": [
-              {
-                "type": "string"
+              "label": {
+                "type": ["string", "array"],
+                "oneOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                ]
               },
-              {
-                "type": "number"
-              },
-              {
+              "hidden": {
                 "type": "boolean"
               },
-              {
-                "type": "object"
+              "lazy": {
+                "type": "boolean"
               },
-              {
-                "type": "array"
-              }
-            ]
-          },
-          "required": {
-            "type": "boolean"
-          },
-          "pattern": {
-            "type": "string",
-            "minLength": 1
-          },
-          "enum": {
-            "type": "array",
-            "uniqueItems": true,
-            "items": {
-              "type": ["string", "number", "boolean", "object", "array"],
-              "oneOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "number"
-                },
-                {
-                  "type": "boolean"
-                },
-                {
-                  "type": "object"
-                },
-                {
-                  "type": "array"
-                }
-              ]
-            }
-          },
-          "schema": {
-            "type": "object",
-            "minProperties": 1
-          },
-          "test": {
-            "type": ["string", "array"],
-            "oneOf": [
-              {
+              "const": {
                 "type": "string",
                 "minLength": 1
               },
-              {
+              "default": {
+                "type": ["string", "number", "boolean", "object", "array"],
+                "oneOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "object"
+                  },
+                  {
+                    "type": "array"
+                  }
+                ]
+              },
+              "required": {
+                "type": "boolean"
+              },
+              "pattern": {
+                "type": "string",
+                "minLength": 1
+              },
+              "enum": {
                 "type": "array",
-                "minItems": 1,
                 "uniqueItems": true,
                 "items": {
-                  "type": "string",
-                  "minLength": 1
+                  "type": ["string", "number", "boolean", "object", "array"],
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "object"
+                    },
+                    {
+                      "type": "array"
+                    }
+                  ]
+                }
+              },
+              "schema": {
+                "type": "object",
+                "minProperties": 1
+              },
+              "test": {
+                "type": ["string", "array"],
+                "oneOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                ]
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "required": ["lazy"]
+                },
+                "then": {
+                  "properties": {
+                    "const": false,
+                    "default": false
+                  }
+                }
+              },
+              {
+                "if": {
+                  "required": ["const"]
+                },
+                "then": {
+                  "properties": {
+                    "lazy": false,
+                    "default": false
+                  }
+                }
+              },
+              {
+                "if": {
+                  "required": ["default"]
+                },
+                "then": {
+                  "properties": {
+                    "lazy": false,
+                    "const": false,
+                    "required": false
+                  }
+                }
+              },
+              {
+                "if": {
+                  "required": ["required"]
+                },
+                "then": {
+                  "properties": {
+                    "const": false,
+                    "default": false
+                  }
                 }
               }
             ]
-          }
-        },
-        "allOf": [
-          {
-            "if": {
-              "required": ["lazy"]
-            },
-            "then": {
-              "properties": {
-                "const": false,
-                "default": false
-              }
-            }
           },
           {
-            "if": {
-              "required": ["const"]
-            },
-            "then": {
-              "properties": {
-                "lazy": false,
-                "default": false,
-                "required": false
-              }
-            }
-          },
-          {
-            "if": {
-              "required": ["default"]
-            },
-            "then": {
-              "properties": {
-                "lazy": false,
-                "const": false,
-                "required": false
-              }
-            }
-          },
-          {
-            "if": {
-              "required": ["required"]
-            },
-            "then": {
-              "properties": {
-                "const": false,
-                "default": false
-              }
-            }
+            "type": "null"
           }
         ]
       }
