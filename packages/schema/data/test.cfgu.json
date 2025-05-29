@@ -1,5 +1,5 @@
 {
-  "$schema": "https://files.configu.com/schema/.cfgu.json",
+  "$schema": "../.cfgu.json",
   "keys": {
     "NODE_ENV": {
       "description": "Defines the environment in which the application runs",

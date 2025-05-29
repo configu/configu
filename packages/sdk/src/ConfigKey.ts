@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { _ } from './expressions';
 
 export class ConfigKey {
   static readonly pattern = '^[A-Za-z0-9_-]+$';

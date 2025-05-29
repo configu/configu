@@ -1,17 +1,18 @@
-import _ from 'lodash';
 import { ConfigCommand } from '../ConfigCommand';
 import { ConfigValue, ConfigValueAny, ConfigWithCfgu } from '../ConfigValue';
 import { ConfigStore, ConfigQuery } from '../ConfigStore';
 import { ConfigSet } from '../ConfigSet';
 import { ConfigSchema } from '../ConfigSchema';
 import { ConfigExpression } from '../ConfigExpression';
+import { _ } from '../expressions';
 
 export enum EvaluatedConfigOrigin {
-  Const = 'const',
-  Override = 'override',
-  Store = 'store',
-  Default = 'default',
   Empty = 'empty',
+  Store = 'store',
+  Override = 'override',
+  Default = 'default',
+  // Pipe = 'pipe' -> pipped configs brings their own origin
+  Const = 'const',
 }
 
 export type EvaluatedConfig = ConfigWithCfgu & {
@@ -28,6 +29,7 @@ export type EvalCommandInput = {
   schema: ConfigSchema;
   configs?: { [key: string]: ConfigValueAny };
   pipe?: EvalCommandOutput;
+  depth?: number;
   validate?: boolean;
 };
 
@@ -38,8 +40,8 @@ export class EvalCommand extends ConfigCommand<EvalCommandInput, EvalCommandOutp
     await store.init();
 
     let result: EvalCommandOutput = { ...this.evalEmpty() };
-    result = { ...result, ...this.evalOverride(result) };
     result = { ...result, ...(await this.evalStore(result)) };
+    result = { ...result, ...this.evalOverride(result) };
     result = { ...result, ...this.evalDefault(result) };
     result = { ...result, ...this.evalPipe(result) };
     result = { ...result, ...this.evalConst(result) };
@@ -53,17 +55,12 @@ export class EvalCommand extends ConfigCommand<EvalCommandInput, EvalCommandOutp
     const { schema } = this.input;
 
     return _.mapValues<ConfigSchema['keys'], EvaluatedConfig>(schema.keys, (cfgu, key) => {
-      let origin = EvaluatedConfigOrigin.Empty;
-      if (cfgu?.const) {
-        origin = EvaluatedConfigOrigin.Const;
-      }
-
       return {
         set: this.input.set.path,
         key,
         value: '',
         cfgu,
-        origin,
+        origin: EvaluatedConfigOrigin.Empty,
       };
     });
   }
@@ -72,37 +69,33 @@ export class EvalCommand extends ConfigCommand<EvalCommandInput, EvalCommandOutp
     const { configs = {} } = this.input;
 
     return _.mapValues(result, (current) => {
-      if (current.origin !== EvaluatedConfigOrigin.Empty) {
-        return current;
-      }
-
       const isOverridden = Object.prototype.hasOwnProperty.call(configs, current.key);
       const isLazy = Boolean(current.cfgu?.lazy);
 
-      if (!isOverridden && !isLazy) {
-        return current;
+      if (isOverridden || isLazy) {
+        const overrideValue = configs?.[current.key] ?? '';
+        return {
+          ...current,
+          value: ConfigValue.stringify(overrideValue),
+          origin: EvaluatedConfigOrigin.Override,
+        };
       }
 
-      const overrideValue = configs?.[current.key] ?? '';
-      return {
-        ...current,
-        value: ConfigValue.stringify(overrideValue),
-        origin: EvaluatedConfigOrigin.Override,
-      };
+      return current;
     });
   }
 
   private async evalStore(result: EvalCommandOutput): Promise<EvalCommandOutput> {
-    const { store, set } = this.input;
+    const { store, set, depth = Infinity } = this.input;
 
+    const setHierarchy = _.takeRight(set.hierarchy, depth);
     const storeQueries = _.chain(result)
       .values()
-      .filter((current) => current.origin === EvaluatedConfigOrigin.Empty)
-      .flatMap((current) => set.hierarchy.map((node) => ({ set: node, key: current.key })))
+      .flatMap((current) => setHierarchy.map((node) => ({ set: node, key: current.key })))
       .value() satisfies ConfigQuery[];
     const storeConfigsArray = await store.get(storeQueries);
     const storeConfigsDict = _.chain(storeConfigsArray)
-      .orderBy([(config) => set.hierarchy.indexOf(config.set)], ['asc']) // "asc" because _.keyBy will keep the last element for each key
+      .orderBy([(config) => setHierarchy.indexOf(config.set)], ['asc']) // "asc" because _.keyBy will keep the last element for each key
       .keyBy((config) => config.key) // https://lodash.com/docs#keyBy
       .value();
 
@@ -124,11 +117,9 @@ export class EvalCommand extends ConfigCommand<EvalCommandInput, EvalCommandOutp
 
   private evalDefault(result: EvalCommandOutput): EvalCommandOutput {
     return _.mapValues(result, (current) => {
-      if (current.origin !== EvaluatedConfigOrigin.Empty) {
-        return current;
-      }
+      const isEmpty = current.origin === EvaluatedConfigOrigin.Empty;
 
-      if (current.cfgu?.default) {
+      if (current.cfgu?.default && isEmpty) {
         return {
           ...current,
           value: ConfigValue.stringify(current.cfgu.default),
@@ -174,10 +165,19 @@ export class EvalCommand extends ConfigCommand<EvalCommandInput, EvalCommandOutp
   private evalConst(result: EvalCommandOutput): EvalCommandOutput {
     const { store, set, schema } = this.input;
 
-    const resultWithConstExpressions = { ...result };
+    const resultWithConstExpressions = _.mapValues(result, (current) => {
+      if (current.cfgu?.const) {
+        return {
+          ...current,
+          value: '',
+          origin: EvaluatedConfigOrigin.Const,
+        };
+      }
+      return current;
+    });
 
-    const constExpressionsDict = _.chain(result)
-      .pickBy((current) => current.origin === EvaluatedConfigOrigin.Const)
+    const constExpressionsDict = _.chain(resultWithConstExpressions)
+      .pickBy((current) => current.cfgu?.const)
       .mapValues((current) => (current.cfgu?.const ? `\`${current.cfgu.const}\`` : ''))
       .value();
 
@@ -196,6 +196,7 @@ export class EvalCommand extends ConfigCommand<EvalCommandInput, EvalCommandOutp
         ) ?? '';
       (resultWithConstExpressions[key] as EvaluatedConfig).value = value;
     });
+
     return resultWithConstExpressions;
   }
 

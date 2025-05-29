@@ -3,6 +3,11 @@ import { ConfigKey } from './ConfigKey';
 
 export type ConfigQuery = Pick<Config, 'set' | 'key'>;
 
+export type ConfigStoreConfiguration = {
+  cfgu?: boolean;
+  [key: string]: any;
+};
+
 export interface ConfigStoreConstructor {
   // eslint-disable-next-line no-use-before-define
   new (configuration: any): ConfigStore;
@@ -18,6 +23,8 @@ export abstract class ConfigStore {
 
   // todo: verify if this is needed except for jsonify
   public readonly type: string = this.constructor.name;
+
+  constructor(public readonly configuration: ConfigStoreConfiguration = { cfgu: false }) {}
 
   static get type() {
     if (!this.name.endsWith(ConfigStore.name)) {
