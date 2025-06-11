@@ -109,7 +109,7 @@ importers:
         version: link:../common
       '@configu/formatters':
         specifier: workspace:*
-        version: file:packages/formatters
+        version: link:../formatters
       '@configu/sdk':
         specifier: workspace:*
         version: link:../sdk
@@ -242,8 +242,8 @@ importers:
         specifier: ^4.17.21
         version: 4.17.21
       yaml:
-        specifier: ^2.7.0
-        version: 2.7.0
+        specifier: ^2.8.0
+        version: 2.8.0
 
   packages/proxy:
     dependencies:
@@ -441,8 +441,8 @@ importers:
         specifier: workspace:*
         version: link:../../sdk
       axios:
-        specifier: ^1.7.9
-        version: 1.7.9
+        specifier: ^1.9.0
+        version: 1.9.0(debug@4.4.1)
 
   packages/stores/csv-file:
     dependencies:
@@ -507,8 +507,8 @@ importers:
         specifier: workspace:*
         version: link:../../sdk
       axios:
-        specifier: ^1.7.9
-        version: 1.7.9
+        specifier: ^1.9.0
+        version: 1.9.0(debug@4.4.1)
 
   packages/stores/ini-file:
     dependencies:
@@ -946,9 +946,6 @@ packages:
 
   '@configu/database@file:packages/stores/database':
     resolution: {directory: packages/stores/database, type: directory}
-
-  '@configu/formatters@file:packages/formatters':
-    resolution: {directory: packages/formatters, type: directory}
 
   '@configu/sdk@file:packages/sdk':
     resolution: {directory: packages/sdk, type: directory}
@@ -3027,9 +3024,6 @@ packages:
 
   aws4@1.13.2:
     resolution: {integrity: sha512-lHe62zvbTB5eEABUVi/AwVh0ZKY9rMMDhmm+eeyuuUQbQ3+J+fONVQOZyj+DdrvD4BY33uYniyRJ4UJIaSKAfw==}
-
-  axios@1.7.9:
-    resolution: {integrity: sha512-LhLcE7Hbiryz8oMDdDptSrWowmB4Bl6RCt6sIJKpRB4XtVf0iEgewX3au/pJqm+Py1kCASkb/FFKjxQaLtxJvw==}
 
   axios@1.9.0:
     resolution: {integrity: sha512-re4CqKTJaURpzbLHtIi6XpDv20/CnpXOtjRY5/CU32L8gU8ek9UIivcfvSWvmKEngmVbrUtPpdDwWDWL7DNHvg==}
@@ -8433,13 +8427,6 @@ snapshots:
       - ts-node
       - typeorm-aurora-data-api-driver
 
-  '@configu/formatters@file:packages/formatters':
-    dependencies:
-      change-case: 5.4.4
-      dotenv: 16.4.7
-      lodash: 4.17.21
-      yaml: 2.8.0
-
   '@configu/sdk@file:packages/sdk':
     dependencies:
       '@segment/ajv-human-errors': 2.14.1(ajv@8.17.1)
@@ -10841,14 +10828,6 @@ snapshots:
   aws-sign2@0.7.0: {}
 
   aws4@1.13.2: {}
-
-  axios@1.7.9:
-    dependencies:
-      follow-redirects: 1.15.9(debug@4.4.1)
-      form-data: 4.0.2
-      proxy-from-env: 1.1.0
-    transitivePeerDependencies:
-      - debug
 
   axios@1.9.0(debug@4.4.1):
     dependencies:

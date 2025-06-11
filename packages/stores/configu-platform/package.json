@@ -27,7 +27,7 @@
   ],
   "dependencies": {
     "@configu/sdk": "workspace:*",
-    "axios": "^1.7.9"
+    "axios": "^1.9.0"
   },
   "devDependencies": {}
 }
