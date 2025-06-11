@@ -3,10 +3,12 @@ import { ConfigKey } from './ConfigKey';
 
 export type ConfigQuery = Pick<Config, 'set' | 'key'>;
 
-export type ConfigStoreConfiguration = {
-  cfgu?: boolean;
-  [key: string]: any;
-};
+export type ConfigStoreConfiguration =
+  | {
+      cfgu?: boolean;
+      [key: string]: any;
+    }
+  | undefined;
 
 export interface ConfigStoreConstructor {
   // eslint-disable-next-line no-use-before-define

@@ -3,7 +3,7 @@ import os from 'node:os';
 import fs from 'node:fs/promises';
 import { _ } from '@configu/sdk';
 import { debug } from './OutputStreams';
-import { path, stdenv, JSON, YAML } from './Misc';
+import { path, stdenv, JSON, YAML, Dotenv } from './Misc';
 
 export const CONFIGU_DEFAULT_HOME_DIR = path.join(os.homedir(), '.configu');
 export const CONFIGU_HOME = path.resolve(stdenv.env.CONFIGU_HOME ?? CONFIGU_DEFAULT_HOME_DIR);
@@ -74,6 +74,15 @@ export const parseYamlFile = (filePath: string, fileContent: string): any => {
     return YAML.parse(fileContent);
   } catch (error) {
     error.message = `YAML Error in ${filePath}:\n${error.message}`;
+    throw error;
+  }
+};
+
+export const parseDotenvFile = (filePath: string, fileContent: string): any => {
+  try {
+    return Dotenv.parse(fileContent, { processEnv: {} });
+  } catch (error) {
+    error.message = `Dotenv Error in ${filePath}:\n${error.message}`;
     throw error;
   }
 };

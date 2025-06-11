@@ -3,8 +3,19 @@ import { Command, Option } from 'clipanion';
 import * as prompts from '@clack/prompts';
 import openEditor from 'open-editor';
 import { ConfigSet, ConfigValue, UpsertCommand, UpsertCommandInput, _ } from '@configu/sdk';
-import { ConfiguInterface, table, color, path, YAML, readFile, diffChars } from '@configu/common';
-import { ConfigFormatter, ConfigFormat } from '@configu/formatters';
+import {
+  ConfiguInterface,
+  table,
+  color,
+  path,
+  YAML,
+  readFile,
+  parseJsonFile,
+  parseYamlFile,
+  parseDotenvFile,
+  diffChars,
+} from '@configu/common';
+// import { ConfigFormatter, ConfigFormat } from '@configu/formatters';
 // import { ConfiguPlatformConfigStoreApprovalQueueError } from '@configu/configu';
 import { BaseCommand } from './base';
 
@@ -57,8 +68,8 @@ export class CliUpsertCommand extends BaseCommand {
     description: `Provide key=value pairs inline. Can be repeated.`,
   });
 
-  fromFile = Option.String(`--from-file,--fs,-f`, {
-    description: `Load values from a file or directory. Supports .env, .json, .yaml.`,
+  fromFile = Option.Array(`--from-file,--fs,-f`, {
+    description: `Load values from a file or directory. Supports .env, .json, .yaml. Can be repeated.`,
   });
 
   edit = Option.Boolean(`--edit,--interactive,-i`, false, {
@@ -94,9 +105,41 @@ export class CliUpsertCommand extends BaseCommand {
 
       let configs = {} as UpsertCommandInput['configs'];
 
+      if (this.fromFile) {
+        spinner.message(`Loading configs from file`);
+        const filePromises = this.fromFile.map(async (file, idx) => {
+          const filePath = path.resolve(file);
+          const fileExt = path.extname(filePath).slice(1).toLowerCase();
+          const fileContents = await readFile(filePath);
+          if (fileExt === 'env') {
+            return parseDotenvFile(filePath, fileContents);
+          }
+          if (fileExt === 'json') {
+            const contents = parseJsonFile(filePath, fileContents);
+            if (_.isArray(contents)) {
+              throw new Error(`JSON file at --from-file[${idx}] should contain an object, not an array`);
+            }
+            return contents;
+          }
+          if (fileExt === 'yaml' || fileExt === 'yml') {
+            const contents = parseYamlFile(filePath, fileContents);
+            if (_.isArray(contents)) {
+              throw new Error(`YAML file at --from-file[${idx}] should contain an object, not an array`);
+            }
+            return contents;
+          }
+          throw new Error(`Unsupported file type: ${fileExt} at --from-file[${idx}]`);
+        });
+        const fileConfigsArray = await Promise.all(filePromises);
+        spinner.message(`Merging configs from files`);
+        configs = _.merge({}, ...fileConfigsArray);
+      }
+
       if (this.fromLiteral) {
         spinner.message(`Parsing kv flag`);
-        configs = this.reduceKVFlag(this.fromLiteral);
+        const literalConfigs = this.reduceKVFlag(this.fromLiteral);
+        spinner.message(`Merging configs from --from-literal`);
+        configs = _.merge({}, configs, literalConfigs);
       }
 
       if (this.edit) {
@@ -120,9 +163,38 @@ export class CliUpsertCommand extends BaseCommand {
           dry: true,
         });
         const upsertResult = await upsertCommand.run();
+
+        // // Build a YAMLMap to preserve order and allow comments
+        // const map = new YAML.YAMLMap();
+
+        // _.chain(upsertResult.result).forEach(({ key, value, cfgu }) => {
+        //   const parsedValue = ConfigValue.parse(value);
+        //   const valueNode = YAML.createNode(parsedValue);
+
+        //   if (cfgu?.const) {
+        //     valueNode.commentBefore = 'const';
+        //   } else if (cfgu?.lazy) {
+        //     valueNode.commentBefore = 'lazy';
+        //   }
+
+        //   const pair = new YAML.Pair(key, valueNode);
+        //   map.items.push(pair);
+        // });
+
+        // const doc = new YAML.Document(map);
+        // const editorTempFileContents = doc.toString();
+
         const editorTempFileData = _.chain(upsertResult.result)
           .keyBy('key')
-          .mapValues(({ value }) => ConfigValue.parse(value))
+          .mapValues(({ value, cfgu }) => {
+            if (cfgu?.lazy) {
+              return '';
+            }
+            if (cfgu?.const) {
+              return '';
+            }
+            return ConfigValue.parse(value);
+          })
           .value();
         let editorTempFileContents = YAML.stringify(editorTempFileData);
 

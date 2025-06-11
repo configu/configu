@@ -59,14 +59,7 @@ export const ConfigSchemaKeysSchema = {
   // patternProperties: {
   //   [Naming.pattern]: CfguSchema,
   // },
-  additionalProperties: {
-    oneOf: [
-      CfguSchema,
-      {
-        type: 'null',
-      },
-    ],
-  },
+  additionalProperties: CfguSchema,
 } as const satisfies JSONSchemaObject;
 
 export type ConfigSchemaKeys = FromSchema<typeof ConfigSchemaKeysSchema>;

@@ -5,6 +5,7 @@ import * as stdenv from 'std-env';
 import semver from 'semver';
 import parseJson from 'parse-json';
 import YAML from 'yaml';
+import dotenv from '@dotenvx/dotenvx';
 import { diffChars } from 'diff';
 import { flatten, unflatten } from 'flat';
 import { print, box, debug } from './OutputStreams';
@@ -15,7 +16,25 @@ const JSON = {
   stringify: globalThis.JSON.stringify,
 };
 
-export { path, findUp, findUpMultiple, pathExists, glob, stdenv, semver, diffChars, flatten, unflatten, JSON, YAML };
+const Dotenv = {
+  parse: dotenv.parse,
+};
+
+export {
+  path,
+  findUp,
+  findUpMultiple,
+  pathExists,
+  glob,
+  stdenv,
+  semver,
+  diffChars,
+  flatten,
+  unflatten,
+  JSON,
+  YAML,
+  Dotenv,
+};
 
 export const validateEngineVersion = () => {
   // todo: find a way to get the repo version smoothly

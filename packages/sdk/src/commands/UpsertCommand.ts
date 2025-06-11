@@ -34,19 +34,23 @@ export class UpsertCommand extends ConfigCommand<UpsertCommandInput, UpsertComma
       return;
     }
 
-    const differentKeys = _.difference(_.keys(configs), _.keys(schema.keys));
-    if (!_.isEmpty(differentKeys)) {
-      throw new Error(`Keys ${differentKeys.map((key) => `"${key}"`).join(', ')} are not declared on schema`);
-    }
+    // const differentKeys = _.difference(_.keys(configs), _.keys(schema.keys));
+    // if (!_.isEmpty(differentKeys)) {
+    //   throw new Error(`Keys ${differentKeys.map((key) => `"${key}"`).join(', ')} are not declared on schema`);
+    // }
 
     // validate assigned configs
     _.forEach(configs, (value, key) => {
       try {
         if (value) {
-          const cfgu = schema.keys[key];
-          if (!cfgu) {
+          const isDeclared = Object.prototype.hasOwnProperty.call(schema.keys, key);
+          if (!isDeclared) {
             throw new Error(`Key is not declared on schema`);
           }
+          const cfgu = schema.keys[key] ?? null;
+          // if (!cfgu) {
+          //   throw new Error(`Key is not declared on schema`);
+          // }
           if (cfgu?.lazy) {
             throw new Error(`Key declared as "lazy" cannot be assigned a value`);
           }
@@ -145,7 +149,7 @@ export class UpsertCommand extends ConfigCommand<UpsertCommandInput, UpsertComma
         .entries()
         .map(([key, diff]) => {
           const config = { set: set.path, key, value: diff.next };
-          if (store.configuration.cfgu) {
+          if (store.configuration?.cfgu) {
             return { ...config, cfgu: diff.cfgu };
           }
           return config;

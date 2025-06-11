@@ -29,10 +29,16 @@
         // "DEBUG": "configu"
       },
       "args": [
-        "eval",
-        "--defaults"
+        // "eval",
+        // "--defaults"
         // ====================
-        // "upsert",
+        "upsert",
+        // "-f",
+        // ".env",
+        "-l",
+        "X.0=500",
+        "-l",
+        "Y.a.c=true"
         // ====================
         // "--store",
         // "hc",

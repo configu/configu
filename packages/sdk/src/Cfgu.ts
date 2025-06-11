@@ -129,7 +129,7 @@ const CfguStringOrStringArrayProperty = {
 } as const satisfies JSONSchemaObject;
 
 export const CfguSchema = {
-  type: 'object',
+  type: ['object', 'null'],
   required: [],
   additionalProperties: false,
   nullable: true,

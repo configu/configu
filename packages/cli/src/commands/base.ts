@@ -3,7 +3,7 @@ import sea from 'node:sea';
 import { log } from '@clack/prompts';
 import getStdin from 'get-stdin';
 import { _, EvalCommandOutput } from '@configu/sdk';
-import { debug, inspect, ConfiguInterface, parseJsonFile } from '@configu/common';
+import { debug, inspect, ConfiguInterface, parseJsonFile, unflatten } from '@configu/common';
 
 import { type RunContext } from '..';
 
@@ -45,7 +45,7 @@ export abstract class BaseCommand extends Command<Context> {
       return {};
     }
 
-    return _(configFlag)
+    const reducedKV = _(configFlag)
       .map((pair, idx) => {
         const [key, ...rest] = pair.split('=');
         if (!key) {
@@ -56,6 +56,8 @@ export abstract class BaseCommand extends Command<Context> {
       .keyBy('key')
       .mapValues('value')
       .value();
+
+    return unflatten(reducedKV) satisfies Record<string, string>;
   }
 
   private async readPreviousEvalCommandOutput() {
