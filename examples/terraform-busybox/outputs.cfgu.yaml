@@ -1,0 +1,7 @@
+# yaml-language-server: $schema=https://files.configu.com/schema/.cfgu.json
+
+keys:
+  container_id:
+    description: "ID of the Docker container"
+  image_id:
+    description: "ID of the Docker image"

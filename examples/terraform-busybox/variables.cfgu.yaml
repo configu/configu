@@ -1,0 +1,21 @@
+# yaml-language-server: $schema=https://files.configu.com/schema/.cfgu.json
+
+keys:
+  image_tag:
+    description: "Tag of the Docker image"
+    default: '1.36.1'
+    test:
+      - validator.isSemVer($.value)
+  container_name:
+    description: "Name of the Docker container"
+    const: '`busybox-{{ $.input.set.path.replace("/", "-") }}`'
+  container_env:
+    description: "Environment variable pair to inject into the container"
+    const: '`{{ $.configs.MY_ENV_VAR.key }}={{ $.configs.MY_ENV_VAR.value }}`'
+  MY_ENV_VAR:
+    hidden: true
+    schema:
+      type: string
+      minLength: 1
+    test: 0 < $.value.length < 100
+    default: 'this env delivered by configu'
