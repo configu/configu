@@ -26,19 +26,23 @@
       "skipFiles": ["<node_internals>/**", "${workspaceFolder}/node_modules/**"],
       "cwd": "${workspaceFolder}/examples/playground",
       "env": {
-        // "DEBUG": "configu"
+        // "DEBUG": "configu",
+        "EDITOR": "code"
       },
       "args": [
         // "eval",
         // "--defaults"
         // ====================
         "upsert",
-        // "-f",
-        // ".env",
+        "-f",
+        ".env",
+        // "-l",
+        // "X.0=500",
         "-l",
-        "X.0=500",
-        "-l",
-        "Y.a.c=true"
+        "Y.a.c=true",
+        "--edit",
+        "--prune",
+        "--dry"
         // ====================
         // "--store",
         // "hc",

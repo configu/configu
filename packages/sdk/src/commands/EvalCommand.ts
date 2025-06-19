@@ -69,7 +69,7 @@ export class EvalCommand extends ConfigCommand<EvalCommandInput, EvalCommandOutp
     const { configs = {} } = this.input;
 
     return _.mapValues(result, (current) => {
-      const isOverridden = Object.prototype.hasOwnProperty.call(configs, current.key);
+      const isOverridden = _.has(configs, current.key);
       const isLazy = Boolean(current.cfgu?.lazy);
 
       if (isOverridden || isLazy) {
@@ -178,7 +178,8 @@ export class EvalCommand extends ConfigCommand<EvalCommandInput, EvalCommandOutp
 
     const constExpressionsDict = _.chain(resultWithConstExpressions)
       .pickBy((current) => current.cfgu?.const)
-      .mapValues((current) => (current.cfgu?.const ? `\`${current.cfgu.const}\`` : ''))
+      // .mapValues((current) => (current.cfgu?.const ? `\`${current.cfgu.const}\`` : ''))
+      .mapValues((current) => current.cfgu?.const ?? '')
       .value();
 
     ConfigExpression.sort(constExpressionsDict).forEach((key) => {

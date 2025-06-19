@@ -94,6 +94,10 @@ export class ConfigSchema {
     }
   }
 
+  getCfgu(key: string) {
+    return this.keys[key] ?? null;
+  }
+
   static fromLegacyConfigSchema(contents: V0ConfigSchemaKeys) {
     const migratedContents: ConfigSchemaKeys = _(contents)
       .mapValues((value, key) => {

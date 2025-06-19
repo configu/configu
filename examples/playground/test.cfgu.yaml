@@ -5,4 +5,11 @@ keys:
     default: 1
   Y:
   Z:
+    lazy: true
+  SOME_KEY:
+  LONGER_KEY:
+  VERY_LONG_KEY:
+
+
+
 

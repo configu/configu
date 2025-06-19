@@ -2,7 +2,7 @@ import { Command, Option, UsageError } from 'clipanion';
 import sea from 'node:sea';
 import { log } from '@clack/prompts';
 import getStdin from 'get-stdin';
-import { _, EvalCommandOutput } from '@configu/sdk';
+import { _, ConfigValue, EvalCommandOutput } from '@configu/sdk';
 import { debug, inspect, ConfiguInterface, parseJsonFile, unflatten } from '@configu/common';
 
 import { type RunContext } from '..';
@@ -58,6 +58,23 @@ export abstract class BaseCommand extends Command<Context> {
       .value();
 
     return unflatten(reducedKV) satisfies Record<string, string>;
+  }
+
+  public handleLiteralInput(literals?: string[]) {
+    const reducedLiterals = _(literals)
+      .map((literal, idx) => {
+        const [key, ...rest] = literal.split('=');
+        if (!key) {
+          throw new UsageError(`Literal key is missing at --from-literal[${idx}]`);
+        }
+        const value = ConfigValue.parse(rest.join('=') ?? '');
+        return { key, value };
+      })
+      .keyBy('key')
+      .mapValues('value')
+      .value();
+
+    return unflatten(reducedLiterals) satisfies Record<string, string>;
   }
 
   private async readPreviousEvalCommandOutput() {

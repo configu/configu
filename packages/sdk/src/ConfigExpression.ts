@@ -134,6 +134,6 @@ export class ConfigExpression {
     });
 
     // Filter sorted to include only the initial template keys
-    return sorted.filter((key) => Object.prototype.hasOwnProperty.call(expressionsDict, key));
+    return sorted.filter((key) => _.has(expressionsDict, key));
   }
 }
