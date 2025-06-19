@@ -65,7 +65,7 @@ export class CliUpsertCommand extends BaseCommand {
   });
 
   store = Option.String(`--store,--st,-s`, {
-    description: `Target [ConfigStore](https://docs.configu.com/introduction/concepts#learn-more-about-configstore).Defaults to [.configu.stores.default](https://docs.configu.com/interfaces/.configu#stores).`,
+    description: `Target [ConfigStore](https://docs.configu.com/introduction/concepts#learn-more-about-configstore). Defaults to [.configu.stores.default](https://docs.configu.com/interfaces/.configu#stores).`,
   });
 
   set = Option.String(`--set,--se,-t`, {
