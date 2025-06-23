@@ -129,7 +129,7 @@ const CfguStringOrStringArrayProperty = {
 } as const satisfies JSONSchemaObject;
 
 export const CfguSchema = {
-  type: 'object',
+  type: ['object', 'null'],
   required: [],
   additionalProperties: false,
   nullable: true,
@@ -153,9 +153,7 @@ export const CfguSchema = {
     }),
     JSONSchema.createPropertyExclusiveSchema({
       property: 'const',
-      // todo: consider if its a stupid but valid pair with required
-      // exclusive: ['lazy', 'default']
-      exclusive: ['lazy', 'default', 'required'],
+      exclusive: ['lazy', 'default'],
     }),
     JSONSchema.createPropertyExclusiveSchema({
       property: 'default',

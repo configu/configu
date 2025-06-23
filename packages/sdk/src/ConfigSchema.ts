@@ -1,9 +1,8 @@
-import _ from 'lodash';
 import { CfguSchema } from './Cfgu';
 import { ConfigKey } from './ConfigKey';
-import { JSONSchema, JSONSchemaObject, FromSchema } from './expressions/JSONSchema';
 import { ConfigValue } from './ConfigValue';
 import { ConfigExpression } from './ConfigExpression';
+import { _, JSONSchema, JSONSchemaObject, FromSchema } from './expressions';
 
 const LEGACY_CFGU_VALUE_TYPE_VALIDATORS: Record<string, string> = {
   Boolean: 'validator.isBoolean($.storedValue, { loose: true })',
@@ -93,6 +92,10 @@ export class ConfigSchema {
     } catch (error) {
       throw new Error(`ConfigSchema.keys are invalid\n${error.message}`);
     }
+  }
+
+  getCfgu(key: string) {
+    return this.keys[key] ?? null;
   }
 
   static fromLegacyConfigSchema(contents: V0ConfigSchemaKeys) {

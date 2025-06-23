@@ -1,4 +1,4 @@
-$schema: https://files.configu.com/schema/.configu.json
+# yaml-language-server: $schema=../.configu.json
 
 stores:
   store1:

@@ -1,5 +1,5 @@
-import _ from 'lodash';
 import { ConfigKey } from './ConfigKey';
+import { _ } from './expressions';
 
 /**
  * A unique, case-sensitive path within a tree-like data structure that groups `Config`s contextually.
@@ -11,6 +11,7 @@ export class ConfigSet {
   static readonly rootLabel = '/';
 
   public readonly hierarchy: string[] = [];
+  public readonly label: string = ConfigSet.rootLabel;
 
   constructor(public readonly path: string = ConfigSet.root) {
     this.path = this.path.trim();
@@ -25,6 +26,7 @@ export class ConfigSet {
 
     if (this.path === ConfigSet.root) {
       this.hierarchy = [ConfigSet.root];
+      this.label = ConfigSet.rootLabel;
       return;
     }
 
@@ -34,5 +36,11 @@ export class ConfigSet {
       return _.take(sets, idx + 1).join(ConfigSet.separator);
     });
     this.hierarchy.unshift(ConfigSet.root);
+
+    this.label = _.truncate(`${ConfigSet.rootLabel}${this.path}`, {
+      length: 48,
+      separator: ConfigSet.separator,
+      omission: `${ConfigSet.separator}...`,
+    });
   }
 }

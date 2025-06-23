@@ -1,4 +1,4 @@
-$schema: https://files.configu.com/schema/.cfgu.json
+# yaml-language-server: $schema=../.cfgu.json
 
 keys:
   NODE_ENV:
