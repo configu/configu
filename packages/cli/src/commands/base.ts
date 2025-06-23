@@ -45,7 +45,7 @@ export abstract class BaseCommand extends Command<Context> {
       return {};
     }
 
-    const reducedKV = _(configFlag)
+    return _(configFlag)
       .map((pair, idx) => {
         const [key, ...rest] = pair.split('=');
         if (!key) {
@@ -56,8 +56,6 @@ export abstract class BaseCommand extends Command<Context> {
       .keyBy('key')
       .mapValues('value')
       .value();
-
-    return unflatten(reducedKV) satisfies Record<string, string>;
   }
 
   public handleLiteralInput(literals?: string[]) {
