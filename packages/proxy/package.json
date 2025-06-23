@@ -56,7 +56,7 @@
     "@gquittet/graceful-server": "4.0.9",
     "@scalar/fastify-api-reference": "^1.24.39",
     "cosmiconfig": "^9.0.0",
-    "fastify": "^4.28.1",
+    "fastify": "^4.29.1",
     "fastify-plugin": "^4.5.1",
     "lodash": "^4.17.21"
   },
