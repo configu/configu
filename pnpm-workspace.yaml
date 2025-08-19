@@ -10,7 +10,7 @@ managePackageManagerVersions: false
 
 # https://pnpm.io/settings#build-settings
 childConcurrency: 10
-verifyDepsBeforeRun: error
+verifyDepsBeforeRun: warn
 
 # https://pnpm.io/settings#nodejs-settings
 useNodeVersion: 22.18.0
