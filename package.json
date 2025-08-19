@@ -62,11 +62,11 @@
     "start": "pnpm prepare:art"
   },
   "devDependencies": {
-    "@arethetypeswrong/cli": "^0.17.3",
+    "@arethetypeswrong/cli": "^0.18.2",
     "@cspell/eslint-plugin": "^8.17.3",
-    "@microsoft/api-extractor": "^7.50.0",
-    "@types/lodash": "^4.17.15",
-    "@types/node": "22.10.10",
+    "@microsoft/api-extractor": "^7.52.10",
+    "@types/lodash": "^4.17.20",
+    "@types/node": "22.17.2",
     "@typescript-eslint/eslint-plugin": "^8.24.1",
     "@typescript-eslint/parser": "^8.24.1",
     "eslint": "^8.57.1",
@@ -75,14 +75,14 @@
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-prettier": "^5.2.3",
     "husky": "^9.1.7",
-    "lint-staged": "^15.4.3",
-    "prettier": "^3.5.1",
-    "shx": "^0.3.4",
-    "syncpack": "^13.0.2",
-    "tsup": "^8.3.6",
-    "tsx": "^4.19.3",
-    "typescript": "^5.7.3",
-    "zx": "8.3.2"
+    "lint-staged": "^16.1.5",
+    "prettier": "^3.6.2",
+    "shx": "^0.4.0",
+    "syncpack": "^13.0.4",
+    "tsup": "^8.5.0",
+    "tsx": "^4.20.4",
+    "typescript": "^5.9.2",
+    "zx": "8.8.0"
   },
   "pnpm": {
     "patchedDependencies": {
