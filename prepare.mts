@@ -34,9 +34,9 @@ Run "${chalk.magenta(`pnpm exec npm pkg set config.node=${node.lts}`)}" to updat
   await fs.writeFile('.nvmrc', `${node.engine}\n`);
   await fs.writeFile('.node-version', `${node.engine}\n`);
 
-  let npmrc = await fs.readFile('.npmrc', 'utf-8');
-  npmrc = npmrc.replace(/node_version=(.*)/, `node_version=${node.engine}`);
-  await fs.writeFile('.npmrc', npmrc);
+  let pnpmWorkspace = await fs.readFile('pnpm-workspace.yaml', 'utf-8');
+  pnpmWorkspace = pnpmWorkspace.replace(/useNodeVersion:\s*(.*)/, `useNodeVersion: ${node.engine}`);
+  await fs.writeFile('pnpm-workspace.yaml', pnpmWorkspace);
 
   const dockerFiles = await glob('**/Dockerfile', { dot: true, gitignore: true });
   for await (const file of dockerFiles) {
