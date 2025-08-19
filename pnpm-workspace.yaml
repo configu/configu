@@ -21,7 +21,7 @@ childConcurrency: 10
 verifyDepsBeforeRun: error
 
 # https://pnpm.io/settings#nodejs-settings
-useNodeVersion: 22.17.0
+useNodeVersion: 22.18.0
 
 # https://pnpm.io/settings#workspace-settings
 injectWorkspacePackages: true

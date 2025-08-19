@@ -3,7 +3,6 @@ lockfileVersion: '9.0'
 settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
-  injectWorkspacePackages: true
 
 patchedDependencies:
   '@npmcli/run-script':
@@ -149,7 +148,7 @@ importers:
     dependencies:
       '@configu/configu-platform':
         specifier: workspace:*
-        version: file:packages/stores/configu-platform(debug@4.4.1)
+        version: link:../stores/configu-platform
       '@configu/json-file':
         specifier: workspace:*
         version: link:../stores/json-file
@@ -607,7 +606,7 @@ importers:
     dependencies:
       '@configu/database':
         specifier: workspace:*
-        version: file:packages/stores/database(mssql@11.0.1)(pg@8.13.1)(sqlite3@5.1.7)(ts-node@10.9.2(@types/node@22.10.10)(typescript@5.7.3))
+        version: link:../database
       '@configu/sdk':
         specifier: workspace:*
         version: link:../../sdk
@@ -940,15 +939,6 @@ packages:
   '@colors/colors@1.5.0':
     resolution: {integrity: sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==}
     engines: {node: '>=0.1.90'}
-
-  '@configu/configu-platform@file:packages/stores/configu-platform':
-    resolution: {directory: packages/stores/configu-platform, type: directory}
-
-  '@configu/database@file:packages/stores/database':
-    resolution: {directory: packages/stores/database, type: directory}
-
-  '@configu/sdk@file:packages/sdk':
-    resolution: {directory: packages/sdk, type: directory}
 
   '@cspell/cspell-bundled-dicts@8.17.3':
     resolution: {integrity: sha512-6uOF726o3JnExAUKM20OJJXZo+Qf9Jt64nkVwnVXx7Upqr5I9Pb1npYPEAIpUA03SnWYmKwUIqhAmkwrN+bLPA==}
@@ -8392,59 +8382,6 @@ snapshots:
 
   '@colors/colors@1.5.0':
     optional: true
-
-  '@configu/configu-platform@file:packages/stores/configu-platform(debug@4.4.1)':
-    dependencies:
-      '@configu/sdk': file:packages/sdk
-      axios: 1.9.0(debug@4.4.1)
-    transitivePeerDependencies:
-      - debug
-      - jest
-
-  '@configu/database@file:packages/stores/database(mssql@11.0.1)(pg@8.13.1)(sqlite3@5.1.7)(ts-node@10.9.2(@types/node@22.10.10)(typescript@5.7.3))':
-    dependencies:
-      '@configu/sdk': file:packages/sdk
-      reflect-metadata: 0.2.2
-      typeorm: 0.3.20(mssql@11.0.1)(pg@8.13.1)(sqlite3@5.1.7)(ts-node@10.9.2(@types/node@22.10.10)(typescript@5.7.3))
-    transitivePeerDependencies:
-      - '@google-cloud/spanner'
-      - '@sap/hana-client'
-      - better-sqlite3
-      - hdb-pool
-      - ioredis
-      - jest
-      - mongodb
-      - mssql
-      - mysql2
-      - oracledb
-      - pg
-      - pg-native
-      - pg-query-stream
-      - redis
-      - sql.js
-      - sqlite3
-      - supports-color
-      - ts-node
-      - typeorm-aurora-data-api-driver
-
-  '@configu/sdk@file:packages/sdk':
-    dependencies:
-      '@segment/ajv-human-errors': 2.14.1(ajv@8.17.1)
-      '@vitest/expect': 3.0.6
-      acorn: 8.14.0
-      acorn-walk: 8.3.4
-      ajv: 8.17.1
-      ajv-formats: 3.0.1(ajv@8.17.1)
-      chai: 5.2.0
-      chai-subset: 1.6.0
-      jest-extended: 4.0.2
-      json-schema-to-ts: 3.1.1
-      lodash: 4.17.21
-      ses: 1.11.0
-      validator: 13.12.0
-      zod: 3.24.2
-    transitivePeerDependencies:
-      - jest
 
   '@cspell/cspell-bundled-dicts@8.17.3':
     dependencies:
