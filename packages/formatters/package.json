@@ -50,8 +50,8 @@
   "dependencies": {
     "change-case": "^5.4.4",
     "dotenv": "16.4.7",
-    "lodash": "catalog:",
-    "yaml": "catalog:"
+    "lodash": "^4.17.21",
+    "yaml": "^2.8.1"
   },
   "devDependencies": {}
 }

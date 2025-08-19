@@ -3,10 +3,6 @@ packages:
   - 'packages/stores/*'
   - 'docs'
 
-catalog:
-  'lodash': '^4.17.21'
-  'yaml': '^2.8.1'
-
 # https://pnpm.io/settings#cli-settings
 engineStrict: true
 packageManagerStrictVersion: true

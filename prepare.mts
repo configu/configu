@@ -20,11 +20,11 @@ const getCurrentNodeLTSVersion = async () => {
     lts: await getCurrentNodeLTSVersion(),
     current: process.versions.node,
   };
-  const pnpm = {
-    engine: packageJson.config.pnpm,
-    // lts: 'pnpm has its own version management',
-    current: (await $`pnpm --version`).stdout.trim(),
-  };
+  // const pnpm = {
+  //   engine: packageJson.config.pnpm,
+  //   // lts: 'pnpm has its own version management',
+  //   current: (await $`pnpm --version`).stdout.trim(),
+  // };
 
   if (node.lts !== node.engine) {
     console.warn(`Node.js Update available! ${chalk.red(node.engine)} → ${chalk.green(node.lts)}.
@@ -46,7 +46,7 @@ Run "${chalk.magenta(`pnpm exec npm pkg set config.node=${node.lts}`)}" to updat
     await fs.writeFile(file, content);
   }
 
-  await $`pnpm exec npm pkg set packageManager=pnpm@${pnpm.engine}`.pipe(process.stdout);
+  // await $`pnpm exec npm pkg set packageManager=pnpm@${pnpm.engine}`.pipe(process.stdout);
   // await $`pnpm exec npm pkg set devEngines.packageManager.version=${pnpm.engine}`.pipe(process.stdout);
 
   await $`pnpm --filter @configu/common exec npm pkg set engines.node=${node.engine}`.pipe(process.stdout);
@@ -60,11 +60,11 @@ Run "${chalk.magenta(`pnpm exec npm pkg set config.node=${node.lts}`)}" to updat
     exitCode = 1;
   }
 
-  if (pnpm.current !== pnpm.engine) {
-    console.error(`This project requires pnpm ${pnpm.engine} but you are running ${pnpm.current}.
-    Run "${chalk.magenta(`corepack enable`)}" to switch to the correct version.`);
-    exitCode = 1;
-  }
+  // if (pnpm.current !== pnpm.engine) {
+  //   console.error(`This project requires pnpm ${pnpm.engine} but you are running ${pnpm.current}.
+  //   Run "${chalk.magenta(`corepack enable`)}" to switch to the correct version.`);
+  //   exitCode = 1;
+  // }
 
   process.exitCode = exitCode;
 })();

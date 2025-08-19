@@ -26,7 +26,7 @@
   "dependencies": {
     "@configu/key-value": "workspace:*",
     "@kubernetes/client-node": "^0.20.0",
-    "lodash": "catalog:"
+    "lodash": "^4.17.21"
   },
   "devDependencies": {}
 }

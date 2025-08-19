@@ -63,7 +63,7 @@
     "semver": "^7.7.2",
     "std-env": "^3.9.0",
     "table": "6.9.0",
-    "yaml": "catalog:"
+    "yaml": "^2.8.1"
   },
   "devDependencies": {
     "@types/debug": "^4.1.12",
