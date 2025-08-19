@@ -53,7 +53,7 @@ runs:
       if: ${{ inputs.dependencies == 'true' }} # * there is a bug in gh-actions causing booleans to be strings in composite actions - see: https://github.com/actions/runner/issues/1483#issuecomment-1042393939
       shell: bash
       run: |
-        pnpm install --config.architecture=${{ inputs.architecture }} --frozen-lockfile
+        pnpm install --config.architecture=${{ inputs.architecture }} --frozen-lockfile --ignore-scripts
         pnpm list --recursive --depth 0
       env:
         HUSKY: '0'
