@@ -1,5 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
-
 import { $, cd } from 'zx';
 import * as fs from 'node:fs/promises';
 import { JSONSchemaObject } from '@configu/sdk';

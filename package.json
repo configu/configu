@@ -20,29 +20,30 @@
     "email": "dev@configu.com",
     "url": "https://configu.com"
   },
-  "packageManager": "pnpm@10.14.0",
+  "packageManager": "pnpm@10.17.1",
   "devEngines": {
     "runtime": {
       "name": "node",
-      "version": "22.18.0",
+      "version": "22.20.0",
       "onFail": "error"
     }
   },
   "config": {
-    "format": "**/*.{js,mjs,ts,mts,md,mdx,json,yml,yaml}",
+    "format": ".",
     "lint": ".",
     "test": "packages/**/src/**/*.test.ts",
-    "node": "22.18.0"
+    "node": "22.20.0"
   },
   "scripts": {
     "prepare": "pnpm pkg:art && pnpm pkg:hooks && pnpm pkg:config && pnpm build",
     "clean": "pnpm -r clean",
     "clean:cache": "shx rm -rf **/node_modules **/dist .eslintcache lcov.info",
     "clean:all": "pnpm clean && pnpm clean:cache",
-    "format": "prettier --ignore-path .gitignore --ignore-path .prettierignore",
+    "format": "prettier",
     "format:check": "pnpm format --check $npm_package_config_format",
     "format:fix": "pnpm format --write $npm_package_config_format",
-    "lint": "eslint --ignore-path .gitignore --cache",
+    "type:check": "tsc --build",
+    "lint": "eslint --cache",
     "lint:check": "pnpm lint --quiet $npm_package_config_lint",
     "lint:fix": "pnpm lint --fix $npm_package_config_lint",
     "pkg:art": "shx cat docs/images/ascii-art.txt",
@@ -56,38 +57,33 @@
     "build": "pnpm build:libs && pnpm install --ignore-scripts && pnpm build:interfaces",
     "build:libs": "pnpm --filter \"@configu/sdk\" --filter \"@configu/formatters\" build",
     "build:interfaces": "pnpm --filter \"@configu/schema\" --filter \"@configu/cli\" --filter \"@configu/proxy\" build",
-    "build:stores": "pnpm -r --filter \"./packages/stores/*\" build",
     "build:docs": "pnpm --filter \"@configu/docs\" build",
     "start": "pnpm prepare:art"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.2",
-    "@cspell/eslint-plugin": "^8.17.3",
-    "@microsoft/api-extractor": "^7.52.10",
+    "@arethetypeswrong/core": "^0.18.2",
+    "@cspell/eslint-plugin": "^9.2.1",
+    "@eslint/compat": "^1.4.0",
+    "@eslint/js": "^9.36.0",
+    "@microsoft/api-extractor": "^7.52.14",
     "@types/lodash": "^4.17.20",
-    "@types/node": "22.17.2",
-    "@typescript-eslint/eslint-plugin": "^8.24.1",
-    "@typescript-eslint/parser": "^8.24.1",
-    "eslint": "^8.57.1",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-prettier": "^10.0.1",
-    "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-prettier": "^5.2.3",
+    "@types/node": "24.6.0",
+    "esbuild": "^0.25.10",
+    "eslint": "^9.36.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-import-x": "^4.16.1",
+    "eslint-plugin-prettier": "^5.5.4",
+    "globals": "^16.4.0",
     "husky": "^9.1.7",
-    "lint-staged": "^16.1.5",
+    "lint-staged": "^16.2.3",
     "prettier": "^3.6.2",
     "shx": "^0.4.0",
     "syncpack": "^13.0.4",
-    "tsup": "^8.5.0",
-    "tsx": "^4.20.4",
-    "typescript": "^5.9.2",
-    "zx": "8.8.0"
-  },
-  "pnpm": {
-    "patchedDependencies": {
-      "giget": "patches/giget.patch",
-      "@npmcli/run-script": "patches/@npmcli__run-script.patch"
-    },
-    "neverBuiltDependencies": []
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.45.0",
+    "zx": "8.8.4"
   }
 }

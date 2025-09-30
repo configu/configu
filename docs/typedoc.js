@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+
 /** @type {import('typedoc').TypeDocOptions} */
 module.exports = {
   basePath: '../',

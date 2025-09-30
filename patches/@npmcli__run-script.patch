@@ -1,22 +1,39 @@
 diff --git a/lib/make-spawn-args.js b/lib/make-spawn-args.js
-index 8a32d7198cb2e2969576ca8fa226926a5fe0afef..1c08440155ec49e2ccc7ee0e6e71bf8ec341aef4 100644
+index 1c9f02c062f72645b75947204a53457e181384e4..08f3e0ab44254a6aed029f4f34f712ba92486c25 100644
 --- a/lib/make-spawn-args.js
 +++ b/lib/make-spawn-args.js
-@@ -1,7 +1,7 @@
- /* eslint camelcase: "off" */
+@@ -2,8 +2,6 @@
  const setPATH = require('./set-path.js')
  const { resolve } = require('path')
--const npm_config_node_gyp = require.resolve('node-gyp/bin/node-gyp.js')
-+// const npm_config_node_gyp = require.resolve('node-gyp/bin/node-gyp.js')
  
+-let npm_config_node_gyp
+-
  const makeSpawnArgs = options => {
    const {
-@@ -23,7 +23,7 @@ const makeSpawnArgs = options => {
+     args,
+@@ -18,17 +16,6 @@ const makeSpawnArgs = options => {
+     stdioString,
+   } = options
+ 
+-  if (nodeGyp) {
+-    // npm already pulled this from env and passes it in to options
+-    npm_config_node_gyp = nodeGyp
+-  } else if (env.npm_config_node_gyp) {
+-    // legacy mode for standalone user
+-    npm_config_node_gyp = env.npm_config_node_gyp
+-  } else {
+-    // default
+-    npm_config_node_gyp = require.resolve('node-gyp/bin/node-gyp.js')
+-  }
+-
+   const spawnEnv = setPATH(path, binPaths, {
+     // we need to at least save the PATH environment var
+     ...process.env,
+@@ -36,7 +23,6 @@ const makeSpawnArgs = options => {
      npm_package_json: resolve(path, 'package.json'),
      npm_lifecycle_event: event,
      npm_lifecycle_script: cmd,
 -    npm_config_node_gyp,
-+    // npm_config_node_gyp,
    })
  
    const spawnOpts = {

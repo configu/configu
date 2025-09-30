@@ -28,5 +28,7 @@
     "@configu/sdk": "workspace:*",
     "ini": "5.0.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/ini": "^4.1.1"
+  }
 }

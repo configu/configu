@@ -1,4 +1,4 @@
-import { type MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
+import { type MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions.js';
 import { ORMConfigStore, type ORMConfigStoreSharedConfiguration } from '@configu/database';
 
 // * TypeORM uses the mysql driver under the hood for MariaDB

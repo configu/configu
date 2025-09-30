@@ -1,4 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import { createJiti } from 'jiti';
 import { downloadTemplate, TemplateProvider, TemplateInfo, GitInfo, providers } from 'giget';
 import PackageJson from '@npmcli/package-json';
@@ -9,7 +8,6 @@ import { CONFIGU_PATHS } from './FileSystem';
 // todo: think of a way to check if local package is outdated and needs to be updated
 // todo: potentially contribute to giget providers - https://github.com/unjs/giget/blob/main/src/providers.ts
 declare module 'giget' {
-  // eslint-disable-next-line @typescript-eslint/no-shadow
   const providers: Record<GitInfo['provider'] | 'configu', TemplateProvider>;
 }
 

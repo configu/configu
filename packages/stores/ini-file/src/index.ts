@@ -1,4 +1,4 @@
-import ini from 'ini';
+import * as ini from 'ini';
 import { _, type Config } from '@configu/sdk';
 import { FileConfigStore } from '@configu/file';
 

@@ -1,10 +1,14 @@
+import path from 'pathe';
+import { findUp, findUpMultiple } from 'find-up';
+import { glob } from 'glob';
 import process from 'node:process';
 import os from 'node:os';
 import fs from 'node:fs/promises';
 import { _ } from '@configu/sdk';
 import { debug } from './OutputStreams';
-import { path, stdenv, JSON, YAML, Dotenv } from './Misc';
+import { stdenv, JSON, YAML, Dotenv } from './Misc';
 
+export { path, findUp, findUpMultiple, glob };
 export const CONFIGU_DEFAULT_HOME_DIR = path.join(os.homedir(), '.configu');
 export const CONFIGU_HOME = path.resolve(stdenv.env.CONFIGU_HOME ?? CONFIGU_DEFAULT_HOME_DIR);
 
@@ -16,6 +20,15 @@ export const CONFIGU_PATHS = {
   home: CONFIGU_HOME,
   cache: path.join(CONFIGU_HOME, 'cache'),
   bin: path.join(CONFIGU_HOME, 'bin'),
+};
+
+export const pathExists = async (path: string) => {
+  try {
+    await fs.access(path);
+    return true;
+  } catch {
+    return false;
+  }
 };
 
 export const readFile = async (

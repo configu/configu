@@ -1,6 +1,4 @@
-/* eslint-disable no-param-reassign */
 /* eslint-disable no-undef */
-/* eslint-disable import/no-extraneous-dependencies */
 
 import 'zx/globals';
 import _ from 'lodash';

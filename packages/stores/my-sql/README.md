@@ -44,15 +44,12 @@ configu eval --store "my-store" --set "test" --schema "./start.cfgu.json" \
 ## Common Errors and Solutions
 
 1. **Connection Timeout Troubleshooting**
-
    - **Solution:** Increase the `connectTimeout` or `acquireTimeout` in the configuration options to handle long-running connection setups. Make sure the database is reachable from your application.
 
 2. **Authentication Failures**
-
    - **Solution:** Verify that the provided `username` and `password` are correct, and that the user has the necessary permissions to access the specified database. Use a MySQL client to manually confirm the credentials.
 
 3. **SSL Certificate Issues**
-
    - **Solution:** Ensure the correct paths for SSL certificates are provided if `ssl` is enabled. Verify that the certificates match the MySQL server's configuration.
 
 4. **Database Permissions Problems**

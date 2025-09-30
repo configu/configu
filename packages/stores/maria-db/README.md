@@ -44,15 +44,12 @@ configu eval --store "my-store" --set "test" --schema "./start.cfgu.json" \
 ## Common errors and solutions
 
 1. Connection timeout troubleshooting
-
    - Solution: Increase the `connectTimeout` or `acquireTimeout` in the configuration options to handle long-running connection setups. Make sure the database is reachable from your application.
 
 2. Authentication failures
-
    - Solution: Verify that the provided `username` and `password` are correct, and that the user has the necessary permissions to access the specified database. Use a MariaDB client to manually confirm the credentials.
 
 3. SSL Certificate issues
-
    - Solution: Ensure the correct paths for SSL certificates are provided if `ssl` is enabled. Verify that the certificates match the MariaDB server's configuration.
 
 4. Database permissions problems

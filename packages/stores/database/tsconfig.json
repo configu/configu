@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "extends": "../../../tsconfig.json",
-  "include": ["src", "src/**/*.json"],
+  "extends": "../../../tsconfig.base.json",
+  "include": ["src/**/*"],
   "compilerOptions": {
     // https://typeorm.io/#installation
     "emitDecoratorMetadata": true,

@@ -26,8 +26,9 @@
   "dependencies": {
     "@configu/database": "workspace:*",
     "@configu/sdk": "workspace:*",
-    "mysql": "2.18.1",
-    "typeorm": "^0.3.20"
+    "mysql": "2.18.1"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "typeorm": "^0.3.20"
+  }
 }

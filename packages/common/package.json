@@ -23,7 +23,7 @@
     "url": "https://configu.com"
   },
   "engines": {
-    "node": "22.18.0"
+    "node": "22.20.0"
   },
   "type": "module",
   "types": "./src/index.ts",
@@ -45,18 +45,18 @@
     "@configu/configu-platform": "workspace:*",
     "@configu/json-file": "workspace:*",
     "@configu/sdk": "workspace:*",
-    "@dotenvx/dotenvx": "^1.49.0",
-    "@npmcli/arborist": "^9.1.1",
-    "@npmcli/package-json": "^6.2.0",
-    "axios": "^1.11.0",
-    "debug": "^4.4.1",
+    "@dotenvx/dotenvx": "^1.51.0",
+    "@npmcli/arborist": "^9.1.5",
+    "@npmcli/package-json": "^7.0.1",
+    "axios": "^1.12.2",
+    "debug": "^4.4.3",
     "diff": "^8.0.2",
-    "find-up": "^7.0.0",
+    "find-up": "^8.0.0",
     "flat": "^6.0.1",
-    "giget": "1.2.5",
+    "giget": "2.0.0",
     "glob": "^11.0.3",
     "is-glob": "^4.0.3",
-    "jiti": "^2.5.1",
+    "jiti": "^2.6.0",
     "parse-json": "8.3.0",
     "pathe": "^2.0.3",
     "picocolors": "^1.1.1",
@@ -68,8 +68,8 @@
   "devDependencies": {
     "@types/debug": "^4.1.12",
     "@types/is-glob": "^4.0.4",
-    "@types/npmcli__arborist": "^6.3.0",
+    "@types/npmcli__arborist": "^6.3.1",
     "@types/npmcli__package-json": "^4.0.4",
-    "@types/semver": "^7.7.0"
+    "@types/semver": "^7.7.1"
   }
 }

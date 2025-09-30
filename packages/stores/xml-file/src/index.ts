@@ -1,4 +1,4 @@
-import xml2js from 'xml2js';
+import * as xml2js from 'xml2js';
 import { type Config } from '@configu/sdk';
 import { FileConfigStore } from '@configu/file';
 
