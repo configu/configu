@@ -32,22 +32,22 @@ export class InitCommand extends BaseCommand {
       message: 'Pick a preset.',
       options: [
         { value: 'greet', label: 'Hello, World! Schema', hint: `greet.cfgu.${format}` },
-        { value: 'features', label: 'Fully Featured Schema', hint: `features.cfgu.${format}` },
+        // { value: 'features', label: 'Fully Featured Schema', hint: `features.cfgu.${format}` },
         {
           value: 'starter',
           label: 'Starter Pack',
-          hint: `.configu + starter.cfgu.${format}`,
+          hint: `.configu + app.cfgu.${format}`,
         },
-        {
-          value: 'complete',
-          label: 'Complete Pack',
-          hint: `.configu + {common,api,worker}.cfgu.${format} + ./module.ts`,
-        },
-        {
-          value: 'module',
-          label: 'Configu Module',
-          hint: `./module.ts + ./package.json`,
-        },
+        // {
+        //   value: 'complete',
+        //   label: 'Complete Pack',
+        //   hint: `.configu + {common,api,worker}.cfgu.${format} + ./module.ts`,
+        // },
+        // {
+        //   value: 'module',
+        //   label: 'Configu Module',
+        //   hint: `./module.ts + ./package.json`,
+        // },
       ],
     });
 
@@ -74,13 +74,6 @@ export class InitCommand extends BaseCommand {
       };
       const greet = new CfguFile(path.join(process.cwd(), `./greet.cfgu.${format}`), GreetSchema, format);
       await greet.save({});
-    } else if (preset === 'features') {
-      const FeaturesSchema: CfguFileContents = {
-        $schema: CfguFile.schema.$id,
-        keys: {},
-      };
-      const features = new CfguFile(path.join(process.cwd(), `./features.cfgu.${format}`), FeaturesSchema, format);
-      await features.save({});
     } else if (preset === 'starter') {
       const ProjectConfigu: ConfiguFileContents = {
         $schema: ConfiguFile.schema.$id,
@@ -93,7 +86,7 @@ export class InitCommand extends BaseCommand {
           },
         },
         schemas: {
-          app: './app.cfgu.yaml',
+          app: './starter.cfgu.yaml',
         },
         scripts: {
           local: "configu eval --defaults --schema 'app' | configu export --format 'env' > .env",
@@ -119,7 +112,7 @@ export class InitCommand extends BaseCommand {
           },
           APP_PORT: {
             description: 'Defines the port on which the application listens',
-            test: 'validator.isPort($.value)',
+            test: 'validator.isPort($.storedValue)',
             default: 3000,
           },
           SERVICE_ENDPOINT: {
@@ -129,10 +122,19 @@ export class InitCommand extends BaseCommand {
           },
         },
       };
-      const service = new CfguFile(path.join(process.cwd(), `./service.cfgu.${format}`), AppSchema, format);
+      const app = new CfguFile(path.join(process.cwd(), `./app.cfgu.${format}`), AppSchema, format);
 
-      await Promise.all([configu.save({}), service.save({})]);
+      await Promise.all([configu.save({}), app.save({})]);
     }
+
+    // else if (preset === 'features') {
+    //   const FeaturesSchema: CfguFileContents = {
+    //     $schema: CfguFile.schema.$id,
+    //     keys: {},
+    //   };
+    //   const features = new CfguFile(path.join(process.cwd(), `./features.cfgu.${format}`), FeaturesSchema, format);
+    //   await features.save({});
+    // }
 
     spinner.stop(`Assets generated`, 0);
 

@@ -2,8 +2,8 @@ import { Command, Option, UsageError } from 'clipanion';
 import sea from 'node:sea';
 import { log } from '@clack/prompts';
 import getStdin from 'get-stdin';
-import { _, EvalCommandOutput } from '@configu/sdk';
-import { debug, inspect, ConfiguInterface, parseJsonFile } from '@configu/common';
+import { _, ConfigValue, EvalCommandOutput } from '@configu/sdk';
+import { debug, inspect, ConfiguInterface, parseJsonFile, unflatten } from '@configu/common';
 
 import { type RunContext } from '..';
 
@@ -26,16 +26,18 @@ export abstract class BaseCommand extends Command<Context> {
     const pipe = await this.readPreviousEvalCommandOutput();
 
     // todo: think to wrap with try/catch and throw a UsageError
-    await ConfiguInterface.initConfig(this.config);
+    await ConfiguInterface.init(this.config);
+    if (ConfiguInterface.context.exec.isExecFromHome) {
+      await this.checkForUpdates();
+    }
 
     this.context = {
       ...this.context,
       ...ConfiguInterface.context,
       isExecutable:
-        sea.isSea() && process.execPath.endsWith(`${this.cli.binaryName}${ConfiguInterface.context.execExt}`),
+        sea.isSea() && process.execPath.endsWith(`${this.cli.binaryName}${ConfiguInterface.context.exec.ext}`),
       pipe,
     };
-    // debug('BaseCommand', this.context);
   }
 
   public reduceKVFlag(configFlag?: string[]) {
@@ -54,6 +56,23 @@ export abstract class BaseCommand extends Command<Context> {
       .keyBy('key')
       .mapValues('value')
       .value();
+  }
+
+  public handleLiteralInput(literals?: string[]) {
+    const reducedLiterals = _(literals)
+      .map((literal, idx) => {
+        const [key, ...rest] = literal.split('=');
+        if (!key) {
+          throw new UsageError(`Literal key is missing at --from-literal[${idx}]`);
+        }
+        const value = ConfigValue.parse(rest.join('=') ?? '');
+        return { key, value };
+      })
+      .keyBy('key')
+      .mapValues('value')
+      .value();
+
+    return unflatten(reducedLiterals) satisfies Record<string, string>;
   }
 
   private async readPreviousEvalCommandOutput() {
@@ -79,6 +98,11 @@ export abstract class BaseCommand extends Command<Context> {
       debug('Invalid input from stdin', stdin);
       throw new Error(`Failed to parse previous eval command result from stdin`, { cause: { silent: true } });
     }
+  }
+
+  private async checkForUpdates() {
+    // todo: implement update check using packageJson and configuFilesApi
+    // ConfiguInterface.context.interface
   }
 
   override catch(error: any): Promise<void> {

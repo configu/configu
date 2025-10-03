@@ -1,6 +1,5 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import axios, { type Axios } from 'axios';
-import { Config, ConfigStore, ConfigQuery, validator } from '@configu/sdk';
+import { Config, ConfigWithCfgu, ConfigStore, ConfigQuery, validator } from '@configu/sdk';
 
 export type ConfiguPlatformConfigStoreConfiguration = {
   credentials: { org: string; token: string };
@@ -33,7 +32,7 @@ export class ConfiguPlatformConfigStore extends ConfigStore {
     source = 'sdk',
     tag,
   }: ConfiguPlatformConfigStoreConfiguration) {
-    super();
+    super({ cfgu: true });
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
@@ -74,7 +73,7 @@ export class ConfiguPlatformConfigStore extends ConfigStore {
     return data;
   }
 
-  async set(configs: Config[]): Promise<void> {
+  async set(configs: ConfigWithCfgu[]): Promise<void> {
     const response = await this.client.put('/config', { configs });
     if (response.status === 202) {
       const protectedSet = response.data.diff.pending[0].set;

@@ -1,8 +1,8 @@
-import _ from 'lodash';
 import { ConfigCommand } from '../ConfigCommand';
 import { EvalCommandOutput } from './EvalCommand';
 import { ConfigKey } from '../ConfigKey';
 import { ConfigValue, ConfigValueAny } from '../ConfigValue';
+import { _ } from '../expressions';
 
 export type ExportCommandOutput = {
   [key: string]: ConfigValueAny;

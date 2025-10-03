@@ -1,6 +1,5 @@
 import { FileConfigStore } from '@configu/file';
 import { _, Config } from '@configu/sdk';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import TOML from '@iarna/toml';
 
 export type TomlFileConfigStoreConfiguration = { path: string };

@@ -1,5 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
-
 // https://nodejs.org/api/single-executable-applications.html
 
 import process from 'node:process';

@@ -46,7 +46,7 @@ export class InstallCommand extends BaseCommand {
         spinner.message(`Copying ${this.cli.binaryName} to home directory`);
         version = this.cli.binaryVersion as string;
         const binDir = path.join(this.context.paths.bin, version);
-        const nextExecPath = path.join(binDir, `${this.cli.binaryName}${this.context.execExt}`);
+        const nextExecPath = path.join(binDir, `${this.cli.binaryName}${this.context.exec.ext}`);
 
         if (process.execPath !== nextExecPath) {
           await fs.mkdir(binDir, { recursive: true });
@@ -73,7 +73,7 @@ export class InstallCommand extends BaseCommand {
 
       spinner.message(`Installing ${version} version`);
       const binDir = path.join(this.context.paths.bin, version);
-      const nextExecPath = path.join(binDir, `${this.cli.binaryName}${this.context.execExt}`);
+      const nextExecPath = path.join(binDir, `${this.cli.binaryName}${this.context.exec.ext}`);
 
       const isExecExists = await pathExists(nextExecPath);
       if (isExecExists) {

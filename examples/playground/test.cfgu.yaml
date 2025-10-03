@@ -2,12 +2,10 @@
 
 keys:
   X:
-    default: 7
+    default: 1
   Y:
-    schema: { type: number }
-    test:
-      - validator.isNumeric($.storedValue)
-      - $.value > 0
-    default: 7
-  XY:
-    const: X*Y=${ $.configs.X.value * $.configs.Y.value }
+  Z:
+    lazy: true
+  SOME_KEY:
+  LONGER_KEY:
+  VERY_LONG_KEY:

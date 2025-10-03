@@ -1,0 +1,1 @@
+{{ _.chain($.configs).map(({ key, value }) => `${key}: "${value}"`).join('\n').value() }}

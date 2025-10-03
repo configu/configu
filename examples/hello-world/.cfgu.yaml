@@ -1,0 +1,19 @@
+# yaml-language-server: $schema=https://files.configu.com/schema/.cfgu.json
+
+keys:
+  GREETING:
+    description: Defines the greeting word
+    enum:
+      - Hello
+      - Hey
+      - Marhaba
+      - Hola
+      - Bonjour
+    default: Hello
+  SUBJECT:
+    description: Defines the message subject
+    test: validator.isAlpha($.value)
+    default: World
+  MESSAGE:
+    description: Defines the message to print
+    const: '`{{ $.configs.GREETING.value }}, {{ $.configs.SUBJECT.value }}!`'

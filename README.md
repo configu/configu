@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/configu/configu/refs/heads/main/docs/images/banner/hacktoberfest-24-banner.svg" alt="Hacktoberfest 24 Banner" />
+<!-- <img src="https://raw.githubusercontent.com/configu/configu/refs/heads/main/docs/images/banner/hacktoberfest-24-banner.svg" alt="Hacktoberfest 24 Banner" /> -->
 <br/>
 <p align="center">
   <a target="_blank" href="https://configu.com">
@@ -54,7 +54,7 @@
 [^extensible]: **🛠 Extensible**: Supports **custom** configuration **storage** implementations, configuration **formatters**, and **injectors**. Continuously evolving and driven by **community** contributions.
 
 <a href="https://configu.com" target="_blank">
-  <img src="https://raw.githubusercontent.com/configu/configu/main/docs/images/banner/software-code-configurations-1.svg" alt="Configu Icon">
+  <img src="docs/images/banner/readme-equation.svg" alt="Configu Icon" width="100%">
 </a>
 
 ## 📚 Documentation
@@ -72,16 +72,18 @@ Explore Configu with our easy-to-follow documentation:
 Every contribution matters! Here’s how you can jump in and make an impact:
 
 - **[Start Here](https://github.com/configu/configu/blob/main/CONTRIBUTING.md)**: Find your way around our processes.
-- **[Pair Up](mailto:support@configu.com?subject=Pairing%20session&body=I'd%20like%20to%20do%20a%20pairing%20session%20...)**: Schedule a free, hands-on session with our team.
 - **[Engage on Discord](https://discord.com/invite/cjSBxnB9z8)**: Join our community discussion.
 - **[Provide Feedback](https://github.com/configu/configu/issues/265)**: Share your insights and suggestions.
 - **[Report & Fix Bugs](https://github.com/configu/configu/issues)**: Help us enhance Configu.
 - **[Improve Code & Docs](https://github.com/configu/configu/pulls)**: Contribute features and documentation.
 
-Massive thanks 🙏 to all our [contributors](https://github.com/configu/configu/graphs/contributors) for your time and efforts in making Configu better. Keep rocking 💪!
+<!-- - **[Pair Up](mailto:support@configu.com?subject=Pairing%20session&body=I'd%20like%20to%20do%20a%20pairing%20session%20...)**: Schedule a free, hands-on session with our team. -->
 
-> [!NOTE]
-> Eager to code? Kickstart your Configu development now:<br/> [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/configu/configu) [![Edit in CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/github/configu/configu/main) [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/configu/configu) [![Open in Codeanywhere](https://codeanywhere.com/img/open-in-codeanywhere-btn.svg)](https://app.codeanywhere.com/#https://github.com/configu/configu)
+<!-- Eager to code? Kickstart your Configu development now:<br/>  -->
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/configu/configu) [![Edit in CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/github/configu/configu/main) [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/configu/configu) [![Open in Codeanywhere](https://codeanywhere.com/img/open-in-codeanywhere-btn.svg)](https://app.codeanywhere.com/#https://github.com/configu/configu)
+
+Massive thanks 🙏 to all our [contributors](https://github.com/configu/configu/graphs/contributors) for your time and energy helping Configu grow! 🌱 Your contributions are incredibly valued. Keep rocking 💪!
 
 <!-- ## 🗺️ Roadmap
 
@@ -113,11 +115,11 @@ This repository is a monorepo that contains the Configu user interface packages.
 - [Webinar - Configuration-as-Code](https://www.youtube.com/live/Z_Vz8v6e-U4?si=bDao_gIo1xiLDeQS&t=107)
 - [Post - Configuration-as-Code](https://dev.to/rannn505/configuration-as-code-automating-application-configuration-45k6)
 
-## 🙌 Thanks to all of our contributors
+<!-- ## 🙌 Thanks to all of our contributors
 
 A huge thanks for spending your time and energy helping Configu grow! 🌱 Your contributions are incredibly valued.
 
-<img src="https://contributors-img.web.app/image?repo=configu/configu" alt="Contributors"/>
+<img src="https://contributors-img.web.app/image?repo=configu/configu" alt="Contributors"/> -->
 
 ## 🪪 License
 

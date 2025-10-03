@@ -42,14 +42,12 @@ configu eval --store "my-store" --set "test" --schema "./config.cfgu.json" \
 ## Common errors and solutions
 
 1. Authentication error
-
    - Solution: Ensure the `credentials` file points to a valid service account JSON key, or verify that your environment is authenticated with GCP using:
      ```bash
      gcloud auth application-default login
      ```
 
 2. Insufficient permissions
-
    - Solution: Grant the necessary permissions to the service account by assigning the `Secret Manager Admin` role:
      ```bash
      gcloud projects add-iam-policy-binding my-gcp-project \
@@ -58,7 +56,6 @@ configu eval --store "my-store" --set "test" --schema "./config.cfgu.json" \
      ```
 
 3. Secret not found
-
    - Solution: Ensure the secret exists in the GCP Secret Manager and that the correct `projectId` is provided in the configuration.
 
 4. Quota limit exceeded

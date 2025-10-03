@@ -46,15 +46,12 @@ configu eval --store "my-store" --set "test" --schema "./start.cfgu.json" \
 ## Common Errors and Solutions
 
 1. **Connection Timeout Troubleshooting**
-
    - **Solution:** Increase the `connectTimeout` or `acquireTimeout` in the configuration options to handle long-running connection setups. Ensure the database is accessible.
 
 2. **Authentication Failures**
-
    - **Solution:** Verify the provided `username` and `password`, and confirm the user has access to the specified database. Use a CockroachDB client to check credentials.
 
 3. **SSL Certificate Issues**
-
    - **Solution:** Ensure the correct SSL certificate paths are provided if `ssl` is enabled. Verify that the certificates match the CockroachDB server configuration.
 
 4. **Database Permissions Issues**

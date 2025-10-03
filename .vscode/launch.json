@@ -26,31 +26,41 @@
       "skipFiles": ["<node_internals>/**", "${workspaceFolder}/node_modules/**"],
       "cwd": "${workspaceFolder}/examples/playground",
       "env": {
-        // "DEBUG": "configu"
+        // "DEBUG": "configu",
+        "EDITOR": "code"
       },
       "args": [
         // "eval",
-        // "--defaults",
+        // "--defaults"
         // ====================
-        // "upsert",
+        "upsert",
+        "-f",
+        ".env",
+        // "-l",
+        // "X.0=500",
+        "-l",
+        "Y.a.c=true",
+        "--edit",
+        "--prune",
+        "--dry"
         // ====================
         // "--store",
         // "hc",
         // "--schema",
-        // "${workspaceFolder}/packages/schema/data/xy.cfgu.yaml"
+        // "${workspaceFolder}/packages/schema/data/xy.cfgu.yaml",
         // "--kv",
-        // "Z=8"
+        // "Z=8",
         // ====================
-        "export",
-        "--format",
-        "json"
+        // "export",
+        // "--format",
+        // "json",
         // ====================
         // "run",
         // "--script",
         // "script1",
         // ====================
         // "<",
-        // "./stdin"
+        // "./stdin",
       ]
     }
   ]

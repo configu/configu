@@ -18,7 +18,7 @@
       "required": [],
       "minProperties": 1,
       "additionalProperties": {
-        "type": "object",
+        "type": ["object", "null"],
         "required": [],
         "additionalProperties": false,
         "nullable": true,
@@ -148,8 +148,7 @@
             "then": {
               "properties": {
                 "lazy": false,
-                "default": false,
-                "required": false
+                "default": false
               }
             }
           },

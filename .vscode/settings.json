@@ -1,20 +1,18 @@
 {
-  "terminal.integrated.defaultProfile.windows": "Git Bash",
-  "typescript.tsdk": "node_modules/typescript/lib",
-  "typescript.referencesCodeLens.enabled": true,
   "editor.tabSize": 2,
   "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
-  "[javascript][typescript]": {
-    "editor.formatOnSave": false
-  },
-  "[markdown][mdx]": {
-    "editor.formatOnSave": false
-  },
-  "[json][yaml]": {
-    "editor.formatOnSave": false
+  "terminal.integrated.defaultProfile.windows": "Git Bash",
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.referencesCodeLens.enabled": true,
+  "typescript.preferGoToSourceDefinition": true,
+  "typescript.disableAutomaticTypeAcquisition": true,
+  "typescript.tsserver.maxTsServerMemory": 8192,
+  "typescript.tsserver.watchOptions": {
+    "fallbackPolling": "dynamicPriorityPolling"
   },
   "search.exclude": {
     "**/node_modules": true,
@@ -22,10 +20,8 @@
     "**/dist": true,
     "**/coverage": true,
     "package-lock.json": true,
-    "pnpm-lock.yaml": true,
-    "tsconfig.tsbuildinfo": true
+    "pnpm-lock.yaml": true
   },
-  "eslint.validate": ["javascript", "typescript"],
   "yaml.schemas": {
     "../packages/schema/.cfgu.json": ["*.cfgu.yaml", "*.cfgu.yml"],
     "../packages/schema/.configu.json": ["*.configu.yaml", "*.configu.yml"]

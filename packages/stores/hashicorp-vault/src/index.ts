@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import axios, { type Axios } from 'axios';
 import { KeyValueConfigStore } from '@configu/key-value';
 

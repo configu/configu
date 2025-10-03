@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax */
 import { $, cd, chalk, fs, glob } from 'zx';
 import packageJson from './package.json' with { type: 'json' };
 
@@ -13,6 +12,7 @@ const getCurrentNodeLTSVersion = async () => {
 };
 
 (async () => {
+  process.env.FORCE_COLOR = '1';
   cd(ROOT_PATH);
 
   const node = {
@@ -20,10 +20,11 @@ const getCurrentNodeLTSVersion = async () => {
     lts: await getCurrentNodeLTSVersion(),
     current: process.versions.node,
   };
-  const pnpm = {
-    engine: packageJson.config.pnpm,
-    current: (await $`pnpm --version`).stdout.trim(),
-  };
+  // const pnpm = {
+  //   engine: packageJson.config.pnpm,
+  //   // lts: 'pnpm has its own version management',
+  //   current: (await $`pnpm --version`).stdout.trim(),
+  // };
 
   if (node.lts !== node.engine) {
     console.warn(`Node.js Update available! ${chalk.red(node.engine)} → ${chalk.green(node.lts)}.
@@ -34,9 +35,9 @@ Run "${chalk.magenta(`pnpm exec npm pkg set config.node=${node.lts}`)}" to updat
   await fs.writeFile('.nvmrc', `${node.engine}\n`);
   await fs.writeFile('.node-version', `${node.engine}\n`);
 
-  let npmrc = await fs.readFile('.npmrc', 'utf-8');
-  npmrc = npmrc.replace(/node_version=(.*)/, `node_version=${node.engine}`);
-  await fs.writeFile('.npmrc', npmrc);
+  let pnpmWorkspace = await fs.readFile('pnpm-workspace.yaml', 'utf-8');
+  pnpmWorkspace = pnpmWorkspace.replace(/useNodeVersion:\s*(.*)/, `useNodeVersion: ${node.engine}`);
+  await fs.writeFile('pnpm-workspace.yaml', pnpmWorkspace);
 
   const dockerFiles = await glob('**/Dockerfile', { dot: true, gitignore: true });
   for await (const file of dockerFiles) {
@@ -45,11 +46,11 @@ Run "${chalk.magenta(`pnpm exec npm pkg set config.node=${node.lts}`)}" to updat
     await fs.writeFile(file, content);
   }
 
-  await $`pnpm exec npm pkg set devEngines.runtime.version=${node.engine}`.pipe(process.stdout);
-  await $`pnpm --filter @configu/common exec npm pkg set engines.node=${node.engine}`.pipe(process.stdout);
-
-  await $`pnpm exec npm pkg set packageManager=pnpm@${pnpm.engine}`.pipe(process.stdout);
+  // await $`pnpm exec npm pkg set packageManager=pnpm@${pnpm.engine}`.pipe(process.stdout);
   // await $`pnpm exec npm pkg set devEngines.packageManager.version=${pnpm.engine}`.pipe(process.stdout);
+
+  await $`pnpm --filter @configu/common exec npm pkg set engines.node=${node.engine}`.pipe(process.stdout);
+  await $`pnpm exec npm pkg set devEngines.runtime.version=${node.engine}`.pipe(process.stdout);
 
   let exitCode = 0;
   if (node.current !== node.engine) {
@@ -59,11 +60,11 @@ Run "${chalk.magenta(`pnpm exec npm pkg set config.node=${node.lts}`)}" to updat
     exitCode = 1;
   }
 
-  if (pnpm.current !== pnpm.engine) {
-    console.error(`This project requires pnpm ${pnpm.engine} but you are running ${pnpm.current}.
-    Run "${chalk.magenta(`corepack enable`)}" to switch to the correct version.`);
-    exitCode = 1;
-  }
+  // if (pnpm.current !== pnpm.engine) {
+  //   console.error(`This project requires pnpm ${pnpm.engine} but you are running ${pnpm.current}.
+  //   Run "${chalk.magenta(`corepack enable`)}" to switch to the correct version.`);
+  //   exitCode = 1;
+  // }
 
   process.exitCode = exitCode;
 })();

@@ -2,3 +2,28 @@ packages:
   - 'packages/*'
   - 'packages/stores/*'
   - 'docs'
+
+patchedDependencies:
+  '@npmcli/run-script': patches/@npmcli__run-script.patch
+  'giget': patches/giget.patch
+
+# https://pnpm.io/settings#cli-settings
+engineStrict: true
+packageManagerStrictVersion: true
+managePackageManagerVersions: false
+
+# https://pnpm.io/settings#build-settings
+childConcurrency: 10
+verifyDepsBeforeRun: warn
+
+# https://pnpm.io/settings#nodejs-settings
+useNodeVersion: 22.20.0
+
+# https://pnpm.io/settings#workspace-settings
+injectWorkspacePackages: true
+disallowWorkspaceCycles: true
+
+# https://pnpm.io/settings#other-settings
+useStderr: true
+updateNotifier: true
+shellEmulator: true

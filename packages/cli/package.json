@@ -32,24 +32,26 @@
     "/dist"
   ],
   "scripts": {
-    "build": "tsup",
+    "clean": "shx rm -rf dist",
+    "prebuild": "pnpm run clean",
+    "build": "tsx compile.mts",
     "build:binary": "tsx build.mts",
     "build:docker": "docker build --progress plain -t configu/cli -f ./Dockerfile ../..",
-    "clean": "shx rm -rf dist",
     "dev": "DEBUG=configu tsx src/configu.ts",
     "prestart": "pnpm build",
     "start": "node dist/configu.cjs"
   },
   "dependencies": {
-    "@clack/prompts": "^0.10.0",
+    "@clack/prompts": "^0.11.0",
     "@configu/common": "workspace:*",
     "@configu/formatters": "workspace:*",
     "@configu/sdk": "workspace:*",
-    "@pnpm/os.env.path-extender": "^2.0.0",
+    "@pnpm/os.env.path-extender": "^2.0.3",
     "adm-zip": "^0.5.16",
     "clipanion": "^4.0.0-rc.4",
     "get-stdin": "^9.0.0",
-    "open": "10.1.0",
+    "open": "10.2.0",
+    "open-editor": "5.1.0",
     "openid-client": "5.7.1",
     "tar": "^7.4.3",
     "typanion": "3.14.0"
