@@ -20,7 +20,7 @@
     "email": "dev@configu.com",
     "url": "https://configu.com"
   },
-  "packageManager": "pnpm@10.17.1",
+  "packageManager": "pnpm@10.18.0",
   "devEngines": {
     "runtime": {
       "name": "node",
@@ -66,9 +66,9 @@
     "@cspell/eslint-plugin": "^9.2.1",
     "@eslint/compat": "^1.4.0",
     "@eslint/js": "^9.36.0",
-    "@microsoft/api-extractor": "^7.52.14",
+    "@microsoft/api-extractor": "^7.52.15",
     "@types/lodash": "^4.17.20",
-    "@types/node": "24.6.0",
+    "@types/node": "24.6.2",
     "esbuild": "^0.25.10",
     "eslint": "^9.36.0",
     "eslint-config-prettier": "^10.1.8",

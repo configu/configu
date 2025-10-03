@@ -71,7 +71,7 @@ if (extractorResult.succeeded) {
   process.exitCode = 1;
 }
 
-await $`cp dist/index.d.mts dist/index.d.cts`.pipe(process.stdout);
+await fs.copyFile('dist/index.d.mts', 'dist/index.d.cts');
 
 await $`attw --pack .`.pipe(process.stdout);
 
