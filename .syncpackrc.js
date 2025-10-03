@@ -1,4 +1,6 @@
-// @ts-check
+/* eslint-disable no-undef */
+/* eslint-disable @typescript-eslint/no-require-imports */
+
 const rootPackageJson = require('./package.json');
 
 /** @type {import("syncpack").RcFile} */

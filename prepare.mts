@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax */
 import { $, cd, chalk, fs, glob } from 'zx';
 import packageJson from './package.json' with { type: 'json' };
 
@@ -13,6 +12,7 @@ const getCurrentNodeLTSVersion = async () => {
 };
 
 (async () => {
+  process.env.FORCE_COLOR = '1';
   cd(ROOT_PATH);
 
   const node = {

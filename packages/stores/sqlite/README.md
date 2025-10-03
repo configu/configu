@@ -44,7 +44,6 @@ configu eval --store "my-store" --set "test" --schema "./start.cfgu.json" \
 ## Common errors and solutions
 
 1. Database is locked
-
    - Solution: Ensure that only one thread is writing to the database at a time. Use transactions to control access. Set the `PRAGMA busy_timeout` to make SQLite wait before throwing the error, e.g.
 
    ```sql
@@ -52,11 +51,9 @@ configu eval --store "my-store" --set "test" --schema "./start.cfgu.json" \
    ```
 
 2. Disk I/O error
-
    - Solution: Ensure the disk isn’t full. Make sure SQLite has permission to read and write to the database file. Verify that the path to the database file is correct.
 
 3. Database disk image is malformed
-
    - Solution: Create a backup of the corrupted database file. Use the SQLite `.dump` command to export and re-import data
 
    ```sql

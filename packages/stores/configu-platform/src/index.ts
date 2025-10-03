@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import axios, { type Axios } from 'axios';
 import { Config, ConfigWithCfgu, ConfigStore, ConfigQuery, validator } from '@configu/sdk';
 

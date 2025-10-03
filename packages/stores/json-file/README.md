@@ -41,15 +41,12 @@ configu eval --store "my-store" --set "test" --schema "./start.cfgu.json" \
 ## Common errors and solutions
 
 1. File permission issues
-
    - Solution: Ensure that the application has read and write permissions for the specified JSON file path. Check the file system permissions and adjust them if necessary.
 
 2. Invalid JSON format
-
    - Solution: Verify that the JSON file follows the correct syntax. Use a JSON validator or parser to check for errors if you manually edit the file.
 
 3. File path not found
-
    - Solution: Make sure the specified path exists and is accessible. Create any necessary parent directories before attempting to read or write the JSON file.
 
 4. Encoding issues

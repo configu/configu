@@ -42,21 +42,18 @@ configu eval --store "my-k8s-secret-store" --set "test" --schema "./start.cfgu.j
 ## Common errors and solutions
 
 1. Cluster Access Issues
-
    - Solution: Ensure that the kubeconfig path is correct and that your user or service account has access to the cluster. Test connectivity with:
      ```bash
      kubectl get nodes
      ```
 
 2. Insufficient Permissions
-
    - Solution: Make sure your account has `GET`, `CREATE`, and `UPDATE` permissions for secrets. Use the following command to grant access:
      ```bash
      kubectl create rolebinding configu-access --clusterrole=admin --serviceaccount=default:default
      ```
 
 3. Namespace Not Found
-
    - Solution: Verify that the specified namespace exists by listing all available namespaces:
      ```bash
      kubectl get namespaces

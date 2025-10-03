@@ -1,4 +1,4 @@
-import validator from 'validator';
+import * as validator from 'validator';
 
 export * from './JSONSchema';
 export { validator };

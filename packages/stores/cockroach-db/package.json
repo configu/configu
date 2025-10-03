@@ -26,8 +26,9 @@
   "dependencies": {
     "@configu/database": "workspace:*",
     "@configu/sdk": "workspace:*",
-    "pg": "8.13.1",
-    "typeorm": "^0.3.20"
+    "pg": "8.13.1"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "typeorm": "^0.3.20"
+  }
 }

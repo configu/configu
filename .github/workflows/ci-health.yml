@@ -14,8 +14,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Link Checker # https://github.com/marketplace/actions/lychee-broken-link-checker
-        uses: lycheeverse/lychee-action@v1.10.0
+      - name: Broken Link Checker
+        uses: lycheeverse/lychee-action@v2.6.1
         with:
           fail: true
           args: --verbose --no-progress --exclude-all-private --exclude 'stackoverflow.com' --exclude 'support.discord.com' --exclude-path 'examples' --exclude-path 'docs/snippets/callouts.mdx' .
