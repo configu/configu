@@ -9,7 +9,7 @@ jobs:
   pre-release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: ./.github/actions/deploy-start-action
         with:
@@ -65,7 +65,7 @@ jobs:
             runner: windows-latest
             arch: x64
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: ./.github/actions/get-release-action
         id: release
@@ -105,36 +105,28 @@ jobs:
       S3_BUCKET: 's3://public-file-browser-files-0eff4c2890a7/cli'
       CLOUDFRONT_DISTRIBUTION: 'EV0BWKNB8L53Y'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: ./.github/actions/get-release-action
         id: release
 
-      - uses: aws-actions/configure-aws-credentials@v4
+      - uses: aws-actions/configure-aws-credentials@v5
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
         with:
           path: ${{ steps.release.outputs.package_path }}/dist
           pattern: configu-v${{ steps.release.outputs.version }}-*
           merge-multiple: true
 
-      - name: Release package to GitHub release
-        uses: softprops/action-gh-release@v2
-        if: ${{ startsWith(github.ref, 'refs/tags/') }}
-        with:
-          files: |
-            ${{ steps.release.outputs.package_path }}/dist/*
-
-      - name: Release package to public S3 bucket
+      - name: Generate release files
         run: |
           cd ${{ steps.release.outputs.package_path }}/dist
 
           achieves_pattern="configu-v${{ steps.release.outputs.version }}-*"
-          version_path="${{ env.S3_BUCKET }}/versions/${{ steps.release.outputs.version }}"
 
           # generate package.json
           jq '.version = "${{ steps.release.outputs.version }}"' ../package.json > package.json
@@ -144,11 +136,27 @@ jobs:
           shasum -a 256 $achieves_pattern > sha256sum.txt
           cat sha256sum.txt
 
+      - name: Release package to GitHub release
+        uses: softprops/action-gh-release@v2
+        if: ${{ startsWith(github.ref, 'refs/tags/') }}
+        with:
+          files: |
+            ${{ steps.release.outputs.package_path }}/dist/*
+            ${{ steps.release.outputs.package_path }}/dist/sha256sum.txt
+            ${{ steps.release.outputs.package_path }}/dist/package.json
+
+      - name: Release package to public S3 bucket
+        run: |
+          cd ${{ steps.release.outputs.package_path }}/dist
+
           # generate channel
           echo "${{ steps.release.outputs.version }}" > ${{ steps.release.outputs.channel }}
           cat ${{ steps.release.outputs.channel }}
 
           ls -la .
+
+          achieves_pattern="configu-v${{ steps.release.outputs.version }}-*"
+          version_path="${{ env.S3_BUCKET }}/versions/${{ steps.release.outputs.version }}"
 
           # copy binaries
           aws s3 cp ./ $version_path/ --recursive --exclude "*" --include "$achieves_pattern"
@@ -182,7 +190,7 @@ jobs:
     env:
       DOCKER_IMAGE_NAME: 'configu/cli'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: ./.github/actions/get-release-action
         id: release
@@ -231,7 +239,7 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Update Docker Hub Description
-        uses: peter-evans/dockerhub-description@v4
+        uses: peter-evans/dockerhub-description@v5
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -247,7 +255,7 @@ jobs:
       contents: read
       id-token: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: ./.github/actions/get-release-action
         id: release
@@ -291,7 +299,7 @@ jobs:
           - macos-latest
           - windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: ./.github/actions/get-release-action
         id: release
@@ -350,7 +358,7 @@ jobs:
     env:
       DOCKER_IMAGE_NAME: 'configu/cli'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: ./.github/actions/get-release-action
         id: release
@@ -379,12 +387,12 @@ jobs:
           - macos-latest
           - windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: ./.github/actions/get-release-action
         id: release
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version-file: '.node-version'
 
@@ -400,7 +408,7 @@ jobs:
       - test-docker
       - test-npm
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: ./.github/actions/deploy-end-action
         if: always()

@@ -13,7 +13,7 @@ runs:
       id: release
 
     - name: Post Slack release notice
-      uses: slackapi/slack-github-action@v2.0.0
+      uses: slackapi/slack-github-action@v2
       with:
         webhook: ${{ inputs.slack-webhook }}
         webhook-type: incoming-webhook
