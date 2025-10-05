@@ -53,9 +53,9 @@ RUN pnpm --filter=@configu/cli exec \
 
 # 6. Build and deploy CLI
 RUN pnpm build && \
-    pnpm --filter=@configu/cli --if-present run build && \
-    pnpm --filter=@configu/cli deploy --prod --ignore-scripts /dist && \
-    chmod +x /dist/dist/configu.cjs
+    # pnpm --filter=@configu/cli --if-present run build && \
+    pnpm --filter=@configu/cli deploy --prod --ignore-scripts /dist
+    # && \ chmod +x /dist/dist/configu.cjs
 
 FROM node:$NODE_VERSION-alpine AS dist
 
@@ -65,7 +65,8 @@ ENV PATH="$CONFIGU_BIN:$PATH"
 ENV NODE_ENV="production"
 
 # Ensure bin dir exists
-RUN install -d -m 0755 $CONFIGU_BIN
+RUN install -d -m 0755 $CONFIGU_BIN && \
+    chown -R node:node $CONFIGU_HOME
 
 # Copy built CLI binary
 COPY --from=build --chown=node:node /dist/dist/configu.cjs $CONFIGU_BIN/configu

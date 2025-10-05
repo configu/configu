@@ -123,10 +123,12 @@ jobs:
           merge-multiple: true
 
       - name: Generate release files
+        id: files
         run: |
           cd ${{ steps.release.outputs.package_path }}/dist
 
           archives_pattern="configu-v${{ steps.release.outputs.version }}-*"
+          echo "archives_pattern=$archives_pattern" >> $GITHUB_OUTPUT
 
           # generate package.json
           jq '.version = "${{ steps.release.outputs.version }}"' ../package.json > package.json
@@ -155,11 +157,10 @@ jobs:
 
           ls -la .
 
-          archives_pattern="configu-v${{ steps.release.outputs.version }}-*"
           version_path="${{ env.S3_BUCKET }}/versions/${{ steps.release.outputs.version }}"
 
           # copy binaries
-          aws s3 cp ./ $version_path/ --recursive --exclude "*" --include "$archives_pattern"
+          aws s3 cp ./ $version_path/ --recursive --exclude "*" --include "${{ steps.files.outputs.archives_pattern }}"
 
           # copy package.json
           aws s3 cp package.json $version_path/
