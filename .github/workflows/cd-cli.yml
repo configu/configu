@@ -126,14 +126,14 @@ jobs:
         run: |
           cd ${{ steps.release.outputs.package_path }}/dist
 
-          achieves_pattern="configu-v${{ steps.release.outputs.version }}-*"
+          archives_pattern="configu-v${{ steps.release.outputs.version }}-*"
 
           # generate package.json
           jq '.version = "${{ steps.release.outputs.version }}"' ../package.json > package.json
           cat package.json
 
           # generate checksums
-          shasum -a 256 $achieves_pattern > sha256sum.txt
+          shasum -a 256 $archives_pattern > sha256sum.txt
           cat sha256sum.txt
 
       - name: Release package to GitHub release
@@ -155,11 +155,11 @@ jobs:
 
           ls -la .
 
-          achieves_pattern="configu-v${{ steps.release.outputs.version }}-*"
+          archives_pattern="configu-v${{ steps.release.outputs.version }}-*"
           version_path="${{ env.S3_BUCKET }}/versions/${{ steps.release.outputs.version }}"
 
           # copy binaries
-          aws s3 cp ./ $version_path/ --recursive --exclude "*" --include "$achieves_pattern"
+          aws s3 cp ./ $version_path/ --recursive --exclude "*" --include "$archives_pattern"
 
           # copy package.json
           aws s3 cp package.json $version_path/
