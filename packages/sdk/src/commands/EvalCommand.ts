@@ -178,8 +178,8 @@ export class EvalCommand extends ConfigCommand<EvalCommandInput, EvalCommandOutp
 
     const constExpressionsDict = _.chain(resultWithConstExpressions)
       .pickBy((current) => current.cfgu?.const)
-      // .mapValues((current) => (current.cfgu?.const ? `\`${current.cfgu.const}\`` : ''))
-      .mapValues((current) => current.cfgu?.const ?? '')
+      .mapValues((current) => (current.cfgu?.const ? `\`${current.cfgu.const}\`` : ''))
+      // .mapValues((current) => current.cfgu?.const ?? '')
       .value();
 
     ConfigExpression.sort(constExpressionsDict).forEach((key) => {
