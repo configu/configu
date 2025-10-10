@@ -36,7 +36,7 @@
     "prebuild": "pnpm run clean",
     "build": "tsx compile.mts",
     "build:binary": "tsx build.mts",
-    "build:docker": "docker build --progress plain -t configu/cli -f ./Dockerfile ../..",
+    "build:docker": "docker buildx build --progress plain --load -t configu/cli -f ./Dockerfile ../..",
     "dev": "DEBUG=configu tsx src/configu.ts",
     "prestart": "pnpm build",
     "start": "node dist/configu.cjs"

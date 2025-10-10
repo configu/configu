@@ -1,5 +1,7 @@
 # syntax=docker/dockerfile:1.7-labs
 
+# todo: replace with multi-stage from cli Dockerfile
+
 ARG NODE_VERSION="22.20.0"
 FROM node:$NODE_VERSION AS base
 

@@ -32,7 +32,9 @@
     "format": ".",
     "lint": ".",
     "test": "packages/**/src/**/*.test.ts",
-    "node": "22.20.0"
+    "node": "22.20.0",
+    "corepack": "0.34.0",
+    "pnpm": "10.18.0"
   },
   "scripts": {
     "prepare": "pnpm pkg:art && pnpm pkg:hooks && pnpm pkg:config && pnpm build",

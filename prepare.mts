@@ -1,3 +1,4 @@
+// todo: tune the script to handle corepack and pnpm updates as well
 import { $, cd, chalk, fs, glob } from 'zx';
 import packageJson from './package.json' with { type: 'json' };
 
