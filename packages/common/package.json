@@ -23,7 +23,7 @@
     "url": "https://configu.com"
   },
   "engines": {
-    "node": "22.20.0"
+    "node": "24.11.0"
   },
   "type": "module",
   "types": "./src/index.ts",

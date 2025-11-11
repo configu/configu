@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.7-labs
 
-ARG NODE_VERSION="22.20.0"
+ARG NODE_VERSION="24.11.0"
 FROM node:${NODE_VERSION}
 
 ARG NVM_VERSION="0.40.1"

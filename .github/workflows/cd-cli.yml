@@ -22,24 +22,27 @@ jobs:
       matrix:
         # todo: create a dedicated runner to execute the corresponding Node.js distribution
         # https://nodejs.org/download/release/latest/
+        # https://docs.github.com/en/actions/reference/runners/github-hosted-runners#standard-github-hosted-runners-for-public-repositories
         dist:
           - linux-arm64 # aarch64
-          - linux-armv7l # armv7
+          # - linux-armv7l # armv7 (dropped at v24)
           - linux-ppc64le
           - linux-s390x
           - linux-x64
-          - linux-x64-musl
+          - linux-x64-musl # alpine
+
           - darwin-arm64
           - darwin-x64
+
           - win-arm64
           - win-x64
         include:
           - dist: linux-arm64
-            runner: ubuntu-latest
+            runner: ubuntu-24.04-arm
             arch: arm64
-          - dist: linux-armv7l
-            runner: ubuntu-latest
-            arch: armv7l
+          # - dist: linux-armv7l
+          #   runner: ubuntu-latest
+          #   arch: armv7l
           - dist: linux-ppc64le
             runner: ubuntu-latest
             arch: ppc64le
@@ -56,10 +59,10 @@ jobs:
             runner: macos-latest
             arch: arm64
           - dist: darwin-x64
-            runner: macos-latest
+            runner: macos-15-intel
             arch: x64
           - dist: win-arm64
-            runner: windows-latest
+            runner: windows-11-arm
             arch: arm64
           - dist: win-x64
             runner: windows-latest
@@ -92,7 +95,7 @@ jobs:
             build:binary
           ls -la ${{ steps.release.outputs.package_path }}/dist
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: configu-v${{ steps.release.outputs.version }}-${{ matrix.dist }}
           path: ${{ steps.release.outputs.package_path }}/dist/configu-v${{ steps.release.outputs.version }}-${{ matrix.dist }}.*
@@ -116,7 +119,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - uses: actions/download-artifact@v5
+      - uses: actions/download-artifact@v6
         with:
           path: ${{ steps.release.outputs.package_path }}/dist
           pattern: configu-v${{ steps.release.outputs.version }}-*
@@ -144,8 +147,6 @@ jobs:
         with:
           files: |
             ${{ steps.release.outputs.package_path }}/dist/*
-            ${{ steps.release.outputs.package_path }}/dist/sha256sum.txt
-            ${{ steps.release.outputs.package_path }}/dist/package.json
 
       - name: Release package to public S3 bucket
         run: |
@@ -393,9 +394,10 @@ jobs:
       - uses: ./.github/actions/get-release-action
         id: release
 
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version-file: '.node-version'
+          package-manager-cache: false
 
       - name: Test npm on ${{ matrix.runner }}
         run: |

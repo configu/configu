@@ -6,7 +6,7 @@
 # Reuse local cache:
 # docker run --rm -i -w $(pwd) -v $(pwd):$(pwd) -v $HOME/.configu/cache:/.configu/cache configu/cli:latest --help
 
-ARG NODE_VERSION="22.20.0"
+ARG NODE_VERSION="24.11.0"
 FROM node:$NODE_VERSION-slim AS base
 
 LABEL author "dev@configu.com"
@@ -14,10 +14,9 @@ LABEL author "dev@configu.com"
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 
-ARG COREPACK_VERSION="0.34.0"
-ARG PNPM_VERSION="10.18.0"
+ARG PNPM_VERSION="10.21.0"
 RUN --mount=type=cache,id=npm-cache,target=/root/.npm \
-    npm install -g "corepack@${COREPACK_VERSION}" && \
+    npm install -g corepack@latest && \
     corepack enable && \
     corepack prepare "pnpm@${PNPM_VERSION}" --activate && \
     pnpm --version && \

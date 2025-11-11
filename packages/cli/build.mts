@@ -22,7 +22,7 @@ const configuJs = `${binaryName}.cjs`;
 
 const supportedDist = [
   'linux-arm64', // https://nodejs.org/
-  'linux-armv7l',
+  // 'linux-armv7l',
   'linux-ppc64le',
   'linux-s390x',
   'linux-x64',
