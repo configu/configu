@@ -17,7 +17,7 @@ childConcurrency: 10
 verifyDepsBeforeRun: warn
 
 # https://pnpm.io/settings#nodejs-settings
-useNodeVersion: 22.20.0
+useNodeVersion: 24.11.0
 
 # https://pnpm.io/settings#workspace-settings
 injectWorkspacePackages: true

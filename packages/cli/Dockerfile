@@ -1,39 +1,75 @@
 # syntax=docker/dockerfile:1.7-labs
 
-ARG NODE_VERSION="22.20.0"
-FROM node:$NODE_VERSION AS base
+# Usage:
+# docker run --rm -i -w $(pwd) -v $(pwd):$(pwd) configu/cli:latest --help
+
+# Reuse local cache:
+# docker run --rm -i -w $(pwd) -v $(pwd):$(pwd) -v $HOME/.configu/cache:/.configu/cache configu/cli:latest --help
+
+ARG NODE_VERSION="24.11.0"
+FROM node:$NODE_VERSION-slim AS base
 
 LABEL author "dev@configu.com"
 
-# https://pnpm.io/docker#example-2-build-multiple-docker-images-in-a-monorepo
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-# https://vercel.com/guides/corepack-errors-github-actions
-RUN npm install -g corepack@latest
-RUN corepack enable
-RUN pnpm --version
+
+ARG PNPM_VERSION="10.21.0"
+RUN --mount=type=cache,id=npm-cache,target=/root/.npm \
+    npm install -g corepack@latest && \
+    corepack enable && \
+    corepack prepare "pnpm@${PNPM_VERSION}" --activate && \
+    pnpm --version && \
+    npm cache clean --force
+
 
 FROM base AS build
-COPY --exclude=**/node_modules --exclude=**/*.md --exclude=**/build --exclude=**/dist --exclude=**/tmp . /src
+
 WORKDIR /src
 
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+# 1. Copy only manifests for dependency cache
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
+COPY --parents packages/**/package.json patches ./
 
+# 2. Pre-fetch dependencies for better cache
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
+    pnpm fetch --frozen-lockfile
+
+# 3. Copy all sources
+COPY . .
+
+# 4. Install dependencies
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
+    pnpm install --frozen-lockfile --prefer-offline --ignore-scripts
+
+
+# 5. Set CLI version and re-install only CLI deps
 ARG CONFIGU_VERSION="0.0.0"
 RUN pnpm --filter=@configu/cli exec \
-  npm --no-git-tag-version --allow-same-version version $CONFIGU_VERSION \
-  && pnpm install --ignore-scripts
+    npm --no-git-tag-version --allow-same-version version $CONFIGU_VERSION && \
+    pnpm --filter=@configu/cli install --ignore-scripts --frozen-lockfile --prefer-offline
 
-RUN pnpm --filter=@configu/cli --if-present run build
-RUN pnpm --filter=@configu/cli deploy --prod --ignore-scripts /dist
+
+# 6. Build and deploy CLI
+RUN pnpm build && \
+    # pnpm --filter=@configu/cli --if-present run build && \
+    pnpm --filter=@configu/cli deploy --prod --ignore-scripts /dist
+    # && \ chmod +x /dist/dist/configu.cjs
 
 FROM node:$NODE_VERSION-alpine AS dist
+
+ENV CONFIGU_HOME="/.configu"
+ENV CONFIGU_BIN="$CONFIGU_HOME/bin"
+ENV PATH="$CONFIGU_BIN:$PATH"
+ENV NODE_ENV="production"
+
+# Ensure bin dir exists
+RUN install -d -m 0755 $CONFIGU_BIN && \
+    chown -R node:node $CONFIGU_HOME
+
+# Copy built CLI binary
+COPY --from=build --chown=node:node /dist/dist/configu.cjs $CONFIGU_BIN/configu
+
 USER node
 
-ENV CONFIGU_HOME="$HOME/.configu"
-ENV CONFIGU_BIN="$CONFIGU_HOME/bin"
-COPY --from=build --chown=node:node /dist $CONFIGU_BIN
-WORKDIR $CONFIGU_BIN
-
-ENV NODE_ENV="production"
-ENTRYPOINT [ "node", "dist/configu.cjs" ]
+ENTRYPOINT ["node","/.configu/bin/configu"]
