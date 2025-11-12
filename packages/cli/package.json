@@ -53,7 +53,7 @@
     "open": "10.2.0",
     "open-editor": "5.1.0",
     "openid-client": "5.7.1",
-    "tar": "^7.4.3",
+    "tar": "^7.5.2",
     "typanion": "3.14.0"
   },
   "devDependencies": {
