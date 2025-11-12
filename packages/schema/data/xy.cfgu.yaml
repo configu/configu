@@ -6,7 +6,7 @@ keys:
   Y:
     schema: { type: number }
     test:
-      # - validator.isNumeric($.storedValue)
+      - validator.isNumeric($.storedValue)
       - $.value > 0
     default: 7
   XY:
