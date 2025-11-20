@@ -4,6 +4,8 @@ import isGlob from 'is-glob';
 import { YAML } from './Misc';
 import { TemplateProviders } from './Modules';
 
+const RAW_INPUT_LENGTH_THRESHOLD = 120;
+
 export const normalizeInput = (
   input: string,
   source: string,
@@ -27,7 +29,9 @@ export const normalizeInput = (
   }
 
   const trimmed = input.trim();
-  if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
+  const isLongString = trimmed.length > RAW_INPUT_LENGTH_THRESHOLD;
+
+  if (trimmed.startsWith('{') || trimmed.startsWith('[') || isLongString) {
     try {
       JSON.parse(input);
       return { type: 'json', path: '' };
@@ -38,7 +42,6 @@ export const normalizeInput = (
 
   const hasNewlines = trimmed.includes('\n');
   const hasYamlKeyPattern = /^[a-zA-Z_][\w-]*:\s+/m.test(trimmed);
-  const isLongString = trimmed.length > 100;
   if (hasNewlines || hasYamlKeyPattern || isLongString) {
     try {
       const parsed = YAML.parse(input);
