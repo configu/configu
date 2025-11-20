@@ -18,7 +18,6 @@ import {
   parseYamlFile,
   YAML,
   normalizeInput,
-  httpClient,
   configuFilesApi,
   AllowedExtensions,
   AllowedExtension,
@@ -173,10 +172,14 @@ export class CfguFile {
       return new ConfigSchema(_.merge({}, ...configSchemas.map((schema) => schema.keys)));
     }
     if (type === 'http') {
-      const response = await httpClient.get<string>(input);
-      const responseInput = normalizeInput(response.data, '.cfgu');
-      if (responseInput.type === 'json' || responseInput.type === 'yaml') {
-        const cfguFile = await CfguFile.init(`.cfgu.${responseInput.type}`, response.data, responseInput.type);
+      const response = await fetch(input);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch .cfgu file from "${input}": ${response.status} ${response.statusText}`);
+      }
+      const result = await response.text();
+      const resultInput = normalizeInput(result, '.cfgu');
+      if (resultInput.type === 'json' || resultInput.type === 'yaml') {
+        const cfguFile = await CfguFile.init(`.cfgu.${resultInput.type}`, result, resultInput.type);
         return cfguFile.getSchemaInstance();
       } else {
         throw new Error('.cfgu file input from HTTP is not a valid JSON or YAML string');
