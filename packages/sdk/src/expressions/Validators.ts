@@ -1,5 +1,3 @@
-import * as validator from 'validator';
-
 export * from './JSONSchema';
-export { validator };
+export { default as validator } from 'validator';
 export { z } from 'zod';
