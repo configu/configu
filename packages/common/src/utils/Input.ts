@@ -41,7 +41,8 @@ export const normalizeInput = (
   }
 
   const hasNewlines = trimmed.includes('\n');
-  const hasYamlKeyPattern = /^[a-zA-Z_][\w-]*:\s+/m.test(trimmed);
+  const hasYamlKeyPattern = /^[a-zA-Z_][\w-]*:\s*/m.test(trimmed);
+
   if (hasNewlines || hasYamlKeyPattern || isLongString) {
     try {
       const parsed = YAML.parse(input);
