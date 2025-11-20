@@ -187,6 +187,6 @@ export class CfguFile {
     }
 
     // code below is unreachable
-    throw new Error('.cfgu file input is not a valid file path, glob, or JSON string');
+    throw new Error('.cfgu file input is not a valid file path, glob, JSON string, YAML string, or HTTP URL');
   }
 }
