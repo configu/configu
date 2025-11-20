@@ -29,9 +29,7 @@ export const normalizeInput = (
   }
 
   const trimmed = input.trim();
-  const isLongString = trimmed.length > RAW_INPUT_LENGTH_THRESHOLD;
-
-  if (trimmed.startsWith('{') || trimmed.startsWith('[') || isLongString) {
+  if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
     try {
       JSON.parse(input);
       return { type: 'json', path: '' };
@@ -42,6 +40,7 @@ export const normalizeInput = (
 
   const hasNewlines = trimmed.includes('\n');
   const hasYamlKeyPattern = /^[a-zA-Z_][\w-]*:\s*/m.test(trimmed);
+  const isLongString = trimmed.length > RAW_INPUT_LENGTH_THRESHOLD;
 
   if (hasNewlines || hasYamlKeyPattern || isLongString) {
     try {
