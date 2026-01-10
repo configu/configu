@@ -2,6 +2,7 @@ import { Command, Option } from 'clipanion';
 import * as t from 'typanion';
 import * as prompts from '@clack/prompts';
 import { spawnSync } from 'node:child_process';
+import fs from 'node:fs/promises';
 import { log } from '@clack/prompts';
 import {
   ConfigExpression,
@@ -12,7 +13,7 @@ import {
   EvaluatedConfig,
   EvaluatedConfigOrigin,
 } from '@configu/sdk';
-import { print, table, readFile, color } from '@configu/common';
+import { print, table, readFile, color, path, normalizeInput } from '@configu/common';
 import { ConfigFormatter, ConfigFormat } from '@configu/formatters';
 
 import { BaseCommand } from './base';
@@ -84,9 +85,11 @@ export class CliExportCommand extends BaseCommand {
     description: `Spawns executable as child-process and pass exported \`Configs\` as environment variables`,
   });
 
-  static override schema = [
-    t.hasMutuallyExclusiveKeys(['explain', 'format', 'template', 'source', 'run'], { missingIf: 'undefined' }),
-  ];
+  out = Option.String('--out', {
+    description: `Write the exported \`Configs\` to a file at the specified location`,
+  });
+
+  static override schema = [t.hasMutuallyExclusiveKeys(['explain', 'source', 'run'], { missingIf: 'undefined' })];
 
   explainConfigs(pipe: EvalCommandOutput) {
     const orderedOrigins = [
@@ -168,7 +171,30 @@ export class CliExportCommand extends BaseCommand {
     const evaluationContext = ConfigValue.createEvaluationContext({ configs: pipe });
 
     if (this.template) {
-      const templateContent = await readFile(this.template);
+      let templateContent: string;
+
+      try {
+        const normalized = normalizeInput(this.template, 'template');
+
+        if (normalized.type === 'http') {
+          const response = await fetch(normalized.path);
+          if (!response.ok) {
+            throw new Error(
+              `Failed to fetch template from "${normalized.path}": ${response.status} ${response.statusText}`,
+            );
+          }
+          templateContent = await response.text();
+        } else if (normalized.type === 'file') {
+          templateContent = await readFile(normalized.path);
+        } else {
+          // Treat as raw template text
+          templateContent = this.template;
+        }
+      } catch (error) {
+        // If normalizeInput fails or anything goes wrong, treat as raw text
+        templateContent = this.template;
+      }
+
       try {
         return ConfigExpression.evaluateTemplateString(templateContent, evaluationContext);
       } catch (error) {
@@ -212,7 +238,14 @@ export class CliExportCommand extends BaseCommand {
 
     const reducedPipe = await this.reduceConfigs(mappedPipe);
 
-    print(reducedPipe);
+    if (this.out && !this.source) {
+      const absolutePath = path.resolve(this.out);
+      const dir = path.dirname(absolutePath);
+      await fs.mkdir(dir, { recursive: true });
+      await fs.writeFile(absolutePath, reducedPipe);
+    } else {
+      print(reducedPipe);
+    }
     return 0;
   }
 }
