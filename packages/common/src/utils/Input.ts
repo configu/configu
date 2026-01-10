@@ -3,6 +3,7 @@ import path from 'pathe';
 import isGlob from 'is-glob';
 import { YAML } from './Misc';
 import { TemplateProviders } from './Modules';
+import { debug } from './OutputStreams';
 
 const RAW_INPUT_LENGTH_THRESHOLD = 120;
 
@@ -16,13 +17,19 @@ export const normalizeInput = (
   try {
     const url = new URL(input);
     if (url.protocol === 'file:') {
-      return { type: 'file', path: fileURLToPath(url) };
+      const result = { type: 'file' as const, path: fileURLToPath(url) };
+      debug('normalizeInput', { input, source, result });
+      return result;
     }
     if (url.protocol === 'http:' || url.protocol === 'https:') {
-      return { type: 'http', path: input };
+      const result = { type: 'http' as const, path: input };
+      debug('normalizeInput', { input, source, result });
+      return result;
     }
     if (Object.keys(TemplateProviders).includes(url.protocol.slice(0, -1))) {
-      return { type: 'template', path: input };
+      const result = { type: 'template' as const, path: input };
+      debug('normalizeInput', { input, source, result });
+      return result;
     }
   } catch {
     // Not a valid URL
@@ -32,7 +39,9 @@ export const normalizeInput = (
   if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
     try {
       JSON.parse(input);
-      return { type: 'json', path: '' };
+      const result = { type: 'json' as const, path: '' };
+      debug('normalizeInput', { input, source, result });
+      return result;
     } catch {
       // Not valid JSON
     }
@@ -47,7 +56,9 @@ export const normalizeInput = (
       const parsed = YAML.parse(input);
       // Must be an object or array (not a primitive value)
       if (typeof parsed === 'object' && parsed !== null) {
-        return { type: 'yaml', path: '' };
+        const result = { type: 'yaml' as const, path: '' };
+        debug('normalizeInput', { input, source, result });
+        return result;
       }
     } catch {
       // Not valid YAML
@@ -58,9 +69,13 @@ export const normalizeInput = (
   try {
     path.resolve(input);
     if (isGlob(input)) {
-      return { type: 'glob', path: input };
+      const result = { type: 'glob' as const, path: input };
+      debug('normalizeInput', { input, source, result });
+      return result;
     }
-    return { type: 'file', path: input };
+    const result = { type: 'file' as const, path: input };
+    debug('normalizeInput', { input, source, result });
+    return result;
   } catch {
     // Not a valid path
   }

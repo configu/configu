@@ -337,7 +337,7 @@ export class ConfiguFile {
     debug('ConfiguFile.loadFromInput', { input });
 
     const { type, path } = normalizeInput(input, '.configu');
-    if (type === 'json') {
+    if (type === 'json' || type === 'yaml') {
       return ConfiguFile.init(join(cwd(), '.configu'), input);
     }
     if (type === 'file') {
