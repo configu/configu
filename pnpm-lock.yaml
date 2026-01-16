@@ -115,7 +115,7 @@ importers:
         version: 0.11.0
       '@configu/common':
         specifier: workspace:*
-        version: link:../common
+        version: file:packages/common
       '@configu/formatters':
         specifier: workspace:*
         version: link:../formatters
@@ -144,8 +144,8 @@ importers:
         specifier: 5.7.1
         version: 5.7.1
       tar:
-        specifier: ^7.5.2
-        version: 7.5.2
+        specifier: ^7.5.3
+        version: 7.5.3
       typanion:
         specifier: 3.14.0
         version: 3.14.0
@@ -258,7 +258,7 @@ importers:
     dependencies:
       '@configu/common':
         specifier: workspace:*
-        version: link:../common
+        version: file:packages/common
       '@configu/sdk':
         specifier: workspace:*
         version: link:../sdk
@@ -304,7 +304,7 @@ importers:
     dependencies:
       '@configu/common':
         specifier: workspace:*
-        version: link:../common
+        version: file:packages/common
       '@configu/sdk':
         specifier: workspace:*
         version: link:../sdk
@@ -995,8 +995,18 @@ packages:
     resolution: {integrity: sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==}
     engines: {node: '>=0.1.90'}
 
+  '@configu/common@file:packages/common':
+    resolution: {directory: packages/common, type: directory}
+    engines: {node: 24.11.0}
+
   '@configu/configu-platform@file:packages/stores/configu-platform':
     resolution: {directory: packages/stores/configu-platform, type: directory}
+
+  '@configu/file@file:packages/stores/file':
+    resolution: {directory: packages/stores/file, type: directory}
+
+  '@configu/json-file@file:packages/stores/json-file':
+    resolution: {directory: packages/stores/json-file, type: directory}
 
   '@configu/sdk@file:packages/sdk':
     resolution: {directory: packages/sdk, type: directory}
@@ -2066,6 +2076,7 @@ packages:
   '@mintlify/cli@4.0.739':
     resolution: {integrity: sha512-e4KUGtzmH0AugxrV5TVQjP+i660k/7J972jy3/H2+5kg5A32vYNeRadnJHy9Ci/QOhOWQ4mJyHkbm0GaYIs71g==}
     engines: {node: '>=18.0.0'}
+    deprecated: This version is deprecated. Please upgrade to version 4.0.423 or later.
     hasBin: true
 
   '@mintlify/common@1.0.549':
@@ -4063,8 +4074,8 @@ packages:
     engines: {node: '>=4'}
     hasBin: true
 
-  csstype@3.1.3:
-    resolution: {integrity: sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==}
+  csstype@3.2.3:
+    resolution: {integrity: sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==}
 
   csv-generate@4.5.0:
     resolution: {integrity: sha512-aQr/vmOKyBSBHNwYhAoXw1+kUsPnMSwmYgpNoo36rIXoG1ecWILnvPGZeQ6oUjzrWknZAD3+jfpqYOBAl4x15A==}
@@ -4245,6 +4256,10 @@ packages:
 
   diff@8.0.2:
     resolution: {integrity: sha512-sSuxWU5j5SR9QQji/o2qMvqRNYRDOcBTgsJ/DeCf4iSN4gW+gNMXM7wFIP+fdXZxoNiAnHUTGjCr+TSWXdRDKg==}
+    engines: {node: '>=0.3.1'}
+
+  diff@8.0.3:
+    resolution: {integrity: sha512-qejHi7bcSD4hQAZE0tNAawRK1ZtafHDmMTMkrrIGgSLl7hTnQHmKCeB45xAcbfTqK2zowkM3j3bHt/4b/ARbYQ==}
     engines: {node: '>=0.3.1'}
 
   dlv@1.1.3:
@@ -4929,8 +4944,12 @@ packages:
     resolution: {integrity: sha512-7Bv8RF0k6xjo7d4A/PxYLbUCfb6c+Vpd2/mB2yRDlew7Jb5hEXiCD9ibfO7wpk8i4sevK6DFny9h7EYbM3/sHg==}
     hasBin: true
 
-  glob@11.0.3:
-    resolution: {integrity: sha512-2Nim7dha1KVkaiF4q6Dj+ngPPMdfvLJEOpZk/jKiUAkqKebpGAWQXAq9z1xu9HKu5lWfqw/FASuccEjyznjPaA==}
+  glob@10.5.0:
+    resolution: {integrity: sha512-DfXN8DfhJ7NH3Oe7cFmu3NCu1wKbkReJ8TorzSAFbSKrlNaQSKfIzqYqVY8zlbs2NLBbWpRiU52GX2PbaBVNkg==}
+    hasBin: true
+
+  glob@11.1.0:
+    resolution: {integrity: sha512-vuNwKSaKiqm7g0THUBu2x7ckSs3XJLXE+2ssL7/MfTGPLLcrJQ/4Uq1CjPTtO5cCIiRxqvN6Twy1qOwhL0Xjcw==}
     engines: {node: 20 || >=22}
     hasBin: true
 
@@ -6203,6 +6222,7 @@ packages:
   mintlify@4.2.135:
     resolution: {integrity: sha512-AQuxdRcv1RBEOSqYC3JMmI61gv6whvarALHHH7x2mynKx6l6pAy6zBThrn2aUjXFzmLaUD6jn2QFrzmcYcgopw==}
     engines: {node: '>=18.0.0'}
+    deprecated: This version is deprecated. Please upgrade to version 4.0.423 or later.
     hasBin: true
 
   mitt@3.0.1:
@@ -6979,7 +6999,7 @@ packages:
   puppeteer@22.15.0:
     resolution: {integrity: sha512-XjCY1SiSEi1T7iSYuxS82ft85kwDJUS7wj1Z0eGVXKdtr5g4xnVcbjwxhq5xBnpK/E7x1VZZoJDxpjAOasHT4Q==}
     engines: {node: '>=18'}
-    deprecated: < 24.10.2 is no longer supported
+    deprecated: < 24.15.0 is no longer supported
     hasBin: true
 
   pure-rand@6.1.0:
@@ -7035,8 +7055,8 @@ packages:
       '@types/react':
         optional: true
 
-  react-remove-scroll@2.7.1:
-    resolution: {integrity: sha512-HpMh8+oahmIdOuS5aFKKY6Pyog+FNaZV/XyJOq7b4YFwsFHe5yYfdbIalI4k3vU2nSDql7YskmUseHsRrJqIPA==}
+  react-remove-scroll@2.7.2:
+    resolution: {integrity: sha512-Iqb9NjCCTt6Hf+vOdNIZGdTiH1QSqr27H/Ek9sv/a97gfueI/5h1s3yRi1nngzMUaOOToin5dI1dXKdXiF+u0Q==}
     engines: {node: '>=10'}
     peerDependencies:
       '@types/react': '*'
@@ -7781,8 +7801,8 @@ packages:
     resolution: {integrity: sha512-DZ4yORTwrbTj/7MZYq2w+/ZFdI6OZ/f9SFHR+71gIVUZhOQPHzVCLpvRnPgyaMpfWxxk/4ONva3GQSyNIKRv6A==}
     engines: {node: '>=10'}
 
-  tar@7.5.2:
-    resolution: {integrity: sha512-7NyxrTE4Anh8km8iEy7o0QYPs+0JKBTj5ZaqHg6B39erLg0qYXN3BijtShwbsNSvQ+LN75+KV+C4QR/f6Gwnpg==}
+  tar@7.5.3:
+    resolution: {integrity: sha512-ENg5JUHUm2rDD7IvKNFGzyElLXNjachNLp6RaGf4+JOgxXHkqA+gq81ZAMCUmtMtqBsoU62lcp6S27g1LCYGGQ==}
     engines: {node: '>=18'}
 
   tarn@3.0.2:
@@ -9111,12 +9131,53 @@ snapshots:
   '@colors/colors@1.5.0':
     optional: true
 
+  '@configu/common@file:packages/common':
+    dependencies:
+      '@configu/configu-platform': file:packages/stores/configu-platform(debug@4.4.3)
+      '@configu/json-file': file:packages/stores/json-file
+      '@configu/sdk': file:packages/sdk
+      '@dotenvx/dotenvx': 1.51.4
+      '@npmcli/arborist': 9.1.9
+      '@npmcli/package-json': 7.0.4
+      axios: 1.13.2(debug@4.4.3)
+      debug: 4.4.3
+      diff: 8.0.3
+      find-up: 8.0.0
+      flat: 6.0.1
+      giget: 2.0.0(patch_hash=928a883e8ac8cf77ab141da917de2aa536df39a3cd03cbcb6af746c63238ce00)
+      glob: 13.0.0
+      is-glob: 4.0.3
+      jiti: 2.6.1
+      parse-json: 8.3.0
+      pathe: 2.0.3
+      picocolors: 1.1.1
+      semver: 7.7.3
+      std-env: 3.10.0
+      table: 6.9.0
+      yaml: 2.8.2
+    transitivePeerDependencies:
+      - jest
+      - supports-color
+
   '@configu/configu-platform@file:packages/stores/configu-platform(debug@4.4.3)':
     dependencies:
       '@configu/sdk': file:packages/sdk
       axios: 1.13.2(debug@4.4.3)
     transitivePeerDependencies:
       - debug
+      - jest
+
+  '@configu/file@file:packages/stores/file':
+    dependencies:
+      '@configu/sdk': file:packages/sdk
+    transitivePeerDependencies:
+      - jest
+
+  '@configu/json-file@file:packages/stores/json-file':
+    dependencies:
+      '@configu/file': file:packages/stores/file
+      '@configu/sdk': file:packages/sdk
+    transitivePeerDependencies:
       - jest
 
   '@configu/sdk@file:packages/sdk':
@@ -9649,7 +9710,7 @@ snapshots:
       content-disposition: 0.5.4
       fastify-plugin: 4.5.1
       fastq: 1.19.1
-      glob: 10.4.5
+      glob: 10.5.0
 
   '@fastify/swagger-ui@4.2.0':
     dependencies:
@@ -10519,7 +10580,7 @@ snapshots:
     dependencies:
       '@npmcli/name-from-folder': 3.0.0
       '@npmcli/package-json': 7.0.4
-      glob: 11.0.3
+      glob: 11.1.0
       minimatch: 10.0.3
 
   '@npmcli/metavuln-calculator@9.0.2':
@@ -10730,7 +10791,7 @@ snapshots:
       aria-hidden: 1.2.6
       react: 19.1.1
       react-dom: 18.3.1(react@19.1.1)
-      react-remove-scroll: 2.7.1(@types/react@19.1.16)(react@19.1.1)
+      react-remove-scroll: 2.7.2(@types/react@19.1.16)(react@19.1.1)
     optionalDependencies:
       '@types/react': 19.1.16
 
@@ -11626,7 +11687,7 @@ snapshots:
 
   '@types/react@19.1.16':
     dependencies:
-      csstype: 3.1.3
+      csstype: 3.2.3
 
   '@types/readable-stream@4.0.21':
     dependencies:
@@ -12277,7 +12338,7 @@ snapshots:
     dependencies:
       '@npmcli/fs': 4.0.0
       fs-minipass: 3.0.3
-      glob: 10.4.5
+      glob: 10.5.0
       lru-cache: 10.4.3
       minipass: 7.1.2
       minipass-collect: 2.0.1
@@ -12285,14 +12346,14 @@ snapshots:
       minipass-pipeline: 1.2.4
       p-map: 7.0.3
       ssri: 12.0.0
-      tar: 7.5.2
+      tar: 7.5.3
       unique-filename: 4.0.0
 
   cacache@20.0.1:
     dependencies:
       '@npmcli/fs': 4.0.0
       fs-minipass: 3.0.3
-      glob: 11.0.3
+      glob: 11.1.0
       lru-cache: 11.2.2
       minipass: 7.1.2
       minipass-collect: 2.0.1
@@ -12661,7 +12722,7 @@ snapshots:
 
   cssesc@3.0.0: {}
 
-  csstype@3.1.3: {}
+  csstype@3.2.3: {}
 
   csv-generate@4.5.0: {}
 
@@ -12800,6 +12861,8 @@ snapshots:
   diff-sequences@29.6.3: {}
 
   diff@8.0.2: {}
+
+  diff@8.0.3: {}
 
   dlv@1.1.3: {}
 
@@ -13745,11 +13808,20 @@ snapshots:
       package-json-from-dist: 1.0.1
       path-scurry: 1.11.1
 
-  glob@11.0.3:
+  glob@10.5.0:
+    dependencies:
+      foreground-child: 3.3.1
+      jackspeak: 3.4.3
+      minimatch: 9.0.5
+      minipass: 7.1.2
+      package-json-from-dist: 1.0.1
+      path-scurry: 1.11.1
+
+  glob@11.1.0:
     dependencies:
       foreground-child: 3.3.1
       jackspeak: 4.1.1
-      minimatch: 10.0.3
+      minimatch: 10.1.1
       minipass: 7.1.2
       package-json-from-dist: 1.0.1
       path-scurry: 2.0.0
@@ -15619,7 +15691,7 @@ snapshots:
       nopt: 8.1.0
       proc-log: 5.0.0
       semver: 7.7.3
-      tar: 7.5.2
+      tar: 7.5.3
       tinyglobby: 0.2.15
       which: 5.0.0
     transitivePeerDependencies:
@@ -15950,7 +16022,7 @@ snapshots:
       promise-retry: 2.0.1
       sigstore: 4.0.0
       ssri: 12.0.0
-      tar: 7.5.2
+      tar: 7.5.3
     transitivePeerDependencies:
       - supports-color
 
@@ -16401,7 +16473,7 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.1.16
 
-  react-remove-scroll@2.7.1(@types/react@19.1.16)(react@19.1.1):
+  react-remove-scroll@2.7.2(@types/react@19.1.16)(react@19.1.1):
     dependencies:
       react: 19.1.1
       react-remove-scroll-bar: 2.3.8(@types/react@19.1.16)(react@19.1.1)
@@ -17312,7 +17384,7 @@ snapshots:
     dependencies:
       '@jridgewell/gen-mapping': 0.3.13
       commander: 4.1.1
-      glob: 10.4.5
+      glob: 10.5.0
       lines-and-columns: 1.2.4
       mz: 2.7.0
       pirates: 4.0.7
@@ -17437,7 +17509,7 @@ snapshots:
       mkdirp: 1.0.4
       yallist: 4.0.0
 
-  tar@7.5.2:
+  tar@7.5.3:
     dependencies:
       '@isaacs/fs-minipass': 4.0.1
       chownr: 3.0.0
