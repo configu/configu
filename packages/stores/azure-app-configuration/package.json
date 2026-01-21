@@ -29,6 +29,5 @@
     "@azure/identity": "4.13.0",
     "@configu/sdk": "workspace:*"
   },
-  "devDependencies": {},
-  "peerDependencies": {}
+  "devDependencies": {}
 }
