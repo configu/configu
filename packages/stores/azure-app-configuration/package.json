@@ -26,10 +26,9 @@
   ],
   "dependencies": {
     "@azure/app-configuration": "1.10.0",
-    "@azure/identity": "4.13.0"
+    "@azure/identity": "4.13.0",
+    "@configu/sdk": "workspace:*"
   },
   "devDependencies": {},
-  "peerDependencies": {
-    "@configu/sdk": "workspace:*"
-  }
+  "peerDependencies": {}
 }
