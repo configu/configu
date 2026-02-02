@@ -3,15 +3,13 @@
 // https://github.com/vitest-dev/vitest/blob/main/packages/vitest/src/integrations/chai/setup.ts
 // https://github.com/vitest-dev/vitest/blob/main/packages/vitest/src/integrations/chai/index.ts
 import * as chai from 'chai';
-import Subset from 'chai-subset';
 import { JestAsymmetricMatchers, JestChaiExpect, JestExtend } from '@vitest/expect';
 import * as matchers from 'jest-extended';
 
 chai.use(JestExtend);
 chai.use(JestChaiExpect);
-chai.use(Subset);
 chai.use(JestAsymmetricMatchers);
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
 // @ts-expect-error untyped
 chai.expect.extend(chai.expect, matchers);
 

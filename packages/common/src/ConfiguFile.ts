@@ -303,7 +303,8 @@ export class ConfiguFile {
       const registeree = `.configu.register[${index}]`;
       const { type, path: modulePath } = normalizeInput(module, registeree);
       if (type === 'file') {
-        const resolvedPath = join(configuFile.dir, modulePath);
+        // Resolve paths relative to .configu file location (keeps absolute paths as-is)
+        const resolvedPath = resolve(configuFile.dir, modulePath);
         return ConfiguModule.registerLocal(resolvedPath);
       }
       if (type === 'template') {
@@ -394,6 +395,7 @@ export class ConfiguFile {
     if (!shouldBackup) {
       return undefined;
     }
+    // Use join() since this.dir is already absolute
     const database = this.contents.backup ?? join(this.dir, 'configs_backup.sqlite');
     return ConfiguFile.constructStore({
       type: 'sqlite',
@@ -406,7 +408,10 @@ export class ConfiguFile {
     if (!schemaConfig) {
       return undefined;
     }
-    return CfguFile.constructSchema(schemaConfig);
+    // Normalize and resolve file paths relative to .configu location
+    const { type, path: schemaPath } = normalizeInput(schemaConfig, `schemas.${name}`);
+    const resolvedPath = type === 'file' ? resolve(this.dir, schemaPath) : schemaConfig;
+    return CfguFile.constructSchema(resolvedPath);
   }
 
   runScript(name: string, options: { cwd?: string; env?: Record<string, string> } = {}) {

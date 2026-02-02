@@ -26,7 +26,7 @@
   "dependencies": {
     "@configu/key-value": "workspace:*",
     "@configu/sdk": "workspace:*",
-    "etcd3": "1.1.2"
+    "etcd3": "^1.1.2"
   },
   "devDependencies": {}
 }
