@@ -58,7 +58,7 @@
     "cosmiconfig": "^9.0.0",
     "fastify": "^4.29.1",
     "fastify-plugin": "^4.5.1",
-    "lodash": "^4.17.21"
+    "lodash": "^4.17.23"
   },
   "devDependencies": {
     "fastify-cli": "^6.2.1"
