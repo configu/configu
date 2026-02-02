@@ -51,7 +51,7 @@
   "dependencies": {
     "change-case": "^5.4.4",
     "dotenv": "^17.2.3",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "yaml": "^2.8.2"
   },
   "devDependencies": {}
