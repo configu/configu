@@ -1,4 +1,5 @@
 import { createJiti } from 'jiti';
+// import { createRequire } from 'module';
 import { downloadTemplate, TemplateProvider, TemplateInfo, GitInfo, providers } from 'giget';
 import PackageJson from '@npmcli/package-json';
 import Arborist from '@npmcli/arborist';
@@ -61,13 +62,37 @@ export const installPackage = async (moduleDir: string) => {
   const arb = new Arborist({
     path: moduleDir,
     registry: installPackage.registry,
+    cache: CONFIGU_PATHS.cache,
+    // Production mode - only install what's needed
+    save: false,
+    omit: ['dev', 'optional', 'peer'],
+    // Performance optimizations
+    installStrategy: 'shallow',
+    preferDedupe: true,
+    workspacesEnabled: false,
+    // Stability and compatibility
+    force: true,
+    legacyPeerDeps: true,
+    legacy: false,
+    // Skip unnecessary operations
+    audit: false,
+    fund: false,
   });
   await arb.reify();
   debug('Package installed:', moduleDir);
 };
 installPackage.registry = CONFIGU_DEFAULT_REGISTRY;
 
-const jiti = createJiti(import.meta.url, { debug: debug.enabled });
+// const require = createRequire(import.meta.url);
+const jiti = createJiti(import.meta.url, {
+  debug: debug.enabled,
+  // // Alias map: redirect SDK source imports to bundled package
+  // // @see https://github.com/unjs/jiti#options
+  // alias: {
+  //   '@configu/sdk': require.resolve('@configu/sdk'),
+  // },
+});
+
 export const importModule = async (moduleFile: string) => {
   debug('Importing Module:', moduleFile);
   const module = await jiti.import(moduleFile);

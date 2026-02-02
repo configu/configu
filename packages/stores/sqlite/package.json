@@ -28,7 +28,7 @@
   "dependencies": {
     "@configu/database": "workspace:*",
     "@configu/sdk": "workspace:*",
-    "sqlite3": "5.1.7"
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "typeorm": "^0.3.20"

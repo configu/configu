@@ -23,6 +23,10 @@ useNodeVersion: 24.11.0
 injectWorkspacePackages: true
 disallowWorkspaceCycles: true
 
+# todo: activate after fixing docs and stores versioning
+# https://pnpm.io/settings#strictpeerdependencies
+# strictPeerDependencies: true
+
 # https://pnpm.io/settings#other-settings
 useStderr: true
 updateNotifier: true

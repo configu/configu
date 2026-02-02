@@ -66,6 +66,20 @@ const config = {
       isBanned: true,
     },
   ],
+  semverGroups: [
+    {
+      label: 'Use exact versions for some packages',
+      dependencies: ['@types/node'],
+      packages: ['**'],
+      range: '',
+    },
+    {
+      label: 'Use caret ranges for all dependencies',
+      packages: ['**'],
+      dependencies: ['**'],
+      range: '^',
+    },
+  ],
 };
 
 module.exports = config;

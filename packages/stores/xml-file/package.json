@@ -26,8 +26,7 @@
   "dependencies": {
     "@configu/file": "workspace:*",
     "@configu/sdk": "workspace:*",
-    "csv": "^6.3.8",
-    "xml2js": "0.6.2"
+    "xml2js": "^0.6.2"
   },
   "devDependencies": {
     "@types/xml2js": "^0.4.14"

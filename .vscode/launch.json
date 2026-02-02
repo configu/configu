@@ -42,20 +42,24 @@
         // "--defaults",
         // ====================
         "upsert",
-        "-f",
-        ".env",
+        // "-f",
+        // ".env",
         // "-l",
         // "X.0=500",
         // "-l",
         // "Y.a.c=true",
+        "-l",
+        "SUBJECT=blablaaaa",
+        "--set",
+        "prod/us-east-1"
         // "--edit",
         // "--prune",
         // "--dry"
         // ====================
-        "--store",
-        "xml",
-        "--schema",
-        "https://raw.githubusercontent.com/configu/configu/refs/heads/main/packages/schema/data/xy.cfgu.yaml"
+        // "--store",
+        // "xml",
+        // "--schema",
+        // "https://raw.githubusercontent.com/configu/configu/refs/heads/main/packages/schema/data/xy.cfgu.yaml"
         // "${workspaceFolder}/packages/schema/data/xy.cfgu.yaml",
         // "--kv",
         // "Z=8",

@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 
 module.exports = {
-  '**/package.json': () => 'pnpm pkg:check',
+  '**/package.json': () => 'pnpm deps:check',
   'packages/**/*.ts': () => 'pnpm type:check',
   '*.{js,mjs,ts,mts}': (filenames) => [
     `pnpm format --check ${filenames.join(' ')}`,

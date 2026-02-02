@@ -27,7 +27,7 @@
     "@configu/open-feature": "workspace:*",
     "@configu/sdk": "workspace:*",
     "@launchdarkly/node-server-sdk": "^9.7.0",
-    "@launchdarkly/openfeature-node-server": "1.0.0",
+    "@launchdarkly/openfeature-node-server": "^1.0.0",
     "@openfeature/server-sdk": "^1.7.4"
   },
   "devDependencies": {}
