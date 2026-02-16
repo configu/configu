@@ -1,4 +1,5 @@
 import { Command, Option } from 'clipanion';
+import * as t from 'typanion';
 import * as prompts from '@clack/prompts';
 import { ConfigSet, ConfigStore, EvalCommand } from '@configu/sdk';
 import { print, debug, ConfiguInterface } from '@configu/common';
@@ -39,6 +40,10 @@ export class CliEvalCommand extends BaseCommand {
     description: `'key=value' pairs to override fetched \`Configs\``,
   });
 
+  depth = Option.String('--depth,--dp', {
+    validator: t.isNumber(),
+  });
+
   async execute() {
     await this.init();
 
@@ -58,7 +63,7 @@ export class CliEvalCommand extends BaseCommand {
       const configs = this.reduceKVFlag(this.override);
 
       spinner.message(`Evaluating configs`);
-      const evalCommand = new EvalCommand({ store, set, schema, configs, pipe: this.context.pipe });
+      const evalCommand = new EvalCommand({ store, set, schema, configs, pipe: this.context.pipe, depth: this.depth });
       const { result } = await evalCommand.run();
 
       spinner.message(`Backing up output`);
