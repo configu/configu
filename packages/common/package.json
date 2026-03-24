@@ -45,6 +45,7 @@
     "@configu/configu-platform": "workspace:*",
     "@configu/json-file": "workspace:*",
     "@configu/sdk": "workspace:*",
+    "@configu/yaml-file": "workspace:*",
     "@dotenvx/dotenvx": "^1.51.4",
     "@npmcli/arborist": "^9.1.9",
     "@npmcli/package-json": "^7.0.4",

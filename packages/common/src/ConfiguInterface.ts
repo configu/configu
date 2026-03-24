@@ -12,6 +12,7 @@ import {
   InMemoryConfigStore,
 } from '@configu/sdk';
 import { JsonFileConfigStore } from '@configu/json-file';
+import { YamlFileConfigStore } from '@configu/yaml-file';
 import { ConfiguPlatformConfigStore } from '@configu/configu-platform';
 
 import { debug, path, stdenv, CONFIGU_PATHS, validateEngineVersion } from './utils';
@@ -43,6 +44,7 @@ export class ConfiguInterface {
     ConfigStore.register(NoopConfigStore);
     ConfigStore.register(InMemoryConfigStore);
     ConfigStore.register(JsonFileConfigStore);
+    ConfigStore.register(YamlFileConfigStore);
     ConfigStore.register(ConfiguPlatformConfigStore);
   }
 

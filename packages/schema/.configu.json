@@ -116,6 +116,9 @@
           "configuration": {
             "type": "object"
           },
+          "strategy": {
+            "type": "string"
+          },
           "backup": {
             "type": "boolean"
           },
