@@ -3,15 +3,23 @@ import * as YAML from 'yaml';
 import { ObjectConfigStore, type ObjectConfigStoreConfiguration } from '@configu/object';
 
 export type YamlFileConfigStoreConfiguration = ObjectConfigStoreConfiguration & {
-  path: string;
+  path: string | string[];
 };
 
 /**
- * A YAML-file-backed config store with arbitrary nesting.
+ * A YAML-file-backed config store with arbitrary nesting and multi-file merge.
  *
- * The YAML file structure defines its own nesting. On read, nested paths
- * are joined with `_` to produce the flat configu key. On write, the
- * original structure is preserved.
+ * `path` accepts a single file or an array of files. Files are classified
+ * automatically:
+ * - **Abstract**: top-level key is `_abstract` — shared/partial config
+ * - **Set**: top-level keys are concrete set names (e.g. `staging:`)
+ *
+ * Merge order (left-to-right, later overrides earlier):
+ * 1. All abstract files are deep-merged → base data
+ * 2. All set files are deep-merged → set data
+ * 3. Base data is injected under each set key (set values override base)
+ *
+ * Writes always go to the **last** file in the `path` array.
  *
  * Example — the YAML:
  * ```yaml
@@ -35,7 +43,10 @@ export type YamlFileConfigStoreConfiguration = ObjectConfigStoreConfiguration & 
  * The `hash` strategy falls back to flat keys (hashes can't be nested).
  */
 export class YamlFileConfigStore extends ObjectConfigStore {
-  private readonly path: string;
+  private static readonly ABSTRACT_KEY = '_abstract';
+
+  private readonly paths: string[];
+  private readonly primaryPath: string;
   private data: Record<string, string> = {};
   /** Maps flat key → path segments (for reconstructing nested YAML on save) */
   private keyPaths: Map<string, string[]> = new Map();
@@ -43,15 +54,21 @@ export class YamlFileConfigStore extends ObjectConfigStore {
 
   constructor(configuration: YamlFileConfigStoreConfiguration) {
     super(configuration);
-    this.path = configuration.path;
+    this.paths = Array.isArray(configuration.path) ? configuration.path : [configuration.path];
+    this.primaryPath = this.paths[this.paths.length - 1]!;
   }
 
   override async init() {
+    // Validate all non-primary paths exist
+    for (const p of this.paths.slice(0, -1)) {
+      await fs.access(p);
+    }
+    // Create primary path if missing
     try {
-      await fs.access(this.path);
+      await fs.access(this.primaryPath);
     } catch (error: any) {
       if (error.code === 'ENOENT') {
-        await fs.writeFile(this.path, '{}\n');
+        await fs.writeFile(this.primaryPath, '{}\n');
       } else {
         throw error;
       }
@@ -166,21 +183,71 @@ export class YamlFileConfigStore extends ObjectConfigStore {
     return nested;
   }
 
-  private async load(): Promise<void> {
-    const content = await fs.readFile(this.path, 'utf8');
-    const parsed = YAML.parse(content);
-    if (parsed && typeof parsed === 'object') {
-      this.data = this.flatten(parsed);
-    } else {
-      this.data = {};
+  private async loadYaml(filePath: string): Promise<Record<string, any>> {
+    const content = await fs.readFile(filePath, 'utf8');
+    return YAML.parse(content) ?? {};
+  }
+
+  private deepMerge(base: Record<string, any>, overlay: Record<string, any>): Record<string, any> {
+    const result = { ...base };
+    for (const [key, value] of Object.entries(overlay)) {
+      if (
+        value &&
+        typeof value === 'object' &&
+        !Array.isArray(value) &&
+        result[key] &&
+        typeof result[key] === 'object' &&
+        !Array.isArray(result[key])
+      ) {
+        result[key] = this.deepMerge(result[key], value);
+      } else {
+        result[key] = value;
+      }
     }
+    return result;
+  }
+
+  private async load(): Promise<void> {
+    let baseData: Record<string, any> = {};
+    let setData: Record<string, any> = {};
+
+    for (const p of this.paths) {
+      const raw = await this.loadYaml(p);
+
+      if (YamlFileConfigStore.ABSTRACT_KEY in raw) {
+        // Abstract file — merge content under _abstract key into base
+        const data = raw[YamlFileConfigStore.ABSTRACT_KEY];
+        if (data && typeof data === 'object') {
+          baseData = this.deepMerge(baseData, data);
+        }
+      } else {
+        // Set file — merge into set data
+        setData = this.deepMerge(setData, raw);
+      }
+    }
+
+    // Inject base under each set key
+    if (Object.keys(baseData).length > 0) {
+      const merged: Record<string, any> = {};
+      for (const [setName, setValue] of Object.entries(setData)) {
+        if (setValue && typeof setValue === 'object' && !Array.isArray(setValue)) {
+          merged[setName] = this.deepMerge(baseData, setValue);
+        } else {
+          merged[setName] = setValue;
+        }
+      }
+      this.data = this.flatten(merged);
+    } else {
+      this.data = this.flatten(setData);
+    }
+
     this.loaded = true;
   }
 
   private async save(): Promise<void> {
     const nested = this.unflatten(this.data);
     const content = YAML.stringify(nested, { lineWidth: 0 });
-    await fs.writeFile(this.path, content);
+    await fs.writeFile(this.primaryPath, content);
   }
 
   protected async getByKey(key: string): Promise<string | undefined> {

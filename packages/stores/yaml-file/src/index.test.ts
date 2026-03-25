@@ -170,4 +170,192 @@ describe('YamlFileConfigStore', () => {
       assert.equal(yaml.env.KEY, 'val');
     });
   });
+
+  describe('_abstract base inheritance', () => {
+    it('merges _abstract parent under child set key', async () => {
+      const basePath = path.join(tmpDir, 'base.yaml');
+      await fs.writeFile(
+        basePath,
+        YAML.stringify({
+          _abstract: { database: { host: 'base-host', port: '5432' } },
+        }),
+      );
+      await fs.writeFile(
+        filePath,
+        YAML.stringify({
+          staging: { database: { host: 'child-host' } },
+        }),
+      );
+      const store = new YamlFileConfigStore({ path: [basePath, filePath] });
+      await store.init();
+
+      const host = await store.get([{ set: 'staging', key: 'database_host' }]);
+      assert.equal(host[0]?.value, 'child-host');
+      const port = await store.get([{ set: 'staging', key: 'database_port' }]);
+      assert.equal(port[0]?.value, '5432');
+    });
+
+    it('inherits parent keys not present in child', async () => {
+      const basePath = path.join(tmpDir, 'base.yaml');
+      await fs.writeFile(
+        basePath,
+        YAML.stringify({
+          _abstract: { smtp: { host: 'mail.example.com' } },
+        }),
+      );
+      await fs.writeFile(
+        filePath,
+        YAML.stringify({
+          prod: { app: { name: 'my-service' } },
+        }),
+      );
+      const store = new YamlFileConfigStore({ path: [basePath, filePath] });
+      await store.init();
+
+      const smtp = await store.get([{ set: 'prod', key: 'smtp_host' }]);
+      assert.equal(smtp[0]?.value, 'mail.example.com');
+      const app = await store.get([{ set: 'prod', key: 'app_name' }]);
+      assert.equal(app[0]?.value, 'my-service');
+    });
+
+    it('writes go to last path file only', async () => {
+      const basePath = path.join(tmpDir, 'base.yaml');
+      await fs.writeFile(
+        basePath,
+        YAML.stringify({
+          _abstract: { DB: 'base-db' },
+        }),
+      );
+      await fs.writeFile(filePath, YAML.stringify({ dev: {} }));
+      const store = new YamlFileConfigStore({ path: [basePath, filePath] });
+      await store.init();
+
+      await store.set([{ set: 'dev', key: 'DB', value: 'new-db' }]);
+
+      const parentYaml = YAML.parse(await fs.readFile(basePath, 'utf8'));
+      assert.equal(parentYaml._abstract.DB, 'base-db');
+      const childYaml = YAML.parse(await fs.readFile(filePath, 'utf8'));
+      assert.equal(childYaml.dev.DB, 'new-db');
+    });
+
+    it('same base serves multiple sets in one child', async () => {
+      const basePath = path.join(tmpDir, 'base.yaml');
+      await fs.writeFile(
+        basePath,
+        YAML.stringify({
+          _abstract: { shared_key: 'shared-val' },
+        }),
+      );
+      await fs.writeFile(
+        filePath,
+        YAML.stringify({
+          dev: { own_key: 'dev-val' },
+          staging: { own_key: 'staging-val' },
+        }),
+      );
+      const store = new YamlFileConfigStore({ path: [basePath, filePath] });
+      await store.init();
+
+      const devShared = await store.get([{ set: 'dev', key: 'shared_key' }]);
+      assert.equal(devShared[0]?.value, 'shared-val');
+      const stagingShared = await store.get([{ set: 'staging', key: 'shared_key' }]);
+      assert.equal(stagingShared[0]?.value, 'shared-val');
+    });
+
+    it('backward compatible — single path without _abstract', async () => {
+      const store = await createStore({ dev: { PORT: '3000' } });
+      const results = await store.get([{ set: 'dev', key: 'PORT' }]);
+      assert.equal(results[0]?.value, '3000');
+    });
+  });
+
+  describe('multi-file merge — multiple abstract files', () => {
+    it('merges multiple _abstract files left-to-right', async () => {
+      const infraPath = path.join(tmpDir, 'infra.yaml');
+      const appPath = path.join(tmpDir, 'app.yaml');
+      await fs.writeFile(
+        infraPath,
+        YAML.stringify({
+          _abstract: {
+            cluster: { storage: 'local-path' },
+            shared_val: 'from-infra',
+          },
+        }),
+      );
+      await fs.writeFile(
+        appPath,
+        YAML.stringify({
+          _abstract: {
+            app: { name: 'my-app' },
+            shared_val: 'from-app',
+          },
+        }),
+      );
+      await fs.writeFile(
+        filePath,
+        YAML.stringify({
+          prod: { cluster: { name: 'konoha' } },
+        }),
+      );
+      const store = new YamlFileConfigStore({
+        path: [infraPath, appPath, filePath],
+      });
+      await store.init();
+
+      const storage = await store.get([{ set: 'prod', key: 'cluster_storage' }]);
+      assert.equal(storage[0]?.value, 'local-path');
+      const appName = await store.get([{ set: 'prod', key: 'app_name' }]);
+      assert.equal(appName[0]?.value, 'my-app');
+      const shared = await store.get([{ set: 'prod', key: 'shared_val' }]);
+      assert.equal(shared[0]?.value, 'from-app');
+      const clusterName = await store.get([{ set: 'prod', key: 'cluster_name' }]);
+      assert.equal(clusterName[0]?.value, 'konoha');
+    });
+  });
+
+  describe('multi-file merge — multiple set files', () => {
+    it('merges multiple set files left-to-right', async () => {
+      const configPath = path.join(tmpDir, 'config.yaml');
+      const secretsPath = path.join(tmpDir, 'secrets.yaml');
+      await fs.writeFile(
+        configPath,
+        YAML.stringify({
+          myenv: { app: { host: 'example.com' } },
+        }),
+      );
+      await fs.writeFile(
+        secretsPath,
+        YAML.stringify({
+          myenv: { app: { api_key: 'secret123' } },
+        }),
+      );
+      const store = new YamlFileConfigStore({
+        path: [configPath, secretsPath],
+      });
+      await store.init();
+
+      const host = await store.get([{ set: 'myenv', key: 'app_host' }]);
+      assert.equal(host[0]?.value, 'example.com');
+      const key = await store.get([{ set: 'myenv', key: 'app_api_key' }]);
+      assert.equal(key[0]?.value, 'secret123');
+    });
+
+    it('writes go to last path file', async () => {
+      const configPath = path.join(tmpDir, 'config.yaml');
+      const secretsPath = path.join(tmpDir, 'secrets.yaml');
+      await fs.writeFile(configPath, YAML.stringify({ dev: { A: '1' } }));
+      await fs.writeFile(secretsPath, YAML.stringify({ dev: { B: '2' } }));
+      const store = new YamlFileConfigStore({
+        path: [configPath, secretsPath],
+      });
+      await store.init();
+
+      await store.set([{ set: 'dev', key: 'C', value: '3' }]);
+
+      const secretsYaml = YAML.parse(await fs.readFile(secretsPath, 'utf8'));
+      assert.ok('C' in (secretsYaml.dev ?? {}));
+      const configYaml = YAML.parse(await fs.readFile(configPath, 'utf8'));
+      assert.equal(configYaml.dev?.C, undefined);
+    });
+  });
 });
