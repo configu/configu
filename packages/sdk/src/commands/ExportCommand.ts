@@ -11,13 +11,15 @@ export type ExportCommandOutput = {
 export type ExportCommandInput = {
   pipe: EvalCommandOutput;
   coerce?: boolean;
+  includeHidden?: boolean;
 };
 
 export class ExportCommand extends ConfigCommand<ExportCommandInput, ExportCommandOutput> {
   async execute() {
     const { pipe } = this.input;
 
-    const filteredPipe = _.pickBy(pipe, (config) => !config.cfgu?.hidden);
+    const { includeHidden = false } = this.input;
+    const filteredPipe = includeHidden ? pipe : _.pickBy(pipe, (config) => !config.cfgu?.hidden);
     this.validatePipe(filteredPipe);
     const mappedPipe = this.kv(filteredPipe);
 

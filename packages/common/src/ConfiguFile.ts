@@ -226,6 +226,7 @@ const ConfiguFileSchema = {
           type: { type: 'string' },
           version: { type: 'string' },
           configuration: { type: 'object' },
+          strategy: { type: 'string' },
           backup: { type: 'boolean' },
           default: { type: 'boolean' },
         },
@@ -438,6 +439,10 @@ export class ConfiguFile {
       const storePackageUri = `configu:packages/stores/${storePackageSubdir}${storeConfig.version ? `#${storeConfig.version}` : ''}`;
       await ConfiguModule.registerRemote(storePackageUri);
     }
-    return ConfigStore.construct(storeConfig.type, storeConfig.configuration);
+    const configuration = {
+      ...storeConfig.configuration,
+      ...(storeConfig.strategy && { strategy: storeConfig.strategy }),
+    };
+    return ConfigStore.construct(storeConfig.type, configuration);
   }
 }

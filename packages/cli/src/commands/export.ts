@@ -35,6 +35,10 @@ export class CliExportCommand extends BaseCommand {
     description: `Outputs metadata on the exported \`Configs\``,
   });
 
+  includeHidden = Option.Boolean('--include-hidden', {
+    description: `Include hidden \`Configs\` in the export result`,
+  });
+
   filter = Option.Array('--filter', {
     description: `Picks config keys by a given expression`,
     validator: t.isArray(t.isString()),
@@ -119,7 +123,7 @@ export class CliExportCommand extends BaseCommand {
   }
 
   async filterConfigs(pipe: EvalCommandOutput) {
-    const hidden: ExportCommandFilter = (config) => !config.cfgu?.hidden;
+    const hidden: ExportCommandFilter = this.includeHidden ? () => true : (config) => !config.cfgu?.hidden;
 
     const flag: ExportCommandFilter = this.filter
       ? (config) => {
